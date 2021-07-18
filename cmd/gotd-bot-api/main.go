@@ -2,9 +2,11 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"flag"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/go-chi/chi/v5"
@@ -15,6 +17,21 @@ import (
 	"github.com/gotd/botapi/api"
 	"github.com/gotd/botapi/pool"
 )
+
+type HandleContext struct {
+	Method  string
+	Client  *telegram.Client
+	Writer  http.ResponseWriter
+	Request *http.Request
+}
+
+type Handler struct {
+	handlers map[string]func(ctx context.Context, h HandleContext) error
+}
+
+func (h Handler) On(method string, f func(ctx context.Context, h HandleContext) error) {
+	h.handlers[strings.ToLower(method)] = f
+}
 
 func main() {
 	var (
@@ -48,42 +65,57 @@ func main() {
 	}
 	go p.RunGC(*keepalive)
 
+	h := Handler{
+		handlers: map[string]func(ctx context.Context, h HandleContext) error{},
+	}
+	h.On("getMe", func(ctx context.Context, h HandleContext) error {
+		res, err := h.Client.Self(ctx)
+		if err != nil {
+			return err
+		}
+		return json.NewEncoder(h.Writer).Encode(api.Response{
+			Result: api.User{
+				ID:              res.ID,
+				FirstName:       res.FirstName,
+				LastName:        res.LastName,
+				Username:        res.Username,
+				LanguageCode:    res.LangCode,
+				IsBot:           res.Bot,
+				CanJoinGroups:   !res.BotNochats,
+				CanReadMessages: res.BotChatHistory,
+				SupportsInline:  false, // ?
+			},
+		})
+	})
+
 	// https://api.telegram.org/bot123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11/getMe
 	r := chi.NewRouter()
-	r.Route("/bot{token}", func(r chi.Router) {
-		r.Post("/getMe", func(w http.ResponseWriter, r *http.Request) {
-			token, err := pool.ParseToken(chi.URLParam(r, "token"))
-			if err != nil {
-				w.WriteHeader(http.StatusBadRequest)
-				return
-			}
+	r.Post("/bot{token}/{method}", func(w http.ResponseWriter, r *http.Request) {
+		token, err := pool.ParseToken(chi.URLParam(r, "token"))
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
 
-			ctx := r.Context()
-			if err := p.Do(ctx, token, func(client *telegram.Client) error {
-				res, err := client.Self(ctx)
-				if err != nil {
-					return err
-				}
-				_ = json.NewEncoder(w).Encode(api.Response{
-					Result: api.User{
-						ID:              res.ID,
-						FirstName:       res.FirstName,
-						LastName:        res.LastName,
-						Username:        res.Username,
-						LanguageCode:    res.LangCode,
-						IsBot:           res.Bot,
-						CanJoinGroups:   !res.BotNochats,
-						CanReadMessages: res.BotChatHistory,
-						SupportsInline:  false, // ?
-					},
-				})
+		method := strings.ToLower(chi.URLParam(r, "method"))
+		handler, ok := h.handlers[method]
+		if !ok {
+			w.WriteHeader(http.StatusNotFound)
+			return
+		}
 
-				return nil
-			}); err != nil {
-				w.WriteHeader(http.StatusInternalServerError)
-				return
-			}
-		})
+		ctx := r.Context()
+		if err := p.Do(ctx, token, func(client *telegram.Client) error {
+			return handler(ctx, HandleContext{
+				Method:  method,
+				Client:  client,
+				Writer:  w,
+				Request: r,
+			})
+		}); err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
 	})
 
 	if err := http.ListenAndServe(*addr, r); err != nil {
