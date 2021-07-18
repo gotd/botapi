@@ -3,17 +3,98 @@ package pool
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
+	"os"
 	"strconv"
 	"strings"
 	"sync"
 	"time"
 
 	"go.uber.org/zap"
+	"golang.org/x/xerrors"
 
+	"github.com/gotd/td/session"
 	"github.com/gotd/td/telegram"
 )
+
+type fileStorage struct {
+	path string
+	mux  sync.Mutex
+}
+
+type sessionFile struct {
+	Data map[int][]byte `json:"data"`
+}
+
+func (s *fileStorage) Store(ctx context.Context, id int, data []byte) error {
+	s.mux.Lock()
+	defer s.mux.Unlock()
+
+	var decoded sessionFile
+
+	b, err := os.ReadFile(s.path)
+	if os.IsNotExist(err) || len(b) == 0 {
+		// Blank initial session.
+	} else if err == nil {
+		if err := json.Unmarshal(b, &decoded); err != nil {
+			return xerrors.Errorf("unmarshal session file: %w", err)
+		}
+	}
+	if decoded.Data == nil {
+		decoded.Data = map[int][]byte{}
+	}
+
+	decoded.Data[id] = data
+
+	if b, err = json.Marshal(&decoded); err != nil {
+		return err
+	}
+
+	return os.WriteFile(s.path, b, 0600)
+}
+
+func (s *fileStorage) Load(ctx context.Context, id int) ([]byte, error) {
+	s.mux.Lock()
+	defer s.mux.Unlock()
+
+	data, err := os.ReadFile(s.path)
+	if os.IsNotExist(err) || len(data) == 0 {
+		return nil, session.ErrNotFound
+	}
+
+	var decoded sessionFile
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		return nil, err
+	}
+
+	if len(decoded.Data) == 0 {
+		return nil, session.ErrNotFound
+	}
+
+	return decoded.Data[id], nil
+}
+
+type clientStorage struct {
+	storage StateStorage
+	id      int
+}
+
+func (c clientStorage) LoadSession(ctx context.Context) ([]byte, error) {
+	data, err := c.storage.Load(ctx, c.id)
+	if err != nil {
+		return nil, err
+	}
+	if len(data) == 0 {
+		return nil, session.ErrNotFound
+	}
+	return data, nil
+}
+
+func (c clientStorage) StoreSession(ctx context.Context, data []byte) error {
+	return c.storage.Store(ctx, c.id, data)
+}
 
 // Token represents bot token, like 123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11
 type Token struct {
@@ -72,6 +153,7 @@ type Pool struct {
 	appHash string
 	log     *zap.Logger
 
+	storage    StateStorage
 	clientsMux sync.Mutex
 	clients    map[Token]*client
 }
@@ -110,9 +192,16 @@ func (p *Pool) Do(ctx context.Context, token Token, fn func(client *telegram.Cli
 		return fn(c.telegram)
 	}
 
-	tgClient := telegram.NewClient(p.appID, p.appHash, telegram.Options{
+	options := telegram.Options{
 		Logger: p.log.Named("client").With(zap.Int("id", token.ID)),
-	})
+	}
+	if p.storage != nil {
+		options.SessionStorage = clientStorage{
+			id:      token.ID,
+			storage: p.storage,
+		}
+	}
+	tgClient := telegram.NewClient(p.appID, p.appHash, options)
 
 	tgContext, tgCancel := context.WithCancel(context.Background())
 	c = &client{
@@ -207,6 +296,18 @@ type Options struct {
 	AppID   int
 	AppHash string
 	Log     *zap.Logger
+	Storage StateStorage
+}
+
+type StateStorage interface {
+	Store(ctx context.Context, id int, data []byte) error
+	Load(ctx context.Context, id int) ([]byte, error)
+}
+
+func NewFileStorage(path string) StateStorage {
+	return &fileStorage{
+		path: path,
+	}
 }
 
 func NewPool(opt Options) (*Pool, error) {
@@ -215,6 +316,7 @@ func NewPool(opt Options) (*Pool, error) {
 		appHash: opt.AppHash,
 		log:     opt.Log,
 		clients: map[Token]*client{},
+		storage: opt.Storage,
 	}
 	return p, nil
 }

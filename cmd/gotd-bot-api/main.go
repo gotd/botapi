@@ -21,6 +21,7 @@ func main() {
 		appHash   = flag.String("api-hash", "", "The api_hash of application")
 		addr      = flag.String("addr", "localhost:8081", "http listen addr")
 		keepalive = flag.Duration("keepalive", time.Second*5, "client keepalive")
+		statePath = flag.String("state", "", "path to state file (json)")
 	)
 	flag.Parse()
 
@@ -29,11 +30,17 @@ func main() {
 		panic(err)
 	}
 
+	var storage pool.StateStorage
+	if *statePath != "" {
+		storage = pool.NewFileStorage(*statePath)
+	}
+
 	log.Info("Start", zap.String("addr", *addr))
 	p, err := pool.NewPool(pool.Options{
 		AppID:   *appID,
 		AppHash: *appHash,
 		Log:     log.Named("pool"),
+		Storage: storage,
 	})
 	if err != nil {
 		panic(err)
