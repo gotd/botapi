@@ -3,6 +3,7 @@ package pool
 
 import (
 	"context"
+	"crypto/sha256"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -25,10 +26,10 @@ type fileStorage struct {
 }
 
 type sessionFile struct {
-	Data map[int][]byte `json:"data"`
+	Data map[string][]byte `json:"data"`
 }
 
-func (s *fileStorage) Store(ctx context.Context, id int, data []byte) error {
+func (s *fileStorage) Store(ctx context.Context, id string, data []byte) error {
 	s.mux.Lock()
 	defer s.mux.Unlock()
 
@@ -43,7 +44,7 @@ func (s *fileStorage) Store(ctx context.Context, id int, data []byte) error {
 		}
 	}
 	if decoded.Data == nil {
-		decoded.Data = map[int][]byte{}
+		decoded.Data = map[string][]byte{}
 	}
 
 	decoded.Data[id] = data
@@ -55,7 +56,7 @@ func (s *fileStorage) Store(ctx context.Context, id int, data []byte) error {
 	return os.WriteFile(s.path, b, 0600)
 }
 
-func (s *fileStorage) Load(ctx context.Context, id int) ([]byte, error) {
+func (s *fileStorage) Load(ctx context.Context, id string) ([]byte, error) {
 	s.mux.Lock()
 	defer s.mux.Unlock()
 
@@ -78,7 +79,7 @@ func (s *fileStorage) Load(ctx context.Context, id int) ([]byte, error) {
 
 type clientStorage struct {
 	storage StateStorage
-	id      int
+	id      string
 }
 
 func (c clientStorage) LoadSession(ctx context.Context) ([]byte, error) {
@@ -197,7 +198,7 @@ func (p *Pool) Do(ctx context.Context, token Token, fn func(client *telegram.Cli
 	}
 	if p.storage != nil {
 		options.SessionStorage = clientStorage{
-			id:      token.ID,
+			id:      fmt.Sprintf("%x:%x", token.ID, sha256.Sum256([]byte(token.Secret))),
 			storage: p.storage,
 		}
 	}
@@ -300,8 +301,8 @@ type Options struct {
 }
 
 type StateStorage interface {
-	Store(ctx context.Context, id int, data []byte) error
-	Load(ctx context.Context, id int) ([]byte, error)
+	Store(ctx context.Context, id string, data []byte) error
+	Load(ctx context.Context, id string) ([]byte, error)
 }
 
 func NewFileStorage(path string) StateStorage {
