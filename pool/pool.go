@@ -129,6 +129,16 @@ func (p *Pool) Do(ctx context.Context, token Token, fn func(client *telegram.Cli
 		defer close(initializationResult)
 		defer tgCancel()
 
+		defer func() {
+			// Removing client from client list on close.
+			p.clientsMux.Lock()
+			c, ok := p.clients[token]
+			if ok && c.telegram == tgClient {
+				delete(p.clients, token)
+			}
+			p.clientsMux.Unlock()
+		}()
+
 		if err := tgClient.Run(c.ctx, func(ctx context.Context) error {
 			status, err := tgClient.Auth().Status(ctx)
 			if err != nil {
