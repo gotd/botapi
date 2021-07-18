@@ -12,6 +12,7 @@ import (
 
 	"github.com/gotd/td/telegram"
 
+	"github.com/gotd/botapi/api"
 	"github.com/gotd/botapi/pool"
 )
 
@@ -63,25 +64,8 @@ func main() {
 				if err != nil {
 					return err
 				}
-
-				type User struct {
-					ID int `json:"id"`
-
-					FirstName    string `json:"first_name"`
-					LastName     string `json:"last_name"`
-					Username     string `json:"username"`
-					LanguageCode string `json:"language_code"`
-					IsBot        bool   `json:"is_bot"`
-
-					// Returns only in getMe
-					CanJoinGroups   bool `json:"can_join_groups"`
-					CanReadMessages bool `json:"can_read_all_group_messages"`
-					SupportsInline  bool `json:"supports_inline_queries"`
-				}
-				_ = json.NewEncoder(w).Encode(struct {
-					Result User `json:"result"`
-				}{
-					Result: User{
+				_ = json.NewEncoder(w).Encode(api.Response{
+					Result: api.User{
 						ID:              res.ID,
 						FirstName:       res.FirstName,
 						LastName:        res.LastName,
