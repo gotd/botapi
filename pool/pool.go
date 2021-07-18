@@ -57,7 +57,7 @@ func (c *client) Deadline(deadline time.Time) bool {
 	c.mux.Lock()
 	defer c.mux.Unlock()
 
-	return deadline.Before(c.lastUsed)
+	return c.lastUsed.Before(deadline)
 }
 
 func (c *client) Use(t time.Time) {
@@ -192,6 +192,14 @@ func (p *Pool) Do(ctx context.Context, token Token, fn func(client *telegram.Cli
 		return ctx.Err()
 	case <-tgContext.Done():
 		return tgContext.Err()
+	}
+}
+
+func (p *Pool) RunGC(timeout time.Duration) {
+	timer := time.NewTicker(time.Second)
+	for now := range timer.C {
+		deadline := now.Add(-timeout)
+		p.tick(deadline)
 	}
 }
 

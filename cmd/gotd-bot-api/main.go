@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"flag"
 	"net/http"
+	"time"
 
 	"github.com/go-chi/chi/v5"
 	"go.uber.org/zap"
@@ -16,9 +17,10 @@ import (
 
 func main() {
 	var (
-		appID   = flag.Int("api-id", 0, "The api_id of application")
-		appHash = flag.String("api-hash", "", "The api_hash of application")
-		addr    = flag.String("addr", "localhost:8081", "http listen addr")
+		appID     = flag.Int("api-id", 0, "The api_id of application")
+		appHash   = flag.String("api-hash", "", "The api_hash of application")
+		addr      = flag.String("addr", "localhost:8081", "http listen addr")
+		keepalive = flag.Duration("keepalive", time.Second*5, "client keepalive")
 	)
 	flag.Parse()
 
@@ -36,6 +38,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	go p.RunGC(*keepalive)
 
 	// https://api.telegram.org/bot123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11/getMe
 	r := chi.NewRouter()
