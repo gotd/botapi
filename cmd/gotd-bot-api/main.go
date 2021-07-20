@@ -3,7 +3,6 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"flag"
 	"net/http"
 	"strings"
@@ -14,7 +13,6 @@ import (
 
 	"github.com/gotd/td/telegram"
 
-	"github.com/gotd/botapi/api"
 	"github.com/gotd/botapi/pool"
 )
 
@@ -68,25 +66,7 @@ func main() {
 	h := Handler{
 		handlers: map[string]func(ctx context.Context, h HandleContext) error{},
 	}
-	h.On("getMe", func(ctx context.Context, h HandleContext) error {
-		res, err := h.Client.Self(ctx)
-		if err != nil {
-			return err
-		}
-		return json.NewEncoder(h.Writer).Encode(api.Response{
-			Result: api.User{
-				ID:              res.ID,
-				FirstName:       res.FirstName,
-				LastName:        res.LastName,
-				Username:        res.Username,
-				LanguageCode:    res.LangCode,
-				IsBot:           res.Bot,
-				CanJoinGroups:   !res.BotNochats,
-				CanReadMessages: res.BotChatHistory,
-				SupportsInline:  false, // ?
-			},
-		})
-	})
+	h.On("getMe", getMe)
 
 	// https://api.telegram.org/bot123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11/getMe
 	r := chi.NewRouter()
