@@ -70,7 +70,7 @@ func (a API) OAS() *ogen.Spec {
 	}
 
 	return &ogen.Spec{
-		OpenAPI: "3.0.0",
+		OpenAPI: "3.0.3",
 		Info: ogen.Info{
 			Title:          "Telegram Bot API",
 			TermsOfService: "https://telegram.org/tos",
