@@ -8,8 +8,377 @@
   },
   "servers": [
     {
-      "name": "production",
+      "description": "production",
       "url": "https://api.telegram.org/"
     }
-  ]
+  ],
+  "paths": {
+    "/getMe": {
+      "description": "A simple method for testing your bot's auth token. Requires no parameters. Returns basic information about the bot in form of a User object.",
+      "get": {
+        "operationId": "getMe",
+        "responses": {
+          "200": {
+            "description": "Basic information about the bot",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Animation": {
+        "type": "object"
+      },
+      "Audio": {
+        "type": "object"
+      },
+      "BotCommand": {
+        "type": "object"
+      },
+      "BotCommandScopeAllChatAdministrators": {
+        "type": "object"
+      },
+      "BotCommandScopeAllGroupChats": {
+        "type": "object"
+      },
+      "BotCommandScopeAllPrivateChats": {
+        "type": "object"
+      },
+      "BotCommandScopeChat": {
+        "type": "object"
+      },
+      "BotCommandScopeChatAdministrators": {
+        "type": "object"
+      },
+      "BotCommandScopeChatMember": {
+        "type": "object"
+      },
+      "BotCommandScopeDefault": {
+        "type": "object"
+      },
+      "CallbackQuery": {
+        "type": "object"
+      },
+      "Chat": {
+        "type": "object"
+      },
+      "ChatInviteLink": {
+        "type": "object"
+      },
+      "ChatLocation": {
+        "type": "object"
+      },
+      "ChatMemberAdministrator": {
+        "type": "object"
+      },
+      "ChatMemberBanned": {
+        "type": "object"
+      },
+      "ChatMemberLeft": {
+        "type": "object"
+      },
+      "ChatMemberMember": {
+        "type": "object"
+      },
+      "ChatMemberOwner": {
+        "type": "object"
+      },
+      "ChatMemberRestricted": {
+        "type": "object"
+      },
+      "ChatMemberUpdated": {
+        "type": "object"
+      },
+      "ChatPermissions": {
+        "type": "object"
+      },
+      "ChatPhoto": {
+        "type": "object"
+      },
+      "ChosenInlineResult": {
+        "type": "object"
+      },
+      "Contact": {
+        "type": "object"
+      },
+      "Dice": {
+        "type": "object"
+      },
+      "Document": {
+        "type": "object"
+      },
+      "EncryptedCredentials": {
+        "type": "object"
+      },
+      "EncryptedPassportElement": {
+        "type": "object"
+      },
+      "File": {
+        "type": "object"
+      },
+      "ForceReply": {
+        "type": "object"
+      },
+      "Game": {
+        "type": "object"
+      },
+      "GameHighScore": {
+        "type": "object"
+      },
+      "InlineKeyboardButton": {
+        "type": "object"
+      },
+      "InlineKeyboardMarkup": {
+        "type": "object"
+      },
+      "InlineQuery": {
+        "type": "object"
+      },
+      "InlineQueryResultArticle": {
+        "type": "object"
+      },
+      "InlineQueryResultAudio": {
+        "type": "object"
+      },
+      "InlineQueryResultCachedAudio": {
+        "type": "object"
+      },
+      "InlineQueryResultCachedDocument": {
+        "type": "object"
+      },
+      "InlineQueryResultCachedGif": {
+        "type": "object"
+      },
+      "InlineQueryResultCachedMpeg4Gif": {
+        "type": "object"
+      },
+      "InlineQueryResultCachedPhoto": {
+        "type": "object"
+      },
+      "InlineQueryResultCachedSticker": {
+        "type": "object"
+      },
+      "InlineQueryResultCachedVideo": {
+        "type": "object"
+      },
+      "InlineQueryResultCachedVoice": {
+        "type": "object"
+      },
+      "InlineQueryResultContact": {
+        "type": "object"
+      },
+      "InlineQueryResultDocument": {
+        "type": "object"
+      },
+      "InlineQueryResultGame": {
+        "type": "object"
+      },
+      "InlineQueryResultGif": {
+        "type": "object"
+      },
+      "InlineQueryResultLocation": {
+        "type": "object"
+      },
+      "InlineQueryResultMpeg4Gif": {
+        "type": "object"
+      },
+      "InlineQueryResultPhoto": {
+        "type": "object"
+      },
+      "InlineQueryResultVenue": {
+        "type": "object"
+      },
+      "InlineQueryResultVideo": {
+        "type": "object"
+      },
+      "InlineQueryResultVoice": {
+        "type": "object"
+      },
+      "InputContactMessageContent": {
+        "type": "object"
+      },
+      "InputInvoiceMessageContent": {
+        "type": "object"
+      },
+      "InputLocationMessageContent": {
+        "type": "object"
+      },
+      "InputMediaAnimation": {
+        "type": "object"
+      },
+      "InputMediaAudio": {
+        "type": "object"
+      },
+      "InputMediaDocument": {
+        "type": "object"
+      },
+      "InputMediaPhoto": {
+        "type": "object"
+      },
+      "InputMediaVideo": {
+        "type": "object"
+      },
+      "InputTextMessageContent": {
+        "type": "object"
+      },
+      "InputVenueMessageContent": {
+        "type": "object"
+      },
+      "Invoice": {
+        "type": "object"
+      },
+      "KeyboardButton": {
+        "type": "object"
+      },
+      "KeyboardButtonPollType": {
+        "type": "object"
+      },
+      "LabeledPrice": {
+        "type": "object"
+      },
+      "Location": {
+        "type": "object"
+      },
+      "LoginUrl": {
+        "type": "object"
+      },
+      "MaskPosition": {
+        "type": "object"
+      },
+      "Message": {
+        "type": "object"
+      },
+      "MessageAutoDeleteTimerChanged": {
+        "type": "object"
+      },
+      "MessageEntity": {
+        "type": "object"
+      },
+      "MessageId": {
+        "type": "object"
+      },
+      "OrderInfo": {
+        "type": "object"
+      },
+      "PassportData": {
+        "type": "object"
+      },
+      "PassportElementErrorDataField": {
+        "type": "object"
+      },
+      "PassportElementErrorFile": {
+        "type": "object"
+      },
+      "PassportElementErrorFiles": {
+        "type": "object"
+      },
+      "PassportElementErrorFrontSide": {
+        "type": "object"
+      },
+      "PassportElementErrorReverseSide": {
+        "type": "object"
+      },
+      "PassportElementErrorSelfie": {
+        "type": "object"
+      },
+      "PassportElementErrorTranslationFile": {
+        "type": "object"
+      },
+      "PassportElementErrorTranslationFiles": {
+        "type": "object"
+      },
+      "PassportElementErrorUnspecified": {
+        "type": "object"
+      },
+      "PassportFile": {
+        "type": "object"
+      },
+      "PhotoSize": {
+        "type": "object"
+      },
+      "Poll": {
+        "type": "object"
+      },
+      "PollAnswer": {
+        "type": "object"
+      },
+      "PollOption": {
+        "type": "object"
+      },
+      "PreCheckoutQuery": {
+        "type": "object"
+      },
+      "ProximityAlertTriggered": {
+        "type": "object"
+      },
+      "ReplyKeyboardMarkup": {
+        "type": "object"
+      },
+      "ReplyKeyboardRemove": {
+        "type": "object"
+      },
+      "ResponseParameters": {
+        "type": "object"
+      },
+      "ShippingAddress": {
+        "type": "object"
+      },
+      "ShippingOption": {
+        "type": "object"
+      },
+      "ShippingQuery": {
+        "type": "object"
+      },
+      "Sticker": {
+        "type": "object"
+      },
+      "StickerSet": {
+        "type": "object"
+      },
+      "SuccessfulPayment": {
+        "type": "object"
+      },
+      "Update": {
+        "type": "object"
+      },
+      "User": {
+        "type": "object"
+      },
+      "UserProfilePhotos": {
+        "type": "object"
+      },
+      "Venue": {
+        "type": "object"
+      },
+      "Video": {
+        "type": "object"
+      },
+      "VideoNote": {
+        "type": "object"
+      },
+      "Voice": {
+        "type": "object"
+      },
+      "VoiceChatEnded": {
+        "type": "object"
+      },
+      "VoiceChatParticipantsInvited": {
+        "type": "object"
+      },
+      "VoiceChatScheduled": {
+        "type": "object"
+      },
+      "WebhookInfo": {
+        "type": "object"
+      }
+    }
+  }
 }
