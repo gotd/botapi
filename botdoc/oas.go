@@ -42,16 +42,22 @@ func (a API) OAS() *ogen.Spec {
 				Description: f.Description,
 			}
 			t := f.Type
-			switch t.Primitive {
-			case String:
-				p.Type = "string"
-			case Integer:
-				p.Type = "int"
-			case Float:
-				p.Type = "float64"
+			switch t.Kind {
+			case KindPrimitive:
+				switch t.Primitive {
+				case String:
+					p.Type = "string"
+				case Integer:
+					p.Type = "int"
+				case Float:
+					p.Type = "float64"
+				}
+			case KindObject:
+				p.Ref = "#/components/schemas/" + t.Name
 			default:
 				continue
 			}
+
 			if !f.Optional {
 				s.Required = append(s.Required, f.Name)
 			}

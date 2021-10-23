@@ -65,6 +65,10 @@
             "description": "MIME type of the file as defined by sender",
             "type": "string"
           },
+          "thumb": {
+            "$ref": "#/components/schemas/PhotoSize",
+            "description": "Animation thumbnail as defined by sender"
+          },
           "width": {
             "description": "Video width as defined by sender",
             "type": "int"
@@ -108,6 +112,10 @@
           "performer": {
             "description": "Performer of the audio as defined by sender or by audio tags",
             "type": "string"
+          },
+          "thumb": {
+            "$ref": "#/components/schemas/PhotoSize",
+            "description": "Thumbnail of the album cover to which the music file belongs"
           },
           "title": {
             "description": "Title of the audio as defined by sender or by audio tags",
@@ -237,6 +245,10 @@
             "description": "Data associated with the callback button. Be aware that a bad client can send arbitrary data in this field",
             "type": "string"
           },
+          "from": {
+            "$ref": "#/components/schemas/User",
+            "description": "Sender"
+          },
           "game_short_name": {
             "description": "Short name of a Game to be returned, serves as the unique identifier for the game",
             "type": "string"
@@ -248,10 +260,15 @@
           "inline_message_id": {
             "description": "Identifier of the message sent via the bot in inline mode, that originated the query",
             "type": "string"
+          },
+          "message": {
+            "$ref": "#/components/schemas/Message",
+            "description": "Message with the callback button that originated the query. Note that message content and message date will not be available if the message is too old"
           }
         },
         "required": [
           "id",
+          "from",
           "chat_instance"
         ]
       },
@@ -261,6 +278,10 @@
           "bio": {
             "description": "Bio of the other party in a private chat. Returned only in getChat",
             "type": "string"
+          },
+          "can_set_sticker_set": {
+            "$ref": "#/components/schemas/Boolean",
+            "description": "True, if the bot can change the group sticker set. Returned only in getChat"
           },
           "description": {
             "description": "Description, for groups, supergroups and channel chats. Returned only in getChat",
@@ -286,9 +307,25 @@
             "description": "Unique identifier for the linked chat, i.e. the discussion group identifier for a channel and vice versa; for supergroups and channel chats. This identifier may be greater than 32 bits and some programming languages may have difficulty/silent defects in interpreting it. But it is smaller than 52 bits, so a signed 64 bit integer or double-precision float type are safe for storing this identifier. Returned only in getChat",
             "type": "int"
           },
+          "location": {
+            "$ref": "#/components/schemas/ChatLocation",
+            "description": "For supergroups, the location to which the supergroup is connected. Returned only in getChat"
+          },
           "message_auto_delete_time": {
             "description": "The time after which all messages sent to the chat will be automatically deleted; in seconds. Returned only in getChat",
             "type": "int"
+          },
+          "permissions": {
+            "$ref": "#/components/schemas/ChatPermissions",
+            "description": "Default chat member permissions, for groups and supergroups. Returned only in getChat"
+          },
+          "photo": {
+            "$ref": "#/components/schemas/ChatPhoto",
+            "description": "Chat photo. Returned only in getChat"
+          },
+          "pinned_message": {
+            "$ref": "#/components/schemas/Message",
+            "description": "The most recent pinned message (by sending date). Returned only in getChat"
           },
           "slow_mode_delay": {
             "description": "For supergroups, the minimum allowed delay between consecutive messages sent by each unpriviledged user. Returned only in getChat",
@@ -319,6 +356,10 @@
       "ChatInviteLink": {
         "type": "object",
         "properties": {
+          "creator": {
+            "$ref": "#/components/schemas/User",
+            "description": "Creator of the link"
+          },
           "expire_date": {
             "description": "Point in time (Unix timestamp) when the link will expire or has been expired",
             "type": "int"
@@ -327,13 +368,24 @@
             "description": "The invite link. If the link was created by another chat administrator, then the second part of the link will be replaced with “…”",
             "type": "string"
           },
+          "is_primary": {
+            "$ref": "#/components/schemas/Boolean",
+            "description": "True, if the link is primary"
+          },
+          "is_revoked": {
+            "$ref": "#/components/schemas/Boolean",
+            "description": "True, if the link is revoked"
+          },
           "member_limit": {
             "description": "Maximum number of users that can be members of the chat simultaneously after joining the chat via this invite link; 1-99999",
             "type": "int"
           }
         },
         "required": [
-          "invite_link"
+          "invite_link",
+          "creator",
+          "is_primary",
+          "is_revoked"
         ]
       },
       "ChatLocation": {
@@ -342,26 +394,93 @@
           "address": {
             "description": "Location address; 1-64 characters, as defined by the chat owner",
             "type": "string"
+          },
+          "location": {
+            "$ref": "#/components/schemas/Location",
+            "description": "The location to which the supergroup is connected. Can't be a live location"
           }
         },
         "required": [
+          "location",
           "address"
         ]
       },
       "ChatMemberAdministrator": {
         "type": "object",
         "properties": {
+          "can_be_edited": {
+            "$ref": "#/components/schemas/Boolean",
+            "description": "True, if the bot is allowed to edit administrator privileges of that user"
+          },
+          "can_change_info": {
+            "$ref": "#/components/schemas/Boolean",
+            "description": "True, if the user is allowed to change the chat title, photo and other settings"
+          },
+          "can_delete_messages": {
+            "$ref": "#/components/schemas/Boolean",
+            "description": "True, if the administrator can delete messages of other users"
+          },
+          "can_edit_messages": {
+            "$ref": "#/components/schemas/Boolean",
+            "description": "True, if the administrator can edit messages of other users and can pin messages; channels only"
+          },
+          "can_invite_users": {
+            "$ref": "#/components/schemas/Boolean",
+            "description": "True, if the user is allowed to invite new users to the chat"
+          },
+          "can_manage_chat": {
+            "$ref": "#/components/schemas/Boolean",
+            "description": "True, if the administrator can access the chat event log, chat statistics, message statistics in channels, see channel members, see anonymous administrators in supergroups and ignore slow mode. Implied by any other administrator privilege"
+          },
+          "can_manage_voice_chats": {
+            "$ref": "#/components/schemas/Boolean",
+            "description": "True, if the administrator can manage voice chats"
+          },
+          "can_pin_messages": {
+            "$ref": "#/components/schemas/Boolean",
+            "description": "True, if the user is allowed to pin messages; groups and supergroups only"
+          },
+          "can_post_messages": {
+            "$ref": "#/components/schemas/Boolean",
+            "description": "True, if the administrator can post in the channel; channels only"
+          },
+          "can_promote_members": {
+            "$ref": "#/components/schemas/Boolean",
+            "description": "True, if the administrator can add new administrators with a subset of their own privileges or demote administrators that he has promoted, directly or indirectly (promoted by administrators that were appointed by the user)"
+          },
+          "can_restrict_members": {
+            "$ref": "#/components/schemas/Boolean",
+            "description": "True, if the administrator can restrict, ban or unban chat members"
+          },
           "custom_title": {
             "description": "Custom title for this user",
             "type": "string"
           },
+          "is_anonymous": {
+            "$ref": "#/components/schemas/Boolean",
+            "description": "True, if the user's presence in the chat is hidden"
+          },
           "status": {
             "description": "The member's status in the chat, always “administrator”",
             "type": "string"
+          },
+          "user": {
+            "$ref": "#/components/schemas/User",
+            "description": "Information about the user"
           }
         },
         "required": [
-          "status"
+          "status",
+          "user",
+          "can_be_edited",
+          "is_anonymous",
+          "can_manage_chat",
+          "can_delete_messages",
+          "can_manage_voice_chats",
+          "can_restrict_members",
+          "can_promote_members",
+          "can_change_info",
+          "can_invite_users"
         ]
       },
       "ChatMemberBanned": {
@@ -374,10 +493,15 @@
           "until_date": {
             "description": "Date when restrictions will be lifted for this user; unix time. If 0, then the user is banned forever",
             "type": "int"
+          },
+          "user": {
+            "$ref": "#/components/schemas/User",
+            "description": "Information about the user"
           }
         },
         "required": [
           "status",
+          "user",
           "until_date"
         ]
       },
@@ -387,10 +511,15 @@
           "status": {
             "description": "The member's status in the chat, always “left”",
             "type": "string"
+          },
+          "user": {
+            "$ref": "#/components/schemas/User",
+            "description": "Information about the user"
           }
         },
         "required": [
-          "status"
+          "status",
+          "user"
         ]
       },
       "ChatMemberMember": {
@@ -399,10 +528,15 @@
           "status": {
             "description": "The member's status in the chat, always “member”",
             "type": "string"
+          },
+          "user": {
+            "$ref": "#/components/schemas/User",
+            "description": "Information about the user"
           }
         },
         "required": [
-          "status"
+          "status",
+          "user"
         ]
       },
       "ChatMemberOwner": {
@@ -412,18 +546,64 @@
             "description": "Custom title for this user",
             "type": "string"
           },
+          "is_anonymous": {
+            "$ref": "#/components/schemas/Boolean",
+            "description": "True, if the user's presence in the chat is hidden"
+          },
           "status": {
             "description": "The member's status in the chat, always “creator”",
             "type": "string"
+          },
+          "user": {
+            "$ref": "#/components/schemas/User",
+            "description": "Information about the user"
           }
         },
         "required": [
-          "status"
+          "status",
+          "user",
+          "is_anonymous"
         ]
       },
       "ChatMemberRestricted": {
         "type": "object",
         "properties": {
+          "can_add_web_page_previews": {
+            "$ref": "#/components/schemas/Boolean",
+            "description": "True, if the user is allowed to add web page previews to their messages"
+          },
+          "can_change_info": {
+            "$ref": "#/components/schemas/Boolean",
+            "description": "True, if the user is allowed to change the chat title, photo and other settings"
+          },
+          "can_invite_users": {
+            "$ref": "#/components/schemas/Boolean",
+            "description": "True, if the user is allowed to invite new users to the chat"
+          },
+          "can_pin_messages": {
+            "$ref": "#/components/schemas/Boolean",
+            "description": "True, if the user is allowed to pin messages"
+          },
+          "can_send_media_messages": {
+            "$ref": "#/components/schemas/Boolean",
+            "description": "True, if the user is allowed to send audios, documents, photos, videos, video notes and voice notes"
+          },
+          "can_send_messages": {
+            "$ref": "#/components/schemas/Boolean",
+            "description": "True, if the user is allowed to send text messages, contacts, locations and venues"
+          },
+          "can_send_other_messages": {
+            "$ref": "#/components/schemas/Boolean",
+            "description": "True, if the user is allowed to send animations, games, stickers and use inline bots"
+          },
+          "can_send_polls": {
+            "$ref": "#/components/schemas/Boolean",
+            "description": "True, if the user is allowed to send polls"
+          },
+          "is_member": {
+            "$ref": "#/components/schemas/Boolean",
+            "description": "True, if the user is a member of the chat at the moment of the request"
+          },
           "status": {
             "description": "The member's status in the chat, always “restricted”",
             "type": "string"
@@ -431,27 +611,99 @@
           "until_date": {
             "description": "Date when restrictions will be lifted for this user; unix time. If 0, then the user is restricted forever",
             "type": "int"
+          },
+          "user": {
+            "$ref": "#/components/schemas/User",
+            "description": "Information about the user"
           }
         },
         "required": [
           "status",
+          "user",
+          "is_member",
+          "can_change_info",
+          "can_invite_users",
+          "can_pin_messages",
+          "can_send_messages",
+          "can_send_media_messages",
+          "can_send_polls",
+          "can_send_other_messages",
+          "can_add_web_page_previews",
           "until_date"
         ]
       },
       "ChatMemberUpdated": {
         "type": "object",
         "properties": {
+          "chat": {
+            "$ref": "#/components/schemas/Chat",
+            "description": "Chat the user belongs to"
+          },
           "date": {
             "description": "Date the change was done in Unix time",
             "type": "int"
+          },
+          "from": {
+            "$ref": "#/components/schemas/User",
+            "description": "Performer of the action, which resulted in the change"
+          },
+          "invite_link": {
+            "$ref": "#/components/schemas/ChatInviteLink",
+            "description": "Chat invite link, which was used by the user to join the chat; for joining by invite link events only"
+          },
+          "new_chat_member": {
+            "$ref": "#/components/schemas/ChatMember",
+            "description": "New information about the chat member"
+          },
+          "old_chat_member": {
+            "$ref": "#/components/schemas/ChatMember",
+            "description": "Previous information about the chat member"
           }
         },
         "required": [
-          "date"
+          "chat",
+          "from",
+          "date",
+          "old_chat_member",
+          "new_chat_member"
         ]
       },
       "ChatPermissions": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "can_add_web_page_previews": {
+            "$ref": "#/components/schemas/Boolean",
+            "description": "True, if the user is allowed to add web page previews to their messages, implies can_send_media_messages"
+          },
+          "can_change_info": {
+            "$ref": "#/components/schemas/Boolean",
+            "description": "True, if the user is allowed to change the chat title, photo and other settings. Ignored in public supergroups"
+          },
+          "can_invite_users": {
+            "$ref": "#/components/schemas/Boolean",
+            "description": "True, if the user is allowed to invite new users to the chat"
+          },
+          "can_pin_messages": {
+            "$ref": "#/components/schemas/Boolean",
+            "description": "True, if the user is allowed to pin messages. Ignored in public supergroups"
+          },
+          "can_send_media_messages": {
+            "$ref": "#/components/schemas/Boolean",
+            "description": "True, if the user is allowed to send audios, documents, photos, videos, video notes and voice notes, implies can_send_messages"
+          },
+          "can_send_messages": {
+            "$ref": "#/components/schemas/Boolean",
+            "description": "True, if the user is allowed to send text messages, contacts, locations and venues"
+          },
+          "can_send_other_messages": {
+            "$ref": "#/components/schemas/Boolean",
+            "description": "True, if the user is allowed to send animations, games, stickers and use inline bots, implies can_send_media_messages"
+          },
+          "can_send_polls": {
+            "$ref": "#/components/schemas/Boolean",
+            "description": "True, if the user is allowed to send polls, implies can_send_messages"
+          }
+        }
       },
       "ChatPhoto": {
         "type": "object",
@@ -483,9 +735,17 @@
       "ChosenInlineResult": {
         "type": "object",
         "properties": {
+          "from": {
+            "$ref": "#/components/schemas/User",
+            "description": "The user that chose the result"
+          },
           "inline_message_id": {
             "description": "Identifier of the sent inline message. Available only if there is an inline keyboard attached to the message. Will be also received in callback queries and can be used to edit the message",
             "type": "string"
+          },
+          "location": {
+            "$ref": "#/components/schemas/Location",
+            "description": "Sender location, only for bots that require user location"
           },
           "query": {
             "description": "The query that was used to obtain the result",
@@ -498,6 +758,7 @@
         },
         "required": [
           "result_id",
+          "from",
           "query"
         ]
       },
@@ -569,6 +830,10 @@
           "mime_type": {
             "description": "MIME type of the file as defined by sender",
             "type": "string"
+          },
+          "thumb": {
+            "$ref": "#/components/schemas/PhotoSize",
+            "description": "Document thumbnail as defined by sender"
           }
         },
         "required": [
@@ -609,6 +874,10 @@
             "description": "User's verified email address, available only for “email” type",
             "type": "string"
           },
+          "front_side": {
+            "$ref": "#/components/schemas/PassportFile",
+            "description": "Encrypted file with the front side of the document, provided by the user. Available for “passport”, “driver_license”, “identity_card” and “internal_passport”. The file can be decrypted and verified using the accompanying EncryptedCredentials"
+          },
           "hash": {
             "description": "Base64-encoded element hash for using in PassportElementErrorUnspecified",
             "type": "string"
@@ -616,6 +885,14 @@
           "phone_number": {
             "description": "User's verified phone number, available only for “phone_number” type",
             "type": "string"
+          },
+          "reverse_side": {
+            "$ref": "#/components/schemas/PassportFile",
+            "description": "Encrypted file with the reverse side of the document, provided by the user. Available for “driver_license” and “identity_card”. The file can be decrypted and verified using the accompanying EncryptedCredentials"
+          },
+          "selfie": {
+            "$ref": "#/components/schemas/PassportFile",
+            "description": "Encrypted file with the selfie of the user holding a document, provided by the user; available for “passport”, “driver_license”, “identity_card” and “internal_passport”. The file can be decrypted and verified using the accompanying EncryptedCredentials"
           },
           "type": {
             "description": "Element type. One of “personal_details”, “passport”, “driver_license”, “identity_card”, “internal_passport”, “address”, “utility_bill”, “bank_statement”, “rental_agreement”, “passport_registration”, “temporary_registration”, “phone_number”, “email”",
@@ -655,15 +932,30 @@
       "ForceReply": {
         "type": "object",
         "properties": {
+          "force_reply": {
+            "$ref": "#/components/schemas/True",
+            "description": "Shows reply interface to the user, as if they manually selected the bot's message and tapped 'Reply'"
+          },
           "input_field_placeholder": {
             "description": "The placeholder to be shown in the input field when the reply is active; 1-64 characters",
             "type": "string"
+          },
+          "selective": {
+            "$ref": "#/components/schemas/Boolean",
+            "description": "Use this parameter if you want to force reply from specific users only. Targets: 1) users that are @mentioned in the text of the Message object; 2) if the bot's message is a reply (has reply_to_message_id), sender of the original message"
           }
-        }
+        },
+        "required": [
+          "force_reply"
+        ]
       },
       "Game": {
         "type": "object",
         "properties": {
+          "animation": {
+            "$ref": "#/components/schemas/Animation",
+            "description": "Animation that will be displayed in the game message in chats. Upload via BotFather"
+          },
           "description": {
             "description": "Description of the game",
             "type": "string"
@@ -692,10 +984,15 @@
           "score": {
             "description": "Score",
             "type": "int"
+          },
+          "user": {
+            "$ref": "#/components/schemas/User",
+            "description": "User"
           }
         },
         "required": [
           "position",
+          "user",
           "score"
         ]
       },
@@ -705,6 +1002,18 @@
           "callback_data": {
             "description": "Data to be sent in a callback query to the bot when button is pressed, 1-64 bytes",
             "type": "string"
+          },
+          "callback_game": {
+            "$ref": "#/components/schemas/CallbackGame",
+            "description": "Description of the game that will be launched when the user presses the button.NOTE: This type of button must always be the first button in the first row"
+          },
+          "login_url": {
+            "$ref": "#/components/schemas/LoginUrl",
+            "description": "An HTTP URL used to automatically authorize the user. Can be used as a replacement for the Telegram Login Widget"
+          },
+          "pay": {
+            "$ref": "#/components/schemas/Boolean",
+            "description": "Specify True, to send a Pay button.NOTE: This type of button must always be the first button in the first row"
           },
           "switch_inline_query": {
             "description": "If set, pressing the button will prompt the user to select one of their chats, open that chat and insert the bot's username and the specified inline query in the input field. Can be empty, in which case just the bot's username will be inserted.Note: This offers an easy way for users to start using your bot in inline mode when they are currently in a private chat with it. Especially useful when combined with switch_pm… actions – in this case the user will be automatically returned to the chat they switched from, skipping the chat selection screen",
@@ -737,9 +1046,17 @@
             "description": "Type of the chat, from which the inline query was sent. Can be either “sender” for a private chat with the inline query sender, “private”, “group”, “supergroup”, or “channel”. The chat type should be always known for requests sent from official clients and most third-party clients, unless the request was sent from a secret chat",
             "type": "string"
           },
+          "from": {
+            "$ref": "#/components/schemas/User",
+            "description": "Sender"
+          },
           "id": {
             "description": "Unique identifier for this query",
             "type": "string"
+          },
+          "location": {
+            "$ref": "#/components/schemas/Location",
+            "description": "Sender location, only for bots that request user location"
           },
           "offset": {
             "description": "Offset of the results to be returned, can be controlled by the bot",
@@ -752,6 +1069,7 @@
         },
         "required": [
           "id",
+          "from",
           "query",
           "offset"
         ]
@@ -763,9 +1081,21 @@
             "description": "Short description of the result",
             "type": "string"
           },
+          "hide_url": {
+            "$ref": "#/components/schemas/Boolean",
+            "description": "Pass True, if you don't want the URL to be shown in the message"
+          },
           "id": {
             "description": "Unique identifier for this result, 1-64 Bytes",
             "type": "string"
+          },
+          "input_message_content": {
+            "$ref": "#/components/schemas/InputMessageContent",
+            "description": "Content of the message to be sent"
+          },
+          "reply_markup": {
+            "$ref": "#/components/schemas/InlineKeyboardMarkup",
+            "description": "Inline keyboard attached to the message"
           },
           "thumb_height": {
             "description": "Thumbnail height",
@@ -795,7 +1125,8 @@
         "required": [
           "type",
           "id",
-          "title"
+          "title",
+          "input_message_content"
         ]
       },
       "InlineQueryResultAudio": {
@@ -817,6 +1148,10 @@
             "description": "Unique identifier for this result, 1-64 bytes",
             "type": "string"
           },
+          "input_message_content": {
+            "$ref": "#/components/schemas/InputMessageContent",
+            "description": "Content of the message to be sent instead of the audio"
+          },
           "parse_mode": {
             "description": "Mode for parsing entities in the audio caption. See formatting options for more details",
             "type": "string"
@@ -824,6 +1159,10 @@
           "performer": {
             "description": "Performer",
             "type": "string"
+          },
+          "reply_markup": {
+            "$ref": "#/components/schemas/InlineKeyboardMarkup",
+            "description": "Inline keyboard attached to the message"
           },
           "title": {
             "description": "Title",
@@ -856,9 +1195,17 @@
             "description": "Unique identifier for this result, 1-64 bytes",
             "type": "string"
           },
+          "input_message_content": {
+            "$ref": "#/components/schemas/InputMessageContent",
+            "description": "Content of the message to be sent instead of the audio"
+          },
           "parse_mode": {
             "description": "Mode for parsing entities in the audio caption. See formatting options for more details",
             "type": "string"
+          },
+          "reply_markup": {
+            "$ref": "#/components/schemas/InlineKeyboardMarkup",
+            "description": "Inline keyboard attached to the message"
           },
           "type": {
             "description": "Type of the result, must be audio",
@@ -890,9 +1237,17 @@
             "description": "Unique identifier for this result, 1-64 bytes",
             "type": "string"
           },
+          "input_message_content": {
+            "$ref": "#/components/schemas/InputMessageContent",
+            "description": "Content of the message to be sent instead of the file"
+          },
           "parse_mode": {
             "description": "Mode for parsing entities in the document caption. See formatting options for more details",
             "type": "string"
+          },
+          "reply_markup": {
+            "$ref": "#/components/schemas/InlineKeyboardMarkup",
+            "description": "Inline keyboard attached to the message"
           },
           "title": {
             "description": "Title for the result",
@@ -925,9 +1280,17 @@
             "description": "Unique identifier for this result, 1-64 bytes",
             "type": "string"
           },
+          "input_message_content": {
+            "$ref": "#/components/schemas/InputMessageContent",
+            "description": "Content of the message to be sent instead of the GIF animation"
+          },
           "parse_mode": {
             "description": "Mode for parsing entities in the caption. See formatting options for more details",
             "type": "string"
+          },
+          "reply_markup": {
+            "$ref": "#/components/schemas/InlineKeyboardMarkup",
+            "description": "Inline keyboard attached to the message"
           },
           "title": {
             "description": "Title for the result",
@@ -955,6 +1318,10 @@
             "description": "Unique identifier for this result, 1-64 bytes",
             "type": "string"
           },
+          "input_message_content": {
+            "$ref": "#/components/schemas/InputMessageContent",
+            "description": "Content of the message to be sent instead of the video animation"
+          },
           "mpeg4_file_id": {
             "description": "A valid file identifier for the MP4 file",
             "type": "string"
@@ -962,6 +1329,10 @@
           "parse_mode": {
             "description": "Mode for parsing entities in the caption. See formatting options for more details",
             "type": "string"
+          },
+          "reply_markup": {
+            "$ref": "#/components/schemas/InlineKeyboardMarkup",
+            "description": "Inline keyboard attached to the message"
           },
           "title": {
             "description": "Title for the result",
@@ -993,6 +1364,10 @@
             "description": "Unique identifier for this result, 1-64 bytes",
             "type": "string"
           },
+          "input_message_content": {
+            "$ref": "#/components/schemas/InputMessageContent",
+            "description": "Content of the message to be sent instead of the photo"
+          },
           "parse_mode": {
             "description": "Mode for parsing entities in the photo caption. See formatting options for more details",
             "type": "string"
@@ -1000,6 +1375,10 @@
           "photo_file_id": {
             "description": "A valid file identifier of the photo",
             "type": "string"
+          },
+          "reply_markup": {
+            "$ref": "#/components/schemas/InlineKeyboardMarkup",
+            "description": "Inline keyboard attached to the message"
           },
           "title": {
             "description": "Title for the result",
@@ -1022,6 +1401,14 @@
           "id": {
             "description": "Unique identifier for this result, 1-64 bytes",
             "type": "string"
+          },
+          "input_message_content": {
+            "$ref": "#/components/schemas/InputMessageContent",
+            "description": "Content of the message to be sent instead of the sticker"
+          },
+          "reply_markup": {
+            "$ref": "#/components/schemas/InlineKeyboardMarkup",
+            "description": "Inline keyboard attached to the message"
           },
           "sticker_file_id": {
             "description": "A valid file identifier of the sticker",
@@ -1053,9 +1440,17 @@
             "description": "Unique identifier for this result, 1-64 bytes",
             "type": "string"
           },
+          "input_message_content": {
+            "$ref": "#/components/schemas/InputMessageContent",
+            "description": "Content of the message to be sent instead of the video"
+          },
           "parse_mode": {
             "description": "Mode for parsing entities in the video caption. See formatting options for more details",
             "type": "string"
+          },
+          "reply_markup": {
+            "$ref": "#/components/schemas/InlineKeyboardMarkup",
+            "description": "Inline keyboard attached to the message"
           },
           "title": {
             "description": "Title for the result",
@@ -1088,9 +1483,17 @@
             "description": "Unique identifier for this result, 1-64 bytes",
             "type": "string"
           },
+          "input_message_content": {
+            "$ref": "#/components/schemas/InputMessageContent",
+            "description": "Content of the message to be sent instead of the voice message"
+          },
           "parse_mode": {
             "description": "Mode for parsing entities in the voice message caption. See formatting options for more details",
             "type": "string"
+          },
+          "reply_markup": {
+            "$ref": "#/components/schemas/InlineKeyboardMarkup",
+            "description": "Inline keyboard attached to the message"
           },
           "title": {
             "description": "Voice message title",
@@ -1123,6 +1526,10 @@
             "description": "Unique identifier for this result, 1-64 Bytes",
             "type": "string"
           },
+          "input_message_content": {
+            "$ref": "#/components/schemas/InputMessageContent",
+            "description": "Content of the message to be sent instead of the contact"
+          },
           "last_name": {
             "description": "Contact's last name",
             "type": "string"
@@ -1130,6 +1537,10 @@
           "phone_number": {
             "description": "Contact's phone number",
             "type": "string"
+          },
+          "reply_markup": {
+            "$ref": "#/components/schemas/InlineKeyboardMarkup",
+            "description": "Inline keyboard attached to the message"
           },
           "thumb_height": {
             "description": "Thumbnail height",
@@ -1178,6 +1589,10 @@
             "description": "Unique identifier for this result, 1-64 bytes",
             "type": "string"
           },
+          "input_message_content": {
+            "$ref": "#/components/schemas/InputMessageContent",
+            "description": "Content of the message to be sent instead of the file"
+          },
           "mime_type": {
             "description": "Mime type of the content of the file, either “application/pdf” or “application/zip”",
             "type": "string"
@@ -1185,6 +1600,10 @@
           "parse_mode": {
             "description": "Mode for parsing entities in the document caption. See formatting options for more details",
             "type": "string"
+          },
+          "reply_markup": {
+            "$ref": "#/components/schemas/InlineKeyboardMarkup",
+            "description": "Inline keyboard attached to the message"
           },
           "thumb_height": {
             "description": "Thumbnail height",
@@ -1226,6 +1645,10 @@
             "description": "Unique identifier for this result, 1-64 bytes",
             "type": "string"
           },
+          "reply_markup": {
+            "$ref": "#/components/schemas/InlineKeyboardMarkup",
+            "description": "Inline keyboard attached to the message"
+          },
           "type": {
             "description": "Type of the result, must be game",
             "type": "string"
@@ -1264,9 +1687,17 @@
             "description": "Unique identifier for this result, 1-64 bytes",
             "type": "string"
           },
+          "input_message_content": {
+            "$ref": "#/components/schemas/InputMessageContent",
+            "description": "Content of the message to be sent instead of the GIF animation"
+          },
           "parse_mode": {
             "description": "Mode for parsing entities in the caption. See formatting options for more details",
             "type": "string"
+          },
+          "reply_markup": {
+            "$ref": "#/components/schemas/InlineKeyboardMarkup",
+            "description": "Inline keyboard attached to the message"
           },
           "thumb_mime_type": {
             "description": "MIME type of the thumbnail, must be one of “image/jpeg”, “image/gif”, or “video/mp4”. Defaults to “image/jpeg”",
@@ -1307,6 +1738,10 @@
             "description": "Unique identifier for this result, 1-64 Bytes",
             "type": "string"
           },
+          "input_message_content": {
+            "$ref": "#/components/schemas/InputMessageContent",
+            "description": "Content of the message to be sent instead of the location"
+          },
           "latitude": {
             "description": "Location latitude in degrees",
             "type": "float64"
@@ -1322,6 +1757,10 @@
           "proximity_alert_radius": {
             "description": "For live locations, a maximum distance for proximity alerts about approaching another chat member, in meters. Must be between 1 and 100000 if specified",
             "type": "int"
+          },
+          "reply_markup": {
+            "$ref": "#/components/schemas/InlineKeyboardMarkup",
+            "description": "Inline keyboard attached to the message"
           },
           "thumb_height": {
             "description": "Thumbnail height",
@@ -1363,6 +1802,10 @@
             "description": "Unique identifier for this result, 1-64 bytes",
             "type": "string"
           },
+          "input_message_content": {
+            "$ref": "#/components/schemas/InputMessageContent",
+            "description": "Content of the message to be sent instead of the video animation"
+          },
           "mpeg4_duration": {
             "description": "Video duration in seconds",
             "type": "int"
@@ -1382,6 +1825,10 @@
           "parse_mode": {
             "description": "Mode for parsing entities in the caption. See formatting options for more details",
             "type": "string"
+          },
+          "reply_markup": {
+            "$ref": "#/components/schemas/InlineKeyboardMarkup",
+            "description": "Inline keyboard attached to the message"
           },
           "thumb_mime_type": {
             "description": "MIME type of the thumbnail, must be one of “image/jpeg”, “image/gif”, or “video/mp4”. Defaults to “image/jpeg”",
@@ -1422,6 +1869,10 @@
             "description": "Unique identifier for this result, 1-64 bytes",
             "type": "string"
           },
+          "input_message_content": {
+            "$ref": "#/components/schemas/InputMessageContent",
+            "description": "Content of the message to be sent instead of the photo"
+          },
           "parse_mode": {
             "description": "Mode for parsing entities in the photo caption. See formatting options for more details",
             "type": "string"
@@ -1437,6 +1888,10 @@
           "photo_width": {
             "description": "Width of the photo",
             "type": "int"
+          },
+          "reply_markup": {
+            "$ref": "#/components/schemas/InlineKeyboardMarkup",
+            "description": "Inline keyboard attached to the message"
           },
           "thumb_url": {
             "description": "URL of the thumbnail for the photo",
@@ -1485,6 +1940,10 @@
             "description": "Unique identifier for this result, 1-64 Bytes",
             "type": "string"
           },
+          "input_message_content": {
+            "$ref": "#/components/schemas/InputMessageContent",
+            "description": "Content of the message to be sent instead of the venue"
+          },
           "latitude": {
             "description": "Latitude of the venue location in degrees",
             "type": "float64"
@@ -1492,6 +1951,10 @@
           "longitude": {
             "description": "Longitude of the venue location in degrees",
             "type": "float64"
+          },
+          "reply_markup": {
+            "$ref": "#/components/schemas/InlineKeyboardMarkup",
+            "description": "Inline keyboard attached to the message"
           },
           "thumb_height": {
             "description": "Thumbnail height",
@@ -1538,6 +2001,10 @@
             "description": "Unique identifier for this result, 1-64 bytes",
             "type": "string"
           },
+          "input_message_content": {
+            "$ref": "#/components/schemas/InputMessageContent",
+            "description": "Content of the message to be sent instead of the video. This field is required if InlineQueryResultVideo is used to send an HTML-page as a result (e.g., a YouTube video)"
+          },
           "mime_type": {
             "description": "Mime type of the content of video url, “text/html” or “video/mp4”",
             "type": "string"
@@ -1545,6 +2012,10 @@
           "parse_mode": {
             "description": "Mode for parsing entities in the video caption. See formatting options for more details",
             "type": "string"
+          },
+          "reply_markup": {
+            "$ref": "#/components/schemas/InlineKeyboardMarkup",
+            "description": "Inline keyboard attached to the message"
           },
           "thumb_url": {
             "description": "URL of the thumbnail (JPEG only) for the video",
@@ -1595,9 +2066,17 @@
             "description": "Unique identifier for this result, 1-64 bytes",
             "type": "string"
           },
+          "input_message_content": {
+            "$ref": "#/components/schemas/InputMessageContent",
+            "description": "Content of the message to be sent instead of the voice recording"
+          },
           "parse_mode": {
             "description": "Mode for parsing entities in the voice message caption. See formatting options for more details",
             "type": "string"
+          },
+          "reply_markup": {
+            "$ref": "#/components/schemas/InlineKeyboardMarkup",
+            "description": "Inline keyboard attached to the message"
           },
           "title": {
             "description": "Recording title",
@@ -1659,9 +2138,29 @@
             "description": "Product description, 1-255 characters",
             "type": "string"
           },
+          "is_flexible": {
+            "$ref": "#/components/schemas/Boolean",
+            "description": "Pass True, if the final price depends on the shipping method"
+          },
           "max_tip_amount": {
             "description": "The maximum accepted amount for tips in the smallest units of the currency (integer, not float/double). For example, for a maximum tip of US$ 1.45 pass max_tip_amount = 145. See the exp parameter in currencies.json, it shows the number of digits past the decimal point for each currency (2 for the majority of currencies). Defaults to 0",
             "type": "int"
+          },
+          "need_email": {
+            "$ref": "#/components/schemas/Boolean",
+            "description": "Pass True, if you require the user's email address to complete the order"
+          },
+          "need_name": {
+            "$ref": "#/components/schemas/Boolean",
+            "description": "Pass True, if you require the user's full name to complete the order"
+          },
+          "need_phone_number": {
+            "$ref": "#/components/schemas/Boolean",
+            "description": "Pass True, if you require the user's phone number to complete the order"
+          },
+          "need_shipping_address": {
+            "$ref": "#/components/schemas/Boolean",
+            "description": "Pass True, if you require the user's shipping address to complete the order"
           },
           "payload": {
             "description": "Bot-defined invoice payload, 1-128 bytes. This will not be displayed to the user, use for your internal processes",
@@ -1690,6 +2189,14 @@
           "provider_token": {
             "description": "Payment provider token, obtained via Botfather",
             "type": "string"
+          },
+          "send_email_to_provider": {
+            "$ref": "#/components/schemas/Boolean",
+            "description": "Pass True, if user's email address should be sent to provider"
+          },
+          "send_phone_number_to_provider": {
+            "$ref": "#/components/schemas/Boolean",
+            "description": "Pass True, if user's phone number should be sent to provider"
           },
           "title": {
             "description": "Product name, 1-32 characters",
@@ -1818,6 +2325,10 @@
             "description": "Caption of the document to be sent, 0-1024 characters after entities parsing",
             "type": "string"
           },
+          "disable_content_type_detection": {
+            "$ref": "#/components/schemas/Boolean",
+            "description": "Disables automatic server-side content type detection for files uploaded using multipart/form-data. Always true, if the document is sent as part of an album"
+          },
           "media": {
             "description": "File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass “attach://\u003cfile_attach_name\u003e” to upload a new one using multipart/form-data under \u003cfile_attach_name\u003e name. More info on Sending Files »",
             "type": "string"
@@ -1884,6 +2395,10 @@
             "description": "Mode for parsing entities in the video caption. See formatting options for more details",
             "type": "string"
           },
+          "supports_streaming": {
+            "$ref": "#/components/schemas/Boolean",
+            "description": "Pass True, if the uploaded video is suitable for streaming"
+          },
           "type": {
             "description": "Type of the result, must be video",
             "type": "string"
@@ -1901,6 +2416,10 @@
       "InputTextMessageContent": {
         "type": "object",
         "properties": {
+          "disable_web_page_preview": {
+            "$ref": "#/components/schemas/Boolean",
+            "description": "Disables link previews for links in the sent message"
+          },
           "message_text": {
             "description": "Text of the message to be sent, 1-4096 characters",
             "type": "string"
@@ -1992,6 +2511,18 @@
       "KeyboardButton": {
         "type": "object",
         "properties": {
+          "request_contact": {
+            "$ref": "#/components/schemas/Boolean",
+            "description": "If True, the user's phone number will be sent as a contact when the button is pressed. Available in private chats only"
+          },
+          "request_location": {
+            "$ref": "#/components/schemas/Boolean",
+            "description": "If True, the user's current location will be sent when the button is pressed. Available in private chats only"
+          },
+          "request_poll": {
+            "$ref": "#/components/schemas/KeyboardButtonPollType",
+            "description": "If specified, the user will be asked to create a poll and send it to the bot when the button is pressed. Available in private chats only"
+          },
           "text": {
             "description": "Text of the button. If none of the optional fields are used, it will be sent as a message when the button is pressed",
             "type": "string"
@@ -2071,6 +2602,10 @@
             "description": "New text of the button in forwarded messages",
             "type": "string"
           },
+          "request_write_access": {
+            "$ref": "#/components/schemas/Boolean",
+            "description": "Pass True to request the permission for your bot to send messages to the user"
+          },
           "url": {
             "description": "An HTTP URL to be opened with user authorization data added to the query string when the button is pressed. If the user refuses to provide authorization data, the original URL without information about the user will be opened. The data added is the same as described in Receiving authorization data.NOTE: You must always check the hash of the received data to verify the authentication and the integrity of the data as described in Checking authorization",
             "type": "string"
@@ -2110,6 +2645,14 @@
       "Message": {
         "type": "object",
         "properties": {
+          "animation": {
+            "$ref": "#/components/schemas/Animation",
+            "description": "Message is an animation, information about the animation. For backward compatibility, when this field is set, the document field will also be set"
+          },
+          "audio": {
+            "$ref": "#/components/schemas/Audio",
+            "description": "Message is an audio file, information about the file"
+          },
           "author_signature": {
             "description": "Signature of the post author for messages in channels, or the custom title of an anonymous group administrator",
             "type": "string"
@@ -2118,13 +2661,37 @@
             "description": "Caption for the animation, audio, document, photo, video or voice, 0-1024 characters",
             "type": "string"
           },
+          "channel_chat_created": {
+            "$ref": "#/components/schemas/True",
+            "description": "Service message: the channel has been created. This field can't be received in a message coming through updates, because bot can't be a member of a channel when it is created. It can only be found in reply_to_message if someone replies to a very first message in a channel"
+          },
+          "chat": {
+            "$ref": "#/components/schemas/Chat",
+            "description": "Conversation the message belongs to"
+          },
           "connected_website": {
             "description": "The domain name of the website on which the user has logged in. More about Telegram Login »",
             "type": "string"
           },
+          "contact": {
+            "$ref": "#/components/schemas/Contact",
+            "description": "Message is a shared contact, information about the contact"
+          },
           "date": {
             "description": "Date the message was sent in Unix time",
             "type": "int"
+          },
+          "delete_chat_photo": {
+            "$ref": "#/components/schemas/True",
+            "description": "Service message: the chat photo was deleted"
+          },
+          "dice": {
+            "$ref": "#/components/schemas/Dice",
+            "description": "Message is a dice with random value"
+          },
+          "document": {
+            "$ref": "#/components/schemas/Document",
+            "description": "Message is a general file, information about the file"
           },
           "edit_date": {
             "description": "Date the message was last edited in Unix time",
@@ -2133,6 +2700,14 @@
           "forward_date": {
             "description": "For forwarded messages, date the original message was sent in Unix time",
             "type": "int"
+          },
+          "forward_from": {
+            "$ref": "#/components/schemas/User",
+            "description": "For forwarded messages, sender of the original message"
+          },
+          "forward_from_chat": {
+            "$ref": "#/components/schemas/Chat",
+            "description": "For messages forwarded from channels or from anonymous administrators, information about the original sender chat"
           },
           "forward_from_message_id": {
             "description": "For messages forwarded from channels, identifier of the original message in the channel",
@@ -2146,9 +2721,37 @@
             "description": "For messages forwarded from channels, signature of the post author if present",
             "type": "string"
           },
+          "from": {
+            "$ref": "#/components/schemas/User",
+            "description": "Sender, empty for messages sent to channels"
+          },
+          "game": {
+            "$ref": "#/components/schemas/Game",
+            "description": "Message is a game, information about the game. More about games »"
+          },
+          "group_chat_created": {
+            "$ref": "#/components/schemas/True",
+            "description": "Service message: the group has been created"
+          },
+          "invoice": {
+            "$ref": "#/components/schemas/Invoice",
+            "description": "Message is an invoice for a payment, information about the invoice. More about payments »"
+          },
+          "left_chat_member": {
+            "$ref": "#/components/schemas/User",
+            "description": "A member was removed from the group, information about them (this member may be the bot itself)"
+          },
+          "location": {
+            "$ref": "#/components/schemas/Location",
+            "description": "Message is a shared location, information about the location"
+          },
           "media_group_id": {
             "description": "The unique identifier of a media message group this message belongs to",
             "type": "string"
+          },
+          "message_auto_delete_timer_changed": {
+            "$ref": "#/components/schemas/MessageAutoDeleteTimerChanged",
+            "description": "Service message: auto-delete timer settings changed in the chat"
           },
           "message_id": {
             "description": "Unique message identifier inside this chat",
@@ -2166,14 +2769,91 @@
             "description": "A chat title was changed to this value",
             "type": "string"
           },
+          "passport_data": {
+            "$ref": "#/components/schemas/PassportData",
+            "description": "Telegram Passport data"
+          },
+          "pinned_message": {
+            "$ref": "#/components/schemas/Message",
+            "description": "Specified message was pinned. Note that the Message object in this field will not contain further reply_to_message fields even if it is itself a reply"
+          },
+          "poll": {
+            "$ref": "#/components/schemas/Poll",
+            "description": "Message is a native poll, information about the poll"
+          },
+          "proximity_alert_triggered": {
+            "$ref": "#/components/schemas/ProximityAlertTriggered",
+            "description": "Service message. A user in the chat triggered another user's proximity alert while sharing Live Location"
+          },
+          "reply_markup": {
+            "$ref": "#/components/schemas/InlineKeyboardMarkup",
+            "description": "Inline keyboard attached to the message. login_url buttons are represented as ordinary url buttons"
+          },
+          "reply_to_message": {
+            "$ref": "#/components/schemas/Message",
+            "description": "For replies, the original message. Note that the Message object in this field will not contain further reply_to_message fields even if it itself is a reply"
+          },
+          "sender_chat": {
+            "$ref": "#/components/schemas/Chat",
+            "description": "Sender of the message, sent on behalf of a chat. The channel itself for channel messages. The supergroup itself for messages from anonymous group administrators. The linked channel for messages automatically forwarded to the discussion group"
+          },
+          "sticker": {
+            "$ref": "#/components/schemas/Sticker",
+            "description": "Message is a sticker, information about the sticker"
+          },
+          "successful_payment": {
+            "$ref": "#/components/schemas/SuccessfulPayment",
+            "description": "Message is a service message about a successful payment, information about the payment. More about payments »"
+          },
+          "supergroup_chat_created": {
+            "$ref": "#/components/schemas/True",
+            "description": "Service message: the supergroup has been created. This field can't be received in a message coming through updates, because bot can't be a member of a supergroup when it is created. It can only be found in reply_to_message if someone replies to a very first message in a directly created supergroup"
+          },
           "text": {
             "description": "For text messages, the actual UTF-8 text of the message, 0-4096 characters",
             "type": "string"
+          },
+          "venue": {
+            "$ref": "#/components/schemas/Venue",
+            "description": "Message is a venue, information about the venue. For backward compatibility, when this field is set, the location field will also be set"
+          },
+          "via_bot": {
+            "$ref": "#/components/schemas/User",
+            "description": "Bot through which the message was sent"
+          },
+          "video": {
+            "$ref": "#/components/schemas/Video",
+            "description": "Message is a video, information about the video"
+          },
+          "video_note": {
+            "$ref": "#/components/schemas/VideoNote",
+            "description": "Message is a video note, information about the video message"
+          },
+          "voice": {
+            "$ref": "#/components/schemas/Voice",
+            "description": "Message is a voice message, information about the file"
+          },
+          "voice_chat_ended": {
+            "$ref": "#/components/schemas/VoiceChatEnded",
+            "description": "Service message: voice chat ended"
+          },
+          "voice_chat_participants_invited": {
+            "$ref": "#/components/schemas/VoiceChatParticipantsInvited",
+            "description": "Service message: new participants invited to a voice chat"
+          },
+          "voice_chat_scheduled": {
+            "$ref": "#/components/schemas/VoiceChatScheduled",
+            "description": "Service message: voice chat scheduled"
+          },
+          "voice_chat_started": {
+            "$ref": "#/components/schemas/VoiceChatStarted",
+            "description": "Service message: voice chat started"
           }
         },
         "required": [
           "message_id",
-          "date"
+          "date",
+          "chat"
         ]
       },
       "MessageAutoDeleteTimerChanged": {
@@ -2210,6 +2890,10 @@
           "url": {
             "description": "For “text_link” only, url that will be opened after user taps on the text",
             "type": "string"
+          },
+          "user": {
+            "$ref": "#/components/schemas/User",
+            "description": "For “text_mention” only, the mentioned user"
           }
         },
         "required": [
@@ -2244,11 +2928,24 @@
           "phone_number": {
             "description": "User's phone number",
             "type": "string"
+          },
+          "shipping_address": {
+            "$ref": "#/components/schemas/ShippingAddress",
+            "description": "User shipping address"
           }
         }
       },
       "PassportData": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "credentials": {
+            "$ref": "#/components/schemas/EncryptedCredentials",
+            "description": "Encrypted credentials required to decrypt the data"
+          }
+        },
+        "required": [
+          "credentials"
+        ]
       },
       "PassportElementErrorDataField": {
         "type": "object",
@@ -2549,6 +3246,10 @@
       "Poll": {
         "type": "object",
         "properties": {
+          "allows_multiple_answers": {
+            "$ref": "#/components/schemas/Boolean",
+            "description": "True, if the poll allows multiple answers"
+          },
           "close_date": {
             "description": "Point in time (Unix timestamp) when the poll will be automatically closed",
             "type": "int"
@@ -2564,6 +3265,14 @@
           "id": {
             "description": "Unique poll identifier",
             "type": "string"
+          },
+          "is_anonymous": {
+            "$ref": "#/components/schemas/Boolean",
+            "description": "True, if the poll is anonymous"
+          },
+          "is_closed": {
+            "$ref": "#/components/schemas/Boolean",
+            "description": "True, if the poll is closed"
           },
           "open_period": {
             "description": "Amount of time in seconds the poll will be active after creation",
@@ -2586,7 +3295,10 @@
           "id",
           "question",
           "total_voter_count",
-          "type"
+          "is_closed",
+          "is_anonymous",
+          "type",
+          "allows_multiple_answers"
         ]
       },
       "PollAnswer": {
@@ -2595,10 +3307,15 @@
           "poll_id": {
             "description": "Unique poll identifier",
             "type": "string"
+          },
+          "user": {
+            "$ref": "#/components/schemas/User",
+            "description": "The user, who changed the answer to the poll"
           }
         },
         "required": [
-          "poll_id"
+          "poll_id",
+          "user"
         ]
       },
       "PollOption": {
@@ -2625,6 +3342,10 @@
             "description": "Three-letter ISO 4217 currency code",
             "type": "string"
           },
+          "from": {
+            "$ref": "#/components/schemas/User",
+            "description": "User who sent the query"
+          },
           "id": {
             "description": "Unique query identifier",
             "type": "string"
@@ -2632,6 +3353,10 @@
           "invoice_payload": {
             "description": "Bot specified invoice payload",
             "type": "string"
+          },
+          "order_info": {
+            "$ref": "#/components/schemas/OrderInfo",
+            "description": "Order info provided by the user"
           },
           "shipping_option_id": {
             "description": "Identifier of the shipping option chosen by the user",
@@ -2644,6 +3369,7 @@
         },
         "required": [
           "id",
+          "from",
           "currency",
           "total_amount",
           "invoice_payload"
@@ -2655,9 +3381,19 @@
           "distance": {
             "description": "The distance between the users",
             "type": "int"
+          },
+          "traveler": {
+            "$ref": "#/components/schemas/User",
+            "description": "User that triggered the alert"
+          },
+          "watcher": {
+            "$ref": "#/components/schemas/User",
+            "description": "User that set the alert"
           }
         },
         "required": [
+          "traveler",
+          "watcher",
           "distance"
         ]
       },
@@ -2667,11 +3403,36 @@
           "input_field_placeholder": {
             "description": "The placeholder to be shown in the input field when the keyboard is active; 1-64 characters",
             "type": "string"
+          },
+          "one_time_keyboard": {
+            "$ref": "#/components/schemas/Boolean",
+            "description": "Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat – the user can press a special button in the input field to see the custom keyboard again. Defaults to false"
+          },
+          "resize_keyboard": {
+            "$ref": "#/components/schemas/Boolean",
+            "description": "Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to false, in which case the custom keyboard is always of the same height as the app's standard keyboard"
+          },
+          "selective": {
+            "$ref": "#/components/schemas/Boolean",
+            "description": "Use this parameter if you want to show the keyboard to specific users only. Targets: 1) users that are @mentioned in the text of the Message object; 2) if the bot's message is a reply (has reply_to_message_id), sender of the original message.Example: A user requests to change the bot's language, bot replies to the request with a keyboard to select the new language. Other users in the group don't see the keyboard"
           }
         }
       },
       "ReplyKeyboardRemove": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "remove_keyboard": {
+            "$ref": "#/components/schemas/True",
+            "description": "Requests clients to remove the custom keyboard (user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)"
+          },
+          "selective": {
+            "$ref": "#/components/schemas/Boolean",
+            "description": "Use this parameter if you want to remove the keyboard for specific users only. Targets: 1) users that are @mentioned in the text of the Message object; 2) if the bot's message is a reply (has reply_to_message_id), sender of the original message.Example: A user votes in a poll, bot returns confirmation message in reply to the vote and removes the keyboard for that user, while still showing the keyboard with poll options to users who haven't voted yet"
+          }
+        },
+        "required": [
+          "remove_keyboard"
+        ]
       },
       "ResponseParameters": {
         "type": "object",
@@ -2743,6 +3504,10 @@
       "ShippingQuery": {
         "type": "object",
         "properties": {
+          "from": {
+            "$ref": "#/components/schemas/User",
+            "description": "User who sent the query"
+          },
           "id": {
             "description": "Unique query identifier",
             "type": "string"
@@ -2750,11 +3515,17 @@
           "invoice_payload": {
             "description": "Bot specified invoice payload",
             "type": "string"
+          },
+          "shipping_address": {
+            "$ref": "#/components/schemas/ShippingAddress",
+            "description": "User specified shipping address"
           }
         },
         "required": [
           "id",
-          "invoice_payload"
+          "from",
+          "invoice_payload",
+          "shipping_address"
         ]
       },
       "Sticker": {
@@ -2780,9 +3551,21 @@
             "description": "Sticker height",
             "type": "int"
           },
+          "is_animated": {
+            "$ref": "#/components/schemas/Boolean",
+            "description": "True, if the sticker is animated"
+          },
+          "mask_position": {
+            "$ref": "#/components/schemas/MaskPosition",
+            "description": "For mask stickers, the position where the mask should be placed"
+          },
           "set_name": {
             "description": "Name of the sticker set to which the sticker belongs",
             "type": "string"
+          },
+          "thumb": {
+            "$ref": "#/components/schemas/PhotoSize",
+            "description": "Sticker thumbnail in the .WEBP or .JPG format"
           },
           "width": {
             "description": "Sticker width",
@@ -2793,15 +3576,28 @@
           "file_id",
           "file_unique_id",
           "width",
-          "height"
+          "height",
+          "is_animated"
         ]
       },
       "StickerSet": {
         "type": "object",
         "properties": {
+          "contains_masks": {
+            "$ref": "#/components/schemas/Boolean",
+            "description": "True, if the sticker set contains masks"
+          },
+          "is_animated": {
+            "$ref": "#/components/schemas/Boolean",
+            "description": "True, if the sticker set contains animated stickers"
+          },
           "name": {
             "description": "Sticker set name",
             "type": "string"
+          },
+          "thumb": {
+            "$ref": "#/components/schemas/PhotoSize",
+            "description": "Sticker set thumbnail in the .WEBP or .TGS format"
           },
           "title": {
             "description": "Sticker set title",
@@ -2810,7 +3606,9 @@
         },
         "required": [
           "name",
-          "title"
+          "title",
+          "is_animated",
+          "contains_masks"
         ]
       },
       "SuccessfulPayment": {
@@ -2823,6 +3621,10 @@
           "invoice_payload": {
             "description": "Bot specified invoice payload",
             "type": "string"
+          },
+          "order_info": {
+            "$ref": "#/components/schemas/OrderInfo",
+            "description": "Order info provided by the user"
           },
           "provider_payment_charge_id": {
             "description": "Provider payment identifier",
@@ -2852,6 +3654,58 @@
       "Update": {
         "type": "object",
         "properties": {
+          "callback_query": {
+            "$ref": "#/components/schemas/CallbackQuery",
+            "description": "New incoming callback query"
+          },
+          "channel_post": {
+            "$ref": "#/components/schemas/Message",
+            "description": "New incoming channel post of any kind — text, photo, sticker, etc"
+          },
+          "chat_member": {
+            "$ref": "#/components/schemas/ChatMemberUpdated",
+            "description": "A chat member's status was updated in a chat. The bot must be an administrator in the chat and must explicitly specify “chat_member” in the list of allowed_updates to receive these updates"
+          },
+          "chosen_inline_result": {
+            "$ref": "#/components/schemas/ChosenInlineResult",
+            "description": "The result of an inline query that was chosen by a user and sent to their chat partner. Please see our documentation on the feedback collecting for details on how to enable these updates for your bot"
+          },
+          "edited_channel_post": {
+            "$ref": "#/components/schemas/Message",
+            "description": "New version of a channel post that is known to the bot and was edited"
+          },
+          "edited_message": {
+            "$ref": "#/components/schemas/Message",
+            "description": "New version of a message that is known to the bot and was edited"
+          },
+          "inline_query": {
+            "$ref": "#/components/schemas/InlineQuery",
+            "description": "New incoming inline query"
+          },
+          "message": {
+            "$ref": "#/components/schemas/Message",
+            "description": "New incoming message of any kind — text, photo, sticker, etc"
+          },
+          "my_chat_member": {
+            "$ref": "#/components/schemas/ChatMemberUpdated",
+            "description": "The bot's chat member status was updated in a chat. For private chats, this update is received only when the bot is blocked or unblocked by the user"
+          },
+          "poll": {
+            "$ref": "#/components/schemas/Poll",
+            "description": "New poll state. Bots receive only updates about stopped polls and polls, which are sent by the bot"
+          },
+          "poll_answer": {
+            "$ref": "#/components/schemas/PollAnswer",
+            "description": "A user changed their answer in a non-anonymous poll. Bots receive new votes only in polls that were sent by the bot itself"
+          },
+          "pre_checkout_query": {
+            "$ref": "#/components/schemas/PreCheckoutQuery",
+            "description": "New incoming pre-checkout query. Contains full information about checkout"
+          },
+          "shipping_query": {
+            "$ref": "#/components/schemas/ShippingQuery",
+            "description": "New incoming shipping query. Only for invoices with flexible price"
+          },
           "update_id": {
             "description": "The update's unique identifier. Update identifiers start from a certain positive number and increase sequentially. This ID becomes especially handy if you're using Webhooks, since it allows you to ignore repeated updates or to restore the correct update sequence, should they get out of order. If there are no new updates for at least a week, then identifier of the next update will be chosen randomly instead of sequentially",
             "type": "int"
@@ -2864,6 +3718,14 @@
       "User": {
         "type": "object",
         "properties": {
+          "can_join_groups": {
+            "$ref": "#/components/schemas/Boolean",
+            "description": "True, if the bot can be invited to groups. Returned only in getMe"
+          },
+          "can_read_all_group_messages": {
+            "$ref": "#/components/schemas/Boolean",
+            "description": "True, if privacy mode is disabled for the bot. Returned only in getMe"
+          },
           "first_name": {
             "description": "User's or bot's first name",
             "type": "string"
@@ -2871,6 +3733,10 @@
           "id": {
             "description": "Unique identifier for this user or bot. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a 64-bit integer or double-precision float type are safe for storing this identifier",
             "type": "int"
+          },
+          "is_bot": {
+            "$ref": "#/components/schemas/Boolean",
+            "description": "True, if this user is a bot"
           },
           "language_code": {
             "description": "IETF language tag of the user's language",
@@ -2880,6 +3746,10 @@
             "description": "User's or bot's last name",
             "type": "string"
           },
+          "supports_inline_queries": {
+            "$ref": "#/components/schemas/Boolean",
+            "description": "True, if the bot supports inline queries. Returned only in getMe"
+          },
           "username": {
             "description": "User's or bot's username",
             "type": "string"
@@ -2887,6 +3757,7 @@
         },
         "required": [
           "id",
+          "is_bot",
           "first_name"
         ]
       },
@@ -2925,12 +3796,17 @@
             "description": "Google Places type of the venue. (See supported types.)",
             "type": "string"
           },
+          "location": {
+            "$ref": "#/components/schemas/Location",
+            "description": "Venue location. Can't be a live location"
+          },
           "title": {
             "description": "Name of the venue",
             "type": "string"
           }
         },
         "required": [
+          "location",
           "title",
           "address"
         ]
@@ -2965,6 +3841,10 @@
           "mime_type": {
             "description": "Mime type of a file as defined by sender",
             "type": "string"
+          },
+          "thumb": {
+            "$ref": "#/components/schemas/PhotoSize",
+            "description": "Video thumbnail"
           },
           "width": {
             "description": "Video width as defined by sender",
@@ -3001,6 +3881,10 @@
           "length": {
             "description": "Video width and height (diameter of the video message) as defined by sender",
             "type": "int"
+          },
+          "thumb": {
+            "$ref": "#/components/schemas/PhotoSize",
+            "description": "Video thumbnail"
           }
         },
         "required": [
@@ -3070,6 +3954,10 @@
       "WebhookInfo": {
         "type": "object",
         "properties": {
+          "has_custom_certificate": {
+            "$ref": "#/components/schemas/Boolean",
+            "description": "True, if a custom certificate was provided for webhook certificate checks"
+          },
           "ip_address": {
             "description": "Currently used webhook IP address",
             "type": "string"
@@ -3097,6 +3985,7 @@
         },
         "required": [
           "url",
+          "has_custom_certificate",
           "pending_update_count"
         ]
       }
