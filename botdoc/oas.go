@@ -11,7 +11,9 @@ func (a API) OAS() *ogen.Spec {
 	}
 	p := ogen.Paths{
 		"/getMe": ogen.PathItem{
-			Description: "A simple method for testing your bot's auth token. Requires no parameters. Returns basic information about the bot in form of a User object.",
+			Description: "A simple method for testing your bot's auth token. " +
+				"Requires no parameters. " +
+				"Returns basic information about the bot in form of a User object.",
 			Get: &ogen.Operation{
 				OperationID: "getMe",
 				Responses: ogen.Responses{
