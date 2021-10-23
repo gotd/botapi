@@ -39,7 +39,7 @@
         "properties": {
           "duration": {
             "description": "Duration of the video in seconds as defined by sender",
-            "type": "int"
+            "type": "integer"
           },
           "file_id": {
             "description": "Identifier for this file, which can be used to download or reuse the file",
@@ -51,7 +51,7 @@
           },
           "file_size": {
             "description": "File size in bytes",
-            "type": "int"
+            "type": "integer"
           },
           "file_unique_id": {
             "description": "Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file",
@@ -59,7 +59,7 @@
           },
           "height": {
             "description": "Video height as defined by sender",
-            "type": "int"
+            "type": "integer"
           },
           "mime_type": {
             "description": "MIME type of the file as defined by sender",
@@ -71,7 +71,7 @@
           },
           "width": {
             "description": "Video width as defined by sender",
-            "type": "int"
+            "type": "integer"
           }
         },
         "required": [
@@ -87,7 +87,7 @@
         "properties": {
           "duration": {
             "description": "Duration of the audio in seconds as defined by sender",
-            "type": "int"
+            "type": "integer"
           },
           "file_id": {
             "description": "Identifier for this file, which can be used to download or reuse the file",
@@ -99,7 +99,7 @@
           },
           "file_size": {
             "description": "File size in bytes",
-            "type": "int"
+            "type": "integer"
           },
           "file_unique_id": {
             "description": "Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file",
@@ -214,7 +214,7 @@
           },
           "user_id": {
             "description": "Unique identifier of the target user",
-            "type": "int"
+            "type": "integer"
           }
         },
         "required": [
@@ -281,7 +281,7 @@
           },
           "can_set_sticker_set": {
             "description": "True, if the bot can change the group sticker set. Returned only in getChat",
-            "type": "bool"
+            "type": "boolean"
           },
           "description": {
             "description": "Description, for groups, supergroups and channel chats. Returned only in getChat",
@@ -293,7 +293,7 @@
           },
           "id": {
             "description": "Unique identifier for this chat. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this identifier",
-            "type": "int"
+            "type": "integer"
           },
           "invite_link": {
             "description": "Primary invite link, for groups, supergroups and channel chats. Returned only in getChat",
@@ -305,7 +305,7 @@
           },
           "linked_chat_id": {
             "description": "Unique identifier for the linked chat, i.e. the discussion group identifier for a channel and vice versa; for supergroups and channel chats. This identifier may be greater than 32 bits and some programming languages may have difficulty/silent defects in interpreting it. But it is smaller than 52 bits, so a signed 64 bit integer or double-precision float type are safe for storing this identifier. Returned only in getChat",
-            "type": "int"
+            "type": "integer"
           },
           "location": {
             "$ref": "#/components/schemas/ChatLocation",
@@ -313,7 +313,7 @@
           },
           "message_auto_delete_time": {
             "description": "The time after which all messages sent to the chat will be automatically deleted; in seconds. Returned only in getChat",
-            "type": "int"
+            "type": "integer"
           },
           "permissions": {
             "$ref": "#/components/schemas/ChatPermissions",
@@ -329,7 +329,7 @@
           },
           "slow_mode_delay": {
             "description": "For supergroups, the minimum allowed delay between consecutive messages sent by each unpriviledged user. Returned only in getChat",
-            "type": "int"
+            "type": "integer"
           },
           "sticker_set_name": {
             "description": "For supergroups, name of group sticker set. Returned only in getChat",
@@ -362,7 +362,7 @@
           },
           "expire_date": {
             "description": "Point in time (Unix timestamp) when the link will expire or has been expired",
-            "type": "int"
+            "type": "integer"
           },
           "invite_link": {
             "description": "The invite link. If the link was created by another chat administrator, then the second part of the link will be replaced with “…”",
@@ -370,15 +370,15 @@
           },
           "is_primary": {
             "description": "True, if the link is primary",
-            "type": "bool"
+            "type": "boolean"
           },
           "is_revoked": {
             "description": "True, if the link is revoked",
-            "type": "bool"
+            "type": "boolean"
           },
           "member_limit": {
             "description": "Maximum number of users that can be members of the chat simultaneously after joining the chat via this invite link; 1-99999",
-            "type": "int"
+            "type": "integer"
           }
         },
         "required": [
@@ -410,47 +410,47 @@
         "properties": {
           "can_be_edited": {
             "description": "True, if the bot is allowed to edit administrator privileges of that user",
-            "type": "bool"
+            "type": "boolean"
           },
           "can_change_info": {
             "description": "True, if the user is allowed to change the chat title, photo and other settings",
-            "type": "bool"
+            "type": "boolean"
           },
           "can_delete_messages": {
             "description": "True, if the administrator can delete messages of other users",
-            "type": "bool"
+            "type": "boolean"
           },
           "can_edit_messages": {
             "description": "True, if the administrator can edit messages of other users and can pin messages; channels only",
-            "type": "bool"
+            "type": "boolean"
           },
           "can_invite_users": {
             "description": "True, if the user is allowed to invite new users to the chat",
-            "type": "bool"
+            "type": "boolean"
           },
           "can_manage_chat": {
             "description": "True, if the administrator can access the chat event log, chat statistics, message statistics in channels, see channel members, see anonymous administrators in supergroups and ignore slow mode. Implied by any other administrator privilege",
-            "type": "bool"
+            "type": "boolean"
           },
           "can_manage_voice_chats": {
             "description": "True, if the administrator can manage voice chats",
-            "type": "bool"
+            "type": "boolean"
           },
           "can_pin_messages": {
             "description": "True, if the user is allowed to pin messages; groups and supergroups only",
-            "type": "bool"
+            "type": "boolean"
           },
           "can_post_messages": {
             "description": "True, if the administrator can post in the channel; channels only",
-            "type": "bool"
+            "type": "boolean"
           },
           "can_promote_members": {
             "description": "True, if the administrator can add new administrators with a subset of their own privileges or demote administrators that he has promoted, directly or indirectly (promoted by administrators that were appointed by the user)",
-            "type": "bool"
+            "type": "boolean"
           },
           "can_restrict_members": {
             "description": "True, if the administrator can restrict, ban or unban chat members",
-            "type": "bool"
+            "type": "boolean"
           },
           "custom_title": {
             "description": "Custom title for this user",
@@ -458,7 +458,7 @@
           },
           "is_anonymous": {
             "description": "True, if the user's presence in the chat is hidden",
-            "type": "bool"
+            "type": "boolean"
           },
           "status": {
             "description": "The member's status in the chat, always “administrator”",
@@ -492,7 +492,7 @@
           },
           "until_date": {
             "description": "Date when restrictions will be lifted for this user; unix time. If 0, then the user is banned forever",
-            "type": "int"
+            "type": "integer"
           },
           "user": {
             "$ref": "#/components/schemas/User",
@@ -548,7 +548,7 @@
           },
           "is_anonymous": {
             "description": "True, if the user's presence in the chat is hidden",
-            "type": "bool"
+            "type": "boolean"
           },
           "status": {
             "description": "The member's status in the chat, always “creator”",
@@ -570,39 +570,39 @@
         "properties": {
           "can_add_web_page_previews": {
             "description": "True, if the user is allowed to add web page previews to their messages",
-            "type": "bool"
+            "type": "boolean"
           },
           "can_change_info": {
             "description": "True, if the user is allowed to change the chat title, photo and other settings",
-            "type": "bool"
+            "type": "boolean"
           },
           "can_invite_users": {
             "description": "True, if the user is allowed to invite new users to the chat",
-            "type": "bool"
+            "type": "boolean"
           },
           "can_pin_messages": {
             "description": "True, if the user is allowed to pin messages",
-            "type": "bool"
+            "type": "boolean"
           },
           "can_send_media_messages": {
             "description": "True, if the user is allowed to send audios, documents, photos, videos, video notes and voice notes",
-            "type": "bool"
+            "type": "boolean"
           },
           "can_send_messages": {
             "description": "True, if the user is allowed to send text messages, contacts, locations and venues",
-            "type": "bool"
+            "type": "boolean"
           },
           "can_send_other_messages": {
             "description": "True, if the user is allowed to send animations, games, stickers and use inline bots",
-            "type": "bool"
+            "type": "boolean"
           },
           "can_send_polls": {
             "description": "True, if the user is allowed to send polls",
-            "type": "bool"
+            "type": "boolean"
           },
           "is_member": {
             "description": "True, if the user is a member of the chat at the moment of the request",
-            "type": "bool"
+            "type": "boolean"
           },
           "status": {
             "description": "The member's status in the chat, always “restricted”",
@@ -610,7 +610,7 @@
           },
           "until_date": {
             "description": "Date when restrictions will be lifted for this user; unix time. If 0, then the user is restricted forever",
-            "type": "int"
+            "type": "integer"
           },
           "user": {
             "$ref": "#/components/schemas/User",
@@ -641,7 +641,7 @@
           },
           "date": {
             "description": "Date the change was done in Unix time",
-            "type": "int"
+            "type": "integer"
           },
           "from": {
             "$ref": "#/components/schemas/User",
@@ -673,35 +673,35 @@
         "properties": {
           "can_add_web_page_previews": {
             "description": "True, if the user is allowed to add web page previews to their messages, implies can_send_media_messages",
-            "type": "bool"
+            "type": "boolean"
           },
           "can_change_info": {
             "description": "True, if the user is allowed to change the chat title, photo and other settings. Ignored in public supergroups",
-            "type": "bool"
+            "type": "boolean"
           },
           "can_invite_users": {
             "description": "True, if the user is allowed to invite new users to the chat",
-            "type": "bool"
+            "type": "boolean"
           },
           "can_pin_messages": {
             "description": "True, if the user is allowed to pin messages. Ignored in public supergroups",
-            "type": "bool"
+            "type": "boolean"
           },
           "can_send_media_messages": {
             "description": "True, if the user is allowed to send audios, documents, photos, videos, video notes and voice notes, implies can_send_messages",
-            "type": "bool"
+            "type": "boolean"
           },
           "can_send_messages": {
             "description": "True, if the user is allowed to send text messages, contacts, locations and venues",
-            "type": "bool"
+            "type": "boolean"
           },
           "can_send_other_messages": {
             "description": "True, if the user is allowed to send animations, games, stickers and use inline bots, implies can_send_media_messages",
-            "type": "bool"
+            "type": "boolean"
           },
           "can_send_polls": {
             "description": "True, if the user is allowed to send polls, implies can_send_messages",
-            "type": "bool"
+            "type": "boolean"
           }
         }
       },
@@ -779,7 +779,7 @@
           },
           "user_id": {
             "description": "Contact's user identifier in Telegram. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a 64-bit integer or double-precision float type are safe for storing this identifier",
-            "type": "int"
+            "type": "integer"
           },
           "vcard": {
             "description": "Additional data about the contact in the form of a vCard",
@@ -800,7 +800,7 @@
           },
           "value": {
             "description": "Value of the dice, 1-6 for “”, “” and “” base emoji, 1-5 for “” and “” base emoji, 1-64 for “” base emoji",
-            "type": "int"
+            "type": "integer"
           }
         },
         "required": [
@@ -821,7 +821,7 @@
           },
           "file_size": {
             "description": "File size in bytes",
-            "type": "int"
+            "type": "integer"
           },
           "file_unique_id": {
             "description": "Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file",
@@ -917,7 +917,7 @@
           },
           "file_size": {
             "description": "File size in bytes, if known",
-            "type": "int"
+            "type": "integer"
           },
           "file_unique_id": {
             "description": "Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file",
@@ -942,7 +942,7 @@
           },
           "selective": {
             "description": "Use this parameter if you want to force reply from specific users only. Targets: 1) users that are @mentioned in the text of the Message object; 2) if the bot's message is a reply (has reply_to_message_id), sender of the original message",
-            "type": "bool"
+            "type": "boolean"
           }
         },
         "required": [
@@ -979,11 +979,11 @@
         "properties": {
           "position": {
             "description": "Position in high score table for the game",
-            "type": "int"
+            "type": "integer"
           },
           "score": {
             "description": "Score",
-            "type": "int"
+            "type": "integer"
           },
           "user": {
             "$ref": "#/components/schemas/User",
@@ -1013,7 +1013,7 @@
           },
           "pay": {
             "description": "Specify True, to send a Pay button.NOTE: This type of button must always be the first button in the first row",
-            "type": "bool"
+            "type": "boolean"
           },
           "switch_inline_query": {
             "description": "If set, pressing the button will prompt the user to select one of their chats, open that chat and insert the bot's username and the specified inline query in the input field. Can be empty, in which case just the bot's username will be inserted.Note: This offers an easy way for users to start using your bot in inline mode when they are currently in a private chat with it. Especially useful when combined with switch_pm… actions – in this case the user will be automatically returned to the chat they switched from, skipping the chat selection screen",
@@ -1083,7 +1083,7 @@
           },
           "hide_url": {
             "description": "Pass True, if you don't want the URL to be shown in the message",
-            "type": "bool"
+            "type": "boolean"
           },
           "id": {
             "description": "Unique identifier for this result, 1-64 Bytes",
@@ -1099,7 +1099,7 @@
           },
           "thumb_height": {
             "description": "Thumbnail height",
-            "type": "int"
+            "type": "integer"
           },
           "thumb_url": {
             "description": "Url of the thumbnail for the result",
@@ -1107,7 +1107,7 @@
           },
           "thumb_width": {
             "description": "Thumbnail width",
-            "type": "int"
+            "type": "integer"
           },
           "title": {
             "description": "Title of the result",
@@ -1134,7 +1134,7 @@
         "properties": {
           "audio_duration": {
             "description": "Audio duration in seconds",
-            "type": "int"
+            "type": "integer"
           },
           "audio_url": {
             "description": "A valid URL for the audio file",
@@ -1544,7 +1544,7 @@
           },
           "thumb_height": {
             "description": "Thumbnail height",
-            "type": "int"
+            "type": "integer"
           },
           "thumb_url": {
             "description": "Url of the thumbnail for the result",
@@ -1552,7 +1552,7 @@
           },
           "thumb_width": {
             "description": "Thumbnail width",
-            "type": "int"
+            "type": "integer"
           },
           "type": {
             "description": "Type of the result, must be contact",
@@ -1607,7 +1607,7 @@
           },
           "thumb_height": {
             "description": "Thumbnail height",
-            "type": "int"
+            "type": "integer"
           },
           "thumb_url": {
             "description": "URL of the thumbnail (JPEG only) for the file",
@@ -1615,7 +1615,7 @@
           },
           "thumb_width": {
             "description": "Thumbnail width",
-            "type": "int"
+            "type": "integer"
           },
           "title": {
             "description": "Title for the result",
@@ -1669,11 +1669,11 @@
           },
           "gif_duration": {
             "description": "Duration of the GIF in seconds",
-            "type": "int"
+            "type": "integer"
           },
           "gif_height": {
             "description": "Height of the GIF",
-            "type": "int"
+            "type": "integer"
           },
           "gif_url": {
             "description": "A valid URL for the GIF file. File size must not exceed 1MB",
@@ -1681,7 +1681,7 @@
           },
           "gif_width": {
             "description": "Width of the GIF",
-            "type": "int"
+            "type": "integer"
           },
           "id": {
             "description": "Unique identifier for this result, 1-64 bytes",
@@ -1728,7 +1728,7 @@
         "properties": {
           "heading": {
             "description": "For live locations, a direction in which the user is moving, in degrees. Must be between 1 and 360 if specified",
-            "type": "int"
+            "type": "integer"
           },
           "horizontal_accuracy": {
             "description": "The radius of uncertainty for the location, measured in meters; 0-1500",
@@ -1748,7 +1748,7 @@
           },
           "live_period": {
             "description": "Period in seconds for which the location can be updated, should be between 60 and 86400",
-            "type": "int"
+            "type": "integer"
           },
           "longitude": {
             "description": "Location longitude in degrees",
@@ -1756,7 +1756,7 @@
           },
           "proximity_alert_radius": {
             "description": "For live locations, a maximum distance for proximity alerts about approaching another chat member, in meters. Must be between 1 and 100000 if specified",
-            "type": "int"
+            "type": "integer"
           },
           "reply_markup": {
             "$ref": "#/components/schemas/InlineKeyboardMarkup",
@@ -1764,7 +1764,7 @@
           },
           "thumb_height": {
             "description": "Thumbnail height",
-            "type": "int"
+            "type": "integer"
           },
           "thumb_url": {
             "description": "Url of the thumbnail for the result",
@@ -1772,7 +1772,7 @@
           },
           "thumb_width": {
             "description": "Thumbnail width",
-            "type": "int"
+            "type": "integer"
           },
           "title": {
             "description": "Location title",
@@ -1808,11 +1808,11 @@
           },
           "mpeg4_duration": {
             "description": "Video duration in seconds",
-            "type": "int"
+            "type": "integer"
           },
           "mpeg4_height": {
             "description": "Video height",
-            "type": "int"
+            "type": "integer"
           },
           "mpeg4_url": {
             "description": "A valid URL for the MP4 file. File size must not exceed 1MB",
@@ -1820,7 +1820,7 @@
           },
           "mpeg4_width": {
             "description": "Video width",
-            "type": "int"
+            "type": "integer"
           },
           "parse_mode": {
             "description": "Mode for parsing entities in the caption. See formatting options for more details",
@@ -1879,7 +1879,7 @@
           },
           "photo_height": {
             "description": "Height of the photo",
-            "type": "int"
+            "type": "integer"
           },
           "photo_url": {
             "description": "A valid URL of the photo. Photo must be in JPEG format. Photo size must not exceed 5MB",
@@ -1887,7 +1887,7 @@
           },
           "photo_width": {
             "description": "Width of the photo",
-            "type": "int"
+            "type": "integer"
           },
           "reply_markup": {
             "$ref": "#/components/schemas/InlineKeyboardMarkup",
@@ -1958,7 +1958,7 @@
           },
           "thumb_height": {
             "description": "Thumbnail height",
-            "type": "int"
+            "type": "integer"
           },
           "thumb_url": {
             "description": "Url of the thumbnail for the result",
@@ -1966,7 +1966,7 @@
           },
           "thumb_width": {
             "description": "Thumbnail width",
-            "type": "int"
+            "type": "integer"
           },
           "title": {
             "description": "Title of the venue",
@@ -2031,11 +2031,11 @@
           },
           "video_duration": {
             "description": "Video duration in seconds",
-            "type": "int"
+            "type": "integer"
           },
           "video_height": {
             "description": "Video height",
-            "type": "int"
+            "type": "integer"
           },
           "video_url": {
             "description": "A valid URL for the embedded video player or video file",
@@ -2043,7 +2043,7 @@
           },
           "video_width": {
             "description": "Video width",
-            "type": "int"
+            "type": "integer"
           }
         },
         "required": [
@@ -2088,7 +2088,7 @@
           },
           "voice_duration": {
             "description": "Recording duration in seconds",
-            "type": "int"
+            "type": "integer"
           },
           "voice_url": {
             "description": "A valid URL for the voice recording",
@@ -2140,27 +2140,27 @@
           },
           "is_flexible": {
             "description": "Pass True, if the final price depends on the shipping method",
-            "type": "bool"
+            "type": "boolean"
           },
           "max_tip_amount": {
             "description": "The maximum accepted amount for tips in the smallest units of the currency (integer, not float/double). For example, for a maximum tip of US$ 1.45 pass max_tip_amount = 145. See the exp parameter in currencies.json, it shows the number of digits past the decimal point for each currency (2 for the majority of currencies). Defaults to 0",
-            "type": "int"
+            "type": "integer"
           },
           "need_email": {
             "description": "Pass True, if you require the user's email address to complete the order",
-            "type": "bool"
+            "type": "boolean"
           },
           "need_name": {
             "description": "Pass True, if you require the user's full name to complete the order",
-            "type": "bool"
+            "type": "boolean"
           },
           "need_phone_number": {
             "description": "Pass True, if you require the user's phone number to complete the order",
-            "type": "bool"
+            "type": "boolean"
           },
           "need_shipping_address": {
             "description": "Pass True, if you require the user's shipping address to complete the order",
-            "type": "bool"
+            "type": "boolean"
           },
           "payload": {
             "description": "Bot-defined invoice payload, 1-128 bytes. This will not be displayed to the user, use for your internal processes",
@@ -2168,11 +2168,11 @@
           },
           "photo_height": {
             "description": "Photo height",
-            "type": "int"
+            "type": "integer"
           },
           "photo_size": {
             "description": "Photo size",
-            "type": "int"
+            "type": "integer"
           },
           "photo_url": {
             "description": "URL of the product photo for the invoice. Can be a photo of the goods or a marketing image for a service. People like it better when they see what they are paying for",
@@ -2180,7 +2180,7 @@
           },
           "photo_width": {
             "description": "Photo width",
-            "type": "int"
+            "type": "integer"
           },
           "provider_data": {
             "description": "A JSON-serialized object for data about the invoice, which will be shared with the payment provider. A detailed description of the required fields should be provided by the payment provider",
@@ -2192,11 +2192,11 @@
           },
           "send_email_to_provider": {
             "description": "Pass True, if user's email address should be sent to provider",
-            "type": "bool"
+            "type": "boolean"
           },
           "send_phone_number_to_provider": {
             "description": "Pass True, if user's phone number should be sent to provider",
-            "type": "bool"
+            "type": "boolean"
           },
           "title": {
             "description": "Product name, 1-32 characters",
@@ -2216,7 +2216,7 @@
         "properties": {
           "heading": {
             "description": "For live locations, a direction in which the user is moving, in degrees. Must be between 1 and 360 if specified",
-            "type": "int"
+            "type": "integer"
           },
           "horizontal_accuracy": {
             "description": "The radius of uncertainty for the location, measured in meters; 0-1500",
@@ -2228,7 +2228,7 @@
           },
           "live_period": {
             "description": "Period in seconds for which the location can be updated, should be between 60 and 86400",
-            "type": "int"
+            "type": "integer"
           },
           "longitude": {
             "description": "Longitude of the location in degrees",
@@ -2236,7 +2236,7 @@
           },
           "proximity_alert_radius": {
             "description": "For live locations, a maximum distance for proximity alerts about approaching another chat member, in meters. Must be between 1 and 100000 if specified",
-            "type": "int"
+            "type": "integer"
           }
         },
         "required": [
@@ -2253,11 +2253,11 @@
           },
           "duration": {
             "description": "Animation duration in seconds",
-            "type": "int"
+            "type": "integer"
           },
           "height": {
             "description": "Animation height",
-            "type": "int"
+            "type": "integer"
           },
           "media": {
             "description": "File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass “attach://\u003cfile_attach_name\u003e” to upload a new one using multipart/form-data under \u003cfile_attach_name\u003e name. More info on Sending Files »",
@@ -2273,7 +2273,7 @@
           },
           "width": {
             "description": "Animation width",
-            "type": "int"
+            "type": "integer"
           }
         },
         "required": [
@@ -2290,7 +2290,7 @@
           },
           "duration": {
             "description": "Duration of the audio in seconds",
-            "type": "int"
+            "type": "integer"
           },
           "media": {
             "description": "File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass “attach://\u003cfile_attach_name\u003e” to upload a new one using multipart/form-data under \u003cfile_attach_name\u003e name. More info on Sending Files »",
@@ -2327,7 +2327,7 @@
           },
           "disable_content_type_detection": {
             "description": "Disables automatic server-side content type detection for files uploaded using multipart/form-data. Always true, if the document is sent as part of an album",
-            "type": "bool"
+            "type": "boolean"
           },
           "media": {
             "description": "File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass “attach://\u003cfile_attach_name\u003e” to upload a new one using multipart/form-data under \u003cfile_attach_name\u003e name. More info on Sending Files »",
@@ -2381,11 +2381,11 @@
           },
           "duration": {
             "description": "Video duration in seconds",
-            "type": "int"
+            "type": "integer"
           },
           "height": {
             "description": "Video height",
-            "type": "int"
+            "type": "integer"
           },
           "media": {
             "description": "File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass “attach://\u003cfile_attach_name\u003e” to upload a new one using multipart/form-data under \u003cfile_attach_name\u003e name. More info on Sending Files »",
@@ -2397,7 +2397,7 @@
           },
           "supports_streaming": {
             "description": "Pass True, if the uploaded video is suitable for streaming",
-            "type": "bool"
+            "type": "boolean"
           },
           "type": {
             "description": "Type of the result, must be video",
@@ -2405,7 +2405,7 @@
           },
           "width": {
             "description": "Video width",
-            "type": "int"
+            "type": "integer"
           }
         },
         "required": [
@@ -2418,7 +2418,7 @@
         "properties": {
           "disable_web_page_preview": {
             "description": "Disables link previews for links in the sent message",
-            "type": "bool"
+            "type": "boolean"
           },
           "message_text": {
             "description": "Text of the message to be sent, 1-4096 characters",
@@ -2497,7 +2497,7 @@
           },
           "total_amount": {
             "description": "Total price in the smallest units of the currency (integer, not float/double). For example, for a price of US$ 1.45 pass amount = 145. See the exp parameter in currencies.json, it shows the number of digits past the decimal point for each currency (2 for the majority of currencies)",
-            "type": "int"
+            "type": "integer"
           }
         },
         "required": [
@@ -2513,11 +2513,11 @@
         "properties": {
           "request_contact": {
             "description": "If True, the user's phone number will be sent as a contact when the button is pressed. Available in private chats only",
-            "type": "bool"
+            "type": "boolean"
           },
           "request_location": {
             "description": "If True, the user's current location will be sent when the button is pressed. Available in private chats only",
-            "type": "bool"
+            "type": "boolean"
           },
           "request_poll": {
             "$ref": "#/components/schemas/KeyboardButtonPollType",
@@ -2546,7 +2546,7 @@
         "properties": {
           "amount": {
             "description": "Price of the product in the smallest units of the currency (integer, not float/double). For example, for a price of US$ 1.45 pass amount = 145. See the exp parameter in currencies.json, it shows the number of digits past the decimal point for each currency (2 for the majority of currencies)",
-            "type": "int"
+            "type": "integer"
           },
           "label": {
             "description": "Portion label",
@@ -2563,7 +2563,7 @@
         "properties": {
           "heading": {
             "description": "The direction in which user is moving, in degrees; 1-360. For active live locations only",
-            "type": "int"
+            "type": "integer"
           },
           "horizontal_accuracy": {
             "description": "The radius of uncertainty for the location, measured in meters; 0-1500",
@@ -2575,7 +2575,7 @@
           },
           "live_period": {
             "description": "Time relative to the message sending date, during which the location can be updated, in seconds. For active live locations only",
-            "type": "int"
+            "type": "integer"
           },
           "longitude": {
             "description": "Longitude as defined by sender",
@@ -2583,7 +2583,7 @@
           },
           "proximity_alert_radius": {
             "description": "Maximum distance for proximity alerts about approaching another chat member, in meters. For sent live locations only",
-            "type": "int"
+            "type": "integer"
           }
         },
         "required": [
@@ -2604,7 +2604,7 @@
           },
           "request_write_access": {
             "description": "Pass True to request the permission for your bot to send messages to the user",
-            "type": "bool"
+            "type": "boolean"
           },
           "url": {
             "description": "An HTTP URL to be opened with user authorization data added to the query string when the button is pressed. If the user refuses to provide authorization data, the original URL without information about the user will be opened. The data added is the same as described in Receiving authorization data.NOTE: You must always check the hash of the received data to verify the authentication and the integrity of the data as described in Checking authorization",
@@ -2679,7 +2679,7 @@
           },
           "date": {
             "description": "Date the message was sent in Unix time",
-            "type": "int"
+            "type": "integer"
           },
           "delete_chat_photo": {
             "$ref": "#/components/schemas/True",
@@ -2695,11 +2695,11 @@
           },
           "edit_date": {
             "description": "Date the message was last edited in Unix time",
-            "type": "int"
+            "type": "integer"
           },
           "forward_date": {
             "description": "For forwarded messages, date the original message was sent in Unix time",
-            "type": "int"
+            "type": "integer"
           },
           "forward_from": {
             "$ref": "#/components/schemas/User",
@@ -2711,7 +2711,7 @@
           },
           "forward_from_message_id": {
             "description": "For messages forwarded from channels, identifier of the original message in the channel",
-            "type": "int"
+            "type": "integer"
           },
           "forward_sender_name": {
             "description": "Sender's name for messages forwarded from users who disallow adding a link to their account in forwarded messages",
@@ -2755,15 +2755,15 @@
           },
           "message_id": {
             "description": "Unique message identifier inside this chat",
-            "type": "int"
+            "type": "integer"
           },
           "migrate_from_chat_id": {
             "description": "The supergroup has been migrated from a group with the specified identifier. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this identifier",
-            "type": "int"
+            "type": "integer"
           },
           "migrate_to_chat_id": {
             "description": "The group has been migrated to a supergroup with the specified identifier. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this identifier",
-            "type": "int"
+            "type": "integer"
           },
           "new_chat_title": {
             "description": "A chat title was changed to this value",
@@ -2861,7 +2861,7 @@
         "properties": {
           "message_auto_delete_time": {
             "description": "New auto-delete time for messages in the chat",
-            "type": "int"
+            "type": "integer"
           }
         },
         "required": [
@@ -2877,11 +2877,11 @@
           },
           "length": {
             "description": "Length of the entity in UTF-16 code units",
-            "type": "int"
+            "type": "integer"
           },
           "offset": {
             "description": "Offset in UTF-16 code units to the start of the entity",
-            "type": "int"
+            "type": "integer"
           },
           "type": {
             "description": "Type of the entity. Can be “mention” (@username), “hashtag” (#hashtag), “cashtag” ($USD), “bot_command” (/start@jobs_bot), “url” (https://telegram.org), “email” (do-not-reply@telegram.org), “phone_number” (+1-212-555-0123), “bold” (bold text), “italic” (italic text), “underline” (underlined text), “strikethrough” (strikethrough text), “code” (monowidth string), “pre” (monowidth block), “text_link” (for clickable text URLs), “text_mention” (for users without usernames)",
@@ -2907,7 +2907,7 @@
         "properties": {
           "message_id": {
             "description": "Unique message identifier",
-            "type": "int"
+            "type": "integer"
           }
         },
         "required": [
@@ -3190,7 +3190,7 @@
         "properties": {
           "file_date": {
             "description": "Unix time when the file was uploaded",
-            "type": "int"
+            "type": "integer"
           },
           "file_id": {
             "description": "Identifier for this file, which can be used to download or reuse the file",
@@ -3198,7 +3198,7 @@
           },
           "file_size": {
             "description": "File size in bytes",
-            "type": "int"
+            "type": "integer"
           },
           "file_unique_id": {
             "description": "Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file",
@@ -3221,7 +3221,7 @@
           },
           "file_size": {
             "description": "File size in bytes",
-            "type": "int"
+            "type": "integer"
           },
           "file_unique_id": {
             "description": "Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file",
@@ -3229,11 +3229,11 @@
           },
           "height": {
             "description": "Photo height",
-            "type": "int"
+            "type": "integer"
           },
           "width": {
             "description": "Photo width",
-            "type": "int"
+            "type": "integer"
           }
         },
         "required": [
@@ -3248,15 +3248,15 @@
         "properties": {
           "allows_multiple_answers": {
             "description": "True, if the poll allows multiple answers",
-            "type": "bool"
+            "type": "boolean"
           },
           "close_date": {
             "description": "Point in time (Unix timestamp) when the poll will be automatically closed",
-            "type": "int"
+            "type": "integer"
           },
           "correct_option_id": {
             "description": "0-based identifier of the correct answer option. Available only for polls in the quiz mode, which are closed, or was sent (not forwarded) by the bot or to the private chat with the bot",
-            "type": "int"
+            "type": "integer"
           },
           "explanation": {
             "description": "Text that is shown when a user chooses an incorrect answer or taps on the lamp icon in a quiz-style poll, 0-200 characters",
@@ -3268,15 +3268,15 @@
           },
           "is_anonymous": {
             "description": "True, if the poll is anonymous",
-            "type": "bool"
+            "type": "boolean"
           },
           "is_closed": {
             "description": "True, if the poll is closed",
-            "type": "bool"
+            "type": "boolean"
           },
           "open_period": {
             "description": "Amount of time in seconds the poll will be active after creation",
-            "type": "int"
+            "type": "integer"
           },
           "question": {
             "description": "Poll question, 1-300 characters",
@@ -3284,7 +3284,7 @@
           },
           "total_voter_count": {
             "description": "Total number of users that voted in the poll",
-            "type": "int"
+            "type": "integer"
           },
           "type": {
             "description": "Poll type, currently can be “regular” or “quiz”",
@@ -3327,7 +3327,7 @@
           },
           "voter_count": {
             "description": "Number of users that voted for this option",
-            "type": "int"
+            "type": "integer"
           }
         },
         "required": [
@@ -3364,7 +3364,7 @@
           },
           "total_amount": {
             "description": "Total price in the smallest units of the currency (integer, not float/double). For example, for a price of US$ 1.45 pass amount = 145. See the exp parameter in currencies.json, it shows the number of digits past the decimal point for each currency (2 for the majority of currencies)",
-            "type": "int"
+            "type": "integer"
           }
         },
         "required": [
@@ -3380,7 +3380,7 @@
         "properties": {
           "distance": {
             "description": "The distance between the users",
-            "type": "int"
+            "type": "integer"
           },
           "traveler": {
             "$ref": "#/components/schemas/User",
@@ -3406,15 +3406,15 @@
           },
           "one_time_keyboard": {
             "description": "Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat – the user can press a special button in the input field to see the custom keyboard again. Defaults to false",
-            "type": "bool"
+            "type": "boolean"
           },
           "resize_keyboard": {
             "description": "Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to false, in which case the custom keyboard is always of the same height as the app's standard keyboard",
-            "type": "bool"
+            "type": "boolean"
           },
           "selective": {
             "description": "Use this parameter if you want to show the keyboard to specific users only. Targets: 1) users that are @mentioned in the text of the Message object; 2) if the bot's message is a reply (has reply_to_message_id), sender of the original message.Example: A user requests to change the bot's language, bot replies to the request with a keyboard to select the new language. Other users in the group don't see the keyboard",
-            "type": "bool"
+            "type": "boolean"
           }
         }
       },
@@ -3427,7 +3427,7 @@
           },
           "selective": {
             "description": "Use this parameter if you want to remove the keyboard for specific users only. Targets: 1) users that are @mentioned in the text of the Message object; 2) if the bot's message is a reply (has reply_to_message_id), sender of the original message.Example: A user votes in a poll, bot returns confirmation message in reply to the vote and removes the keyboard for that user, while still showing the keyboard with poll options to users who haven't voted yet",
-            "type": "bool"
+            "type": "boolean"
           }
         },
         "required": [
@@ -3439,11 +3439,11 @@
         "properties": {
           "migrate_to_chat_id": {
             "description": "The group has been migrated to a supergroup with the specified identifier. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this identifier",
-            "type": "int"
+            "type": "integer"
           },
           "retry_after": {
             "description": "In case of exceeding flood control, the number of seconds left to wait before the request can be repeated",
-            "type": "int"
+            "type": "integer"
           }
         }
       },
@@ -3541,7 +3541,7 @@
           },
           "file_size": {
             "description": "File size in bytes",
-            "type": "int"
+            "type": "integer"
           },
           "file_unique_id": {
             "description": "Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file",
@@ -3549,11 +3549,11 @@
           },
           "height": {
             "description": "Sticker height",
-            "type": "int"
+            "type": "integer"
           },
           "is_animated": {
             "description": "True, if the sticker is animated",
-            "type": "bool"
+            "type": "boolean"
           },
           "mask_position": {
             "$ref": "#/components/schemas/MaskPosition",
@@ -3569,7 +3569,7 @@
           },
           "width": {
             "description": "Sticker width",
-            "type": "int"
+            "type": "integer"
           }
         },
         "required": [
@@ -3585,11 +3585,11 @@
         "properties": {
           "contains_masks": {
             "description": "True, if the sticker set contains masks",
-            "type": "bool"
+            "type": "boolean"
           },
           "is_animated": {
             "description": "True, if the sticker set contains animated stickers",
-            "type": "bool"
+            "type": "boolean"
           },
           "name": {
             "description": "Sticker set name",
@@ -3640,7 +3640,7 @@
           },
           "total_amount": {
             "description": "Total price in the smallest units of the currency (integer, not float/double). For example, for a price of US$ 1.45 pass amount = 145. See the exp parameter in currencies.json, it shows the number of digits past the decimal point for each currency (2 for the majority of currencies)",
-            "type": "int"
+            "type": "integer"
           }
         },
         "required": [
@@ -3708,7 +3708,7 @@
           },
           "update_id": {
             "description": "The update's unique identifier. Update identifiers start from a certain positive number and increase sequentially. This ID becomes especially handy if you're using Webhooks, since it allows you to ignore repeated updates or to restore the correct update sequence, should they get out of order. If there are no new updates for at least a week, then identifier of the next update will be chosen randomly instead of sequentially",
-            "type": "int"
+            "type": "integer"
           }
         },
         "required": [
@@ -3720,11 +3720,11 @@
         "properties": {
           "can_join_groups": {
             "description": "True, if the bot can be invited to groups. Returned only in getMe",
-            "type": "bool"
+            "type": "boolean"
           },
           "can_read_all_group_messages": {
             "description": "True, if privacy mode is disabled for the bot. Returned only in getMe",
-            "type": "bool"
+            "type": "boolean"
           },
           "first_name": {
             "description": "User's or bot's first name",
@@ -3732,11 +3732,11 @@
           },
           "id": {
             "description": "Unique identifier for this user or bot. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a 64-bit integer or double-precision float type are safe for storing this identifier",
-            "type": "int"
+            "type": "integer"
           },
           "is_bot": {
             "description": "True, if this user is a bot",
-            "type": "bool"
+            "type": "boolean"
           },
           "language_code": {
             "description": "IETF language tag of the user's language",
@@ -3748,7 +3748,7 @@
           },
           "supports_inline_queries": {
             "description": "True, if the bot supports inline queries. Returned only in getMe",
-            "type": "bool"
+            "type": "boolean"
           },
           "username": {
             "description": "User's or bot's username",
@@ -3766,7 +3766,7 @@
         "properties": {
           "total_count": {
             "description": "Total number of profile pictures the target user has",
-            "type": "int"
+            "type": "integer"
           }
         },
         "required": [
@@ -3816,7 +3816,7 @@
         "properties": {
           "duration": {
             "description": "Duration of the video in seconds as defined by sender",
-            "type": "int"
+            "type": "integer"
           },
           "file_id": {
             "description": "Identifier for this file, which can be used to download or reuse the file",
@@ -3828,7 +3828,7 @@
           },
           "file_size": {
             "description": "File size in bytes",
-            "type": "int"
+            "type": "integer"
           },
           "file_unique_id": {
             "description": "Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file",
@@ -3836,7 +3836,7 @@
           },
           "height": {
             "description": "Video height as defined by sender",
-            "type": "int"
+            "type": "integer"
           },
           "mime_type": {
             "description": "Mime type of a file as defined by sender",
@@ -3848,7 +3848,7 @@
           },
           "width": {
             "description": "Video width as defined by sender",
-            "type": "int"
+            "type": "integer"
           }
         },
         "required": [
@@ -3864,7 +3864,7 @@
         "properties": {
           "duration": {
             "description": "Duration of the video in seconds as defined by sender",
-            "type": "int"
+            "type": "integer"
           },
           "file_id": {
             "description": "Identifier for this file, which can be used to download or reuse the file",
@@ -3872,7 +3872,7 @@
           },
           "file_size": {
             "description": "File size in bytes",
-            "type": "int"
+            "type": "integer"
           },
           "file_unique_id": {
             "description": "Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file",
@@ -3880,7 +3880,7 @@
           },
           "length": {
             "description": "Video width and height (diameter of the video message) as defined by sender",
-            "type": "int"
+            "type": "integer"
           },
           "thumb": {
             "$ref": "#/components/schemas/PhotoSize",
@@ -3899,7 +3899,7 @@
         "properties": {
           "duration": {
             "description": "Duration of the audio in seconds as defined by sender",
-            "type": "int"
+            "type": "integer"
           },
           "file_id": {
             "description": "Identifier for this file, which can be used to download or reuse the file",
@@ -3907,7 +3907,7 @@
           },
           "file_size": {
             "description": "File size in bytes",
-            "type": "int"
+            "type": "integer"
           },
           "file_unique_id": {
             "description": "Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file",
@@ -3929,7 +3929,7 @@
         "properties": {
           "duration": {
             "description": "Voice chat duration in seconds",
-            "type": "int"
+            "type": "integer"
           }
         },
         "required": [
@@ -3944,7 +3944,7 @@
         "properties": {
           "start_date": {
             "description": "Point in time (Unix timestamp) when the voice chat is supposed to be started by a chat administrator",
-            "type": "int"
+            "type": "integer"
           }
         },
         "required": [
@@ -3956,7 +3956,7 @@
         "properties": {
           "has_custom_certificate": {
             "description": "True, if a custom certificate was provided for webhook certificate checks",
-            "type": "bool"
+            "type": "boolean"
           },
           "ip_address": {
             "description": "Currently used webhook IP address",
@@ -3964,7 +3964,7 @@
           },
           "last_error_date": {
             "description": "Unix time for the most recent error that happened when trying to deliver an update via webhook",
-            "type": "int"
+            "type": "integer"
           },
           "last_error_message": {
             "description": "Error message in human-readable format for the most recent error that happened when trying to deliver an update via webhook",
@@ -3972,11 +3972,11 @@
           },
           "max_connections": {
             "description": "Maximum allowed number of simultaneous HTTPS connections to the webhook for update delivery",
-            "type": "int"
+            "type": "integer"
           },
           "pending_update_count": {
             "description": "Number of updates awaiting delivery",
-            "type": "int"
+            "type": "integer"
           },
           "url": {
             "description": "Webhook URL, may be empty if webhook is not set up",

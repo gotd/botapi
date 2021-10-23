@@ -48,11 +48,11 @@ func (a API) OAS() *ogen.Spec {
 				case String:
 					p.Type = "string"
 				case Integer:
-					p.Type = "int"
+					p.Type = "integer"
 				case Float:
 					p.Type = "float64"
 				case Boolean:
-					p.Type = "bool"
+					p.Type = "boolean"
 				}
 			case KindObject:
 				p.Ref = "#/components/schemas/" + t.Name
