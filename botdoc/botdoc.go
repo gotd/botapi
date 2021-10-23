@@ -27,6 +27,7 @@ const (
 	String  Primitive = "String"
 	Integer Primitive = "Integer"
 	Float   Primitive = "Float"
+	Boolean Primitive = "Boolean"
 )
 
 func (p Primitive) String() string {
@@ -52,7 +53,7 @@ func newPrimitive(p Primitive) Type {
 // ParseType parses telegram documentation Type from string
 func ParseType(s string) Type {
 	switch p := Primitive(s); p {
-	case String, Integer, Float:
+	case String, Integer, Float, Boolean:
 		return newPrimitive(p)
 	case "Float number":
 		return newPrimitive(Float)
