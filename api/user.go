@@ -5,7 +5,7 @@ package api
 //
 // https://core.telegram.org/bots/api#user
 type User struct {
-	ID int `json:"id"`
+	ID int64 `json:"id"`
 
 	FirstName    string `json:"first_name"`
 	LastName     string `json:"last_name"`
