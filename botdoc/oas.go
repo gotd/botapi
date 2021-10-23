@@ -1,6 +1,9 @@
 package botdoc
 
 import (
+	"encoding/json"
+	"strings"
+
 	"github.com/ogen-go/ogen"
 )
 
@@ -47,6 +50,19 @@ func (a API) OAS() *ogen.Spec {
 				switch t.Primitive {
 				case String:
 					p.Type = "string"
+
+					const defaultMarker = `, must be `
+					if idx := strings.LastIndex(p.Description, defaultMarker); idx > 0 {
+						// Handle possible default value.
+						v := p.Description[idx+len(defaultMarker):]
+						if !strings.Contains(p.Description, `one of `) {
+							data, err := json.Marshal(v)
+							if err != nil {
+								panic(err)
+							}
+							p.Default = data
+						}
+					}
 				case Integer:
 					p.Type = "integer"
 				case Float:

@@ -150,7 +150,8 @@
         "properties": {
           "type": {
             "description": "Scope type, must be all_chat_administrators",
-            "type": "string"
+            "type": "string",
+            "default": "all_chat_administrators"
           }
         },
         "required": [
@@ -162,7 +163,8 @@
         "properties": {
           "type": {
             "description": "Scope type, must be all_group_chats",
-            "type": "string"
+            "type": "string",
+            "default": "all_group_chats"
           }
         },
         "required": [
@@ -174,7 +176,8 @@
         "properties": {
           "type": {
             "description": "Scope type, must be all_private_chats",
-            "type": "string"
+            "type": "string",
+            "default": "all_private_chats"
           }
         },
         "required": [
@@ -186,7 +189,8 @@
         "properties": {
           "type": {
             "description": "Scope type, must be chat",
-            "type": "string"
+            "type": "string",
+            "default": "chat"
           }
         },
         "required": [
@@ -198,7 +202,8 @@
         "properties": {
           "type": {
             "description": "Scope type, must be chat_administrators",
-            "type": "string"
+            "type": "string",
+            "default": "chat_administrators"
           }
         },
         "required": [
@@ -210,7 +215,8 @@
         "properties": {
           "type": {
             "description": "Scope type, must be chat_member",
-            "type": "string"
+            "type": "string",
+            "default": "chat_member"
           },
           "user_id": {
             "description": "Unique identifier of the target user",
@@ -227,7 +233,8 @@
         "properties": {
           "type": {
             "description": "Scope type, must be default",
-            "type": "string"
+            "type": "string",
+            "default": "default"
           }
         },
         "required": [
@@ -1115,7 +1122,8 @@
           },
           "type": {
             "description": "Type of the result, must be article",
-            "type": "string"
+            "type": "string",
+            "default": "article"
           },
           "url": {
             "description": "URL of the result",
@@ -1170,7 +1178,8 @@
           },
           "type": {
             "description": "Type of the result, must be audio",
-            "type": "string"
+            "type": "string",
+            "default": "audio"
           }
         },
         "required": [
@@ -1209,7 +1218,8 @@
           },
           "type": {
             "description": "Type of the result, must be audio",
-            "type": "string"
+            "type": "string",
+            "default": "audio"
           }
         },
         "required": [
@@ -1255,7 +1265,8 @@
           },
           "type": {
             "description": "Type of the result, must be document",
-            "type": "string"
+            "type": "string",
+            "default": "document"
           }
         },
         "required": [
@@ -1298,7 +1309,8 @@
           },
           "type": {
             "description": "Type of the result, must be gif",
-            "type": "string"
+            "type": "string",
+            "default": "gif"
           }
         },
         "required": [
@@ -1340,7 +1352,8 @@
           },
           "type": {
             "description": "Type of the result, must be mpeg4_gif",
-            "type": "string"
+            "type": "string",
+            "default": "mpeg4_gif"
           }
         },
         "required": [
@@ -1386,7 +1399,8 @@
           },
           "type": {
             "description": "Type of the result, must be photo",
-            "type": "string"
+            "type": "string",
+            "default": "photo"
           }
         },
         "required": [
@@ -1416,7 +1430,8 @@
           },
           "type": {
             "description": "Type of the result, must be sticker",
-            "type": "string"
+            "type": "string",
+            "default": "sticker"
           }
         },
         "required": [
@@ -1458,7 +1473,8 @@
           },
           "type": {
             "description": "Type of the result, must be video",
-            "type": "string"
+            "type": "string",
+            "default": "video"
           },
           "video_file_id": {
             "description": "A valid file identifier for the video file",
@@ -1501,7 +1517,8 @@
           },
           "type": {
             "description": "Type of the result, must be voice",
-            "type": "string"
+            "type": "string",
+            "default": "voice"
           },
           "voice_file_id": {
             "description": "A valid file identifier for the voice message",
@@ -1556,7 +1573,8 @@
           },
           "type": {
             "description": "Type of the result, must be contact",
-            "type": "string"
+            "type": "string",
+            "default": "contact"
           },
           "vcard": {
             "description": "Additional data about the contact in the form of a vCard, 0-2048 bytes",
@@ -1623,7 +1641,8 @@
           },
           "type": {
             "description": "Type of the result, must be document",
-            "type": "string"
+            "type": "string",
+            "default": "document"
           }
         },
         "required": [
@@ -1651,7 +1670,8 @@
           },
           "type": {
             "description": "Type of the result, must be game",
-            "type": "string"
+            "type": "string",
+            "default": "game"
           }
         },
         "required": [
@@ -1713,7 +1733,8 @@
           },
           "type": {
             "description": "Type of the result, must be gif",
-            "type": "string"
+            "type": "string",
+            "default": "gif"
           }
         },
         "required": [
@@ -1780,7 +1801,8 @@
           },
           "type": {
             "description": "Type of the result, must be location",
-            "type": "string"
+            "type": "string",
+            "default": "location"
           }
         },
         "required": [
@@ -1844,7 +1866,8 @@
           },
           "type": {
             "description": "Type of the result, must be mpeg4_gif",
-            "type": "string"
+            "type": "string",
+            "default": "mpeg4_gif"
           }
         },
         "required": [
@@ -1903,7 +1926,8 @@
           },
           "type": {
             "description": "Type of the result, must be photo",
-            "type": "string"
+            "type": "string",
+            "default": "photo"
           }
         },
         "required": [
@@ -1974,7 +1998,8 @@
           },
           "type": {
             "description": "Type of the result, must be venue",
-            "type": "string"
+            "type": "string",
+            "default": "venue"
           }
         },
         "required": [
@@ -2027,7 +2052,8 @@
           },
           "type": {
             "description": "Type of the result, must be video",
-            "type": "string"
+            "type": "string",
+            "default": "video"
           },
           "video_duration": {
             "description": "Video duration in seconds",
@@ -2084,7 +2110,8 @@
           },
           "type": {
             "description": "Type of the result, must be voice",
-            "type": "string"
+            "type": "string",
+            "default": "voice"
           },
           "voice_duration": {
             "description": "Recording duration in seconds",
@@ -2269,7 +2296,8 @@
           },
           "type": {
             "description": "Type of the result, must be animation",
-            "type": "string"
+            "type": "string",
+            "default": "animation"
           },
           "width": {
             "description": "Animation width",
@@ -2310,7 +2338,8 @@
           },
           "type": {
             "description": "Type of the result, must be audio",
-            "type": "string"
+            "type": "string",
+            "default": "audio"
           }
         },
         "required": [
@@ -2339,7 +2368,8 @@
           },
           "type": {
             "description": "Type of the result, must be document",
-            "type": "string"
+            "type": "string",
+            "default": "document"
           }
         },
         "required": [
@@ -2364,7 +2394,8 @@
           },
           "type": {
             "description": "Type of the result, must be photo",
-            "type": "string"
+            "type": "string",
+            "default": "photo"
           }
         },
         "required": [
@@ -2401,7 +2432,8 @@
           },
           "type": {
             "description": "Type of the result, must be video",
-            "type": "string"
+            "type": "string",
+            "default": "video"
           },
           "width": {
             "description": "Video width",
@@ -2964,7 +2996,8 @@
           },
           "source": {
             "description": "Error source, must be data",
-            "type": "string"
+            "type": "string",
+            "default": "data"
           },
           "type": {
             "description": "The section of the user's Telegram Passport which has the error, one of “personal_details”, “passport”, “driver_license”, “identity_card”, “internal_passport”, “address”",
@@ -2992,7 +3025,8 @@
           },
           "source": {
             "description": "Error source, must be file",
-            "type": "string"
+            "type": "string",
+            "default": "file"
           },
           "type": {
             "description": "The section of the user's Telegram Passport which has the issue, one of “utility_bill”, “bank_statement”, “rental_agreement”, “passport_registration”, “temporary_registration”",
@@ -3015,7 +3049,8 @@
           },
           "source": {
             "description": "Error source, must be files",
-            "type": "string"
+            "type": "string",
+            "default": "files"
           },
           "type": {
             "description": "The section of the user's Telegram Passport which has the issue, one of “utility_bill”, “bank_statement”, “rental_agreement”, “passport_registration”, “temporary_registration”",
@@ -3041,7 +3076,8 @@
           },
           "source": {
             "description": "Error source, must be front_side",
-            "type": "string"
+            "type": "string",
+            "default": "front_side"
           },
           "type": {
             "description": "The section of the user's Telegram Passport which has the issue, one of “passport”, “driver_license”, “identity_card”, “internal_passport”",
@@ -3068,7 +3104,8 @@
           },
           "source": {
             "description": "Error source, must be reverse_side",
-            "type": "string"
+            "type": "string",
+            "default": "reverse_side"
           },
           "type": {
             "description": "The section of the user's Telegram Passport which has the issue, one of “driver_license”, “identity_card”",
@@ -3095,7 +3132,8 @@
           },
           "source": {
             "description": "Error source, must be selfie",
-            "type": "string"
+            "type": "string",
+            "default": "selfie"
           },
           "type": {
             "description": "The section of the user's Telegram Passport which has the issue, one of “passport”, “driver_license”, “identity_card”, “internal_passport”",
@@ -3122,7 +3160,8 @@
           },
           "source": {
             "description": "Error source, must be translation_file",
-            "type": "string"
+            "type": "string",
+            "default": "translation_file"
           },
           "type": {
             "description": "Type of element of the user's Telegram Passport which has the issue, one of “passport”, “driver_license”, “identity_card”, “internal_passport”, “utility_bill”, “bank_statement”, “rental_agreement”, “passport_registration”, “temporary_registration”",
@@ -3145,7 +3184,8 @@
           },
           "source": {
             "description": "Error source, must be translation_files",
-            "type": "string"
+            "type": "string",
+            "default": "translation_files"
           },
           "type": {
             "description": "Type of element of the user's Telegram Passport which has the issue, one of “passport”, “driver_license”, “identity_card”, “internal_passport”, “utility_bill”, “bank_statement”, “rental_agreement”, “passport_registration”, “temporary_registration”",
@@ -3171,7 +3211,8 @@
           },
           "source": {
             "description": "Error source, must be unspecified",
-            "type": "string"
+            "type": "string",
+            "default": "unspecified"
           },
           "type": {
             "description": "Type of element of the user's Telegram Passport which has the issue",
