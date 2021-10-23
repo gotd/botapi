@@ -4,6 +4,7 @@ import (
 	"github.com/ogen-go/ogen"
 )
 
+// OAS generates OpenAPI v3 Specification from API definition.
 func (a API) OAS() *ogen.Spec {
 	spec := &ogen.Spec{
 		OpenAPI: "3.0.0",
