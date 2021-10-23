@@ -4,8 +4,9 @@ import (
 	"context"
 	"encoding/json"
 
-	"github.com/gotd/botapi/api"
 	"github.com/gotd/td/tg"
+
+	"github.com/gotd/botapi/api"
 )
 
 func convertUser(res *tg.User) api.User {
