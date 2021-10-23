@@ -940,8 +940,8 @@
         "type": "object",
         "properties": {
           "force_reply": {
-            "$ref": "#/components/schemas/True",
-            "description": "Shows reply interface to the user, as if they manually selected the bot's message and tapped 'Reply'"
+            "description": "Shows reply interface to the user, as if they manually selected the bot's message and tapped 'Reply'",
+            "type": "boolean"
           },
           "input_field_placeholder": {
             "description": "The placeholder to be shown in the input field when the reply is active; 1-64 characters",
@@ -2694,8 +2694,8 @@
             "type": "string"
           },
           "channel_chat_created": {
-            "$ref": "#/components/schemas/True",
-            "description": "Service message: the channel has been created. This field can't be received in a message coming through updates, because bot can't be a member of a channel when it is created. It can only be found in reply_to_message if someone replies to a very first message in a channel"
+            "description": "Service message: the channel has been created. This field can't be received in a message coming through updates, because bot can't be a member of a channel when it is created. It can only be found in reply_to_message if someone replies to a very first message in a channel",
+            "type": "boolean"
           },
           "chat": {
             "$ref": "#/components/schemas/Chat",
@@ -2714,8 +2714,8 @@
             "type": "integer"
           },
           "delete_chat_photo": {
-            "$ref": "#/components/schemas/True",
-            "description": "Service message: the chat photo was deleted"
+            "description": "Service message: the chat photo was deleted",
+            "type": "boolean"
           },
           "dice": {
             "$ref": "#/components/schemas/Dice",
@@ -2762,8 +2762,8 @@
             "description": "Message is a game, information about the game. More about games »"
           },
           "group_chat_created": {
-            "$ref": "#/components/schemas/True",
-            "description": "Service message: the group has been created"
+            "description": "Service message: the group has been created",
+            "type": "boolean"
           },
           "invoice": {
             "$ref": "#/components/schemas/Invoice",
@@ -2838,8 +2838,8 @@
             "description": "Message is a service message about a successful payment, information about the payment. More about payments »"
           },
           "supergroup_chat_created": {
-            "$ref": "#/components/schemas/True",
-            "description": "Service message: the supergroup has been created. This field can't be received in a message coming through updates, because bot can't be a member of a supergroup when it is created. It can only be found in reply_to_message if someone replies to a very first message in a directly created supergroup"
+            "description": "Service message: the supergroup has been created. This field can't be received in a message coming through updates, because bot can't be a member of a supergroup when it is created. It can only be found in reply_to_message if someone replies to a very first message in a directly created supergroup",
+            "type": "boolean"
           },
           "text": {
             "description": "For text messages, the actual UTF-8 text of the message, 0-4096 characters",
@@ -3463,8 +3463,8 @@
         "type": "object",
         "properties": {
           "remove_keyboard": {
-            "$ref": "#/components/schemas/True",
-            "description": "Requests clients to remove the custom keyboard (user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)"
+            "description": "Requests clients to remove the custom keyboard (user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)",
+            "type": "boolean"
           },
           "selective": {
             "description": "Use this parameter if you want to remove the keyboard for specific users only. Targets: 1) users that are @mentioned in the text of the Message object; 2) if the bot's message is a reply (has reply_to_message_id), sender of the original message.Example: A user votes in a poll, bot returns confirmation message in reply to the vote and removes the keyboard for that user, while still showing the keyboard with poll options to users who haven't voted yet",

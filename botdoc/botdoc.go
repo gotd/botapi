@@ -57,6 +57,8 @@ func ParseType(s string) Type {
 		return newPrimitive(p)
 	case "Float number":
 		return newPrimitive(Float)
+	case "True":
+		return newPrimitive(Boolean)
 	}
 
 	if t := strings.TrimPrefix(s, "Array of "); t != s {
