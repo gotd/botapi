@@ -35,349 +35,3070 @@
   "components": {
     "schemas": {
       "Animation": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "duration": {
+            "description": "Duration of the video in seconds as defined by sender",
+            "type": "int"
+          },
+          "file_id": {
+            "description": "Identifier for this file, which can be used to download or reuse the file",
+            "type": "string"
+          },
+          "file_name": {
+            "description": "Original animation filename as defined by sender",
+            "type": "string"
+          },
+          "file_size": {
+            "description": "File size in bytes",
+            "type": "int"
+          },
+          "file_unique_id": {
+            "description": "Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file",
+            "type": "string"
+          },
+          "height": {
+            "description": "Video height as defined by sender",
+            "type": "int"
+          },
+          "mime_type": {
+            "description": "MIME type of the file as defined by sender",
+            "type": "string"
+          },
+          "width": {
+            "description": "Video width as defined by sender",
+            "type": "int"
+          }
+        },
+        "required": [
+          "file_id",
+          "file_unique_id",
+          "width",
+          "height",
+          "duration"
+        ]
       },
       "Audio": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "duration": {
+            "description": "Duration of the audio in seconds as defined by sender",
+            "type": "int"
+          },
+          "file_id": {
+            "description": "Identifier for this file, which can be used to download or reuse the file",
+            "type": "string"
+          },
+          "file_name": {
+            "description": "Original filename as defined by sender",
+            "type": "string"
+          },
+          "file_size": {
+            "description": "File size in bytes",
+            "type": "int"
+          },
+          "file_unique_id": {
+            "description": "Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file",
+            "type": "string"
+          },
+          "mime_type": {
+            "description": "MIME type of the file as defined by sender",
+            "type": "string"
+          },
+          "performer": {
+            "description": "Performer of the audio as defined by sender or by audio tags",
+            "type": "string"
+          },
+          "title": {
+            "description": "Title of the audio as defined by sender or by audio tags",
+            "type": "string"
+          }
+        },
+        "required": [
+          "file_id",
+          "file_unique_id",
+          "duration"
+        ]
       },
       "BotCommand": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "command": {
+            "description": "Text of the command, 1-32 characters. Can contain only lowercase English letters, digits and underscores",
+            "type": "string"
+          },
+          "description": {
+            "description": "Description of the command, 3-256 characters",
+            "type": "string"
+          }
+        },
+        "required": [
+          "command",
+          "description"
+        ]
       },
       "BotCommandScopeAllChatAdministrators": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "type": {
+            "description": "Scope type, must be all_chat_administrators",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type"
+        ]
       },
       "BotCommandScopeAllGroupChats": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "type": {
+            "description": "Scope type, must be all_group_chats",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type"
+        ]
       },
       "BotCommandScopeAllPrivateChats": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "type": {
+            "description": "Scope type, must be all_private_chats",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type"
+        ]
       },
       "BotCommandScopeChat": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "type": {
+            "description": "Scope type, must be chat",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type"
+        ]
       },
       "BotCommandScopeChatAdministrators": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "type": {
+            "description": "Scope type, must be chat_administrators",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type"
+        ]
       },
       "BotCommandScopeChatMember": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "type": {
+            "description": "Scope type, must be chat_member",
+            "type": "string"
+          },
+          "user_id": {
+            "description": "Unique identifier of the target user",
+            "type": "int"
+          }
+        },
+        "required": [
+          "type",
+          "user_id"
+        ]
       },
       "BotCommandScopeDefault": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "type": {
+            "description": "Scope type, must be default",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type"
+        ]
       },
       "CallbackQuery": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "chat_instance": {
+            "description": "Global identifier, uniquely corresponding to the chat to which the message with the callback button was sent. Useful for high scores in games",
+            "type": "string"
+          },
+          "data": {
+            "description": "Data associated with the callback button. Be aware that a bad client can send arbitrary data in this field",
+            "type": "string"
+          },
+          "game_short_name": {
+            "description": "Short name of a Game to be returned, serves as the unique identifier for the game",
+            "type": "string"
+          },
+          "id": {
+            "description": "Unique identifier for this query",
+            "type": "string"
+          },
+          "inline_message_id": {
+            "description": "Identifier of the message sent via the bot in inline mode, that originated the query",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "chat_instance"
+        ]
       },
       "Chat": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "bio": {
+            "description": "Bio of the other party in a private chat. Returned only in getChat",
+            "type": "string"
+          },
+          "description": {
+            "description": "Description, for groups, supergroups and channel chats. Returned only in getChat",
+            "type": "string"
+          },
+          "first_name": {
+            "description": "First name of the other party in a private chat",
+            "type": "string"
+          },
+          "id": {
+            "description": "Unique identifier for this chat. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this identifier",
+            "type": "int"
+          },
+          "invite_link": {
+            "description": "Primary invite link, for groups, supergroups and channel chats. Returned only in getChat",
+            "type": "string"
+          },
+          "last_name": {
+            "description": "Last name of the other party in a private chat",
+            "type": "string"
+          },
+          "linked_chat_id": {
+            "description": "Unique identifier for the linked chat, i.e. the discussion group identifier for a channel and vice versa; for supergroups and channel chats. This identifier may be greater than 32 bits and some programming languages may have difficulty/silent defects in interpreting it. But it is smaller than 52 bits, so a signed 64 bit integer or double-precision float type are safe for storing this identifier. Returned only in getChat",
+            "type": "int"
+          },
+          "message_auto_delete_time": {
+            "description": "The time after which all messages sent to the chat will be automatically deleted; in seconds. Returned only in getChat",
+            "type": "int"
+          },
+          "slow_mode_delay": {
+            "description": "For supergroups, the minimum allowed delay between consecutive messages sent by each unpriviledged user. Returned only in getChat",
+            "type": "int"
+          },
+          "sticker_set_name": {
+            "description": "For supergroups, name of group sticker set. Returned only in getChat",
+            "type": "string"
+          },
+          "title": {
+            "description": "Title, for supergroups, channels and group chats",
+            "type": "string"
+          },
+          "type": {
+            "description": "Type of chat, can be either “private”, “group”, “supergroup” or “channel”",
+            "type": "string"
+          },
+          "username": {
+            "description": "Username, for private chats, supergroups and channels if available",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "type"
+        ]
       },
       "ChatInviteLink": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "expire_date": {
+            "description": "Point in time (Unix timestamp) when the link will expire or has been expired",
+            "type": "int"
+          },
+          "invite_link": {
+            "description": "The invite link. If the link was created by another chat administrator, then the second part of the link will be replaced with “…”",
+            "type": "string"
+          },
+          "member_limit": {
+            "description": "Maximum number of users that can be members of the chat simultaneously after joining the chat via this invite link; 1-99999",
+            "type": "int"
+          }
+        },
+        "required": [
+          "invite_link"
+        ]
       },
       "ChatLocation": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "address": {
+            "description": "Location address; 1-64 characters, as defined by the chat owner",
+            "type": "string"
+          }
+        },
+        "required": [
+          "address"
+        ]
       },
       "ChatMemberAdministrator": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "custom_title": {
+            "description": "Custom title for this user",
+            "type": "string"
+          },
+          "status": {
+            "description": "The member's status in the chat, always “administrator”",
+            "type": "string"
+          }
+        },
+        "required": [
+          "status"
+        ]
       },
       "ChatMemberBanned": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "status": {
+            "description": "The member's status in the chat, always “kicked”",
+            "type": "string"
+          },
+          "until_date": {
+            "description": "Date when restrictions will be lifted for this user; unix time. If 0, then the user is banned forever",
+            "type": "int"
+          }
+        },
+        "required": [
+          "status",
+          "until_date"
+        ]
       },
       "ChatMemberLeft": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "status": {
+            "description": "The member's status in the chat, always “left”",
+            "type": "string"
+          }
+        },
+        "required": [
+          "status"
+        ]
       },
       "ChatMemberMember": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "status": {
+            "description": "The member's status in the chat, always “member”",
+            "type": "string"
+          }
+        },
+        "required": [
+          "status"
+        ]
       },
       "ChatMemberOwner": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "custom_title": {
+            "description": "Custom title for this user",
+            "type": "string"
+          },
+          "status": {
+            "description": "The member's status in the chat, always “creator”",
+            "type": "string"
+          }
+        },
+        "required": [
+          "status"
+        ]
       },
       "ChatMemberRestricted": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "status": {
+            "description": "The member's status in the chat, always “restricted”",
+            "type": "string"
+          },
+          "until_date": {
+            "description": "Date when restrictions will be lifted for this user; unix time. If 0, then the user is restricted forever",
+            "type": "int"
+          }
+        },
+        "required": [
+          "status",
+          "until_date"
+        ]
       },
       "ChatMemberUpdated": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "date": {
+            "description": "Date the change was done in Unix time",
+            "type": "int"
+          }
+        },
+        "required": [
+          "date"
+        ]
       },
       "ChatPermissions": {
         "type": "object"
       },
       "ChatPhoto": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "big_file_id": {
+            "description": "File identifier of big (640x640) chat photo. This file_id can be used only for photo download and only for as long as the photo is not changed",
+            "type": "string"
+          },
+          "big_file_unique_id": {
+            "description": "Unique file identifier of big (640x640) chat photo, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file",
+            "type": "string"
+          },
+          "small_file_id": {
+            "description": "File identifier of small (160x160) chat photo. This file_id can be used only for photo download and only for as long as the photo is not changed",
+            "type": "string"
+          },
+          "small_file_unique_id": {
+            "description": "Unique file identifier of small (160x160) chat photo, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file",
+            "type": "string"
+          }
+        },
+        "required": [
+          "small_file_id",
+          "small_file_unique_id",
+          "big_file_id",
+          "big_file_unique_id"
+        ]
       },
       "ChosenInlineResult": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "inline_message_id": {
+            "description": "Identifier of the sent inline message. Available only if there is an inline keyboard attached to the message. Will be also received in callback queries and can be used to edit the message",
+            "type": "string"
+          },
+          "query": {
+            "description": "The query that was used to obtain the result",
+            "type": "string"
+          },
+          "result_id": {
+            "description": "The unique identifier for the result that was chosen",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result_id",
+          "query"
+        ]
       },
       "Contact": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "first_name": {
+            "description": "Contact's first name",
+            "type": "string"
+          },
+          "last_name": {
+            "description": "Contact's last name",
+            "type": "string"
+          },
+          "phone_number": {
+            "description": "Contact's phone number",
+            "type": "string"
+          },
+          "user_id": {
+            "description": "Contact's user identifier in Telegram. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a 64-bit integer or double-precision float type are safe for storing this identifier",
+            "type": "int"
+          },
+          "vcard": {
+            "description": "Additional data about the contact in the form of a vCard",
+            "type": "string"
+          }
+        },
+        "required": [
+          "phone_number",
+          "first_name"
+        ]
       },
       "Dice": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "emoji": {
+            "description": "Emoji on which the dice throw animation is based",
+            "type": "string"
+          },
+          "value": {
+            "description": "Value of the dice, 1-6 for “”, “” and “” base emoji, 1-5 for “” and “” base emoji, 1-64 for “” base emoji",
+            "type": "int"
+          }
+        },
+        "required": [
+          "emoji",
+          "value"
+        ]
       },
       "Document": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "file_id": {
+            "description": "Identifier for this file, which can be used to download or reuse the file",
+            "type": "string"
+          },
+          "file_name": {
+            "description": "Original filename as defined by sender",
+            "type": "string"
+          },
+          "file_size": {
+            "description": "File size in bytes",
+            "type": "int"
+          },
+          "file_unique_id": {
+            "description": "Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file",
+            "type": "string"
+          },
+          "mime_type": {
+            "description": "MIME type of the file as defined by sender",
+            "type": "string"
+          }
+        },
+        "required": [
+          "file_id",
+          "file_unique_id"
+        ]
       },
       "EncryptedCredentials": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "data": {
+            "description": "Base64-encoded encrypted JSON-serialized data with unique user's payload, data hashes and secrets required for EncryptedPassportElement decryption and authentication",
+            "type": "string"
+          },
+          "hash": {
+            "description": "Base64-encoded data hash for data authentication",
+            "type": "string"
+          },
+          "secret": {
+            "description": "Base64-encoded secret, encrypted with the bot's public RSA key, required for data decryption",
+            "type": "string"
+          }
+        },
+        "required": [
+          "data",
+          "hash",
+          "secret"
+        ]
       },
       "EncryptedPassportElement": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "data": {
+            "description": "Base64-encoded encrypted Telegram Passport element data provided by the user, available for “personal_details”, “passport”, “driver_license”, “identity_card”, “internal_passport” and “address” types. Can be decrypted and verified using the accompanying EncryptedCredentials",
+            "type": "string"
+          },
+          "email": {
+            "description": "User's verified email address, available only for “email” type",
+            "type": "string"
+          },
+          "hash": {
+            "description": "Base64-encoded element hash for using in PassportElementErrorUnspecified",
+            "type": "string"
+          },
+          "phone_number": {
+            "description": "User's verified phone number, available only for “phone_number” type",
+            "type": "string"
+          },
+          "type": {
+            "description": "Element type. One of “personal_details”, “passport”, “driver_license”, “identity_card”, “internal_passport”, “address”, “utility_bill”, “bank_statement”, “rental_agreement”, “passport_registration”, “temporary_registration”, “phone_number”, “email”",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "hash"
+        ]
       },
       "File": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "file_id": {
+            "description": "Identifier for this file, which can be used to download or reuse the file",
+            "type": "string"
+          },
+          "file_path": {
+            "description": "File path. Use https://api.telegram.org/file/bot\u003ctoken\u003e/\u003cfile_path\u003e to get the file",
+            "type": "string"
+          },
+          "file_size": {
+            "description": "File size in bytes, if known",
+            "type": "int"
+          },
+          "file_unique_id": {
+            "description": "Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file",
+            "type": "string"
+          }
+        },
+        "required": [
+          "file_id",
+          "file_unique_id"
+        ]
       },
       "ForceReply": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "input_field_placeholder": {
+            "description": "The placeholder to be shown in the input field when the reply is active; 1-64 characters",
+            "type": "string"
+          }
+        }
       },
       "Game": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "description": {
+            "description": "Description of the game",
+            "type": "string"
+          },
+          "text": {
+            "description": "Brief description of the game or high scores included in the game message. Can be automatically edited to include current high scores for the game when the bot calls setGameScore, or manually edited using editMessageText. 0-4096 characters",
+            "type": "string"
+          },
+          "title": {
+            "description": "Title of the game",
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "description"
+        ]
       },
       "GameHighScore": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "position": {
+            "description": "Position in high score table for the game",
+            "type": "int"
+          },
+          "score": {
+            "description": "Score",
+            "type": "int"
+          }
+        },
+        "required": [
+          "position",
+          "score"
+        ]
       },
       "InlineKeyboardButton": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "callback_data": {
+            "description": "Data to be sent in a callback query to the bot when button is pressed, 1-64 bytes",
+            "type": "string"
+          },
+          "switch_inline_query": {
+            "description": "If set, pressing the button will prompt the user to select one of their chats, open that chat and insert the bot's username and the specified inline query in the input field. Can be empty, in which case just the bot's username will be inserted.Note: This offers an easy way for users to start using your bot in inline mode when they are currently in a private chat with it. Especially useful when combined with switch_pm… actions – in this case the user will be automatically returned to the chat they switched from, skipping the chat selection screen",
+            "type": "string"
+          },
+          "switch_inline_query_current_chat": {
+            "description": "If set, pressing the button will insert the bot's username and the specified inline query in the current chat's input field. Can be empty, in which case only the bot's username will be inserted.This offers a quick way for the user to open your bot in inline mode in the same chat – good for selecting something from multiple options",
+            "type": "string"
+          },
+          "text": {
+            "description": "Label text on the button",
+            "type": "string"
+          },
+          "url": {
+            "description": "HTTP or tg:// url to be opened when button is pressed",
+            "type": "string"
+          }
+        },
+        "required": [
+          "text"
+        ]
       },
       "InlineKeyboardMarkup": {
         "type": "object"
       },
       "InlineQuery": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "chat_type": {
+            "description": "Type of the chat, from which the inline query was sent. Can be either “sender” for a private chat with the inline query sender, “private”, “group”, “supergroup”, or “channel”. The chat type should be always known for requests sent from official clients and most third-party clients, unless the request was sent from a secret chat",
+            "type": "string"
+          },
+          "id": {
+            "description": "Unique identifier for this query",
+            "type": "string"
+          },
+          "offset": {
+            "description": "Offset of the results to be returned, can be controlled by the bot",
+            "type": "string"
+          },
+          "query": {
+            "description": "Text of the query (up to 256 characters)",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "query",
+          "offset"
+        ]
       },
       "InlineQueryResultArticle": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "description": {
+            "description": "Short description of the result",
+            "type": "string"
+          },
+          "id": {
+            "description": "Unique identifier for this result, 1-64 Bytes",
+            "type": "string"
+          },
+          "thumb_height": {
+            "description": "Thumbnail height",
+            "type": "int"
+          },
+          "thumb_url": {
+            "description": "Url of the thumbnail for the result",
+            "type": "string"
+          },
+          "thumb_width": {
+            "description": "Thumbnail width",
+            "type": "int"
+          },
+          "title": {
+            "description": "Title of the result",
+            "type": "string"
+          },
+          "type": {
+            "description": "Type of the result, must be article",
+            "type": "string"
+          },
+          "url": {
+            "description": "URL of the result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id",
+          "title"
+        ]
       },
       "InlineQueryResultAudio": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "audio_duration": {
+            "description": "Audio duration in seconds",
+            "type": "int"
+          },
+          "audio_url": {
+            "description": "A valid URL for the audio file",
+            "type": "string"
+          },
+          "caption": {
+            "description": "Caption, 0-1024 characters after entities parsing",
+            "type": "string"
+          },
+          "id": {
+            "description": "Unique identifier for this result, 1-64 bytes",
+            "type": "string"
+          },
+          "parse_mode": {
+            "description": "Mode for parsing entities in the audio caption. See formatting options for more details",
+            "type": "string"
+          },
+          "performer": {
+            "description": "Performer",
+            "type": "string"
+          },
+          "title": {
+            "description": "Title",
+            "type": "string"
+          },
+          "type": {
+            "description": "Type of the result, must be audio",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id",
+          "audio_url",
+          "title"
+        ]
       },
       "InlineQueryResultCachedAudio": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "audio_file_id": {
+            "description": "A valid file identifier for the audio file",
+            "type": "string"
+          },
+          "caption": {
+            "description": "Caption, 0-1024 characters after entities parsing",
+            "type": "string"
+          },
+          "id": {
+            "description": "Unique identifier for this result, 1-64 bytes",
+            "type": "string"
+          },
+          "parse_mode": {
+            "description": "Mode for parsing entities in the audio caption. See formatting options for more details",
+            "type": "string"
+          },
+          "type": {
+            "description": "Type of the result, must be audio",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id",
+          "audio_file_id"
+        ]
       },
       "InlineQueryResultCachedDocument": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "caption": {
+            "description": "Caption of the document to be sent, 0-1024 characters after entities parsing",
+            "type": "string"
+          },
+          "description": {
+            "description": "Short description of the result",
+            "type": "string"
+          },
+          "document_file_id": {
+            "description": "A valid file identifier for the file",
+            "type": "string"
+          },
+          "id": {
+            "description": "Unique identifier for this result, 1-64 bytes",
+            "type": "string"
+          },
+          "parse_mode": {
+            "description": "Mode for parsing entities in the document caption. See formatting options for more details",
+            "type": "string"
+          },
+          "title": {
+            "description": "Title for the result",
+            "type": "string"
+          },
+          "type": {
+            "description": "Type of the result, must be document",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id",
+          "title",
+          "document_file_id"
+        ]
       },
       "InlineQueryResultCachedGif": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "caption": {
+            "description": "Caption of the GIF file to be sent, 0-1024 characters after entities parsing",
+            "type": "string"
+          },
+          "gif_file_id": {
+            "description": "A valid file identifier for the GIF file",
+            "type": "string"
+          },
+          "id": {
+            "description": "Unique identifier for this result, 1-64 bytes",
+            "type": "string"
+          },
+          "parse_mode": {
+            "description": "Mode for parsing entities in the caption. See formatting options for more details",
+            "type": "string"
+          },
+          "title": {
+            "description": "Title for the result",
+            "type": "string"
+          },
+          "type": {
+            "description": "Type of the result, must be gif",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id",
+          "gif_file_id"
+        ]
       },
       "InlineQueryResultCachedMpeg4Gif": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "caption": {
+            "description": "Caption of the MPEG-4 file to be sent, 0-1024 characters after entities parsing",
+            "type": "string"
+          },
+          "id": {
+            "description": "Unique identifier for this result, 1-64 bytes",
+            "type": "string"
+          },
+          "mpeg4_file_id": {
+            "description": "A valid file identifier for the MP4 file",
+            "type": "string"
+          },
+          "parse_mode": {
+            "description": "Mode for parsing entities in the caption. See formatting options for more details",
+            "type": "string"
+          },
+          "title": {
+            "description": "Title for the result",
+            "type": "string"
+          },
+          "type": {
+            "description": "Type of the result, must be mpeg4_gif",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id",
+          "mpeg4_file_id"
+        ]
       },
       "InlineQueryResultCachedPhoto": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "caption": {
+            "description": "Caption of the photo to be sent, 0-1024 characters after entities parsing",
+            "type": "string"
+          },
+          "description": {
+            "description": "Short description of the result",
+            "type": "string"
+          },
+          "id": {
+            "description": "Unique identifier for this result, 1-64 bytes",
+            "type": "string"
+          },
+          "parse_mode": {
+            "description": "Mode for parsing entities in the photo caption. See formatting options for more details",
+            "type": "string"
+          },
+          "photo_file_id": {
+            "description": "A valid file identifier of the photo",
+            "type": "string"
+          },
+          "title": {
+            "description": "Title for the result",
+            "type": "string"
+          },
+          "type": {
+            "description": "Type of the result, must be photo",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id",
+          "photo_file_id"
+        ]
       },
       "InlineQueryResultCachedSticker": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "id": {
+            "description": "Unique identifier for this result, 1-64 bytes",
+            "type": "string"
+          },
+          "sticker_file_id": {
+            "description": "A valid file identifier of the sticker",
+            "type": "string"
+          },
+          "type": {
+            "description": "Type of the result, must be sticker",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id",
+          "sticker_file_id"
+        ]
       },
       "InlineQueryResultCachedVideo": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "caption": {
+            "description": "Caption of the video to be sent, 0-1024 characters after entities parsing",
+            "type": "string"
+          },
+          "description": {
+            "description": "Short description of the result",
+            "type": "string"
+          },
+          "id": {
+            "description": "Unique identifier for this result, 1-64 bytes",
+            "type": "string"
+          },
+          "parse_mode": {
+            "description": "Mode for parsing entities in the video caption. See formatting options for more details",
+            "type": "string"
+          },
+          "title": {
+            "description": "Title for the result",
+            "type": "string"
+          },
+          "type": {
+            "description": "Type of the result, must be video",
+            "type": "string"
+          },
+          "video_file_id": {
+            "description": "A valid file identifier for the video file",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id",
+          "video_file_id",
+          "title"
+        ]
       },
       "InlineQueryResultCachedVoice": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "caption": {
+            "description": "Caption, 0-1024 characters after entities parsing",
+            "type": "string"
+          },
+          "id": {
+            "description": "Unique identifier for this result, 1-64 bytes",
+            "type": "string"
+          },
+          "parse_mode": {
+            "description": "Mode for parsing entities in the voice message caption. See formatting options for more details",
+            "type": "string"
+          },
+          "title": {
+            "description": "Voice message title",
+            "type": "string"
+          },
+          "type": {
+            "description": "Type of the result, must be voice",
+            "type": "string"
+          },
+          "voice_file_id": {
+            "description": "A valid file identifier for the voice message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id",
+          "voice_file_id",
+          "title"
+        ]
       },
       "InlineQueryResultContact": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "first_name": {
+            "description": "Contact's first name",
+            "type": "string"
+          },
+          "id": {
+            "description": "Unique identifier for this result, 1-64 Bytes",
+            "type": "string"
+          },
+          "last_name": {
+            "description": "Contact's last name",
+            "type": "string"
+          },
+          "phone_number": {
+            "description": "Contact's phone number",
+            "type": "string"
+          },
+          "thumb_height": {
+            "description": "Thumbnail height",
+            "type": "int"
+          },
+          "thumb_url": {
+            "description": "Url of the thumbnail for the result",
+            "type": "string"
+          },
+          "thumb_width": {
+            "description": "Thumbnail width",
+            "type": "int"
+          },
+          "type": {
+            "description": "Type of the result, must be contact",
+            "type": "string"
+          },
+          "vcard": {
+            "description": "Additional data about the contact in the form of a vCard, 0-2048 bytes",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id",
+          "phone_number",
+          "first_name"
+        ]
       },
       "InlineQueryResultDocument": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "caption": {
+            "description": "Caption of the document to be sent, 0-1024 characters after entities parsing",
+            "type": "string"
+          },
+          "description": {
+            "description": "Short description of the result",
+            "type": "string"
+          },
+          "document_url": {
+            "description": "A valid URL for the file",
+            "type": "string"
+          },
+          "id": {
+            "description": "Unique identifier for this result, 1-64 bytes",
+            "type": "string"
+          },
+          "mime_type": {
+            "description": "Mime type of the content of the file, either “application/pdf” or “application/zip”",
+            "type": "string"
+          },
+          "parse_mode": {
+            "description": "Mode for parsing entities in the document caption. See formatting options for more details",
+            "type": "string"
+          },
+          "thumb_height": {
+            "description": "Thumbnail height",
+            "type": "int"
+          },
+          "thumb_url": {
+            "description": "URL of the thumbnail (JPEG only) for the file",
+            "type": "string"
+          },
+          "thumb_width": {
+            "description": "Thumbnail width",
+            "type": "int"
+          },
+          "title": {
+            "description": "Title for the result",
+            "type": "string"
+          },
+          "type": {
+            "description": "Type of the result, must be document",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id",
+          "title",
+          "document_url",
+          "mime_type"
+        ]
       },
       "InlineQueryResultGame": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "game_short_name": {
+            "description": "Short name of the game",
+            "type": "string"
+          },
+          "id": {
+            "description": "Unique identifier for this result, 1-64 bytes",
+            "type": "string"
+          },
+          "type": {
+            "description": "Type of the result, must be game",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id",
+          "game_short_name"
+        ]
       },
       "InlineQueryResultGif": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "caption": {
+            "description": "Caption of the GIF file to be sent, 0-1024 characters after entities parsing",
+            "type": "string"
+          },
+          "gif_duration": {
+            "description": "Duration of the GIF in seconds",
+            "type": "int"
+          },
+          "gif_height": {
+            "description": "Height of the GIF",
+            "type": "int"
+          },
+          "gif_url": {
+            "description": "A valid URL for the GIF file. File size must not exceed 1MB",
+            "type": "string"
+          },
+          "gif_width": {
+            "description": "Width of the GIF",
+            "type": "int"
+          },
+          "id": {
+            "description": "Unique identifier for this result, 1-64 bytes",
+            "type": "string"
+          },
+          "parse_mode": {
+            "description": "Mode for parsing entities in the caption. See formatting options for more details",
+            "type": "string"
+          },
+          "thumb_mime_type": {
+            "description": "MIME type of the thumbnail, must be one of “image/jpeg”, “image/gif”, or “video/mp4”. Defaults to “image/jpeg”",
+            "type": "string"
+          },
+          "thumb_url": {
+            "description": "URL of the static (JPEG or GIF) or animated (MPEG4) thumbnail for the result",
+            "type": "string"
+          },
+          "title": {
+            "description": "Title for the result",
+            "type": "string"
+          },
+          "type": {
+            "description": "Type of the result, must be gif",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id",
+          "gif_url",
+          "thumb_url"
+        ]
       },
       "InlineQueryResultLocation": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "heading": {
+            "description": "For live locations, a direction in which the user is moving, in degrees. Must be between 1 and 360 if specified",
+            "type": "int"
+          },
+          "horizontal_accuracy": {
+            "description": "The radius of uncertainty for the location, measured in meters; 0-1500",
+            "type": "float64"
+          },
+          "id": {
+            "description": "Unique identifier for this result, 1-64 Bytes",
+            "type": "string"
+          },
+          "latitude": {
+            "description": "Location latitude in degrees",
+            "type": "float64"
+          },
+          "live_period": {
+            "description": "Period in seconds for which the location can be updated, should be between 60 and 86400",
+            "type": "int"
+          },
+          "longitude": {
+            "description": "Location longitude in degrees",
+            "type": "float64"
+          },
+          "proximity_alert_radius": {
+            "description": "For live locations, a maximum distance for proximity alerts about approaching another chat member, in meters. Must be between 1 and 100000 if specified",
+            "type": "int"
+          },
+          "thumb_height": {
+            "description": "Thumbnail height",
+            "type": "int"
+          },
+          "thumb_url": {
+            "description": "Url of the thumbnail for the result",
+            "type": "string"
+          },
+          "thumb_width": {
+            "description": "Thumbnail width",
+            "type": "int"
+          },
+          "title": {
+            "description": "Location title",
+            "type": "string"
+          },
+          "type": {
+            "description": "Type of the result, must be location",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id",
+          "latitude",
+          "longitude",
+          "title"
+        ]
       },
       "InlineQueryResultMpeg4Gif": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "caption": {
+            "description": "Caption of the MPEG-4 file to be sent, 0-1024 characters after entities parsing",
+            "type": "string"
+          },
+          "id": {
+            "description": "Unique identifier for this result, 1-64 bytes",
+            "type": "string"
+          },
+          "mpeg4_duration": {
+            "description": "Video duration in seconds",
+            "type": "int"
+          },
+          "mpeg4_height": {
+            "description": "Video height",
+            "type": "int"
+          },
+          "mpeg4_url": {
+            "description": "A valid URL for the MP4 file. File size must not exceed 1MB",
+            "type": "string"
+          },
+          "mpeg4_width": {
+            "description": "Video width",
+            "type": "int"
+          },
+          "parse_mode": {
+            "description": "Mode for parsing entities in the caption. See formatting options for more details",
+            "type": "string"
+          },
+          "thumb_mime_type": {
+            "description": "MIME type of the thumbnail, must be one of “image/jpeg”, “image/gif”, or “video/mp4”. Defaults to “image/jpeg”",
+            "type": "string"
+          },
+          "thumb_url": {
+            "description": "URL of the static (JPEG or GIF) or animated (MPEG4) thumbnail for the result",
+            "type": "string"
+          },
+          "title": {
+            "description": "Title for the result",
+            "type": "string"
+          },
+          "type": {
+            "description": "Type of the result, must be mpeg4_gif",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id",
+          "mpeg4_url",
+          "thumb_url"
+        ]
       },
       "InlineQueryResultPhoto": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "caption": {
+            "description": "Caption of the photo to be sent, 0-1024 characters after entities parsing",
+            "type": "string"
+          },
+          "description": {
+            "description": "Short description of the result",
+            "type": "string"
+          },
+          "id": {
+            "description": "Unique identifier for this result, 1-64 bytes",
+            "type": "string"
+          },
+          "parse_mode": {
+            "description": "Mode for parsing entities in the photo caption. See formatting options for more details",
+            "type": "string"
+          },
+          "photo_height": {
+            "description": "Height of the photo",
+            "type": "int"
+          },
+          "photo_url": {
+            "description": "A valid URL of the photo. Photo must be in JPEG format. Photo size must not exceed 5MB",
+            "type": "string"
+          },
+          "photo_width": {
+            "description": "Width of the photo",
+            "type": "int"
+          },
+          "thumb_url": {
+            "description": "URL of the thumbnail for the photo",
+            "type": "string"
+          },
+          "title": {
+            "description": "Title for the result",
+            "type": "string"
+          },
+          "type": {
+            "description": "Type of the result, must be photo",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id",
+          "photo_url",
+          "thumb_url"
+        ]
       },
       "InlineQueryResultVenue": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "address": {
+            "description": "Address of the venue",
+            "type": "string"
+          },
+          "foursquare_id": {
+            "description": "Foursquare identifier of the venue if known",
+            "type": "string"
+          },
+          "foursquare_type": {
+            "description": "Foursquare type of the venue, if known. (For example, “arts_entertainment/default”, “arts_entertainment/aquarium” or “food/icecream”.)",
+            "type": "string"
+          },
+          "google_place_id": {
+            "description": "Google Places identifier of the venue",
+            "type": "string"
+          },
+          "google_place_type": {
+            "description": "Google Places type of the venue. (See supported types.)",
+            "type": "string"
+          },
+          "id": {
+            "description": "Unique identifier for this result, 1-64 Bytes",
+            "type": "string"
+          },
+          "latitude": {
+            "description": "Latitude of the venue location in degrees",
+            "type": "float64"
+          },
+          "longitude": {
+            "description": "Longitude of the venue location in degrees",
+            "type": "float64"
+          },
+          "thumb_height": {
+            "description": "Thumbnail height",
+            "type": "int"
+          },
+          "thumb_url": {
+            "description": "Url of the thumbnail for the result",
+            "type": "string"
+          },
+          "thumb_width": {
+            "description": "Thumbnail width",
+            "type": "int"
+          },
+          "title": {
+            "description": "Title of the venue",
+            "type": "string"
+          },
+          "type": {
+            "description": "Type of the result, must be venue",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id",
+          "latitude",
+          "longitude",
+          "title",
+          "address"
+        ]
       },
       "InlineQueryResultVideo": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "caption": {
+            "description": "Caption of the video to be sent, 0-1024 characters after entities parsing",
+            "type": "string"
+          },
+          "description": {
+            "description": "Short description of the result",
+            "type": "string"
+          },
+          "id": {
+            "description": "Unique identifier for this result, 1-64 bytes",
+            "type": "string"
+          },
+          "mime_type": {
+            "description": "Mime type of the content of video url, “text/html” or “video/mp4”",
+            "type": "string"
+          },
+          "parse_mode": {
+            "description": "Mode for parsing entities in the video caption. See formatting options for more details",
+            "type": "string"
+          },
+          "thumb_url": {
+            "description": "URL of the thumbnail (JPEG only) for the video",
+            "type": "string"
+          },
+          "title": {
+            "description": "Title for the result",
+            "type": "string"
+          },
+          "type": {
+            "description": "Type of the result, must be video",
+            "type": "string"
+          },
+          "video_duration": {
+            "description": "Video duration in seconds",
+            "type": "int"
+          },
+          "video_height": {
+            "description": "Video height",
+            "type": "int"
+          },
+          "video_url": {
+            "description": "A valid URL for the embedded video player or video file",
+            "type": "string"
+          },
+          "video_width": {
+            "description": "Video width",
+            "type": "int"
+          }
+        },
+        "required": [
+          "type",
+          "id",
+          "video_url",
+          "mime_type",
+          "thumb_url",
+          "title"
+        ]
       },
       "InlineQueryResultVoice": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "caption": {
+            "description": "Caption, 0-1024 characters after entities parsing",
+            "type": "string"
+          },
+          "id": {
+            "description": "Unique identifier for this result, 1-64 bytes",
+            "type": "string"
+          },
+          "parse_mode": {
+            "description": "Mode for parsing entities in the voice message caption. See formatting options for more details",
+            "type": "string"
+          },
+          "title": {
+            "description": "Recording title",
+            "type": "string"
+          },
+          "type": {
+            "description": "Type of the result, must be voice",
+            "type": "string"
+          },
+          "voice_duration": {
+            "description": "Recording duration in seconds",
+            "type": "int"
+          },
+          "voice_url": {
+            "description": "A valid URL for the voice recording",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id",
+          "voice_url",
+          "title"
+        ]
       },
       "InputContactMessageContent": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "first_name": {
+            "description": "Contact's first name",
+            "type": "string"
+          },
+          "last_name": {
+            "description": "Contact's last name",
+            "type": "string"
+          },
+          "phone_number": {
+            "description": "Contact's phone number",
+            "type": "string"
+          },
+          "vcard": {
+            "description": "Additional data about the contact in the form of a vCard, 0-2048 bytes",
+            "type": "string"
+          }
+        },
+        "required": [
+          "phone_number",
+          "first_name"
+        ]
       },
       "InputInvoiceMessageContent": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "currency": {
+            "description": "Three-letter ISO 4217 currency code, see more on currencies",
+            "type": "string"
+          },
+          "description": {
+            "description": "Product description, 1-255 characters",
+            "type": "string"
+          },
+          "max_tip_amount": {
+            "description": "The maximum accepted amount for tips in the smallest units of the currency (integer, not float/double). For example, for a maximum tip of US$ 1.45 pass max_tip_amount = 145. See the exp parameter in currencies.json, it shows the number of digits past the decimal point for each currency (2 for the majority of currencies). Defaults to 0",
+            "type": "int"
+          },
+          "payload": {
+            "description": "Bot-defined invoice payload, 1-128 bytes. This will not be displayed to the user, use for your internal processes",
+            "type": "string"
+          },
+          "photo_height": {
+            "description": "Photo height",
+            "type": "int"
+          },
+          "photo_size": {
+            "description": "Photo size",
+            "type": "int"
+          },
+          "photo_url": {
+            "description": "URL of the product photo for the invoice. Can be a photo of the goods or a marketing image for a service. People like it better when they see what they are paying for",
+            "type": "string"
+          },
+          "photo_width": {
+            "description": "Photo width",
+            "type": "int"
+          },
+          "provider_data": {
+            "description": "A JSON-serialized object for data about the invoice, which will be shared with the payment provider. A detailed description of the required fields should be provided by the payment provider",
+            "type": "string"
+          },
+          "provider_token": {
+            "description": "Payment provider token, obtained via Botfather",
+            "type": "string"
+          },
+          "title": {
+            "description": "Product name, 1-32 characters",
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "description",
+          "payload",
+          "provider_token",
+          "currency"
+        ]
       },
       "InputLocationMessageContent": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "heading": {
+            "description": "For live locations, a direction in which the user is moving, in degrees. Must be between 1 and 360 if specified",
+            "type": "int"
+          },
+          "horizontal_accuracy": {
+            "description": "The radius of uncertainty for the location, measured in meters; 0-1500",
+            "type": "float64"
+          },
+          "latitude": {
+            "description": "Latitude of the location in degrees",
+            "type": "float64"
+          },
+          "live_period": {
+            "description": "Period in seconds for which the location can be updated, should be between 60 and 86400",
+            "type": "int"
+          },
+          "longitude": {
+            "description": "Longitude of the location in degrees",
+            "type": "float64"
+          },
+          "proximity_alert_radius": {
+            "description": "For live locations, a maximum distance for proximity alerts about approaching another chat member, in meters. Must be between 1 and 100000 if specified",
+            "type": "int"
+          }
+        },
+        "required": [
+          "latitude",
+          "longitude"
+        ]
       },
       "InputMediaAnimation": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "caption": {
+            "description": "Caption of the animation to be sent, 0-1024 characters after entities parsing",
+            "type": "string"
+          },
+          "duration": {
+            "description": "Animation duration in seconds",
+            "type": "int"
+          },
+          "height": {
+            "description": "Animation height",
+            "type": "int"
+          },
+          "media": {
+            "description": "File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass “attach://\u003cfile_attach_name\u003e” to upload a new one using multipart/form-data under \u003cfile_attach_name\u003e name. More info on Sending Files »",
+            "type": "string"
+          },
+          "parse_mode": {
+            "description": "Mode for parsing entities in the animation caption. See formatting options for more details",
+            "type": "string"
+          },
+          "type": {
+            "description": "Type of the result, must be animation",
+            "type": "string"
+          },
+          "width": {
+            "description": "Animation width",
+            "type": "int"
+          }
+        },
+        "required": [
+          "type",
+          "media"
+        ]
       },
       "InputMediaAudio": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "caption": {
+            "description": "Caption of the audio to be sent, 0-1024 characters after entities parsing",
+            "type": "string"
+          },
+          "duration": {
+            "description": "Duration of the audio in seconds",
+            "type": "int"
+          },
+          "media": {
+            "description": "File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass “attach://\u003cfile_attach_name\u003e” to upload a new one using multipart/form-data under \u003cfile_attach_name\u003e name. More info on Sending Files »",
+            "type": "string"
+          },
+          "parse_mode": {
+            "description": "Mode for parsing entities in the audio caption. See formatting options for more details",
+            "type": "string"
+          },
+          "performer": {
+            "description": "Performer of the audio",
+            "type": "string"
+          },
+          "title": {
+            "description": "Title of the audio",
+            "type": "string"
+          },
+          "type": {
+            "description": "Type of the result, must be audio",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "media"
+        ]
       },
       "InputMediaDocument": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "caption": {
+            "description": "Caption of the document to be sent, 0-1024 characters after entities parsing",
+            "type": "string"
+          },
+          "media": {
+            "description": "File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass “attach://\u003cfile_attach_name\u003e” to upload a new one using multipart/form-data under \u003cfile_attach_name\u003e name. More info on Sending Files »",
+            "type": "string"
+          },
+          "parse_mode": {
+            "description": "Mode for parsing entities in the document caption. See formatting options for more details",
+            "type": "string"
+          },
+          "type": {
+            "description": "Type of the result, must be document",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "media"
+        ]
       },
       "InputMediaPhoto": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "caption": {
+            "description": "Caption of the photo to be sent, 0-1024 characters after entities parsing",
+            "type": "string"
+          },
+          "media": {
+            "description": "File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass “attach://\u003cfile_attach_name\u003e” to upload a new one using multipart/form-data under \u003cfile_attach_name\u003e name. More info on Sending Files »",
+            "type": "string"
+          },
+          "parse_mode": {
+            "description": "Mode for parsing entities in the photo caption. See formatting options for more details",
+            "type": "string"
+          },
+          "type": {
+            "description": "Type of the result, must be photo",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "media"
+        ]
       },
       "InputMediaVideo": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "caption": {
+            "description": "Caption of the video to be sent, 0-1024 characters after entities parsing",
+            "type": "string"
+          },
+          "duration": {
+            "description": "Video duration in seconds",
+            "type": "int"
+          },
+          "height": {
+            "description": "Video height",
+            "type": "int"
+          },
+          "media": {
+            "description": "File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass “attach://\u003cfile_attach_name\u003e” to upload a new one using multipart/form-data under \u003cfile_attach_name\u003e name. More info on Sending Files »",
+            "type": "string"
+          },
+          "parse_mode": {
+            "description": "Mode for parsing entities in the video caption. See formatting options for more details",
+            "type": "string"
+          },
+          "type": {
+            "description": "Type of the result, must be video",
+            "type": "string"
+          },
+          "width": {
+            "description": "Video width",
+            "type": "int"
+          }
+        },
+        "required": [
+          "type",
+          "media"
+        ]
       },
       "InputTextMessageContent": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "message_text": {
+            "description": "Text of the message to be sent, 1-4096 characters",
+            "type": "string"
+          },
+          "parse_mode": {
+            "description": "Mode for parsing entities in the message text. See formatting options for more details",
+            "type": "string"
+          }
+        },
+        "required": [
+          "message_text"
+        ]
       },
       "InputVenueMessageContent": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "address": {
+            "description": "Address of the venue",
+            "type": "string"
+          },
+          "foursquare_id": {
+            "description": "Foursquare identifier of the venue, if known",
+            "type": "string"
+          },
+          "foursquare_type": {
+            "description": "Foursquare type of the venue, if known. (For example, “arts_entertainment/default”, “arts_entertainment/aquarium” or “food/icecream”.)",
+            "type": "string"
+          },
+          "google_place_id": {
+            "description": "Google Places identifier of the venue",
+            "type": "string"
+          },
+          "google_place_type": {
+            "description": "Google Places type of the venue. (See supported types.)",
+            "type": "string"
+          },
+          "latitude": {
+            "description": "Latitude of the venue in degrees",
+            "type": "float64"
+          },
+          "longitude": {
+            "description": "Longitude of the venue in degrees",
+            "type": "float64"
+          },
+          "title": {
+            "description": "Name of the venue",
+            "type": "string"
+          }
+        },
+        "required": [
+          "latitude",
+          "longitude",
+          "title",
+          "address"
+        ]
       },
       "Invoice": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "currency": {
+            "description": "Three-letter ISO 4217 currency code",
+            "type": "string"
+          },
+          "description": {
+            "description": "Product description",
+            "type": "string"
+          },
+          "start_parameter": {
+            "description": "Unique bot deep-linking parameter that can be used to generate this invoice",
+            "type": "string"
+          },
+          "title": {
+            "description": "Product name",
+            "type": "string"
+          },
+          "total_amount": {
+            "description": "Total price in the smallest units of the currency (integer, not float/double). For example, for a price of US$ 1.45 pass amount = 145. See the exp parameter in currencies.json, it shows the number of digits past the decimal point for each currency (2 for the majority of currencies)",
+            "type": "int"
+          }
+        },
+        "required": [
+          "title",
+          "description",
+          "start_parameter",
+          "currency",
+          "total_amount"
+        ]
       },
       "KeyboardButton": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "text": {
+            "description": "Text of the button. If none of the optional fields are used, it will be sent as a message when the button is pressed",
+            "type": "string"
+          }
+        },
+        "required": [
+          "text"
+        ]
       },
       "KeyboardButtonPollType": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "type": {
+            "description": "If quiz is passed, the user will be allowed to create only polls in the quiz mode. If regular is passed, only regular polls will be allowed. Otherwise, the user will be allowed to create a poll of any type",
+            "type": "string"
+          }
+        }
       },
       "LabeledPrice": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "amount": {
+            "description": "Price of the product in the smallest units of the currency (integer, not float/double). For example, for a price of US$ 1.45 pass amount = 145. See the exp parameter in currencies.json, it shows the number of digits past the decimal point for each currency (2 for the majority of currencies)",
+            "type": "int"
+          },
+          "label": {
+            "description": "Portion label",
+            "type": "string"
+          }
+        },
+        "required": [
+          "label",
+          "amount"
+        ]
       },
       "Location": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "heading": {
+            "description": "The direction in which user is moving, in degrees; 1-360. For active live locations only",
+            "type": "int"
+          },
+          "horizontal_accuracy": {
+            "description": "The radius of uncertainty for the location, measured in meters; 0-1500",
+            "type": "float64"
+          },
+          "latitude": {
+            "description": "Latitude as defined by sender",
+            "type": "float64"
+          },
+          "live_period": {
+            "description": "Time relative to the message sending date, during which the location can be updated, in seconds. For active live locations only",
+            "type": "int"
+          },
+          "longitude": {
+            "description": "Longitude as defined by sender",
+            "type": "float64"
+          },
+          "proximity_alert_radius": {
+            "description": "Maximum distance for proximity alerts about approaching another chat member, in meters. For sent live locations only",
+            "type": "int"
+          }
+        },
+        "required": [
+          "longitude",
+          "latitude"
+        ]
       },
       "LoginUrl": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "bot_username": {
+            "description": "Username of a bot, which will be used for user authorization. See Setting up a bot for more details. If not specified, the current bot's username will be assumed. The url's domain must be the same as the domain linked with the bot. See Linking your domain to the bot for more details",
+            "type": "string"
+          },
+          "forward_text": {
+            "description": "New text of the button in forwarded messages",
+            "type": "string"
+          },
+          "url": {
+            "description": "An HTTP URL to be opened with user authorization data added to the query string when the button is pressed. If the user refuses to provide authorization data, the original URL without information about the user will be opened. The data added is the same as described in Receiving authorization data.NOTE: You must always check the hash of the received data to verify the authentication and the integrity of the data as described in Checking authorization",
+            "type": "string"
+          }
+        },
+        "required": [
+          "url"
+        ]
       },
       "MaskPosition": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "point": {
+            "description": "The part of the face relative to which the mask should be placed. One of “forehead”, “eyes”, “mouth”, or “chin”",
+            "type": "string"
+          },
+          "scale": {
+            "description": "Mask scaling coefficient. For example, 2.0 means double size",
+            "type": "float64"
+          },
+          "x_shift": {
+            "description": "Shift by X-axis measured in widths of the mask scaled to the face size, from left to right. For example, choosing -1.0 will place mask just to the left of the default mask position",
+            "type": "float64"
+          },
+          "y_shift": {
+            "description": "Shift by Y-axis measured in heights of the mask scaled to the face size, from top to bottom. For example, 1.0 will place the mask just below the default mask position",
+            "type": "float64"
+          }
+        },
+        "required": [
+          "point",
+          "x_shift",
+          "y_shift",
+          "scale"
+        ]
       },
       "Message": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "author_signature": {
+            "description": "Signature of the post author for messages in channels, or the custom title of an anonymous group administrator",
+            "type": "string"
+          },
+          "caption": {
+            "description": "Caption for the animation, audio, document, photo, video or voice, 0-1024 characters",
+            "type": "string"
+          },
+          "connected_website": {
+            "description": "The domain name of the website on which the user has logged in. More about Telegram Login »",
+            "type": "string"
+          },
+          "date": {
+            "description": "Date the message was sent in Unix time",
+            "type": "int"
+          },
+          "edit_date": {
+            "description": "Date the message was last edited in Unix time",
+            "type": "int"
+          },
+          "forward_date": {
+            "description": "For forwarded messages, date the original message was sent in Unix time",
+            "type": "int"
+          },
+          "forward_from_message_id": {
+            "description": "For messages forwarded from channels, identifier of the original message in the channel",
+            "type": "int"
+          },
+          "forward_sender_name": {
+            "description": "Sender's name for messages forwarded from users who disallow adding a link to their account in forwarded messages",
+            "type": "string"
+          },
+          "forward_signature": {
+            "description": "For messages forwarded from channels, signature of the post author if present",
+            "type": "string"
+          },
+          "media_group_id": {
+            "description": "The unique identifier of a media message group this message belongs to",
+            "type": "string"
+          },
+          "message_id": {
+            "description": "Unique message identifier inside this chat",
+            "type": "int"
+          },
+          "migrate_from_chat_id": {
+            "description": "The supergroup has been migrated from a group with the specified identifier. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this identifier",
+            "type": "int"
+          },
+          "migrate_to_chat_id": {
+            "description": "The group has been migrated to a supergroup with the specified identifier. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this identifier",
+            "type": "int"
+          },
+          "new_chat_title": {
+            "description": "A chat title was changed to this value",
+            "type": "string"
+          },
+          "text": {
+            "description": "For text messages, the actual UTF-8 text of the message, 0-4096 characters",
+            "type": "string"
+          }
+        },
+        "required": [
+          "message_id",
+          "date"
+        ]
       },
       "MessageAutoDeleteTimerChanged": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "message_auto_delete_time": {
+            "description": "New auto-delete time for messages in the chat",
+            "type": "int"
+          }
+        },
+        "required": [
+          "message_auto_delete_time"
+        ]
       },
       "MessageEntity": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "language": {
+            "description": "For “pre” only, the programming language of the entity text",
+            "type": "string"
+          },
+          "length": {
+            "description": "Length of the entity in UTF-16 code units",
+            "type": "int"
+          },
+          "offset": {
+            "description": "Offset in UTF-16 code units to the start of the entity",
+            "type": "int"
+          },
+          "type": {
+            "description": "Type of the entity. Can be “mention” (@username), “hashtag” (#hashtag), “cashtag” ($USD), “bot_command” (/start@jobs_bot), “url” (https://telegram.org), “email” (do-not-reply@telegram.org), “phone_number” (+1-212-555-0123), “bold” (bold text), “italic” (italic text), “underline” (underlined text), “strikethrough” (strikethrough text), “code” (monowidth string), “pre” (monowidth block), “text_link” (for clickable text URLs), “text_mention” (for users without usernames)",
+            "type": "string"
+          },
+          "url": {
+            "description": "For “text_link” only, url that will be opened after user taps on the text",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "offset",
+          "length"
+        ]
       },
       "MessageId": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "message_id": {
+            "description": "Unique message identifier",
+            "type": "int"
+          }
+        },
+        "required": [
+          "message_id"
+        ]
       },
       "OrderInfo": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "email": {
+            "description": "User email",
+            "type": "string"
+          },
+          "name": {
+            "description": "User name",
+            "type": "string"
+          },
+          "phone_number": {
+            "description": "User's phone number",
+            "type": "string"
+          }
+        }
       },
       "PassportData": {
         "type": "object"
       },
       "PassportElementErrorDataField": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "data_hash": {
+            "description": "Base64-encoded data hash",
+            "type": "string"
+          },
+          "field_name": {
+            "description": "Name of the data field which has the error",
+            "type": "string"
+          },
+          "message": {
+            "description": "Error message",
+            "type": "string"
+          },
+          "source": {
+            "description": "Error source, must be data",
+            "type": "string"
+          },
+          "type": {
+            "description": "The section of the user's Telegram Passport which has the error, one of “personal_details”, “passport”, “driver_license”, “identity_card”, “internal_passport”, “address”",
+            "type": "string"
+          }
+        },
+        "required": [
+          "source",
+          "type",
+          "field_name",
+          "data_hash",
+          "message"
+        ]
       },
       "PassportElementErrorFile": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "file_hash": {
+            "description": "Base64-encoded file hash",
+            "type": "string"
+          },
+          "message": {
+            "description": "Error message",
+            "type": "string"
+          },
+          "source": {
+            "description": "Error source, must be file",
+            "type": "string"
+          },
+          "type": {
+            "description": "The section of the user's Telegram Passport which has the issue, one of “utility_bill”, “bank_statement”, “rental_agreement”, “passport_registration”, “temporary_registration”",
+            "type": "string"
+          }
+        },
+        "required": [
+          "source",
+          "type",
+          "file_hash",
+          "message"
+        ]
       },
       "PassportElementErrorFiles": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "message": {
+            "description": "Error message",
+            "type": "string"
+          },
+          "source": {
+            "description": "Error source, must be files",
+            "type": "string"
+          },
+          "type": {
+            "description": "The section of the user's Telegram Passport which has the issue, one of “utility_bill”, “bank_statement”, “rental_agreement”, “passport_registration”, “temporary_registration”",
+            "type": "string"
+          }
+        },
+        "required": [
+          "source",
+          "type",
+          "message"
+        ]
       },
       "PassportElementErrorFrontSide": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "file_hash": {
+            "description": "Base64-encoded hash of the file with the front side of the document",
+            "type": "string"
+          },
+          "message": {
+            "description": "Error message",
+            "type": "string"
+          },
+          "source": {
+            "description": "Error source, must be front_side",
+            "type": "string"
+          },
+          "type": {
+            "description": "The section of the user's Telegram Passport which has the issue, one of “passport”, “driver_license”, “identity_card”, “internal_passport”",
+            "type": "string"
+          }
+        },
+        "required": [
+          "source",
+          "type",
+          "file_hash",
+          "message"
+        ]
       },
       "PassportElementErrorReverseSide": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "file_hash": {
+            "description": "Base64-encoded hash of the file with the reverse side of the document",
+            "type": "string"
+          },
+          "message": {
+            "description": "Error message",
+            "type": "string"
+          },
+          "source": {
+            "description": "Error source, must be reverse_side",
+            "type": "string"
+          },
+          "type": {
+            "description": "The section of the user's Telegram Passport which has the issue, one of “driver_license”, “identity_card”",
+            "type": "string"
+          }
+        },
+        "required": [
+          "source",
+          "type",
+          "file_hash",
+          "message"
+        ]
       },
       "PassportElementErrorSelfie": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "file_hash": {
+            "description": "Base64-encoded hash of the file with the selfie",
+            "type": "string"
+          },
+          "message": {
+            "description": "Error message",
+            "type": "string"
+          },
+          "source": {
+            "description": "Error source, must be selfie",
+            "type": "string"
+          },
+          "type": {
+            "description": "The section of the user's Telegram Passport which has the issue, one of “passport”, “driver_license”, “identity_card”, “internal_passport”",
+            "type": "string"
+          }
+        },
+        "required": [
+          "source",
+          "type",
+          "file_hash",
+          "message"
+        ]
       },
       "PassportElementErrorTranslationFile": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "file_hash": {
+            "description": "Base64-encoded file hash",
+            "type": "string"
+          },
+          "message": {
+            "description": "Error message",
+            "type": "string"
+          },
+          "source": {
+            "description": "Error source, must be translation_file",
+            "type": "string"
+          },
+          "type": {
+            "description": "Type of element of the user's Telegram Passport which has the issue, one of “passport”, “driver_license”, “identity_card”, “internal_passport”, “utility_bill”, “bank_statement”, “rental_agreement”, “passport_registration”, “temporary_registration”",
+            "type": "string"
+          }
+        },
+        "required": [
+          "source",
+          "type",
+          "file_hash",
+          "message"
+        ]
       },
       "PassportElementErrorTranslationFiles": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "message": {
+            "description": "Error message",
+            "type": "string"
+          },
+          "source": {
+            "description": "Error source, must be translation_files",
+            "type": "string"
+          },
+          "type": {
+            "description": "Type of element of the user's Telegram Passport which has the issue, one of “passport”, “driver_license”, “identity_card”, “internal_passport”, “utility_bill”, “bank_statement”, “rental_agreement”, “passport_registration”, “temporary_registration”",
+            "type": "string"
+          }
+        },
+        "required": [
+          "source",
+          "type",
+          "message"
+        ]
       },
       "PassportElementErrorUnspecified": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "element_hash": {
+            "description": "Base64-encoded element hash",
+            "type": "string"
+          },
+          "message": {
+            "description": "Error message",
+            "type": "string"
+          },
+          "source": {
+            "description": "Error source, must be unspecified",
+            "type": "string"
+          },
+          "type": {
+            "description": "Type of element of the user's Telegram Passport which has the issue",
+            "type": "string"
+          }
+        },
+        "required": [
+          "source",
+          "type",
+          "element_hash",
+          "message"
+        ]
       },
       "PassportFile": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "file_date": {
+            "description": "Unix time when the file was uploaded",
+            "type": "int"
+          },
+          "file_id": {
+            "description": "Identifier for this file, which can be used to download or reuse the file",
+            "type": "string"
+          },
+          "file_size": {
+            "description": "File size in bytes",
+            "type": "int"
+          },
+          "file_unique_id": {
+            "description": "Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file",
+            "type": "string"
+          }
+        },
+        "required": [
+          "file_id",
+          "file_unique_id",
+          "file_size",
+          "file_date"
+        ]
       },
       "PhotoSize": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "file_id": {
+            "description": "Identifier for this file, which can be used to download or reuse the file",
+            "type": "string"
+          },
+          "file_size": {
+            "description": "File size in bytes",
+            "type": "int"
+          },
+          "file_unique_id": {
+            "description": "Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file",
+            "type": "string"
+          },
+          "height": {
+            "description": "Photo height",
+            "type": "int"
+          },
+          "width": {
+            "description": "Photo width",
+            "type": "int"
+          }
+        },
+        "required": [
+          "file_id",
+          "file_unique_id",
+          "width",
+          "height"
+        ]
       },
       "Poll": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "close_date": {
+            "description": "Point in time (Unix timestamp) when the poll will be automatically closed",
+            "type": "int"
+          },
+          "correct_option_id": {
+            "description": "0-based identifier of the correct answer option. Available only for polls in the quiz mode, which are closed, or was sent (not forwarded) by the bot or to the private chat with the bot",
+            "type": "int"
+          },
+          "explanation": {
+            "description": "Text that is shown when a user chooses an incorrect answer or taps on the lamp icon in a quiz-style poll, 0-200 characters",
+            "type": "string"
+          },
+          "id": {
+            "description": "Unique poll identifier",
+            "type": "string"
+          },
+          "open_period": {
+            "description": "Amount of time in seconds the poll will be active after creation",
+            "type": "int"
+          },
+          "question": {
+            "description": "Poll question, 1-300 characters",
+            "type": "string"
+          },
+          "total_voter_count": {
+            "description": "Total number of users that voted in the poll",
+            "type": "int"
+          },
+          "type": {
+            "description": "Poll type, currently can be “regular” or “quiz”",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "question",
+          "total_voter_count",
+          "type"
+        ]
       },
       "PollAnswer": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "poll_id": {
+            "description": "Unique poll identifier",
+            "type": "string"
+          }
+        },
+        "required": [
+          "poll_id"
+        ]
       },
       "PollOption": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "text": {
+            "description": "Option text, 1-100 characters",
+            "type": "string"
+          },
+          "voter_count": {
+            "description": "Number of users that voted for this option",
+            "type": "int"
+          }
+        },
+        "required": [
+          "text",
+          "voter_count"
+        ]
       },
       "PreCheckoutQuery": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "currency": {
+            "description": "Three-letter ISO 4217 currency code",
+            "type": "string"
+          },
+          "id": {
+            "description": "Unique query identifier",
+            "type": "string"
+          },
+          "invoice_payload": {
+            "description": "Bot specified invoice payload",
+            "type": "string"
+          },
+          "shipping_option_id": {
+            "description": "Identifier of the shipping option chosen by the user",
+            "type": "string"
+          },
+          "total_amount": {
+            "description": "Total price in the smallest units of the currency (integer, not float/double). For example, for a price of US$ 1.45 pass amount = 145. See the exp parameter in currencies.json, it shows the number of digits past the decimal point for each currency (2 for the majority of currencies)",
+            "type": "int"
+          }
+        },
+        "required": [
+          "id",
+          "currency",
+          "total_amount",
+          "invoice_payload"
+        ]
       },
       "ProximityAlertTriggered": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "distance": {
+            "description": "The distance between the users",
+            "type": "int"
+          }
+        },
+        "required": [
+          "distance"
+        ]
       },
       "ReplyKeyboardMarkup": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "input_field_placeholder": {
+            "description": "The placeholder to be shown in the input field when the keyboard is active; 1-64 characters",
+            "type": "string"
+          }
+        }
       },
       "ReplyKeyboardRemove": {
         "type": "object"
       },
       "ResponseParameters": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "migrate_to_chat_id": {
+            "description": "The group has been migrated to a supergroup with the specified identifier. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this identifier",
+            "type": "int"
+          },
+          "retry_after": {
+            "description": "In case of exceeding flood control, the number of seconds left to wait before the request can be repeated",
+            "type": "int"
+          }
+        }
       },
       "ShippingAddress": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "city": {
+            "description": "City",
+            "type": "string"
+          },
+          "country_code": {
+            "description": "ISO 3166-1 alpha-2 country code",
+            "type": "string"
+          },
+          "post_code": {
+            "description": "Address post code",
+            "type": "string"
+          },
+          "state": {
+            "description": "State, if applicable",
+            "type": "string"
+          },
+          "street_line1": {
+            "description": "First line for the address",
+            "type": "string"
+          },
+          "street_line2": {
+            "description": "Second line for the address",
+            "type": "string"
+          }
+        },
+        "required": [
+          "country_code",
+          "state",
+          "city",
+          "street_line1",
+          "street_line2",
+          "post_code"
+        ]
       },
       "ShippingOption": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "id": {
+            "description": "Shipping option identifier",
+            "type": "string"
+          },
+          "title": {
+            "description": "Option title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title"
+        ]
       },
       "ShippingQuery": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "id": {
+            "description": "Unique query identifier",
+            "type": "string"
+          },
+          "invoice_payload": {
+            "description": "Bot specified invoice payload",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "invoice_payload"
+        ]
       },
       "Sticker": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "emoji": {
+            "description": "Emoji associated with the sticker",
+            "type": "string"
+          },
+          "file_id": {
+            "description": "Identifier for this file, which can be used to download or reuse the file",
+            "type": "string"
+          },
+          "file_size": {
+            "description": "File size in bytes",
+            "type": "int"
+          },
+          "file_unique_id": {
+            "description": "Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file",
+            "type": "string"
+          },
+          "height": {
+            "description": "Sticker height",
+            "type": "int"
+          },
+          "set_name": {
+            "description": "Name of the sticker set to which the sticker belongs",
+            "type": "string"
+          },
+          "width": {
+            "description": "Sticker width",
+            "type": "int"
+          }
+        },
+        "required": [
+          "file_id",
+          "file_unique_id",
+          "width",
+          "height"
+        ]
       },
       "StickerSet": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "Sticker set name",
+            "type": "string"
+          },
+          "title": {
+            "description": "Sticker set title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "title"
+        ]
       },
       "SuccessfulPayment": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "currency": {
+            "description": "Three-letter ISO 4217 currency code",
+            "type": "string"
+          },
+          "invoice_payload": {
+            "description": "Bot specified invoice payload",
+            "type": "string"
+          },
+          "provider_payment_charge_id": {
+            "description": "Provider payment identifier",
+            "type": "string"
+          },
+          "shipping_option_id": {
+            "description": "Identifier of the shipping option chosen by the user",
+            "type": "string"
+          },
+          "telegram_payment_charge_id": {
+            "description": "Telegram payment identifier",
+            "type": "string"
+          },
+          "total_amount": {
+            "description": "Total price in the smallest units of the currency (integer, not float/double). For example, for a price of US$ 1.45 pass amount = 145. See the exp parameter in currencies.json, it shows the number of digits past the decimal point for each currency (2 for the majority of currencies)",
+            "type": "int"
+          }
+        },
+        "required": [
+          "currency",
+          "total_amount",
+          "invoice_payload",
+          "telegram_payment_charge_id",
+          "provider_payment_charge_id"
+        ]
       },
       "Update": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "update_id": {
+            "description": "The update's unique identifier. Update identifiers start from a certain positive number and increase sequentially. This ID becomes especially handy if you're using Webhooks, since it allows you to ignore repeated updates or to restore the correct update sequence, should they get out of order. If there are no new updates for at least a week, then identifier of the next update will be chosen randomly instead of sequentially",
+            "type": "int"
+          }
+        },
+        "required": [
+          "update_id"
+        ]
       },
       "User": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "first_name": {
+            "description": "User's or bot's first name",
+            "type": "string"
+          },
+          "id": {
+            "description": "Unique identifier for this user or bot. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a 64-bit integer or double-precision float type are safe for storing this identifier",
+            "type": "int"
+          },
+          "language_code": {
+            "description": "IETF language tag of the user's language",
+            "type": "string"
+          },
+          "last_name": {
+            "description": "User's or bot's last name",
+            "type": "string"
+          },
+          "username": {
+            "description": "User's or bot's username",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "first_name"
+        ]
       },
       "UserProfilePhotos": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "total_count": {
+            "description": "Total number of profile pictures the target user has",
+            "type": "int"
+          }
+        },
+        "required": [
+          "total_count"
+        ]
       },
       "Venue": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "address": {
+            "description": "Address of the venue",
+            "type": "string"
+          },
+          "foursquare_id": {
+            "description": "Foursquare identifier of the venue",
+            "type": "string"
+          },
+          "foursquare_type": {
+            "description": "Foursquare type of the venue. (For example, “arts_entertainment/default”, “arts_entertainment/aquarium” or “food/icecream”.)",
+            "type": "string"
+          },
+          "google_place_id": {
+            "description": "Google Places identifier of the venue",
+            "type": "string"
+          },
+          "google_place_type": {
+            "description": "Google Places type of the venue. (See supported types.)",
+            "type": "string"
+          },
+          "title": {
+            "description": "Name of the venue",
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "address"
+        ]
       },
       "Video": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "duration": {
+            "description": "Duration of the video in seconds as defined by sender",
+            "type": "int"
+          },
+          "file_id": {
+            "description": "Identifier for this file, which can be used to download or reuse the file",
+            "type": "string"
+          },
+          "file_name": {
+            "description": "Original filename as defined by sender",
+            "type": "string"
+          },
+          "file_size": {
+            "description": "File size in bytes",
+            "type": "int"
+          },
+          "file_unique_id": {
+            "description": "Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file",
+            "type": "string"
+          },
+          "height": {
+            "description": "Video height as defined by sender",
+            "type": "int"
+          },
+          "mime_type": {
+            "description": "Mime type of a file as defined by sender",
+            "type": "string"
+          },
+          "width": {
+            "description": "Video width as defined by sender",
+            "type": "int"
+          }
+        },
+        "required": [
+          "file_id",
+          "file_unique_id",
+          "width",
+          "height",
+          "duration"
+        ]
       },
       "VideoNote": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "duration": {
+            "description": "Duration of the video in seconds as defined by sender",
+            "type": "int"
+          },
+          "file_id": {
+            "description": "Identifier for this file, which can be used to download or reuse the file",
+            "type": "string"
+          },
+          "file_size": {
+            "description": "File size in bytes",
+            "type": "int"
+          },
+          "file_unique_id": {
+            "description": "Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file",
+            "type": "string"
+          },
+          "length": {
+            "description": "Video width and height (diameter of the video message) as defined by sender",
+            "type": "int"
+          }
+        },
+        "required": [
+          "file_id",
+          "file_unique_id",
+          "length",
+          "duration"
+        ]
       },
       "Voice": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "duration": {
+            "description": "Duration of the audio in seconds as defined by sender",
+            "type": "int"
+          },
+          "file_id": {
+            "description": "Identifier for this file, which can be used to download or reuse the file",
+            "type": "string"
+          },
+          "file_size": {
+            "description": "File size in bytes",
+            "type": "int"
+          },
+          "file_unique_id": {
+            "description": "Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file",
+            "type": "string"
+          },
+          "mime_type": {
+            "description": "MIME type of the file as defined by sender",
+            "type": "string"
+          }
+        },
+        "required": [
+          "file_id",
+          "file_unique_id",
+          "duration"
+        ]
       },
       "VoiceChatEnded": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "duration": {
+            "description": "Voice chat duration in seconds",
+            "type": "int"
+          }
+        },
+        "required": [
+          "duration"
+        ]
       },
       "VoiceChatParticipantsInvited": {
         "type": "object"
       },
       "VoiceChatScheduled": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "start_date": {
+            "description": "Point in time (Unix timestamp) when the voice chat is supposed to be started by a chat administrator",
+            "type": "int"
+          }
+        },
+        "required": [
+          "start_date"
+        ]
       },
       "WebhookInfo": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "ip_address": {
+            "description": "Currently used webhook IP address",
+            "type": "string"
+          },
+          "last_error_date": {
+            "description": "Unix time for the most recent error that happened when trying to deliver an update via webhook",
+            "type": "int"
+          },
+          "last_error_message": {
+            "description": "Error message in human-readable format for the most recent error that happened when trying to deliver an update via webhook",
+            "type": "string"
+          },
+          "max_connections": {
+            "description": "Maximum allowed number of simultaneous HTTPS connections to the webhook for update delivery",
+            "type": "int"
+          },
+          "pending_update_count": {
+            "description": "Number of updates awaiting delivery",
+            "type": "int"
+          },
+          "url": {
+            "description": "Webhook URL, may be empty if webhook is not set up",
+            "type": "string"
+          }
+        },
+        "required": [
+          "url",
+          "pending_update_count"
+        ]
       }
     }
   }

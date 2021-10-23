@@ -35,6 +35,28 @@ func (a API) OAS() *ogen.Spec {
 		s := ogen.Schema{
 			Description: d.Description,
 			Type:        "object",
+			Properties:  map[string]ogen.Schema{},
+		}
+		for _, f := range d.Fields {
+			p := ogen.Schema{
+				Description: f.Description,
+			}
+			t := f.Type
+			switch t.Primitive {
+			case String:
+				p.Type = "string"
+			case Integer:
+				p.Type = "int"
+			case Float:
+				p.Type = "float64"
+			default:
+				continue
+			}
+			if !f.Optional {
+				s.Required = append(s.Required, f.Name)
+			}
+
+			s.Properties[f.Name] = p
 		}
 		c.Schemas[d.Name] = s
 	}
