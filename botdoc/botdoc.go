@@ -8,17 +8,21 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
+// Kind of Type.
 type Kind string
 
+// Possible types.
 const (
-	KindPrimitive Kind = "primitive" // String, Int
+	KindPrimitive Kind = "primitive"
 	KindArray     Kind = "array"
 	KindObject    Kind = "object"
 	KindSum       Kind = "sum"
 )
 
+// Primitive type.
 type Primitive string
 
+// Possible primitives.
 const (
 	String  Primitive = "String"
 	Integer Primitive = "Integer"
@@ -38,19 +42,20 @@ type Type struct {
 	Sum       []Type
 }
 
-func NewPrimitive(p Primitive) Type {
+func newPrimitive(p Primitive) Type {
 	return Type{
 		Kind:      KindPrimitive,
 		Primitive: p,
 	}
 }
 
+// ParseType parses telegram documentation Type from string
 func ParseType(s string) Type {
 	switch p := Primitive(s); p {
 	case String, Integer, Float:
-		return NewPrimitive(p)
+		return newPrimitive(p)
 	case "Float number":
-		return NewPrimitive(Float)
+		return newPrimitive(Float)
 	}
 
 	if t := strings.TrimPrefix(s, "Array of "); t != s {
@@ -114,12 +119,14 @@ type Field struct {
 	Optional    bool
 }
 
+// Definition of structure (method or object).
 type Definition struct {
 	Name        string
 	Description string
 	Fields      []Field
 }
 
+// API definition.
 type API struct {
 	Types   []Definition
 	Methods []Definition

@@ -61,8 +61,7 @@ linters:
     - unused
     - varcheck
     - whitespace
-    - gochecknoglobals
-    - gocognit
+
 
   # Do not enable:
   # - wsl       (too opinionated about newlines)
@@ -71,7 +70,8 @@ linters:
   # - prealloc  (not worth it in scope of this project)
   # - maligned  (same as prealloc)
   # - funlen    (gocyclo is enough)
-
+  # - gochecknoglobals
+  # - gocognit
 issues:
   exclude-use-default: false
   exclude-rules:
@@ -114,3 +114,7 @@ issues:
 
     - linters: [staticcheck]
       text: "SA1019: (telegram|client).+ is deprecated:"
+
+    # TODO: Rewrite
+    - path: pool\.go
+      linters: [golint, govet, gocritic, misspell]

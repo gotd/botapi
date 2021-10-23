@@ -16,18 +16,18 @@ import (
 	"github.com/gotd/botapi/pool"
 )
 
-type HandleContext struct {
+type handleContext struct {
 	Method  string
 	Client  *telegram.Client
 	Writer  http.ResponseWriter
 	Request *http.Request
 }
 
-type Handler struct {
-	handlers map[string]func(ctx context.Context, h HandleContext) error
+type handler struct {
+	handlers map[string]func(ctx context.Context, h handleContext) error
 }
 
-func (h Handler) On(method string, f func(ctx context.Context, h HandleContext) error) {
+func (h handler) On(method string, f func(ctx context.Context, h handleContext) error) {
 	h.handlers[strings.ToLower(method)] = f
 }
 
@@ -63,8 +63,8 @@ func main() {
 	}
 	go p.RunGC(*keepalive)
 
-	h := Handler{
-		handlers: map[string]func(ctx context.Context, h HandleContext) error{},
+	h := handler{
+		handlers: map[string]func(ctx context.Context, h handleContext) error{},
 	}
 	h.On("getMe", getMe)
 
@@ -86,7 +86,7 @@ func main() {
 
 		ctx := r.Context()
 		if err := p.Do(ctx, token, func(client *telegram.Client) error {
-			return handler(ctx, HandleContext{
+			return handler(ctx, handleContext{
 				Method:  method,
 				Client:  client,
 				Writer:  w,

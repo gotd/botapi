@@ -42,7 +42,7 @@ func convertUser(res *tg.User) api.User {
 	}
 }
 
-func getMe(ctx context.Context, h HandleContext) error {
+func getMe(ctx context.Context, h handleContext) error {
 	res, err := h.Client.Self(ctx)
 	if err != nil {
 		return err
