@@ -99,7 +99,10 @@ func (t Type) String() string {
 		}
 		return strings.Join(sum, " or ")
 	default:
-		return "unknown"
+		if t.Name == "" {
+			return "unknown"
+		}
+		return fmt.Sprintf("unknown (%s)", t.Name)
 	}
 }
 
