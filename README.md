@@ -6,8 +6,8 @@ Reference: https://core.telegram.org/bots/api
 
 Reference implementation: https://github.com/tdlib/telegram-bot-api
 
-## Desired features
+## Roadmap
 
-* Embeddable, can be used as a library
-* OpenAPI v3 specification is generated from [documentation](https://core.telegram.org/bots/api)
-* Server code is generated from OpenAPI v3 documentation
+- [x] Parse definition
+- [ ] Generate OpenAPI v3 Specification
+- [ ] Generate client and server from OpenAPi v3 using [ogen](https://github.com/ogen-go/ogen)
