@@ -163,7 +163,7 @@ func Extract(doc *goquery.Document) (a API) {
 			}
 		}
 		appendDefinition := func() {
-			if len(d.Name) == 0 {
+			if d.Name == "" {
 				d = Definition{}
 				return
 			}

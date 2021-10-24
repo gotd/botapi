@@ -88,8 +88,6 @@ github.com/modern-go/concurrent v0.0.0-20180228061459-e0a39a4cb421/go.mod h1:6dJ
 github.com/modern-go/reflect2 v0.0.0-20180701023420-4b7aa43c6742/go.mod h1:bx2lNnkwVCuqBIxFjflWJWanXIb3RllmbCylyMrvgv0=
 github.com/modern-go/reflect2 v1.0.2 h1:xBagoLtFs94CBntxluKeaWgTMpvLxC4ur3nMaC9Gz0M=
 github.com/modern-go/reflect2 v1.0.2/go.mod h1:yWuevngMOJpCy52FWWMvUC8ws7m/LJsjYzDa0/r8luk=
-github.com/ogen-go/ogen v0.0.0-20211024122337-3a11d4ce5a65 h1:/EVHdpreGG2WNREVDpvnhaB7SQklf4slqixYXaDXxw8=
-github.com/ogen-go/ogen v0.0.0-20211024122337-3a11d4ce5a65/go.mod h1:kMwNq6z7qHZ1lGVGA4JmPh91vURPrack1lrAyw5sVAE=
 github.com/ogen-go/ogen v0.0.0-20211024160458-7b9347e6348f h1:M6DQAOgtl32cX6yFG+G5ZObQpRYg+fwHeuEHey9g1IA=
 github.com/ogen-go/ogen v0.0.0-20211024160458-7b9347e6348f/go.mod h1:kMwNq6z7qHZ1lGVGA4JmPh91vURPrack1lrAyw5sVAE=
 github.com/pkg/diff v0.0.0-20210226163009-20ebb0f2a09e/go.mod h1:pJLUxLENpZxwdsKMEsNbx1VGcRFpLqf3715MtcvvzbA=

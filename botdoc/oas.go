@@ -28,6 +28,8 @@ func resultFor(s ogen.Schema) ogen.Schema {
 }
 
 // OAS generates OpenAPI v3 Specification from API definition.
+//
+//nolint:dupl // TODO(ernado): refactor
 func (a API) OAS() *ogen.Spec {
 	c := &ogen.Components{
 		Schemas: map[string]ogen.Schema{},
