@@ -72,11 +72,823 @@ func NewClient(serverURL string) *Client {
 	}
 }
 
+func (c *Client) AddStickerToSet(ctx context.Context, req AddStickerToSet) (res AddStickerToSet, err error) {
+	body, contentType, err := encodeAddStickerToSetRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/addStickerToSet"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeAddStickerToSetResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) AnswerCallbackQuery(ctx context.Context, req AnswerCallbackQuery) (res AnswerCallbackQuery, err error) {
+	body, contentType, err := encodeAnswerCallbackQueryRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/answerCallbackQuery"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeAnswerCallbackQueryResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) AnswerInlineQuery(ctx context.Context, req AnswerInlineQuery) (res AnswerInlineQuery, err error) {
+	body, contentType, err := encodeAnswerInlineQueryRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/answerInlineQuery"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeAnswerInlineQueryResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) AnswerPreCheckoutQuery(ctx context.Context, req AnswerPreCheckoutQuery) (res AnswerPreCheckoutQuery, err error) {
+	body, contentType, err := encodeAnswerPreCheckoutQueryRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/answerPreCheckoutQuery"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeAnswerPreCheckoutQueryResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) AnswerShippingQuery(ctx context.Context, req AnswerShippingQuery) (res AnswerShippingQuery, err error) {
+	body, contentType, err := encodeAnswerShippingQueryRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/answerShippingQuery"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeAnswerShippingQueryResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) BanChatMember(ctx context.Context, req BanChatMember) (res BanChatMember, err error) {
+	body, contentType, err := encodeBanChatMemberRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/banChatMember"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeBanChatMemberResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) CopyMessage(ctx context.Context, req CopyMessage) (res CopyMessage, err error) {
+	body, contentType, err := encodeCopyMessageRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/copyMessage"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeCopyMessageResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) CreateChatInviteLink(ctx context.Context, req CreateChatInviteLink) (res CreateChatInviteLink, err error) {
+	body, contentType, err := encodeCreateChatInviteLinkRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/createChatInviteLink"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeCreateChatInviteLinkResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) CreateNewStickerSet(ctx context.Context, req CreateNewStickerSet) (res CreateNewStickerSet, err error) {
+	body, contentType, err := encodeCreateNewStickerSetRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/createNewStickerSet"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeCreateNewStickerSetResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) DeleteChatPhoto(ctx context.Context, req DeleteChatPhoto) (res DeleteChatPhoto, err error) {
+	body, contentType, err := encodeDeleteChatPhotoRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/deleteChatPhoto"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeDeleteChatPhotoResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) DeleteChatStickerSet(ctx context.Context, req DeleteChatStickerSet) (res DeleteChatStickerSet, err error) {
+	body, contentType, err := encodeDeleteChatStickerSetRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/deleteChatStickerSet"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeDeleteChatStickerSetResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) DeleteMessage(ctx context.Context, req DeleteMessage) (res DeleteMessage, err error) {
+	body, contentType, err := encodeDeleteMessageRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/deleteMessage"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeDeleteMessageResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) DeleteMyCommands(ctx context.Context, req DeleteMyCommands) (res DeleteMyCommands, err error) {
+	body, contentType, err := encodeDeleteMyCommandsRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/deleteMyCommands"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeDeleteMyCommandsResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) DeleteStickerFromSet(ctx context.Context, req DeleteStickerFromSet) (res DeleteStickerFromSet, err error) {
+	body, contentType, err := encodeDeleteStickerFromSetRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/deleteStickerFromSet"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeDeleteStickerFromSetResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) DeleteWebhook(ctx context.Context, req DeleteWebhook) (res DeleteWebhook, err error) {
+	body, contentType, err := encodeDeleteWebhookRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/deleteWebhook"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeDeleteWebhookResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) EditChatInviteLink(ctx context.Context, req EditChatInviteLink) (res EditChatInviteLink, err error) {
+	body, contentType, err := encodeEditChatInviteLinkRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/editChatInviteLink"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeEditChatInviteLinkResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) EditMessageCaption(ctx context.Context, req EditMessageCaption) (res EditMessageCaption, err error) {
+	body, contentType, err := encodeEditMessageCaptionRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/editMessageCaption"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeEditMessageCaptionResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) EditMessageLiveLocation(ctx context.Context, req EditMessageLiveLocation) (res EditMessageLiveLocation, err error) {
+	body, contentType, err := encodeEditMessageLiveLocationRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/editMessageLiveLocation"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeEditMessageLiveLocationResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) EditMessageMedia(ctx context.Context, req EditMessageMedia) (res EditMessageMedia, err error) {
+	body, contentType, err := encodeEditMessageMediaRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/editMessageMedia"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeEditMessageMediaResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) EditMessageReplyMarkup(ctx context.Context, req EditMessageReplyMarkup) (res EditMessageReplyMarkup, err error) {
+	body, contentType, err := encodeEditMessageReplyMarkupRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/editMessageReplyMarkup"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeEditMessageReplyMarkupResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) EditMessageText(ctx context.Context, req EditMessageText) (res EditMessageText, err error) {
+	body, contentType, err := encodeEditMessageTextRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/editMessageText"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeEditMessageTextResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) ExportChatInviteLink(ctx context.Context, req ExportChatInviteLink) (res ExportChatInviteLink, err error) {
+	body, contentType, err := encodeExportChatInviteLinkRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/exportChatInviteLink"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeExportChatInviteLinkResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) ForwardMessage(ctx context.Context, req ForwardMessage) (res ForwardMessage, err error) {
+	body, contentType, err := encodeForwardMessageRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/forwardMessage"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeForwardMessageResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) GetChat(ctx context.Context, req GetChat) (res GetChat, err error) {
+	body, contentType, err := encodeGetChatRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/getChat"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeGetChatResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) GetChatAdministrators(ctx context.Context, req GetChatAdministrators) (res GetChatAdministrators, err error) {
+	body, contentType, err := encodeGetChatAdministratorsRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/getChatAdministrators"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeGetChatAdministratorsResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) GetChatMember(ctx context.Context, req GetChatMember) (res GetChatMember, err error) {
+	body, contentType, err := encodeGetChatMemberRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/getChatMember"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeGetChatMemberResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) GetChatMemberCount(ctx context.Context, req GetChatMemberCount) (res GetChatMemberCount, err error) {
+	body, contentType, err := encodeGetChatMemberCountRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/getChatMemberCount"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeGetChatMemberCountResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) GetFile(ctx context.Context, req GetFile) (res GetFile, err error) {
+	body, contentType, err := encodeGetFileRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/getFile"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeGetFileResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) GetGameHighScores(ctx context.Context, req GetGameHighScores) (res GetGameHighScores, err error) {
+	body, contentType, err := encodeGetGameHighScoresRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/getGameHighScores"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeGetGameHighScoresResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
 func (c *Client) GetMe(ctx context.Context) (res User, err error) {
 	u := uri.Clone(c.serverURL)
 	u.Path += "/getMe"
 
-	r := ht.NewRequest(ctx, "GET", u, nil)
+	r := ht.NewRequest(ctx, "POST", u, nil)
 	defer ht.PutRequest(r)
 
 	resp, err := c.http.Do(r)
@@ -86,6 +898,1266 @@ func (c *Client) GetMe(ctx context.Context) (res User, err error) {
 	defer resp.Body.Close()
 
 	result, err := decodeGetMeResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) GetMyCommands(ctx context.Context, req GetMyCommands) (res GetMyCommands, err error) {
+	body, contentType, err := encodeGetMyCommandsRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/getMyCommands"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeGetMyCommandsResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) GetStickerSet(ctx context.Context, req GetStickerSet) (res GetStickerSet, err error) {
+	body, contentType, err := encodeGetStickerSetRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/getStickerSet"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeGetStickerSetResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) GetUpdates(ctx context.Context, req GetUpdates) (res GetUpdates, err error) {
+	body, contentType, err := encodeGetUpdatesRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/getUpdates"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeGetUpdatesResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) GetUserProfilePhotos(ctx context.Context, req GetUserProfilePhotos) (res GetUserProfilePhotos, err error) {
+	body, contentType, err := encodeGetUserProfilePhotosRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/getUserProfilePhotos"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeGetUserProfilePhotosResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) LeaveChat(ctx context.Context, req LeaveChat) (res LeaveChat, err error) {
+	body, contentType, err := encodeLeaveChatRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/leaveChat"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeLeaveChatResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) PinChatMessage(ctx context.Context, req PinChatMessage) (res PinChatMessage, err error) {
+	body, contentType, err := encodePinChatMessageRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/pinChatMessage"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodePinChatMessageResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) PromoteChatMember(ctx context.Context, req PromoteChatMember) (res PromoteChatMember, err error) {
+	body, contentType, err := encodePromoteChatMemberRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/promoteChatMember"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodePromoteChatMemberResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) RestrictChatMember(ctx context.Context, req RestrictChatMember) (res RestrictChatMember, err error) {
+	body, contentType, err := encodeRestrictChatMemberRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/restrictChatMember"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeRestrictChatMemberResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) RevokeChatInviteLink(ctx context.Context, req RevokeChatInviteLink) (res RevokeChatInviteLink, err error) {
+	body, contentType, err := encodeRevokeChatInviteLinkRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/revokeChatInviteLink"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeRevokeChatInviteLinkResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) SendAnimation(ctx context.Context, req SendAnimation) (res SendAnimation, err error) {
+	body, contentType, err := encodeSendAnimationRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/sendAnimation"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeSendAnimationResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) SendAudio(ctx context.Context, req SendAudio) (res SendAudio, err error) {
+	body, contentType, err := encodeSendAudioRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/sendAudio"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeSendAudioResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) SendChatAction(ctx context.Context, req SendChatAction) (res SendChatAction, err error) {
+	body, contentType, err := encodeSendChatActionRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/sendChatAction"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeSendChatActionResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) SendContact(ctx context.Context, req SendContact) (res SendContact, err error) {
+	body, contentType, err := encodeSendContactRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/sendContact"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeSendContactResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) SendDice(ctx context.Context, req SendDice) (res SendDice, err error) {
+	body, contentType, err := encodeSendDiceRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/sendDice"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeSendDiceResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) SendDocument(ctx context.Context, req SendDocument) (res SendDocument, err error) {
+	body, contentType, err := encodeSendDocumentRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/sendDocument"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeSendDocumentResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) SendGame(ctx context.Context, req SendGame) (res SendGame, err error) {
+	body, contentType, err := encodeSendGameRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/sendGame"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeSendGameResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) SendInvoice(ctx context.Context, req SendInvoice) (res SendInvoice, err error) {
+	body, contentType, err := encodeSendInvoiceRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/sendInvoice"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeSendInvoiceResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) SendLocation(ctx context.Context, req SendLocation) (res SendLocation, err error) {
+	body, contentType, err := encodeSendLocationRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/sendLocation"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeSendLocationResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) SendMediaGroup(ctx context.Context, req SendMediaGroup) (res SendMediaGroup, err error) {
+	body, contentType, err := encodeSendMediaGroupRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/sendMediaGroup"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeSendMediaGroupResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) SendMessage(ctx context.Context, req SendMessage) (res SendMessage, err error) {
+	body, contentType, err := encodeSendMessageRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/sendMessage"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeSendMessageResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) SendPhoto(ctx context.Context, req SendPhoto) (res SendPhoto, err error) {
+	body, contentType, err := encodeSendPhotoRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/sendPhoto"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeSendPhotoResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) SendPoll(ctx context.Context, req SendPoll) (res SendPoll, err error) {
+	body, contentType, err := encodeSendPollRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/sendPoll"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeSendPollResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) SendSticker(ctx context.Context, req SendSticker) (res SendSticker, err error) {
+	body, contentType, err := encodeSendStickerRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/sendSticker"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeSendStickerResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) SendVenue(ctx context.Context, req SendVenue) (res SendVenue, err error) {
+	body, contentType, err := encodeSendVenueRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/sendVenue"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeSendVenueResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) SendVideo(ctx context.Context, req SendVideo) (res SendVideo, err error) {
+	body, contentType, err := encodeSendVideoRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/sendVideo"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeSendVideoResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) SendVideoNote(ctx context.Context, req SendVideoNote) (res SendVideoNote, err error) {
+	body, contentType, err := encodeSendVideoNoteRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/sendVideoNote"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeSendVideoNoteResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) SendVoice(ctx context.Context, req SendVoice) (res SendVoice, err error) {
+	body, contentType, err := encodeSendVoiceRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/sendVoice"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeSendVoiceResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) SetChatAdministratorCustomTitle(ctx context.Context, req SetChatAdministratorCustomTitle) (res SetChatAdministratorCustomTitle, err error) {
+	body, contentType, err := encodeSetChatAdministratorCustomTitleRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/setChatAdministratorCustomTitle"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeSetChatAdministratorCustomTitleResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) SetChatDescription(ctx context.Context, req SetChatDescription) (res SetChatDescription, err error) {
+	body, contentType, err := encodeSetChatDescriptionRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/setChatDescription"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeSetChatDescriptionResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) SetChatPermissions(ctx context.Context, req SetChatPermissions) (res SetChatPermissions, err error) {
+	body, contentType, err := encodeSetChatPermissionsRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/setChatPermissions"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeSetChatPermissionsResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) SetChatPhoto(ctx context.Context, req SetChatPhoto) (res SetChatPhoto, err error) {
+	body, contentType, err := encodeSetChatPhotoRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/setChatPhoto"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeSetChatPhotoResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) SetChatStickerSet(ctx context.Context, req SetChatStickerSet) (res SetChatStickerSet, err error) {
+	body, contentType, err := encodeSetChatStickerSetRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/setChatStickerSet"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeSetChatStickerSetResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) SetChatTitle(ctx context.Context, req SetChatTitle) (res SetChatTitle, err error) {
+	body, contentType, err := encodeSetChatTitleRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/setChatTitle"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeSetChatTitleResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) SetGameScore(ctx context.Context, req SetGameScore) (res SetGameScore, err error) {
+	body, contentType, err := encodeSetGameScoreRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/setGameScore"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeSetGameScoreResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) SetMyCommands(ctx context.Context, req SetMyCommands) (res SetMyCommands, err error) {
+	body, contentType, err := encodeSetMyCommandsRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/setMyCommands"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeSetMyCommandsResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) SetPassportDataErrors(ctx context.Context, req SetPassportDataErrors) (res SetPassportDataErrors, err error) {
+	body, contentType, err := encodeSetPassportDataErrorsRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/setPassportDataErrors"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeSetPassportDataErrorsResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) SetStickerPositionInSet(ctx context.Context, req SetStickerPositionInSet) (res SetStickerPositionInSet, err error) {
+	body, contentType, err := encodeSetStickerPositionInSetRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/setStickerPositionInSet"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeSetStickerPositionInSetResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) SetStickerSetThumb(ctx context.Context, req SetStickerSetThumb) (res SetStickerSetThumb, err error) {
+	body, contentType, err := encodeSetStickerSetThumbRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/setStickerSetThumb"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeSetStickerSetThumbResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) SetWebhook(ctx context.Context, req SetWebhook) (res SetWebhook, err error) {
+	body, contentType, err := encodeSetWebhookRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/setWebhook"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeSetWebhookResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) StopMessageLiveLocation(ctx context.Context, req StopMessageLiveLocation) (res StopMessageLiveLocation, err error) {
+	body, contentType, err := encodeStopMessageLiveLocationRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/stopMessageLiveLocation"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeStopMessageLiveLocationResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) StopPoll(ctx context.Context, req StopPoll) (res StopPoll, err error) {
+	body, contentType, err := encodeStopPollRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/stopPoll"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeStopPollResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) UnbanChatMember(ctx context.Context, req UnbanChatMember) (res UnbanChatMember, err error) {
+	body, contentType, err := encodeUnbanChatMemberRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/unbanChatMember"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeUnbanChatMemberResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) UnpinAllChatMessages(ctx context.Context, req UnpinAllChatMessages) (res UnpinAllChatMessages, err error) {
+	body, contentType, err := encodeUnpinAllChatMessagesRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/unpinAllChatMessages"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeUnpinAllChatMessagesResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) UnpinChatMessage(ctx context.Context, req UnpinChatMessage) (res UnpinChatMessage, err error) {
+	body, contentType, err := encodeUnpinChatMessageRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/unpinChatMessage"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeUnpinChatMessageResponse(resp)
+	if err != nil {
+		return res, fmt.Errorf("decode response: %w", err)
+	}
+
+	return result, nil
+}
+
+func (c *Client) UploadStickerFile(ctx context.Context, req UploadStickerFile) (res UploadStickerFile, err error) {
+	body, contentType, err := encodeUploadStickerFileRequest(req)
+	if err != nil {
+		return res, err
+	}
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/uploadStickerFile"
+
+	r := ht.NewRequest(ctx, "POST", u, bytes.NewReader(body))
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.http.Do(r)
+	if err != nil {
+		return res, fmt.Errorf("do request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeUploadStickerFileResponse(resp)
 	if err != nil {
 		return res, fmt.Errorf("decode response: %w", err)
 	}

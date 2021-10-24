@@ -50,11 +50,381 @@ var (
 	_ = net.IP{}
 )
 
+func encodeAddStickerToSetResponse(response AddStickerToSet, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeAnswerCallbackQueryResponse(response AnswerCallbackQuery, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeAnswerInlineQueryResponse(response AnswerInlineQuery, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeAnswerPreCheckoutQueryResponse(response AnswerPreCheckoutQuery, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeAnswerShippingQueryResponse(response AnswerShippingQuery, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeBanChatMemberResponse(response BanChatMember, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeCopyMessageResponse(response CopyMessage, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeCreateChatInviteLinkResponse(response CreateChatInviteLink, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeCreateNewStickerSetResponse(response CreateNewStickerSet, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeDeleteChatPhotoResponse(response DeleteChatPhoto, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeDeleteChatStickerSetResponse(response DeleteChatStickerSet, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeDeleteMessageResponse(response DeleteMessage, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeDeleteMyCommandsResponse(response DeleteMyCommands, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeDeleteStickerFromSetResponse(response DeleteStickerFromSet, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeDeleteWebhookResponse(response DeleteWebhook, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeEditChatInviteLinkResponse(response EditChatInviteLink, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeEditMessageCaptionResponse(response EditMessageCaption, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeEditMessageLiveLocationResponse(response EditMessageLiveLocation, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeEditMessageMediaResponse(response EditMessageMedia, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeEditMessageReplyMarkupResponse(response EditMessageReplyMarkup, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeEditMessageTextResponse(response EditMessageText, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeExportChatInviteLinkResponse(response ExportChatInviteLink, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeForwardMessageResponse(response ForwardMessage, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeGetChatResponse(response GetChat, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeGetChatAdministratorsResponse(response GetChatAdministrators, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeGetChatMemberResponse(response GetChatMember, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeGetChatMemberCountResponse(response GetChatMemberCount, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeGetFileResponse(response GetFile, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeGetGameHighScoresResponse(response GetGameHighScores, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
 func encodeGetMeResponse(response User, w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 	if err := response.WriteJSONTo(w); err != nil {
 		return err
 	}
+	return nil
+}
+
+func encodeGetMyCommandsResponse(response GetMyCommands, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeGetStickerSetResponse(response GetStickerSet, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeGetUpdatesResponse(response GetUpdates, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeGetUserProfilePhotosResponse(response GetUserProfilePhotos, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeLeaveChatResponse(response LeaveChat, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodePinChatMessageResponse(response PinChatMessage, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodePromoteChatMemberResponse(response PromoteChatMember, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeRestrictChatMemberResponse(response RestrictChatMember, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeRevokeChatInviteLinkResponse(response RevokeChatInviteLink, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeSendAnimationResponse(response SendAnimation, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeSendAudioResponse(response SendAudio, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeSendChatActionResponse(response SendChatAction, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeSendContactResponse(response SendContact, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeSendDiceResponse(response SendDice, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeSendDocumentResponse(response SendDocument, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeSendGameResponse(response SendGame, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeSendInvoiceResponse(response SendInvoice, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeSendLocationResponse(response SendLocation, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeSendMediaGroupResponse(response SendMediaGroup, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeSendMessageResponse(response SendMessage, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeSendPhotoResponse(response SendPhoto, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeSendPollResponse(response SendPoll, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeSendStickerResponse(response SendSticker, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeSendVenueResponse(response SendVenue, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeSendVideoResponse(response SendVideo, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeSendVideoNoteResponse(response SendVideoNote, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeSendVoiceResponse(response SendVoice, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeSetChatAdministratorCustomTitleResponse(response SetChatAdministratorCustomTitle, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeSetChatDescriptionResponse(response SetChatDescription, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeSetChatPermissionsResponse(response SetChatPermissions, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeSetChatPhotoResponse(response SetChatPhoto, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeSetChatStickerSetResponse(response SetChatStickerSet, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeSetChatTitleResponse(response SetChatTitle, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeSetGameScoreResponse(response SetGameScore, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeSetMyCommandsResponse(response SetMyCommands, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeSetPassportDataErrorsResponse(response SetPassportDataErrors, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeSetStickerPositionInSetResponse(response SetStickerPositionInSet, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeSetStickerSetThumbResponse(response SetStickerSetThumb, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeSetWebhookResponse(response SetWebhook, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeStopMessageLiveLocationResponse(response StopMessageLiveLocation, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeStopPollResponse(response StopPoll, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeUnbanChatMemberResponse(response UnbanChatMember, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeUnpinAllChatMessagesResponse(response UnpinAllChatMessages, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeUnpinChatMessageResponse(response UnpinChatMessage, w http.ResponseWriter) error {
+	w.WriteHeader(200)
+	return nil
+}
+
+func encodeUploadStickerFileResponse(response UploadStickerFile, w http.ResponseWriter) error {
+	w.WriteHeader(200)
 	return nil
 }

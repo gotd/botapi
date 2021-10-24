@@ -50,6 +50,267 @@ var (
 	_ = net.IP{}
 )
 
+func decodeAddStickerToSetResponse(resp *http.Response) (res AddStickerToSet, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return AddStickerToSet{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeAnswerCallbackQueryResponse(resp *http.Response) (res AnswerCallbackQuery, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return AnswerCallbackQuery{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeAnswerInlineQueryResponse(resp *http.Response) (res AnswerInlineQuery, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return AnswerInlineQuery{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeAnswerPreCheckoutQueryResponse(resp *http.Response) (res AnswerPreCheckoutQuery, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return AnswerPreCheckoutQuery{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeAnswerShippingQueryResponse(resp *http.Response) (res AnswerShippingQuery, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return AnswerShippingQuery{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeBanChatMemberResponse(resp *http.Response) (res BanChatMember, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return BanChatMember{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeCopyMessageResponse(resp *http.Response) (res CopyMessage, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return CopyMessage{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeCreateChatInviteLinkResponse(resp *http.Response) (res CreateChatInviteLink, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return CreateChatInviteLink{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeCreateNewStickerSetResponse(resp *http.Response) (res CreateNewStickerSet, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return CreateNewStickerSet{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeDeleteChatPhotoResponse(resp *http.Response) (res DeleteChatPhoto, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return DeleteChatPhoto{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeDeleteChatStickerSetResponse(resp *http.Response) (res DeleteChatStickerSet, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return DeleteChatStickerSet{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeDeleteMessageResponse(resp *http.Response) (res DeleteMessage, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return DeleteMessage{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeDeleteMyCommandsResponse(resp *http.Response) (res DeleteMyCommands, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return DeleteMyCommands{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeDeleteStickerFromSetResponse(resp *http.Response) (res DeleteStickerFromSet, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return DeleteStickerFromSet{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeDeleteWebhookResponse(resp *http.Response) (res DeleteWebhook, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return DeleteWebhook{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeEditChatInviteLinkResponse(resp *http.Response) (res EditChatInviteLink, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return EditChatInviteLink{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeEditMessageCaptionResponse(resp *http.Response) (res EditMessageCaption, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return EditMessageCaption{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeEditMessageLiveLocationResponse(resp *http.Response) (res EditMessageLiveLocation, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return EditMessageLiveLocation{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeEditMessageMediaResponse(resp *http.Response) (res EditMessageMedia, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return EditMessageMedia{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeEditMessageReplyMarkupResponse(resp *http.Response) (res EditMessageReplyMarkup, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return EditMessageReplyMarkup{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeEditMessageTextResponse(resp *http.Response) (res EditMessageText, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return EditMessageText{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeExportChatInviteLinkResponse(resp *http.Response) (res ExportChatInviteLink, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return ExportChatInviteLink{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeForwardMessageResponse(resp *http.Response) (res ForwardMessage, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return ForwardMessage{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeGetChatResponse(resp *http.Response) (res GetChat, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return GetChat{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeGetChatAdministratorsResponse(resp *http.Response) (res GetChatAdministrators, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return GetChatAdministrators{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeGetChatMemberResponse(resp *http.Response) (res GetChatMember, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return GetChatMember{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeGetChatMemberCountResponse(resp *http.Response) (res GetChatMemberCount, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return GetChatMemberCount{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeGetFileResponse(resp *http.Response) (res GetFile, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return GetFile{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeGetGameHighScoresResponse(resp *http.Response) (res GetGameHighScores, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return GetGameHighScores{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
 func decodeGetMeResponse(resp *http.Response) (res User, err error) {
 	switch resp.StatusCode {
 	case 200:
@@ -64,6 +325,411 @@ func decodeGetMeResponse(resp *http.Response) (res User, err error) {
 		default:
 			return res, fmt.Errorf("unexpected content-type: %s", resp.Header.Get("Content-Type"))
 		}
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeGetMyCommandsResponse(resp *http.Response) (res GetMyCommands, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return GetMyCommands{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeGetStickerSetResponse(resp *http.Response) (res GetStickerSet, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return GetStickerSet{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeGetUpdatesResponse(resp *http.Response) (res GetUpdates, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return GetUpdates{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeGetUserProfilePhotosResponse(resp *http.Response) (res GetUserProfilePhotos, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return GetUserProfilePhotos{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeLeaveChatResponse(resp *http.Response) (res LeaveChat, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return LeaveChat{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodePinChatMessageResponse(resp *http.Response) (res PinChatMessage, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return PinChatMessage{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodePromoteChatMemberResponse(resp *http.Response) (res PromoteChatMember, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return PromoteChatMember{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeRestrictChatMemberResponse(resp *http.Response) (res RestrictChatMember, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return RestrictChatMember{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeRevokeChatInviteLinkResponse(resp *http.Response) (res RevokeChatInviteLink, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return RevokeChatInviteLink{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeSendAnimationResponse(resp *http.Response) (res SendAnimation, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return SendAnimation{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeSendAudioResponse(resp *http.Response) (res SendAudio, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return SendAudio{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeSendChatActionResponse(resp *http.Response) (res SendChatAction, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return SendChatAction{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeSendContactResponse(resp *http.Response) (res SendContact, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return SendContact{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeSendDiceResponse(resp *http.Response) (res SendDice, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return SendDice{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeSendDocumentResponse(resp *http.Response) (res SendDocument, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return SendDocument{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeSendGameResponse(resp *http.Response) (res SendGame, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return SendGame{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeSendInvoiceResponse(resp *http.Response) (res SendInvoice, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return SendInvoice{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeSendLocationResponse(resp *http.Response) (res SendLocation, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return SendLocation{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeSendMediaGroupResponse(resp *http.Response) (res SendMediaGroup, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return SendMediaGroup{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeSendMessageResponse(resp *http.Response) (res SendMessage, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return SendMessage{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeSendPhotoResponse(resp *http.Response) (res SendPhoto, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return SendPhoto{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeSendPollResponse(resp *http.Response) (res SendPoll, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return SendPoll{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeSendStickerResponse(resp *http.Response) (res SendSticker, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return SendSticker{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeSendVenueResponse(resp *http.Response) (res SendVenue, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return SendVenue{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeSendVideoResponse(resp *http.Response) (res SendVideo, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return SendVideo{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeSendVideoNoteResponse(resp *http.Response) (res SendVideoNote, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return SendVideoNote{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeSendVoiceResponse(resp *http.Response) (res SendVoice, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return SendVoice{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeSetChatAdministratorCustomTitleResponse(resp *http.Response) (res SetChatAdministratorCustomTitle, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return SetChatAdministratorCustomTitle{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeSetChatDescriptionResponse(resp *http.Response) (res SetChatDescription, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return SetChatDescription{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeSetChatPermissionsResponse(resp *http.Response) (res SetChatPermissions, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return SetChatPermissions{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeSetChatPhotoResponse(resp *http.Response) (res SetChatPhoto, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return SetChatPhoto{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeSetChatStickerSetResponse(resp *http.Response) (res SetChatStickerSet, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return SetChatStickerSet{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeSetChatTitleResponse(resp *http.Response) (res SetChatTitle, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return SetChatTitle{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeSetGameScoreResponse(resp *http.Response) (res SetGameScore, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return SetGameScore{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeSetMyCommandsResponse(resp *http.Response) (res SetMyCommands, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return SetMyCommands{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeSetPassportDataErrorsResponse(resp *http.Response) (res SetPassportDataErrors, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return SetPassportDataErrors{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeSetStickerPositionInSetResponse(resp *http.Response) (res SetStickerPositionInSet, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return SetStickerPositionInSet{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeSetStickerSetThumbResponse(resp *http.Response) (res SetStickerSetThumb, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return SetStickerSetThumb{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeSetWebhookResponse(resp *http.Response) (res SetWebhook, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return SetWebhook{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeStopMessageLiveLocationResponse(resp *http.Response) (res StopMessageLiveLocation, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return StopMessageLiveLocation{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeStopPollResponse(resp *http.Response) (res StopPoll, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return StopPoll{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeUnbanChatMemberResponse(resp *http.Response) (res UnbanChatMember, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return UnbanChatMember{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeUnpinAllChatMessagesResponse(resp *http.Response) (res UnpinAllChatMessages, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return UnpinAllChatMessages{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeUnpinChatMessageResponse(resp *http.Response) (res UnpinChatMessage, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return UnpinChatMessage{}, nil
+	default:
+		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
+	}
+}
+
+func decodeUploadStickerFileResponse(resp *http.Response) (res UploadStickerFile, err error) {
+	switch resp.StatusCode {
+	case 200:
+		return UploadStickerFile{}, nil
 	default:
 		return res, fmt.Errorf("unexpected statusCode: %d", resp.StatusCode)
 	}

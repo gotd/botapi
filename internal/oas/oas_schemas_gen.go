@@ -50,6 +50,96 @@ var (
 	_ = net.IP{}
 )
 
+type AddStickerToSet struct{}
+
+type AnswerCallbackQuery struct{}
+
+type AnswerInlineQuery struct{}
+
+type AnswerPreCheckoutQuery struct{}
+
+type AnswerShippingQuery struct{}
+
+type BanChatMember struct{}
+
+// ChatPermissions describes #/components/schemas/ChatPermissions.
+type ChatPermissions struct {
+	CanAddWebPagePreviews OptBool `json:"can_add_web_page_previews"`
+	CanChangeInfo         OptBool `json:"can_change_info"`
+	CanInviteUsers        OptBool `json:"can_invite_users"`
+	CanPinMessages        OptBool `json:"can_pin_messages"`
+	CanSendMediaMessages  OptBool `json:"can_send_media_messages"`
+	CanSendMessages       OptBool `json:"can_send_messages"`
+	CanSendOtherMessages  OptBool `json:"can_send_other_messages"`
+	CanSendPolls          OptBool `json:"can_send_polls"`
+}
+
+type CopyMessage struct{}
+
+type CreateChatInviteLink struct{}
+
+type CreateNewStickerSet struct{}
+
+type DeleteChatPhoto struct{}
+
+type DeleteChatStickerSet struct{}
+
+type DeleteMessage struct{}
+
+type DeleteMyCommands struct{}
+
+type DeleteStickerFromSet struct{}
+
+type DeleteWebhook struct{}
+
+type EditChatInviteLink struct{}
+
+type EditMessageCaption struct{}
+
+type EditMessageLiveLocation struct{}
+
+type EditMessageMedia struct{}
+
+type EditMessageReplyMarkup struct{}
+
+type EditMessageText struct{}
+
+type ExportChatInviteLink struct{}
+
+type ForwardMessage struct{}
+
+type GetChat struct{}
+
+type GetChatAdministrators struct{}
+
+type GetChatMember struct{}
+
+type GetChatMemberCount struct{}
+
+type GetFile struct{}
+
+type GetGameHighScores struct{}
+
+type GetMyCommands struct{}
+
+type GetStickerSet struct{}
+
+type GetUpdates struct{}
+
+type GetUserProfilePhotos struct{}
+
+type InlineKeyboardMarkup struct{}
+
+type LeaveChat struct{}
+
+// MaskPosition describes #/components/schemas/MaskPosition.
+type MaskPosition struct {
+	Point  string  `json:"point"`
+	Scale  float64 `json:"scale"`
+	XShift float64 `json:"x_shift"`
+	YShift float64 `json:"y_shift"`
+}
+
 // NewOptBool returns new OptBool with value set to v.
 func NewOptBool(v bool) OptBool {
 	return OptBool{
@@ -125,6 +215,86 @@ func (o OptString) Get() (v string, ok bool) {
 	}
 	return o.Value, true
 }
+
+type PinChatMessage struct{}
+
+type PromoteChatMember struct{}
+
+type RestrictChatMember struct{}
+
+type RevokeChatInviteLink struct{}
+
+type SendAnimation struct{}
+
+type SendAudio struct{}
+
+type SendChatAction struct{}
+
+type SendContact struct{}
+
+type SendDice struct{}
+
+type SendDocument struct{}
+
+type SendGame struct{}
+
+type SendInvoice struct{}
+
+type SendLocation struct{}
+
+type SendMediaGroup struct{}
+
+type SendMessage struct{}
+
+type SendPhoto struct{}
+
+type SendPoll struct{}
+
+type SendSticker struct{}
+
+type SendVenue struct{}
+
+type SendVideo struct{}
+
+type SendVideoNote struct{}
+
+type SendVoice struct{}
+
+type SetChatAdministratorCustomTitle struct{}
+
+type SetChatDescription struct{}
+
+type SetChatPermissions struct{}
+
+type SetChatPhoto struct{}
+
+type SetChatStickerSet struct{}
+
+type SetChatTitle struct{}
+
+type SetGameScore struct{}
+
+type SetMyCommands struct{}
+
+type SetPassportDataErrors struct{}
+
+type SetStickerPositionInSet struct{}
+
+type SetStickerSetThumb struct{}
+
+type SetWebhook struct{}
+
+type StopMessageLiveLocation struct{}
+
+type StopPoll struct{}
+
+type UnbanChatMember struct{}
+
+type UnpinAllChatMessages struct{}
+
+type UnpinChatMessage struct{}
+
+type UploadStickerFile struct{}
 
 // User describes #/components/schemas/User.
 type User struct {
