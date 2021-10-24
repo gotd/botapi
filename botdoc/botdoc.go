@@ -263,6 +263,7 @@ func Extract(doc *goquery.Document) (a API) {
 			const (
 				fName     = 0
 				fType     = 1
+				fOptional = 2
 				optPrefix = "Optional. "
 			)
 			var fDescription int
@@ -274,10 +275,14 @@ func Extract(doc *goquery.Document) (a API) {
 			default:
 				return
 			}
+			optional := strings.HasPrefix(definition[fDescription], optPrefix)
+			if definition[fOptional] == "Optional" {
+				optional = true
+			}
 			d.Fields = append(d.Fields, Field{
 				Name:        definition[fName],
 				Description: strings.TrimSuffix(strings.TrimPrefix(definition[fDescription], optPrefix), "."),
-				Optional:    strings.HasPrefix(definition[fDescription], optPrefix),
+				Optional:    optional,
 				Type:        ParseType(definition[fType]),
 			})
 		})
