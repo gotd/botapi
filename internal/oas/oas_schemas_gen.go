@@ -76,6 +76,8 @@ type Audio struct {
 	Title        OptString    `json:"title"`
 }
 
+type BotCommandScope struct{}
+
 // Chat describes #/components/schemas/Chat.
 type Chat struct {
 	Bio                   OptString          `json:"bio"`
@@ -166,6 +168,8 @@ type Game struct {
 
 type InlineKeyboardMarkup struct{}
 
+type InputMedia struct{}
+
 // Invoice describes #/components/schemas/Invoice.
 type Invoice struct {
 	Currency       string `json:"currency"`
@@ -200,7 +204,7 @@ type Message struct {
 	AuthorSignature               OptString                        `json:"author_signature"`
 	Caption                       OptString                        `json:"caption"`
 	ChannelChatCreated            OptBool                          `json:"channel_chat_created"`
-	Chat                          Chat                             `json:"chat"`
+	Chat                          *Chat                            `json:"chat"`
 	ConnectedWebsite              OptString                        `json:"connected_website"`
 	Contact                       OptContact                       `json:"contact"`
 	Date                          int                              `json:"date"`
@@ -210,7 +214,7 @@ type Message struct {
 	EditDate                      OptInt                           `json:"edit_date"`
 	ForwardDate                   OptInt                           `json:"forward_date"`
 	ForwardFrom                   OptUser                          `json:"forward_from"`
-	ForwardFromChat               OptChat                          `json:"forward_from_chat"`
+	ForwardFromChat               *Chat                            `json:"forward_from_chat"`
 	ForwardFromMessageID          OptInt                           `json:"forward_from_message_id"`
 	ForwardSenderName             OptString                        `json:"forward_sender_name"`
 	ForwardSignature              OptString                        `json:"forward_signature"`
@@ -232,7 +236,7 @@ type Message struct {
 	ProximityAlertTriggered       OptProximityAlertTriggered       `json:"proximity_alert_triggered"`
 	ReplyMarkup                   *InlineKeyboardMarkup            `json:"reply_markup"`
 	ReplyToMessage                *Message                         `json:"reply_to_message"`
-	SenderChat                    OptChat                          `json:"sender_chat"`
+	SenderChat                    *Chat                            `json:"sender_chat"`
 	Sticker                       OptSticker                       `json:"sticker"`
 	SuccessfulPayment             OptSuccessfulPayment             `json:"successful_payment"`
 	SupergroupChatCreated         OptBool                          `json:"supergroup_chat_created"`
@@ -361,44 +365,6 @@ func (o *OptBool) SetTo(v bool) {
 
 // Get returns value and boolean that denotes whether value was set.
 func (o OptBool) Get() (v bool, ok bool) {
-	if !o.Set {
-		return v, false
-	}
-	return o.Value, true
-}
-
-// NewOptChat returns new OptChat with value set to v.
-func NewOptChat(v Chat) OptChat {
-	return OptChat{
-		Value: v,
-		Set:   true,
-	}
-}
-
-// OptChat is optional Chat.
-type OptChat struct {
-	Value Chat
-	Set   bool
-}
-
-// IsSet returns true if OptChat was set.
-func (o OptChat) IsSet() bool { return o.Set }
-
-// Reset unsets value.
-func (o *OptChat) Reset() {
-	var v Chat
-	o.Value = v
-	o.Set = false
-}
-
-// SetTo sets value to v.
-func (o *OptChat) SetTo(v Chat) {
-	o.Set = true
-	o.Value = v
-}
-
-// Get returns value and boolean that denotes whether value was set.
-func (o OptChat) Get() (v Chat, ok bool) {
 	if !o.Set {
 		return v, false
 	}
@@ -1589,7 +1555,7 @@ type ProximityAlertTriggered struct {
 	Watcher  User `json:"watcher"`
 }
 
-// SendAnimation describes #/components/schemas/sendAnimation.
+// SendAnimation describes #/components/schemas/SendAnimation.
 type SendAnimation struct {
 	AllowSendingWithoutReply bool   `json:"allow_sending_without_reply"`
 	Caption                  string `json:"caption"`
@@ -1601,7 +1567,7 @@ type SendAnimation struct {
 	Width                    int    `json:"width"`
 }
 
-// SendAudio describes #/components/schemas/sendAudio.
+// SendAudio describes #/components/schemas/SendAudio.
 type SendAudio struct {
 	AllowSendingWithoutReply bool   `json:"allow_sending_without_reply"`
 	Caption                  string `json:"caption"`
@@ -1613,7 +1579,7 @@ type SendAudio struct {
 	Title                    string `json:"title"`
 }
 
-// SendContact describes #/components/schemas/sendContact.
+// SendContact describes #/components/schemas/SendContact.
 type SendContact struct {
 	AllowSendingWithoutReply bool   `json:"allow_sending_without_reply"`
 	DisableNotification      bool   `json:"disable_notification"`
@@ -1624,7 +1590,7 @@ type SendContact struct {
 	Vcard                    string `json:"vcard"`
 }
 
-// SendDice describes #/components/schemas/sendDice.
+// SendDice describes #/components/schemas/SendDice.
 type SendDice struct {
 	AllowSendingWithoutReply bool   `json:"allow_sending_without_reply"`
 	DisableNotification      bool   `json:"disable_notification"`
@@ -1632,7 +1598,7 @@ type SendDice struct {
 	ReplyToMessageID         int    `json:"reply_to_message_id"`
 }
 
-// SendDocument describes #/components/schemas/sendDocument.
+// SendDocument describes #/components/schemas/SendDocument.
 type SendDocument struct {
 	AllowSendingWithoutReply    bool   `json:"allow_sending_without_reply"`
 	Caption                     string `json:"caption"`
@@ -1642,7 +1608,7 @@ type SendDocument struct {
 	ReplyToMessageID            int    `json:"reply_to_message_id"`
 }
 
-// SendGame describes #/components/schemas/sendGame.
+// SendGame describes #/components/schemas/SendGame.
 type SendGame struct {
 	AllowSendingWithoutReply bool                 `json:"allow_sending_without_reply"`
 	ChatID                   int                  `json:"chat_id"`
@@ -1652,7 +1618,7 @@ type SendGame struct {
 	ReplyToMessageID         int                  `json:"reply_to_message_id"`
 }
 
-// SendInvoice describes #/components/schemas/sendInvoice.
+// SendInvoice describes #/components/schemas/SendInvoice.
 type SendInvoice struct {
 	AllowSendingWithoutReply  bool                 `json:"allow_sending_without_reply"`
 	Currency                  string               `json:"currency"`
@@ -1679,7 +1645,7 @@ type SendInvoice struct {
 	Title                     string               `json:"title"`
 }
 
-// SendLocation describes #/components/schemas/sendLocation.
+// SendLocation describes #/components/schemas/SendLocation.
 type SendLocation struct {
 	AllowSendingWithoutReply bool    `json:"allow_sending_without_reply"`
 	DisableNotification      bool    `json:"disable_notification"`
@@ -1692,7 +1658,7 @@ type SendLocation struct {
 	ReplyToMessageID         int     `json:"reply_to_message_id"`
 }
 
-// SendPhoto describes #/components/schemas/sendPhoto.
+// SendPhoto describes #/components/schemas/SendPhoto.
 type SendPhoto struct {
 	AllowSendingWithoutReply bool   `json:"allow_sending_without_reply"`
 	Caption                  string `json:"caption"`
@@ -1701,7 +1667,7 @@ type SendPhoto struct {
 	ReplyToMessageID         int    `json:"reply_to_message_id"`
 }
 
-// SendPoll describes #/components/schemas/sendPoll.
+// SendPoll describes #/components/schemas/SendPoll.
 type SendPoll struct {
 	AllowSendingWithoutReply bool   `json:"allow_sending_without_reply"`
 	AllowsMultipleAnswers    bool   `json:"allows_multiple_answers"`
@@ -1718,14 +1684,14 @@ type SendPoll struct {
 	Type                     string `json:"type"`
 }
 
-// SendSticker describes #/components/schemas/sendSticker.
+// SendSticker describes #/components/schemas/SendSticker.
 type SendSticker struct {
 	AllowSendingWithoutReply bool `json:"allow_sending_without_reply"`
 	DisableNotification      bool `json:"disable_notification"`
 	ReplyToMessageID         int  `json:"reply_to_message_id"`
 }
 
-// SendVenue describes #/components/schemas/sendVenue.
+// SendVenue describes #/components/schemas/SendVenue.
 type SendVenue struct {
 	Address                  string  `json:"address"`
 	AllowSendingWithoutReply bool    `json:"allow_sending_without_reply"`
@@ -1740,7 +1706,7 @@ type SendVenue struct {
 	Title                    string  `json:"title"`
 }
 
-// SendVideo describes #/components/schemas/sendVideo.
+// SendVideo describes #/components/schemas/SendVideo.
 type SendVideo struct {
 	AllowSendingWithoutReply bool   `json:"allow_sending_without_reply"`
 	Caption                  string `json:"caption"`
@@ -1753,7 +1719,7 @@ type SendVideo struct {
 	Width                    int    `json:"width"`
 }
 
-// SendVideoNote describes #/components/schemas/sendVideoNote.
+// SendVideoNote describes #/components/schemas/SendVideoNote.
 type SendVideoNote struct {
 	AllowSendingWithoutReply bool `json:"allow_sending_without_reply"`
 	DisableNotification      bool `json:"disable_notification"`
@@ -1762,7 +1728,7 @@ type SendVideoNote struct {
 	ReplyToMessageID         int  `json:"reply_to_message_id"`
 }
 
-// SendVoice describes #/components/schemas/sendVoice.
+// SendVoice describes #/components/schemas/SendVoice.
 type SendVoice struct {
 	AllowSendingWithoutReply bool   `json:"allow_sending_without_reply"`
 	Caption                  string `json:"caption"`
@@ -1796,7 +1762,7 @@ type Sticker struct {
 	Width        int             `json:"width"`
 }
 
-// StopPoll describes #/components/schemas/stopPoll.
+// StopPoll describes #/components/schemas/StopPoll.
 type StopPoll struct {
 	MessageID   int                  `json:"message_id"`
 	ReplyMarkup InlineKeyboardMarkup `json:"reply_markup"`

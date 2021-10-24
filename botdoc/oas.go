@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"strings"
+	"unicode"
 
 	"github.com/ogen-go/ogen"
 )
@@ -128,9 +129,6 @@ func (a API) OAS() *ogen.Spec {
 					p.Type = "boolean"
 				}
 			case KindObject:
-				if _, ok := c.Schemas[t.Name]; !ok {
-					continue
-				}
 				p.Ref = "#/components/schemas/" + t.Name
 			default:
 				continue
@@ -142,7 +140,19 @@ func (a API) OAS() *ogen.Spec {
 
 			s.Properties[f.Name] = p
 		}
-		c.Schemas[m.Name] = s
+
+		// HACK: gotd currently supports only capitalized schemas
+		var schemaNameChars []rune
+		for i, c := range m.Name {
+			if i == 0 {
+				c = unicode.ToUpper(c)
+			}
+			schemaNameChars = append(schemaNameChars, c)
+		}
+		schemaName := string(schemaNameChars)
+
+		c.Schemas[schemaName] = s
+		fmt.Println(schemaName)
 
 		media := ogen.Media{}
 		if t := m.Ret; t != nil {
@@ -174,7 +184,7 @@ func (a API) OAS() *ogen.Spec {
 					Content: map[string]ogen.Media{
 						contentJSON: {
 							Schema: ogen.Schema{
-								Ref: "#/components/schemas/" + m.Name,
+								Ref: "#/components/schemas/" + schemaName,
 							},
 						},
 					},

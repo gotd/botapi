@@ -60,6 +60,9 @@ func ParseType(s string) Type {
 		return newPrimitive(Float)
 	case "True":
 		return newPrimitive(Boolean)
+	case "InputFile":
+		// TODO(ernado): Implement file upload
+		return newPrimitive(String)
 	}
 
 	if t := strings.TrimPrefix(s, "Array of "); t != s {
@@ -188,7 +191,7 @@ func Extract(doc *goquery.Document) (a API) {
 		}
 		if s.Is("p") && d.Name != "" && d.Description == "" {
 			d.Description = strings.TrimSpace(s.Text())
-			if strings.Contains(d.Description, `Currently holds no information`) {
+			if strings.Contains(strings.ToLower(d.Description), `currently holds no information`) {
 				appendDefinition()
 			}
 			return
@@ -198,7 +201,18 @@ func Extract(doc *goquery.Document) (a API) {
 			d.Ret = &t
 		}
 
-		if s.Is("ul") && strings.Contains(d.Description, `Telegram clients currently support the following`) {
+		// Detect definition of sum-types.
+		var probablySum bool
+		for _, sumMarker := range []string{
+			`It should be one of`,
+			`Telegram clients currently support the following`,
+			`Currently, the following`,
+		} {
+			if strings.Contains(d.Description, sumMarker) {
+				probablySum = true
+			}
+		}
+		if s.Is("ul") && probablySum {
 			t := &Type{
 				Kind: KindSum,
 			}
@@ -209,6 +223,7 @@ func Extract(doc *goquery.Document) (a API) {
 			appendDefinition()
 			return
 		}
+
 		if d.Ret == nil {
 			const (
 				retPrefix = `On success, the`
