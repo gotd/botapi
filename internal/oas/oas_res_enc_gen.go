@@ -50,148 +50,264 @@ var (
 	_ = net.IP{}
 )
 
-func encodeAddStickerToSetResponse(response AddStickerToSet, w http.ResponseWriter) error {
+func encodeAddStickerToSetResponse(response bool, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeAnswerCallbackQueryResponse(response AnswerCallbackQuery, w http.ResponseWriter) error {
+func encodeAnswerCallbackQueryResponse(response string, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeAnswerInlineQueryResponse(response AnswerInlineQuery, w http.ResponseWriter) error {
+func encodeAnswerInlineQueryResponse(response string, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeAnswerPreCheckoutQueryResponse(response AnswerPreCheckoutQuery, w http.ResponseWriter) error {
+func encodeAnswerPreCheckoutQueryResponse(response string, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeAnswerShippingQueryResponse(response AnswerShippingQuery, w http.ResponseWriter) error {
+func encodeAnswerShippingQueryResponse(response string, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeBanChatMemberResponse(response BanChatMember, w http.ResponseWriter) error {
+func encodeBanChatMemberResponse(response bool, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeCopyMessageResponse(response CopyMessage, w http.ResponseWriter) error {
+func encodeCopyMessageResponse(response string, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeCreateChatInviteLinkResponse(response CreateChatInviteLink, w http.ResponseWriter) error {
+func encodeCreateChatInviteLinkResponse(response string, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeCreateNewStickerSetResponse(response CreateNewStickerSet, w http.ResponseWriter) error {
+func encodeCreateNewStickerSetResponse(response bool, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeDeleteChatPhotoResponse(response DeleteChatPhoto, w http.ResponseWriter) error {
+func encodeDeleteChatPhotoResponse(response bool, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeDeleteChatStickerSetResponse(response DeleteChatStickerSet, w http.ResponseWriter) error {
+func encodeDeleteChatStickerSetResponse(response bool, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeDeleteMessageResponse(response DeleteMessage, w http.ResponseWriter) error {
+func encodeDeleteMessageResponse(response bool, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeDeleteMyCommandsResponse(response DeleteMyCommands, w http.ResponseWriter) error {
+func encodeDeleteMyCommandsResponse(response bool, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeDeleteStickerFromSetResponse(response DeleteStickerFromSet, w http.ResponseWriter) error {
+func encodeDeleteStickerFromSetResponse(response bool, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeDeleteWebhookResponse(response DeleteWebhook, w http.ResponseWriter) error {
+func encodeDeleteWebhookResponse(response bool, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeEditChatInviteLinkResponse(response EditChatInviteLink, w http.ResponseWriter) error {
+func encodeEditChatInviteLinkResponse(response string, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeEditMessageCaptionResponse(response EditMessageCaption, w http.ResponseWriter) error {
+func encodeEditMessageCaptionResponse(response string, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeEditMessageLiveLocationResponse(response EditMessageLiveLocation, w http.ResponseWriter) error {
+func encodeEditMessageLiveLocationResponse(response string, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeEditMessageMediaResponse(response EditMessageMedia, w http.ResponseWriter) error {
+func encodeEditMessageMediaResponse(response string, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeEditMessageReplyMarkupResponse(response EditMessageReplyMarkup, w http.ResponseWriter) error {
+func encodeEditMessageReplyMarkupResponse(response string, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeEditMessageTextResponse(response EditMessageText, w http.ResponseWriter) error {
+func encodeEditMessageTextResponse(response string, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeExportChatInviteLinkResponse(response ExportChatInviteLink, w http.ResponseWriter) error {
+func encodeExportChatInviteLinkResponse(response string, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeForwardMessageResponse(response ForwardMessage, w http.ResponseWriter) error {
+func encodeForwardMessageResponse(response string, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeGetChatResponse(response GetChat, w http.ResponseWriter) error {
+func encodeGetChatResponse(response string, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeGetChatAdministratorsResponse(response GetChatAdministrators, w http.ResponseWriter) error {
+func encodeGetChatAdministratorsResponse(response string, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeGetChatMemberResponse(response GetChatMember, w http.ResponseWriter) error {
+func encodeGetChatMemberResponse(response string, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeGetChatMemberCountResponse(response GetChatMemberCount, w http.ResponseWriter) error {
+func encodeGetChatMemberCountResponse(response string, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeGetFileResponse(response GetFile, w http.ResponseWriter) error {
+func encodeGetFileResponse(response string, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeGetGameHighScoresResponse(response GetGameHighScores, w http.ResponseWriter) error {
+func encodeGetGameHighScoresResponse(response string, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -204,227 +320,407 @@ func encodeGetMeResponse(response User, w http.ResponseWriter) error {
 	return nil
 }
 
-func encodeGetMyCommandsResponse(response GetMyCommands, w http.ResponseWriter) error {
+func encodeGetMyCommandsResponse(response string, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeGetStickerSetResponse(response GetStickerSet, w http.ResponseWriter) error {
+func encodeGetStickerSetResponse(response string, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeGetUpdatesResponse(response GetUpdates, w http.ResponseWriter) error {
+func encodeGetUpdatesResponse(response string, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeGetUserProfilePhotosResponse(response GetUserProfilePhotos, w http.ResponseWriter) error {
+func encodeGetUserProfilePhotosResponse(response string, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeLeaveChatResponse(response LeaveChat, w http.ResponseWriter) error {
+func encodeLeaveChatResponse(response bool, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodePinChatMessageResponse(response PinChatMessage, w http.ResponseWriter) error {
+func encodePinChatMessageResponse(response bool, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodePromoteChatMemberResponse(response PromoteChatMember, w http.ResponseWriter) error {
+func encodePromoteChatMemberResponse(response bool, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeRestrictChatMemberResponse(response RestrictChatMember, w http.ResponseWriter) error {
+func encodeRestrictChatMemberResponse(response bool, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeRevokeChatInviteLinkResponse(response RevokeChatInviteLink, w http.ResponseWriter) error {
+func encodeRevokeChatInviteLinkResponse(response string, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeSendAnimationResponse(response SendAnimation, w http.ResponseWriter) error {
+func encodeSendAnimationResponse(response Message, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeSendAudioResponse(response SendAudio, w http.ResponseWriter) error {
+func encodeSendAudioResponse(response Message, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeSendChatActionResponse(response SendChatAction, w http.ResponseWriter) error {
+func encodeSendChatActionResponse(response bool, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeSendContactResponse(response SendContact, w http.ResponseWriter) error {
+func encodeSendContactResponse(response Message, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeSendDiceResponse(response SendDice, w http.ResponseWriter) error {
+func encodeSendDiceResponse(response Message, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeSendDocumentResponse(response SendDocument, w http.ResponseWriter) error {
+func encodeSendDocumentResponse(response Message, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeSendGameResponse(response SendGame, w http.ResponseWriter) error {
+func encodeSendGameResponse(response Message, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeSendInvoiceResponse(response SendInvoice, w http.ResponseWriter) error {
+func encodeSendInvoiceResponse(response Message, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeSendLocationResponse(response SendLocation, w http.ResponseWriter) error {
+func encodeSendLocationResponse(response Message, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeSendMediaGroupResponse(response SendMediaGroup, w http.ResponseWriter) error {
+func encodeSendMediaGroupResponse(response string, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeSendMessageResponse(response SendMessage, w http.ResponseWriter) error {
+func encodeSendMessageResponse(response string, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeSendPhotoResponse(response SendPhoto, w http.ResponseWriter) error {
+func encodeSendPhotoResponse(response Message, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeSendPollResponse(response SendPoll, w http.ResponseWriter) error {
+func encodeSendPollResponse(response Message, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeSendStickerResponse(response SendSticker, w http.ResponseWriter) error {
+func encodeSendStickerResponse(response Message, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeSendVenueResponse(response SendVenue, w http.ResponseWriter) error {
+func encodeSendVenueResponse(response Message, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeSendVideoResponse(response SendVideo, w http.ResponseWriter) error {
+func encodeSendVideoResponse(response Message, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeSendVideoNoteResponse(response SendVideoNote, w http.ResponseWriter) error {
+func encodeSendVideoNoteResponse(response Message, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeSendVoiceResponse(response SendVoice, w http.ResponseWriter) error {
+func encodeSendVoiceResponse(response Message, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeSetChatAdministratorCustomTitleResponse(response SetChatAdministratorCustomTitle, w http.ResponseWriter) error {
+func encodeSetChatAdministratorCustomTitleResponse(response bool, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeSetChatDescriptionResponse(response SetChatDescription, w http.ResponseWriter) error {
+func encodeSetChatDescriptionResponse(response bool, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeSetChatPermissionsResponse(response SetChatPermissions, w http.ResponseWriter) error {
+func encodeSetChatPermissionsResponse(response bool, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeSetChatPhotoResponse(response SetChatPhoto, w http.ResponseWriter) error {
+func encodeSetChatPhotoResponse(response bool, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeSetChatStickerSetResponse(response SetChatStickerSet, w http.ResponseWriter) error {
+func encodeSetChatStickerSetResponse(response bool, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeSetChatTitleResponse(response SetChatTitle, w http.ResponseWriter) error {
+func encodeSetChatTitleResponse(response bool, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeSetGameScoreResponse(response SetGameScore, w http.ResponseWriter) error {
+func encodeSetGameScoreResponse(response string, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeSetMyCommandsResponse(response SetMyCommands, w http.ResponseWriter) error {
+func encodeSetMyCommandsResponse(response bool, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeSetPassportDataErrorsResponse(response SetPassportDataErrors, w http.ResponseWriter) error {
+func encodeSetPassportDataErrorsResponse(response bool, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeSetStickerPositionInSetResponse(response SetStickerPositionInSet, w http.ResponseWriter) error {
+func encodeSetStickerPositionInSetResponse(response bool, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeSetStickerSetThumbResponse(response SetStickerSetThumb, w http.ResponseWriter) error {
+func encodeSetStickerSetThumbResponse(response bool, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeSetWebhookResponse(response SetWebhook, w http.ResponseWriter) error {
+func encodeSetWebhookResponse(response bool, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeStopMessageLiveLocationResponse(response StopMessageLiveLocation, w http.ResponseWriter) error {
+func encodeStopMessageLiveLocationResponse(response string, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeStopPollResponse(response StopPoll, w http.ResponseWriter) error {
+func encodeStopPollResponse(response Poll, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeUnbanChatMemberResponse(response UnbanChatMember, w http.ResponseWriter) error {
+func encodeUnbanChatMemberResponse(response bool, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeUnpinAllChatMessagesResponse(response UnpinAllChatMessages, w http.ResponseWriter) error {
+func encodeUnpinAllChatMessagesResponse(response bool, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeUnpinChatMessageResponse(response UnpinChatMessage, w http.ResponseWriter) error {
+func encodeUnpinChatMessageResponse(response bool, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }
 
-func encodeUploadStickerFileResponse(response UploadStickerFile, w http.ResponseWriter) error {
+func encodeUploadStickerFileResponse(response string, w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	if err := response.WriteJSONTo(w); err != nil {
+		return err
+	}
 	return nil
 }

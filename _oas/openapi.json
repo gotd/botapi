@@ -28,7 +28,16 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -47,7 +56,14 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
         }
       }
     },
@@ -66,7 +82,14 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
         }
       }
     },
@@ -85,7 +108,14 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
         }
       }
     },
@@ -104,7 +134,14 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
         }
       }
     },
@@ -123,7 +160,16 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -142,7 +188,14 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
         }
       }
     },
@@ -161,7 +214,14 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
         }
       }
     },
@@ -180,7 +240,16 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -199,7 +268,16 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -218,7 +296,16 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -237,7 +324,16 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -256,7 +352,16 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -275,7 +380,16 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -294,7 +408,16 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -313,7 +436,14 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
         }
       }
     },
@@ -332,7 +462,14 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
         }
       }
     },
@@ -351,7 +488,14 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
         }
       }
     },
@@ -370,7 +514,14 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
         }
       }
     },
@@ -389,7 +540,14 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
         }
       }
     },
@@ -408,7 +566,14 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
         }
       }
     },
@@ -427,7 +592,14 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
         }
       }
     },
@@ -446,7 +618,14 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
         }
       }
     },
@@ -465,7 +644,14 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
         }
       }
     },
@@ -484,7 +670,14 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
         }
       }
     },
@@ -503,7 +696,14 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
         }
       }
     },
@@ -522,7 +722,14 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
         }
       }
     },
@@ -541,7 +748,14 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
         }
       }
     },
@@ -560,7 +774,14 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
         }
       }
     },
@@ -597,7 +818,14 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
         }
       }
     },
@@ -616,7 +844,14 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
         }
       }
     },
@@ -635,7 +870,14 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
         }
       }
     },
@@ -654,7 +896,14 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
         }
       }
     },
@@ -673,7 +922,16 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -692,7 +950,16 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -711,7 +978,16 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -730,7 +1006,16 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -749,7 +1034,14 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
         }
       }
     },
@@ -768,7 +1060,16 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -787,7 +1088,16 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -806,7 +1116,16 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -825,7 +1144,16 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -844,7 +1172,16 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -863,7 +1200,16 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -882,7 +1228,16 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -901,7 +1256,16 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -920,7 +1284,16 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -939,7 +1312,14 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
         }
       }
     },
@@ -958,7 +1338,14 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
         }
       }
     },
@@ -977,7 +1364,16 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -996,7 +1392,16 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -1015,7 +1420,16 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -1034,7 +1448,16 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -1053,7 +1476,16 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -1072,7 +1504,16 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -1091,7 +1532,16 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -1110,7 +1560,16 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -1129,7 +1588,16 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -1148,7 +1616,16 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -1167,7 +1644,16 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -1186,7 +1672,16 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -1205,7 +1700,16 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -1224,7 +1728,14 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
         }
       }
     },
@@ -1243,7 +1754,16 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -1262,7 +1782,16 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -1281,7 +1810,16 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -1300,7 +1838,16 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -1319,7 +1866,16 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -1338,7 +1894,14 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
         }
       }
     },
@@ -1357,7 +1920,16 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Poll"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -1376,7 +1948,16 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -1395,7 +1976,16 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -1414,7 +2004,16 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -1433,7 +2032,14 @@
           "required": true
         },
         "responses": {
-          "200": {}
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
         }
       }
     }
@@ -3915,8 +4521,12 @@
           "media"
         ]
       },
-      "InputTextMessageContent": {
+      "InputMessageContent": {
         "description": "This object represents the content of a message to be sent as a result of an inline query. Telegram clients currently support the following 5 types:",
+        "type": "object"
+      },
+      "InputTextMessageContent": {
+        "description": "Represents the content of a text message to be sent as the result of an inline query.",
         "type": "object",
         "properties": {
           "disable_web_page_preview": {
@@ -5483,7 +6093,7 @@
         ]
       },
       "VoiceChatEnded": {
-        "description": "This object represents a service message about a voice chat started in the chat. Currently holds no information.",
+        "description": "This object represents a service message about a voice chat ended in the chat.",
         "type": "object",
         "properties": {
           "duration": {
@@ -5511,6 +6121,10 @@
         "required": [
           "start_date"
         ]
+      },
+      "VoiceChatStarted": {
+        "description": "This object represents a service message about a voice chat started in the chat. Currently holds no information.",
+        "type": "object"
       },
       "WebhookInfo": {
         "description": "Use this method to get current webhook status. Requires no parameters. On success, returns a WebhookInfo object. If the bot is using getUpdates, will return an object with the url field empty.",

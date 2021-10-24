@@ -4,6 +4,7 @@ package botdoc
 import (
 	"fmt"
 	"strings"
+	"unicode"
 
 	"github.com/PuerkitoBio/goquery"
 )
@@ -127,6 +128,7 @@ type Definition struct {
 	Name        string
 	Description string
 	Fields      []Field
+	Ret         *Type
 }
 
 // API definition.
@@ -135,18 +137,98 @@ type API struct {
 	Methods []Definition
 }
 
+type section string
+
+const (
+	sectionTypes   = "types"
+	sectionMethods = "methods"
+)
+
 // Extract API definition from goquery document.
 func Extract(doc *goquery.Document) (a API) {
-	var d Definition
+	var (
+		d   Definition
+		sec section
+	)
 	doc.Find("#dev_page_content").Children().Each(func(i int, s *goquery.Selection) {
+		if s.Is("h3") {
+			switch strings.TrimSpace(s.Text()) {
+			case "Available types":
+				sec = sectionTypes
+			case "Available methods":
+				sec = sectionMethods
+			}
+		}
+		appendDefinition := func() {
+			if len(d.Name) == 0 {
+				d = Definition{}
+				return
+			}
+			for i, c := range d.Name {
+				if i != 0 {
+					break
+				}
+				if c == unicode.ToUpper(c) {
+					sec = sectionTypes
+				} else {
+					sec = sectionMethods
+				}
+			}
+			switch sec {
+			case sectionMethods:
+				a.Methods = append(a.Methods, d)
+			case sectionTypes:
+				a.Types = append(a.Types, d)
+			}
+			d = Definition{}
+		}
 		if s.Is("h4") {
 			d.Name = strings.TrimSpace(s.Text())
 			return
 		}
 		if s.Is("p") && d.Name != "" && d.Description == "" {
 			d.Description = strings.TrimSpace(s.Text())
+			if strings.Contains(d.Description, `Currently holds no information`) {
+				appendDefinition()
+			}
 			return
 		}
+		if strings.Contains(d.Description, `Returns True on success`) {
+			t := newPrimitive(Boolean)
+			d.Ret = &t
+		}
+
+		if s.Is("ul") && strings.Contains(d.Description, `Telegram clients currently support the following`) {
+			t := &Type{
+				Kind: KindSum,
+			}
+			s.Find("li").Each(func(i int, s *goquery.Selection) {
+				t.Sum = append(t.Sum, ParseType(s.Text()))
+			})
+			d.Ret = t
+			appendDefinition()
+			return
+		}
+		if d.Ret == nil {
+			const (
+				retPrefix = `On success, the`
+				retSuffix = ` is returned.`
+			)
+			var (
+				start = strings.Index(d.Description, retPrefix)
+				end   = strings.Index(d.Description, retSuffix)
+			)
+			if start > 0 && end > start {
+				ret := strings.TrimSpace(d.Description[start+len(retPrefix) : end])
+				if idxSpace := strings.LastIndex(ret, " "); idxSpace > 0 {
+					// Skipping verb like "sent".
+					ret = ret[idxSpace+1:]
+				}
+				t := ParseType(ret)
+				d.Ret = &t
+			}
+		}
+
 		if !s.Is("table") {
 			return
 		}
@@ -184,13 +266,7 @@ func Extract(doc *goquery.Document) (a API) {
 				Type:        ParseType(definition[fType]),
 			})
 		})
-		switch head[0] {
-		case "Field":
-			a.Types = append(a.Types, d)
-		case "Parameter":
-			a.Methods = append(a.Methods, d)
-		}
-		d = Definition{}
+		appendDefinition()
 	})
 	return a
 }
