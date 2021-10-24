@@ -13,6 +13,20 @@ const (
 	codeOK      = "200"
 )
 
+func resultFor(s ogen.Schema) ogen.Schema {
+	return ogen.Schema{
+		Type:     "object",
+		Required: []string{"ok"},
+		Properties: map[string]ogen.Schema{
+			"result": s,
+			"ok": {
+				Type:    "boolean",
+				Default: []byte(`true`),
+			},
+		},
+	}
+}
+
 // OAS generates OpenAPI v3 Specification from API definition.
 func (a API) OAS() *ogen.Spec {
 	c := &ogen.Components{
@@ -91,6 +105,17 @@ func (a API) OAS() *ogen.Spec {
 		}
 		c.Schemas[d.Name] = s
 	}
+
+	c.Schemas["Result"] = resultFor(ogen.Schema{
+		Type: "boolean",
+	})
+	c.Schemas["ResultStr"] = resultFor(ogen.Schema{
+		Type: "string",
+	})
+	c.Schemas["ResultMsg"] = ogen.Schema{
+		Ref: "#/components/schemas/Message",
+	}
+
 	for _, m := range a.Methods {
 		s := ogen.Schema{
 			Description: fmt.Sprintf("Input for %s", m.Name),
@@ -143,25 +168,24 @@ func (a API) OAS() *ogen.Spec {
 		schemaName := m.Name
 		c.Schemas[schemaName] = s
 
-		media := ogen.Media{}
+		response := ogen.Schema{
+			Ref: "#/components/schemas/Result",
+		}
+
 		if t := m.Ret; t != nil {
 			switch {
-			case t.Primitive == Boolean:
-				media.Schema = ogen.Schema{
-					Type: "boolean",
-				}
-			case t.Kind == KindObject:
-				if _, ok := c.Schemas[m.Ret.Name]; ok {
-					media.Schema = ogen.Schema{
-						Ref: "#/components/schemas/" + m.Ret.Name,
-					}
-				}
+			case t.Primitive == String:
+				response.Ref = "#/components/schemas/ResultStr"
+			case t.Kind == KindObject && m.Ret.Name == "ResultMsg":
+				response.Ref = "#/components/schemas/ResultMsg"
 			}
 		}
 		res := ogen.Response{
 			Description: "Successful response",
 			Content: map[string]ogen.Media{
-				contentJSON: media,
+				contentJSON: {
+					Schema: response,
+				},
 			},
 		}
 		p["/"+m.Name] = ogen.PathItem{
