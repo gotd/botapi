@@ -9,3 +9,6 @@ The telegram-bot-api, but in go. WIP.
 - [x] Parse definition
 - [x] Generate OpenAPI v3 Specification
 - [x] Generate client and server from OpenAPi v3 using [ogen](https://github.com/ogen-go/ogen)
+- [ ] Infer enums
+- [ ] Use rich text for documentation
+- [ ] More links to documentation
