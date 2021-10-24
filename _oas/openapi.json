@@ -14,6 +14,7 @@
   ],
   "paths": {
     "/addStickerToSet": {
+      "description": "Use this method to add a new sticker to a set created by the bot. You must use exactly one of the fields png_sticker or tgs_sticker. Animated stickers can be added to animated sticker sets and only to them. Animated sticker sets can have up to 50 stickers. Static sticker sets can have up to 120 stickers. Returns True on success.",
       "post": {
         "operationId": "addStickerToSet",
         "requestBody": {
@@ -32,6 +33,7 @@
       }
     },
     "/answerCallbackQuery": {
+      "description": "Use this method to send answers to callback queries sent from inline keyboards. The answer will be displayed to the user as a notification at the top of the chat screen or as an alert. On success, True is returned.",
       "post": {
         "operationId": "answerCallbackQuery",
         "requestBody": {
@@ -50,6 +52,7 @@
       }
     },
     "/answerInlineQuery": {
+      "description": "Use this method to send answers to an inline query. On success, True is returned.No more than 50 results per query are allowed.",
       "post": {
         "operationId": "answerInlineQuery",
         "requestBody": {
@@ -68,6 +71,7 @@
       }
     },
     "/answerPreCheckoutQuery": {
+      "description": "Once the user has confirmed their payment and shipping details, the Bot API sends the final confirmation in the form of an Update with the field pre_checkout_query. Use this method to respond to such pre-checkout queries. On success, True is returned. Note: The Bot API must receive an answer within 10 seconds after the pre-checkout query was sent.",
       "post": {
         "operationId": "answerPreCheckoutQuery",
         "requestBody": {
@@ -86,6 +90,7 @@
       }
     },
     "/answerShippingQuery": {
+      "description": "If you sent an invoice requesting a shipping address and the parameter is_flexible was specified, the Bot API will send an Update with a shipping_query field to the bot. Use this method to reply to shipping queries. On success, True is returned.",
       "post": {
         "operationId": "answerShippingQuery",
         "requestBody": {
@@ -104,6 +109,7 @@
       }
     },
     "/banChatMember": {
+      "description": "Use this method to ban a user in a group, a supergroup or a channel. In the case of supergroups and channels, the user will not be able to return to the chat on their own using invite links, etc., unless unbanned first. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Returns True on success.",
       "post": {
         "operationId": "banChatMember",
         "requestBody": {
@@ -122,6 +128,7 @@
       }
     },
     "/copyMessage": {
+      "description": "Use this method to copy messages of any kind. Service messages and invoice messages can't be copied. The method is analogous to the method forwardMessage, but the copied message doesn't have a link to the original message. Returns the MessageId of the sent message on success.",
       "post": {
         "operationId": "copyMessage",
         "requestBody": {
@@ -140,6 +147,7 @@
       }
     },
     "/createChatInviteLink": {
+      "description": "Use this method to create an additional invite link for a chat. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. The link can be revoked using the method revokeChatInviteLink. Returns the new invite link as ChatInviteLink object.",
       "post": {
         "operationId": "createChatInviteLink",
         "requestBody": {
@@ -158,6 +166,7 @@
       }
     },
     "/createNewStickerSet": {
+      "description": "Use this method to create a new sticker set owned by a user. The bot will be able to edit the sticker set thus created. You must use exactly one of the fields png_sticker or tgs_sticker. Returns True on success.",
       "post": {
         "operationId": "createNewStickerSet",
         "requestBody": {
@@ -176,6 +185,7 @@
       }
     },
     "/deleteChatPhoto": {
+      "description": "Use this method to delete a chat photo. Photos can't be changed for private chats. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Returns True on success.",
       "post": {
         "operationId": "deleteChatPhoto",
         "requestBody": {
@@ -194,6 +204,7 @@
       }
     },
     "/deleteChatStickerSet": {
+      "description": "Use this method to delete a group sticker set from a supergroup. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Use the field can_set_sticker_set optionally returned in getChat requests to check if the bot can use this method. Returns True on success.",
       "post": {
         "operationId": "deleteChatStickerSet",
         "requestBody": {
@@ -212,6 +223,7 @@
       }
     },
     "/deleteMessage": {
+      "description": "Use this method to delete a message, including service messages, with the following limitations:- A message can only be deleted if it was sent less than 48 hours ago.- A dice message in a private chat can only be deleted if it was sent more than 24 hours ago.- Bots can delete outgoing messages in private chats, groups, and supergroups.- Bots can delete incoming messages in private chats.- Bots granted can_post_messages permissions can delete outgoing messages in channels.- If the bot is an administrator of a group, it can delete any message there.- If the bot has can_delete_messages permission in a supergroup or a channel, it can delete any message there.Returns True on success.",
       "post": {
         "operationId": "deleteMessage",
         "requestBody": {
@@ -230,6 +242,7 @@
       }
     },
     "/deleteMyCommands": {
+      "description": "Use this method to delete the list of the bot's commands for the given scope and user language. After deletion, higher level commands will be shown to affected users. Returns True on success.",
       "post": {
         "operationId": "deleteMyCommands",
         "requestBody": {
@@ -248,6 +261,7 @@
       }
     },
     "/deleteStickerFromSet": {
+      "description": "Use this method to delete a sticker from a set created by the bot. Returns True on success.",
       "post": {
         "operationId": "deleteStickerFromSet",
         "requestBody": {
@@ -266,6 +280,7 @@
       }
     },
     "/deleteWebhook": {
+      "description": "Use this method to remove webhook integration if you decide to switch back to getUpdates. Returns True on success.",
       "post": {
         "operationId": "deleteWebhook",
         "requestBody": {
@@ -284,6 +299,7 @@
       }
     },
     "/editChatInviteLink": {
+      "description": "Use this method to edit a non-primary invite link created by the bot. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Returns the edited invite link as a ChatInviteLink object.",
       "post": {
         "operationId": "editChatInviteLink",
         "requestBody": {
@@ -302,6 +318,7 @@
       }
     },
     "/editMessageCaption": {
+      "description": "Use this method to edit captions of messages. On success, if the edited message is not an inline message, the edited Message is returned, otherwise True is returned.",
       "post": {
         "operationId": "editMessageCaption",
         "requestBody": {
@@ -320,6 +337,7 @@
       }
     },
     "/editMessageLiveLocation": {
+      "description": "Use this method to edit live location messages. A location can be edited until its live_period expires or editing is explicitly disabled by a call to stopMessageLiveLocation. On success, if the edited message is not an inline message, the edited Message is returned, otherwise True is returned.",
       "post": {
         "operationId": "editMessageLiveLocation",
         "requestBody": {
@@ -338,6 +356,7 @@
       }
     },
     "/editMessageMedia": {
+      "description": "Use this method to edit animation, audio, document, photo, or video messages. If a message is part of a message album, then it can be edited only to an audio for audio albums, only to a document for document albums and to a photo or a video otherwise. When an inline message is edited, a new file can't be uploaded; use a previously uploaded file via its file_id or specify a URL. On success, if the edited message is not an inline message, the edited Message is returned, otherwise True is returned.",
       "post": {
         "operationId": "editMessageMedia",
         "requestBody": {
@@ -356,6 +375,7 @@
       }
     },
     "/editMessageReplyMarkup": {
+      "description": "Use this method to edit only the reply markup of messages. On success, if the edited message is not an inline message, the edited Message is returned, otherwise True is returned.",
       "post": {
         "operationId": "editMessageReplyMarkup",
         "requestBody": {
@@ -374,6 +394,7 @@
       }
     },
     "/editMessageText": {
+      "description": "Methods and objects used in the inline mode are described in the Inline mode section.",
       "post": {
         "operationId": "editMessageText",
         "requestBody": {
@@ -392,6 +413,7 @@
       }
     },
     "/exportChatInviteLink": {
+      "description": "Use this method to generate a new primary invite link for a chat; any previously generated primary link is revoked. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Returns the new invite link as String on success.",
       "post": {
         "operationId": "exportChatInviteLink",
         "requestBody": {
@@ -410,6 +432,7 @@
       }
     },
     "/forwardMessage": {
+      "description": "The Bot API supports basic formatting for messages. You can use bold, italic, underlined and strikethrough text, as well as inline links and pre-formatted code in your bots' messages. Telegram clients will render them accordingly. You can use either markdown-style or HTML-style formatting.",
       "post": {
         "operationId": "forwardMessage",
         "requestBody": {
@@ -428,6 +451,7 @@
       }
     },
     "/getChat": {
+      "description": "Use this method to get up to date information about the chat (current name of the user for one-on-one conversations, current username of a user, group or channel, etc.). Returns a Chat object on success.",
       "post": {
         "operationId": "getChat",
         "requestBody": {
@@ -446,6 +470,7 @@
       }
     },
     "/getChatAdministrators": {
+      "description": "Use this method to get a list of administrators in a chat. On success, returns an Array of ChatMember objects that contains information about all chat administrators except other bots. If the chat is a group or a supergroup and no administrators were appointed, only the creator will be returned.",
       "post": {
         "operationId": "getChatAdministrators",
         "requestBody": {
@@ -464,6 +489,7 @@
       }
     },
     "/getChatMember": {
+      "description": "Use this method to get information about a member of a chat. Returns a ChatMember object on success.",
       "post": {
         "operationId": "getChatMember",
         "requestBody": {
@@ -482,6 +508,7 @@
       }
     },
     "/getChatMemberCount": {
+      "description": "Use this method to get the number of members in a chat. Returns Int on success.",
       "post": {
         "operationId": "getChatMemberCount",
         "requestBody": {
@@ -500,6 +527,7 @@
       }
     },
     "/getFile": {
+      "description": "Use this method to get basic info about a file and prepare it for downloading. For the moment, bots can download files of up to 20MB in size. On success, a File object is returned. The file can then be downloaded via the link https://api.telegram.org/file/bot\u003ctoken\u003e/\u003cfile_path\u003e, where \u003cfile_path\u003e is taken from the response. It is guaranteed that the link will be valid for at least 1 hour. When the link expires, a new one can be requested by calling getFile again.",
       "post": {
         "operationId": "getFile",
         "requestBody": {
@@ -518,6 +546,7 @@
       }
     },
     "/getGameHighScores": {
+      "description": "Use this method to get data for high score tables. Will return the score of the specified user and several of their neighbors in a game. On success, returns an Array of GameHighScore objects.",
       "post": {
         "operationId": "getGameHighScores",
         "requestBody": {
@@ -554,6 +583,7 @@
       }
     },
     "/getMyCommands": {
+      "description": "Use this method to get the current list of the bot's commands for the given scope and user language. Returns Array of BotCommand on success. If commands aren't set, an empty list is returned.",
       "post": {
         "operationId": "getMyCommands",
         "requestBody": {
@@ -572,6 +602,7 @@
       }
     },
     "/getStickerSet": {
+      "description": "Use this method to get a sticker set. On success, a StickerSet object is returned.",
       "post": {
         "operationId": "getStickerSet",
         "requestBody": {
@@ -590,6 +621,7 @@
       }
     },
     "/getUpdates": {
+      "description": "Use this method to receive incoming updates using long polling (wiki). An Array of Update objects is returned.",
       "post": {
         "operationId": "getUpdates",
         "requestBody": {
@@ -608,6 +640,7 @@
       }
     },
     "/getUserProfilePhotos": {
+      "description": "Use this method to get a list of profile pictures for a user. Returns a UserProfilePhotos object.",
       "post": {
         "operationId": "getUserProfilePhotos",
         "requestBody": {
@@ -626,6 +659,7 @@
       }
     },
     "/leaveChat": {
+      "description": "Use this method for your bot to leave a group, supergroup or channel. Returns True on success.",
       "post": {
         "operationId": "leaveChat",
         "requestBody": {
@@ -644,6 +678,7 @@
       }
     },
     "/pinChatMessage": {
+      "description": "Use this method to add a message to the list of pinned messages in a chat. If the chat is not a private chat, the bot must be an administrator in the chat for this to work and must have the 'can_pin_messages' admin right in a supergroup or 'can_edit_messages' admin right in a channel. Returns True on success.",
       "post": {
         "operationId": "pinChatMessage",
         "requestBody": {
@@ -662,6 +697,7 @@
       }
     },
     "/promoteChatMember": {
+      "description": "Use this method to promote or demote a user in a supergroup or a channel. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Pass False for all boolean parameters to demote a user. Returns True on success.",
       "post": {
         "operationId": "promoteChatMember",
         "requestBody": {
@@ -680,6 +716,7 @@
       }
     },
     "/restrictChatMember": {
+      "description": "Use this method to restrict a user in a supergroup. The bot must be an administrator in the supergroup for this to work and must have the appropriate admin rights. Pass True for all permissions to lift restrictions from a user. Returns True on success.",
       "post": {
         "operationId": "restrictChatMember",
         "requestBody": {
@@ -698,6 +735,7 @@
       }
     },
     "/revokeChatInviteLink": {
+      "description": "Use this method to revoke an invite link created by the bot. If the primary link is revoked, a new link is automatically generated. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Returns the revoked invite link as ChatInviteLink object.",
       "post": {
         "operationId": "revokeChatInviteLink",
         "requestBody": {
@@ -716,6 +754,7 @@
       }
     },
     "/sendAnimation": {
+      "description": "Use this method to send animation files (GIF or H.264/MPEG-4 AVC video without sound). On success, the sent Message is returned. Bots can currently send animation files of up to 50 MB in size, this limit may be changed in the future.",
       "post": {
         "operationId": "sendAnimation",
         "requestBody": {
@@ -734,6 +773,7 @@
       }
     },
     "/sendAudio": {
+      "description": "Use this method to send audio files, if you want Telegram clients to display them in the music player. Your audio must be in the .MP3 or .M4A format. On success, the sent Message is returned. Bots can currently send audio files of up to 50 MB in size, this limit may be changed in the future.",
       "post": {
         "operationId": "sendAudio",
         "requestBody": {
@@ -752,6 +792,7 @@
       }
     },
     "/sendChatAction": {
+      "description": "Use this method when you need to tell the user that something is happening on the bot's side. The status is set for 5 seconds or less (when a message arrives from your bot, Telegram clients clear its typing status). Returns True on success.",
       "post": {
         "operationId": "sendChatAction",
         "requestBody": {
@@ -770,6 +811,7 @@
       }
     },
     "/sendContact": {
+      "description": "Use this method to send phone contacts. On success, the sent Message is returned.",
       "post": {
         "operationId": "sendContact",
         "requestBody": {
@@ -788,6 +830,7 @@
       }
     },
     "/sendDice": {
+      "description": "Use this method to send an animated emoji that will display a random value. On success, the sent Message is returned.",
       "post": {
         "operationId": "sendDice",
         "requestBody": {
@@ -806,6 +849,7 @@
       }
     },
     "/sendDocument": {
+      "description": "Use this method to send general files. On success, the sent Message is returned. Bots can currently send files of any type of up to 50 MB in size, this limit may be changed in the future.",
       "post": {
         "operationId": "sendDocument",
         "requestBody": {
@@ -824,6 +868,7 @@
       }
     },
     "/sendGame": {
+      "description": "Use this method to send a game. On success, the sent Message is returned.",
       "post": {
         "operationId": "sendGame",
         "requestBody": {
@@ -842,6 +887,7 @@
       }
     },
     "/sendInvoice": {
+      "description": "Use this method to send invoices. On success, the sent Message is returned.",
       "post": {
         "operationId": "sendInvoice",
         "requestBody": {
@@ -860,6 +906,7 @@
       }
     },
     "/sendLocation": {
+      "description": "Use this method to send point on the map. On success, the sent Message is returned.",
       "post": {
         "operationId": "sendLocation",
         "requestBody": {
@@ -878,6 +925,7 @@
       }
     },
     "/sendMediaGroup": {
+      "description": "Use this method to send a group of photos, videos, documents or audios as an album. Documents and audio files can be only grouped in an album with messages of the same type. On success, an array of Messages that were sent is returned.",
       "post": {
         "operationId": "sendMediaGroup",
         "requestBody": {
@@ -896,6 +944,7 @@
       }
     },
     "/sendMessage": {
+      "description": "This object represents the contents of a file to be uploaded. Must be posted using multipart/form-data in the usual way that files are uploaded via the browser.",
       "post": {
         "operationId": "sendMessage",
         "requestBody": {
@@ -914,6 +963,7 @@
       }
     },
     "/sendPhoto": {
+      "description": "Use this method to send photos. On success, the sent Message is returned.",
       "post": {
         "operationId": "sendPhoto",
         "requestBody": {
@@ -932,6 +982,7 @@
       }
     },
     "/sendPoll": {
+      "description": "Use this method to send a native poll. On success, the sent Message is returned.",
       "post": {
         "operationId": "sendPoll",
         "requestBody": {
@@ -950,6 +1001,7 @@
       }
     },
     "/sendSticker": {
+      "description": "Use this method to send static .WEBP or animated .TGS stickers. On success, the sent Message is returned.",
       "post": {
         "operationId": "sendSticker",
         "requestBody": {
@@ -968,6 +1020,7 @@
       }
     },
     "/sendVenue": {
+      "description": "Use this method to send information about a venue. On success, the sent Message is returned.",
       "post": {
         "operationId": "sendVenue",
         "requestBody": {
@@ -986,6 +1039,7 @@
       }
     },
     "/sendVideo": {
+      "description": "Use this method to send video files, Telegram clients support mp4 videos (other formats may be sent as Document). On success, the sent Message is returned. Bots can currently send video files of up to 50 MB in size, this limit may be changed in the future.",
       "post": {
         "operationId": "sendVideo",
         "requestBody": {
@@ -1004,6 +1058,7 @@
       }
     },
     "/sendVideoNote": {
+      "description": "As of v.4.0, Telegram clients support rounded square mp4 videos of up to 1 minute long. Use this method to send video messages. On success, the sent Message is returned.",
       "post": {
         "operationId": "sendVideoNote",
         "requestBody": {
@@ -1022,6 +1077,7 @@
       }
     },
     "/sendVoice": {
+      "description": "Use this method to send audio files, if you want Telegram clients to display the file as a playable voice message. For this to work, your audio must be in an .OGG file encoded with OPUS (other formats may be sent as Audio or Document). On success, the sent Message is returned. Bots can currently send voice messages of up to 50 MB in size, this limit may be changed in the future.",
       "post": {
         "operationId": "sendVoice",
         "requestBody": {
@@ -1040,6 +1096,7 @@
       }
     },
     "/setChatAdministratorCustomTitle": {
+      "description": "Use this method to set a custom title for an administrator in a supergroup promoted by the bot. Returns True on success.",
       "post": {
         "operationId": "setChatAdministratorCustomTitle",
         "requestBody": {
@@ -1058,6 +1115,7 @@
       }
     },
     "/setChatDescription": {
+      "description": "Use this method to change the description of a group, a supergroup or a channel. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Returns True on success.",
       "post": {
         "operationId": "setChatDescription",
         "requestBody": {
@@ -1076,6 +1134,7 @@
       }
     },
     "/setChatPermissions": {
+      "description": "Use this method to set default chat permissions for all members. The bot must be an administrator in the group or a supergroup for this to work and must have the can_restrict_members admin rights. Returns True on success.",
       "post": {
         "operationId": "setChatPermissions",
         "requestBody": {
@@ -1094,6 +1153,7 @@
       }
     },
     "/setChatPhoto": {
+      "description": "Use this method to set a new profile photo for the chat. Photos can't be changed for private chats. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Returns True on success.",
       "post": {
         "operationId": "setChatPhoto",
         "requestBody": {
@@ -1112,6 +1172,7 @@
       }
     },
     "/setChatStickerSet": {
+      "description": "Use this method to set a new group sticker set for a supergroup. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Use the field can_set_sticker_set optionally returned in getChat requests to check if the bot can use this method. Returns True on success.",
       "post": {
         "operationId": "setChatStickerSet",
         "requestBody": {
@@ -1130,6 +1191,7 @@
       }
     },
     "/setChatTitle": {
+      "description": "Use this method to change the title of a chat. Titles can't be changed for private chats. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Returns True on success.",
       "post": {
         "operationId": "setChatTitle",
         "requestBody": {
@@ -1148,6 +1210,7 @@
       }
     },
     "/setGameScore": {
+      "description": "A placeholder, currently holds no information. Use BotFather to set up your game.",
       "post": {
         "operationId": "setGameScore",
         "requestBody": {
@@ -1166,6 +1229,7 @@
       }
     },
     "/setMyCommands": {
+      "description": "Use this method to change the list of the bot's commands. See https://core.telegram.org/bots#commands for more details about bot commands. Returns True on success.",
       "post": {
         "operationId": "setMyCommands",
         "requestBody": {
@@ -1184,6 +1248,7 @@
       }
     },
     "/setPassportDataErrors": {
+      "description": "Informs a user that some of the Telegram Passport elements they provided contains errors. The user will not be able to re-submit their Passport to you until the errors are fixed (the contents of the field for which you returned the error must change). Returns True on success.",
       "post": {
         "operationId": "setPassportDataErrors",
         "requestBody": {
@@ -1202,6 +1267,7 @@
       }
     },
     "/setStickerPositionInSet": {
+      "description": "Use this method to move a sticker in a set created by the bot to a specific position. Returns True on success.",
       "post": {
         "operationId": "setStickerPositionInSet",
         "requestBody": {
@@ -1220,6 +1286,7 @@
       }
     },
     "/setStickerSetThumb": {
+      "description": "Use this method to set the thumbnail of a sticker set. Animated thumbnails can be set for animated sticker sets only. Returns True on success.",
       "post": {
         "operationId": "setStickerSetThumb",
         "requestBody": {
@@ -1238,6 +1305,7 @@
       }
     },
     "/setWebhook": {
+      "description": "Use this method to specify a url and receive incoming updates via an outgoing webhook. Whenever there is an update for the bot, we will send an HTTPS POST request to the specified url, containing a JSON-serialized Update. In case of an unsuccessful request, we will give up after a reasonable amount of attempts. Returns True on success.",
       "post": {
         "operationId": "setWebhook",
         "requestBody": {
@@ -1256,6 +1324,7 @@
       }
     },
     "/stopMessageLiveLocation": {
+      "description": "Use this method to stop updating a live location message before live_period expires. On success, if the message is not an inline message, the edited Message is returned, otherwise True is returned.",
       "post": {
         "operationId": "stopMessageLiveLocation",
         "requestBody": {
@@ -1274,6 +1343,7 @@
       }
     },
     "/stopPoll": {
+      "description": "Use this method to stop a poll which was sent by the bot. On success, the stopped Poll is returned.",
       "post": {
         "operationId": "stopPoll",
         "requestBody": {
@@ -1292,6 +1362,7 @@
       }
     },
     "/unbanChatMember": {
+      "description": "Use this method to unban a previously banned user in a supergroup or channel. The user will not return to the group or channel automatically, but will be able to join via link, etc. The bot must be an administrator for this to work. By default, this method guarantees that after the call the user is not a member of the chat, but will be able to join it. So if the user is a member of the chat they will also be removed from the chat. If you don't want this, use the parameter only_if_banned. Returns True on success.",
       "post": {
         "operationId": "unbanChatMember",
         "requestBody": {
@@ -1310,6 +1381,7 @@
       }
     },
     "/unpinAllChatMessages": {
+      "description": "Use this method to clear the list of pinned messages in a chat. If the chat is not a private chat, the bot must be an administrator in the chat for this to work and must have the 'can_pin_messages' admin right in a supergroup or 'can_edit_messages' admin right in a channel. Returns True on success.",
       "post": {
         "operationId": "unpinAllChatMessages",
         "requestBody": {
@@ -1328,6 +1400,7 @@
       }
     },
     "/unpinChatMessage": {
+      "description": "Use this method to remove a message from the list of pinned messages in a chat. If the chat is not a private chat, the bot must be an administrator in the chat for this to work and must have the 'can_pin_messages' admin right in a supergroup or 'can_edit_messages' admin right in a channel. Returns True on success.",
       "post": {
         "operationId": "unpinChatMessage",
         "requestBody": {
@@ -1346,6 +1419,7 @@
       }
     },
     "/uploadStickerFile": {
+      "description": "Use this method to upload a .PNG file with a sticker for later use in createNewStickerSet and addStickerToSet methods (can be used multiple times). Returns the uploaded File on success.",
       "post": {
         "operationId": "uploadStickerFile",
         "requestBody": {
@@ -1367,6 +1441,7 @@
   "components": {
     "schemas": {
       "Animation": {
+        "description": "This object represents an animation file (GIF or H.264/MPEG-4 AVC video without sound).",
         "type": "object",
         "properties": {
           "duration": {
@@ -1415,6 +1490,7 @@
         ]
       },
       "Audio": {
+        "description": "This object represents an audio file to be treated as music by the Telegram clients.",
         "type": "object",
         "properties": {
           "duration": {
@@ -1461,6 +1537,7 @@
         ]
       },
       "BotCommand": {
+        "description": "This object represents a bot command.",
         "type": "object",
         "properties": {
           "command": {
@@ -1478,6 +1555,7 @@
         ]
       },
       "BotCommandScopeAllChatAdministrators": {
+        "description": "Represents the scope of bot commands, covering all group and supergroup chat administrators.",
         "type": "object",
         "properties": {
           "type": {
@@ -1491,6 +1569,7 @@
         ]
       },
       "BotCommandScopeAllGroupChats": {
+        "description": "Represents the scope of bot commands, covering all group and supergroup chats.",
         "type": "object",
         "properties": {
           "type": {
@@ -1504,6 +1583,7 @@
         ]
       },
       "BotCommandScopeAllPrivateChats": {
+        "description": "Represents the scope of bot commands, covering all private chats.",
         "type": "object",
         "properties": {
           "type": {
@@ -1517,6 +1597,7 @@
         ]
       },
       "BotCommandScopeChat": {
+        "description": "Represents the scope of bot commands, covering a specific chat.",
         "type": "object",
         "properties": {
           "type": {
@@ -1530,6 +1611,7 @@
         ]
       },
       "BotCommandScopeChatAdministrators": {
+        "description": "Represents the scope of bot commands, covering all administrators of a specific group or supergroup chat.",
         "type": "object",
         "properties": {
           "type": {
@@ -1543,6 +1625,7 @@
         ]
       },
       "BotCommandScopeChatMember": {
+        "description": "Represents the scope of bot commands, covering a specific member of a group or supergroup chat.",
         "type": "object",
         "properties": {
           "type": {
@@ -1561,6 +1644,7 @@
         ]
       },
       "BotCommandScopeDefault": {
+        "description": "This object represents the scope to which bot commands are applied. Currently, the following 7 scopes are supported:",
         "type": "object",
         "properties": {
           "type": {
@@ -1574,6 +1658,7 @@
         ]
       },
       "CallbackQuery": {
+        "description": "This object represents an incoming callback query from a callback button in an inline keyboard. If the button that originated the query was attached to a message sent by the bot, the field message will be present. If the button was attached to a message sent via the bot (in inline mode), the field inline_message_id will be present. Exactly one of the fields data or game_short_name will be present.",
         "type": "object",
         "properties": {
           "chat_instance": {
@@ -1612,6 +1697,7 @@
         ]
       },
       "Chat": {
+        "description": "This object represents a chat.",
         "type": "object",
         "properties": {
           "bio": {
@@ -1693,6 +1779,7 @@
         ]
       },
       "ChatInviteLink": {
+        "description": "Represents an invite link for a chat.",
         "type": "object",
         "properties": {
           "creator": {
@@ -1728,6 +1815,7 @@
         ]
       },
       "ChatLocation": {
+        "description": "Represents a location to which a chat is connected.",
         "type": "object",
         "properties": {
           "address": {
@@ -1745,6 +1833,7 @@
         ]
       },
       "ChatMemberAdministrator": {
+        "description": "Represents a chat member that has some additional privileges.",
         "type": "object",
         "properties": {
           "can_be_edited": {
@@ -1823,6 +1912,7 @@
         ]
       },
       "ChatMemberBanned": {
+        "description": "Represents a chat member that was banned in the chat and can't return to the chat or view chat messages.",
         "type": "object",
         "properties": {
           "status": {
@@ -1845,6 +1935,7 @@
         ]
       },
       "ChatMemberLeft": {
+        "description": "Represents a chat member that isn't currently a member of the chat, but may join it themselves.",
         "type": "object",
         "properties": {
           "status": {
@@ -1862,6 +1953,7 @@
         ]
       },
       "ChatMemberMember": {
+        "description": "Represents a chat member that has no additional privileges or restrictions.",
         "type": "object",
         "properties": {
           "status": {
@@ -1879,6 +1971,7 @@
         ]
       },
       "ChatMemberOwner": {
+        "description": "This object contains information about one member of a chat. Currently, the following 6 types of chat members are supported:",
         "type": "object",
         "properties": {
           "custom_title": {
@@ -1905,6 +1998,7 @@
         ]
       },
       "ChatMemberRestricted": {
+        "description": "Represents a chat member that is under certain restrictions in the chat. Supergroups only.",
         "type": "object",
         "properties": {
           "can_add_web_page_previews": {
@@ -1972,6 +2066,7 @@
         ]
       },
       "ChatMemberUpdated": {
+        "description": "This object represents changes in the status of a chat member.",
         "type": "object",
         "properties": {
           "chat": {
@@ -2008,6 +2103,7 @@
         ]
       },
       "ChatPermissions": {
+        "description": "Describes actions that a non-administrator user is allowed to take in a chat.",
         "type": "object",
         "properties": {
           "can_add_web_page_previews": {
@@ -2045,6 +2141,7 @@
         }
       },
       "ChatPhoto": {
+        "description": "This object represents a chat photo.",
         "type": "object",
         "properties": {
           "big_file_id": {
@@ -2072,6 +2169,7 @@
         ]
       },
       "ChosenInlineResult": {
+        "description": "Represents a result of an inline query that was chosen by the user and sent to their chat partner.",
         "type": "object",
         "properties": {
           "from": {
@@ -2102,6 +2200,7 @@
         ]
       },
       "Contact": {
+        "description": "This object represents a phone contact.",
         "type": "object",
         "properties": {
           "first_name": {
@@ -2131,6 +2230,7 @@
         ]
       },
       "Dice": {
+        "description": "This object represents an animated emoji that displays a random value.",
         "type": "object",
         "properties": {
           "emoji": {
@@ -2148,6 +2248,7 @@
         ]
       },
       "Document": {
+        "description": "This object represents a general file (as opposed to photos, voice messages and audio files).",
         "type": "object",
         "properties": {
           "file_id": {
@@ -2181,6 +2282,7 @@
         ]
       },
       "EncryptedCredentials": {
+        "description": "Contains data required for decrypting and authenticating EncryptedPassportElement. See the Telegram Passport Documentation for a complete description of the data decryption and authentication processes.",
         "type": "object",
         "properties": {
           "data": {
@@ -2203,6 +2305,7 @@
         ]
       },
       "EncryptedPassportElement": {
+        "description": "Contains information about documents or other Telegram Passport elements shared with the bot by the user.",
         "type": "object",
         "properties": {
           "data": {
@@ -2244,6 +2347,7 @@
         ]
       },
       "File": {
+        "description": "This object represents a file ready to be downloaded. The file can be downloaded via the link https://api.telegram.org/file/bot\u003ctoken\u003e/\u003cfile_path\u003e. It is guaranteed that the link will be valid for at least 1 hour. When the link expires, a new one can be requested by calling getFile.",
         "type": "object",
         "properties": {
           "file_id": {
@@ -2269,6 +2373,7 @@
         ]
       },
       "ForceReply": {
+        "description": "Upon receiving a message with this object, Telegram clients will display a reply interface to the user (act as if the user has selected the bot's message and tapped 'Reply'). This can be extremely useful if you want to create user-friendly step-by-step interfaces without having to sacrifice privacy mode.",
         "type": "object",
         "properties": {
           "force_reply": {
@@ -2289,6 +2394,7 @@
         ]
       },
       "Game": {
+        "description": "This object represents a game. Use BotFather to create and edit games, their short names will act as unique identifiers.",
         "type": "object",
         "properties": {
           "animation": {
@@ -2314,6 +2420,7 @@
         ]
       },
       "GameHighScore": {
+        "description": "This object represents one row of the high scores table for a game.",
         "type": "object",
         "properties": {
           "position": {
@@ -2336,6 +2443,7 @@
         ]
       },
       "InlineKeyboardButton": {
+        "description": "This object represents one button of an inline keyboard. You must use exactly one of the optional fields.",
         "type": "object",
         "properties": {
           "callback_data": {
@@ -2376,9 +2484,11 @@
         ]
       },
       "InlineKeyboardMarkup": {
+        "description": "This object represents an inline keyboard that appears right next to the message it belongs to.",
         "type": "object"
       },
       "InlineQuery": {
+        "description": "This object represents an incoming inline query. When the user sends an empty query, your bot could return some default or trending results.",
         "type": "object",
         "properties": {
           "chat_type": {
@@ -2414,6 +2524,7 @@
         ]
       },
       "InlineQueryResultArticle": {
+        "description": "This object represents one result of an inline query. Telegram clients currently support results of the following 20 types:",
         "type": "object",
         "properties": {
           "description": {
@@ -2470,6 +2581,7 @@
         ]
       },
       "InlineQueryResultAudio": {
+        "description": "Represents a link to an MP3 audio file. By default, this audio file will be sent by the user. Alternatively, you can use input_message_content to send a message with the specified content instead of the audio.",
         "type": "object",
         "properties": {
           "audio_duration": {
@@ -2522,6 +2634,7 @@
         ]
       },
       "InlineQueryResultCachedAudio": {
+        "description": "Represents a link to an MP3 audio file stored on the Telegram servers. By default, this audio file will be sent by the user. Alternatively, you can use input_message_content to send a message with the specified content instead of the audio.",
         "type": "object",
         "properties": {
           "audio_file_id": {
@@ -2561,6 +2674,7 @@
         ]
       },
       "InlineQueryResultCachedDocument": {
+        "description": "Represents a link to a file stored on the Telegram servers. By default, this file will be sent by the user with an optional caption. Alternatively, you can use input_message_content to send a message with the specified content instead of the file.",
         "type": "object",
         "properties": {
           "caption": {
@@ -2609,6 +2723,7 @@
         ]
       },
       "InlineQueryResultCachedGif": {
+        "description": "Represents a link to an animated GIF file stored on the Telegram servers. By default, this animated GIF file will be sent by the user with an optional caption. Alternatively, you can use input_message_content to send a message with specified content instead of the animation.",
         "type": "object",
         "properties": {
           "caption": {
@@ -2652,6 +2767,7 @@
         ]
       },
       "InlineQueryResultCachedMpeg4Gif": {
+        "description": "Represents a link to a video animation (H.264/MPEG-4 AVC video without sound) stored on the Telegram servers. By default, this animated MPEG-4 file will be sent by the user with an optional caption. Alternatively, you can use input_message_content to send a message with the specified content instead of the animation.",
         "type": "object",
         "properties": {
           "caption": {
@@ -2695,6 +2811,7 @@
         ]
       },
       "InlineQueryResultCachedPhoto": {
+        "description": "Represents a link to a photo stored on the Telegram servers. By default, this photo will be sent by the user with an optional caption. Alternatively, you can use input_message_content to send a message with the specified content instead of the photo.",
         "type": "object",
         "properties": {
           "caption": {
@@ -2742,6 +2859,7 @@
         ]
       },
       "InlineQueryResultCachedSticker": {
+        "description": "Represents a link to a sticker stored on the Telegram servers. By default, this sticker will be sent by the user. Alternatively, you can use input_message_content to send a message with the specified content instead of the sticker.",
         "type": "object",
         "properties": {
           "id": {
@@ -2773,6 +2891,7 @@
         ]
       },
       "InlineQueryResultCachedVideo": {
+        "description": "Represents a link to a video file stored on the Telegram servers. By default, this video file will be sent by the user with an optional caption. Alternatively, you can use input_message_content to send a message with the specified content instead of the video.",
         "type": "object",
         "properties": {
           "caption": {
@@ -2821,6 +2940,7 @@
         ]
       },
       "InlineQueryResultCachedVoice": {
+        "description": "Represents a link to a voice message stored on the Telegram servers. By default, this voice message will be sent by the user. Alternatively, you can use input_message_content to send a message with the specified content instead of the voice message.",
         "type": "object",
         "properties": {
           "caption": {
@@ -2865,6 +2985,7 @@
         ]
       },
       "InlineQueryResultContact": {
+        "description": "Represents a contact with a phone number. By default, this contact will be sent by the user. Alternatively, you can use input_message_content to send a message with the specified content instead of the contact.",
         "type": "object",
         "properties": {
           "first_name": {
@@ -2921,6 +3042,7 @@
         ]
       },
       "InlineQueryResultDocument": {
+        "description": "Represents a link to a file. By default, this file will be sent by the user with an optional caption. Alternatively, you can use input_message_content to send a message with the specified content instead of the file. Currently, only .PDF and .ZIP files can be sent using this method.",
         "type": "object",
         "properties": {
           "caption": {
@@ -2986,6 +3108,7 @@
         ]
       },
       "InlineQueryResultGame": {
+        "description": "Represents a Game.",
         "type": "object",
         "properties": {
           "game_short_name": {
@@ -3013,6 +3136,7 @@
         ]
       },
       "InlineQueryResultGif": {
+        "description": "Represents a link to an animated GIF file. By default, this animated GIF file will be sent by the user with optional caption. Alternatively, you can use input_message_content to send a message with the specified content instead of the animation.",
         "type": "object",
         "properties": {
           "caption": {
@@ -3077,6 +3201,7 @@
         ]
       },
       "InlineQueryResultLocation": {
+        "description": "Represents a location on a map. By default, the location will be sent by the user. Alternatively, you can use input_message_content to send a message with the specified content instead of the location.",
         "type": "object",
         "properties": {
           "heading": {
@@ -3146,6 +3271,7 @@
         ]
       },
       "InlineQueryResultMpeg4Gif": {
+        "description": "Represents a link to a video animation (H.264/MPEG-4 AVC video without sound). By default, this animated MPEG-4 file will be sent by the user with optional caption. Alternatively, you can use input_message_content to send a message with the specified content instead of the animation.",
         "type": "object",
         "properties": {
           "caption": {
@@ -3210,6 +3336,7 @@
         ]
       },
       "InlineQueryResultPhoto": {
+        "description": "Represents a link to a photo. By default, this photo will be sent by the user with optional caption. Alternatively, you can use input_message_content to send a message with the specified content instead of the photo.",
         "type": "object",
         "properties": {
           "caption": {
@@ -3270,6 +3397,7 @@
         ]
       },
       "InlineQueryResultVenue": {
+        "description": "Represents a venue. By default, the venue will be sent by the user. Alternatively, you can use input_message_content to send a message with the specified content instead of the venue.",
         "type": "object",
         "properties": {
           "address": {
@@ -3344,6 +3472,7 @@
         ]
       },
       "InlineQueryResultVideo": {
+        "description": "Represents a link to a page containing an embedded video player or a video file. By default, this video file will be sent by the user with an optional caption. Alternatively, you can use input_message_content to send a message with the specified content instead of the video.",
         "type": "object",
         "properties": {
           "caption": {
@@ -3414,6 +3543,7 @@
         ]
       },
       "InlineQueryResultVoice": {
+        "description": "Represents a link to a voice recording in an .OGG container encoded with OPUS. By default, this voice recording will be sent by the user. Alternatively, you can use input_message_content to send a message with the specified content instead of the the voice message.",
         "type": "object",
         "properties": {
           "caption": {
@@ -3462,6 +3592,7 @@
         ]
       },
       "InputContactMessageContent": {
+        "description": "Represents the content of a contact message to be sent as the result of an inline query.",
         "type": "object",
         "properties": {
           "first_name": {
@@ -3487,6 +3618,7 @@
         ]
       },
       "InputInvoiceMessageContent": {
+        "description": "Represents the content of an invoice message to be sent as the result of an inline query.",
         "type": "object",
         "properties": {
           "currency": {
@@ -3571,6 +3703,7 @@
         ]
       },
       "InputLocationMessageContent": {
+        "description": "Represents the content of a location message to be sent as the result of an inline query.",
         "type": "object",
         "properties": {
           "heading": {
@@ -3604,6 +3737,7 @@
         ]
       },
       "InputMediaAnimation": {
+        "description": "Represents an animation file (GIF or H.264/MPEG-4 AVC video without sound) to be sent.",
         "type": "object",
         "properties": {
           "caption": {
@@ -3642,6 +3776,7 @@
         ]
       },
       "InputMediaAudio": {
+        "description": "Represents an audio file to be treated as music to be sent.",
         "type": "object",
         "properties": {
           "caption": {
@@ -3680,6 +3815,7 @@
         ]
       },
       "InputMediaDocument": {
+        "description": "Represents a general file to be sent.",
         "type": "object",
         "properties": {
           "caption": {
@@ -3710,6 +3846,7 @@
         ]
       },
       "InputMediaPhoto": {
+        "description": "This object represents the content of a media message to be sent. It should be one of",
         "type": "object",
         "properties": {
           "caption": {
@@ -3736,6 +3873,7 @@
         ]
       },
       "InputMediaVideo": {
+        "description": "Represents a video to be sent.",
         "type": "object",
         "properties": {
           "caption": {
@@ -3778,6 +3916,7 @@
         ]
       },
       "InputTextMessageContent": {
+        "description": "This object represents the content of a message to be sent as a result of an inline query. Telegram clients currently support the following 5 types:",
         "type": "object",
         "properties": {
           "disable_web_page_preview": {
@@ -3798,6 +3937,7 @@
         ]
       },
       "InputVenueMessageContent": {
+        "description": "Represents the content of a venue message to be sent as the result of an inline query.",
         "type": "object",
         "properties": {
           "address": {
@@ -3841,6 +3981,7 @@
         ]
       },
       "Invoice": {
+        "description": "This object contains basic information about an invoice.",
         "type": "object",
         "properties": {
           "currency": {
@@ -3873,6 +4014,7 @@
         ]
       },
       "KeyboardButton": {
+        "description": "This object represents one button of the reply keyboard. For simple text buttons String can be used instead of this object to specify text of the button. Optional fields request_contact, request_location, and request_poll are mutually exclusive.",
         "type": "object",
         "properties": {
           "request_contact": {
@@ -3897,6 +4039,7 @@
         ]
       },
       "KeyboardButtonPollType": {
+        "description": "This object represents type of a poll, which is allowed to be created and sent when the corresponding button is pressed.",
         "type": "object",
         "properties": {
           "type": {
@@ -3906,6 +4049,7 @@
         }
       },
       "LabeledPrice": {
+        "description": "This object represents a portion of the price for goods or services.",
         "type": "object",
         "properties": {
           "amount": {
@@ -3923,6 +4067,7 @@
         ]
       },
       "Location": {
+        "description": "This object represents a point on the map.",
         "type": "object",
         "properties": {
           "heading": {
@@ -3956,6 +4101,7 @@
         ]
       },
       "LoginUrl": {
+        "description": "This object represents a parameter of the inline keyboard button used to automatically authorize a user. Serves as a great replacement for the Telegram Login Widget when the user is coming from Telegram. All the user needs to do is tap/click a button and confirm that they want to log in:",
         "type": "object",
         "properties": {
           "bot_username": {
@@ -3980,6 +4126,7 @@
         ]
       },
       "MaskPosition": {
+        "description": "This object describes the position on faces where a mask should be placed by default.",
         "type": "object",
         "properties": {
           "point": {
@@ -4007,6 +4154,7 @@
         ]
       },
       "Message": {
+        "description": "This object represents a message.",
         "type": "object",
         "properties": {
           "animation": {
@@ -4221,6 +4369,7 @@
         ]
       },
       "MessageAutoDeleteTimerChanged": {
+        "description": "This object represents a service message about a change in auto-delete timer settings.",
         "type": "object",
         "properties": {
           "message_auto_delete_time": {
@@ -4233,6 +4382,7 @@
         ]
       },
       "MessageEntity": {
+        "description": "This object represents one special entity in a text message. For example, hashtags, usernames, URLs, etc.",
         "type": "object",
         "properties": {
           "language": {
@@ -4267,6 +4417,7 @@
         ]
       },
       "MessageId": {
+        "description": "This object represents a unique message identifier.",
         "type": "object",
         "properties": {
           "message_id": {
@@ -4279,6 +4430,7 @@
         ]
       },
       "OrderInfo": {
+        "description": "This object represents information about an order.",
         "type": "object",
         "properties": {
           "email": {
@@ -4300,6 +4452,7 @@
         }
       },
       "PassportData": {
+        "description": "Contains information about Telegram Passport data shared with the bot by the user.",
         "type": "object",
         "properties": {
           "credentials": {
@@ -4312,6 +4465,7 @@
         ]
       },
       "PassportElementErrorDataField": {
+        "description": "This object represents an error in the Telegram Passport element which was submitted that should be resolved by the user. It should be one of:",
         "type": "object",
         "properties": {
           "data_hash": {
@@ -4345,6 +4499,7 @@
         ]
       },
       "PassportElementErrorFile": {
+        "description": "Represents an issue with a document scan. The error is considered resolved when the file with the document scan changes.",
         "type": "object",
         "properties": {
           "file_hash": {
@@ -4373,6 +4528,7 @@
         ]
       },
       "PassportElementErrorFiles": {
+        "description": "Represents an issue with a list of scans. The error is considered resolved when the list of files containing the scans changes.",
         "type": "object",
         "properties": {
           "message": {
@@ -4396,6 +4552,7 @@
         ]
       },
       "PassportElementErrorFrontSide": {
+        "description": "Represents an issue with the front side of a document. The error is considered resolved when the file with the front side of the document changes.",
         "type": "object",
         "properties": {
           "file_hash": {
@@ -4424,6 +4581,7 @@
         ]
       },
       "PassportElementErrorReverseSide": {
+        "description": "Represents an issue with the reverse side of a document. The error is considered resolved when the file with reverse side of the document changes.",
         "type": "object",
         "properties": {
           "file_hash": {
@@ -4452,6 +4610,7 @@
         ]
       },
       "PassportElementErrorSelfie": {
+        "description": "Represents an issue with the selfie with a document. The error is considered resolved when the file with the selfie changes.",
         "type": "object",
         "properties": {
           "file_hash": {
@@ -4480,6 +4639,7 @@
         ]
       },
       "PassportElementErrorTranslationFile": {
+        "description": "Represents an issue with one of the files that constitute the translation of a document. The error is considered resolved when the file changes.",
         "type": "object",
         "properties": {
           "file_hash": {
@@ -4508,6 +4668,7 @@
         ]
       },
       "PassportElementErrorTranslationFiles": {
+        "description": "Represents an issue with the translated version of a document. The error is considered resolved when a file with the document translation change.",
         "type": "object",
         "properties": {
           "message": {
@@ -4531,6 +4692,7 @@
         ]
       },
       "PassportElementErrorUnspecified": {
+        "description": "Represents an issue in an unspecified place. The error is considered resolved when new data is added.",
         "type": "object",
         "properties": {
           "element_hash": {
@@ -4559,6 +4721,7 @@
         ]
       },
       "PassportFile": {
+        "description": "This object represents a file uploaded to Telegram Passport. Currently all Telegram Passport files are in JPEG format when decrypted and don't exceed 10MB.",
         "type": "object",
         "properties": {
           "file_date": {
@@ -4586,6 +4749,7 @@
         ]
       },
       "PhotoSize": {
+        "description": "This object represents one size of a photo or a file / sticker thumbnail.",
         "type": "object",
         "properties": {
           "file_id": {
@@ -4617,6 +4781,7 @@
         ]
       },
       "Poll": {
+        "description": "This object contains information about a poll.",
         "type": "object",
         "properties": {
           "allows_multiple_answers": {
@@ -4675,6 +4840,7 @@
         ]
       },
       "PollAnswer": {
+        "description": "This object represents an answer of a user in a non-anonymous poll.",
         "type": "object",
         "properties": {
           "poll_id": {
@@ -4692,6 +4858,7 @@
         ]
       },
       "PollOption": {
+        "description": "This object contains information about one answer option in a poll.",
         "type": "object",
         "properties": {
           "text": {
@@ -4709,6 +4876,7 @@
         ]
       },
       "PreCheckoutQuery": {
+        "description": "This object contains information about an incoming pre-checkout query.",
         "type": "object",
         "properties": {
           "currency": {
@@ -4749,6 +4917,7 @@
         ]
       },
       "ProximityAlertTriggered": {
+        "description": "This object represents the content of a service message, sent whenever a user in the chat triggers a proximity alert set by another user.",
         "type": "object",
         "properties": {
           "distance": {
@@ -4771,6 +4940,7 @@
         ]
       },
       "ReplyKeyboardMarkup": {
+        "description": "This object represents a custom keyboard with reply options (see Introduction to bots for details and examples).",
         "type": "object",
         "properties": {
           "input_field_placeholder": {
@@ -4792,6 +4962,7 @@
         }
       },
       "ReplyKeyboardRemove": {
+        "description": "Upon receiving a message with this object, Telegram clients will remove the current custom keyboard and display the default letter-keyboard. By default, custom keyboards are displayed until a new keyboard is sent by a bot. An exception is made for one-time keyboards that are hidden immediately after the user presses a button (see ReplyKeyboardMarkup).",
         "type": "object",
         "properties": {
           "remove_keyboard": {
@@ -4808,6 +4979,7 @@
         ]
       },
       "ResponseParameters": {
+        "description": "Contains information about why a request was unsuccessful.",
         "type": "object",
         "properties": {
           "migrate_to_chat_id": {
@@ -4821,6 +4993,7 @@
         }
       },
       "ShippingAddress": {
+        "description": "This object represents a shipping address.",
         "type": "object",
         "properties": {
           "city": {
@@ -4858,6 +5031,7 @@
         ]
       },
       "ShippingOption": {
+        "description": "This object represents one shipping option.",
         "type": "object",
         "properties": {
           "id": {
@@ -4875,6 +5049,7 @@
         ]
       },
       "ShippingQuery": {
+        "description": "This object contains information about an incoming shipping query.",
         "type": "object",
         "properties": {
           "from": {
@@ -4902,6 +5077,7 @@
         ]
       },
       "Sticker": {
+        "description": "This object represents a sticker.",
         "type": "object",
         "properties": {
           "emoji": {
@@ -4954,6 +5130,7 @@
         ]
       },
       "StickerSet": {
+        "description": "This object represents a sticker set.",
         "type": "object",
         "properties": {
           "contains_masks": {
@@ -4985,6 +5162,7 @@
         ]
       },
       "SuccessfulPayment": {
+        "description": "This object contains basic information about a successful payment.",
         "type": "object",
         "properties": {
           "currency": {
@@ -5025,6 +5203,7 @@
         ]
       },
       "Update": {
+        "description": "Bot API 5.3",
         "type": "object",
         "properties": {
           "callback_query": {
@@ -5089,6 +5268,7 @@
         ]
       },
       "User": {
+        "description": "This object represents a Telegram user or bot.",
         "type": "object",
         "properties": {
           "can_join_groups": {
@@ -5135,6 +5315,7 @@
         ]
       },
       "UserProfilePhotos": {
+        "description": "This object represent a user's profile pictures.",
         "type": "object",
         "properties": {
           "total_count": {
@@ -5147,6 +5328,7 @@
         ]
       },
       "Venue": {
+        "description": "This object represents a venue.",
         "type": "object",
         "properties": {
           "address": {
@@ -5185,6 +5367,7 @@
         ]
       },
       "Video": {
+        "description": "This object represents a video file.",
         "type": "object",
         "properties": {
           "duration": {
@@ -5233,6 +5416,7 @@
         ]
       },
       "VideoNote": {
+        "description": "This object represents a video message (available in Telegram apps as of v.4.0).",
         "type": "object",
         "properties": {
           "duration": {
@@ -5268,6 +5452,7 @@
         ]
       },
       "Voice": {
+        "description": "This object represents a voice note.",
         "type": "object",
         "properties": {
           "duration": {
@@ -5298,6 +5483,7 @@
         ]
       },
       "VoiceChatEnded": {
+        "description": "This object represents a service message about a voice chat started in the chat. Currently holds no information.",
         "type": "object",
         "properties": {
           "duration": {
@@ -5310,9 +5496,11 @@
         ]
       },
       "VoiceChatParticipantsInvited": {
+        "description": "This object represents a service message about new members invited to a voice chat.",
         "type": "object"
       },
       "VoiceChatScheduled": {
+        "description": "This object represents a service message about a voice chat scheduled in the chat.",
         "type": "object",
         "properties": {
           "start_date": {
@@ -5325,6 +5513,7 @@
         ]
       },
       "WebhookInfo": {
+        "description": "Use this method to get current webhook status. Requires no parameters. On success, returns a WebhookInfo object. If the bot is using getUpdates, will return an object with the url field empty.",
         "type": "object",
         "properties": {
           "has_custom_certificate": {

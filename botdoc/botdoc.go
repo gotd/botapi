@@ -143,6 +143,10 @@ func Extract(doc *goquery.Document) (a API) {
 			d.Name = strings.TrimSpace(s.Text())
 			return
 		}
+		if s.Is("p") && d.Name != "" && d.Description == "" {
+			d.Description = strings.TrimSpace(s.Text())
+			return
+		}
 		if !s.Is("table") {
 			return
 		}

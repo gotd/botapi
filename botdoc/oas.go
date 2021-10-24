@@ -143,13 +143,17 @@ func (a API) OAS() *ogen.Spec {
 			s.Properties[f.Name] = p
 		}
 		c.Schemas[m.Name] = s
+		res := ogen.Response{}
+		// On success, the sent Message is returned.
+		const (
+			retPrefix = `On success, the`
+			retSuffix = ` is returned.`
+		)
 		p["/"+m.Name] = ogen.PathItem{
 			Description: m.Description,
 			Post: &ogen.Operation{
 				OperationID: m.Name,
-				Responses: ogen.Responses{
-					codeOK: ogen.Response{},
-				},
+				Responses:   ogen.Responses{codeOK: res},
 				RequestBody: &ogen.RequestBody{
 					Content: map[string]ogen.Media{
 						contentJSON: {
