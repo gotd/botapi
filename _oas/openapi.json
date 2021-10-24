@@ -5698,7 +5698,19 @@
         ]
       },
       "ResultMsg": {
-        "$ref": "#/components/schemas/Message"
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean",
+            "default": true
+          },
+          "result": {
+            "$ref": "#/components/schemas/Message"
+          }
+        },
+        "required": [
+          "ok"
+        ]
       },
       "ResultStr": {
         "type": "object",
@@ -5716,7 +5728,19 @@
         ]
       },
       "ResultUsr": {
-        "$ref": "#/components/schemas/User"
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean",
+            "default": true
+          },
+          "result": {
+            "$ref": "#/components/schemas/User"
+          }
+        },
+        "required": [
+          "ok"
+        ]
       },
       "ShippingAddress": {
         "description": "This object represents a shipping address.",

@@ -1561,6 +1561,18 @@ type Result struct {
 	Result OptBool `json:"result"`
 }
 
+// ResultMsg describes #/components/schemas/ResultMsg.
+type ResultMsg struct {
+	Ok     bool       `json:"ok"`
+	Result OptMessage `json:"result"`
+}
+
+// ResultUsr describes #/components/schemas/ResultUsr.
+type ResultUsr struct {
+	Ok     bool    `json:"ok"`
+	Result OptUser `json:"result"`
+}
+
 // ShippingAddress describes #/components/schemas/ShippingAddress.
 type ShippingAddress struct {
 	City        string `json:"city"`

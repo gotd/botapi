@@ -72,3 +72,10 @@ func (s *Message) Validate() error {
 	}
 	return nil
 }
+func (s *ResultMsg) Validate() error {
+	var failures []validate.FieldError
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+	return nil
+}

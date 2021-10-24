@@ -93,12 +93,12 @@ func (a API) OAS() *ogen.Spec {
 	c.Schemas["ResultStr"] = resultFor(ogen.Schema{
 		Type: "string",
 	})
-	c.Schemas["ResultMsg"] = ogen.Schema{
+	c.Schemas["ResultMsg"] = resultFor(ogen.Schema{
 		Ref: "#/components/schemas/Message",
-	}
-	c.Schemas["ResultUsr"] = ogen.Schema{
+	})
+	c.Schemas["ResultUsr"] = resultFor(ogen.Schema{
 		Ref: "#/components/schemas/User",
-	}
+	})
 
 	for _, m := range a.Methods {
 		s := ogen.Schema{
