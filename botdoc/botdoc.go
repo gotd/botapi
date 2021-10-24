@@ -189,11 +189,19 @@ func Extract(doc *goquery.Document) (a API) {
 			d.Name = strings.TrimSpace(s.Text())
 			return
 		}
-		if s.Is("p") && d.Name != "" && d.Description == "" {
+		if s.Is("p") && d.Name != "" {
 			d.Description = strings.TrimSpace(s.Text())
 			if strings.Contains(strings.ToLower(d.Description), `currently holds no information`) {
 				appendDefinition()
 			}
+			if strings.Contains(d.Description, `Returns basic information about the bot`) {
+				d.Ret = &Type{
+					Kind: KindObject,
+					Name: "User",
+				}
+				appendDefinition()
+			}
+
 			return
 		}
 		if strings.Contains(d.Description, `Returns True on success`) {

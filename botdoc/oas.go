@@ -34,28 +34,7 @@ func (a API) OAS() *ogen.Spec {
 	c := &ogen.Components{
 		Schemas: map[string]ogen.Schema{},
 	}
-	p := ogen.Paths{
-		"/getMe": ogen.PathItem{
-			Description: "A simple method for testing your bot's auth token. " +
-				"Requires no parameters. " +
-				"Returns basic information about the bot in form of a User object.",
-			Post: &ogen.Operation{
-				OperationID: "getMe",
-				Responses: ogen.Responses{
-					codeOK: ogen.Response{
-						Description: "Basic information about the bot",
-						Content: map[string]ogen.Media{
-							contentJSON: {
-								Schema: ogen.Schema{
-									Ref: "#/components/schemas/User",
-								},
-							},
-						},
-					},
-				},
-			},
-		},
-	}
+	p := ogen.Paths{}
 
 	for _, d := range a.Types {
 		s := ogen.Schema{
@@ -117,6 +96,9 @@ func (a API) OAS() *ogen.Spec {
 	c.Schemas["ResultMsg"] = ogen.Schema{
 		Ref: "#/components/schemas/Message",
 	}
+	c.Schemas["ResultUsr"] = ogen.Schema{
+		Ref: "#/components/schemas/User",
+	}
 
 	for _, m := range a.Methods {
 		s := ogen.Schema{
@@ -168,18 +150,29 @@ func (a API) OAS() *ogen.Spec {
 		}
 
 		schemaName := m.Name
-		c.Schemas[schemaName] = s
+		if len(m.Fields) > 0 {
+			c.Schemas[schemaName] = s
+		}
 
 		response := ogen.Schema{
 			Ref: "#/components/schemas/Result",
 		}
 
 		if t := m.Ret; t != nil {
-			switch {
-			case t.Primitive == String:
+			switch t.Primitive {
+			case String:
 				response.Ref = "#/components/schemas/ResultStr"
-			case t.Kind == KindObject && m.Ret.Name == "ResultMsg":
+			case Boolean:
+				response.Ref = "#/components/schemas/Result"
+			}
+			switch t.Name {
+			case "Message":
 				response.Ref = "#/components/schemas/ResultMsg"
+			case "User":
+				response.Ref = "#/components/schemas/ResultUsr"
+			}
+			if response.Ref == "" {
+				panic("Unable to infer result type")
 			}
 		}
 		res := ogen.Response{
@@ -190,21 +183,26 @@ func (a API) OAS() *ogen.Spec {
 				},
 			},
 		}
+
+		var reqBody *ogen.RequestBody
+		if len(m.Fields) > 0 {
+			reqBody = &ogen.RequestBody{
+				Content: map[string]ogen.Media{
+					contentJSON: {
+						Schema: ogen.Schema{
+							Ref: "#/components/schemas/" + schemaName,
+						},
+					},
+				},
+				Required: true,
+			}
+		}
 		p["/"+m.Name] = ogen.PathItem{
 			Description: m.Description,
 			Post: &ogen.Operation{
 				OperationID: m.Name,
 				Responses:   ogen.Responses{codeOK: res},
-				RequestBody: &ogen.RequestBody{
-					Content: map[string]ogen.Media{
-						contentJSON: {
-							Schema: ogen.Schema{
-								Ref: "#/components/schemas/" + schemaName,
-							},
-						},
-					},
-					Required: true,
-				},
+				RequestBody: reqBody,
 			},
 		}
 	}
