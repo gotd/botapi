@@ -76,6 +76,7 @@ type Audio struct {
 	Title        OptString    `json:"title"`
 }
 
+// BotCommandScope describes #/components/schemas/BotCommandScope.
 type BotCommandScope struct{}
 
 // Chat describes #/components/schemas/Chat.
@@ -166,8 +167,10 @@ type Game struct {
 	Title       string       `json:"title"`
 }
 
+// InlineKeyboardMarkup describes #/components/schemas/InlineKeyboardMarkup.
 type InlineKeyboardMarkup struct{}
 
+// InputMedia describes #/components/schemas/InputMedia.
 type InputMedia struct{}
 
 // Invoice describes #/components/schemas/Invoice.
@@ -1669,6 +1672,7 @@ type VoiceChatEnded struct {
 	Duration int `json:"duration"`
 }
 
+// VoiceChatParticipantsInvited describes #/components/schemas/VoiceChatParticipantsInvited.
 type VoiceChatParticipantsInvited struct{}
 
 // VoiceChatScheduled describes #/components/schemas/VoiceChatScheduled.
@@ -1676,6 +1680,7 @@ type VoiceChatScheduled struct {
 	StartDate int `json:"start_date"`
 }
 
+// VoiceChatStarted describes #/components/schemas/VoiceChatStarted.
 type VoiceChatStarted struct{}
 
 // AddStickerToSet describes #/components/schemas/addStickerToSet.
@@ -1754,8 +1759,10 @@ type CreateNewStickerSet struct {
 	UserID        int             `json:"user_id"`
 }
 
+// DeleteChatPhoto describes #/components/schemas/deleteChatPhoto.
 type DeleteChatPhoto struct{}
 
+// DeleteChatStickerSet describes #/components/schemas/deleteChatStickerSet.
 type DeleteChatStickerSet struct{}
 
 // DeleteMessage describes #/components/schemas/deleteMessage.
@@ -1832,6 +1839,7 @@ type EditMessageText struct {
 	Text                  string                `json:"text"`
 }
 
+// ExportChatInviteLink describes #/components/schemas/exportChatInviteLink.
 type ExportChatInviteLink struct{}
 
 // ForwardMessage describes #/components/schemas/forwardMessage.
@@ -1840,8 +1848,10 @@ type ForwardMessage struct {
 	MessageID           int     `json:"message_id"`
 }
 
+// GetChat describes #/components/schemas/getChat.
 type GetChat struct{}
 
+// GetChatAdministrators describes #/components/schemas/getChatAdministrators.
 type GetChatAdministrators struct{}
 
 // GetChatMember describes #/components/schemas/getChatMember.
@@ -1849,6 +1859,7 @@ type GetChatMember struct {
 	UserID int `json:"user_id"`
 }
 
+// GetChatMemberCount describes #/components/schemas/getChatMemberCount.
 type GetChatMemberCount struct{}
 
 // GetFile describes #/components/schemas/getFile.
@@ -1889,6 +1900,7 @@ type GetUserProfilePhotos struct {
 	UserID int    `json:"user_id"`
 }
 
+// LeaveChat describes #/components/schemas/leaveChat.
 type LeaveChat struct{}
 
 // PinChatMessage describes #/components/schemas/pinChatMessage.
@@ -2223,6 +2235,7 @@ type UnbanChatMember struct {
 	UserID       int     `json:"user_id"`
 }
 
+// UnpinAllChatMessages describes #/components/schemas/unpinAllChatMessages.
 type UnpinAllChatMessages struct{}
 
 // UnpinChatMessage describes #/components/schemas/unpinChatMessage.
