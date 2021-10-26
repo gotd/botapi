@@ -6598,7 +6598,9 @@
           },
           "height": {
             "description": "Animation height",
-            "type": "integer"
+            "type": "integer",
+            "minimum": 0,
+            "exclusiveMinimum": true
           },
           "parse_mode": {
             "description": "Mode for parsing entities in the animation caption. See formatting options for more details",
@@ -6841,7 +6843,9 @@
           },
           "photo_height": {
             "description": "Photo height",
-            "type": "integer"
+            "type": "integer",
+            "minimum": 0,
+            "exclusiveMinimum": true
           },
           "photo_size": {
             "description": "Photo size",
@@ -7178,7 +7182,9 @@
           },
           "height": {
             "description": "Video height",
-            "type": "integer"
+            "type": "integer",
+            "minimum": 0,
+            "exclusiveMinimum": true
           },
           "parse_mode": {
             "description": "Mode for parsing entities in the video caption. See formatting options for more details",

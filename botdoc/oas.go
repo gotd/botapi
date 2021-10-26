@@ -185,7 +185,7 @@ func (a API) OAS() *ogen.Spec {
 					}
 				case Integer:
 					p.Type = "integer"
-					if strings.Contains(f.Name, "width") {
+					if strings.Contains(f.Name, "width") || strings.Contains(f.Name, "height") {
 						v := int64(0)
 						p.Minimum = &v
 						p.ExclusiveMinimum = true
