@@ -12,3 +12,4 @@ The telegram-bot-api, but in go. WIP.
 - [ ] Infer enums
 - [ ] Use rich text for documentation
 - [ ] More links to documentation
+- [ ] Support Emoji
