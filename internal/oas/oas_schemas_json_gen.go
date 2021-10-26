@@ -3565,6 +3565,28 @@ func (o *OptSuccessfulPayment) ReadJSON(i *json.Iterator) error {
 	return nil
 }
 
+// WriteJSON writes json value of url.URL to json stream.
+func (o OptURL) WriteJSON(j *json.Stream) {
+	json.WriteURI(j, o.Value)
+}
+
+// ReadJSON reads json value of url.URL from json iterator.
+func (o *OptURL) ReadJSON(i *json.Iterator) error {
+	switch i.WhatIsNext() {
+	case json.StringValue:
+		o.Set = true
+		v, err := json.ReadURI(i)
+		if err != nil {
+			return err
+		}
+		o.Value = v
+		return i.Error
+	default:
+		return fmt.Errorf("unexpected type %d while reading OptURL", i.WhatIsNext())
+	}
+	return nil
+}
+
 // WriteJSON writes json value of User to json stream.
 func (o OptUser) WriteJSON(j *json.Stream) {
 	o.Value.WriteJSON(j)
@@ -13079,7 +13101,7 @@ func (s SetWebhook) WriteJSON(j *json.Stream) {
 	}
 	more.More()
 	j.WriteObjectField("url")
-	j.WriteString(s.URL)
+	json.WriteURI(j, s.URL)
 	j.WriteObjectEnd()
 }
 
@@ -13161,7 +13183,11 @@ func (s *SetWebhook) ReadJSON(i *json.Iterator) error {
 			return true
 		case "url":
 			if err := func() error {
-				s.URL = string(i.ReadString())
+				v, err := json.ReadURI(i)
+				s.URL = v
+				if err != nil {
+					return err
+				}
 				return i.Error
 			}(); err != nil {
 				retErr = err

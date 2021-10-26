@@ -99,6 +99,9 @@ func decodeAnswerCallbackQueryRequest(r *http.Request) (req AnswerCallbackQuery,
 		}(); err != nil {
 			return req, err
 		}
+		if err := request.Validate(); err != nil {
+			return req, fmt.Errorf("validate: %w", err)
+		}
 
 		return request, nil
 	default:
@@ -126,6 +129,9 @@ func decodeAnswerInlineQueryRequest(r *http.Request) (req AnswerInlineQuery, err
 			return i.Error
 		}(); err != nil {
 			return req, err
+		}
+		if err := request.Validate(); err != nil {
+			return req, fmt.Errorf("validate: %w", err)
 		}
 
 		return request, nil
@@ -239,6 +245,9 @@ func decodeCopyMessageRequest(r *http.Request) (req CopyMessage, err error) {
 		}(); err != nil {
 			return req, err
 		}
+		if err := request.Validate(); err != nil {
+			return req, fmt.Errorf("validate: %w", err)
+		}
 
 		return request, nil
 	default:
@@ -294,6 +303,9 @@ func decodeCreateNewStickerSetRequest(r *http.Request) (req CreateNewStickerSet,
 			return i.Error
 		}(); err != nil {
 			return req, err
+		}
+		if err := request.Validate(); err != nil {
+			return req, fmt.Errorf("validate: %w", err)
 		}
 
 		return request, nil
@@ -519,6 +531,9 @@ func decodeEditMessageCaptionRequest(r *http.Request) (req EditMessageCaption, e
 		}(); err != nil {
 			return req, err
 		}
+		if err := request.Validate(); err != nil {
+			return req, fmt.Errorf("validate: %w", err)
+		}
 
 		return request, nil
 	default:
@@ -630,6 +645,9 @@ func decodeEditMessageTextRequest(r *http.Request) (req EditMessageText, err err
 			return i.Error
 		}(); err != nil {
 			return req, err
+		}
+		if err := request.Validate(); err != nil {
+			return req, fmt.Errorf("validate: %w", err)
 		}
 
 		return request, nil
@@ -1166,6 +1184,9 @@ func decodeSendAudioRequest(r *http.Request) (req SendAudio, err error) {
 		}(); err != nil {
 			return req, err
 		}
+		if err := request.Validate(); err != nil {
+			return req, fmt.Errorf("validate: %w", err)
+		}
 
 		return request, nil
 	default:
@@ -1277,6 +1298,9 @@ func decodeSendDocumentRequest(r *http.Request) (req SendDocument, err error) {
 			return i.Error
 		}(); err != nil {
 			return req, err
+		}
+		if err := request.Validate(); err != nil {
+			return req, fmt.Errorf("validate: %w", err)
 		}
 
 		return request, nil
@@ -1421,6 +1445,9 @@ func decodeSendMessageRequest(r *http.Request) (req SendMessage, err error) {
 		}(); err != nil {
 			return req, err
 		}
+		if err := request.Validate(); err != nil {
+			return req, fmt.Errorf("validate: %w", err)
+		}
 
 		return request, nil
 	default:
@@ -1449,6 +1476,9 @@ func decodeSendPhotoRequest(r *http.Request) (req SendPhoto, err error) {
 		}(); err != nil {
 			return req, err
 		}
+		if err := request.Validate(); err != nil {
+			return req, fmt.Errorf("validate: %w", err)
+		}
 
 		return request, nil
 	default:
@@ -1476,6 +1506,9 @@ func decodeSendPollRequest(r *http.Request) (req SendPoll, err error) {
 			return i.Error
 		}(); err != nil {
 			return req, err
+		}
+		if err := request.Validate(); err != nil {
+			return req, fmt.Errorf("validate: %w", err)
 		}
 
 		return request, nil
@@ -1592,6 +1625,9 @@ func decodeSendVideoNoteRequest(r *http.Request) (req SendVideoNote, err error) 
 		}(); err != nil {
 			return req, err
 		}
+		if err := request.Validate(); err != nil {
+			return req, fmt.Errorf("validate: %w", err)
+		}
 
 		return request, nil
 	default:
@@ -1619,6 +1655,9 @@ func decodeSendVoiceRequest(r *http.Request) (req SendVoice, err error) {
 			return i.Error
 		}(); err != nil {
 			return req, err
+		}
+		if err := request.Validate(); err != nil {
+			return req, fmt.Errorf("validate: %w", err)
 		}
 
 		return request, nil
@@ -1648,6 +1687,9 @@ func decodeSetChatAdministratorCustomTitleRequest(r *http.Request) (req SetChatA
 		}(); err != nil {
 			return req, err
 		}
+		if err := request.Validate(); err != nil {
+			return req, fmt.Errorf("validate: %w", err)
+		}
 
 		return request, nil
 	default:
@@ -1675,6 +1717,9 @@ func decodeSetChatDescriptionRequest(r *http.Request) (req SetChatDescription, e
 			return i.Error
 		}(); err != nil {
 			return req, err
+		}
+		if err := request.Validate(); err != nil {
+			return req, fmt.Errorf("validate: %w", err)
 		}
 
 		return request, nil
@@ -1787,6 +1832,9 @@ func decodeSetChatTitleRequest(r *http.Request) (req SetChatTitle, err error) {
 			return i.Error
 		}(); err != nil {
 			return req, err
+		}
+		if err := request.Validate(); err != nil {
+			return req, fmt.Errorf("validate: %w", err)
 		}
 
 		return request, nil

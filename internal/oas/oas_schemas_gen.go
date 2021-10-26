@@ -1248,6 +1248,44 @@ func (o OptSuccessfulPayment) Get() (v SuccessfulPayment, ok bool) {
 	return o.Value, true
 }
 
+// NewOptURL returns new OptURL with value set to v.
+func NewOptURL(v url.URL) OptURL {
+	return OptURL{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptURL is optional url.URL.
+type OptURL struct {
+	Value url.URL
+	Set   bool
+}
+
+// IsSet returns true if OptURL was set.
+func (o OptURL) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptURL) Reset() {
+	var v url.URL
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptURL) SetTo(v url.URL) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptURL) Get() (v url.URL, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
 // NewOptUser returns new OptUser with value set to v.
 func NewOptUser(v User) OptUser {
 	return OptUser{
@@ -1695,7 +1733,7 @@ type AnswerCallbackQuery struct {
 	CallbackQueryID string    `json:"callback_query_id"`
 	ShowAlert       OptBool   `json:"show_alert"`
 	Text            OptString `json:"text"`
-	URL             OptString `json:"url"`
+	URL             OptURL    `json:"url"`
 }
 
 // AnswerInlineQuery describes #/components/schemas/answerInlineQuery.
@@ -2017,7 +2055,7 @@ type SendInvoice struct {
 	Payload                   string                `json:"payload"`
 	PhotoHeight               OptInt                `json:"photo_height"`
 	PhotoSize                 OptInt                `json:"photo_size"`
-	PhotoURL                  OptString             `json:"photo_url"`
+	PhotoURL                  OptURL                `json:"photo_url"`
 	PhotoWidth                OptInt                `json:"photo_width"`
 	ProviderData              OptString             `json:"provider_data"`
 	ProviderToken             string                `json:"provider_token"`
@@ -2210,7 +2248,7 @@ type SetWebhook struct {
 	DropPendingUpdates OptBool   `json:"drop_pending_updates"`
 	IPAddress          OptString `json:"ip_address"`
 	MaxConnections     OptInt    `json:"max_connections"`
-	URL                string    `json:"url"`
+	URL                url.URL   `json:"url"`
 }
 
 // StopMessageLiveLocation describes #/components/schemas/stopMessageLiveLocation.

@@ -106,6 +106,17 @@ func (a API) OAS() *ogen.Spec {
 					}
 				case Integer:
 					p.Type = "integer"
+					for _, n := range []string{
+						"width",
+						"height",
+						"duration",
+					} {
+						if strings.Contains(f.Name, n) {
+							v := int64(0)
+							p.Minimum = &v
+							p.ExclusiveMinimum = true
+						}
+					}
 				case Float:
 					p.Type = "number"
 				case Boolean:
@@ -183,12 +194,29 @@ func (a API) OAS() *ogen.Spec {
 							p.Default = data
 						}
 					}
+					b := stringBounds(f.Description)
+					if b.Max > 0 {
+						p.MaxLength = &b.Max
+					}
+					if b.Min > 0 {
+						p.MinLength = &b.Min
+					}
+
+					if strings.Contains(f.Name, "url") {
+						p.Format = "uri"
+					}
 				case Integer:
 					p.Type = "integer"
-					if strings.Contains(f.Name, "width") || strings.Contains(f.Name, "height") {
-						v := int64(0)
-						p.Minimum = &v
-						p.ExclusiveMinimum = true
+					for _, n := range []string{
+						"width",
+						"height",
+						"duration",
+					} {
+						if strings.Contains(f.Name, n) {
+							v := int64(0)
+							p.Minimum = &v
+							p.ExclusiveMinimum = true
+						}
 					}
 				case Float:
 					p.Type = "number"
