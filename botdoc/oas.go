@@ -3,6 +3,8 @@ package botdoc
 import (
 	"encoding/json"
 	"fmt"
+	"regexp"
+	"strconv"
 	"strings"
 
 	"github.com/ogen-go/ogen"
@@ -25,6 +27,30 @@ func resultFor(s ogen.Schema) ogen.Schema {
 			},
 		},
 	}
+}
+
+type stringBound struct {
+	Min int64
+	Max uint64
+}
+
+var boundRegex = regexp.MustCompile(`(\d+)-(\d+) characters`)
+
+func stringBounds(s string) stringBound {
+	// 1-32 characters
+	matches := boundRegex.FindSubmatch([]byte(s))
+	if len(matches) != 3 {
+		return stringBound{}
+	}
+	start, err := strconv.Atoi(string(matches[1]))
+	if err != nil {
+		return stringBound{}
+	}
+	end, err := strconv.Atoi(string(matches[2]))
+	if err != nil {
+		return stringBound{}
+	}
+	return stringBound{Min: int64(start), Max: uint64(end)}
 }
 
 // OAS generates OpenAPI v3 Specification from API definition.
@@ -64,6 +90,17 @@ func (a API) OAS() *ogen.Spec {
 							}
 							p.Default = data
 						}
+					}
+					b := stringBounds(f.Description)
+					if b.Max > 0 {
+						p.MaxLength = &b.Max
+					}
+					if b.Min > 0 {
+						p.MinLength = &b.Min
+					}
+
+					if strings.Contains(f.Name, "url") {
+						p.Format = "uri"
 					}
 				case Integer:
 					p.Type = "integer"

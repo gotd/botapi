@@ -150,6 +150,7 @@ const (
 func fixTypos(s string) string {
 	r := strings.NewReplacer(
 		`unpriviledged`, `unprivileged`,
+		`Url`, `URL`,
 	)
 	return r.Replace(s)
 }
