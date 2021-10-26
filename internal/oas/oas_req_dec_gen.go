@@ -957,6 +957,9 @@ func decodeGetUpdatesRequest(r *http.Request) (req GetUpdates, err error) {
 		}(); err != nil {
 			return req, err
 		}
+		if err := request.Validate(); err != nil {
+			return req, fmt.Errorf("validate: %w", err)
+		}
 
 		return request, nil
 	default:
@@ -984,6 +987,9 @@ func decodeGetUserProfilePhotosRequest(r *http.Request) (req GetUserProfilePhoto
 			return i.Error
 		}(); err != nil {
 			return req, err
+		}
+		if err := request.Validate(); err != nil {
+			return req, fmt.Errorf("validate: %w", err)
 		}
 
 		return request, nil

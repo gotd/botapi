@@ -30,28 +30,116 @@ func resultFor(s ogen.Schema) ogen.Schema {
 	}
 }
 
-type stringBound struct {
+type bound struct {
 	Min int64
 	Max uint64
 }
 
-var boundRegex = regexp.MustCompile(`(\d+)-(\d+) characters`)
+var (
+	charBoundRegex = regexp.MustCompile(`(\d+)-(\d+) characters`)
+	intBoundRegex  = regexp.MustCompile(`Values between (\d+)-(\d+) are accepted`)
+)
 
-func stringBounds(s string) stringBound {
-	// 1-32 characters
-	matches := boundRegex.FindSubmatch([]byte(s))
-	if len(matches) != 3 {
-		return stringBound{}
-	}
+func matchBounds(matches [][]byte) (a, b int) {
 	start, err := strconv.Atoi(string(matches[1]))
 	if err != nil {
-		return stringBound{}
+		return a, b
 	}
 	end, err := strconv.Atoi(string(matches[2]))
 	if err != nil {
-		return stringBound{}
+		return a, b
 	}
-	return stringBound{Min: int64(start), Max: uint64(end)}
+	return start, end
+}
+
+func regexBounds(r *regexp.Regexp, s string) (a, b int) {
+	matches := r.FindSubmatch([]byte(s))
+	if len(matches) != 3 {
+		return a, b
+	}
+	return matchBounds(matches)
+}
+
+func stringBounds(s string) bound {
+	start, end := regexBounds(charBoundRegex, s)
+	return bound{Min: int64(start), Max: uint64(end)}
+}
+
+func intBounds(s string) bound {
+	start, end := regexBounds(intBoundRegex, s)
+	return bound{Min: int64(start), Max: uint64(end)}
+}
+
+func (a API) fieldOAS(parent *ogen.Schema, f Field) *ogen.Schema {
+	p := &ogen.Schema{
+		Description: fixTypos(f.Description),
+	}
+	t := f.Type
+
+	switch t.Kind {
+	case KindPrimitive:
+		switch t.Primitive {
+		case String:
+			p.Type = "string"
+
+			const defaultMarker = `, must be `
+			if idx := strings.LastIndex(p.Description, defaultMarker); idx > 0 {
+				// Handle possible default value.
+				v := p.Description[idx+len(defaultMarker):]
+				if !strings.Contains(p.Description, `one of `) {
+					data, err := json.Marshal(v)
+					if err != nil {
+						panic(err)
+					}
+					p.Default = data
+				}
+			}
+			b := stringBounds(f.Description)
+			if b.Max > 0 {
+				p.MaxLength = &b.Max
+			}
+			if b.Min > 0 {
+				p.MinLength = &b.Min
+			}
+
+			if strings.Contains(f.Name, "url") {
+				p.Format = "uri"
+			}
+		case Integer:
+			p.Type = "integer"
+			for _, n := range []string{
+				"width",
+				"height",
+				"duration",
+			} {
+				if strings.Contains(f.Name, n) {
+					v := int64(0)
+					p.Minimum = &v
+					p.ExclusiveMinimum = true
+				}
+			}
+			b := intBounds(p.Description)
+			if b.Max > 0 {
+				v := int64(b.Max)
+				p.Maximum = &v
+			}
+			if b.Min > 0 {
+				p.Minimum = &b.Min
+			}
+		case Float:
+			p.Type = "number"
+		case Boolean:
+			p.Type = "boolean"
+		}
+	case KindObject:
+		p.Ref = "#/components/schemas/" + t.Name
+	default:
+		return nil
+	}
+	if !f.Optional {
+		parent.Required = append(parent.Required, f.Name)
+	}
+	return p
 }
 
 // OAS generates OpenAPI v3 Specification from API definition.
@@ -71,68 +159,9 @@ func (a API) OAS() *ogen.Spec {
 			Properties:  map[string]ogen.Schema{},
 		}
 		for _, f := range d.Fields {
-			p := ogen.Schema{
-				Description: fixTypos(f.Description),
+			if p := a.fieldOAS(&s, f); p != nil {
+				s.Properties[f.Name] = *p
 			}
-			t := f.Type
-			switch t.Kind {
-			case KindPrimitive:
-				switch t.Primitive {
-				case String:
-					p.Type = "string"
-
-					const defaultMarker = `, must be `
-					if idx := strings.LastIndex(p.Description, defaultMarker); idx > 0 {
-						// Handle possible default value.
-						v := p.Description[idx+len(defaultMarker):]
-						if !strings.Contains(p.Description, `one of `) {
-							data, err := json.Marshal(v)
-							if err != nil {
-								panic(err)
-							}
-							p.Default = data
-						}
-					}
-					b := stringBounds(f.Description)
-					if b.Max > 0 {
-						p.MaxLength = &b.Max
-					}
-					if b.Min > 0 {
-						p.MinLength = &b.Min
-					}
-
-					if strings.Contains(f.Name, "url") {
-						p.Format = "uri"
-					}
-				case Integer:
-					p.Type = "integer"
-					for _, n := range []string{
-						"width",
-						"height",
-						"duration",
-					} {
-						if strings.Contains(f.Name, n) {
-							v := int64(0)
-							p.Minimum = &v
-							p.ExclusiveMinimum = true
-						}
-					}
-				case Float:
-					p.Type = "number"
-				case Boolean:
-					p.Type = "boolean"
-				}
-			case KindObject:
-				p.Ref = "#/components/schemas/" + t.Name
-			default:
-				continue
-			}
-
-			if !f.Optional {
-				s.Required = append(s.Required, f.Name)
-			}
-
-			s.Properties[f.Name] = p
 		}
 		c.Schemas[d.Name] = s
 	}
@@ -172,68 +201,9 @@ func (a API) OAS() *ogen.Spec {
 			Properties:  map[string]ogen.Schema{},
 		}
 		for _, f := range m.Fields {
-			p := ogen.Schema{
-				Description: f.Description,
+			if p := a.fieldOAS(&s, f); p != nil {
+				s.Properties[f.Name] = *p
 			}
-			t := f.Type
-			switch t.Kind {
-			case KindPrimitive:
-				switch t.Primitive {
-				case String:
-					p.Type = "string"
-
-					const defaultMarker = `, must be `
-					if idx := strings.LastIndex(p.Description, defaultMarker); idx > 0 {
-						// Handle possible default value.
-						v := p.Description[idx+len(defaultMarker):]
-						if !strings.Contains(p.Description, `one of `) {
-							data, err := json.Marshal(v)
-							if err != nil {
-								panic(err)
-							}
-							p.Default = data
-						}
-					}
-					b := stringBounds(f.Description)
-					if b.Max > 0 {
-						p.MaxLength = &b.Max
-					}
-					if b.Min > 0 {
-						p.MinLength = &b.Min
-					}
-
-					if strings.Contains(f.Name, "url") {
-						p.Format = "uri"
-					}
-				case Integer:
-					p.Type = "integer"
-					for _, n := range []string{
-						"width",
-						"height",
-						"duration",
-					} {
-						if strings.Contains(f.Name, n) {
-							v := int64(0)
-							p.Minimum = &v
-							p.ExclusiveMinimum = true
-						}
-					}
-				case Float:
-					p.Type = "number"
-				case Boolean:
-					p.Type = "boolean"
-				}
-			case KindObject:
-				p.Ref = "#/components/schemas/" + t.Name
-			default:
-				continue
-			}
-
-			if !f.Optional {
-				s.Required = append(s.Required, f.Name)
-			}
-
-			s.Properties[f.Name] = p
 		}
 
 		schemaName := m.Name
