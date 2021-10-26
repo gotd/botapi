@@ -4684,7 +4684,8 @@
           },
           "offset": {
             "description": "Offset in UTF-16 code units to the start of the entity",
-            "type": "integer"
+            "type": "integer",
+            "default": 0
           },
           "type": {
             "description": "Type of the entity. Can be “mention” (@username), “hashtag” (#hashtag), “cashtag” ($USD), “bot_command” (/start@jobs_bot), “url” (https://telegram.org), “email” (do-not-reply@telegram.org), “phone_number” (+1-212-555-0123), “bold” (bold text), “italic” (italic text), “underline” (underlined text), “strikethrough” (strikethrough text), “code” (monowidth string), “pre” (monowidth block), “text_link” (for clickable text URLs), “text_mention” (for users without usernames)",
@@ -6540,7 +6541,8 @@
           },
           "offset": {
             "description": "Identifier of the first update to be returned. Must be greater by one than the highest among the identifiers of previously received updates. By default, updates starting with the earliest unconfirmed update are returned. An update is considered confirmed as soon as getUpdates is called with an offset higher than its update_id. The negative offset can be specified to retrieve updates starting from -offset update from the end of the updates queue. All previous updates will forgotten",
-            "type": "integer"
+            "type": "integer",
+            "default": 0
           },
           "timeout": {
             "description": "Timeout in seconds for long polling. Defaults to 0, i.e. usual short polling. Should be positive, short polling should be used for testing purposes only",
@@ -6560,7 +6562,8 @@
           },
           "offset": {
             "description": "Sequential number of the first photo to be returned. By default, all photos are returned",
-            "type": "integer"
+            "type": "integer",
+            "default": 0
           },
           "user_id": {
             "description": "Unique identifier of the target user",

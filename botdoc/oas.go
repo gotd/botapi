@@ -118,6 +118,9 @@ func (a API) fieldOAS(parent *ogen.Schema, f Field) *ogen.Schema {
 					p.ExclusiveMinimum = true
 				}
 			}
+			if f.Name == "offset" {
+				p.Default = []byte(`0`)
+			}
 			b := intBounds(p.Description)
 			if b.Max > 0 {
 				v := int64(b.Max)
