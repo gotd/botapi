@@ -1558,19 +1558,16 @@ type ProximityAlertTriggered struct {
 	Watcher  User `json:"watcher"`
 }
 
-// Result describes #/components/schemas/Result.
 type Result struct {
 	Ok     bool    `json:"ok"`
 	Result OptBool `json:"result"`
 }
 
-// ResultMsg describes #/components/schemas/ResultMsg.
 type ResultMsg struct {
 	Ok     bool       `json:"ok"`
 	Result OptMessage `json:"result"`
 }
 
-// ResultUsr describes #/components/schemas/ResultUsr.
 type ResultUsr struct {
 	Ok     bool    `json:"ok"`
 	Result OptUser `json:"result"`

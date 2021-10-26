@@ -3,6 +3,7 @@ package botdoc
 import (
 	"encoding/json"
 	"fmt"
+	"path"
 	"regexp"
 	"strconv"
 	"strings"
@@ -58,7 +59,8 @@ func stringBounds(s string) stringBound {
 //nolint:dupl // TODO(ernado): refactor
 func (a API) OAS() *ogen.Spec {
 	c := &ogen.Components{
-		Schemas: map[string]ogen.Schema{},
+		Schemas:   map[string]ogen.Schema{},
+		Responses: map[string]ogen.Response{},
 	}
 	p := ogen.Paths{}
 
@@ -136,6 +138,21 @@ func (a API) OAS() *ogen.Spec {
 	c.Schemas["ResultUsr"] = resultFor(ogen.Schema{
 		Ref: "#/components/schemas/User",
 	})
+	for _, name := range []string{
+		"Result",
+		"ResultStr",
+		"ResultMsg",
+		"ResultUsr",
+	} {
+		c.Responses[name] = ogen.Response{
+			Description: "Result of method invocation",
+			Content: map[string]ogen.Media{
+				contentJSON: {
+					Schema: c.Schemas[name],
+				},
+			},
+		}
+	}
 
 	for _, m := range a.Methods {
 		s := ogen.Schema{
@@ -194,7 +211,6 @@ func (a API) OAS() *ogen.Spec {
 		response := ogen.Schema{
 			Ref: "#/components/schemas/Result",
 		}
-
 		if t := m.Ret; t != nil {
 			switch t.Primitive {
 			case String:
@@ -211,14 +227,6 @@ func (a API) OAS() *ogen.Spec {
 			if response.Ref == "" {
 				panic("Unable to infer result type")
 			}
-		}
-		res := ogen.Response{
-			Description: "Successful response",
-			Content: map[string]ogen.Media{
-				contentJSON: {
-					Schema: response,
-				},
-			},
 		}
 
 		var reqBody *ogen.RequestBody
@@ -238,8 +246,10 @@ func (a API) OAS() *ogen.Spec {
 			Description: m.Description,
 			Post: &ogen.Operation{
 				OperationID: m.Name,
-				Responses:   ogen.Responses{codeOK: res},
 				RequestBody: reqBody,
+				Responses: ogen.Responses{
+					codeOK: ogen.Response{Ref: "#/components/responses/" + path.Base(response.Ref)},
+				},
 			},
 		}
 	}
