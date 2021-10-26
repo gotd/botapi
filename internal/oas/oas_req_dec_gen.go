@@ -1135,6 +1135,9 @@ func decodeSendAnimationRequest(r *http.Request) (req SendAnimation, err error) 
 		}(); err != nil {
 			return req, err
 		}
+		if err := request.Validate(); err != nil {
+			return req, fmt.Errorf("validate: %w", err)
+		}
 
 		return request, nil
 	default:
@@ -1330,6 +1333,9 @@ func decodeSendInvoiceRequest(r *http.Request) (req SendInvoice, err error) {
 			return i.Error
 		}(); err != nil {
 			return req, err
+		}
+		if err := request.Validate(); err != nil {
+			return req, fmt.Errorf("validate: %w", err)
 		}
 
 		return request, nil
@@ -1554,6 +1560,9 @@ func decodeSendVideoRequest(r *http.Request) (req SendVideo, err error) {
 			return i.Error
 		}(); err != nil {
 			return req, err
+		}
+		if err := request.Validate(); err != nil {
+			return req, fmt.Errorf("validate: %w", err)
 		}
 
 		return request, nil

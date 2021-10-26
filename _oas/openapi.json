@@ -6610,7 +6610,9 @@
           },
           "width": {
             "description": "Animation width",
-            "type": "integer"
+            "type": "integer",
+            "minimum": 0,
+            "exclusiveMinimum": true
           }
         }
       },
@@ -6851,7 +6853,9 @@
           },
           "photo_width": {
             "description": "Photo width",
-            "type": "integer"
+            "type": "integer",
+            "minimum": 0,
+            "exclusiveMinimum": true
           },
           "provider_data": {
             "description": "A JSON-serialized data about the invoice, which will be shared with the payment provider. A detailed description of required fields should be provided by the payment provider",
@@ -7190,7 +7194,9 @@
           },
           "width": {
             "description": "Video width",
-            "type": "integer"
+            "type": "integer",
+            "minimum": 0,
+            "exclusiveMinimum": true
           }
         }
       },
