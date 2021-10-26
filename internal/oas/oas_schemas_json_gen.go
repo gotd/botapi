@@ -1567,6 +1567,153 @@ func (s *EncryptedCredentials) ReadJSON(i *json.Iterator) error {
 }
 
 // WriteJSON implements json.Marshaler.
+func (s Error) WriteJSON(j *json.Stream) {
+	j.WriteObjectStart()
+	more := json.NewMore(j)
+	defer more.Reset()
+	more.More()
+	j.WriteObjectField("description")
+	j.WriteString(s.Description)
+	more.More()
+	j.WriteObjectField("error_code")
+	j.WriteInt(s.ErrorCode)
+	more.More()
+	j.WriteObjectField("ok")
+	j.WriteBool(s.Ok)
+	if s.Parameters.Set {
+		more.More()
+		j.WriteObjectField("parameters")
+		s.Parameters.WriteJSON(j)
+	}
+	j.WriteObjectEnd()
+}
+
+// WriteJSONTo writes Error json value to io.Writer.
+func (s Error) WriteJSONTo(w io.Writer) error {
+	j := json.GetStream(w)
+	defer json.PutStream(j)
+	s.WriteJSON(j)
+	return j.Flush()
+}
+
+// ReadJSONFrom reads Error json value from io.Reader.
+func (s *Error) ReadJSONFrom(r io.Reader) error {
+	buf := json.GetBuffer()
+	defer json.PutBuffer(buf)
+
+	if _, err := buf.ReadFrom(r); err != nil {
+		return err
+	}
+	i := json.GetIterator()
+	i.ResetBytes(buf.Bytes())
+	defer json.PutIterator(i)
+
+	return s.ReadJSON(i)
+}
+
+// ReadJSON reads Error from json stream.
+func (s *Error) ReadJSON(i *json.Iterator) error {
+	var retErr error
+	i.ReadObjectCB(func(i *json.Iterator, k string) bool {
+		switch k {
+		case "description":
+			if err := func() error {
+				s.Description = string(i.ReadString())
+				return i.Error
+			}(); err != nil {
+				retErr = err
+				return false
+			}
+			return true
+		case "error_code":
+			if err := func() error {
+				s.ErrorCode = int(i.ReadInt())
+				return i.Error
+			}(); err != nil {
+				retErr = err
+				return false
+			}
+			return true
+		case "ok":
+			if err := func() error {
+				s.Ok = bool(i.ReadBool())
+				return i.Error
+			}(); err != nil {
+				retErr = err
+				return false
+			}
+			return true
+		case "parameters":
+			if err := func() error {
+				s.Parameters.Reset()
+				if err := s.Parameters.ReadJSON(i); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				retErr = err
+				return false
+			}
+			return true
+		default:
+			i.Skip()
+			return true
+		}
+	})
+	if retErr != nil {
+		return retErr
+	}
+	return i.Error
+}
+
+// WriteJSON implements json.Marshaler.
+func (s ErrorStatusCode) WriteJSON(j *json.Stream) {
+	j.WriteObjectStart()
+	more := json.NewMore(j)
+	defer more.Reset()
+	j.WriteObjectEnd()
+}
+
+// WriteJSONTo writes ErrorStatusCode json value to io.Writer.
+func (s ErrorStatusCode) WriteJSONTo(w io.Writer) error {
+	j := json.GetStream(w)
+	defer json.PutStream(j)
+	s.WriteJSON(j)
+	return j.Flush()
+}
+
+// ReadJSONFrom reads ErrorStatusCode json value from io.Reader.
+func (s *ErrorStatusCode) ReadJSONFrom(r io.Reader) error {
+	buf := json.GetBuffer()
+	defer json.PutBuffer(buf)
+
+	if _, err := buf.ReadFrom(r); err != nil {
+		return err
+	}
+	i := json.GetIterator()
+	i.ResetBytes(buf.Bytes())
+	defer json.PutIterator(i)
+
+	return s.ReadJSON(i)
+}
+
+// ReadJSON reads ErrorStatusCode from json stream.
+func (s *ErrorStatusCode) ReadJSON(i *json.Iterator) error {
+	var retErr error
+	i.ReadObjectCB(func(i *json.Iterator, k string) bool {
+		switch k {
+		default:
+			i.Skip()
+			return true
+		}
+	})
+	if retErr != nil {
+		return retErr
+	}
+	return i.Error
+}
+
+// WriteJSON implements json.Marshaler.
 func (s Game) WriteJSON(j *json.Stream) {
 	j.WriteObjectStart()
 	more := json.NewMore(j)
@@ -3287,6 +3434,24 @@ func (o *OptInt) ReadJSON(i *json.Iterator) error {
 	return nil
 }
 
+// WriteJSON writes json value of int64 to json stream.
+func (o OptInt64) WriteJSON(j *json.Stream) {
+	j.WriteInt64(int64(o.Value))
+}
+
+// ReadJSON reads json value of int64 from json iterator.
+func (o *OptInt64) ReadJSON(i *json.Iterator) error {
+	switch i.WhatIsNext() {
+	case json.NumberValue:
+		o.Set = true
+		o.Value = int64(i.ReadInt64())
+		return i.Error
+	default:
+		return fmt.Errorf("unexpected type %d while reading OptInt64", i.WhatIsNext())
+	}
+	return nil
+}
+
 // WriteJSON writes json value of Invoice to json stream.
 func (o OptInvoice) WriteJSON(j *json.Stream) {
 	o.Value.WriteJSON(j)
@@ -3483,6 +3648,26 @@ func (o *OptProximityAlertTriggered) ReadJSON(i *json.Iterator) error {
 		return i.Error
 	default:
 		return fmt.Errorf("unexpected type %d while reading OptProximityAlertTriggered", i.WhatIsNext())
+	}
+	return nil
+}
+
+// WriteJSON writes json value of Response to json stream.
+func (o OptResponse) WriteJSON(j *json.Stream) {
+	o.Value.WriteJSON(j)
+}
+
+// ReadJSON reads json value of Response from json iterator.
+func (o *OptResponse) ReadJSON(i *json.Iterator) error {
+	switch i.WhatIsNext() {
+	case json.ObjectValue:
+		o.Set = true
+		if err := o.Value.ReadJSON(i); err != nil {
+			return err
+		}
+		return i.Error
+	default:
+		return fmt.Errorf("unexpected type %d while reading OptResponse", i.WhatIsNext())
 	}
 	return nil
 }
@@ -4285,6 +4470,87 @@ func (s *ProximityAlertTriggered) ReadJSON(i *json.Iterator) error {
 					return err
 				}
 				return i.Error
+			}(); err != nil {
+				retErr = err
+				return false
+			}
+			return true
+		default:
+			i.Skip()
+			return true
+		}
+	})
+	if retErr != nil {
+		return retErr
+	}
+	return i.Error
+}
+
+// WriteJSON implements json.Marshaler.
+func (s Response) WriteJSON(j *json.Stream) {
+	j.WriteObjectStart()
+	more := json.NewMore(j)
+	defer more.Reset()
+	if s.MigrateToChatID.Set {
+		more.More()
+		j.WriteObjectField("migrate_to_chat_id")
+		s.MigrateToChatID.WriteJSON(j)
+	}
+	if s.RetryAfter.Set {
+		more.More()
+		j.WriteObjectField("retry_after")
+		s.RetryAfter.WriteJSON(j)
+	}
+	j.WriteObjectEnd()
+}
+
+// WriteJSONTo writes Response json value to io.Writer.
+func (s Response) WriteJSONTo(w io.Writer) error {
+	j := json.GetStream(w)
+	defer json.PutStream(j)
+	s.WriteJSON(j)
+	return j.Flush()
+}
+
+// ReadJSONFrom reads Response json value from io.Reader.
+func (s *Response) ReadJSONFrom(r io.Reader) error {
+	buf := json.GetBuffer()
+	defer json.PutBuffer(buf)
+
+	if _, err := buf.ReadFrom(r); err != nil {
+		return err
+	}
+	i := json.GetIterator()
+	i.ResetBytes(buf.Bytes())
+	defer json.PutIterator(i)
+
+	return s.ReadJSON(i)
+}
+
+// ReadJSON reads Response from json stream.
+func (s *Response) ReadJSON(i *json.Iterator) error {
+	var retErr error
+	i.ReadObjectCB(func(i *json.Iterator, k string) bool {
+		switch k {
+		case "migrate_to_chat_id":
+			if err := func() error {
+				s.MigrateToChatID.Reset()
+				if err := s.MigrateToChatID.ReadJSON(i); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				retErr = err
+				return false
+			}
+			return true
+		case "retry_after":
+			if err := func() error {
+				s.RetryAfter.Reset()
+				if err := s.RetryAfter.ReadJSON(i); err != nil {
+					return err
+				}
+				return nil
 			}(); err != nil {
 				retErr = err
 				return false

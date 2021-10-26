@@ -13,7 +13,6 @@ import (
 
 const (
 	contentJSON = "application/json"
-	codeOK      = "200"
 )
 
 func resultFor(s ogen.Schema) ogen.Schema {
@@ -181,6 +180,42 @@ func (a API) OAS() *ogen.Spec {
 	c.Schemas["ResultUsr"] = resultFor(ogen.Schema{
 		Ref: "#/components/schemas/User",
 	})
+	c.Schemas["Response"] = ogen.Schema{
+		Description: "Contains information about why a request was unsuccessful.",
+		Type:        "object",
+		Properties: map[string]ogen.Schema{
+			"migrate_to_chat_id": {
+				Description: "The group has been migrated to a supergroup with the specified identifier. This number may be greater than 32 bits and some programming languages may have difficulty/silent defects in interpreting it. But it is smaller than 52 bits, so a signed 64 bit integer or double-precision float type are safe for storing this identifier.",
+				Type:        "integer",
+				Format:      "int64",
+			},
+			"retry_after": {
+				Description: "In case of exceeding flood control, the number of seconds left to wait before the request can be repeated",
+				Type:        "integer",
+			},
+		},
+	}
+	c.Schemas["Error"] = ogen.Schema{
+		Type: "object",
+		Required: []string{
+			"ok", "error_code", "description",
+		},
+		Properties: map[string]ogen.Schema{
+			"ok": {
+				Default: []byte(`false`),
+				Type:    "boolean",
+			},
+			"error_code": {
+				Type: "integer",
+			},
+			"description": {
+				Type: "string",
+			},
+			"parameters": {
+				Ref: "#/components/schemas/Response",
+			},
+		},
+	}
 	for _, name := range []string{
 		"Result",
 		"ResultStr",
@@ -191,10 +226,22 @@ func (a API) OAS() *ogen.Spec {
 			Description: "Result of method invocation",
 			Content: map[string]ogen.Media{
 				contentJSON: {
-					Schema: c.Schemas[name],
+					Schema: ogen.Schema{
+						Ref: "#/components/schemas/" + name,
+					},
 				},
 			},
 		}
+	}
+	c.Responses["Error"] = ogen.Response{
+		Description: "Method invocation error",
+		Content: map[string]ogen.Media{
+			contentJSON: {
+				Schema: ogen.Schema{
+					Ref: "#/components/schemas/Error",
+				},
+			},
+		},
 	}
 
 	for _, m := range a.Methods {
@@ -254,7 +301,8 @@ func (a API) OAS() *ogen.Spec {
 				OperationID: m.Name,
 				RequestBody: reqBody,
 				Responses: ogen.Responses{
-					codeOK: ogen.Response{Ref: "#/components/responses/" + path.Base(response.Ref)},
+					"200":     ogen.Response{Ref: "#/components/responses/" + path.Base(response.Ref)},
+					"default": ogen.Response{Ref: "#/components/responses/Error"},
 				},
 			},
 		}

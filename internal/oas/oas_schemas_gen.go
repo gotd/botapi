@@ -159,6 +159,95 @@ type EncryptedCredentials struct {
 	Secret string `json:"secret"`
 }
 
+// Error describes #/components/schemas/Error.
+type Error struct {
+	Description string      `json:"description"`
+	ErrorCode   int         `json:"error_code"`
+	Ok          bool        `json:"ok"`
+	Parameters  OptResponse `json:"parameters"`
+}
+
+type ErrorStatusCode struct {
+	StatusCode int   `json:"-"`
+	Response   Error `json:"-"`
+}
+
+func (*ErrorStatusCode) addStickerToSetRes()                 {}
+func (*ErrorStatusCode) answerCallbackQueryRes()             {}
+func (*ErrorStatusCode) answerInlineQueryRes()               {}
+func (*ErrorStatusCode) answerPreCheckoutQueryRes()          {}
+func (*ErrorStatusCode) answerShippingQueryRes()             {}
+func (*ErrorStatusCode) banChatMemberRes()                   {}
+func (*ErrorStatusCode) copyMessageRes()                     {}
+func (*ErrorStatusCode) createChatInviteLinkRes()            {}
+func (*ErrorStatusCode) createNewStickerSetRes()             {}
+func (*ErrorStatusCode) deleteChatPhotoRes()                 {}
+func (*ErrorStatusCode) deleteChatStickerSetRes()            {}
+func (*ErrorStatusCode) deleteMessageRes()                   {}
+func (*ErrorStatusCode) deleteMyCommandsRes()                {}
+func (*ErrorStatusCode) deleteStickerFromSetRes()            {}
+func (*ErrorStatusCode) deleteWebhookRes()                   {}
+func (*ErrorStatusCode) editChatInviteLinkRes()              {}
+func (*ErrorStatusCode) editMessageCaptionRes()              {}
+func (*ErrorStatusCode) editMessageLiveLocationRes()         {}
+func (*ErrorStatusCode) editMessageMediaRes()                {}
+func (*ErrorStatusCode) editMessageReplyMarkupRes()          {}
+func (*ErrorStatusCode) editMessageTextRes()                 {}
+func (*ErrorStatusCode) exportChatInviteLinkRes()            {}
+func (*ErrorStatusCode) forwardMessageRes()                  {}
+func (*ErrorStatusCode) getChatAdministratorsRes()           {}
+func (*ErrorStatusCode) getChatMemberCountRes()              {}
+func (*ErrorStatusCode) getChatMemberRes()                   {}
+func (*ErrorStatusCode) getChatRes()                         {}
+func (*ErrorStatusCode) getFileRes()                         {}
+func (*ErrorStatusCode) getGameHighScoresRes()               {}
+func (*ErrorStatusCode) getMeRes()                           {}
+func (*ErrorStatusCode) getMyCommandsRes()                   {}
+func (*ErrorStatusCode) getStickerSetRes()                   {}
+func (*ErrorStatusCode) getUpdatesRes()                      {}
+func (*ErrorStatusCode) getUserProfilePhotosRes()            {}
+func (*ErrorStatusCode) leaveChatRes()                       {}
+func (*ErrorStatusCode) pinChatMessageRes()                  {}
+func (*ErrorStatusCode) promoteChatMemberRes()               {}
+func (*ErrorStatusCode) restrictChatMemberRes()              {}
+func (*ErrorStatusCode) revokeChatInviteLinkRes()            {}
+func (*ErrorStatusCode) sendAnimationRes()                   {}
+func (*ErrorStatusCode) sendAudioRes()                       {}
+func (*ErrorStatusCode) sendChatActionRes()                  {}
+func (*ErrorStatusCode) sendContactRes()                     {}
+func (*ErrorStatusCode) sendDiceRes()                        {}
+func (*ErrorStatusCode) sendDocumentRes()                    {}
+func (*ErrorStatusCode) sendGameRes()                        {}
+func (*ErrorStatusCode) sendInvoiceRes()                     {}
+func (*ErrorStatusCode) sendLocationRes()                    {}
+func (*ErrorStatusCode) sendMediaGroupRes()                  {}
+func (*ErrorStatusCode) sendMessageRes()                     {}
+func (*ErrorStatusCode) sendPhotoRes()                       {}
+func (*ErrorStatusCode) sendPollRes()                        {}
+func (*ErrorStatusCode) sendStickerRes()                     {}
+func (*ErrorStatusCode) sendVenueRes()                       {}
+func (*ErrorStatusCode) sendVideoNoteRes()                   {}
+func (*ErrorStatusCode) sendVideoRes()                       {}
+func (*ErrorStatusCode) sendVoiceRes()                       {}
+func (*ErrorStatusCode) setChatAdministratorCustomTitleRes() {}
+func (*ErrorStatusCode) setChatDescriptionRes()              {}
+func (*ErrorStatusCode) setChatPermissionsRes()              {}
+func (*ErrorStatusCode) setChatPhotoRes()                    {}
+func (*ErrorStatusCode) setChatStickerSetRes()               {}
+func (*ErrorStatusCode) setChatTitleRes()                    {}
+func (*ErrorStatusCode) setGameScoreRes()                    {}
+func (*ErrorStatusCode) setMyCommandsRes()                   {}
+func (*ErrorStatusCode) setPassportDataErrorsRes()           {}
+func (*ErrorStatusCode) setStickerPositionInSetRes()         {}
+func (*ErrorStatusCode) setStickerSetThumbRes()              {}
+func (*ErrorStatusCode) setWebhookRes()                      {}
+func (*ErrorStatusCode) stopMessageLiveLocationRes()         {}
+func (*ErrorStatusCode) stopPollRes()                        {}
+func (*ErrorStatusCode) unbanChatMemberRes()                 {}
+func (*ErrorStatusCode) unpinAllChatMessagesRes()            {}
+func (*ErrorStatusCode) unpinChatMessageRes()                {}
+func (*ErrorStatusCode) uploadStickerFileRes()               {}
+
 // Game describes #/components/schemas/Game.
 type Game struct {
 	Animation   OptAnimation `json:"animation"`
@@ -716,6 +805,44 @@ func (o OptInt) Get() (v int, ok bool) {
 	return o.Value, true
 }
 
+// NewOptInt64 returns new OptInt64 with value set to v.
+func NewOptInt64(v int64) OptInt64 {
+	return OptInt64{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptInt64 is optional int64.
+type OptInt64 struct {
+	Value int64
+	Set   bool
+}
+
+// IsSet returns true if OptInt64 was set.
+func (o OptInt64) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptInt64) Reset() {
+	var v int64
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptInt64) SetTo(v int64) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptInt64) Get() (v int64, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
 // NewOptInvoice returns new OptInvoice with value set to v.
 func NewOptInvoice(v Invoice) OptInvoice {
 	return OptInvoice{
@@ -1090,6 +1217,44 @@ func (o *OptProximityAlertTriggered) SetTo(v ProximityAlertTriggered) {
 
 // Get returns value and boolean that denotes whether value was set.
 func (o OptProximityAlertTriggered) Get() (v ProximityAlertTriggered, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// NewOptResponse returns new OptResponse with value set to v.
+func NewOptResponse(v Response) OptResponse {
+	return OptResponse{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptResponse is optional Response.
+type OptResponse struct {
+	Value Response
+	Set   bool
+}
+
+// IsSet returns true if OptResponse was set.
+func (o OptResponse) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptResponse) Reset() {
+	var v Response
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptResponse) SetTo(v Response) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptResponse) Get() (v Response, ok bool) {
 	if !o.Set {
 		return v, false
 	}
@@ -1596,20 +1761,107 @@ type ProximityAlertTriggered struct {
 	Watcher  User `json:"watcher"`
 }
 
+// Response describes #/components/schemas/Response.
+type Response struct {
+	MigrateToChatID OptInt64 `json:"migrate_to_chat_id"`
+	RetryAfter      OptInt   `json:"retry_after"`
+}
+
+// Result describes #/components/schemas/Result.
 type Result struct {
 	Ok     bool    `json:"ok"`
 	Result OptBool `json:"result"`
 }
 
+func (*Result) addStickerToSetRes()                 {}
+func (*Result) answerCallbackQueryRes()             {}
+func (*Result) answerInlineQueryRes()               {}
+func (*Result) answerPreCheckoutQueryRes()          {}
+func (*Result) answerShippingQueryRes()             {}
+func (*Result) banChatMemberRes()                   {}
+func (*Result) copyMessageRes()                     {}
+func (*Result) createChatInviteLinkRes()            {}
+func (*Result) createNewStickerSetRes()             {}
+func (*Result) deleteChatPhotoRes()                 {}
+func (*Result) deleteChatStickerSetRes()            {}
+func (*Result) deleteMessageRes()                   {}
+func (*Result) deleteMyCommandsRes()                {}
+func (*Result) deleteStickerFromSetRes()            {}
+func (*Result) deleteWebhookRes()                   {}
+func (*Result) editChatInviteLinkRes()              {}
+func (*Result) editMessageCaptionRes()              {}
+func (*Result) editMessageLiveLocationRes()         {}
+func (*Result) editMessageMediaRes()                {}
+func (*Result) editMessageReplyMarkupRes()          {}
+func (*Result) editMessageTextRes()                 {}
+func (*Result) exportChatInviteLinkRes()            {}
+func (*Result) getChatAdministratorsRes()           {}
+func (*Result) getChatMemberCountRes()              {}
+func (*Result) getChatMemberRes()                   {}
+func (*Result) getChatRes()                         {}
+func (*Result) getFileRes()                         {}
+func (*Result) getGameHighScoresRes()               {}
+func (*Result) getMyCommandsRes()                   {}
+func (*Result) getStickerSetRes()                   {}
+func (*Result) getUpdatesRes()                      {}
+func (*Result) getUserProfilePhotosRes()            {}
+func (*Result) leaveChatRes()                       {}
+func (*Result) pinChatMessageRes()                  {}
+func (*Result) promoteChatMemberRes()               {}
+func (*Result) restrictChatMemberRes()              {}
+func (*Result) revokeChatInviteLinkRes()            {}
+func (*Result) sendAudioRes()                       {}
+func (*Result) sendChatActionRes()                  {}
+func (*Result) sendMediaGroupRes()                  {}
+func (*Result) setChatAdministratorCustomTitleRes() {}
+func (*Result) setChatDescriptionRes()              {}
+func (*Result) setChatPermissionsRes()              {}
+func (*Result) setChatPhotoRes()                    {}
+func (*Result) setChatStickerSetRes()               {}
+func (*Result) setChatTitleRes()                    {}
+func (*Result) setGameScoreRes()                    {}
+func (*Result) setMyCommandsRes()                   {}
+func (*Result) setPassportDataErrorsRes()           {}
+func (*Result) setStickerPositionInSetRes()         {}
+func (*Result) setStickerSetThumbRes()              {}
+func (*Result) setWebhookRes()                      {}
+func (*Result) stopMessageLiveLocationRes()         {}
+func (*Result) stopPollRes()                        {}
+func (*Result) unbanChatMemberRes()                 {}
+func (*Result) unpinAllChatMessagesRes()            {}
+func (*Result) unpinChatMessageRes()                {}
+func (*Result) uploadStickerFileRes()               {}
+
+// ResultMsg describes #/components/schemas/ResultMsg.
 type ResultMsg struct {
 	Ok     bool       `json:"ok"`
 	Result OptMessage `json:"result"`
 }
 
+func (*ResultMsg) forwardMessageRes() {}
+func (*ResultMsg) sendAnimationRes()  {}
+func (*ResultMsg) sendContactRes()    {}
+func (*ResultMsg) sendDiceRes()       {}
+func (*ResultMsg) sendDocumentRes()   {}
+func (*ResultMsg) sendGameRes()       {}
+func (*ResultMsg) sendInvoiceRes()    {}
+func (*ResultMsg) sendLocationRes()   {}
+func (*ResultMsg) sendMessageRes()    {}
+func (*ResultMsg) sendPhotoRes()      {}
+func (*ResultMsg) sendPollRes()       {}
+func (*ResultMsg) sendStickerRes()    {}
+func (*ResultMsg) sendVenueRes()      {}
+func (*ResultMsg) sendVideoNoteRes()  {}
+func (*ResultMsg) sendVideoRes()      {}
+func (*ResultMsg) sendVoiceRes()      {}
+
+// ResultUsr describes #/components/schemas/ResultUsr.
 type ResultUsr struct {
 	Ok     bool    `json:"ok"`
 	Result OptUser `json:"result"`
 }
+
+func (*ResultUsr) getMeRes() {}
 
 // ShippingAddress describes #/components/schemas/ShippingAddress.
 type ShippingAddress struct {
