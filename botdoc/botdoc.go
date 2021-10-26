@@ -147,6 +147,13 @@ const (
 	sectionMethods = "methods"
 )
 
+func fixTypos(s string) string {
+	r := strings.NewReplacer(
+		`unpriviledged`, `unprivileged`,
+	)
+	return r.Replace(s)
+}
+
 // Extract API definition from goquery document.
 func Extract(doc *goquery.Document) (a API) {
 	var (
@@ -190,7 +197,7 @@ func Extract(doc *goquery.Document) (a API) {
 			return
 		}
 		if s.Is("p") && d.Name != "" {
-			d.Description = strings.TrimSpace(s.Text())
+			d.Description = fixTypos(strings.TrimSpace(s.Text()))
 			if strings.Contains(strings.ToLower(d.Description), `currently holds no information`) {
 				appendDefinition()
 			}

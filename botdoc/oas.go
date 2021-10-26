@@ -38,13 +38,13 @@ func (a API) OAS() *ogen.Spec {
 
 	for _, d := range a.Types {
 		s := ogen.Schema{
-			Description: d.Description,
+			Description: fixTypos(d.Description),
 			Type:        "object",
 			Properties:  map[string]ogen.Schema{},
 		}
 		for _, f := range d.Fields {
 			p := ogen.Schema{
-				Description: f.Description,
+				Description: fixTypos(f.Description),
 			}
 			t := f.Type
 			switch t.Kind {

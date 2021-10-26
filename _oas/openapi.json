@@ -2427,7 +2427,7 @@
             "description": "The most recent pinned message (by sending date). Returned only in getChat"
           },
           "slow_mode_delay": {
-            "description": "For supergroups, the minimum allowed delay between consecutive messages sent by each unpriviledged user. Returned only in getChat",
+            "description": "For supergroups, the minimum allowed delay between consecutive messages sent by each unprivileged user. Returned only in getChat",
             "type": "integer"
           },
           "sticker_set_name": {
