@@ -5,6 +5,11 @@ The telegram-bot-api, but in go. WIP.
 * [Reference implementation](https://github.com/tdlib/telegram-bot-api)
 * [Generated OpenAPI v3 Schema](./_oas/openapi.json)
 
+## Features
+* Parsing of API documentation with defaults, format, enum and constraints inference
+* OpenAPI v3 specification generation
+* Server and Client generation based on OpenAPI v3 specification
+
 ## Roadmap
 - [x] Parse definition
 - [x] Generate OpenAPI v3 Specification
