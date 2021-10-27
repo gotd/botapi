@@ -138,20 +138,21 @@ func (a API) typeOAS(f Field) *ogen.Schema {
 		p.Type = "array"
 		p.Items = a.typeOAS(Field{Type: *t.Item})
 	default:
-		if f.Type.String() == "Integer or String" {
+		switch f.Type.String() {
+		case "Integer or String":
 			p.Ref = "#/components/schemas/ID"
-		} else if f.Type.String() == "String or String" {
-			// TODO(ernado): Hack for FileInput, should be removed.
+		case "String or String":
 			p.Type = "string"
-		} else if len(t.Sum) > 0 {
-			for _, s := range t.Sum {
-				if one := a.typeOAS(Field{Type: s}); one != nil {
-					p.OneOf = append(p.OneOf, *one)
+		default:
+			if len(t.Sum) > 0 {
+				for _, s := range t.Sum {
+					if one := a.typeOAS(Field{Type: s}); one != nil {
+						p.OneOf = append(p.OneOf, *one)
+					}
 				}
+				// TODO(ernado): Implement
+				return nil
 			}
-			// TODO(ernado): Implement
-			return nil
-		} else {
 			fmt.Println("unknown", t.Item)
 			return nil
 		}
