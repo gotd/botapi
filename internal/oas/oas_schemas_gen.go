@@ -285,55 +285,55 @@ type EditChatInviteLink struct {
 
 // Ref: #/components/schemas/editMessageCaption
 type EditMessageCaption struct {
-	Caption         OptString             `json:"caption"`
-	CaptionEntities []MessageEntity       `json:"caption_entities"`
-	ChatID          OptID                 `json:"chat_id"`
-	InlineMessageID OptString             `json:"inline_message_id"`
-	MessageID       OptInt                `json:"message_id"`
-	ParseMode       OptString             `json:"parse_mode"`
-	ReplyMarkup     *InlineKeyboardMarkup `json:"reply_markup"`
+	Caption         OptString               `json:"caption"`
+	CaptionEntities []MessageEntity         `json:"caption_entities"`
+	ChatID          *ID                     `json:"chat_id"`
+	InlineMessageID OptString               `json:"inline_message_id"`
+	MessageID       OptInt                  `json:"message_id"`
+	ParseMode       OptString               `json:"parse_mode"`
+	ReplyMarkup     OptInlineKeyboardMarkup `json:"reply_markup"`
 }
 
 // Ref: #/components/schemas/editMessageLiveLocation
 type EditMessageLiveLocation struct {
-	ChatID               OptID                 `json:"chat_id"`
-	Heading              OptInt                `json:"heading"`
-	HorizontalAccuracy   OptFloat64            `json:"horizontal_accuracy"`
-	InlineMessageID      OptString             `json:"inline_message_id"`
-	Latitude             float64               `json:"latitude"`
-	Longitude            float64               `json:"longitude"`
-	MessageID            OptInt                `json:"message_id"`
-	ProximityAlertRadius OptInt                `json:"proximity_alert_radius"`
-	ReplyMarkup          *InlineKeyboardMarkup `json:"reply_markup"`
+	ChatID               *ID                     `json:"chat_id"`
+	Heading              OptInt                  `json:"heading"`
+	HorizontalAccuracy   OptFloat64              `json:"horizontal_accuracy"`
+	InlineMessageID      OptString               `json:"inline_message_id"`
+	Latitude             float64                 `json:"latitude"`
+	Longitude            float64                 `json:"longitude"`
+	MessageID            OptInt                  `json:"message_id"`
+	ProximityAlertRadius OptInt                  `json:"proximity_alert_radius"`
+	ReplyMarkup          OptInlineKeyboardMarkup `json:"reply_markup"`
 }
 
 // Ref: #/components/schemas/editMessageMedia
 type EditMessageMedia struct {
-	ChatID          OptID                 `json:"chat_id"`
-	InlineMessageID OptString             `json:"inline_message_id"`
-	Media           InputMedia            `json:"media"`
-	MessageID       OptInt                `json:"message_id"`
-	ReplyMarkup     *InlineKeyboardMarkup `json:"reply_markup"`
+	ChatID          *ID                     `json:"chat_id"`
+	InlineMessageID OptString               `json:"inline_message_id"`
+	Media           InputMedia              `json:"media"`
+	MessageID       OptInt                  `json:"message_id"`
+	ReplyMarkup     OptInlineKeyboardMarkup `json:"reply_markup"`
 }
 
 // Ref: #/components/schemas/editMessageReplyMarkup
 type EditMessageReplyMarkup struct {
-	ChatID          OptID                 `json:"chat_id"`
-	InlineMessageID OptString             `json:"inline_message_id"`
-	MessageID       OptInt                `json:"message_id"`
-	ReplyMarkup     *InlineKeyboardMarkup `json:"reply_markup"`
+	ChatID          *ID                     `json:"chat_id"`
+	InlineMessageID OptString               `json:"inline_message_id"`
+	MessageID       OptInt                  `json:"message_id"`
+	ReplyMarkup     OptInlineKeyboardMarkup `json:"reply_markup"`
 }
 
 // Ref: #/components/schemas/editMessageText
 type EditMessageText struct {
-	ChatID                OptID                 `json:"chat_id"`
-	DisableWebPagePreview OptBool               `json:"disable_web_page_preview"`
-	Entities              []MessageEntity       `json:"entities"`
-	InlineMessageID       OptString             `json:"inline_message_id"`
-	MessageID             OptInt                `json:"message_id"`
-	ParseMode             OptString             `json:"parse_mode"`
-	ReplyMarkup           *InlineKeyboardMarkup `json:"reply_markup"`
-	Text                  string                `json:"text"`
+	ChatID                *ID                     `json:"chat_id"`
+	DisableWebPagePreview OptBool                 `json:"disable_web_page_preview"`
+	Entities              []MessageEntity         `json:"entities"`
+	InlineMessageID       OptString               `json:"inline_message_id"`
+	MessageID             OptInt                  `json:"message_id"`
+	ParseMode             OptString               `json:"parse_mode"`
+	ReplyMarkup           OptInlineKeyboardMarkup `json:"reply_markup"`
+	Text                  string                  `json:"text"`
 }
 
 // Ref: #/components/schemas/EncryptedCredentials
@@ -531,71 +531,66 @@ type GetUserProfilePhotos struct {
 }
 
 // Ref: #/components/schemas/ID
+// ID represents sum type.
 type ID struct {
-	Ok     bool      `json:"ok"`
-	Result *IDResult `json:"result"`
-}
-
-// IDResult represents sum type.
-type IDResult struct {
-	Type   IDResultType // switch on this field
+	Type   IDType // switch on this field
 	String string
 	Int    int
 }
 
-// IDResultType is oneOf type of IDResult.
-type IDResultType string
+// IDType is oneOf type of ID.
+type IDType string
 
-// Possible values for IDResultType.
+// Possible values for IDType.
 const (
-	IDResultStringType IDResultType = "string"
-	IDResultIntType    IDResultType = "int"
+	IDStringType IDType = "string"
+	IDIntType    IDType = "int"
 )
 
-// IsString reports whether IDResult is string.
-func (s IDResult) IsString() bool { return s.Type == IDResultStringType }
+// IsString reports whether ID is string.
+func (s ID) IsString() bool { return s.Type == IDStringType }
 
-// IsInt reports whether IDResult is int.
-func (s IDResult) IsInt() bool { return s.Type == IDResultIntType }
+// IsInt reports whether ID is int.
+func (s ID) IsInt() bool { return s.Type == IDIntType }
 
-// SetString sets IDResult to string.
-func (s *IDResult) SetString(v string) {
-	s.Type = IDResultStringType
+// SetString sets ID to string.
+func (s *ID) SetString(v string) {
+	s.Type = IDStringType
 	s.String = v
 }
 
-// GetString returns string and true boolean if IDResult is string.
-func (s *IDResult) GetString() (v string, ok bool) {
+// GetString returns string and true boolean if ID is string.
+func (s *ID) GetString() (v string, ok bool) {
 	if !s.IsString() {
 		return v, false
 	}
 	return s.String, true
 }
 
-// IDResultString returns new IDResult from string.
-func IDResultString(v string) IDResult {
-	var s IDResult
+// IDString returns new ID from string.
+func IDString(v string) ID {
+	var s ID
 	s.SetString(v)
 	return s
 }
 
-// SetInt sets IDResult to int.
-func (s *IDResult) SetInt(v int) {
-	s.Type = IDResultIntType
+// SetInt sets ID to int.
+func (s *ID) SetInt(v int) {
+	s.Type = IDIntType
 	s.Int = v
 }
 
-// GetInt returns int and true boolean if IDResult is int.
-func (s *IDResult) GetInt() (v int, ok bool) {
+// GetInt returns int and true boolean if ID is int.
+func (s *ID) GetInt() (v int, ok bool) {
 	if !s.IsInt() {
 		return v, false
 	}
 	return s.Int, true
 }
 
-// IDResultInt returns new IDResult from int.
-func IDResultInt(v int) IDResult {
-	var s IDResult
+// IDInt returns new ID from int.
+func IDInt(v int) ID {
+	var s ID
 	s.SetInt(v)
 	return s
 }
@@ -687,7 +682,7 @@ type Message struct {
 	PinnedMessage                 *Message                         `json:"pinned_message"`
 	Poll                          OptPoll                          `json:"poll"`
 	ProximityAlertTriggered       OptProximityAlertTriggered       `json:"proximity_alert_triggered"`
-	ReplyMarkup                   *InlineKeyboardMarkup            `json:"reply_markup"`
+	ReplyMarkup                   OptInlineKeyboardMarkup          `json:"reply_markup"`
 	ReplyToMessage                *Message                         `json:"reply_to_message"`
 	SenderChat                    *Chat                            `json:"sender_chat"`
 	Sticker                       OptSticker                       `json:"sticker"`
@@ -1138,38 +1133,38 @@ func (o OptGame) Get() (v Game, ok bool) {
 	return o.Value, true
 }
 
-// NewOptID returns new OptID with value set to v.
-func NewOptID(v ID) OptID {
-	return OptID{
+// NewOptInlineKeyboardMarkup returns new OptInlineKeyboardMarkup with value set to v.
+func NewOptInlineKeyboardMarkup(v InlineKeyboardMarkup) OptInlineKeyboardMarkup {
+	return OptInlineKeyboardMarkup{
 		Value: v,
 		Set:   true,
 	}
 }
 
-// OptID is optional ID.
-type OptID struct {
-	Value ID
+// OptInlineKeyboardMarkup is optional InlineKeyboardMarkup.
+type OptInlineKeyboardMarkup struct {
+	Value InlineKeyboardMarkup
 	Set   bool
 }
 
-// IsSet returns true if OptID was set.
-func (o OptID) IsSet() bool { return o.Set }
+// IsSet returns true if OptInlineKeyboardMarkup was set.
+func (o OptInlineKeyboardMarkup) IsSet() bool { return o.Set }
 
 // Reset unsets value.
-func (o *OptID) Reset() {
-	var v ID
+func (o *OptInlineKeyboardMarkup) Reset() {
+	var v InlineKeyboardMarkup
 	o.Value = v
 	o.Set = false
 }
 
 // SetTo sets value to v.
-func (o *OptID) SetTo(v ID) {
+func (o *OptInlineKeyboardMarkup) SetTo(v InlineKeyboardMarkup) {
 	o.Set = true
 	o.Value = v
 }
 
 // Get returns value and boolean that denotes whether value was set.
-func (o OptID) Get() (v ID, ok bool) {
+func (o OptInlineKeyboardMarkup) Get() (v InlineKeyboardMarkup, ok bool) {
 	if !o.Set {
 		return v, false
 	}
@@ -2481,42 +2476,42 @@ type SendDocument struct {
 
 // Ref: #/components/schemas/sendGame
 type SendGame struct {
-	AllowSendingWithoutReply OptBool               `json:"allow_sending_without_reply"`
-	ChatID                   int                   `json:"chat_id"`
-	DisableNotification      OptBool               `json:"disable_notification"`
-	GameShortName            string                `json:"game_short_name"`
-	ReplyMarkup              *InlineKeyboardMarkup `json:"reply_markup"`
-	ReplyToMessageID         OptInt                `json:"reply_to_message_id"`
+	AllowSendingWithoutReply OptBool                 `json:"allow_sending_without_reply"`
+	ChatID                   int                     `json:"chat_id"`
+	DisableNotification      OptBool                 `json:"disable_notification"`
+	GameShortName            string                  `json:"game_short_name"`
+	ReplyMarkup              OptInlineKeyboardMarkup `json:"reply_markup"`
+	ReplyToMessageID         OptInt                  `json:"reply_to_message_id"`
 }
 
 // Ref: #/components/schemas/sendInvoice
 type SendInvoice struct {
-	AllowSendingWithoutReply  OptBool               `json:"allow_sending_without_reply"`
-	ChatID                    ID                    `json:"chat_id"`
-	Currency                  string                `json:"currency"`
-	Description               string                `json:"description"`
-	DisableNotification       OptBool               `json:"disable_notification"`
-	IsFlexible                OptBool               `json:"is_flexible"`
-	MaxTipAmount              OptInt                `json:"max_tip_amount"`
-	NeedEmail                 OptBool               `json:"need_email"`
-	NeedName                  OptBool               `json:"need_name"`
-	NeedPhoneNumber           OptBool               `json:"need_phone_number"`
-	NeedShippingAddress       OptBool               `json:"need_shipping_address"`
-	Payload                   string                `json:"payload"`
-	PhotoHeight               OptInt                `json:"photo_height"`
-	PhotoSize                 OptInt                `json:"photo_size"`
-	PhotoURL                  OptURL                `json:"photo_url"`
-	PhotoWidth                OptInt                `json:"photo_width"`
-	Prices                    []LabeledPrice        `json:"prices"`
-	ProviderData              OptString             `json:"provider_data"`
-	ProviderToken             string                `json:"provider_token"`
-	ReplyMarkup               *InlineKeyboardMarkup `json:"reply_markup"`
-	ReplyToMessageID          OptInt                `json:"reply_to_message_id"`
-	SendEmailToProvider       OptBool               `json:"send_email_to_provider"`
-	SendPhoneNumberToProvider OptBool               `json:"send_phone_number_to_provider"`
-	StartParameter            OptString             `json:"start_parameter"`
-	SuggestedTipAmounts       []int                 `json:"suggested_tip_amounts"`
-	Title                     string                `json:"title"`
+	AllowSendingWithoutReply  OptBool                 `json:"allow_sending_without_reply"`
+	ChatID                    ID                      `json:"chat_id"`
+	Currency                  string                  `json:"currency"`
+	Description               string                  `json:"description"`
+	DisableNotification       OptBool                 `json:"disable_notification"`
+	IsFlexible                OptBool                 `json:"is_flexible"`
+	MaxTipAmount              OptInt                  `json:"max_tip_amount"`
+	NeedEmail                 OptBool                 `json:"need_email"`
+	NeedName                  OptBool                 `json:"need_name"`
+	NeedPhoneNumber           OptBool                 `json:"need_phone_number"`
+	NeedShippingAddress       OptBool                 `json:"need_shipping_address"`
+	Payload                   string                  `json:"payload"`
+	PhotoHeight               OptInt                  `json:"photo_height"`
+	PhotoSize                 OptInt                  `json:"photo_size"`
+	PhotoURL                  OptURL                  `json:"photo_url"`
+	PhotoWidth                OptInt                  `json:"photo_width"`
+	Prices                    []LabeledPrice          `json:"prices"`
+	ProviderData              OptString               `json:"provider_data"`
+	ProviderToken             string                  `json:"provider_token"`
+	ReplyMarkup               OptInlineKeyboardMarkup `json:"reply_markup"`
+	ReplyToMessageID          OptInt                  `json:"reply_to_message_id"`
+	SendEmailToProvider       OptBool                 `json:"send_email_to_provider"`
+	SendPhoneNumberToProvider OptBool                 `json:"send_phone_number_to_provider"`
+	StartParameter            OptString               `json:"start_parameter"`
+	SuggestedTipAmounts       []int                   `json:"suggested_tip_amounts"`
+	Title                     string                  `json:"title"`
 }
 
 // Ref: #/components/schemas/sendLocation
@@ -2770,17 +2765,17 @@ type Sticker struct {
 
 // Ref: #/components/schemas/stopMessageLiveLocation
 type StopMessageLiveLocation struct {
-	ChatID          OptID                 `json:"chat_id"`
-	InlineMessageID OptString             `json:"inline_message_id"`
-	MessageID       OptInt                `json:"message_id"`
-	ReplyMarkup     *InlineKeyboardMarkup `json:"reply_markup"`
+	ChatID          *ID                     `json:"chat_id"`
+	InlineMessageID OptString               `json:"inline_message_id"`
+	MessageID       OptInt                  `json:"message_id"`
+	ReplyMarkup     OptInlineKeyboardMarkup `json:"reply_markup"`
 }
 
 // Ref: #/components/schemas/stopPoll
 type StopPoll struct {
-	ChatID      ID                    `json:"chat_id"`
-	MessageID   int                   `json:"message_id"`
-	ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup"`
+	ChatID      ID                      `json:"chat_id"`
+	MessageID   int                     `json:"message_id"`
+	ReplyMarkup OptInlineKeyboardMarkup `json:"reply_markup"`
 }
 
 // Ref: #/components/schemas/SuccessfulPayment

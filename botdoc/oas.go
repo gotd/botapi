@@ -202,12 +202,12 @@ func (a API) OAS() *ogen.Spec {
 		Description: "Hack",
 		Type:        "string",
 	}
-	c.Schemas["ID"] = resultFor(ogen.Schema{
+	c.Schemas["ID"] = ogen.Schema{
 		OneOf: []ogen.Schema{
 			{Type: "string"},
 			{Type: "integer"},
 		},
-	})
+	}
 	c.Schemas["Result"] = resultFor(ogen.Schema{
 		Type: "boolean",
 	})
