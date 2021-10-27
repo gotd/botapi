@@ -74,6 +74,8 @@ func ParseType(s string) Type {
 	}
 
 	const sumDelim = " or "
+	s = strings.ReplaceAll(s, " and ", sumDelim)
+	s = strings.ReplaceAll(s, ", ", sumDelim)
 	if strings.Contains(s, sumDelim) {
 		t := Type{
 			Kind: KindSum,

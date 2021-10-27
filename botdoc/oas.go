@@ -69,12 +69,11 @@ func intBounds(s string) bound {
 	return bound{Min: int64(start), Max: uint64(end)}
 }
 
-func (a API) fieldOAS(parent *ogen.Schema, f Field) *ogen.Schema {
+func (a API) typeOAS(f Field) *ogen.Schema {
+	t := f.Type
 	p := &ogen.Schema{
 		Description: fixTypos(f.Description),
 	}
-	t := f.Type
-
 	switch t.Kind {
 	case KindPrimitive:
 		switch t.Primitive {
@@ -135,9 +134,36 @@ func (a API) fieldOAS(parent *ogen.Schema, f Field) *ogen.Schema {
 		}
 	case KindObject:
 		p.Ref = "#/components/schemas/" + t.Name
+	case KindArray:
+		p.Type = "array"
+		p.Items = a.typeOAS(Field{Type: *t.Item})
 	default:
-		return nil
+		if f.Type.String() == "Integer or String" {
+			p.Ref = "#/components/schemas/ID"
+		} else if f.Type.String() == "String or String" {
+			// TODO(ernado): Hack for FileInput, should be removed.
+			p.Type = "string"
+		} else if len(t.Sum) > 0 {
+			for _, s := range t.Sum {
+				if one := a.typeOAS(Field{Type: s}); one != nil {
+					p.OneOf = append(p.OneOf, *one)
+				}
+			}
+			// TODO(ernado): Implement
+			return nil
+		} else {
+			fmt.Println("unknown", t.Item)
+			return nil
+		}
 	}
+	if p.Ref != "" {
+		p.Description = ""
+	}
+	return p
+}
+
+func (a API) fieldOAS(parent *ogen.Schema, f Field) *ogen.Schema {
+	p := a.typeOAS(f)
 	if !f.Optional {
 		parent.Required = append(parent.Required, f.Name)
 	}
@@ -168,6 +194,20 @@ func (a API) OAS() *ogen.Spec {
 		c.Schemas[d.Name] = s
 	}
 
+	c.Schemas["InlineKeyboardMarkup"] = ogen.Schema{
+		Description: "Hack",
+		Type:        "string",
+	}
+	c.Schemas["InlineQueryResult"] = ogen.Schema{
+		Description: "Hack",
+		Type:        "string",
+	}
+	c.Schemas["ID"] = resultFor(ogen.Schema{
+		OneOf: []ogen.Schema{
+			{Type: "string"},
+			{Type: "integer"},
+		},
+	})
 	c.Schemas["Result"] = resultFor(ogen.Schema{
 		Type: "boolean",
 	})
