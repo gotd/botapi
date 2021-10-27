@@ -50,7 +50,7 @@ var (
 	_ = net.IP{}
 )
 
-func (s *Animation) Validate() error {
+func (s Animation) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
 		if err := (validate.Int{
@@ -63,7 +63,6 @@ func (s *Animation) Validate() error {
 		}).Validate(int64(s.Duration)); err != nil {
 			return err
 		}
-		_ = s.Duration
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -82,7 +81,6 @@ func (s *Animation) Validate() error {
 		}).Validate(int64(s.Height)); err != nil {
 			return err
 		}
-		_ = s.Height
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -91,7 +89,7 @@ func (s *Animation) Validate() error {
 		})
 	}
 	if err := func() error {
-		_ = s.Thumb
+		_ = s.Thumb // validation expected, but not supported
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -110,7 +108,6 @@ func (s *Animation) Validate() error {
 		}).Validate(int64(s.Width)); err != nil {
 			return err
 		}
-		_ = s.Width
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -123,10 +120,10 @@ func (s *Animation) Validate() error {
 	}
 	return nil
 }
-func (s *AnswerCallbackQuery) Validate() error {
+func (s AnswerCallbackQuery) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-		_ = s.Text
+		_ = s.Text // validation expected, but not supported
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -139,28 +136,13 @@ func (s *AnswerCallbackQuery) Validate() error {
 	}
 	return nil
 }
-func (s *AnswerInlineQuery) Validate() error {
+func (s AnswerInlineQuery) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
 		if s.Results == nil {
 			return fmt.Errorf("required, can't be nil")
 		}
-		var failures []validate.FieldError
-		for i, elem := range s.Results {
-			if err := func() error {
-				_ = elem
-				return nil
-			}(); err != nil {
-				failures = append(failures, validate.FieldError{
-					Name:  fmt.Sprintf("[%d]", i),
-					Error: err,
-				})
-			}
-			if len(failures) > 0 {
-				return &validate.Error{Fields: failures}
-			}
-		}
-		_ = s.Results
+		_ = s.Results // validation expected, but not supported
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -169,7 +151,7 @@ func (s *AnswerInlineQuery) Validate() error {
 		})
 	}
 	if err := func() error {
-		_ = s.SwitchPmParameter
+		_ = s.SwitchPmParameter // validation expected, but not supported
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -182,13 +164,15 @@ func (s *AnswerInlineQuery) Validate() error {
 	}
 	return nil
 }
-func (s *AnswerShippingQuery) Validate() error {
+func (s AnswerShippingQuery) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
 		var failures []validate.FieldError
 		for i, elem := range s.ShippingOptions {
 			if err := func() error {
-				_ = elem
+				if err := elem.Validate(); err != nil {
+					return err
+				}
 				return nil
 			}(); err != nil {
 				failures = append(failures, validate.FieldError{
@@ -196,11 +180,10 @@ func (s *AnswerShippingQuery) Validate() error {
 					Error: err,
 				})
 			}
-			if len(failures) > 0 {
-				return &validate.Error{Fields: failures}
-			}
 		}
-		_ = s.ShippingOptions
+		if len(failures) > 0 {
+			return &validate.Error{Fields: failures}
+		}
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -213,7 +196,7 @@ func (s *AnswerShippingQuery) Validate() error {
 	}
 	return nil
 }
-func (s *Audio) Validate() error {
+func (s Audio) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
 		if err := (validate.Int{
@@ -226,7 +209,6 @@ func (s *Audio) Validate() error {
 		}).Validate(int64(s.Duration)); err != nil {
 			return err
 		}
-		_ = s.Duration
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -235,7 +217,7 @@ func (s *Audio) Validate() error {
 		})
 	}
 	if err := func() error {
-		_ = s.Thumb
+		_ = s.Thumb // validation expected, but not supported
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -248,7 +230,7 @@ func (s *Audio) Validate() error {
 	}
 	return nil
 }
-func (s *BotCommand) Validate() error {
+func (s BotCommand) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
 		if err := (validate.String{
@@ -259,7 +241,6 @@ func (s *BotCommand) Validate() error {
 		}).Validate(string(s.Command)); err != nil {
 			return err
 		}
-		_ = s.Command
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -276,7 +257,6 @@ func (s *BotCommand) Validate() error {
 		}).Validate(string(s.Description)); err != nil {
 			return err
 		}
-		_ = s.Description
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -289,10 +269,10 @@ func (s *BotCommand) Validate() error {
 	}
 	return nil
 }
-func (s *Chat) Validate() error {
+func (s Chat) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-		_ = s.Location
+		_ = s.Location // validation expected, but not supported
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -301,7 +281,7 @@ func (s *Chat) Validate() error {
 		})
 	}
 	if err := func() error {
-		_ = s.PinnedMessage
+		_ = s.PinnedMessage // validation expected, but not supported
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -314,7 +294,7 @@ func (s *Chat) Validate() error {
 	}
 	return nil
 }
-func (s *ChatLocation) Validate() error {
+func (s ChatLocation) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
 		if err := (validate.String{
@@ -325,7 +305,6 @@ func (s *ChatLocation) Validate() error {
 		}).Validate(string(s.Address)); err != nil {
 			return err
 		}
-		_ = s.Address
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -338,10 +317,10 @@ func (s *ChatLocation) Validate() error {
 	}
 	return nil
 }
-func (s *CopyMessage) Validate() error {
+func (s CopyMessage) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-		_ = s.Caption
+		_ = s.Caption // validation expected, but not supported
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -354,7 +333,7 @@ func (s *CopyMessage) Validate() error {
 	}
 	return nil
 }
-func (s *CreateNewStickerSet) Validate() error {
+func (s CreateNewStickerSet) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
 		if err := (validate.String{
@@ -365,7 +344,6 @@ func (s *CreateNewStickerSet) Validate() error {
 		}).Validate(string(s.Name)); err != nil {
 			return err
 		}
-		_ = s.Name
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -382,7 +360,6 @@ func (s *CreateNewStickerSet) Validate() error {
 		}).Validate(string(s.Title)); err != nil {
 			return err
 		}
-		_ = s.Title
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -395,10 +372,10 @@ func (s *CreateNewStickerSet) Validate() error {
 	}
 	return nil
 }
-func (s *Document) Validate() error {
+func (s Document) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-		_ = s.Thumb
+		_ = s.Thumb // validation expected, but not supported
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -411,10 +388,10 @@ func (s *Document) Validate() error {
 	}
 	return nil
 }
-func (s *EditMessageCaption) Validate() error {
+func (s EditMessageCaption) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-		_ = s.Caption
+		_ = s.Caption // validation expected, but not supported
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -427,7 +404,7 @@ func (s *EditMessageCaption) Validate() error {
 	}
 	return nil
 }
-func (s *EditMessageText) Validate() error {
+func (s EditMessageText) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
 		if err := (validate.String{
@@ -438,7 +415,6 @@ func (s *EditMessageText) Validate() error {
 		}).Validate(string(s.Text)); err != nil {
 			return err
 		}
-		_ = s.Text
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -451,10 +427,10 @@ func (s *EditMessageText) Validate() error {
 	}
 	return nil
 }
-func (s *Game) Validate() error {
+func (s Game) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-		_ = s.Animation
+		_ = s.Animation // validation expected, but not supported
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -469,7 +445,9 @@ func (s *Game) Validate() error {
 		var failures []validate.FieldError
 		for i, elem := range s.Photo {
 			if err := func() error {
-				_ = elem
+				if err := elem.Validate(); err != nil {
+					return err
+				}
 				return nil
 			}(); err != nil {
 				failures = append(failures, validate.FieldError{
@@ -477,11 +455,10 @@ func (s *Game) Validate() error {
 					Error: err,
 				})
 			}
-			if len(failures) > 0 {
-				return &validate.Error{Fields: failures}
-			}
 		}
-		_ = s.Photo
+		if len(failures) > 0 {
+			return &validate.Error{Fields: failures}
+		}
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -490,7 +467,7 @@ func (s *Game) Validate() error {
 		})
 	}
 	if err := func() error {
-		_ = s.Text
+		_ = s.Text // validation expected, but not supported
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -503,10 +480,10 @@ func (s *Game) Validate() error {
 	}
 	return nil
 }
-func (s *GetUpdates) Validate() error {
+func (s GetUpdates) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-		_ = s.Limit
+		_ = s.Limit // validation expected, but not supported
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -519,10 +496,10 @@ func (s *GetUpdates) Validate() error {
 	}
 	return nil
 }
-func (s *GetUserProfilePhotos) Validate() error {
+func (s GetUserProfilePhotos) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-		_ = s.Limit
+		_ = s.Limit // validation expected, but not supported
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -535,10 +512,10 @@ func (s *GetUserProfilePhotos) Validate() error {
 	}
 	return nil
 }
-func (s *Message) Validate() error {
+func (s Message) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-		_ = s.Animation
+		_ = s.Animation // validation expected, but not supported
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -547,7 +524,7 @@ func (s *Message) Validate() error {
 		})
 	}
 	if err := func() error {
-		_ = s.Audio
+		_ = s.Audio // validation expected, but not supported
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -556,7 +533,7 @@ func (s *Message) Validate() error {
 		})
 	}
 	if err := func() error {
-		_ = s.Caption
+		_ = s.Caption // validation expected, but not supported
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -568,7 +545,7 @@ func (s *Message) Validate() error {
 		if s.Chat == nil {
 			return fmt.Errorf("required, can't be nil")
 		}
-		_ = s.Chat
+		_ = s.Chat // validation expected, but not supported
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -577,7 +554,7 @@ func (s *Message) Validate() error {
 		})
 	}
 	if err := func() error {
-		_ = s.Document
+		_ = s.Document // validation expected, but not supported
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -586,7 +563,7 @@ func (s *Message) Validate() error {
 		})
 	}
 	if err := func() error {
-		_ = s.ForwardFromChat
+		_ = s.ForwardFromChat // validation expected, but not supported
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -595,7 +572,7 @@ func (s *Message) Validate() error {
 		})
 	}
 	if err := func() error {
-		_ = s.Game
+		_ = s.Game // validation expected, but not supported
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -607,7 +584,9 @@ func (s *Message) Validate() error {
 		var failures []validate.FieldError
 		for i, elem := range s.NewChatPhoto {
 			if err := func() error {
-				_ = elem
+				if err := elem.Validate(); err != nil {
+					return err
+				}
 				return nil
 			}(); err != nil {
 				failures = append(failures, validate.FieldError{
@@ -615,11 +594,10 @@ func (s *Message) Validate() error {
 					Error: err,
 				})
 			}
-			if len(failures) > 0 {
-				return &validate.Error{Fields: failures}
-			}
 		}
-		_ = s.NewChatPhoto
+		if len(failures) > 0 {
+			return &validate.Error{Fields: failures}
+		}
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -628,7 +606,7 @@ func (s *Message) Validate() error {
 		})
 	}
 	if err := func() error {
-		_ = s.PassportData
+		_ = s.PassportData // validation expected, but not supported
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -640,7 +618,9 @@ func (s *Message) Validate() error {
 		var failures []validate.FieldError
 		for i, elem := range s.Photo {
 			if err := func() error {
-				_ = elem
+				if err := elem.Validate(); err != nil {
+					return err
+				}
 				return nil
 			}(); err != nil {
 				failures = append(failures, validate.FieldError{
@@ -648,11 +628,10 @@ func (s *Message) Validate() error {
 					Error: err,
 				})
 			}
-			if len(failures) > 0 {
-				return &validate.Error{Fields: failures}
-			}
 		}
-		_ = s.Photo
+		if len(failures) > 0 {
+			return &validate.Error{Fields: failures}
+		}
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -661,7 +640,7 @@ func (s *Message) Validate() error {
 		})
 	}
 	if err := func() error {
-		_ = s.PinnedMessage
+		_ = s.PinnedMessage // validation expected, but not supported
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -670,7 +649,7 @@ func (s *Message) Validate() error {
 		})
 	}
 	if err := func() error {
-		_ = s.Poll
+		_ = s.Poll // validation expected, but not supported
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -679,7 +658,7 @@ func (s *Message) Validate() error {
 		})
 	}
 	if err := func() error {
-		_ = s.ReplyToMessage
+		_ = s.ReplyToMessage // validation expected, but not supported
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -688,7 +667,7 @@ func (s *Message) Validate() error {
 		})
 	}
 	if err := func() error {
-		_ = s.SenderChat
+		_ = s.SenderChat // validation expected, but not supported
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -697,7 +676,7 @@ func (s *Message) Validate() error {
 		})
 	}
 	if err := func() error {
-		_ = s.Sticker
+		_ = s.Sticker // validation expected, but not supported
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -706,7 +685,7 @@ func (s *Message) Validate() error {
 		})
 	}
 	if err := func() error {
-		_ = s.Text
+		_ = s.Text // validation expected, but not supported
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -715,7 +694,7 @@ func (s *Message) Validate() error {
 		})
 	}
 	if err := func() error {
-		_ = s.Video
+		_ = s.Video // validation expected, but not supported
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -724,7 +703,7 @@ func (s *Message) Validate() error {
 		})
 	}
 	if err := func() error {
-		_ = s.VideoNote
+		_ = s.VideoNote // validation expected, but not supported
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -733,7 +712,7 @@ func (s *Message) Validate() error {
 		})
 	}
 	if err := func() error {
-		_ = s.Voice
+		_ = s.Voice // validation expected, but not supported
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -742,7 +721,7 @@ func (s *Message) Validate() error {
 		})
 	}
 	if err := func() error {
-		_ = s.VoiceChatEnded
+		_ = s.VoiceChatEnded // validation expected, but not supported
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -755,28 +734,13 @@ func (s *Message) Validate() error {
 	}
 	return nil
 }
-func (s *PassportData) Validate() error {
+func (s PassportData) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
 		if s.Data == nil {
 			return fmt.Errorf("required, can't be nil")
 		}
-		var failures []validate.FieldError
-		for i, elem := range s.Data {
-			if err := func() error {
-				_ = elem
-				return nil
-			}(); err != nil {
-				failures = append(failures, validate.FieldError{
-					Name:  fmt.Sprintf("[%d]", i),
-					Error: err,
-				})
-			}
-			if len(failures) > 0 {
-				return &validate.Error{Fields: failures}
-			}
-		}
-		_ = s.Data
+		_ = s.Data // validation expected, but not supported
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -789,7 +753,7 @@ func (s *PassportData) Validate() error {
 	}
 	return nil
 }
-func (s *PhotoSize) Validate() error {
+func (s PhotoSize) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
 		if err := (validate.Int{
@@ -802,7 +766,6 @@ func (s *PhotoSize) Validate() error {
 		}).Validate(int64(s.Height)); err != nil {
 			return err
 		}
-		_ = s.Height
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -821,7 +784,6 @@ func (s *PhotoSize) Validate() error {
 		}).Validate(int64(s.Width)); err != nil {
 			return err
 		}
-		_ = s.Width
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -834,10 +796,10 @@ func (s *PhotoSize) Validate() error {
 	}
 	return nil
 }
-func (s *Poll) Validate() error {
+func (s Poll) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-		_ = s.Explanation
+		_ = s.Explanation // validation expected, but not supported
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -852,7 +814,9 @@ func (s *Poll) Validate() error {
 		var failures []validate.FieldError
 		for i, elem := range s.Options {
 			if err := func() error {
-				_ = elem
+				if err := elem.Validate(); err != nil {
+					return err
+				}
 				return nil
 			}(); err != nil {
 				failures = append(failures, validate.FieldError{
@@ -860,11 +824,10 @@ func (s *Poll) Validate() error {
 					Error: err,
 				})
 			}
-			if len(failures) > 0 {
-				return &validate.Error{Fields: failures}
-			}
 		}
-		_ = s.Options
+		if len(failures) > 0 {
+			return &validate.Error{Fields: failures}
+		}
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -881,7 +844,6 @@ func (s *Poll) Validate() error {
 		}).Validate(string(s.Question)); err != nil {
 			return err
 		}
-		_ = s.Question
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -894,7 +856,7 @@ func (s *Poll) Validate() error {
 	}
 	return nil
 }
-func (s *PollOption) Validate() error {
+func (s PollOption) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
 		if err := (validate.String{
@@ -905,7 +867,6 @@ func (s *PollOption) Validate() error {
 		}).Validate(string(s.Text)); err != nil {
 			return err
 		}
-		_ = s.Text
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -918,10 +879,10 @@ func (s *PollOption) Validate() error {
 	}
 	return nil
 }
-func (s *ResultMsg) Validate() error {
+func (s ResultMsg) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-		_ = s.Result
+		_ = s.Result // validation expected, but not supported
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -934,10 +895,10 @@ func (s *ResultMsg) Validate() error {
 	}
 	return nil
 }
-func (s *SendAnimation) Validate() error {
+func (s SendAnimation) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-		_ = s.Caption
+		_ = s.Caption // validation expected, but not supported
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -946,7 +907,7 @@ func (s *SendAnimation) Validate() error {
 		})
 	}
 	if err := func() error {
-		_ = s.Duration
+		_ = s.Duration // validation expected, but not supported
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -955,7 +916,7 @@ func (s *SendAnimation) Validate() error {
 		})
 	}
 	if err := func() error {
-		_ = s.Height
+		_ = s.Height // validation expected, but not supported
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -964,7 +925,7 @@ func (s *SendAnimation) Validate() error {
 		})
 	}
 	if err := func() error {
-		_ = s.Width
+		_ = s.Width // validation expected, but not supported
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -977,10 +938,10 @@ func (s *SendAnimation) Validate() error {
 	}
 	return nil
 }
-func (s *SendAudio) Validate() error {
+func (s SendAudio) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-		_ = s.Caption
+		_ = s.Caption // validation expected, but not supported
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -989,7 +950,7 @@ func (s *SendAudio) Validate() error {
 		})
 	}
 	if err := func() error {
-		_ = s.Duration
+		_ = s.Duration // validation expected, but not supported
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -1002,10 +963,10 @@ func (s *SendAudio) Validate() error {
 	}
 	return nil
 }
-func (s *SendDocument) Validate() error {
+func (s SendDocument) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-		_ = s.Caption
+		_ = s.Caption // validation expected, but not supported
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -1018,7 +979,7 @@ func (s *SendDocument) Validate() error {
 	}
 	return nil
 }
-func (s *SendInvoice) Validate() error {
+func (s SendInvoice) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
 		if err := (validate.String{
@@ -1029,7 +990,6 @@ func (s *SendInvoice) Validate() error {
 		}).Validate(string(s.Description)); err != nil {
 			return err
 		}
-		_ = s.Description
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -1038,7 +998,7 @@ func (s *SendInvoice) Validate() error {
 		})
 	}
 	if err := func() error {
-		_ = s.PhotoHeight
+		_ = s.PhotoHeight // validation expected, but not supported
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -1047,7 +1007,7 @@ func (s *SendInvoice) Validate() error {
 		})
 	}
 	if err := func() error {
-		_ = s.PhotoWidth
+		_ = s.PhotoWidth // validation expected, but not supported
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -1059,22 +1019,7 @@ func (s *SendInvoice) Validate() error {
 		if s.Prices == nil {
 			return fmt.Errorf("required, can't be nil")
 		}
-		var failures []validate.FieldError
-		for i, elem := range s.Prices {
-			if err := func() error {
-				_ = elem
-				return nil
-			}(); err != nil {
-				failures = append(failures, validate.FieldError{
-					Name:  fmt.Sprintf("[%d]", i),
-					Error: err,
-				})
-			}
-			if len(failures) > 0 {
-				return &validate.Error{Fields: failures}
-			}
-		}
-		_ = s.Prices
+		_ = s.Prices // validation expected, but not supported
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -1091,7 +1036,6 @@ func (s *SendInvoice) Validate() error {
 		}).Validate(string(s.Title)); err != nil {
 			return err
 		}
-		_ = s.Title
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -1104,28 +1048,13 @@ func (s *SendInvoice) Validate() error {
 	}
 	return nil
 }
-func (s *SendMediaGroup) Validate() error {
+func (s SendMediaGroup) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
 		if s.Media == nil {
 			return fmt.Errorf("required, can't be nil")
 		}
-		var failures []validate.FieldError
-		for i, elem := range s.Media {
-			if err := func() error {
-				_ = elem
-				return nil
-			}(); err != nil {
-				failures = append(failures, validate.FieldError{
-					Name:  fmt.Sprintf("[%d]", i),
-					Error: err,
-				})
-			}
-			if len(failures) > 0 {
-				return &validate.Error{Fields: failures}
-			}
-		}
-		_ = s.Media
+		_ = s.Media // validation expected, but not supported
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -1138,7 +1067,7 @@ func (s *SendMediaGroup) Validate() error {
 	}
 	return nil
 }
-func (s *SendMessage) Validate() error {
+func (s SendMessage) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
 		if err := (validate.String{
@@ -1149,7 +1078,6 @@ func (s *SendMessage) Validate() error {
 		}).Validate(string(s.Text)); err != nil {
 			return err
 		}
-		_ = s.Text
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -1162,10 +1090,10 @@ func (s *SendMessage) Validate() error {
 	}
 	return nil
 }
-func (s *SendPhoto) Validate() error {
+func (s SendPhoto) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-		_ = s.Caption
+		_ = s.Caption // validation expected, but not supported
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -1178,10 +1106,10 @@ func (s *SendPhoto) Validate() error {
 	}
 	return nil
 }
-func (s *SendPoll) Validate() error {
+func (s SendPoll) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-		_ = s.Explanation
+		_ = s.Explanation // validation expected, but not supported
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -1193,22 +1121,7 @@ func (s *SendPoll) Validate() error {
 		if s.Options == nil {
 			return fmt.Errorf("required, can't be nil")
 		}
-		var failures []validate.FieldError
-		for i, elem := range s.Options {
-			if err := func() error {
-				_ = elem
-				return nil
-			}(); err != nil {
-				failures = append(failures, validate.FieldError{
-					Name:  fmt.Sprintf("[%d]", i),
-					Error: err,
-				})
-			}
-			if len(failures) > 0 {
-				return &validate.Error{Fields: failures}
-			}
-		}
-		_ = s.Options
+		_ = s.Options // validation expected, but not supported
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -1225,7 +1138,6 @@ func (s *SendPoll) Validate() error {
 		}).Validate(string(s.Question)); err != nil {
 			return err
 		}
-		_ = s.Question
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -1238,10 +1150,10 @@ func (s *SendPoll) Validate() error {
 	}
 	return nil
 }
-func (s *SendVideo) Validate() error {
+func (s SendVideo) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-		_ = s.Caption
+		_ = s.Caption // validation expected, but not supported
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -1250,7 +1162,7 @@ func (s *SendVideo) Validate() error {
 		})
 	}
 	if err := func() error {
-		_ = s.Duration
+		_ = s.Duration // validation expected, but not supported
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -1259,7 +1171,7 @@ func (s *SendVideo) Validate() error {
 		})
 	}
 	if err := func() error {
-		_ = s.Height
+		_ = s.Height // validation expected, but not supported
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -1268,7 +1180,7 @@ func (s *SendVideo) Validate() error {
 		})
 	}
 	if err := func() error {
-		_ = s.Width
+		_ = s.Width // validation expected, but not supported
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -1281,10 +1193,10 @@ func (s *SendVideo) Validate() error {
 	}
 	return nil
 }
-func (s *SendVideoNote) Validate() error {
+func (s SendVideoNote) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-		_ = s.Duration
+		_ = s.Duration // validation expected, but not supported
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -1297,10 +1209,10 @@ func (s *SendVideoNote) Validate() error {
 	}
 	return nil
 }
-func (s *SendVoice) Validate() error {
+func (s SendVoice) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-		_ = s.Caption
+		_ = s.Caption // validation expected, but not supported
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -1309,7 +1221,7 @@ func (s *SendVoice) Validate() error {
 		})
 	}
 	if err := func() error {
-		_ = s.Duration
+		_ = s.Duration // validation expected, but not supported
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -1322,7 +1234,7 @@ func (s *SendVoice) Validate() error {
 	}
 	return nil
 }
-func (s *SetChatAdministratorCustomTitle) Validate() error {
+func (s SetChatAdministratorCustomTitle) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
 		if err := (validate.String{
@@ -1333,7 +1245,6 @@ func (s *SetChatAdministratorCustomTitle) Validate() error {
 		}).Validate(string(s.CustomTitle)); err != nil {
 			return err
 		}
-		_ = s.CustomTitle
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -1346,10 +1257,10 @@ func (s *SetChatAdministratorCustomTitle) Validate() error {
 	}
 	return nil
 }
-func (s *SetChatDescription) Validate() error {
+func (s SetChatDescription) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-		_ = s.Description
+		_ = s.Description // validation expected, but not supported
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -1362,7 +1273,7 @@ func (s *SetChatDescription) Validate() error {
 	}
 	return nil
 }
-func (s *SetChatTitle) Validate() error {
+func (s SetChatTitle) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
 		if err := (validate.String{
@@ -1373,7 +1284,6 @@ func (s *SetChatTitle) Validate() error {
 		}).Validate(string(s.Title)); err != nil {
 			return err
 		}
-		_ = s.Title
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -1386,7 +1296,7 @@ func (s *SetChatTitle) Validate() error {
 	}
 	return nil
 }
-func (s *SetMyCommands) Validate() error {
+func (s SetMyCommands) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
 		if s.Commands == nil {
@@ -1395,7 +1305,9 @@ func (s *SetMyCommands) Validate() error {
 		var failures []validate.FieldError
 		for i, elem := range s.Commands {
 			if err := func() error {
-				_ = elem
+				if err := elem.Validate(); err != nil {
+					return err
+				}
 				return nil
 			}(); err != nil {
 				failures = append(failures, validate.FieldError{
@@ -1403,11 +1315,10 @@ func (s *SetMyCommands) Validate() error {
 					Error: err,
 				})
 			}
-			if len(failures) > 0 {
-				return &validate.Error{Fields: failures}
-			}
 		}
-		_ = s.Commands
+		if len(failures) > 0 {
+			return &validate.Error{Fields: failures}
+		}
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -1420,28 +1331,13 @@ func (s *SetMyCommands) Validate() error {
 	}
 	return nil
 }
-func (s *SetPassportDataErrors) Validate() error {
+func (s SetPassportDataErrors) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
 		if s.Errors == nil {
 			return fmt.Errorf("required, can't be nil")
 		}
-		var failures []validate.FieldError
-		for i, elem := range s.Errors {
-			if err := func() error {
-				_ = elem
-				return nil
-			}(); err != nil {
-				failures = append(failures, validate.FieldError{
-					Name:  fmt.Sprintf("[%d]", i),
-					Error: err,
-				})
-			}
-			if len(failures) > 0 {
-				return &validate.Error{Fields: failures}
-			}
-		}
-		_ = s.Errors
+		_ = s.Errors // validation expected, but not supported
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -1454,28 +1350,13 @@ func (s *SetPassportDataErrors) Validate() error {
 	}
 	return nil
 }
-func (s *ShippingOption) Validate() error {
+func (s ShippingOption) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
 		if s.Prices == nil {
 			return fmt.Errorf("required, can't be nil")
 		}
-		var failures []validate.FieldError
-		for i, elem := range s.Prices {
-			if err := func() error {
-				_ = elem
-				return nil
-			}(); err != nil {
-				failures = append(failures, validate.FieldError{
-					Name:  fmt.Sprintf("[%d]", i),
-					Error: err,
-				})
-			}
-			if len(failures) > 0 {
-				return &validate.Error{Fields: failures}
-			}
-		}
-		_ = s.Prices
+		_ = s.Prices // validation expected, but not supported
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -1488,7 +1369,7 @@ func (s *ShippingOption) Validate() error {
 	}
 	return nil
 }
-func (s *Sticker) Validate() error {
+func (s Sticker) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
 		if err := (validate.Int{
@@ -1501,7 +1382,6 @@ func (s *Sticker) Validate() error {
 		}).Validate(int64(s.Height)); err != nil {
 			return err
 		}
-		_ = s.Height
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -1510,7 +1390,7 @@ func (s *Sticker) Validate() error {
 		})
 	}
 	if err := func() error {
-		_ = s.Thumb
+		_ = s.Thumb // validation expected, but not supported
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -1529,7 +1409,6 @@ func (s *Sticker) Validate() error {
 		}).Validate(int64(s.Width)); err != nil {
 			return err
 		}
-		_ = s.Width
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -1542,7 +1421,7 @@ func (s *Sticker) Validate() error {
 	}
 	return nil
 }
-func (s *Video) Validate() error {
+func (s Video) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
 		if err := (validate.Int{
@@ -1555,7 +1434,6 @@ func (s *Video) Validate() error {
 		}).Validate(int64(s.Duration)); err != nil {
 			return err
 		}
-		_ = s.Duration
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -1574,7 +1452,6 @@ func (s *Video) Validate() error {
 		}).Validate(int64(s.Height)); err != nil {
 			return err
 		}
-		_ = s.Height
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -1583,7 +1460,7 @@ func (s *Video) Validate() error {
 		})
 	}
 	if err := func() error {
-		_ = s.Thumb
+		_ = s.Thumb // validation expected, but not supported
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -1602,7 +1479,6 @@ func (s *Video) Validate() error {
 		}).Validate(int64(s.Width)); err != nil {
 			return err
 		}
-		_ = s.Width
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -1615,7 +1491,7 @@ func (s *Video) Validate() error {
 	}
 	return nil
 }
-func (s *VideoNote) Validate() error {
+func (s VideoNote) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
 		if err := (validate.Int{
@@ -1628,7 +1504,6 @@ func (s *VideoNote) Validate() error {
 		}).Validate(int64(s.Duration)); err != nil {
 			return err
 		}
-		_ = s.Duration
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -1637,7 +1512,7 @@ func (s *VideoNote) Validate() error {
 		})
 	}
 	if err := func() error {
-		_ = s.Thumb
+		_ = s.Thumb // validation expected, but not supported
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -1650,7 +1525,7 @@ func (s *VideoNote) Validate() error {
 	}
 	return nil
 }
-func (s *Voice) Validate() error {
+func (s Voice) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
 		if err := (validate.Int{
@@ -1663,7 +1538,6 @@ func (s *Voice) Validate() error {
 		}).Validate(int64(s.Duration)); err != nil {
 			return err
 		}
-		_ = s.Duration
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -1676,7 +1550,7 @@ func (s *Voice) Validate() error {
 	}
 	return nil
 }
-func (s *VoiceChatEnded) Validate() error {
+func (s VoiceChatEnded) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
 		if err := (validate.Int{
@@ -1689,7 +1563,6 @@ func (s *VoiceChatEnded) Validate() error {
 		}).Validate(int64(s.Duration)); err != nil {
 			return err
 		}
-		_ = s.Duration
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
