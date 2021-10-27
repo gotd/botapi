@@ -50,7 +50,16 @@ var (
 	_ = net.IP{}
 )
 
-// Animation describes #/components/schemas/Animation.
+// Ref: #/components/schemas/addStickerToSet
+type AddStickerToSet struct {
+	Emojis       string          `json:"emojis"`
+	MaskPosition OptMaskPosition `json:"mask_position"`
+	Name         string          `json:"name"`
+	TgsSticker   OptString       `json:"tgs_sticker"`
+	UserID       int             `json:"user_id"`
+}
+
+// Ref: #/components/schemas/Animation
 type Animation struct {
 	Duration     int          `json:"duration"`
 	FileID       string       `json:"file_id"`
@@ -63,7 +72,40 @@ type Animation struct {
 	Width        int          `json:"width"`
 }
 
-// Audio describes #/components/schemas/Audio.
+// Ref: #/components/schemas/answerCallbackQuery
+type AnswerCallbackQuery struct {
+	CacheTime       OptInt    `json:"cache_time"`
+	CallbackQueryID string    `json:"callback_query_id"`
+	ShowAlert       OptBool   `json:"show_alert"`
+	Text            OptString `json:"text"`
+	URL             OptURL    `json:"url"`
+}
+
+// Ref: #/components/schemas/answerInlineQuery
+type AnswerInlineQuery struct {
+	CacheTime         OptInt    `json:"cache_time"`
+	InlineQueryID     string    `json:"inline_query_id"`
+	IsPersonal        OptBool   `json:"is_personal"`
+	NextOffset        OptString `json:"next_offset"`
+	SwitchPmParameter OptString `json:"switch_pm_parameter"`
+	SwitchPmText      OptString `json:"switch_pm_text"`
+}
+
+// Ref: #/components/schemas/answerPreCheckoutQuery
+type AnswerPreCheckoutQuery struct {
+	ErrorMessage       OptString `json:"error_message"`
+	Ok                 bool      `json:"ok"`
+	PreCheckoutQueryID string    `json:"pre_checkout_query_id"`
+}
+
+// Ref: #/components/schemas/answerShippingQuery
+type AnswerShippingQuery struct {
+	ErrorMessage    OptString `json:"error_message"`
+	Ok              bool      `json:"ok"`
+	ShippingQueryID string    `json:"shipping_query_id"`
+}
+
+// Ref: #/components/schemas/Audio
 type Audio struct {
 	Duration     int          `json:"duration"`
 	FileID       string       `json:"file_id"`
@@ -76,10 +118,17 @@ type Audio struct {
 	Title        OptString    `json:"title"`
 }
 
-// BotCommandScope describes #/components/schemas/BotCommandScope.
+// Ref: #/components/schemas/banChatMember
+type BanChatMember struct {
+	RevokeMessages OptBool `json:"revoke_messages"`
+	UntilDate      OptInt  `json:"until_date"`
+	UserID         int     `json:"user_id"`
+}
+
+// Ref: #/components/schemas/BotCommandScope
 type BotCommandScope struct{}
 
-// Chat describes #/components/schemas/Chat.
+// Ref: #/components/schemas/Chat
 type Chat struct {
 	Bio                   OptString          `json:"bio"`
 	CanSetStickerSet      OptBool            `json:"can_set_sticker_set"`
@@ -101,13 +150,13 @@ type Chat struct {
 	Username              OptString          `json:"username"`
 }
 
-// ChatLocation describes #/components/schemas/ChatLocation.
+// Ref: #/components/schemas/ChatLocation
 type ChatLocation struct {
 	Address  string   `json:"address"`
 	Location Location `json:"location"`
 }
 
-// ChatPermissions describes #/components/schemas/ChatPermissions.
+// Ref: #/components/schemas/ChatPermissions
 type ChatPermissions struct {
 	CanAddWebPagePreviews OptBool `json:"can_add_web_page_previews"`
 	CanChangeInfo         OptBool `json:"can_change_info"`
@@ -119,7 +168,7 @@ type ChatPermissions struct {
 	CanSendPolls          OptBool `json:"can_send_polls"`
 }
 
-// ChatPhoto describes #/components/schemas/ChatPhoto.
+// Ref: #/components/schemas/ChatPhoto
 type ChatPhoto struct {
 	BigFileID         string `json:"big_file_id"`
 	BigFileUniqueID   string `json:"big_file_unique_id"`
@@ -127,7 +176,7 @@ type ChatPhoto struct {
 	SmallFileUniqueID string `json:"small_file_unique_id"`
 }
 
-// Contact describes #/components/schemas/Contact.
+// Ref: #/components/schemas/Contact
 type Contact struct {
 	FirstName   string    `json:"first_name"`
 	LastName    OptString `json:"last_name"`
@@ -136,13 +185,67 @@ type Contact struct {
 	Vcard       OptString `json:"vcard"`
 }
 
-// Dice describes #/components/schemas/Dice.
+// Ref: #/components/schemas/copyMessage
+type CopyMessage struct {
+	AllowSendingWithoutReply OptBool   `json:"allow_sending_without_reply"`
+	Caption                  OptString `json:"caption"`
+	DisableNotification      OptBool   `json:"disable_notification"`
+	MessageID                int       `json:"message_id"`
+	ParseMode                OptString `json:"parse_mode"`
+	ReplyToMessageID         OptInt    `json:"reply_to_message_id"`
+}
+
+// Ref: #/components/schemas/createChatInviteLink
+type CreateChatInviteLink struct {
+	ExpireDate  OptInt `json:"expire_date"`
+	MemberLimit OptInt `json:"member_limit"`
+}
+
+// Ref: #/components/schemas/createNewStickerSet
+type CreateNewStickerSet struct {
+	ContainsMasks OptBool         `json:"contains_masks"`
+	Emojis        string          `json:"emojis"`
+	MaskPosition  OptMaskPosition `json:"mask_position"`
+	Name          string          `json:"name"`
+	TgsSticker    OptString       `json:"tgs_sticker"`
+	Title         string          `json:"title"`
+	UserID        int             `json:"user_id"`
+}
+
+// Ref: #/components/schemas/deleteChatPhoto
+type DeleteChatPhoto struct{}
+
+// Ref: #/components/schemas/deleteChatStickerSet
+type DeleteChatStickerSet struct{}
+
+// Ref: #/components/schemas/deleteMessage
+type DeleteMessage struct {
+	MessageID int `json:"message_id"`
+}
+
+// Ref: #/components/schemas/deleteMyCommands
+type DeleteMyCommands struct {
+	LanguageCode OptString        `json:"language_code"`
+	Scope        *BotCommandScope `json:"scope"`
+}
+
+// Ref: #/components/schemas/deleteStickerFromSet
+type DeleteStickerFromSet struct {
+	Sticker string `json:"sticker"`
+}
+
+// Ref: #/components/schemas/deleteWebhook
+type DeleteWebhook struct {
+	DropPendingUpdates OptBool `json:"drop_pending_updates"`
+}
+
+// Ref: #/components/schemas/Dice
 type Dice struct {
 	Emoji string `json:"emoji"`
 	Value int    `json:"value"`
 }
 
-// Document describes #/components/schemas/Document.
+// Ref: #/components/schemas/Document
 type Document struct {
 	FileID       string       `json:"file_id"`
 	FileName     OptString    `json:"file_name"`
@@ -152,14 +255,67 @@ type Document struct {
 	Thumb        OptPhotoSize `json:"thumb"`
 }
 
-// EncryptedCredentials describes #/components/schemas/EncryptedCredentials.
+// Ref: #/components/schemas/editChatInviteLink
+type EditChatInviteLink struct {
+	ExpireDate  OptInt `json:"expire_date"`
+	InviteLink  string `json:"invite_link"`
+	MemberLimit OptInt `json:"member_limit"`
+}
+
+// Ref: #/components/schemas/editMessageCaption
+type EditMessageCaption struct {
+	Caption         OptString             `json:"caption"`
+	InlineMessageID OptString             `json:"inline_message_id"`
+	MessageID       OptInt                `json:"message_id"`
+	ParseMode       OptString             `json:"parse_mode"`
+	ReplyMarkup     *InlineKeyboardMarkup `json:"reply_markup"`
+}
+
+// Ref: #/components/schemas/editMessageLiveLocation
+type EditMessageLiveLocation struct {
+	Heading              OptInt                `json:"heading"`
+	HorizontalAccuracy   OptFloat64            `json:"horizontal_accuracy"`
+	InlineMessageID      OptString             `json:"inline_message_id"`
+	Latitude             float64               `json:"latitude"`
+	Longitude            float64               `json:"longitude"`
+	MessageID            OptInt                `json:"message_id"`
+	ProximityAlertRadius OptInt                `json:"proximity_alert_radius"`
+	ReplyMarkup          *InlineKeyboardMarkup `json:"reply_markup"`
+}
+
+// Ref: #/components/schemas/editMessageMedia
+type EditMessageMedia struct {
+	InlineMessageID OptString             `json:"inline_message_id"`
+	Media           InputMedia            `json:"media"`
+	MessageID       OptInt                `json:"message_id"`
+	ReplyMarkup     *InlineKeyboardMarkup `json:"reply_markup"`
+}
+
+// Ref: #/components/schemas/editMessageReplyMarkup
+type EditMessageReplyMarkup struct {
+	InlineMessageID OptString             `json:"inline_message_id"`
+	MessageID       OptInt                `json:"message_id"`
+	ReplyMarkup     *InlineKeyboardMarkup `json:"reply_markup"`
+}
+
+// Ref: #/components/schemas/editMessageText
+type EditMessageText struct {
+	DisableWebPagePreview OptBool               `json:"disable_web_page_preview"`
+	InlineMessageID       OptString             `json:"inline_message_id"`
+	MessageID             OptInt                `json:"message_id"`
+	ParseMode             OptString             `json:"parse_mode"`
+	ReplyMarkup           *InlineKeyboardMarkup `json:"reply_markup"`
+	Text                  string                `json:"text"`
+}
+
+// Ref: #/components/schemas/EncryptedCredentials
 type EncryptedCredentials struct {
 	Data   string `json:"data"`
 	Hash   string `json:"hash"`
 	Secret string `json:"secret"`
 }
 
-// Error describes #/components/schemas/Error.
+// Ref: #/components/schemas/Error
 type Error struct {
 	Description string      `json:"description"`
 	ErrorCode   int         `json:"error_code"`
@@ -167,9 +323,10 @@ type Error struct {
 	Parameters  OptResponse `json:"parameters"`
 }
 
+// ErrorStatusCode wraps Error with StatusCode.
 type ErrorStatusCode struct {
-	StatusCode int   `json:"-"`
-	Response   Error `json:"-"`
+	StatusCode int
+	Response   Error
 }
 
 func (*ErrorStatusCode) addStickerToSetRes()                 {}
@@ -248,7 +405,16 @@ func (*ErrorStatusCode) unpinAllChatMessagesRes()            {}
 func (*ErrorStatusCode) unpinChatMessageRes()                {}
 func (*ErrorStatusCode) uploadStickerFileRes()               {}
 
-// Game describes #/components/schemas/Game.
+// Ref: #/components/schemas/exportChatInviteLink
+type ExportChatInviteLink struct{}
+
+// Ref: #/components/schemas/forwardMessage
+type ForwardMessage struct {
+	DisableNotification OptBool `json:"disable_notification"`
+	MessageID           int     `json:"message_id"`
+}
+
+// Ref: #/components/schemas/Game
 type Game struct {
 	Animation   OptAnimation `json:"animation"`
 	Description string       `json:"description"`
@@ -256,13 +422,65 @@ type Game struct {
 	Title       string       `json:"title"`
 }
 
-// InlineKeyboardMarkup describes #/components/schemas/InlineKeyboardMarkup.
+// Ref: #/components/schemas/getChat
+type GetChat struct{}
+
+// Ref: #/components/schemas/getChatAdministrators
+type GetChatAdministrators struct{}
+
+// Ref: #/components/schemas/getChatMember
+type GetChatMember struct {
+	UserID int `json:"user_id"`
+}
+
+// Ref: #/components/schemas/getChatMemberCount
+type GetChatMemberCount struct{}
+
+// Ref: #/components/schemas/getFile
+type GetFile struct {
+	FileID string `json:"file_id"`
+}
+
+// Ref: #/components/schemas/getGameHighScores
+type GetGameHighScores struct {
+	ChatID          OptInt    `json:"chat_id"`
+	InlineMessageID OptString `json:"inline_message_id"`
+	MessageID       OptInt    `json:"message_id"`
+	UserID          int       `json:"user_id"`
+}
+
+// Ref: #/components/schemas/getMyCommands
+type GetMyCommands struct {
+	LanguageCode OptString        `json:"language_code"`
+	Scope        *BotCommandScope `json:"scope"`
+}
+
+// Ref: #/components/schemas/getStickerSet
+type GetStickerSet struct {
+	Name string `json:"name"`
+}
+
+// Ref: #/components/schemas/getUpdates
+type GetUpdates struct {
+	Limit   OptInt `json:"limit"`
+	Offset  OptInt `json:"offset"`
+	Timeout OptInt `json:"timeout"`
+}
+
+// Ref: #/components/schemas/getUserProfilePhotos
+type GetUserProfilePhotos struct {
+	Limit  OptInt `json:"limit"`
+	Offset OptInt `json:"offset"`
+	UserID int    `json:"user_id"`
+}
+
+// Ref: #/components/schemas/InlineKeyboardMarkup
 type InlineKeyboardMarkup struct{}
 
-// InputMedia describes #/components/schemas/InputMedia.
+// Ref: #/components/schemas/InputMedia
 type InputMedia struct{}
 
-// Invoice describes #/components/schemas/Invoice.
+// Ref: #/components/schemas/Invoice
 type Invoice struct {
 	Currency       string `json:"currency"`
 	Description    string `json:"description"`
@@ -271,7 +489,10 @@ type Invoice struct {
 	TotalAmount    int    `json:"total_amount"`
 }
 
-// Location describes #/components/schemas/Location.
+// Ref: #/components/schemas/leaveChat
+type LeaveChat struct{}
+
+// Ref: #/components/schemas/Location
 type Location struct {
 	Heading              OptInt     `json:"heading"`
 	HorizontalAccuracy   OptFloat64 `json:"horizontal_accuracy"`
@@ -281,7 +502,7 @@ type Location struct {
 	ProximityAlertRadius OptInt     `json:"proximity_alert_radius"`
 }
 
-// MaskPosition describes #/components/schemas/MaskPosition.
+// Ref: #/components/schemas/MaskPosition
 type MaskPosition struct {
 	Point  string  `json:"point"`
 	Scale  float64 `json:"scale"`
@@ -289,7 +510,7 @@ type MaskPosition struct {
 	YShift float64 `json:"y_shift"`
 }
 
-// Message describes #/components/schemas/Message.
+// Ref: #/components/schemas/Message
 type Message struct {
 	Animation                     OptAnimation                     `json:"animation"`
 	Audio                         OptAudio                         `json:"audio"`
@@ -344,7 +565,7 @@ type Message struct {
 	VoiceChatStarted              *VoiceChatStarted                `json:"voice_chat_started"`
 }
 
-// MessageAutoDeleteTimerChanged describes #/components/schemas/MessageAutoDeleteTimerChanged.
+// Ref: #/components/schemas/MessageAutoDeleteTimerChanged
 type MessageAutoDeleteTimerChanged struct {
 	MessageAutoDeleteTime int `json:"message_auto_delete_time"`
 }
@@ -1717,7 +1938,7 @@ func (o OptVoiceChatScheduled) Get() (v VoiceChatScheduled, ok bool) {
 	return o.Value, true
 }
 
-// OrderInfo describes #/components/schemas/OrderInfo.
+// Ref: #/components/schemas/OrderInfo
 type OrderInfo struct {
 	Email           OptString          `json:"email"`
 	Name            OptString          `json:"name"`
@@ -1725,12 +1946,12 @@ type OrderInfo struct {
 	ShippingAddress OptShippingAddress `json:"shipping_address"`
 }
 
-// PassportData describes #/components/schemas/PassportData.
+// Ref: #/components/schemas/PassportData
 type PassportData struct {
 	Credentials EncryptedCredentials `json:"credentials"`
 }
 
-// PhotoSize describes #/components/schemas/PhotoSize.
+// Ref: #/components/schemas/PhotoSize
 type PhotoSize struct {
 	FileID       string `json:"file_id"`
 	FileSize     OptInt `json:"file_size"`
@@ -1739,7 +1960,13 @@ type PhotoSize struct {
 	Width        int    `json:"width"`
 }
 
-// Poll describes #/components/schemas/Poll.
+// Ref: #/components/schemas/pinChatMessage
+type PinChatMessage struct {
+	DisableNotification OptBool `json:"disable_notification"`
+	MessageID           int     `json:"message_id"`
+}
+
+// Ref: #/components/schemas/Poll
 type Poll struct {
 	AllowsMultipleAnswers bool      `json:"allows_multiple_answers"`
 	CloseDate             OptInt    `json:"close_date"`
@@ -1754,20 +1981,43 @@ type Poll struct {
 	Type                  string    `json:"type"`
 }
 
-// ProximityAlertTriggered describes #/components/schemas/ProximityAlertTriggered.
+// Ref: #/components/schemas/promoteChatMember
+type PromoteChatMember struct {
+	CanChangeInfo       OptBool `json:"can_change_info"`
+	CanDeleteMessages   OptBool `json:"can_delete_messages"`
+	CanEditMessages     OptBool `json:"can_edit_messages"`
+	CanInviteUsers      OptBool `json:"can_invite_users"`
+	CanManageChat       OptBool `json:"can_manage_chat"`
+	CanManageVoiceChats OptBool `json:"can_manage_voice_chats"`
+	CanPinMessages      OptBool `json:"can_pin_messages"`
+	CanPostMessages     OptBool `json:"can_post_messages"`
+	CanPromoteMembers   OptBool `json:"can_promote_members"`
+	CanRestrictMembers  OptBool `json:"can_restrict_members"`
+	IsAnonymous         OptBool `json:"is_anonymous"`
+	UserID              int     `json:"user_id"`
+}
+
+// Ref: #/components/schemas/ProximityAlertTriggered
 type ProximityAlertTriggered struct {
 	Distance int  `json:"distance"`
 	Traveler User `json:"traveler"`
 	Watcher  User `json:"watcher"`
 }
 
-// Response describes #/components/schemas/Response.
+// Ref: #/components/schemas/Response
 type Response struct {
 	MigrateToChatID OptInt64 `json:"migrate_to_chat_id"`
 	RetryAfter      OptInt   `json:"retry_after"`
 }
 
-// Result describes #/components/schemas/Result.
+// Ref: #/components/schemas/restrictChatMember
+type RestrictChatMember struct {
+	Permissions ChatPermissions `json:"permissions"`
+	UntilDate   OptInt          `json:"until_date"`
+	UserID      int             `json:"user_id"`
+}
+
+// Ref: #/components/schemas/Result
 type Result struct {
 	Ok     bool    `json:"ok"`
 	Result OptBool `json:"result"`
@@ -1832,7 +2082,7 @@ func (*Result) unpinAllChatMessagesRes()            {}
 func (*Result) unpinChatMessageRes()                {}
 func (*Result) uploadStickerFileRes()               {}
 
-// ResultMsg describes #/components/schemas/ResultMsg.
+// Ref: #/components/schemas/ResultMsg
 type ResultMsg struct {
 	Ok     bool       `json:"ok"`
 	Result OptMessage `json:"result"`
@@ -1855,7 +2105,7 @@ func (*ResultMsg) sendVideoNoteRes()  {}
 func (*ResultMsg) sendVideoRes()      {}
 func (*ResultMsg) sendVoiceRes()      {}
 
-// ResultUsr describes #/components/schemas/ResultUsr.
+// Ref: #/components/schemas/ResultUsr
 type ResultUsr struct {
 	Ok     bool    `json:"ok"`
 	Result OptUser `json:"result"`
@@ -1863,368 +2113,12 @@ type ResultUsr struct {
 
 func (*ResultUsr) getMeRes() {}
 
-// ShippingAddress describes #/components/schemas/ShippingAddress.
-type ShippingAddress struct {
-	City        string `json:"city"`
-	CountryCode string `json:"country_code"`
-	PostCode    string `json:"post_code"`
-	State       string `json:"state"`
-	StreetLine1 string `json:"street_line1"`
-	StreetLine2 string `json:"street_line2"`
-}
-
-// Sticker describes #/components/schemas/Sticker.
-type Sticker struct {
-	Emoji        OptString       `json:"emoji"`
-	FileID       string          `json:"file_id"`
-	FileSize     OptInt          `json:"file_size"`
-	FileUniqueID string          `json:"file_unique_id"`
-	Height       int             `json:"height"`
-	IsAnimated   bool            `json:"is_animated"`
-	MaskPosition OptMaskPosition `json:"mask_position"`
-	SetName      OptString       `json:"set_name"`
-	Thumb        OptPhotoSize    `json:"thumb"`
-	Width        int             `json:"width"`
-}
-
-// SuccessfulPayment describes #/components/schemas/SuccessfulPayment.
-type SuccessfulPayment struct {
-	Currency                string       `json:"currency"`
-	InvoicePayload          string       `json:"invoice_payload"`
-	OrderInfo               OptOrderInfo `json:"order_info"`
-	ProviderPaymentChargeID string       `json:"provider_payment_charge_id"`
-	ShippingOptionID        OptString    `json:"shipping_option_id"`
-	TelegramPaymentChargeID string       `json:"telegram_payment_charge_id"`
-	TotalAmount             int          `json:"total_amount"`
-}
-
-// User describes #/components/schemas/User.
-type User struct {
-	CanJoinGroups           OptBool   `json:"can_join_groups"`
-	CanReadAllGroupMessages OptBool   `json:"can_read_all_group_messages"`
-	FirstName               string    `json:"first_name"`
-	ID                      int       `json:"id"`
-	IsBot                   bool      `json:"is_bot"`
-	LanguageCode            OptString `json:"language_code"`
-	LastName                OptString `json:"last_name"`
-	SupportsInlineQueries   OptBool   `json:"supports_inline_queries"`
-	Username                OptString `json:"username"`
-}
-
-// Venue describes #/components/schemas/Venue.
-type Venue struct {
-	Address         string    `json:"address"`
-	FoursquareID    OptString `json:"foursquare_id"`
-	FoursquareType  OptString `json:"foursquare_type"`
-	GooglePlaceID   OptString `json:"google_place_id"`
-	GooglePlaceType OptString `json:"google_place_type"`
-	Location        Location  `json:"location"`
-	Title           string    `json:"title"`
-}
-
-// Video describes #/components/schemas/Video.
-type Video struct {
-	Duration     int          `json:"duration"`
-	FileID       string       `json:"file_id"`
-	FileName     OptString    `json:"file_name"`
-	FileSize     OptInt       `json:"file_size"`
-	FileUniqueID string       `json:"file_unique_id"`
-	Height       int          `json:"height"`
-	MimeType     OptString    `json:"mime_type"`
-	Thumb        OptPhotoSize `json:"thumb"`
-	Width        int          `json:"width"`
-}
-
-// VideoNote describes #/components/schemas/VideoNote.
-type VideoNote struct {
-	Duration     int          `json:"duration"`
-	FileID       string       `json:"file_id"`
-	FileSize     OptInt       `json:"file_size"`
-	FileUniqueID string       `json:"file_unique_id"`
-	Length       int          `json:"length"`
-	Thumb        OptPhotoSize `json:"thumb"`
-}
-
-// Voice describes #/components/schemas/Voice.
-type Voice struct {
-	Duration     int       `json:"duration"`
-	FileID       string    `json:"file_id"`
-	FileSize     OptInt    `json:"file_size"`
-	FileUniqueID string    `json:"file_unique_id"`
-	MimeType     OptString `json:"mime_type"`
-}
-
-// VoiceChatEnded describes #/components/schemas/VoiceChatEnded.
-type VoiceChatEnded struct {
-	Duration int `json:"duration"`
-}
-
-// VoiceChatParticipantsInvited describes #/components/schemas/VoiceChatParticipantsInvited.
-type VoiceChatParticipantsInvited struct{}
-
-// VoiceChatScheduled describes #/components/schemas/VoiceChatScheduled.
-type VoiceChatScheduled struct {
-	StartDate int `json:"start_date"`
-}
-
-// VoiceChatStarted describes #/components/schemas/VoiceChatStarted.
-type VoiceChatStarted struct{}
-
-// AddStickerToSet describes #/components/schemas/addStickerToSet.
-type AddStickerToSet struct {
-	Emojis       string          `json:"emojis"`
-	MaskPosition OptMaskPosition `json:"mask_position"`
-	Name         string          `json:"name"`
-	TgsSticker   OptString       `json:"tgs_sticker"`
-	UserID       int             `json:"user_id"`
-}
-
-// AnswerCallbackQuery describes #/components/schemas/answerCallbackQuery.
-type AnswerCallbackQuery struct {
-	CacheTime       OptInt    `json:"cache_time"`
-	CallbackQueryID string    `json:"callback_query_id"`
-	ShowAlert       OptBool   `json:"show_alert"`
-	Text            OptString `json:"text"`
-	URL             OptURL    `json:"url"`
-}
-
-// AnswerInlineQuery describes #/components/schemas/answerInlineQuery.
-type AnswerInlineQuery struct {
-	CacheTime         OptInt    `json:"cache_time"`
-	InlineQueryID     string    `json:"inline_query_id"`
-	IsPersonal        OptBool   `json:"is_personal"`
-	NextOffset        OptString `json:"next_offset"`
-	SwitchPmParameter OptString `json:"switch_pm_parameter"`
-	SwitchPmText      OptString `json:"switch_pm_text"`
-}
-
-// AnswerPreCheckoutQuery describes #/components/schemas/answerPreCheckoutQuery.
-type AnswerPreCheckoutQuery struct {
-	ErrorMessage       OptString `json:"error_message"`
-	Ok                 bool      `json:"ok"`
-	PreCheckoutQueryID string    `json:"pre_checkout_query_id"`
-}
-
-// AnswerShippingQuery describes #/components/schemas/answerShippingQuery.
-type AnswerShippingQuery struct {
-	ErrorMessage    OptString `json:"error_message"`
-	Ok              bool      `json:"ok"`
-	ShippingQueryID string    `json:"shipping_query_id"`
-}
-
-// BanChatMember describes #/components/schemas/banChatMember.
-type BanChatMember struct {
-	RevokeMessages OptBool `json:"revoke_messages"`
-	UntilDate      OptInt  `json:"until_date"`
-	UserID         int     `json:"user_id"`
-}
-
-// CopyMessage describes #/components/schemas/copyMessage.
-type CopyMessage struct {
-	AllowSendingWithoutReply OptBool   `json:"allow_sending_without_reply"`
-	Caption                  OptString `json:"caption"`
-	DisableNotification      OptBool   `json:"disable_notification"`
-	MessageID                int       `json:"message_id"`
-	ParseMode                OptString `json:"parse_mode"`
-	ReplyToMessageID         OptInt    `json:"reply_to_message_id"`
-}
-
-// CreateChatInviteLink describes #/components/schemas/createChatInviteLink.
-type CreateChatInviteLink struct {
-	ExpireDate  OptInt `json:"expire_date"`
-	MemberLimit OptInt `json:"member_limit"`
-}
-
-// CreateNewStickerSet describes #/components/schemas/createNewStickerSet.
-type CreateNewStickerSet struct {
-	ContainsMasks OptBool         `json:"contains_masks"`
-	Emojis        string          `json:"emojis"`
-	MaskPosition  OptMaskPosition `json:"mask_position"`
-	Name          string          `json:"name"`
-	TgsSticker    OptString       `json:"tgs_sticker"`
-	Title         string          `json:"title"`
-	UserID        int             `json:"user_id"`
-}
-
-// DeleteChatPhoto describes #/components/schemas/deleteChatPhoto.
-type DeleteChatPhoto struct{}
-
-// DeleteChatStickerSet describes #/components/schemas/deleteChatStickerSet.
-type DeleteChatStickerSet struct{}
-
-// DeleteMessage describes #/components/schemas/deleteMessage.
-type DeleteMessage struct {
-	MessageID int `json:"message_id"`
-}
-
-// DeleteMyCommands describes #/components/schemas/deleteMyCommands.
-type DeleteMyCommands struct {
-	LanguageCode OptString        `json:"language_code"`
-	Scope        *BotCommandScope `json:"scope"`
-}
-
-// DeleteStickerFromSet describes #/components/schemas/deleteStickerFromSet.
-type DeleteStickerFromSet struct {
-	Sticker string `json:"sticker"`
-}
-
-// DeleteWebhook describes #/components/schemas/deleteWebhook.
-type DeleteWebhook struct {
-	DropPendingUpdates OptBool `json:"drop_pending_updates"`
-}
-
-// EditChatInviteLink describes #/components/schemas/editChatInviteLink.
-type EditChatInviteLink struct {
-	ExpireDate  OptInt `json:"expire_date"`
-	InviteLink  string `json:"invite_link"`
-	MemberLimit OptInt `json:"member_limit"`
-}
-
-// EditMessageCaption describes #/components/schemas/editMessageCaption.
-type EditMessageCaption struct {
-	Caption         OptString             `json:"caption"`
-	InlineMessageID OptString             `json:"inline_message_id"`
-	MessageID       OptInt                `json:"message_id"`
-	ParseMode       OptString             `json:"parse_mode"`
-	ReplyMarkup     *InlineKeyboardMarkup `json:"reply_markup"`
-}
-
-// EditMessageLiveLocation describes #/components/schemas/editMessageLiveLocation.
-type EditMessageLiveLocation struct {
-	Heading              OptInt                `json:"heading"`
-	HorizontalAccuracy   OptFloat64            `json:"horizontal_accuracy"`
-	InlineMessageID      OptString             `json:"inline_message_id"`
-	Latitude             float64               `json:"latitude"`
-	Longitude            float64               `json:"longitude"`
-	MessageID            OptInt                `json:"message_id"`
-	ProximityAlertRadius OptInt                `json:"proximity_alert_radius"`
-	ReplyMarkup          *InlineKeyboardMarkup `json:"reply_markup"`
-}
-
-// EditMessageMedia describes #/components/schemas/editMessageMedia.
-type EditMessageMedia struct {
-	InlineMessageID OptString             `json:"inline_message_id"`
-	Media           InputMedia            `json:"media"`
-	MessageID       OptInt                `json:"message_id"`
-	ReplyMarkup     *InlineKeyboardMarkup `json:"reply_markup"`
-}
-
-// EditMessageReplyMarkup describes #/components/schemas/editMessageReplyMarkup.
-type EditMessageReplyMarkup struct {
-	InlineMessageID OptString             `json:"inline_message_id"`
-	MessageID       OptInt                `json:"message_id"`
-	ReplyMarkup     *InlineKeyboardMarkup `json:"reply_markup"`
-}
-
-// EditMessageText describes #/components/schemas/editMessageText.
-type EditMessageText struct {
-	DisableWebPagePreview OptBool               `json:"disable_web_page_preview"`
-	InlineMessageID       OptString             `json:"inline_message_id"`
-	MessageID             OptInt                `json:"message_id"`
-	ParseMode             OptString             `json:"parse_mode"`
-	ReplyMarkup           *InlineKeyboardMarkup `json:"reply_markup"`
-	Text                  string                `json:"text"`
-}
-
-// ExportChatInviteLink describes #/components/schemas/exportChatInviteLink.
-type ExportChatInviteLink struct{}
-
-// ForwardMessage describes #/components/schemas/forwardMessage.
-type ForwardMessage struct {
-	DisableNotification OptBool `json:"disable_notification"`
-	MessageID           int     `json:"message_id"`
-}
-
-// GetChat describes #/components/schemas/getChat.
-type GetChat struct{}
-
-// GetChatAdministrators describes #/components/schemas/getChatAdministrators.
-type GetChatAdministrators struct{}
-
-// GetChatMember describes #/components/schemas/getChatMember.
-type GetChatMember struct {
-	UserID int `json:"user_id"`
-}
-
-// GetChatMemberCount describes #/components/schemas/getChatMemberCount.
-type GetChatMemberCount struct{}
-
-// GetFile describes #/components/schemas/getFile.
-type GetFile struct {
-	FileID string `json:"file_id"`
-}
-
-// GetGameHighScores describes #/components/schemas/getGameHighScores.
-type GetGameHighScores struct {
-	ChatID          OptInt    `json:"chat_id"`
-	InlineMessageID OptString `json:"inline_message_id"`
-	MessageID       OptInt    `json:"message_id"`
-	UserID          int       `json:"user_id"`
-}
-
-// GetMyCommands describes #/components/schemas/getMyCommands.
-type GetMyCommands struct {
-	LanguageCode OptString        `json:"language_code"`
-	Scope        *BotCommandScope `json:"scope"`
-}
-
-// GetStickerSet describes #/components/schemas/getStickerSet.
-type GetStickerSet struct {
-	Name string `json:"name"`
-}
-
-// GetUpdates describes #/components/schemas/getUpdates.
-type GetUpdates struct {
-	Limit   OptInt `json:"limit"`
-	Offset  OptInt `json:"offset"`
-	Timeout OptInt `json:"timeout"`
-}
-
-// GetUserProfilePhotos describes #/components/schemas/getUserProfilePhotos.
-type GetUserProfilePhotos struct {
-	Limit  OptInt `json:"limit"`
-	Offset OptInt `json:"offset"`
-	UserID int    `json:"user_id"`
-}
-
-// LeaveChat describes #/components/schemas/leaveChat.
-type LeaveChat struct{}
-
-// PinChatMessage describes #/components/schemas/pinChatMessage.
-type PinChatMessage struct {
-	DisableNotification OptBool `json:"disable_notification"`
-	MessageID           int     `json:"message_id"`
-}
-
-// PromoteChatMember describes #/components/schemas/promoteChatMember.
-type PromoteChatMember struct {
-	CanChangeInfo       OptBool `json:"can_change_info"`
-	CanDeleteMessages   OptBool `json:"can_delete_messages"`
-	CanEditMessages     OptBool `json:"can_edit_messages"`
-	CanInviteUsers      OptBool `json:"can_invite_users"`
-	CanManageChat       OptBool `json:"can_manage_chat"`
-	CanManageVoiceChats OptBool `json:"can_manage_voice_chats"`
-	CanPinMessages      OptBool `json:"can_pin_messages"`
-	CanPostMessages     OptBool `json:"can_post_messages"`
-	CanPromoteMembers   OptBool `json:"can_promote_members"`
-	CanRestrictMembers  OptBool `json:"can_restrict_members"`
-	IsAnonymous         OptBool `json:"is_anonymous"`
-	UserID              int     `json:"user_id"`
-}
-
-// RestrictChatMember describes #/components/schemas/restrictChatMember.
-type RestrictChatMember struct {
-	Permissions ChatPermissions `json:"permissions"`
-	UntilDate   OptInt          `json:"until_date"`
-	UserID      int             `json:"user_id"`
-}
-
-// RevokeChatInviteLink describes #/components/schemas/revokeChatInviteLink.
+// Ref: #/components/schemas/revokeChatInviteLink
 type RevokeChatInviteLink struct {
 	InviteLink string `json:"invite_link"`
 }
 
-// SendAnimation describes #/components/schemas/sendAnimation.
+// Ref: #/components/schemas/sendAnimation
 type SendAnimation struct {
 	AllowSendingWithoutReply OptBool   `json:"allow_sending_without_reply"`
 	Caption                  OptString `json:"caption"`
@@ -2236,7 +2130,7 @@ type SendAnimation struct {
 	Width                    OptInt    `json:"width"`
 }
 
-// SendAudio describes #/components/schemas/sendAudio.
+// Ref: #/components/schemas/sendAudio
 type SendAudio struct {
 	AllowSendingWithoutReply OptBool   `json:"allow_sending_without_reply"`
 	Caption                  OptString `json:"caption"`
@@ -2248,12 +2142,12 @@ type SendAudio struct {
 	Title                    OptString `json:"title"`
 }
 
-// SendChatAction describes #/components/schemas/sendChatAction.
+// Ref: #/components/schemas/sendChatAction
 type SendChatAction struct {
 	Action string `json:"action"`
 }
 
-// SendContact describes #/components/schemas/sendContact.
+// Ref: #/components/schemas/sendContact
 type SendContact struct {
 	AllowSendingWithoutReply OptBool   `json:"allow_sending_without_reply"`
 	DisableNotification      OptBool   `json:"disable_notification"`
@@ -2264,7 +2158,7 @@ type SendContact struct {
 	Vcard                    OptString `json:"vcard"`
 }
 
-// SendDice describes #/components/schemas/sendDice.
+// Ref: #/components/schemas/sendDice
 type SendDice struct {
 	AllowSendingWithoutReply OptBool   `json:"allow_sending_without_reply"`
 	DisableNotification      OptBool   `json:"disable_notification"`
@@ -2272,7 +2166,7 @@ type SendDice struct {
 	ReplyToMessageID         OptInt    `json:"reply_to_message_id"`
 }
 
-// SendDocument describes #/components/schemas/sendDocument.
+// Ref: #/components/schemas/sendDocument
 type SendDocument struct {
 	AllowSendingWithoutReply    OptBool   `json:"allow_sending_without_reply"`
 	Caption                     OptString `json:"caption"`
@@ -2282,7 +2176,7 @@ type SendDocument struct {
 	ReplyToMessageID            OptInt    `json:"reply_to_message_id"`
 }
 
-// SendGame describes #/components/schemas/sendGame.
+// Ref: #/components/schemas/sendGame
 type SendGame struct {
 	AllowSendingWithoutReply OptBool               `json:"allow_sending_without_reply"`
 	ChatID                   int                   `json:"chat_id"`
@@ -2292,7 +2186,7 @@ type SendGame struct {
 	ReplyToMessageID         OptInt                `json:"reply_to_message_id"`
 }
 
-// SendInvoice describes #/components/schemas/sendInvoice.
+// Ref: #/components/schemas/sendInvoice
 type SendInvoice struct {
 	AllowSendingWithoutReply  OptBool               `json:"allow_sending_without_reply"`
 	Currency                  string                `json:"currency"`
@@ -2319,7 +2213,7 @@ type SendInvoice struct {
 	Title                     string                `json:"title"`
 }
 
-// SendLocation describes #/components/schemas/sendLocation.
+// Ref: #/components/schemas/sendLocation
 type SendLocation struct {
 	AllowSendingWithoutReply OptBool    `json:"allow_sending_without_reply"`
 	DisableNotification      OptBool    `json:"disable_notification"`
@@ -2332,14 +2226,14 @@ type SendLocation struct {
 	ReplyToMessageID         OptInt     `json:"reply_to_message_id"`
 }
 
-// SendMediaGroup describes #/components/schemas/sendMediaGroup.
+// Ref: #/components/schemas/sendMediaGroup
 type SendMediaGroup struct {
 	AllowSendingWithoutReply OptBool `json:"allow_sending_without_reply"`
 	DisableNotification      OptBool `json:"disable_notification"`
 	ReplyToMessageID         OptInt  `json:"reply_to_message_id"`
 }
 
-// SendMessage describes #/components/schemas/sendMessage.
+// Ref: #/components/schemas/sendMessage
 type SendMessage struct {
 	AllowSendingWithoutReply OptBool   `json:"allow_sending_without_reply"`
 	DisableNotification      OptBool   `json:"disable_notification"`
@@ -2349,7 +2243,7 @@ type SendMessage struct {
 	Text                     string    `json:"text"`
 }
 
-// SendPhoto describes #/components/schemas/sendPhoto.
+// Ref: #/components/schemas/sendPhoto
 type SendPhoto struct {
 	AllowSendingWithoutReply OptBool   `json:"allow_sending_without_reply"`
 	Caption                  OptString `json:"caption"`
@@ -2358,7 +2252,7 @@ type SendPhoto struct {
 	ReplyToMessageID         OptInt    `json:"reply_to_message_id"`
 }
 
-// SendPoll describes #/components/schemas/sendPoll.
+// Ref: #/components/schemas/sendPoll
 type SendPoll struct {
 	AllowSendingWithoutReply OptBool   `json:"allow_sending_without_reply"`
 	AllowsMultipleAnswers    OptBool   `json:"allows_multiple_answers"`
@@ -2375,14 +2269,14 @@ type SendPoll struct {
 	Type                     OptString `json:"type"`
 }
 
-// SendSticker describes #/components/schemas/sendSticker.
+// Ref: #/components/schemas/sendSticker
 type SendSticker struct {
 	AllowSendingWithoutReply OptBool `json:"allow_sending_without_reply"`
 	DisableNotification      OptBool `json:"disable_notification"`
 	ReplyToMessageID         OptInt  `json:"reply_to_message_id"`
 }
 
-// SendVenue describes #/components/schemas/sendVenue.
+// Ref: #/components/schemas/sendVenue
 type SendVenue struct {
 	Address                  string    `json:"address"`
 	AllowSendingWithoutReply OptBool   `json:"allow_sending_without_reply"`
@@ -2397,7 +2291,7 @@ type SendVenue struct {
 	Title                    string    `json:"title"`
 }
 
-// SendVideo describes #/components/schemas/sendVideo.
+// Ref: #/components/schemas/sendVideo
 type SendVideo struct {
 	AllowSendingWithoutReply OptBool   `json:"allow_sending_without_reply"`
 	Caption                  OptString `json:"caption"`
@@ -2410,7 +2304,7 @@ type SendVideo struct {
 	Width                    OptInt    `json:"width"`
 }
 
-// SendVideoNote describes #/components/schemas/sendVideoNote.
+// Ref: #/components/schemas/sendVideoNote
 type SendVideoNote struct {
 	AllowSendingWithoutReply OptBool `json:"allow_sending_without_reply"`
 	DisableNotification      OptBool `json:"disable_notification"`
@@ -2419,7 +2313,7 @@ type SendVideoNote struct {
 	ReplyToMessageID         OptInt  `json:"reply_to_message_id"`
 }
 
-// SendVoice describes #/components/schemas/sendVoice.
+// Ref: #/components/schemas/sendVoice
 type SendVoice struct {
 	AllowSendingWithoutReply OptBool   `json:"allow_sending_without_reply"`
 	Caption                  OptString `json:"caption"`
@@ -2429,38 +2323,38 @@ type SendVoice struct {
 	ReplyToMessageID         OptInt    `json:"reply_to_message_id"`
 }
 
-// SetChatAdministratorCustomTitle describes #/components/schemas/setChatAdministratorCustomTitle.
+// Ref: #/components/schemas/setChatAdministratorCustomTitle
 type SetChatAdministratorCustomTitle struct {
 	CustomTitle string `json:"custom_title"`
 	UserID      int    `json:"user_id"`
 }
 
-// SetChatDescription describes #/components/schemas/setChatDescription.
+// Ref: #/components/schemas/setChatDescription
 type SetChatDescription struct {
 	Description OptString `json:"description"`
 }
 
-// SetChatPermissions describes #/components/schemas/setChatPermissions.
+// Ref: #/components/schemas/setChatPermissions
 type SetChatPermissions struct {
 	Permissions ChatPermissions `json:"permissions"`
 }
 
-// SetChatPhoto describes #/components/schemas/setChatPhoto.
+// Ref: #/components/schemas/setChatPhoto
 type SetChatPhoto struct {
 	Photo string `json:"photo"`
 }
 
-// SetChatStickerSet describes #/components/schemas/setChatStickerSet.
+// Ref: #/components/schemas/setChatStickerSet
 type SetChatStickerSet struct {
 	StickerSetName string `json:"sticker_set_name"`
 }
 
-// SetChatTitle describes #/components/schemas/setChatTitle.
+// Ref: #/components/schemas/setChatTitle
 type SetChatTitle struct {
 	Title string `json:"title"`
 }
 
-// SetGameScore describes #/components/schemas/setGameScore.
+// Ref: #/components/schemas/setGameScore
 type SetGameScore struct {
 	ChatID             OptInt    `json:"chat_id"`
 	DisableEditMessage OptBool   `json:"disable_edit_message"`
@@ -2471,30 +2365,30 @@ type SetGameScore struct {
 	UserID             int       `json:"user_id"`
 }
 
-// SetMyCommands describes #/components/schemas/setMyCommands.
+// Ref: #/components/schemas/setMyCommands
 type SetMyCommands struct {
 	LanguageCode OptString        `json:"language_code"`
 	Scope        *BotCommandScope `json:"scope"`
 }
 
-// SetPassportDataErrors describes #/components/schemas/setPassportDataErrors.
+// Ref: #/components/schemas/setPassportDataErrors
 type SetPassportDataErrors struct {
 	UserID int `json:"user_id"`
 }
 
-// SetStickerPositionInSet describes #/components/schemas/setStickerPositionInSet.
+// Ref: #/components/schemas/setStickerPositionInSet
 type SetStickerPositionInSet struct {
 	Position int    `json:"position"`
 	Sticker  string `json:"sticker"`
 }
 
-// SetStickerSetThumb describes #/components/schemas/setStickerSetThumb.
+// Ref: #/components/schemas/setStickerSetThumb
 type SetStickerSetThumb struct {
 	Name   string `json:"name"`
 	UserID int    `json:"user_id"`
 }
 
-// SetWebhook describes #/components/schemas/setWebhook.
+// Ref: #/components/schemas/setWebhook
 type SetWebhook struct {
 	Certificate        OptString `json:"certificate"`
 	DropPendingUpdates OptBool   `json:"drop_pending_updates"`
@@ -2503,35 +2397,142 @@ type SetWebhook struct {
 	URL                url.URL   `json:"url"`
 }
 
-// StopMessageLiveLocation describes #/components/schemas/stopMessageLiveLocation.
+// Ref: #/components/schemas/ShippingAddress
+type ShippingAddress struct {
+	City        string `json:"city"`
+	CountryCode string `json:"country_code"`
+	PostCode    string `json:"post_code"`
+	State       string `json:"state"`
+	StreetLine1 string `json:"street_line1"`
+	StreetLine2 string `json:"street_line2"`
+}
+
+// Ref: #/components/schemas/Sticker
+type Sticker struct {
+	Emoji        OptString       `json:"emoji"`
+	FileID       string          `json:"file_id"`
+	FileSize     OptInt          `json:"file_size"`
+	FileUniqueID string          `json:"file_unique_id"`
+	Height       int             `json:"height"`
+	IsAnimated   bool            `json:"is_animated"`
+	MaskPosition OptMaskPosition `json:"mask_position"`
+	SetName      OptString       `json:"set_name"`
+	Thumb        OptPhotoSize    `json:"thumb"`
+	Width        int             `json:"width"`
+}
+
+// Ref: #/components/schemas/stopMessageLiveLocation
 type StopMessageLiveLocation struct {
 	InlineMessageID OptString             `json:"inline_message_id"`
 	MessageID       OptInt                `json:"message_id"`
 	ReplyMarkup     *InlineKeyboardMarkup `json:"reply_markup"`
 }
 
-// StopPoll describes #/components/schemas/stopPoll.
+// Ref: #/components/schemas/stopPoll
 type StopPoll struct {
 	MessageID   int                   `json:"message_id"`
 	ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup"`
 }
 
-// UnbanChatMember describes #/components/schemas/unbanChatMember.
+// Ref: #/components/schemas/SuccessfulPayment
+type SuccessfulPayment struct {
+	Currency                string       `json:"currency"`
+	InvoicePayload          string       `json:"invoice_payload"`
+	OrderInfo               OptOrderInfo `json:"order_info"`
+	ProviderPaymentChargeID string       `json:"provider_payment_charge_id"`
+	ShippingOptionID        OptString    `json:"shipping_option_id"`
+	TelegramPaymentChargeID string       `json:"telegram_payment_charge_id"`
+	TotalAmount             int          `json:"total_amount"`
+}
+
+// Ref: #/components/schemas/unbanChatMember
 type UnbanChatMember struct {
 	OnlyIfBanned OptBool `json:"only_if_banned"`
 	UserID       int     `json:"user_id"`
 }
 
-// UnpinAllChatMessages describes #/components/schemas/unpinAllChatMessages.
+// Ref: #/components/schemas/unpinAllChatMessages
 type UnpinAllChatMessages struct{}
 
-// UnpinChatMessage describes #/components/schemas/unpinChatMessage.
+// Ref: #/components/schemas/unpinChatMessage
 type UnpinChatMessage struct {
 	MessageID OptInt `json:"message_id"`
 }
 
-// UploadStickerFile describes #/components/schemas/uploadStickerFile.
+// Ref: #/components/schemas/uploadStickerFile
 type UploadStickerFile struct {
 	PNGSticker string `json:"png_sticker"`
 	UserID     int    `json:"user_id"`
 }
+
+// Ref: #/components/schemas/User
+type User struct {
+	CanJoinGroups           OptBool   `json:"can_join_groups"`
+	CanReadAllGroupMessages OptBool   `json:"can_read_all_group_messages"`
+	FirstName               string    `json:"first_name"`
+	ID                      int       `json:"id"`
+	IsBot                   bool      `json:"is_bot"`
+	LanguageCode            OptString `json:"language_code"`
+	LastName                OptString `json:"last_name"`
+	SupportsInlineQueries   OptBool   `json:"supports_inline_queries"`
+	Username                OptString `json:"username"`
+}
+
+// Ref: #/components/schemas/Venue
+type Venue struct {
+	Address         string    `json:"address"`
+	FoursquareID    OptString `json:"foursquare_id"`
+	FoursquareType  OptString `json:"foursquare_type"`
+	GooglePlaceID   OptString `json:"google_place_id"`
+	GooglePlaceType OptString `json:"google_place_type"`
+	Location        Location  `json:"location"`
+	Title           string    `json:"title"`
+}
+
+// Ref: #/components/schemas/Video
+type Video struct {
+	Duration     int          `json:"duration"`
+	FileID       string       `json:"file_id"`
+	FileName     OptString    `json:"file_name"`
+	FileSize     OptInt       `json:"file_size"`
+	FileUniqueID string       `json:"file_unique_id"`
+	Height       int          `json:"height"`
+	MimeType     OptString    `json:"mime_type"`
+	Thumb        OptPhotoSize `json:"thumb"`
+	Width        int          `json:"width"`
+}
+
+// Ref: #/components/schemas/VideoNote
+type VideoNote struct {
+	Duration     int          `json:"duration"`
+	FileID       string       `json:"file_id"`
+	FileSize     OptInt       `json:"file_size"`
+	FileUniqueID string       `json:"file_unique_id"`
+	Length       int          `json:"length"`
+	Thumb        OptPhotoSize `json:"thumb"`
+}
+
+// Ref: #/components/schemas/Voice
+type Voice struct {
+	Duration     int       `json:"duration"`
+	FileID       string    `json:"file_id"`
+	FileSize     OptInt    `json:"file_size"`
+	FileUniqueID string    `json:"file_unique_id"`
+	MimeType     OptString `json:"mime_type"`
+}
+
+// Ref: #/components/schemas/VoiceChatEnded
+type VoiceChatEnded struct {
+	Duration int `json:"duration"`
+}
+
+// Ref: #/components/schemas/VoiceChatParticipantsInvited
+type VoiceChatParticipantsInvited struct{}
+
+// Ref: #/components/schemas/VoiceChatScheduled
+type VoiceChatScheduled struct {
+	StartDate int `json:"start_date"`
+}
+
+// Ref: #/components/schemas/VoiceChatStarted
+type VoiceChatStarted struct{}

@@ -9,3 +9,8 @@ coverage:
 generate:
 	go generate ./...
 .PHONY: generate
+
+tidy:
+	go mod tidy
+
+clean: generate tidy

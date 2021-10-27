@@ -8,7 +8,7 @@ require (
 	github.com/go-chi/chi/v5 v5.0.4
 	github.com/google/uuid v1.3.0
 	github.com/gotd/td v0.51.2
-	github.com/ogen-go/ogen v0.0.0-20211025155300-128b73a875df
+	github.com/ogen-go/ogen v0.0.0-20211027080950-b7e417d2b882
 	github.com/stretchr/testify v1.7.0
 	go.uber.org/zap v1.19.1
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1

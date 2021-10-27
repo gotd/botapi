@@ -71,7 +71,6 @@ func decodeAddStickerToSetRequest(r *http.Request) (req AddStickerToSet, err err
 		}(); err != nil {
 			return req, err
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -102,7 +101,6 @@ func decodeAnswerCallbackQueryRequest(r *http.Request) (req AnswerCallbackQuery,
 		if err := request.Validate(); err != nil {
 			return req, fmt.Errorf("validate: %w", err)
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -133,7 +131,6 @@ func decodeAnswerInlineQueryRequest(r *http.Request) (req AnswerInlineQuery, err
 		if err := request.Validate(); err != nil {
 			return req, fmt.Errorf("validate: %w", err)
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -161,7 +158,6 @@ func decodeAnswerPreCheckoutQueryRequest(r *http.Request) (req AnswerPreCheckout
 		}(); err != nil {
 			return req, err
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -189,7 +185,6 @@ func decodeAnswerShippingQueryRequest(r *http.Request) (req AnswerShippingQuery,
 		}(); err != nil {
 			return req, err
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -217,7 +212,6 @@ func decodeBanChatMemberRequest(r *http.Request) (req BanChatMember, err error) 
 		}(); err != nil {
 			return req, err
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -248,7 +242,6 @@ func decodeCopyMessageRequest(r *http.Request) (req CopyMessage, err error) {
 		if err := request.Validate(); err != nil {
 			return req, fmt.Errorf("validate: %w", err)
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -276,7 +269,6 @@ func decodeCreateChatInviteLinkRequest(r *http.Request) (req CreateChatInviteLin
 		}(); err != nil {
 			return req, err
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -307,7 +299,6 @@ func decodeCreateNewStickerSetRequest(r *http.Request) (req CreateNewStickerSet,
 		if err := request.Validate(); err != nil {
 			return req, fmt.Errorf("validate: %w", err)
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -335,7 +326,6 @@ func decodeDeleteChatPhotoRequest(r *http.Request) (req DeleteChatPhoto, err err
 		}(); err != nil {
 			return req, err
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -363,7 +353,6 @@ func decodeDeleteChatStickerSetRequest(r *http.Request) (req DeleteChatStickerSe
 		}(); err != nil {
 			return req, err
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -391,7 +380,6 @@ func decodeDeleteMessageRequest(r *http.Request) (req DeleteMessage, err error) 
 		}(); err != nil {
 			return req, err
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -419,7 +407,6 @@ func decodeDeleteMyCommandsRequest(r *http.Request) (req DeleteMyCommands, err e
 		}(); err != nil {
 			return req, err
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -447,7 +434,6 @@ func decodeDeleteStickerFromSetRequest(r *http.Request) (req DeleteStickerFromSe
 		}(); err != nil {
 			return req, err
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -475,7 +461,6 @@ func decodeDeleteWebhookRequest(r *http.Request) (req DeleteWebhook, err error) 
 		}(); err != nil {
 			return req, err
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -503,7 +488,6 @@ func decodeEditChatInviteLinkRequest(r *http.Request) (req EditChatInviteLink, e
 		}(); err != nil {
 			return req, err
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -534,7 +518,6 @@ func decodeEditMessageCaptionRequest(r *http.Request) (req EditMessageCaption, e
 		if err := request.Validate(); err != nil {
 			return req, fmt.Errorf("validate: %w", err)
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -562,7 +545,6 @@ func decodeEditMessageLiveLocationRequest(r *http.Request) (req EditMessageLiveL
 		}(); err != nil {
 			return req, err
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -590,7 +572,6 @@ func decodeEditMessageMediaRequest(r *http.Request) (req EditMessageMedia, err e
 		}(); err != nil {
 			return req, err
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -618,7 +599,6 @@ func decodeEditMessageReplyMarkupRequest(r *http.Request) (req EditMessageReplyM
 		}(); err != nil {
 			return req, err
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -649,7 +629,6 @@ func decodeEditMessageTextRequest(r *http.Request) (req EditMessageText, err err
 		if err := request.Validate(); err != nil {
 			return req, fmt.Errorf("validate: %w", err)
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -677,7 +656,6 @@ func decodeExportChatInviteLinkRequest(r *http.Request) (req ExportChatInviteLin
 		}(); err != nil {
 			return req, err
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -705,7 +683,6 @@ func decodeForwardMessageRequest(r *http.Request) (req ForwardMessage, err error
 		}(); err != nil {
 			return req, err
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -733,7 +710,6 @@ func decodeGetChatRequest(r *http.Request) (req GetChat, err error) {
 		}(); err != nil {
 			return req, err
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -761,7 +737,6 @@ func decodeGetChatAdministratorsRequest(r *http.Request) (req GetChatAdministrat
 		}(); err != nil {
 			return req, err
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -789,7 +764,6 @@ func decodeGetChatMemberRequest(r *http.Request) (req GetChatMember, err error) 
 		}(); err != nil {
 			return req, err
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -817,7 +791,6 @@ func decodeGetChatMemberCountRequest(r *http.Request) (req GetChatMemberCount, e
 		}(); err != nil {
 			return req, err
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -845,7 +818,6 @@ func decodeGetFileRequest(r *http.Request) (req GetFile, err error) {
 		}(); err != nil {
 			return req, err
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -873,7 +845,6 @@ func decodeGetGameHighScoresRequest(r *http.Request) (req GetGameHighScores, err
 		}(); err != nil {
 			return req, err
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -901,7 +872,6 @@ func decodeGetMyCommandsRequest(r *http.Request) (req GetMyCommands, err error) 
 		}(); err != nil {
 			return req, err
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -929,7 +899,6 @@ func decodeGetStickerSetRequest(r *http.Request) (req GetStickerSet, err error) 
 		}(); err != nil {
 			return req, err
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -960,7 +929,6 @@ func decodeGetUpdatesRequest(r *http.Request) (req GetUpdates, err error) {
 		if err := request.Validate(); err != nil {
 			return req, fmt.Errorf("validate: %w", err)
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -991,7 +959,6 @@ func decodeGetUserProfilePhotosRequest(r *http.Request) (req GetUserProfilePhoto
 		if err := request.Validate(); err != nil {
 			return req, fmt.Errorf("validate: %w", err)
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -1019,7 +986,6 @@ func decodeLeaveChatRequest(r *http.Request) (req LeaveChat, err error) {
 		}(); err != nil {
 			return req, err
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -1047,7 +1013,6 @@ func decodePinChatMessageRequest(r *http.Request) (req PinChatMessage, err error
 		}(); err != nil {
 			return req, err
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -1075,7 +1040,6 @@ func decodePromoteChatMemberRequest(r *http.Request) (req PromoteChatMember, err
 		}(); err != nil {
 			return req, err
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -1103,7 +1067,6 @@ func decodeRestrictChatMemberRequest(r *http.Request) (req RestrictChatMember, e
 		}(); err != nil {
 			return req, err
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -1131,7 +1094,6 @@ func decodeRevokeChatInviteLinkRequest(r *http.Request) (req RevokeChatInviteLin
 		}(); err != nil {
 			return req, err
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -1162,7 +1124,6 @@ func decodeSendAnimationRequest(r *http.Request) (req SendAnimation, err error) 
 		if err := request.Validate(); err != nil {
 			return req, fmt.Errorf("validate: %w", err)
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -1193,7 +1154,6 @@ func decodeSendAudioRequest(r *http.Request) (req SendAudio, err error) {
 		if err := request.Validate(); err != nil {
 			return req, fmt.Errorf("validate: %w", err)
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -1221,7 +1181,6 @@ func decodeSendChatActionRequest(r *http.Request) (req SendChatAction, err error
 		}(); err != nil {
 			return req, err
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -1249,7 +1208,6 @@ func decodeSendContactRequest(r *http.Request) (req SendContact, err error) {
 		}(); err != nil {
 			return req, err
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -1277,7 +1235,6 @@ func decodeSendDiceRequest(r *http.Request) (req SendDice, err error) {
 		}(); err != nil {
 			return req, err
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -1308,7 +1265,6 @@ func decodeSendDocumentRequest(r *http.Request) (req SendDocument, err error) {
 		if err := request.Validate(); err != nil {
 			return req, fmt.Errorf("validate: %w", err)
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -1336,7 +1292,6 @@ func decodeSendGameRequest(r *http.Request) (req SendGame, err error) {
 		}(); err != nil {
 			return req, err
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -1367,7 +1322,6 @@ func decodeSendInvoiceRequest(r *http.Request) (req SendInvoice, err error) {
 		if err := request.Validate(); err != nil {
 			return req, fmt.Errorf("validate: %w", err)
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -1395,7 +1349,6 @@ func decodeSendLocationRequest(r *http.Request) (req SendLocation, err error) {
 		}(); err != nil {
 			return req, err
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -1423,7 +1376,6 @@ func decodeSendMediaGroupRequest(r *http.Request) (req SendMediaGroup, err error
 		}(); err != nil {
 			return req, err
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -1454,7 +1406,6 @@ func decodeSendMessageRequest(r *http.Request) (req SendMessage, err error) {
 		if err := request.Validate(); err != nil {
 			return req, fmt.Errorf("validate: %w", err)
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -1485,7 +1436,6 @@ func decodeSendPhotoRequest(r *http.Request) (req SendPhoto, err error) {
 		if err := request.Validate(); err != nil {
 			return req, fmt.Errorf("validate: %w", err)
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -1516,7 +1466,6 @@ func decodeSendPollRequest(r *http.Request) (req SendPoll, err error) {
 		if err := request.Validate(); err != nil {
 			return req, fmt.Errorf("validate: %w", err)
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -1544,7 +1493,6 @@ func decodeSendStickerRequest(r *http.Request) (req SendSticker, err error) {
 		}(); err != nil {
 			return req, err
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -1572,7 +1520,6 @@ func decodeSendVenueRequest(r *http.Request) (req SendVenue, err error) {
 		}(); err != nil {
 			return req, err
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -1603,7 +1550,6 @@ func decodeSendVideoRequest(r *http.Request) (req SendVideo, err error) {
 		if err := request.Validate(); err != nil {
 			return req, fmt.Errorf("validate: %w", err)
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -1634,7 +1580,6 @@ func decodeSendVideoNoteRequest(r *http.Request) (req SendVideoNote, err error) 
 		if err := request.Validate(); err != nil {
 			return req, fmt.Errorf("validate: %w", err)
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -1665,7 +1610,6 @@ func decodeSendVoiceRequest(r *http.Request) (req SendVoice, err error) {
 		if err := request.Validate(); err != nil {
 			return req, fmt.Errorf("validate: %w", err)
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -1696,7 +1640,6 @@ func decodeSetChatAdministratorCustomTitleRequest(r *http.Request) (req SetChatA
 		if err := request.Validate(); err != nil {
 			return req, fmt.Errorf("validate: %w", err)
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -1727,7 +1670,6 @@ func decodeSetChatDescriptionRequest(r *http.Request) (req SetChatDescription, e
 		if err := request.Validate(); err != nil {
 			return req, fmt.Errorf("validate: %w", err)
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -1755,7 +1697,6 @@ func decodeSetChatPermissionsRequest(r *http.Request) (req SetChatPermissions, e
 		}(); err != nil {
 			return req, err
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -1783,7 +1724,6 @@ func decodeSetChatPhotoRequest(r *http.Request) (req SetChatPhoto, err error) {
 		}(); err != nil {
 			return req, err
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -1811,7 +1751,6 @@ func decodeSetChatStickerSetRequest(r *http.Request) (req SetChatStickerSet, err
 		}(); err != nil {
 			return req, err
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -1842,7 +1781,6 @@ func decodeSetChatTitleRequest(r *http.Request) (req SetChatTitle, err error) {
 		if err := request.Validate(); err != nil {
 			return req, fmt.Errorf("validate: %w", err)
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -1870,7 +1808,6 @@ func decodeSetGameScoreRequest(r *http.Request) (req SetGameScore, err error) {
 		}(); err != nil {
 			return req, err
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -1898,7 +1835,6 @@ func decodeSetMyCommandsRequest(r *http.Request) (req SetMyCommands, err error) 
 		}(); err != nil {
 			return req, err
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -1926,7 +1862,6 @@ func decodeSetPassportDataErrorsRequest(r *http.Request) (req SetPassportDataErr
 		}(); err != nil {
 			return req, err
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -1954,7 +1889,6 @@ func decodeSetStickerPositionInSetRequest(r *http.Request) (req SetStickerPositi
 		}(); err != nil {
 			return req, err
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -1982,7 +1916,6 @@ func decodeSetStickerSetThumbRequest(r *http.Request) (req SetStickerSetThumb, e
 		}(); err != nil {
 			return req, err
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -2010,7 +1943,6 @@ func decodeSetWebhookRequest(r *http.Request) (req SetWebhook, err error) {
 		}(); err != nil {
 			return req, err
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -2038,7 +1970,6 @@ func decodeStopMessageLiveLocationRequest(r *http.Request) (req StopMessageLiveL
 		}(); err != nil {
 			return req, err
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -2066,7 +1997,6 @@ func decodeStopPollRequest(r *http.Request) (req StopPoll, err error) {
 		}(); err != nil {
 			return req, err
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -2094,7 +2024,6 @@ func decodeUnbanChatMemberRequest(r *http.Request) (req UnbanChatMember, err err
 		}(); err != nil {
 			return req, err
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -2122,7 +2051,6 @@ func decodeUnpinAllChatMessagesRequest(r *http.Request) (req UnpinAllChatMessage
 		}(); err != nil {
 			return req, err
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -2150,7 +2078,6 @@ func decodeUnpinChatMessageRequest(r *http.Request) (req UnpinChatMessage, err e
 		}(); err != nil {
 			return req, err
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
@@ -2178,7 +2105,6 @@ func decodeUploadStickerFileRequest(r *http.Request) (req UploadStickerFile, err
 		}(); err != nil {
 			return req, err
 		}
-
 		return request, nil
 	default:
 		return req, fmt.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
