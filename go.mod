@@ -5,7 +5,7 @@ go 1.17
 require (
 	github.com/PuerkitoBio/goquery v1.8.0
 	github.com/gin-gonic/gin v1.7.4 // indirect
-	github.com/go-chi/chi/v5 v5.0.4
+	github.com/go-chi/chi/v5 v5.0.5
 	github.com/google/uuid v1.3.0
 	github.com/gotd/td v0.51.2
 	github.com/ogen-go/ogen v0.0.0-20211027150433-9d88cb26a084
