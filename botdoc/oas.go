@@ -190,6 +190,7 @@ func (a API) OAS() *ogen.Spec {
 		for _, f := range d.Fields {
 			if p := a.fieldOAS(&s, f); p != nil {
 				s.Properties[f.Name] = *p
+				s.XPropertiesOrder = append(s.XPropertiesOrder, f.Name)
 			}
 		}
 		c.Schemas[d.Name] = s
@@ -298,6 +299,7 @@ func (a API) OAS() *ogen.Spec {
 		for _, f := range m.Fields {
 			if p := a.fieldOAS(&s, f); p != nil {
 				s.Properties[f.Name] = *p
+				s.XPropertiesOrder = append(s.XPropertiesOrder, f.Name)
 			}
 		}
 
