@@ -12,6 +12,7 @@ import (
 	"net"
 	"net/http"
 	"net/url"
+	"regexp"
 	"sort"
 	"strconv"
 	"strings"
@@ -22,8 +23,12 @@ import (
 	"github.com/ogen-go/ogen/conv"
 	ht "github.com/ogen-go/ogen/http"
 	"github.com/ogen-go/ogen/json"
+	"github.com/ogen-go/ogen/otelogen"
 	"github.com/ogen-go/ogen/uri"
 	"github.com/ogen-go/ogen/validate"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/metric"
+	"go.opentelemetry.io/otel/trace"
 )
 
 // No-op definition for keeping imports.
@@ -48,6 +53,11 @@ var (
 	_ = validate.Int{}
 	_ = ht.NewRequest
 	_ = net.IP{}
+	_ = otelogen.Version
+	_ = trace.TraceIDFromHex
+	_ = otel.GetTracerProvider
+	_ = metric.NewNoopMeterProvider
+	_ = regexp.MustCompile
 )
 
 func (s Animation) Validate() error {
@@ -238,6 +248,9 @@ func (s BotCommand) Validate() error {
 			MinLengthSet: true,
 			MaxLength:    32,
 			MaxLengthSet: true,
+			Email:        false,
+			Hostname:     false,
+			Regex:        nil,
 		}).Validate(string(s.Command)); err != nil {
 			return err
 		}
@@ -254,6 +267,9 @@ func (s BotCommand) Validate() error {
 			MinLengthSet: true,
 			MaxLength:    256,
 			MaxLengthSet: true,
+			Email:        false,
+			Hostname:     false,
+			Regex:        nil,
 		}).Validate(string(s.Description)); err != nil {
 			return err
 		}
@@ -302,6 +318,9 @@ func (s ChatLocation) Validate() error {
 			MinLengthSet: true,
 			MaxLength:    64,
 			MaxLengthSet: true,
+			Email:        false,
+			Hostname:     false,
+			Regex:        nil,
 		}).Validate(string(s.Address)); err != nil {
 			return err
 		}
@@ -341,6 +360,9 @@ func (s CreateNewStickerSet) Validate() error {
 			MinLengthSet: true,
 			MaxLength:    64,
 			MaxLengthSet: true,
+			Email:        false,
+			Hostname:     false,
+			Regex:        nil,
 		}).Validate(string(s.Name)); err != nil {
 			return err
 		}
@@ -357,6 +379,9 @@ func (s CreateNewStickerSet) Validate() error {
 			MinLengthSet: true,
 			MaxLength:    64,
 			MaxLengthSet: true,
+			Email:        false,
+			Hostname:     false,
+			Regex:        nil,
 		}).Validate(string(s.Title)); err != nil {
 			return err
 		}
@@ -412,6 +437,9 @@ func (s EditMessageText) Validate() error {
 			MinLengthSet: true,
 			MaxLength:    4096,
 			MaxLengthSet: true,
+			Email:        false,
+			Hostname:     false,
+			Regex:        nil,
 		}).Validate(string(s.Text)); err != nil {
 			return err
 		}
@@ -841,6 +869,9 @@ func (s Poll) Validate() error {
 			MinLengthSet: true,
 			MaxLength:    300,
 			MaxLengthSet: true,
+			Email:        false,
+			Hostname:     false,
+			Regex:        nil,
 		}).Validate(string(s.Question)); err != nil {
 			return err
 		}
@@ -864,6 +895,9 @@ func (s PollOption) Validate() error {
 			MinLengthSet: true,
 			MaxLength:    100,
 			MaxLengthSet: true,
+			Email:        false,
+			Hostname:     false,
+			Regex:        nil,
 		}).Validate(string(s.Text)); err != nil {
 			return err
 		}
@@ -987,6 +1021,9 @@ func (s SendInvoice) Validate() error {
 			MinLengthSet: true,
 			MaxLength:    255,
 			MaxLengthSet: true,
+			Email:        false,
+			Hostname:     false,
+			Regex:        nil,
 		}).Validate(string(s.Description)); err != nil {
 			return err
 		}
@@ -1033,6 +1070,9 @@ func (s SendInvoice) Validate() error {
 			MinLengthSet: true,
 			MaxLength:    32,
 			MaxLengthSet: true,
+			Email:        false,
+			Hostname:     false,
+			Regex:        nil,
 		}).Validate(string(s.Title)); err != nil {
 			return err
 		}
@@ -1075,6 +1115,9 @@ func (s SendMessage) Validate() error {
 			MinLengthSet: true,
 			MaxLength:    4096,
 			MaxLengthSet: true,
+			Email:        false,
+			Hostname:     false,
+			Regex:        nil,
 		}).Validate(string(s.Text)); err != nil {
 			return err
 		}
@@ -1135,6 +1178,9 @@ func (s SendPoll) Validate() error {
 			MinLengthSet: true,
 			MaxLength:    300,
 			MaxLengthSet: true,
+			Email:        false,
+			Hostname:     false,
+			Regex:        nil,
 		}).Validate(string(s.Question)); err != nil {
 			return err
 		}
@@ -1242,6 +1288,9 @@ func (s SetChatAdministratorCustomTitle) Validate() error {
 			MinLengthSet: false,
 			MaxLength:    16,
 			MaxLengthSet: true,
+			Email:        false,
+			Hostname:     false,
+			Regex:        nil,
 		}).Validate(string(s.CustomTitle)); err != nil {
 			return err
 		}
@@ -1281,6 +1330,9 @@ func (s SetChatTitle) Validate() error {
 			MinLengthSet: true,
 			MaxLength:    255,
 			MaxLengthSet: true,
+			Email:        false,
+			Hostname:     false,
+			Regex:        nil,
 		}).Validate(string(s.Title)); err != nil {
 			return err
 		}

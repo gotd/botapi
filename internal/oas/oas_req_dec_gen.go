@@ -12,6 +12,7 @@ import (
 	"net"
 	"net/http"
 	"net/url"
+	"regexp"
 	"sort"
 	"strconv"
 	"strings"
@@ -22,8 +23,12 @@ import (
 	"github.com/ogen-go/ogen/conv"
 	ht "github.com/ogen-go/ogen/http"
 	"github.com/ogen-go/ogen/json"
+	"github.com/ogen-go/ogen/otelogen"
 	"github.com/ogen-go/ogen/uri"
 	"github.com/ogen-go/ogen/validate"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/metric"
+	"go.opentelemetry.io/otel/trace"
 )
 
 // No-op definition for keeping imports.
@@ -48,9 +53,14 @@ var (
 	_ = validate.Int{}
 	_ = ht.NewRequest
 	_ = net.IP{}
+	_ = otelogen.Version
+	_ = trace.TraceIDFromHex
+	_ = otel.GetTracerProvider
+	_ = metric.NewNoopMeterProvider
+	_ = regexp.MustCompile
 )
 
-func decodeAddStickerToSetRequest(r *http.Request) (req AddStickerToSet, err error) {
+func decodeAddStickerToSetRequest(r *http.Request, span trace.Span) (req AddStickerToSet, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -60,14 +70,14 @@ func decodeAddStickerToSetRequest(r *http.Request) (req AddStickerToSet, err err
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request AddStickerToSet
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -77,7 +87,7 @@ func decodeAddStickerToSetRequest(r *http.Request) (req AddStickerToSet, err err
 	}
 }
 
-func decodeAnswerCallbackQueryRequest(r *http.Request) (req AnswerCallbackQuery, err error) {
+func decodeAnswerCallbackQueryRequest(r *http.Request, span trace.Span) (req AnswerCallbackQuery, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -87,14 +97,14 @@ func decodeAnswerCallbackQueryRequest(r *http.Request) (req AnswerCallbackQuery,
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request AnswerCallbackQuery
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -112,7 +122,7 @@ func decodeAnswerCallbackQueryRequest(r *http.Request) (req AnswerCallbackQuery,
 	}
 }
 
-func decodeAnswerInlineQueryRequest(r *http.Request) (req AnswerInlineQuery, err error) {
+func decodeAnswerInlineQueryRequest(r *http.Request, span trace.Span) (req AnswerInlineQuery, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -122,14 +132,14 @@ func decodeAnswerInlineQueryRequest(r *http.Request) (req AnswerInlineQuery, err
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request AnswerInlineQuery
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -147,7 +157,7 @@ func decodeAnswerInlineQueryRequest(r *http.Request) (req AnswerInlineQuery, err
 	}
 }
 
-func decodeAnswerPreCheckoutQueryRequest(r *http.Request) (req AnswerPreCheckoutQuery, err error) {
+func decodeAnswerPreCheckoutQueryRequest(r *http.Request, span trace.Span) (req AnswerPreCheckoutQuery, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -157,14 +167,14 @@ func decodeAnswerPreCheckoutQueryRequest(r *http.Request) (req AnswerPreCheckout
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request AnswerPreCheckoutQuery
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -174,7 +184,7 @@ func decodeAnswerPreCheckoutQueryRequest(r *http.Request) (req AnswerPreCheckout
 	}
 }
 
-func decodeAnswerShippingQueryRequest(r *http.Request) (req AnswerShippingQuery, err error) {
+func decodeAnswerShippingQueryRequest(r *http.Request, span trace.Span) (req AnswerShippingQuery, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -184,14 +194,14 @@ func decodeAnswerShippingQueryRequest(r *http.Request) (req AnswerShippingQuery,
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request AnswerShippingQuery
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -209,7 +219,7 @@ func decodeAnswerShippingQueryRequest(r *http.Request) (req AnswerShippingQuery,
 	}
 }
 
-func decodeBanChatMemberRequest(r *http.Request) (req BanChatMember, err error) {
+func decodeBanChatMemberRequest(r *http.Request, span trace.Span) (req BanChatMember, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -219,14 +229,14 @@ func decodeBanChatMemberRequest(r *http.Request) (req BanChatMember, err error) 
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request BanChatMember
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -236,7 +246,7 @@ func decodeBanChatMemberRequest(r *http.Request) (req BanChatMember, err error) 
 	}
 }
 
-func decodeCopyMessageRequest(r *http.Request) (req CopyMessage, err error) {
+func decodeCopyMessageRequest(r *http.Request, span trace.Span) (req CopyMessage, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -246,14 +256,14 @@ func decodeCopyMessageRequest(r *http.Request) (req CopyMessage, err error) {
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request CopyMessage
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -271,7 +281,7 @@ func decodeCopyMessageRequest(r *http.Request) (req CopyMessage, err error) {
 	}
 }
 
-func decodeCreateChatInviteLinkRequest(r *http.Request) (req CreateChatInviteLink, err error) {
+func decodeCreateChatInviteLinkRequest(r *http.Request, span trace.Span) (req CreateChatInviteLink, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -281,14 +291,14 @@ func decodeCreateChatInviteLinkRequest(r *http.Request) (req CreateChatInviteLin
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request CreateChatInviteLink
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -298,7 +308,7 @@ func decodeCreateChatInviteLinkRequest(r *http.Request) (req CreateChatInviteLin
 	}
 }
 
-func decodeCreateNewStickerSetRequest(r *http.Request) (req CreateNewStickerSet, err error) {
+func decodeCreateNewStickerSetRequest(r *http.Request, span trace.Span) (req CreateNewStickerSet, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -308,14 +318,14 @@ func decodeCreateNewStickerSetRequest(r *http.Request) (req CreateNewStickerSet,
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request CreateNewStickerSet
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -333,7 +343,7 @@ func decodeCreateNewStickerSetRequest(r *http.Request) (req CreateNewStickerSet,
 	}
 }
 
-func decodeDeleteChatPhotoRequest(r *http.Request) (req DeleteChatPhoto, err error) {
+func decodeDeleteChatPhotoRequest(r *http.Request, span trace.Span) (req DeleteChatPhoto, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -343,14 +353,14 @@ func decodeDeleteChatPhotoRequest(r *http.Request) (req DeleteChatPhoto, err err
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request DeleteChatPhoto
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -360,7 +370,7 @@ func decodeDeleteChatPhotoRequest(r *http.Request) (req DeleteChatPhoto, err err
 	}
 }
 
-func decodeDeleteChatStickerSetRequest(r *http.Request) (req DeleteChatStickerSet, err error) {
+func decodeDeleteChatStickerSetRequest(r *http.Request, span trace.Span) (req DeleteChatStickerSet, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -370,14 +380,14 @@ func decodeDeleteChatStickerSetRequest(r *http.Request) (req DeleteChatStickerSe
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request DeleteChatStickerSet
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -387,7 +397,7 @@ func decodeDeleteChatStickerSetRequest(r *http.Request) (req DeleteChatStickerSe
 	}
 }
 
-func decodeDeleteMessageRequest(r *http.Request) (req DeleteMessage, err error) {
+func decodeDeleteMessageRequest(r *http.Request, span trace.Span) (req DeleteMessage, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -397,14 +407,14 @@ func decodeDeleteMessageRequest(r *http.Request) (req DeleteMessage, err error) 
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request DeleteMessage
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -414,7 +424,7 @@ func decodeDeleteMessageRequest(r *http.Request) (req DeleteMessage, err error) 
 	}
 }
 
-func decodeDeleteMyCommandsRequest(r *http.Request) (req DeleteMyCommands, err error) {
+func decodeDeleteMyCommandsRequest(r *http.Request, span trace.Span) (req DeleteMyCommands, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -424,14 +434,14 @@ func decodeDeleteMyCommandsRequest(r *http.Request) (req DeleteMyCommands, err e
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request DeleteMyCommands
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -441,7 +451,7 @@ func decodeDeleteMyCommandsRequest(r *http.Request) (req DeleteMyCommands, err e
 	}
 }
 
-func decodeDeleteStickerFromSetRequest(r *http.Request) (req DeleteStickerFromSet, err error) {
+func decodeDeleteStickerFromSetRequest(r *http.Request, span trace.Span) (req DeleteStickerFromSet, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -451,14 +461,14 @@ func decodeDeleteStickerFromSetRequest(r *http.Request) (req DeleteStickerFromSe
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request DeleteStickerFromSet
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -468,7 +478,7 @@ func decodeDeleteStickerFromSetRequest(r *http.Request) (req DeleteStickerFromSe
 	}
 }
 
-func decodeDeleteWebhookRequest(r *http.Request) (req DeleteWebhook, err error) {
+func decodeDeleteWebhookRequest(r *http.Request, span trace.Span) (req DeleteWebhook, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -478,14 +488,14 @@ func decodeDeleteWebhookRequest(r *http.Request) (req DeleteWebhook, err error) 
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request DeleteWebhook
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -495,7 +505,7 @@ func decodeDeleteWebhookRequest(r *http.Request) (req DeleteWebhook, err error) 
 	}
 }
 
-func decodeEditChatInviteLinkRequest(r *http.Request) (req EditChatInviteLink, err error) {
+func decodeEditChatInviteLinkRequest(r *http.Request, span trace.Span) (req EditChatInviteLink, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -505,14 +515,14 @@ func decodeEditChatInviteLinkRequest(r *http.Request) (req EditChatInviteLink, e
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request EditChatInviteLink
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -522,7 +532,7 @@ func decodeEditChatInviteLinkRequest(r *http.Request) (req EditChatInviteLink, e
 	}
 }
 
-func decodeEditMessageCaptionRequest(r *http.Request) (req EditMessageCaption, err error) {
+func decodeEditMessageCaptionRequest(r *http.Request, span trace.Span) (req EditMessageCaption, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -532,14 +542,14 @@ func decodeEditMessageCaptionRequest(r *http.Request) (req EditMessageCaption, e
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request EditMessageCaption
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -557,7 +567,7 @@ func decodeEditMessageCaptionRequest(r *http.Request) (req EditMessageCaption, e
 	}
 }
 
-func decodeEditMessageLiveLocationRequest(r *http.Request) (req EditMessageLiveLocation, err error) {
+func decodeEditMessageLiveLocationRequest(r *http.Request, span trace.Span) (req EditMessageLiveLocation, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -567,14 +577,14 @@ func decodeEditMessageLiveLocationRequest(r *http.Request) (req EditMessageLiveL
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request EditMessageLiveLocation
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -584,7 +594,7 @@ func decodeEditMessageLiveLocationRequest(r *http.Request) (req EditMessageLiveL
 	}
 }
 
-func decodeEditMessageMediaRequest(r *http.Request) (req EditMessageMedia, err error) {
+func decodeEditMessageMediaRequest(r *http.Request, span trace.Span) (req EditMessageMedia, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -594,14 +604,14 @@ func decodeEditMessageMediaRequest(r *http.Request) (req EditMessageMedia, err e
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request EditMessageMedia
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -611,7 +621,7 @@ func decodeEditMessageMediaRequest(r *http.Request) (req EditMessageMedia, err e
 	}
 }
 
-func decodeEditMessageReplyMarkupRequest(r *http.Request) (req EditMessageReplyMarkup, err error) {
+func decodeEditMessageReplyMarkupRequest(r *http.Request, span trace.Span) (req EditMessageReplyMarkup, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -621,14 +631,14 @@ func decodeEditMessageReplyMarkupRequest(r *http.Request) (req EditMessageReplyM
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request EditMessageReplyMarkup
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -638,7 +648,7 @@ func decodeEditMessageReplyMarkupRequest(r *http.Request) (req EditMessageReplyM
 	}
 }
 
-func decodeEditMessageTextRequest(r *http.Request) (req EditMessageText, err error) {
+func decodeEditMessageTextRequest(r *http.Request, span trace.Span) (req EditMessageText, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -648,14 +658,14 @@ func decodeEditMessageTextRequest(r *http.Request) (req EditMessageText, err err
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request EditMessageText
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -673,7 +683,7 @@ func decodeEditMessageTextRequest(r *http.Request) (req EditMessageText, err err
 	}
 }
 
-func decodeExportChatInviteLinkRequest(r *http.Request) (req ExportChatInviteLink, err error) {
+func decodeExportChatInviteLinkRequest(r *http.Request, span trace.Span) (req ExportChatInviteLink, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -683,14 +693,14 @@ func decodeExportChatInviteLinkRequest(r *http.Request) (req ExportChatInviteLin
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request ExportChatInviteLink
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -700,7 +710,7 @@ func decodeExportChatInviteLinkRequest(r *http.Request) (req ExportChatInviteLin
 	}
 }
 
-func decodeForwardMessageRequest(r *http.Request) (req ForwardMessage, err error) {
+func decodeForwardMessageRequest(r *http.Request, span trace.Span) (req ForwardMessage, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -710,14 +720,14 @@ func decodeForwardMessageRequest(r *http.Request) (req ForwardMessage, err error
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request ForwardMessage
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -727,7 +737,7 @@ func decodeForwardMessageRequest(r *http.Request) (req ForwardMessage, err error
 	}
 }
 
-func decodeGetChatRequest(r *http.Request) (req GetChat, err error) {
+func decodeGetChatRequest(r *http.Request, span trace.Span) (req GetChat, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -737,14 +747,14 @@ func decodeGetChatRequest(r *http.Request) (req GetChat, err error) {
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request GetChat
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -754,7 +764,7 @@ func decodeGetChatRequest(r *http.Request) (req GetChat, err error) {
 	}
 }
 
-func decodeGetChatAdministratorsRequest(r *http.Request) (req GetChatAdministrators, err error) {
+func decodeGetChatAdministratorsRequest(r *http.Request, span trace.Span) (req GetChatAdministrators, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -764,14 +774,14 @@ func decodeGetChatAdministratorsRequest(r *http.Request) (req GetChatAdministrat
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request GetChatAdministrators
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -781,7 +791,7 @@ func decodeGetChatAdministratorsRequest(r *http.Request) (req GetChatAdministrat
 	}
 }
 
-func decodeGetChatMemberRequest(r *http.Request) (req GetChatMember, err error) {
+func decodeGetChatMemberRequest(r *http.Request, span trace.Span) (req GetChatMember, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -791,14 +801,14 @@ func decodeGetChatMemberRequest(r *http.Request) (req GetChatMember, err error) 
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request GetChatMember
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -808,7 +818,7 @@ func decodeGetChatMemberRequest(r *http.Request) (req GetChatMember, err error) 
 	}
 }
 
-func decodeGetChatMemberCountRequest(r *http.Request) (req GetChatMemberCount, err error) {
+func decodeGetChatMemberCountRequest(r *http.Request, span trace.Span) (req GetChatMemberCount, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -818,14 +828,14 @@ func decodeGetChatMemberCountRequest(r *http.Request) (req GetChatMemberCount, e
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request GetChatMemberCount
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -835,7 +845,7 @@ func decodeGetChatMemberCountRequest(r *http.Request) (req GetChatMemberCount, e
 	}
 }
 
-func decodeGetFileRequest(r *http.Request) (req GetFile, err error) {
+func decodeGetFileRequest(r *http.Request, span trace.Span) (req GetFile, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -845,14 +855,14 @@ func decodeGetFileRequest(r *http.Request) (req GetFile, err error) {
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request GetFile
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -862,7 +872,7 @@ func decodeGetFileRequest(r *http.Request) (req GetFile, err error) {
 	}
 }
 
-func decodeGetGameHighScoresRequest(r *http.Request) (req GetGameHighScores, err error) {
+func decodeGetGameHighScoresRequest(r *http.Request, span trace.Span) (req GetGameHighScores, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -872,14 +882,14 @@ func decodeGetGameHighScoresRequest(r *http.Request) (req GetGameHighScores, err
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request GetGameHighScores
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -889,7 +899,7 @@ func decodeGetGameHighScoresRequest(r *http.Request) (req GetGameHighScores, err
 	}
 }
 
-func decodeGetMyCommandsRequest(r *http.Request) (req GetMyCommands, err error) {
+func decodeGetMyCommandsRequest(r *http.Request, span trace.Span) (req GetMyCommands, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -899,14 +909,14 @@ func decodeGetMyCommandsRequest(r *http.Request) (req GetMyCommands, err error) 
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request GetMyCommands
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -916,7 +926,7 @@ func decodeGetMyCommandsRequest(r *http.Request) (req GetMyCommands, err error) 
 	}
 }
 
-func decodeGetStickerSetRequest(r *http.Request) (req GetStickerSet, err error) {
+func decodeGetStickerSetRequest(r *http.Request, span trace.Span) (req GetStickerSet, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -926,14 +936,14 @@ func decodeGetStickerSetRequest(r *http.Request) (req GetStickerSet, err error) 
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request GetStickerSet
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -943,7 +953,7 @@ func decodeGetStickerSetRequest(r *http.Request) (req GetStickerSet, err error) 
 	}
 }
 
-func decodeGetUpdatesRequest(r *http.Request) (req GetUpdates, err error) {
+func decodeGetUpdatesRequest(r *http.Request, span trace.Span) (req GetUpdates, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -953,14 +963,14 @@ func decodeGetUpdatesRequest(r *http.Request) (req GetUpdates, err error) {
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request GetUpdates
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -978,7 +988,7 @@ func decodeGetUpdatesRequest(r *http.Request) (req GetUpdates, err error) {
 	}
 }
 
-func decodeGetUserProfilePhotosRequest(r *http.Request) (req GetUserProfilePhotos, err error) {
+func decodeGetUserProfilePhotosRequest(r *http.Request, span trace.Span) (req GetUserProfilePhotos, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -988,14 +998,14 @@ func decodeGetUserProfilePhotosRequest(r *http.Request) (req GetUserProfilePhoto
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request GetUserProfilePhotos
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -1013,7 +1023,7 @@ func decodeGetUserProfilePhotosRequest(r *http.Request) (req GetUserProfilePhoto
 	}
 }
 
-func decodeLeaveChatRequest(r *http.Request) (req LeaveChat, err error) {
+func decodeLeaveChatRequest(r *http.Request, span trace.Span) (req LeaveChat, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -1023,14 +1033,14 @@ func decodeLeaveChatRequest(r *http.Request) (req LeaveChat, err error) {
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request LeaveChat
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -1040,7 +1050,7 @@ func decodeLeaveChatRequest(r *http.Request) (req LeaveChat, err error) {
 	}
 }
 
-func decodePinChatMessageRequest(r *http.Request) (req PinChatMessage, err error) {
+func decodePinChatMessageRequest(r *http.Request, span trace.Span) (req PinChatMessage, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -1050,14 +1060,14 @@ func decodePinChatMessageRequest(r *http.Request) (req PinChatMessage, err error
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request PinChatMessage
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -1067,7 +1077,7 @@ func decodePinChatMessageRequest(r *http.Request) (req PinChatMessage, err error
 	}
 }
 
-func decodePromoteChatMemberRequest(r *http.Request) (req PromoteChatMember, err error) {
+func decodePromoteChatMemberRequest(r *http.Request, span trace.Span) (req PromoteChatMember, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -1077,14 +1087,14 @@ func decodePromoteChatMemberRequest(r *http.Request) (req PromoteChatMember, err
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request PromoteChatMember
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -1094,7 +1104,7 @@ func decodePromoteChatMemberRequest(r *http.Request) (req PromoteChatMember, err
 	}
 }
 
-func decodeRestrictChatMemberRequest(r *http.Request) (req RestrictChatMember, err error) {
+func decodeRestrictChatMemberRequest(r *http.Request, span trace.Span) (req RestrictChatMember, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -1104,14 +1114,14 @@ func decodeRestrictChatMemberRequest(r *http.Request) (req RestrictChatMember, e
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request RestrictChatMember
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -1121,7 +1131,7 @@ func decodeRestrictChatMemberRequest(r *http.Request) (req RestrictChatMember, e
 	}
 }
 
-func decodeRevokeChatInviteLinkRequest(r *http.Request) (req RevokeChatInviteLink, err error) {
+func decodeRevokeChatInviteLinkRequest(r *http.Request, span trace.Span) (req RevokeChatInviteLink, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -1131,14 +1141,14 @@ func decodeRevokeChatInviteLinkRequest(r *http.Request) (req RevokeChatInviteLin
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request RevokeChatInviteLink
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -1148,7 +1158,7 @@ func decodeRevokeChatInviteLinkRequest(r *http.Request) (req RevokeChatInviteLin
 	}
 }
 
-func decodeSendAnimationRequest(r *http.Request) (req SendAnimation, err error) {
+func decodeSendAnimationRequest(r *http.Request, span trace.Span) (req SendAnimation, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -1158,14 +1168,14 @@ func decodeSendAnimationRequest(r *http.Request) (req SendAnimation, err error) 
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request SendAnimation
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -1183,7 +1193,7 @@ func decodeSendAnimationRequest(r *http.Request) (req SendAnimation, err error) 
 	}
 }
 
-func decodeSendAudioRequest(r *http.Request) (req SendAudio, err error) {
+func decodeSendAudioRequest(r *http.Request, span trace.Span) (req SendAudio, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -1193,14 +1203,14 @@ func decodeSendAudioRequest(r *http.Request) (req SendAudio, err error) {
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request SendAudio
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -1218,7 +1228,7 @@ func decodeSendAudioRequest(r *http.Request) (req SendAudio, err error) {
 	}
 }
 
-func decodeSendChatActionRequest(r *http.Request) (req SendChatAction, err error) {
+func decodeSendChatActionRequest(r *http.Request, span trace.Span) (req SendChatAction, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -1228,14 +1238,14 @@ func decodeSendChatActionRequest(r *http.Request) (req SendChatAction, err error
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request SendChatAction
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -1245,7 +1255,7 @@ func decodeSendChatActionRequest(r *http.Request) (req SendChatAction, err error
 	}
 }
 
-func decodeSendContactRequest(r *http.Request) (req SendContact, err error) {
+func decodeSendContactRequest(r *http.Request, span trace.Span) (req SendContact, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -1255,14 +1265,14 @@ func decodeSendContactRequest(r *http.Request) (req SendContact, err error) {
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request SendContact
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -1272,7 +1282,7 @@ func decodeSendContactRequest(r *http.Request) (req SendContact, err error) {
 	}
 }
 
-func decodeSendDiceRequest(r *http.Request) (req SendDice, err error) {
+func decodeSendDiceRequest(r *http.Request, span trace.Span) (req SendDice, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -1282,14 +1292,14 @@ func decodeSendDiceRequest(r *http.Request) (req SendDice, err error) {
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request SendDice
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -1299,7 +1309,7 @@ func decodeSendDiceRequest(r *http.Request) (req SendDice, err error) {
 	}
 }
 
-func decodeSendDocumentRequest(r *http.Request) (req SendDocument, err error) {
+func decodeSendDocumentRequest(r *http.Request, span trace.Span) (req SendDocument, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -1309,14 +1319,14 @@ func decodeSendDocumentRequest(r *http.Request) (req SendDocument, err error) {
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request SendDocument
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -1334,7 +1344,7 @@ func decodeSendDocumentRequest(r *http.Request) (req SendDocument, err error) {
 	}
 }
 
-func decodeSendGameRequest(r *http.Request) (req SendGame, err error) {
+func decodeSendGameRequest(r *http.Request, span trace.Span) (req SendGame, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -1344,14 +1354,14 @@ func decodeSendGameRequest(r *http.Request) (req SendGame, err error) {
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request SendGame
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -1361,7 +1371,7 @@ func decodeSendGameRequest(r *http.Request) (req SendGame, err error) {
 	}
 }
 
-func decodeSendInvoiceRequest(r *http.Request) (req SendInvoice, err error) {
+func decodeSendInvoiceRequest(r *http.Request, span trace.Span) (req SendInvoice, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -1371,14 +1381,14 @@ func decodeSendInvoiceRequest(r *http.Request) (req SendInvoice, err error) {
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request SendInvoice
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -1396,7 +1406,7 @@ func decodeSendInvoiceRequest(r *http.Request) (req SendInvoice, err error) {
 	}
 }
 
-func decodeSendLocationRequest(r *http.Request) (req SendLocation, err error) {
+func decodeSendLocationRequest(r *http.Request, span trace.Span) (req SendLocation, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -1406,14 +1416,14 @@ func decodeSendLocationRequest(r *http.Request) (req SendLocation, err error) {
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request SendLocation
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -1423,7 +1433,7 @@ func decodeSendLocationRequest(r *http.Request) (req SendLocation, err error) {
 	}
 }
 
-func decodeSendMediaGroupRequest(r *http.Request) (req SendMediaGroup, err error) {
+func decodeSendMediaGroupRequest(r *http.Request, span trace.Span) (req SendMediaGroup, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -1433,14 +1443,14 @@ func decodeSendMediaGroupRequest(r *http.Request) (req SendMediaGroup, err error
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request SendMediaGroup
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -1458,7 +1468,7 @@ func decodeSendMediaGroupRequest(r *http.Request) (req SendMediaGroup, err error
 	}
 }
 
-func decodeSendMessageRequest(r *http.Request) (req SendMessage, err error) {
+func decodeSendMessageRequest(r *http.Request, span trace.Span) (req SendMessage, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -1468,14 +1478,14 @@ func decodeSendMessageRequest(r *http.Request) (req SendMessage, err error) {
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request SendMessage
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -1493,7 +1503,7 @@ func decodeSendMessageRequest(r *http.Request) (req SendMessage, err error) {
 	}
 }
 
-func decodeSendPhotoRequest(r *http.Request) (req SendPhoto, err error) {
+func decodeSendPhotoRequest(r *http.Request, span trace.Span) (req SendPhoto, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -1503,14 +1513,14 @@ func decodeSendPhotoRequest(r *http.Request) (req SendPhoto, err error) {
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request SendPhoto
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -1528,7 +1538,7 @@ func decodeSendPhotoRequest(r *http.Request) (req SendPhoto, err error) {
 	}
 }
 
-func decodeSendPollRequest(r *http.Request) (req SendPoll, err error) {
+func decodeSendPollRequest(r *http.Request, span trace.Span) (req SendPoll, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -1538,14 +1548,14 @@ func decodeSendPollRequest(r *http.Request) (req SendPoll, err error) {
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request SendPoll
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -1563,7 +1573,7 @@ func decodeSendPollRequest(r *http.Request) (req SendPoll, err error) {
 	}
 }
 
-func decodeSendStickerRequest(r *http.Request) (req SendSticker, err error) {
+func decodeSendStickerRequest(r *http.Request, span trace.Span) (req SendSticker, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -1573,14 +1583,14 @@ func decodeSendStickerRequest(r *http.Request) (req SendSticker, err error) {
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request SendSticker
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -1590,7 +1600,7 @@ func decodeSendStickerRequest(r *http.Request) (req SendSticker, err error) {
 	}
 }
 
-func decodeSendVenueRequest(r *http.Request) (req SendVenue, err error) {
+func decodeSendVenueRequest(r *http.Request, span trace.Span) (req SendVenue, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -1600,14 +1610,14 @@ func decodeSendVenueRequest(r *http.Request) (req SendVenue, err error) {
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request SendVenue
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -1617,7 +1627,7 @@ func decodeSendVenueRequest(r *http.Request) (req SendVenue, err error) {
 	}
 }
 
-func decodeSendVideoRequest(r *http.Request) (req SendVideo, err error) {
+func decodeSendVideoRequest(r *http.Request, span trace.Span) (req SendVideo, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -1627,14 +1637,14 @@ func decodeSendVideoRequest(r *http.Request) (req SendVideo, err error) {
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request SendVideo
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -1652,7 +1662,7 @@ func decodeSendVideoRequest(r *http.Request) (req SendVideo, err error) {
 	}
 }
 
-func decodeSendVideoNoteRequest(r *http.Request) (req SendVideoNote, err error) {
+func decodeSendVideoNoteRequest(r *http.Request, span trace.Span) (req SendVideoNote, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -1662,14 +1672,14 @@ func decodeSendVideoNoteRequest(r *http.Request) (req SendVideoNote, err error) 
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request SendVideoNote
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -1687,7 +1697,7 @@ func decodeSendVideoNoteRequest(r *http.Request) (req SendVideoNote, err error) 
 	}
 }
 
-func decodeSendVoiceRequest(r *http.Request) (req SendVoice, err error) {
+func decodeSendVoiceRequest(r *http.Request, span trace.Span) (req SendVoice, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -1697,14 +1707,14 @@ func decodeSendVoiceRequest(r *http.Request) (req SendVoice, err error) {
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request SendVoice
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -1722,7 +1732,7 @@ func decodeSendVoiceRequest(r *http.Request) (req SendVoice, err error) {
 	}
 }
 
-func decodeSetChatAdministratorCustomTitleRequest(r *http.Request) (req SetChatAdministratorCustomTitle, err error) {
+func decodeSetChatAdministratorCustomTitleRequest(r *http.Request, span trace.Span) (req SetChatAdministratorCustomTitle, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -1732,14 +1742,14 @@ func decodeSetChatAdministratorCustomTitleRequest(r *http.Request) (req SetChatA
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request SetChatAdministratorCustomTitle
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -1757,7 +1767,7 @@ func decodeSetChatAdministratorCustomTitleRequest(r *http.Request) (req SetChatA
 	}
 }
 
-func decodeSetChatDescriptionRequest(r *http.Request) (req SetChatDescription, err error) {
+func decodeSetChatDescriptionRequest(r *http.Request, span trace.Span) (req SetChatDescription, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -1767,14 +1777,14 @@ func decodeSetChatDescriptionRequest(r *http.Request) (req SetChatDescription, e
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request SetChatDescription
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -1792,7 +1802,7 @@ func decodeSetChatDescriptionRequest(r *http.Request) (req SetChatDescription, e
 	}
 }
 
-func decodeSetChatPermissionsRequest(r *http.Request) (req SetChatPermissions, err error) {
+func decodeSetChatPermissionsRequest(r *http.Request, span trace.Span) (req SetChatPermissions, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -1802,14 +1812,14 @@ func decodeSetChatPermissionsRequest(r *http.Request) (req SetChatPermissions, e
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request SetChatPermissions
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -1819,7 +1829,7 @@ func decodeSetChatPermissionsRequest(r *http.Request) (req SetChatPermissions, e
 	}
 }
 
-func decodeSetChatPhotoRequest(r *http.Request) (req SetChatPhoto, err error) {
+func decodeSetChatPhotoRequest(r *http.Request, span trace.Span) (req SetChatPhoto, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -1829,14 +1839,14 @@ func decodeSetChatPhotoRequest(r *http.Request) (req SetChatPhoto, err error) {
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request SetChatPhoto
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -1846,7 +1856,7 @@ func decodeSetChatPhotoRequest(r *http.Request) (req SetChatPhoto, err error) {
 	}
 }
 
-func decodeSetChatStickerSetRequest(r *http.Request) (req SetChatStickerSet, err error) {
+func decodeSetChatStickerSetRequest(r *http.Request, span trace.Span) (req SetChatStickerSet, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -1856,14 +1866,14 @@ func decodeSetChatStickerSetRequest(r *http.Request) (req SetChatStickerSet, err
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request SetChatStickerSet
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -1873,7 +1883,7 @@ func decodeSetChatStickerSetRequest(r *http.Request) (req SetChatStickerSet, err
 	}
 }
 
-func decodeSetChatTitleRequest(r *http.Request) (req SetChatTitle, err error) {
+func decodeSetChatTitleRequest(r *http.Request, span trace.Span) (req SetChatTitle, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -1883,14 +1893,14 @@ func decodeSetChatTitleRequest(r *http.Request) (req SetChatTitle, err error) {
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request SetChatTitle
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -1908,7 +1918,7 @@ func decodeSetChatTitleRequest(r *http.Request) (req SetChatTitle, err error) {
 	}
 }
 
-func decodeSetGameScoreRequest(r *http.Request) (req SetGameScore, err error) {
+func decodeSetGameScoreRequest(r *http.Request, span trace.Span) (req SetGameScore, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -1918,14 +1928,14 @@ func decodeSetGameScoreRequest(r *http.Request) (req SetGameScore, err error) {
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request SetGameScore
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -1935,7 +1945,7 @@ func decodeSetGameScoreRequest(r *http.Request) (req SetGameScore, err error) {
 	}
 }
 
-func decodeSetMyCommandsRequest(r *http.Request) (req SetMyCommands, err error) {
+func decodeSetMyCommandsRequest(r *http.Request, span trace.Span) (req SetMyCommands, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -1945,14 +1955,14 @@ func decodeSetMyCommandsRequest(r *http.Request) (req SetMyCommands, err error) 
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request SetMyCommands
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -1970,7 +1980,7 @@ func decodeSetMyCommandsRequest(r *http.Request) (req SetMyCommands, err error) 
 	}
 }
 
-func decodeSetPassportDataErrorsRequest(r *http.Request) (req SetPassportDataErrors, err error) {
+func decodeSetPassportDataErrorsRequest(r *http.Request, span trace.Span) (req SetPassportDataErrors, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -1980,14 +1990,14 @@ func decodeSetPassportDataErrorsRequest(r *http.Request) (req SetPassportDataErr
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request SetPassportDataErrors
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -2005,7 +2015,7 @@ func decodeSetPassportDataErrorsRequest(r *http.Request) (req SetPassportDataErr
 	}
 }
 
-func decodeSetStickerPositionInSetRequest(r *http.Request) (req SetStickerPositionInSet, err error) {
+func decodeSetStickerPositionInSetRequest(r *http.Request, span trace.Span) (req SetStickerPositionInSet, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -2015,14 +2025,14 @@ func decodeSetStickerPositionInSetRequest(r *http.Request) (req SetStickerPositi
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request SetStickerPositionInSet
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -2032,7 +2042,7 @@ func decodeSetStickerPositionInSetRequest(r *http.Request) (req SetStickerPositi
 	}
 }
 
-func decodeSetStickerSetThumbRequest(r *http.Request) (req SetStickerSetThumb, err error) {
+func decodeSetStickerSetThumbRequest(r *http.Request, span trace.Span) (req SetStickerSetThumb, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -2042,14 +2052,14 @@ func decodeSetStickerSetThumbRequest(r *http.Request) (req SetStickerSetThumb, e
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request SetStickerSetThumb
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -2059,7 +2069,7 @@ func decodeSetStickerSetThumbRequest(r *http.Request) (req SetStickerSetThumb, e
 	}
 }
 
-func decodeSetWebhookRequest(r *http.Request) (req SetWebhook, err error) {
+func decodeSetWebhookRequest(r *http.Request, span trace.Span) (req SetWebhook, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -2069,14 +2079,14 @@ func decodeSetWebhookRequest(r *http.Request) (req SetWebhook, err error) {
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request SetWebhook
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -2086,7 +2096,7 @@ func decodeSetWebhookRequest(r *http.Request) (req SetWebhook, err error) {
 	}
 }
 
-func decodeStopMessageLiveLocationRequest(r *http.Request) (req StopMessageLiveLocation, err error) {
+func decodeStopMessageLiveLocationRequest(r *http.Request, span trace.Span) (req StopMessageLiveLocation, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -2096,14 +2106,14 @@ func decodeStopMessageLiveLocationRequest(r *http.Request) (req StopMessageLiveL
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request StopMessageLiveLocation
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -2113,7 +2123,7 @@ func decodeStopMessageLiveLocationRequest(r *http.Request) (req StopMessageLiveL
 	}
 }
 
-func decodeStopPollRequest(r *http.Request) (req StopPoll, err error) {
+func decodeStopPollRequest(r *http.Request, span trace.Span) (req StopPoll, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -2123,14 +2133,14 @@ func decodeStopPollRequest(r *http.Request) (req StopPoll, err error) {
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request StopPoll
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -2140,7 +2150,7 @@ func decodeStopPollRequest(r *http.Request) (req StopPoll, err error) {
 	}
 }
 
-func decodeUnbanChatMemberRequest(r *http.Request) (req UnbanChatMember, err error) {
+func decodeUnbanChatMemberRequest(r *http.Request, span trace.Span) (req UnbanChatMember, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -2150,14 +2160,14 @@ func decodeUnbanChatMemberRequest(r *http.Request) (req UnbanChatMember, err err
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request UnbanChatMember
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -2167,7 +2177,7 @@ func decodeUnbanChatMemberRequest(r *http.Request) (req UnbanChatMember, err err
 	}
 }
 
-func decodeUnpinAllChatMessagesRequest(r *http.Request) (req UnpinAllChatMessages, err error) {
+func decodeUnpinAllChatMessagesRequest(r *http.Request, span trace.Span) (req UnpinAllChatMessages, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -2177,14 +2187,14 @@ func decodeUnpinAllChatMessagesRequest(r *http.Request) (req UnpinAllChatMessage
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request UnpinAllChatMessages
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -2194,7 +2204,7 @@ func decodeUnpinAllChatMessagesRequest(r *http.Request) (req UnpinAllChatMessage
 	}
 }
 
-func decodeUnpinChatMessageRequest(r *http.Request) (req UnpinChatMessage, err error) {
+func decodeUnpinChatMessageRequest(r *http.Request, span trace.Span) (req UnpinChatMessage, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -2204,14 +2214,14 @@ func decodeUnpinChatMessageRequest(r *http.Request) (req UnpinChatMessage, err e
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request UnpinChatMessage
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}
@@ -2221,7 +2231,7 @@ func decodeUnpinChatMessageRequest(r *http.Request) (req UnpinChatMessage, err e
 	}
 }
 
-func decodeUploadStickerFileRequest(r *http.Request) (req UploadStickerFile, err error) {
+func decodeUploadStickerFileRequest(r *http.Request, span trace.Span) (req UploadStickerFile, err error) {
 	buf := json.GetBuffer()
 	defer json.PutBuffer(buf)
 	if _, err := io.Copy(buf, r.Body); err != nil {
@@ -2231,14 +2241,14 @@ func decodeUploadStickerFileRequest(r *http.Request) (req UploadStickerFile, err
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request UploadStickerFile
-		i := json.GetIterator()
-		defer json.PutIterator(i)
-		i.ResetBytes(buf.Bytes())
+		r := json.GetReader()
+		defer json.PutReader(r)
+		r.ResetBytes(buf.Bytes())
 		if err := func() error {
-			if err := request.ReadJSON(i); err != nil {
+			if err := request.ReadJSON(r); err != nil {
 				return err
 			}
-			return i.Error
+			return nil
 		}(); err != nil {
 			return req, err
 		}

@@ -12,6 +12,7 @@ import (
 	"net"
 	"net/http"
 	"net/url"
+	"regexp"
 	"sort"
 	"strconv"
 	"strings"
@@ -22,8 +23,12 @@ import (
 	"github.com/ogen-go/ogen/conv"
 	ht "github.com/ogen-go/ogen/http"
 	"github.com/ogen-go/ogen/json"
+	"github.com/ogen-go/ogen/otelogen"
 	"github.com/ogen-go/ogen/uri"
 	"github.com/ogen-go/ogen/validate"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/metric"
+	"go.opentelemetry.io/otel/trace"
 )
 
 // No-op definition for keeping imports.
@@ -48,6 +53,11 @@ var (
 	_ = validate.Int{}
 	_ = ht.NewRequest
 	_ = net.IP{}
+	_ = otelogen.Version
+	_ = trace.TraceIDFromHex
+	_ = otel.GetTracerProvider
+	_ = metric.NewNoopMeterProvider
+	_ = regexp.MustCompile
 )
 
 // Ref: #/components/schemas/addStickerToSet
