@@ -8,7 +8,7 @@ require (
 	github.com/go-chi/chi/v5 v5.0.5
 	github.com/google/uuid v1.3.0
 	github.com/gotd/td v0.51.2
-	github.com/ogen-go/ogen v0.0.0-20211029235549-c12ac4576d30
+	github.com/ogen-go/ogen v0.0.0-20211030140626-ba905cadebd9
 	github.com/stretchr/testify v1.7.0
 	go.opentelemetry.io/otel v1.1.0
 	go.opentelemetry.io/otel/metric v0.24.0
@@ -27,7 +27,7 @@ require (
 	github.com/gotd/xor v0.1.1 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/klauspost/compress v1.13.6 // indirect
-	github.com/ogen-go/jx v0.7.0 // indirect
+	github.com/ogen-go/jx v0.9.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	go.uber.org/atomic v1.9.0 // indirect
