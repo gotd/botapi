@@ -57,7 +57,11 @@ func run(ctx context.Context) error {
 	buf := new(bytes.Buffer)
 	e := json.NewEncoder(buf)
 	e.SetIndent("", "  ")
-	if err := e.Encode(api.OAS()); err != nil {
+	s, err := api.OAS()
+	if err != nil {
+		return xerrors.Errorf("generate: %w", err)
+	}
+	if err := e.Encode(s); err != nil {
 		return xerrors.Errorf("encode: %w", err)
 	}
 

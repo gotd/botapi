@@ -752,16 +752,374 @@ func (s *BotCommand) ReadJSON(d *json.Decoder) error {
 
 // WriteJSON implements json.Marshaler.
 func (s BotCommandScope) WriteJSON(e *json.Encoder) {
+	switch s.Type {
+	case BotCommandScopeDefaultBotCommandScope:
+		s.BotCommandScopeDefault.WriteJSON(e)
+	case BotCommandScopeAllPrivateChatsBotCommandScope:
+		s.BotCommandScopeAllPrivateChats.WriteJSON(e)
+	case BotCommandScopeAllGroupChatsBotCommandScope:
+		s.BotCommandScopeAllGroupChats.WriteJSON(e)
+	case BotCommandScopeAllChatAdministratorsBotCommandScope:
+		s.BotCommandScopeAllChatAdministrators.WriteJSON(e)
+	case BotCommandScopeChatBotCommandScope:
+		s.BotCommandScopeChat.WriteJSON(e)
+	case BotCommandScopeChatAdministratorsBotCommandScope:
+		s.BotCommandScopeChatAdministrators.WriteJSON(e)
+	case BotCommandScopeChatMemberBotCommandScope:
+		s.BotCommandScopeChatMember.WriteJSON(e)
+	}
+}
+
+// ReadJSON reads value from json reader.
+func (s *BotCommandScope) ReadJSON(d *json.Decoder) error {
+	if s == nil {
+		return fmt.Errorf(`invalid: unable to decode BotCommandScope to nil`)
+	}
+	// Sum type discriminator.
+	if d.Next() != json.Object {
+		return fmt.Errorf("unexpected json type %q", d.Next())
+	}
+	var found bool
+	if err := d.Capture(func(d *json.Decoder) error {
+		return d.ObjBytes(func(d *json.Decoder, key []byte) error {
+			if found {
+				return d.Skip()
+			}
+			switch string(key) {
+			case "type":
+				typ, err := d.Str()
+				if err != nil {
+					return err
+				}
+				switch typ {
+				case "all_chat_administrators":
+					s.Type = BotCommandScopeAllChatAdministratorsBotCommandScope
+					found = true
+				case "all_group_chats":
+					s.Type = BotCommandScopeAllGroupChatsBotCommandScope
+					found = true
+				case "all_private_chats":
+					s.Type = BotCommandScopeAllPrivateChatsBotCommandScope
+					found = true
+				case "chat":
+					s.Type = BotCommandScopeChatBotCommandScope
+					found = true
+				case "chat_administrators":
+					s.Type = BotCommandScopeChatAdministratorsBotCommandScope
+					found = true
+				case "chat_member":
+					s.Type = BotCommandScopeChatMemberBotCommandScope
+					found = true
+				case "default":
+					s.Type = BotCommandScopeDefaultBotCommandScope
+					found = true
+				default:
+					return fmt.Errorf("unknown type %s", typ)
+				}
+				return nil
+			}
+			return d.Skip()
+		})
+	}); err != nil {
+		return fmt.Errorf("capture: %w", err)
+	}
+	if !found {
+		return fmt.Errorf("unable to detect sum type variant")
+	}
+	switch s.Type {
+	case BotCommandScopeDefaultBotCommandScope:
+		if err := s.BotCommandScopeDefault.ReadJSON(d); err != nil {
+			return err
+		}
+	case BotCommandScopeAllPrivateChatsBotCommandScope:
+		if err := s.BotCommandScopeAllPrivateChats.ReadJSON(d); err != nil {
+			return err
+		}
+	case BotCommandScopeAllGroupChatsBotCommandScope:
+		if err := s.BotCommandScopeAllGroupChats.ReadJSON(d); err != nil {
+			return err
+		}
+	case BotCommandScopeAllChatAdministratorsBotCommandScope:
+		if err := s.BotCommandScopeAllChatAdministrators.ReadJSON(d); err != nil {
+			return err
+		}
+	case BotCommandScopeChatBotCommandScope:
+		if err := s.BotCommandScopeChat.ReadJSON(d); err != nil {
+			return err
+		}
+	case BotCommandScopeChatAdministratorsBotCommandScope:
+		if err := s.BotCommandScopeChatAdministrators.ReadJSON(d); err != nil {
+			return err
+		}
+	case BotCommandScopeChatMemberBotCommandScope:
+		if err := s.BotCommandScopeChatMember.ReadJSON(d); err != nil {
+			return err
+		}
+	default:
+		return fmt.Errorf("inferred invalid type: %s", s.Type)
+	}
+	return nil
+}
+
+// WriteJSON implements json.Marshaler.
+func (s BotCommandScopeAllChatAdministrators) WriteJSON(e *json.Encoder) {
+	e.ObjStart()
+	more := json.NewMore(e)
+	defer more.Reset()
+	more.More()
+	e.ObjField("type")
+	e.Str(s.Type)
+	e.ObjEnd()
+}
+
+// ReadJSON reads BotCommandScopeAllChatAdministrators from json stream.
+func (s *BotCommandScopeAllChatAdministrators) ReadJSON(d *json.Decoder) error {
+	if s == nil {
+		return fmt.Errorf(`invalid: unable to decode BotCommandScopeAllChatAdministrators to nil`)
+	}
+	return d.ObjBytes(func(d *json.Decoder, k []byte) error {
+		switch string(k) {
+		case "type":
+			v, err := d.Str()
+			s.Type = string(v)
+			if err != nil {
+				return err
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	})
+}
+
+// WriteJSON implements json.Marshaler.
+func (s BotCommandScopeAllGroupChats) WriteJSON(e *json.Encoder) {
+	e.ObjStart()
+	more := json.NewMore(e)
+	defer more.Reset()
+	more.More()
+	e.ObjField("type")
+	e.Str(s.Type)
+	e.ObjEnd()
+}
+
+// ReadJSON reads BotCommandScopeAllGroupChats from json stream.
+func (s *BotCommandScopeAllGroupChats) ReadJSON(d *json.Decoder) error {
+	if s == nil {
+		return fmt.Errorf(`invalid: unable to decode BotCommandScopeAllGroupChats to nil`)
+	}
+	return d.ObjBytes(func(d *json.Decoder, k []byte) error {
+		switch string(k) {
+		case "type":
+			v, err := d.Str()
+			s.Type = string(v)
+			if err != nil {
+				return err
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	})
+}
+
+// WriteJSON implements json.Marshaler.
+func (s BotCommandScopeAllPrivateChats) WriteJSON(e *json.Encoder) {
+	e.ObjStart()
+	more := json.NewMore(e)
+	defer more.Reset()
+	more.More()
+	e.ObjField("type")
+	e.Str(s.Type)
+	e.ObjEnd()
+}
+
+// ReadJSON reads BotCommandScopeAllPrivateChats from json stream.
+func (s *BotCommandScopeAllPrivateChats) ReadJSON(d *json.Decoder) error {
+	if s == nil {
+		return fmt.Errorf(`invalid: unable to decode BotCommandScopeAllPrivateChats to nil`)
+	}
+	return d.ObjBytes(func(d *json.Decoder, k []byte) error {
+		switch string(k) {
+		case "type":
+			v, err := d.Str()
+			s.Type = string(v)
+			if err != nil {
+				return err
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	})
+}
+
+// WriteJSON implements json.Marshaler.
+func (s BotCommandScopeChat) WriteJSON(e *json.Encoder) {
+	e.ObjStart()
+	more := json.NewMore(e)
+	defer more.Reset()
+	more.More()
+	e.ObjField("type")
+	e.Str(s.Type)
+	more.More()
+	e.ObjField("chat_id")
+	s.ChatID.WriteJSON(e)
+	e.ObjEnd()
+}
+
+// ReadJSON reads BotCommandScopeChat from json stream.
+func (s *BotCommandScopeChat) ReadJSON(d *json.Decoder) error {
+	if s == nil {
+		return fmt.Errorf(`invalid: unable to decode BotCommandScopeChat to nil`)
+	}
+	return d.ObjBytes(func(d *json.Decoder, k []byte) error {
+		switch string(k) {
+		case "type":
+			v, err := d.Str()
+			s.Type = string(v)
+			if err != nil {
+				return err
+			}
+		case "chat_id":
+			if err := s.ChatID.ReadJSON(d); err != nil {
+				return err
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	})
+}
+
+// WriteJSON implements json.Marshaler.
+func (s BotCommandScopeChatAdministrators) WriteJSON(e *json.Encoder) {
+	e.ObjStart()
+	more := json.NewMore(e)
+	defer more.Reset()
+	more.More()
+	e.ObjField("type")
+	e.Str(s.Type)
+	more.More()
+	e.ObjField("chat_id")
+	s.ChatID.WriteJSON(e)
+	e.ObjEnd()
+}
+
+// ReadJSON reads BotCommandScopeChatAdministrators from json stream.
+func (s *BotCommandScopeChatAdministrators) ReadJSON(d *json.Decoder) error {
+	if s == nil {
+		return fmt.Errorf(`invalid: unable to decode BotCommandScopeChatAdministrators to nil`)
+	}
+	return d.ObjBytes(func(d *json.Decoder, k []byte) error {
+		switch string(k) {
+		case "type":
+			v, err := d.Str()
+			s.Type = string(v)
+			if err != nil {
+				return err
+			}
+		case "chat_id":
+			if err := s.ChatID.ReadJSON(d); err != nil {
+				return err
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	})
+}
+
+// WriteJSON implements json.Marshaler.
+func (s BotCommandScopeChatMember) WriteJSON(e *json.Encoder) {
+	e.ObjStart()
+	more := json.NewMore(e)
+	defer more.Reset()
+	more.More()
+	e.ObjField("type")
+	e.Str(s.Type)
+	more.More()
+	e.ObjField("chat_id")
+	s.ChatID.WriteJSON(e)
+	more.More()
+	e.ObjField("user_id")
+	e.Int(s.UserID)
+	e.ObjEnd()
+}
+
+// ReadJSON reads BotCommandScopeChatMember from json stream.
+func (s *BotCommandScopeChatMember) ReadJSON(d *json.Decoder) error {
+	if s == nil {
+		return fmt.Errorf(`invalid: unable to decode BotCommandScopeChatMember to nil`)
+	}
+	return d.ObjBytes(func(d *json.Decoder, k []byte) error {
+		switch string(k) {
+		case "type":
+			v, err := d.Str()
+			s.Type = string(v)
+			if err != nil {
+				return err
+			}
+		case "chat_id":
+			if err := s.ChatID.ReadJSON(d); err != nil {
+				return err
+			}
+		case "user_id":
+			v, err := d.Int()
+			s.UserID = int(v)
+			if err != nil {
+				return err
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	})
+}
+
+// WriteJSON implements json.Marshaler.
+func (s BotCommandScopeDefault) WriteJSON(e *json.Encoder) {
+	e.ObjStart()
+	more := json.NewMore(e)
+	defer more.Reset()
+	more.More()
+	e.ObjField("type")
+	e.Str(s.Type)
+	e.ObjEnd()
+}
+
+// ReadJSON reads BotCommandScopeDefault from json stream.
+func (s *BotCommandScopeDefault) ReadJSON(d *json.Decoder) error {
+	if s == nil {
+		return fmt.Errorf(`invalid: unable to decode BotCommandScopeDefault to nil`)
+	}
+	return d.ObjBytes(func(d *json.Decoder, k []byte) error {
+		switch string(k) {
+		case "type":
+			v, err := d.Str()
+			s.Type = string(v)
+			if err != nil {
+				return err
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	})
+}
+
+// WriteJSON implements json.Marshaler.
+func (s CallbackGame) WriteJSON(e *json.Encoder) {
 	e.ObjStart()
 	more := json.NewMore(e)
 	defer more.Reset()
 	e.ObjEnd()
 }
 
-// ReadJSON reads BotCommandScope from json stream.
-func (s *BotCommandScope) ReadJSON(d *json.Decoder) error {
+// ReadJSON reads CallbackGame from json stream.
+func (s *CallbackGame) ReadJSON(d *json.Decoder) error {
 	if s == nil {
-		return fmt.Errorf(`invalid: unable to decode BotCommandScope to nil`)
+		return fmt.Errorf(`invalid: unable to decode CallbackGame to nil`)
 	}
 	return d.ObjBytes(func(d *json.Decoder, k []byte) error {
 		switch string(k) {
@@ -1291,6 +1649,11 @@ func (s CopyMessage) WriteJSON(e *json.Encoder) {
 		e.ObjField("allow_sending_without_reply")
 		s.AllowSendingWithoutReply.WriteJSON(e)
 	}
+	if s.ReplyMarkup != nil {
+		more.More()
+		e.ObjField("reply_markup")
+		s.ReplyMarkup.WriteJSON(e)
+	}
 	e.ObjEnd()
 }
 
@@ -1352,11 +1715,104 @@ func (s *CopyMessage) ReadJSON(d *json.Decoder) error {
 			if err := s.AllowSendingWithoutReply.ReadJSON(d); err != nil {
 				return err
 			}
+		case "reply_markup":
+			s.ReplyMarkup = nil
+			var elem CopyMessageReplyMarkup
+			if err := elem.ReadJSON(d); err != nil {
+				return err
+			}
+			s.ReplyMarkup = &elem
 		default:
 			return d.Skip()
 		}
 		return nil
 	})
+}
+
+// WriteJSON implements json.Marshaler.
+func (s CopyMessageReplyMarkup) WriteJSON(e *json.Encoder) {
+	switch s.Type {
+	case InlineKeyboardMarkupCopyMessageReplyMarkup:
+		s.InlineKeyboardMarkup.WriteJSON(e)
+	case ReplyKeyboardMarkupCopyMessageReplyMarkup:
+		s.ReplyKeyboardMarkup.WriteJSON(e)
+	case ReplyKeyboardRemoveCopyMessageReplyMarkup:
+		s.ReplyKeyboardRemove.WriteJSON(e)
+	case ForceReplyCopyMessageReplyMarkup:
+		s.ForceReply.WriteJSON(e)
+	}
+}
+
+// ReadJSON reads value from json reader.
+func (s *CopyMessageReplyMarkup) ReadJSON(d *json.Decoder) error {
+	if s == nil {
+		return fmt.Errorf(`invalid: unable to decode CopyMessageReplyMarkup to nil`)
+	}
+	// Sum type fields.
+	if d.Next() != json.Object {
+		return fmt.Errorf("unexpected json type %q", d.Next())
+	}
+	var found bool
+	if err := d.Capture(func(d *json.Decoder) error {
+		return d.ObjBytes(func(d *json.Decoder, key []byte) error {
+			if found {
+				return d.Skip()
+			}
+			switch string(key) {
+			case "inline_keyboard":
+				found = true
+				s.Type = InlineKeyboardMarkupCopyMessageReplyMarkup
+			case "keyboard":
+				found = true
+				s.Type = ReplyKeyboardMarkupCopyMessageReplyMarkup
+			case "resize_keyboard":
+				found = true
+				s.Type = ReplyKeyboardMarkupCopyMessageReplyMarkup
+			case "one_time_keyboard":
+				found = true
+				s.Type = ReplyKeyboardMarkupCopyMessageReplyMarkup
+			case "remove_keyboard":
+				found = true
+				s.Type = ReplyKeyboardRemoveCopyMessageReplyMarkup
+			case "force_reply":
+				found = true
+				s.Type = ForceReplyCopyMessageReplyMarkup
+			case "input_field_placeholder":
+				found = true
+				s.Type = ForceReplyCopyMessageReplyMarkup
+			case "selective":
+				found = true
+				s.Type = ForceReplyCopyMessageReplyMarkup
+			}
+			return d.Skip()
+		})
+	}); err != nil {
+		return fmt.Errorf("capture: %w", err)
+	}
+	if !found {
+		return fmt.Errorf("unable to detect sum type variant")
+	}
+	switch s.Type {
+	case InlineKeyboardMarkupCopyMessageReplyMarkup:
+		if err := s.InlineKeyboardMarkup.ReadJSON(d); err != nil {
+			return err
+		}
+	case ReplyKeyboardMarkupCopyMessageReplyMarkup:
+		if err := s.ReplyKeyboardMarkup.ReadJSON(d); err != nil {
+			return err
+		}
+	case ReplyKeyboardRemoveCopyMessageReplyMarkup:
+		if err := s.ReplyKeyboardRemove.ReadJSON(d); err != nil {
+			return err
+		}
+	case ForceReplyCopyMessageReplyMarkup:
+		if err := s.ForceReply.ReadJSON(d); err != nil {
+			return err
+		}
+	default:
+		return fmt.Errorf("inferred invalid type: %s", s.Type)
+	}
+	return nil
 }
 
 // WriteJSON implements json.Marshaler.
@@ -2667,6 +3123,57 @@ func (s *ExportChatInviteLink) ReadJSON(d *json.Decoder) error {
 }
 
 // WriteJSON implements json.Marshaler.
+func (s ForceReply) WriteJSON(e *json.Encoder) {
+	e.ObjStart()
+	more := json.NewMore(e)
+	defer more.Reset()
+	more.More()
+	e.ObjField("force_reply")
+	e.Bool(s.ForceReply)
+	if s.InputFieldPlaceholder.Set {
+		more.More()
+		e.ObjField("input_field_placeholder")
+		s.InputFieldPlaceholder.WriteJSON(e)
+	}
+	if s.Selective.Set {
+		more.More()
+		e.ObjField("selective")
+		s.Selective.WriteJSON(e)
+	}
+	e.ObjEnd()
+}
+
+// ReadJSON reads ForceReply from json stream.
+func (s *ForceReply) ReadJSON(d *json.Decoder) error {
+	if s == nil {
+		return fmt.Errorf(`invalid: unable to decode ForceReply to nil`)
+	}
+	return d.ObjBytes(func(d *json.Decoder, k []byte) error {
+		switch string(k) {
+		case "force_reply":
+			v, err := d.Bool()
+			s.ForceReply = bool(v)
+			if err != nil {
+				return err
+			}
+		case "input_field_placeholder":
+			s.InputFieldPlaceholder.Reset()
+			if err := s.InputFieldPlaceholder.ReadJSON(d); err != nil {
+				return err
+			}
+		case "selective":
+			s.Selective.Reset()
+			if err := s.Selective.ReadJSON(d); err != nil {
+				return err
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	})
+}
+
+// WriteJSON implements json.Marshaler.
 func (s ForwardMessage) WriteJSON(e *json.Encoder) {
 	e.ObjStart()
 	more := json.NewMore(e)
@@ -3263,6 +3770,7 @@ func (s *ID) ReadJSON(d *json.Decoder) error {
 	if s == nil {
 		return fmt.Errorf(`invalid: unable to decode ID to nil`)
 	}
+	// Sum type primitive.
 	switch t := d.Next(); t {
 	case json.String:
 		v, err := d.Str()
@@ -3284,27 +3792,827 @@ func (s *ID) ReadJSON(d *json.Decoder) error {
 	return nil
 }
 
-func (InlineKeyboardMarkup) WriteJSON(e *json.Encoder)      {}
-func (InlineKeyboardMarkup) ReadJSON(d *json.Decoder) error { return nil }
+// WriteJSON implements json.Marshaler.
+func (s InlineKeyboardButton) WriteJSON(e *json.Encoder) {
+	e.ObjStart()
+	more := json.NewMore(e)
+	defer more.Reset()
+	more.More()
+	e.ObjField("text")
+	e.Str(s.Text)
+	if s.URL.Set {
+		more.More()
+		e.ObjField("url")
+		s.URL.WriteJSON(e)
+	}
+	if s.LoginURL.Set {
+		more.More()
+		e.ObjField("login_url")
+		s.LoginURL.WriteJSON(e)
+	}
+	if s.CallbackData.Set {
+		more.More()
+		e.ObjField("callback_data")
+		s.CallbackData.WriteJSON(e)
+	}
+	if s.SwitchInlineQuery.Set {
+		more.More()
+		e.ObjField("switch_inline_query")
+		s.SwitchInlineQuery.WriteJSON(e)
+	}
+	if s.SwitchInlineQueryCurrentChat.Set {
+		more.More()
+		e.ObjField("switch_inline_query_current_chat")
+		s.SwitchInlineQueryCurrentChat.WriteJSON(e)
+	}
+	if s.CallbackGame != nil {
+		more.More()
+		e.ObjField("callback_game")
+		s.CallbackGame.WriteJSON(e)
+	}
+	if s.Pay.Set {
+		more.More()
+		e.ObjField("pay")
+		s.Pay.WriteJSON(e)
+	}
+	e.ObjEnd()
+}
+
+// ReadJSON reads InlineKeyboardButton from json stream.
+func (s *InlineKeyboardButton) ReadJSON(d *json.Decoder) error {
+	if s == nil {
+		return fmt.Errorf(`invalid: unable to decode InlineKeyboardButton to nil`)
+	}
+	return d.ObjBytes(func(d *json.Decoder, k []byte) error {
+		switch string(k) {
+		case "text":
+			v, err := d.Str()
+			s.Text = string(v)
+			if err != nil {
+				return err
+			}
+		case "url":
+			s.URL.Reset()
+			if err := s.URL.ReadJSON(d); err != nil {
+				return err
+			}
+		case "login_url":
+			s.LoginURL.Reset()
+			if err := s.LoginURL.ReadJSON(d); err != nil {
+				return err
+			}
+		case "callback_data":
+			s.CallbackData.Reset()
+			if err := s.CallbackData.ReadJSON(d); err != nil {
+				return err
+			}
+		case "switch_inline_query":
+			s.SwitchInlineQuery.Reset()
+			if err := s.SwitchInlineQuery.ReadJSON(d); err != nil {
+				return err
+			}
+		case "switch_inline_query_current_chat":
+			s.SwitchInlineQueryCurrentChat.Reset()
+			if err := s.SwitchInlineQueryCurrentChat.ReadJSON(d); err != nil {
+				return err
+			}
+		case "callback_game":
+			s.CallbackGame = nil
+			var elem CallbackGame
+			if err := elem.ReadJSON(d); err != nil {
+				return err
+			}
+			s.CallbackGame = &elem
+		case "pay":
+			s.Pay.Reset()
+			if err := s.Pay.ReadJSON(d); err != nil {
+				return err
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	})
+}
+
+// WriteJSON implements json.Marshaler.
+func (s InlineKeyboardMarkup) WriteJSON(e *json.Encoder) {
+	e.ObjStart()
+	more := json.NewMore(e)
+	defer more.Reset()
+	more.More()
+	e.ObjField("inline_keyboard")
+	more.Down()
+	e.ArrStart()
+	for _, elem := range s.InlineKeyboard {
+		more.More()
+		more.Down()
+		e.ArrStart()
+		for _, elem := range elem {
+			more.More()
+			elem.WriteJSON(e)
+		}
+		e.ArrEnd()
+		more.Up()
+	}
+	e.ArrEnd()
+	more.Up()
+	e.ObjEnd()
+}
+
+// ReadJSON reads InlineKeyboardMarkup from json stream.
+func (s *InlineKeyboardMarkup) ReadJSON(d *json.Decoder) error {
+	if s == nil {
+		return fmt.Errorf(`invalid: unable to decode InlineKeyboardMarkup to nil`)
+	}
+	return d.ObjBytes(func(d *json.Decoder, k []byte) error {
+		switch string(k) {
+		case "inline_keyboard":
+			s.InlineKeyboard = nil
+			if err := d.Arr(func(d *json.Decoder) error {
+				var elem []InlineKeyboardButton
+				elem = nil
+				if err := d.Arr(func(d *json.Decoder) error {
+					var elemElem InlineKeyboardButton
+					if err := elemElem.ReadJSON(d); err != nil {
+						return err
+					}
+					elem = append(elem, elemElem)
+					return nil
+				}); err != nil {
+					return err
+				}
+				s.InlineKeyboard = append(s.InlineKeyboard, elem)
+				return nil
+			}); err != nil {
+				return err
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	})
+}
 
 func (InlineQueryResult) WriteJSON(e *json.Encoder)      {}
 func (InlineQueryResult) ReadJSON(d *json.Decoder) error { return nil }
 
 // WriteJSON implements json.Marshaler.
 func (s InputMedia) WriteJSON(e *json.Encoder) {
-	e.ObjStart()
-	more := json.NewMore(e)
-	defer more.Reset()
-	e.ObjEnd()
+	switch s.Type {
+	case InputMediaAnimationInputMedia:
+		s.InputMediaAnimation.WriteJSON(e)
+	case InputMediaDocumentInputMedia:
+		s.InputMediaDocument.WriteJSON(e)
+	case InputMediaAudioInputMedia:
+		s.InputMediaAudio.WriteJSON(e)
+	case InputMediaPhotoInputMedia:
+		s.InputMediaPhoto.WriteJSON(e)
+	case InputMediaVideoInputMedia:
+		s.InputMediaVideo.WriteJSON(e)
+	}
 }
 
-// ReadJSON reads InputMedia from json stream.
+// ReadJSON reads value from json reader.
 func (s *InputMedia) ReadJSON(d *json.Decoder) error {
 	if s == nil {
 		return fmt.Errorf(`invalid: unable to decode InputMedia to nil`)
 	}
+	// Sum type discriminator.
+	if d.Next() != json.Object {
+		return fmt.Errorf("unexpected json type %q", d.Next())
+	}
+	var found bool
+	if err := d.Capture(func(d *json.Decoder) error {
+		return d.ObjBytes(func(d *json.Decoder, key []byte) error {
+			if found {
+				return d.Skip()
+			}
+			switch string(key) {
+			case "type":
+				typ, err := d.Str()
+				if err != nil {
+					return err
+				}
+				switch typ {
+				case "animation":
+					s.Type = InputMediaAnimationInputMedia
+					found = true
+				case "audio":
+					s.Type = InputMediaAudioInputMedia
+					found = true
+				case "document":
+					s.Type = InputMediaDocumentInputMedia
+					found = true
+				case "photo":
+					s.Type = InputMediaPhotoInputMedia
+					found = true
+				case "video":
+					s.Type = InputMediaVideoInputMedia
+					found = true
+				default:
+					return fmt.Errorf("unknown type %s", typ)
+				}
+				return nil
+			}
+			return d.Skip()
+		})
+	}); err != nil {
+		return fmt.Errorf("capture: %w", err)
+	}
+	if !found {
+		return fmt.Errorf("unable to detect sum type variant")
+	}
+	switch s.Type {
+	case InputMediaAnimationInputMedia:
+		if err := s.InputMediaAnimation.ReadJSON(d); err != nil {
+			return err
+		}
+	case InputMediaDocumentInputMedia:
+		if err := s.InputMediaDocument.ReadJSON(d); err != nil {
+			return err
+		}
+	case InputMediaAudioInputMedia:
+		if err := s.InputMediaAudio.ReadJSON(d); err != nil {
+			return err
+		}
+	case InputMediaPhotoInputMedia:
+		if err := s.InputMediaPhoto.ReadJSON(d); err != nil {
+			return err
+		}
+	case InputMediaVideoInputMedia:
+		if err := s.InputMediaVideo.ReadJSON(d); err != nil {
+			return err
+		}
+	default:
+		return fmt.Errorf("inferred invalid type: %s", s.Type)
+	}
+	return nil
+}
+
+// WriteJSON implements json.Marshaler.
+func (s InputMediaAnimation) WriteJSON(e *json.Encoder) {
+	e.ObjStart()
+	more := json.NewMore(e)
+	defer more.Reset()
+	more.More()
+	e.ObjField("type")
+	e.Str(s.Type)
+	more.More()
+	e.ObjField("media")
+	e.Str(s.Media)
+	if s.Thumb.Set {
+		more.More()
+		e.ObjField("thumb")
+		s.Thumb.WriteJSON(e)
+	}
+	if s.Caption.Set {
+		more.More()
+		e.ObjField("caption")
+		s.Caption.WriteJSON(e)
+	}
+	if s.ParseMode.Set {
+		more.More()
+		e.ObjField("parse_mode")
+		s.ParseMode.WriteJSON(e)
+	}
+	if s.CaptionEntities != nil {
+		more.More()
+		e.ObjField("caption_entities")
+		more.Down()
+		e.ArrStart()
+		for _, elem := range s.CaptionEntities {
+			more.More()
+			elem.WriteJSON(e)
+		}
+		e.ArrEnd()
+		more.Up()
+	}
+	if s.Width.Set {
+		more.More()
+		e.ObjField("width")
+		s.Width.WriteJSON(e)
+	}
+	if s.Height.Set {
+		more.More()
+		e.ObjField("height")
+		s.Height.WriteJSON(e)
+	}
+	if s.Duration.Set {
+		more.More()
+		e.ObjField("duration")
+		s.Duration.WriteJSON(e)
+	}
+	e.ObjEnd()
+}
+
+// ReadJSON reads InputMediaAnimation from json stream.
+func (s *InputMediaAnimation) ReadJSON(d *json.Decoder) error {
+	if s == nil {
+		return fmt.Errorf(`invalid: unable to decode InputMediaAnimation to nil`)
+	}
 	return d.ObjBytes(func(d *json.Decoder, k []byte) error {
 		switch string(k) {
+		case "type":
+			v, err := d.Str()
+			s.Type = string(v)
+			if err != nil {
+				return err
+			}
+		case "media":
+			v, err := d.Str()
+			s.Media = string(v)
+			if err != nil {
+				return err
+			}
+		case "thumb":
+			s.Thumb.Reset()
+			if err := s.Thumb.ReadJSON(d); err != nil {
+				return err
+			}
+		case "caption":
+			s.Caption.Reset()
+			if err := s.Caption.ReadJSON(d); err != nil {
+				return err
+			}
+		case "parse_mode":
+			s.ParseMode.Reset()
+			if err := s.ParseMode.ReadJSON(d); err != nil {
+				return err
+			}
+		case "caption_entities":
+			s.CaptionEntities = nil
+			if err := d.Arr(func(d *json.Decoder) error {
+				var elem MessageEntity
+				if err := elem.ReadJSON(d); err != nil {
+					return err
+				}
+				s.CaptionEntities = append(s.CaptionEntities, elem)
+				return nil
+			}); err != nil {
+				return err
+			}
+		case "width":
+			s.Width.Reset()
+			if err := s.Width.ReadJSON(d); err != nil {
+				return err
+			}
+		case "height":
+			s.Height.Reset()
+			if err := s.Height.ReadJSON(d); err != nil {
+				return err
+			}
+		case "duration":
+			s.Duration.Reset()
+			if err := s.Duration.ReadJSON(d); err != nil {
+				return err
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	})
+}
+
+// WriteJSON implements json.Marshaler.
+func (s InputMediaAudio) WriteJSON(e *json.Encoder) {
+	e.ObjStart()
+	more := json.NewMore(e)
+	defer more.Reset()
+	more.More()
+	e.ObjField("type")
+	e.Str(s.Type)
+	more.More()
+	e.ObjField("media")
+	e.Str(s.Media)
+	if s.Thumb.Set {
+		more.More()
+		e.ObjField("thumb")
+		s.Thumb.WriteJSON(e)
+	}
+	if s.Caption.Set {
+		more.More()
+		e.ObjField("caption")
+		s.Caption.WriteJSON(e)
+	}
+	if s.ParseMode.Set {
+		more.More()
+		e.ObjField("parse_mode")
+		s.ParseMode.WriteJSON(e)
+	}
+	if s.CaptionEntities != nil {
+		more.More()
+		e.ObjField("caption_entities")
+		more.Down()
+		e.ArrStart()
+		for _, elem := range s.CaptionEntities {
+			more.More()
+			elem.WriteJSON(e)
+		}
+		e.ArrEnd()
+		more.Up()
+	}
+	if s.Duration.Set {
+		more.More()
+		e.ObjField("duration")
+		s.Duration.WriteJSON(e)
+	}
+	if s.Performer.Set {
+		more.More()
+		e.ObjField("performer")
+		s.Performer.WriteJSON(e)
+	}
+	if s.Title.Set {
+		more.More()
+		e.ObjField("title")
+		s.Title.WriteJSON(e)
+	}
+	e.ObjEnd()
+}
+
+// ReadJSON reads InputMediaAudio from json stream.
+func (s *InputMediaAudio) ReadJSON(d *json.Decoder) error {
+	if s == nil {
+		return fmt.Errorf(`invalid: unable to decode InputMediaAudio to nil`)
+	}
+	return d.ObjBytes(func(d *json.Decoder, k []byte) error {
+		switch string(k) {
+		case "type":
+			v, err := d.Str()
+			s.Type = string(v)
+			if err != nil {
+				return err
+			}
+		case "media":
+			v, err := d.Str()
+			s.Media = string(v)
+			if err != nil {
+				return err
+			}
+		case "thumb":
+			s.Thumb.Reset()
+			if err := s.Thumb.ReadJSON(d); err != nil {
+				return err
+			}
+		case "caption":
+			s.Caption.Reset()
+			if err := s.Caption.ReadJSON(d); err != nil {
+				return err
+			}
+		case "parse_mode":
+			s.ParseMode.Reset()
+			if err := s.ParseMode.ReadJSON(d); err != nil {
+				return err
+			}
+		case "caption_entities":
+			s.CaptionEntities = nil
+			if err := d.Arr(func(d *json.Decoder) error {
+				var elem MessageEntity
+				if err := elem.ReadJSON(d); err != nil {
+					return err
+				}
+				s.CaptionEntities = append(s.CaptionEntities, elem)
+				return nil
+			}); err != nil {
+				return err
+			}
+		case "duration":
+			s.Duration.Reset()
+			if err := s.Duration.ReadJSON(d); err != nil {
+				return err
+			}
+		case "performer":
+			s.Performer.Reset()
+			if err := s.Performer.ReadJSON(d); err != nil {
+				return err
+			}
+		case "title":
+			s.Title.Reset()
+			if err := s.Title.ReadJSON(d); err != nil {
+				return err
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	})
+}
+
+// WriteJSON implements json.Marshaler.
+func (s InputMediaDocument) WriteJSON(e *json.Encoder) {
+	e.ObjStart()
+	more := json.NewMore(e)
+	defer more.Reset()
+	more.More()
+	e.ObjField("type")
+	e.Str(s.Type)
+	more.More()
+	e.ObjField("media")
+	e.Str(s.Media)
+	if s.Thumb.Set {
+		more.More()
+		e.ObjField("thumb")
+		s.Thumb.WriteJSON(e)
+	}
+	if s.Caption.Set {
+		more.More()
+		e.ObjField("caption")
+		s.Caption.WriteJSON(e)
+	}
+	if s.ParseMode.Set {
+		more.More()
+		e.ObjField("parse_mode")
+		s.ParseMode.WriteJSON(e)
+	}
+	if s.CaptionEntities != nil {
+		more.More()
+		e.ObjField("caption_entities")
+		more.Down()
+		e.ArrStart()
+		for _, elem := range s.CaptionEntities {
+			more.More()
+			elem.WriteJSON(e)
+		}
+		e.ArrEnd()
+		more.Up()
+	}
+	if s.DisableContentTypeDetection.Set {
+		more.More()
+		e.ObjField("disable_content_type_detection")
+		s.DisableContentTypeDetection.WriteJSON(e)
+	}
+	e.ObjEnd()
+}
+
+// ReadJSON reads InputMediaDocument from json stream.
+func (s *InputMediaDocument) ReadJSON(d *json.Decoder) error {
+	if s == nil {
+		return fmt.Errorf(`invalid: unable to decode InputMediaDocument to nil`)
+	}
+	return d.ObjBytes(func(d *json.Decoder, k []byte) error {
+		switch string(k) {
+		case "type":
+			v, err := d.Str()
+			s.Type = string(v)
+			if err != nil {
+				return err
+			}
+		case "media":
+			v, err := d.Str()
+			s.Media = string(v)
+			if err != nil {
+				return err
+			}
+		case "thumb":
+			s.Thumb.Reset()
+			if err := s.Thumb.ReadJSON(d); err != nil {
+				return err
+			}
+		case "caption":
+			s.Caption.Reset()
+			if err := s.Caption.ReadJSON(d); err != nil {
+				return err
+			}
+		case "parse_mode":
+			s.ParseMode.Reset()
+			if err := s.ParseMode.ReadJSON(d); err != nil {
+				return err
+			}
+		case "caption_entities":
+			s.CaptionEntities = nil
+			if err := d.Arr(func(d *json.Decoder) error {
+				var elem MessageEntity
+				if err := elem.ReadJSON(d); err != nil {
+					return err
+				}
+				s.CaptionEntities = append(s.CaptionEntities, elem)
+				return nil
+			}); err != nil {
+				return err
+			}
+		case "disable_content_type_detection":
+			s.DisableContentTypeDetection.Reset()
+			if err := s.DisableContentTypeDetection.ReadJSON(d); err != nil {
+				return err
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	})
+}
+
+// WriteJSON implements json.Marshaler.
+func (s InputMediaPhoto) WriteJSON(e *json.Encoder) {
+	e.ObjStart()
+	more := json.NewMore(e)
+	defer more.Reset()
+	more.More()
+	e.ObjField("type")
+	e.Str(s.Type)
+	more.More()
+	e.ObjField("media")
+	e.Str(s.Media)
+	if s.Caption.Set {
+		more.More()
+		e.ObjField("caption")
+		s.Caption.WriteJSON(e)
+	}
+	if s.ParseMode.Set {
+		more.More()
+		e.ObjField("parse_mode")
+		s.ParseMode.WriteJSON(e)
+	}
+	if s.CaptionEntities != nil {
+		more.More()
+		e.ObjField("caption_entities")
+		more.Down()
+		e.ArrStart()
+		for _, elem := range s.CaptionEntities {
+			more.More()
+			elem.WriteJSON(e)
+		}
+		e.ArrEnd()
+		more.Up()
+	}
+	e.ObjEnd()
+}
+
+// ReadJSON reads InputMediaPhoto from json stream.
+func (s *InputMediaPhoto) ReadJSON(d *json.Decoder) error {
+	if s == nil {
+		return fmt.Errorf(`invalid: unable to decode InputMediaPhoto to nil`)
+	}
+	return d.ObjBytes(func(d *json.Decoder, k []byte) error {
+		switch string(k) {
+		case "type":
+			v, err := d.Str()
+			s.Type = string(v)
+			if err != nil {
+				return err
+			}
+		case "media":
+			v, err := d.Str()
+			s.Media = string(v)
+			if err != nil {
+				return err
+			}
+		case "caption":
+			s.Caption.Reset()
+			if err := s.Caption.ReadJSON(d); err != nil {
+				return err
+			}
+		case "parse_mode":
+			s.ParseMode.Reset()
+			if err := s.ParseMode.ReadJSON(d); err != nil {
+				return err
+			}
+		case "caption_entities":
+			s.CaptionEntities = nil
+			if err := d.Arr(func(d *json.Decoder) error {
+				var elem MessageEntity
+				if err := elem.ReadJSON(d); err != nil {
+					return err
+				}
+				s.CaptionEntities = append(s.CaptionEntities, elem)
+				return nil
+			}); err != nil {
+				return err
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	})
+}
+
+// WriteJSON implements json.Marshaler.
+func (s InputMediaVideo) WriteJSON(e *json.Encoder) {
+	e.ObjStart()
+	more := json.NewMore(e)
+	defer more.Reset()
+	more.More()
+	e.ObjField("type")
+	e.Str(s.Type)
+	more.More()
+	e.ObjField("media")
+	e.Str(s.Media)
+	if s.Thumb.Set {
+		more.More()
+		e.ObjField("thumb")
+		s.Thumb.WriteJSON(e)
+	}
+	if s.Caption.Set {
+		more.More()
+		e.ObjField("caption")
+		s.Caption.WriteJSON(e)
+	}
+	if s.ParseMode.Set {
+		more.More()
+		e.ObjField("parse_mode")
+		s.ParseMode.WriteJSON(e)
+	}
+	if s.CaptionEntities != nil {
+		more.More()
+		e.ObjField("caption_entities")
+		more.Down()
+		e.ArrStart()
+		for _, elem := range s.CaptionEntities {
+			more.More()
+			elem.WriteJSON(e)
+		}
+		e.ArrEnd()
+		more.Up()
+	}
+	if s.Width.Set {
+		more.More()
+		e.ObjField("width")
+		s.Width.WriteJSON(e)
+	}
+	if s.Height.Set {
+		more.More()
+		e.ObjField("height")
+		s.Height.WriteJSON(e)
+	}
+	if s.Duration.Set {
+		more.More()
+		e.ObjField("duration")
+		s.Duration.WriteJSON(e)
+	}
+	if s.SupportsStreaming.Set {
+		more.More()
+		e.ObjField("supports_streaming")
+		s.SupportsStreaming.WriteJSON(e)
+	}
+	e.ObjEnd()
+}
+
+// ReadJSON reads InputMediaVideo from json stream.
+func (s *InputMediaVideo) ReadJSON(d *json.Decoder) error {
+	if s == nil {
+		return fmt.Errorf(`invalid: unable to decode InputMediaVideo to nil`)
+	}
+	return d.ObjBytes(func(d *json.Decoder, k []byte) error {
+		switch string(k) {
+		case "type":
+			v, err := d.Str()
+			s.Type = string(v)
+			if err != nil {
+				return err
+			}
+		case "media":
+			v, err := d.Str()
+			s.Media = string(v)
+			if err != nil {
+				return err
+			}
+		case "thumb":
+			s.Thumb.Reset()
+			if err := s.Thumb.ReadJSON(d); err != nil {
+				return err
+			}
+		case "caption":
+			s.Caption.Reset()
+			if err := s.Caption.ReadJSON(d); err != nil {
+				return err
+			}
+		case "parse_mode":
+			s.ParseMode.Reset()
+			if err := s.ParseMode.ReadJSON(d); err != nil {
+				return err
+			}
+		case "caption_entities":
+			s.CaptionEntities = nil
+			if err := d.Arr(func(d *json.Decoder) error {
+				var elem MessageEntity
+				if err := elem.ReadJSON(d); err != nil {
+					return err
+				}
+				s.CaptionEntities = append(s.CaptionEntities, elem)
+				return nil
+			}); err != nil {
+				return err
+			}
+		case "width":
+			s.Width.Reset()
+			if err := s.Width.ReadJSON(d); err != nil {
+				return err
+			}
+		case "height":
+			s.Height.Reset()
+			if err := s.Height.ReadJSON(d); err != nil {
+				return err
+			}
+		case "duration":
+			s.Duration.Reset()
+			if err := s.Duration.ReadJSON(d); err != nil {
+				return err
+			}
+		case "supports_streaming":
+			s.SupportsStreaming.Reset()
+			if err := s.SupportsStreaming.ReadJSON(d); err != nil {
+				return err
+			}
 		default:
 			return d.Skip()
 		}
@@ -3370,6 +4678,99 @@ func (s *Invoice) ReadJSON(d *json.Decoder) error {
 			v, err := d.Int()
 			s.TotalAmount = int(v)
 			if err != nil {
+				return err
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	})
+}
+
+// WriteJSON implements json.Marshaler.
+func (s KeyboardButton) WriteJSON(e *json.Encoder) {
+	e.ObjStart()
+	more := json.NewMore(e)
+	defer more.Reset()
+	more.More()
+	e.ObjField("text")
+	e.Str(s.Text)
+	if s.RequestContact.Set {
+		more.More()
+		e.ObjField("request_contact")
+		s.RequestContact.WriteJSON(e)
+	}
+	if s.RequestLocation.Set {
+		more.More()
+		e.ObjField("request_location")
+		s.RequestLocation.WriteJSON(e)
+	}
+	if s.RequestPoll.Set {
+		more.More()
+		e.ObjField("request_poll")
+		s.RequestPoll.WriteJSON(e)
+	}
+	e.ObjEnd()
+}
+
+// ReadJSON reads KeyboardButton from json stream.
+func (s *KeyboardButton) ReadJSON(d *json.Decoder) error {
+	if s == nil {
+		return fmt.Errorf(`invalid: unable to decode KeyboardButton to nil`)
+	}
+	return d.ObjBytes(func(d *json.Decoder, k []byte) error {
+		switch string(k) {
+		case "text":
+			v, err := d.Str()
+			s.Text = string(v)
+			if err != nil {
+				return err
+			}
+		case "request_contact":
+			s.RequestContact.Reset()
+			if err := s.RequestContact.ReadJSON(d); err != nil {
+				return err
+			}
+		case "request_location":
+			s.RequestLocation.Reset()
+			if err := s.RequestLocation.ReadJSON(d); err != nil {
+				return err
+			}
+		case "request_poll":
+			s.RequestPoll.Reset()
+			if err := s.RequestPoll.ReadJSON(d); err != nil {
+				return err
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	})
+}
+
+// WriteJSON implements json.Marshaler.
+func (s KeyboardButtonPollType) WriteJSON(e *json.Encoder) {
+	e.ObjStart()
+	more := json.NewMore(e)
+	defer more.Reset()
+	if s.Type.Set {
+		more.More()
+		e.ObjField("type")
+		s.Type.WriteJSON(e)
+	}
+	e.ObjEnd()
+}
+
+// ReadJSON reads KeyboardButtonPollType from json stream.
+func (s *KeyboardButtonPollType) ReadJSON(d *json.Decoder) error {
+	if s == nil {
+		return fmt.Errorf(`invalid: unable to decode KeyboardButtonPollType to nil`)
+	}
+	return d.ObjBytes(func(d *json.Decoder, k []byte) error {
+		switch string(k) {
+		case "type":
+			s.Type.Reset()
+			if err := s.Type.ReadJSON(d); err != nil {
 				return err
 			}
 		default:
@@ -3519,6 +4920,67 @@ func (s *Location) ReadJSON(d *json.Decoder) error {
 		case "proximity_alert_radius":
 			s.ProximityAlertRadius.Reset()
 			if err := s.ProximityAlertRadius.ReadJSON(d); err != nil {
+				return err
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	})
+}
+
+// WriteJSON implements json.Marshaler.
+func (s LoginUrl) WriteJSON(e *json.Encoder) {
+	e.ObjStart()
+	more := json.NewMore(e)
+	defer more.Reset()
+	more.More()
+	e.ObjField("url")
+	json.WriteURI(e, s.URL)
+	if s.ForwardText.Set {
+		more.More()
+		e.ObjField("forward_text")
+		s.ForwardText.WriteJSON(e)
+	}
+	if s.BotUsername.Set {
+		more.More()
+		e.ObjField("bot_username")
+		s.BotUsername.WriteJSON(e)
+	}
+	if s.RequestWriteAccess.Set {
+		more.More()
+		e.ObjField("request_write_access")
+		s.RequestWriteAccess.WriteJSON(e)
+	}
+	e.ObjEnd()
+}
+
+// ReadJSON reads LoginUrl from json stream.
+func (s *LoginUrl) ReadJSON(d *json.Decoder) error {
+	if s == nil {
+		return fmt.Errorf(`invalid: unable to decode LoginUrl to nil`)
+	}
+	return d.ObjBytes(func(d *json.Decoder, k []byte) error {
+		switch string(k) {
+		case "url":
+			v, err := json.ReadURI(d)
+			s.URL = v
+			if err != nil {
+				return err
+			}
+		case "forward_text":
+			s.ForwardText.Reset()
+			if err := s.ForwardText.ReadJSON(d); err != nil {
+				return err
+			}
+		case "bot_username":
+			s.BotUsername.Reset()
+			if err := s.BotUsername.ReadJSON(d); err != nil {
+				return err
+			}
+		case "request_write_access":
+			s.RequestWriteAccess.Reset()
+			if err := s.RequestWriteAccess.ReadJSON(d); err != nil {
 				return err
 			}
 		default:
@@ -4606,6 +6068,7 @@ func (o *OptGame) ReadJSON(d *json.Decoder) error {
 
 // WriteJSON writes json value of InlineKeyboardMarkup to json stream.
 func (o OptInlineKeyboardMarkup) WriteJSON(e *json.Encoder) {
+	o.Value.WriteJSON(e)
 }
 
 // ReadJSON reads json value of InlineKeyboardMarkup from json iterator.
@@ -4614,8 +6077,11 @@ func (o *OptInlineKeyboardMarkup) ReadJSON(d *json.Decoder) error {
 		return fmt.Errorf(`invalid: unable to decode OptInlineKeyboardMarkup to nil`)
 	}
 	switch d.Next() {
-	case json.String:
+	case json.Object:
 		o.Set = true
+		if err := o.Value.ReadJSON(d); err != nil {
+			return err
+		}
 		return nil
 	default:
 		return fmt.Errorf("unexpected type %q while reading OptInlineKeyboardMarkup", d.Next())
@@ -4692,6 +6158,28 @@ func (o *OptInvoice) ReadJSON(d *json.Decoder) error {
 	}
 }
 
+// WriteJSON writes json value of KeyboardButtonPollType to json stream.
+func (o OptKeyboardButtonPollType) WriteJSON(e *json.Encoder) {
+	o.Value.WriteJSON(e)
+}
+
+// ReadJSON reads json value of KeyboardButtonPollType from json iterator.
+func (o *OptKeyboardButtonPollType) ReadJSON(d *json.Decoder) error {
+	if o == nil {
+		return fmt.Errorf(`invalid: unable to decode OptKeyboardButtonPollType to nil`)
+	}
+	switch d.Next() {
+	case json.Object:
+		o.Set = true
+		if err := o.Value.ReadJSON(d); err != nil {
+			return err
+		}
+		return nil
+	default:
+		return fmt.Errorf("unexpected type %q while reading OptKeyboardButtonPollType", d.Next())
+	}
+}
+
 // WriteJSON writes json value of Location to json stream.
 func (o OptLocation) WriteJSON(e *json.Encoder) {
 	o.Value.WriteJSON(e)
@@ -4711,6 +6199,28 @@ func (o *OptLocation) ReadJSON(d *json.Decoder) error {
 		return nil
 	default:
 		return fmt.Errorf("unexpected type %q while reading OptLocation", d.Next())
+	}
+}
+
+// WriteJSON writes json value of LoginUrl to json stream.
+func (o OptLoginUrl) WriteJSON(e *json.Encoder) {
+	o.Value.WriteJSON(e)
+}
+
+// ReadJSON reads json value of LoginUrl from json iterator.
+func (o *OptLoginUrl) ReadJSON(d *json.Decoder) error {
+	if o == nil {
+		return fmt.Errorf(`invalid: unable to decode OptLoginUrl to nil`)
+	}
+	switch d.Next() {
+	case json.Object:
+		o.Set = true
+		if err := o.Value.ReadJSON(d); err != nil {
+			return err
+		}
+		return nil
+	default:
+		return fmt.Errorf("unexpected type %q while reading OptLoginUrl", d.Next())
 	}
 }
 
@@ -5339,19 +6849,687 @@ func (s *PassportData) ReadJSON(d *json.Decoder) error {
 
 // WriteJSON implements json.Marshaler.
 func (s PassportElementError) WriteJSON(e *json.Encoder) {
-	e.ObjStart()
-	more := json.NewMore(e)
-	defer more.Reset()
-	e.ObjEnd()
+	switch s.Type {
+	case PassportElementErrorDataFieldPassportElementError:
+		s.PassportElementErrorDataField.WriteJSON(e)
+	case PassportElementErrorFrontSidePassportElementError:
+		s.PassportElementErrorFrontSide.WriteJSON(e)
+	case PassportElementErrorReverseSidePassportElementError:
+		s.PassportElementErrorReverseSide.WriteJSON(e)
+	case PassportElementErrorSelfiePassportElementError:
+		s.PassportElementErrorSelfie.WriteJSON(e)
+	case PassportElementErrorFilePassportElementError:
+		s.PassportElementErrorFile.WriteJSON(e)
+	case PassportElementErrorFilesPassportElementError:
+		s.PassportElementErrorFiles.WriteJSON(e)
+	case PassportElementErrorTranslationFilePassportElementError:
+		s.PassportElementErrorTranslationFile.WriteJSON(e)
+	case PassportElementErrorTranslationFilesPassportElementError:
+		s.PassportElementErrorTranslationFiles.WriteJSON(e)
+	case PassportElementErrorUnspecifiedPassportElementError:
+		s.PassportElementErrorUnspecified.WriteJSON(e)
+	}
 }
 
-// ReadJSON reads PassportElementError from json stream.
+// ReadJSON reads value from json reader.
 func (s *PassportElementError) ReadJSON(d *json.Decoder) error {
 	if s == nil {
 		return fmt.Errorf(`invalid: unable to decode PassportElementError to nil`)
 	}
+	// Sum type discriminator.
+	if d.Next() != json.Object {
+		return fmt.Errorf("unexpected json type %q", d.Next())
+	}
+	var found bool
+	if err := d.Capture(func(d *json.Decoder) error {
+		return d.ObjBytes(func(d *json.Decoder, key []byte) error {
+			if found {
+				return d.Skip()
+			}
+			switch string(key) {
+			case "source":
+				typ, err := d.Str()
+				if err != nil {
+					return err
+				}
+				switch typ {
+				case "data":
+					s.Type = PassportElementErrorDataFieldPassportElementError
+					found = true
+				case "file":
+					s.Type = PassportElementErrorFilePassportElementError
+					found = true
+				case "files":
+					s.Type = PassportElementErrorFilesPassportElementError
+					found = true
+				case "front_side":
+					s.Type = PassportElementErrorFrontSidePassportElementError
+					found = true
+				case "reverse_side":
+					s.Type = PassportElementErrorReverseSidePassportElementError
+					found = true
+				case "selfie":
+					s.Type = PassportElementErrorSelfiePassportElementError
+					found = true
+				case "translation_file":
+					s.Type = PassportElementErrorTranslationFilePassportElementError
+					found = true
+				case "translation_files":
+					s.Type = PassportElementErrorTranslationFilesPassportElementError
+					found = true
+				case "unspecified":
+					s.Type = PassportElementErrorUnspecifiedPassportElementError
+					found = true
+				default:
+					return fmt.Errorf("unknown type %s", typ)
+				}
+				return nil
+			}
+			return d.Skip()
+		})
+	}); err != nil {
+		return fmt.Errorf("capture: %w", err)
+	}
+	if !found {
+		return fmt.Errorf("unable to detect sum type variant")
+	}
+	switch s.Type {
+	case PassportElementErrorDataFieldPassportElementError:
+		if err := s.PassportElementErrorDataField.ReadJSON(d); err != nil {
+			return err
+		}
+	case PassportElementErrorFrontSidePassportElementError:
+		if err := s.PassportElementErrorFrontSide.ReadJSON(d); err != nil {
+			return err
+		}
+	case PassportElementErrorReverseSidePassportElementError:
+		if err := s.PassportElementErrorReverseSide.ReadJSON(d); err != nil {
+			return err
+		}
+	case PassportElementErrorSelfiePassportElementError:
+		if err := s.PassportElementErrorSelfie.ReadJSON(d); err != nil {
+			return err
+		}
+	case PassportElementErrorFilePassportElementError:
+		if err := s.PassportElementErrorFile.ReadJSON(d); err != nil {
+			return err
+		}
+	case PassportElementErrorFilesPassportElementError:
+		if err := s.PassportElementErrorFiles.ReadJSON(d); err != nil {
+			return err
+		}
+	case PassportElementErrorTranslationFilePassportElementError:
+		if err := s.PassportElementErrorTranslationFile.ReadJSON(d); err != nil {
+			return err
+		}
+	case PassportElementErrorTranslationFilesPassportElementError:
+		if err := s.PassportElementErrorTranslationFiles.ReadJSON(d); err != nil {
+			return err
+		}
+	case PassportElementErrorUnspecifiedPassportElementError:
+		if err := s.PassportElementErrorUnspecified.ReadJSON(d); err != nil {
+			return err
+		}
+	default:
+		return fmt.Errorf("inferred invalid type: %s", s.Type)
+	}
+	return nil
+}
+
+// WriteJSON implements json.Marshaler.
+func (s PassportElementErrorDataField) WriteJSON(e *json.Encoder) {
+	e.ObjStart()
+	more := json.NewMore(e)
+	defer more.Reset()
+	more.More()
+	e.ObjField("source")
+	e.Str(s.Source)
+	more.More()
+	e.ObjField("type")
+	e.Str(s.Type)
+	more.More()
+	e.ObjField("field_name")
+	e.Str(s.FieldName)
+	more.More()
+	e.ObjField("data_hash")
+	e.Str(s.DataHash)
+	more.More()
+	e.ObjField("message")
+	e.Str(s.Message)
+	e.ObjEnd()
+}
+
+// ReadJSON reads PassportElementErrorDataField from json stream.
+func (s *PassportElementErrorDataField) ReadJSON(d *json.Decoder) error {
+	if s == nil {
+		return fmt.Errorf(`invalid: unable to decode PassportElementErrorDataField to nil`)
+	}
 	return d.ObjBytes(func(d *json.Decoder, k []byte) error {
 		switch string(k) {
+		case "source":
+			v, err := d.Str()
+			s.Source = string(v)
+			if err != nil {
+				return err
+			}
+		case "type":
+			v, err := d.Str()
+			s.Type = string(v)
+			if err != nil {
+				return err
+			}
+		case "field_name":
+			v, err := d.Str()
+			s.FieldName = string(v)
+			if err != nil {
+				return err
+			}
+		case "data_hash":
+			v, err := d.Str()
+			s.DataHash = string(v)
+			if err != nil {
+				return err
+			}
+		case "message":
+			v, err := d.Str()
+			s.Message = string(v)
+			if err != nil {
+				return err
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	})
+}
+
+// WriteJSON implements json.Marshaler.
+func (s PassportElementErrorFile) WriteJSON(e *json.Encoder) {
+	e.ObjStart()
+	more := json.NewMore(e)
+	defer more.Reset()
+	more.More()
+	e.ObjField("source")
+	e.Str(s.Source)
+	more.More()
+	e.ObjField("type")
+	e.Str(s.Type)
+	more.More()
+	e.ObjField("file_hash")
+	e.Str(s.FileHash)
+	more.More()
+	e.ObjField("message")
+	e.Str(s.Message)
+	e.ObjEnd()
+}
+
+// ReadJSON reads PassportElementErrorFile from json stream.
+func (s *PassportElementErrorFile) ReadJSON(d *json.Decoder) error {
+	if s == nil {
+		return fmt.Errorf(`invalid: unable to decode PassportElementErrorFile to nil`)
+	}
+	return d.ObjBytes(func(d *json.Decoder, k []byte) error {
+		switch string(k) {
+		case "source":
+			v, err := d.Str()
+			s.Source = string(v)
+			if err != nil {
+				return err
+			}
+		case "type":
+			v, err := d.Str()
+			s.Type = string(v)
+			if err != nil {
+				return err
+			}
+		case "file_hash":
+			v, err := d.Str()
+			s.FileHash = string(v)
+			if err != nil {
+				return err
+			}
+		case "message":
+			v, err := d.Str()
+			s.Message = string(v)
+			if err != nil {
+				return err
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	})
+}
+
+// WriteJSON implements json.Marshaler.
+func (s PassportElementErrorFiles) WriteJSON(e *json.Encoder) {
+	e.ObjStart()
+	more := json.NewMore(e)
+	defer more.Reset()
+	more.More()
+	e.ObjField("source")
+	e.Str(s.Source)
+	more.More()
+	e.ObjField("type")
+	e.Str(s.Type)
+	more.More()
+	e.ObjField("file_hashes")
+	more.Down()
+	e.ArrStart()
+	for _, elem := range s.FileHashes {
+		more.More()
+		e.Str(elem)
+	}
+	e.ArrEnd()
+	more.Up()
+	more.More()
+	e.ObjField("message")
+	e.Str(s.Message)
+	e.ObjEnd()
+}
+
+// ReadJSON reads PassportElementErrorFiles from json stream.
+func (s *PassportElementErrorFiles) ReadJSON(d *json.Decoder) error {
+	if s == nil {
+		return fmt.Errorf(`invalid: unable to decode PassportElementErrorFiles to nil`)
+	}
+	return d.ObjBytes(func(d *json.Decoder, k []byte) error {
+		switch string(k) {
+		case "source":
+			v, err := d.Str()
+			s.Source = string(v)
+			if err != nil {
+				return err
+			}
+		case "type":
+			v, err := d.Str()
+			s.Type = string(v)
+			if err != nil {
+				return err
+			}
+		case "file_hashes":
+			s.FileHashes = nil
+			if err := d.Arr(func(d *json.Decoder) error {
+				var elem string
+				v, err := d.Str()
+				elem = string(v)
+				if err != nil {
+					return err
+				}
+				s.FileHashes = append(s.FileHashes, elem)
+				return nil
+			}); err != nil {
+				return err
+			}
+		case "message":
+			v, err := d.Str()
+			s.Message = string(v)
+			if err != nil {
+				return err
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	})
+}
+
+// WriteJSON implements json.Marshaler.
+func (s PassportElementErrorFrontSide) WriteJSON(e *json.Encoder) {
+	e.ObjStart()
+	more := json.NewMore(e)
+	defer more.Reset()
+	more.More()
+	e.ObjField("source")
+	e.Str(s.Source)
+	more.More()
+	e.ObjField("type")
+	e.Str(s.Type)
+	more.More()
+	e.ObjField("file_hash")
+	e.Str(s.FileHash)
+	more.More()
+	e.ObjField("message")
+	e.Str(s.Message)
+	e.ObjEnd()
+}
+
+// ReadJSON reads PassportElementErrorFrontSide from json stream.
+func (s *PassportElementErrorFrontSide) ReadJSON(d *json.Decoder) error {
+	if s == nil {
+		return fmt.Errorf(`invalid: unable to decode PassportElementErrorFrontSide to nil`)
+	}
+	return d.ObjBytes(func(d *json.Decoder, k []byte) error {
+		switch string(k) {
+		case "source":
+			v, err := d.Str()
+			s.Source = string(v)
+			if err != nil {
+				return err
+			}
+		case "type":
+			v, err := d.Str()
+			s.Type = string(v)
+			if err != nil {
+				return err
+			}
+		case "file_hash":
+			v, err := d.Str()
+			s.FileHash = string(v)
+			if err != nil {
+				return err
+			}
+		case "message":
+			v, err := d.Str()
+			s.Message = string(v)
+			if err != nil {
+				return err
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	})
+}
+
+// WriteJSON implements json.Marshaler.
+func (s PassportElementErrorReverseSide) WriteJSON(e *json.Encoder) {
+	e.ObjStart()
+	more := json.NewMore(e)
+	defer more.Reset()
+	more.More()
+	e.ObjField("source")
+	e.Str(s.Source)
+	more.More()
+	e.ObjField("type")
+	e.Str(s.Type)
+	more.More()
+	e.ObjField("file_hash")
+	e.Str(s.FileHash)
+	more.More()
+	e.ObjField("message")
+	e.Str(s.Message)
+	e.ObjEnd()
+}
+
+// ReadJSON reads PassportElementErrorReverseSide from json stream.
+func (s *PassportElementErrorReverseSide) ReadJSON(d *json.Decoder) error {
+	if s == nil {
+		return fmt.Errorf(`invalid: unable to decode PassportElementErrorReverseSide to nil`)
+	}
+	return d.ObjBytes(func(d *json.Decoder, k []byte) error {
+		switch string(k) {
+		case "source":
+			v, err := d.Str()
+			s.Source = string(v)
+			if err != nil {
+				return err
+			}
+		case "type":
+			v, err := d.Str()
+			s.Type = string(v)
+			if err != nil {
+				return err
+			}
+		case "file_hash":
+			v, err := d.Str()
+			s.FileHash = string(v)
+			if err != nil {
+				return err
+			}
+		case "message":
+			v, err := d.Str()
+			s.Message = string(v)
+			if err != nil {
+				return err
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	})
+}
+
+// WriteJSON implements json.Marshaler.
+func (s PassportElementErrorSelfie) WriteJSON(e *json.Encoder) {
+	e.ObjStart()
+	more := json.NewMore(e)
+	defer more.Reset()
+	more.More()
+	e.ObjField("source")
+	e.Str(s.Source)
+	more.More()
+	e.ObjField("type")
+	e.Str(s.Type)
+	more.More()
+	e.ObjField("file_hash")
+	e.Str(s.FileHash)
+	more.More()
+	e.ObjField("message")
+	e.Str(s.Message)
+	e.ObjEnd()
+}
+
+// ReadJSON reads PassportElementErrorSelfie from json stream.
+func (s *PassportElementErrorSelfie) ReadJSON(d *json.Decoder) error {
+	if s == nil {
+		return fmt.Errorf(`invalid: unable to decode PassportElementErrorSelfie to nil`)
+	}
+	return d.ObjBytes(func(d *json.Decoder, k []byte) error {
+		switch string(k) {
+		case "source":
+			v, err := d.Str()
+			s.Source = string(v)
+			if err != nil {
+				return err
+			}
+		case "type":
+			v, err := d.Str()
+			s.Type = string(v)
+			if err != nil {
+				return err
+			}
+		case "file_hash":
+			v, err := d.Str()
+			s.FileHash = string(v)
+			if err != nil {
+				return err
+			}
+		case "message":
+			v, err := d.Str()
+			s.Message = string(v)
+			if err != nil {
+				return err
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	})
+}
+
+// WriteJSON implements json.Marshaler.
+func (s PassportElementErrorTranslationFile) WriteJSON(e *json.Encoder) {
+	e.ObjStart()
+	more := json.NewMore(e)
+	defer more.Reset()
+	more.More()
+	e.ObjField("source")
+	e.Str(s.Source)
+	more.More()
+	e.ObjField("type")
+	e.Str(s.Type)
+	more.More()
+	e.ObjField("file_hash")
+	e.Str(s.FileHash)
+	more.More()
+	e.ObjField("message")
+	e.Str(s.Message)
+	e.ObjEnd()
+}
+
+// ReadJSON reads PassportElementErrorTranslationFile from json stream.
+func (s *PassportElementErrorTranslationFile) ReadJSON(d *json.Decoder) error {
+	if s == nil {
+		return fmt.Errorf(`invalid: unable to decode PassportElementErrorTranslationFile to nil`)
+	}
+	return d.ObjBytes(func(d *json.Decoder, k []byte) error {
+		switch string(k) {
+		case "source":
+			v, err := d.Str()
+			s.Source = string(v)
+			if err != nil {
+				return err
+			}
+		case "type":
+			v, err := d.Str()
+			s.Type = string(v)
+			if err != nil {
+				return err
+			}
+		case "file_hash":
+			v, err := d.Str()
+			s.FileHash = string(v)
+			if err != nil {
+				return err
+			}
+		case "message":
+			v, err := d.Str()
+			s.Message = string(v)
+			if err != nil {
+				return err
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	})
+}
+
+// WriteJSON implements json.Marshaler.
+func (s PassportElementErrorTranslationFiles) WriteJSON(e *json.Encoder) {
+	e.ObjStart()
+	more := json.NewMore(e)
+	defer more.Reset()
+	more.More()
+	e.ObjField("source")
+	e.Str(s.Source)
+	more.More()
+	e.ObjField("type")
+	e.Str(s.Type)
+	more.More()
+	e.ObjField("file_hashes")
+	more.Down()
+	e.ArrStart()
+	for _, elem := range s.FileHashes {
+		more.More()
+		e.Str(elem)
+	}
+	e.ArrEnd()
+	more.Up()
+	more.More()
+	e.ObjField("message")
+	e.Str(s.Message)
+	e.ObjEnd()
+}
+
+// ReadJSON reads PassportElementErrorTranslationFiles from json stream.
+func (s *PassportElementErrorTranslationFiles) ReadJSON(d *json.Decoder) error {
+	if s == nil {
+		return fmt.Errorf(`invalid: unable to decode PassportElementErrorTranslationFiles to nil`)
+	}
+	return d.ObjBytes(func(d *json.Decoder, k []byte) error {
+		switch string(k) {
+		case "source":
+			v, err := d.Str()
+			s.Source = string(v)
+			if err != nil {
+				return err
+			}
+		case "type":
+			v, err := d.Str()
+			s.Type = string(v)
+			if err != nil {
+				return err
+			}
+		case "file_hashes":
+			s.FileHashes = nil
+			if err := d.Arr(func(d *json.Decoder) error {
+				var elem string
+				v, err := d.Str()
+				elem = string(v)
+				if err != nil {
+					return err
+				}
+				s.FileHashes = append(s.FileHashes, elem)
+				return nil
+			}); err != nil {
+				return err
+			}
+		case "message":
+			v, err := d.Str()
+			s.Message = string(v)
+			if err != nil {
+				return err
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	})
+}
+
+// WriteJSON implements json.Marshaler.
+func (s PassportElementErrorUnspecified) WriteJSON(e *json.Encoder) {
+	e.ObjStart()
+	more := json.NewMore(e)
+	defer more.Reset()
+	more.More()
+	e.ObjField("source")
+	e.Str(s.Source)
+	more.More()
+	e.ObjField("type")
+	e.Str(s.Type)
+	more.More()
+	e.ObjField("element_hash")
+	e.Str(s.ElementHash)
+	more.More()
+	e.ObjField("message")
+	e.Str(s.Message)
+	e.ObjEnd()
+}
+
+// ReadJSON reads PassportElementErrorUnspecified from json stream.
+func (s *PassportElementErrorUnspecified) ReadJSON(d *json.Decoder) error {
+	if s == nil {
+		return fmt.Errorf(`invalid: unable to decode PassportElementErrorUnspecified to nil`)
+	}
+	return d.ObjBytes(func(d *json.Decoder, k []byte) error {
+		switch string(k) {
+		case "source":
+			v, err := d.Str()
+			s.Source = string(v)
+			if err != nil {
+				return err
+			}
+		case "type":
+			v, err := d.Str()
+			s.Type = string(v)
+			if err != nil {
+				return err
+			}
+		case "element_hash":
+			v, err := d.Str()
+			s.ElementHash = string(v)
+			if err != nil {
+				return err
+			}
+		case "message":
+			v, err := d.Str()
+			s.Message = string(v)
+			if err != nil {
+				return err
+			}
 		default:
 			return d.Skip()
 		}
@@ -5938,6 +8116,146 @@ func (s *ProximityAlertTriggered) ReadJSON(d *json.Decoder) error {
 }
 
 // WriteJSON implements json.Marshaler.
+func (s ReplyKeyboardMarkup) WriteJSON(e *json.Encoder) {
+	e.ObjStart()
+	more := json.NewMore(e)
+	defer more.Reset()
+	more.More()
+	e.ObjField("keyboard")
+	more.Down()
+	e.ArrStart()
+	for _, elem := range s.Keyboard {
+		more.More()
+		more.Down()
+		e.ArrStart()
+		for _, elem := range elem {
+			more.More()
+			elem.WriteJSON(e)
+		}
+		e.ArrEnd()
+		more.Up()
+	}
+	e.ArrEnd()
+	more.Up()
+	if s.ResizeKeyboard.Set {
+		more.More()
+		e.ObjField("resize_keyboard")
+		s.ResizeKeyboard.WriteJSON(e)
+	}
+	if s.OneTimeKeyboard.Set {
+		more.More()
+		e.ObjField("one_time_keyboard")
+		s.OneTimeKeyboard.WriteJSON(e)
+	}
+	if s.InputFieldPlaceholder.Set {
+		more.More()
+		e.ObjField("input_field_placeholder")
+		s.InputFieldPlaceholder.WriteJSON(e)
+	}
+	if s.Selective.Set {
+		more.More()
+		e.ObjField("selective")
+		s.Selective.WriteJSON(e)
+	}
+	e.ObjEnd()
+}
+
+// ReadJSON reads ReplyKeyboardMarkup from json stream.
+func (s *ReplyKeyboardMarkup) ReadJSON(d *json.Decoder) error {
+	if s == nil {
+		return fmt.Errorf(`invalid: unable to decode ReplyKeyboardMarkup to nil`)
+	}
+	return d.ObjBytes(func(d *json.Decoder, k []byte) error {
+		switch string(k) {
+		case "keyboard":
+			s.Keyboard = nil
+			if err := d.Arr(func(d *json.Decoder) error {
+				var elem []KeyboardButton
+				elem = nil
+				if err := d.Arr(func(d *json.Decoder) error {
+					var elemElem KeyboardButton
+					if err := elemElem.ReadJSON(d); err != nil {
+						return err
+					}
+					elem = append(elem, elemElem)
+					return nil
+				}); err != nil {
+					return err
+				}
+				s.Keyboard = append(s.Keyboard, elem)
+				return nil
+			}); err != nil {
+				return err
+			}
+		case "resize_keyboard":
+			s.ResizeKeyboard.Reset()
+			if err := s.ResizeKeyboard.ReadJSON(d); err != nil {
+				return err
+			}
+		case "one_time_keyboard":
+			s.OneTimeKeyboard.Reset()
+			if err := s.OneTimeKeyboard.ReadJSON(d); err != nil {
+				return err
+			}
+		case "input_field_placeholder":
+			s.InputFieldPlaceholder.Reset()
+			if err := s.InputFieldPlaceholder.ReadJSON(d); err != nil {
+				return err
+			}
+		case "selective":
+			s.Selective.Reset()
+			if err := s.Selective.ReadJSON(d); err != nil {
+				return err
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	})
+}
+
+// WriteJSON implements json.Marshaler.
+func (s ReplyKeyboardRemove) WriteJSON(e *json.Encoder) {
+	e.ObjStart()
+	more := json.NewMore(e)
+	defer more.Reset()
+	more.More()
+	e.ObjField("remove_keyboard")
+	e.Bool(s.RemoveKeyboard)
+	if s.Selective.Set {
+		more.More()
+		e.ObjField("selective")
+		s.Selective.WriteJSON(e)
+	}
+	e.ObjEnd()
+}
+
+// ReadJSON reads ReplyKeyboardRemove from json stream.
+func (s *ReplyKeyboardRemove) ReadJSON(d *json.Decoder) error {
+	if s == nil {
+		return fmt.Errorf(`invalid: unable to decode ReplyKeyboardRemove to nil`)
+	}
+	return d.ObjBytes(func(d *json.Decoder, k []byte) error {
+		switch string(k) {
+		case "remove_keyboard":
+			v, err := d.Bool()
+			s.RemoveKeyboard = bool(v)
+			if err != nil {
+				return err
+			}
+		case "selective":
+			s.Selective.Reset()
+			if err := s.Selective.ReadJSON(d); err != nil {
+				return err
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	})
+}
+
+// WriteJSON implements json.Marshaler.
 func (s Response) WriteJSON(e *json.Encoder) {
 	e.ObjStart()
 	more := json.NewMore(e)
@@ -6263,6 +8581,11 @@ func (s SendAnimation) WriteJSON(e *json.Encoder) {
 		e.ObjField("allow_sending_without_reply")
 		s.AllowSendingWithoutReply.WriteJSON(e)
 	}
+	if s.ReplyMarkup != nil {
+		more.More()
+		e.ObjField("reply_markup")
+		s.ReplyMarkup.WriteJSON(e)
+	}
 	e.ObjEnd()
 }
 
@@ -6340,11 +8663,104 @@ func (s *SendAnimation) ReadJSON(d *json.Decoder) error {
 			if err := s.AllowSendingWithoutReply.ReadJSON(d); err != nil {
 				return err
 			}
+		case "reply_markup":
+			s.ReplyMarkup = nil
+			var elem SendAnimationReplyMarkup
+			if err := elem.ReadJSON(d); err != nil {
+				return err
+			}
+			s.ReplyMarkup = &elem
 		default:
 			return d.Skip()
 		}
 		return nil
 	})
+}
+
+// WriteJSON implements json.Marshaler.
+func (s SendAnimationReplyMarkup) WriteJSON(e *json.Encoder) {
+	switch s.Type {
+	case InlineKeyboardMarkupSendAnimationReplyMarkup:
+		s.InlineKeyboardMarkup.WriteJSON(e)
+	case ReplyKeyboardMarkupSendAnimationReplyMarkup:
+		s.ReplyKeyboardMarkup.WriteJSON(e)
+	case ReplyKeyboardRemoveSendAnimationReplyMarkup:
+		s.ReplyKeyboardRemove.WriteJSON(e)
+	case ForceReplySendAnimationReplyMarkup:
+		s.ForceReply.WriteJSON(e)
+	}
+}
+
+// ReadJSON reads value from json reader.
+func (s *SendAnimationReplyMarkup) ReadJSON(d *json.Decoder) error {
+	if s == nil {
+		return fmt.Errorf(`invalid: unable to decode SendAnimationReplyMarkup to nil`)
+	}
+	// Sum type fields.
+	if d.Next() != json.Object {
+		return fmt.Errorf("unexpected json type %q", d.Next())
+	}
+	var found bool
+	if err := d.Capture(func(d *json.Decoder) error {
+		return d.ObjBytes(func(d *json.Decoder, key []byte) error {
+			if found {
+				return d.Skip()
+			}
+			switch string(key) {
+			case "inline_keyboard":
+				found = true
+				s.Type = InlineKeyboardMarkupSendAnimationReplyMarkup
+			case "keyboard":
+				found = true
+				s.Type = ReplyKeyboardMarkupSendAnimationReplyMarkup
+			case "resize_keyboard":
+				found = true
+				s.Type = ReplyKeyboardMarkupSendAnimationReplyMarkup
+			case "one_time_keyboard":
+				found = true
+				s.Type = ReplyKeyboardMarkupSendAnimationReplyMarkup
+			case "remove_keyboard":
+				found = true
+				s.Type = ReplyKeyboardRemoveSendAnimationReplyMarkup
+			case "force_reply":
+				found = true
+				s.Type = ForceReplySendAnimationReplyMarkup
+			case "input_field_placeholder":
+				found = true
+				s.Type = ForceReplySendAnimationReplyMarkup
+			case "selective":
+				found = true
+				s.Type = ForceReplySendAnimationReplyMarkup
+			}
+			return d.Skip()
+		})
+	}); err != nil {
+		return fmt.Errorf("capture: %w", err)
+	}
+	if !found {
+		return fmt.Errorf("unable to detect sum type variant")
+	}
+	switch s.Type {
+	case InlineKeyboardMarkupSendAnimationReplyMarkup:
+		if err := s.InlineKeyboardMarkup.ReadJSON(d); err != nil {
+			return err
+		}
+	case ReplyKeyboardMarkupSendAnimationReplyMarkup:
+		if err := s.ReplyKeyboardMarkup.ReadJSON(d); err != nil {
+			return err
+		}
+	case ReplyKeyboardRemoveSendAnimationReplyMarkup:
+		if err := s.ReplyKeyboardRemove.ReadJSON(d); err != nil {
+			return err
+		}
+	case ForceReplySendAnimationReplyMarkup:
+		if err := s.ForceReply.ReadJSON(d); err != nil {
+			return err
+		}
+	default:
+		return fmt.Errorf("inferred invalid type: %s", s.Type)
+	}
+	return nil
 }
 
 // WriteJSON implements json.Marshaler.
@@ -6414,6 +8830,11 @@ func (s SendAudio) WriteJSON(e *json.Encoder) {
 		more.More()
 		e.ObjField("allow_sending_without_reply")
 		s.AllowSendingWithoutReply.WriteJSON(e)
+	}
+	if s.ReplyMarkup != nil {
+		more.More()
+		e.ObjField("reply_markup")
+		s.ReplyMarkup.WriteJSON(e)
 	}
 	e.ObjEnd()
 }
@@ -6492,11 +8913,104 @@ func (s *SendAudio) ReadJSON(d *json.Decoder) error {
 			if err := s.AllowSendingWithoutReply.ReadJSON(d); err != nil {
 				return err
 			}
+		case "reply_markup":
+			s.ReplyMarkup = nil
+			var elem SendAudioReplyMarkup
+			if err := elem.ReadJSON(d); err != nil {
+				return err
+			}
+			s.ReplyMarkup = &elem
 		default:
 			return d.Skip()
 		}
 		return nil
 	})
+}
+
+// WriteJSON implements json.Marshaler.
+func (s SendAudioReplyMarkup) WriteJSON(e *json.Encoder) {
+	switch s.Type {
+	case InlineKeyboardMarkupSendAudioReplyMarkup:
+		s.InlineKeyboardMarkup.WriteJSON(e)
+	case ReplyKeyboardMarkupSendAudioReplyMarkup:
+		s.ReplyKeyboardMarkup.WriteJSON(e)
+	case ReplyKeyboardRemoveSendAudioReplyMarkup:
+		s.ReplyKeyboardRemove.WriteJSON(e)
+	case ForceReplySendAudioReplyMarkup:
+		s.ForceReply.WriteJSON(e)
+	}
+}
+
+// ReadJSON reads value from json reader.
+func (s *SendAudioReplyMarkup) ReadJSON(d *json.Decoder) error {
+	if s == nil {
+		return fmt.Errorf(`invalid: unable to decode SendAudioReplyMarkup to nil`)
+	}
+	// Sum type fields.
+	if d.Next() != json.Object {
+		return fmt.Errorf("unexpected json type %q", d.Next())
+	}
+	var found bool
+	if err := d.Capture(func(d *json.Decoder) error {
+		return d.ObjBytes(func(d *json.Decoder, key []byte) error {
+			if found {
+				return d.Skip()
+			}
+			switch string(key) {
+			case "inline_keyboard":
+				found = true
+				s.Type = InlineKeyboardMarkupSendAudioReplyMarkup
+			case "keyboard":
+				found = true
+				s.Type = ReplyKeyboardMarkupSendAudioReplyMarkup
+			case "resize_keyboard":
+				found = true
+				s.Type = ReplyKeyboardMarkupSendAudioReplyMarkup
+			case "one_time_keyboard":
+				found = true
+				s.Type = ReplyKeyboardMarkupSendAudioReplyMarkup
+			case "remove_keyboard":
+				found = true
+				s.Type = ReplyKeyboardRemoveSendAudioReplyMarkup
+			case "force_reply":
+				found = true
+				s.Type = ForceReplySendAudioReplyMarkup
+			case "input_field_placeholder":
+				found = true
+				s.Type = ForceReplySendAudioReplyMarkup
+			case "selective":
+				found = true
+				s.Type = ForceReplySendAudioReplyMarkup
+			}
+			return d.Skip()
+		})
+	}); err != nil {
+		return fmt.Errorf("capture: %w", err)
+	}
+	if !found {
+		return fmt.Errorf("unable to detect sum type variant")
+	}
+	switch s.Type {
+	case InlineKeyboardMarkupSendAudioReplyMarkup:
+		if err := s.InlineKeyboardMarkup.ReadJSON(d); err != nil {
+			return err
+		}
+	case ReplyKeyboardMarkupSendAudioReplyMarkup:
+		if err := s.ReplyKeyboardMarkup.ReadJSON(d); err != nil {
+			return err
+		}
+	case ReplyKeyboardRemoveSendAudioReplyMarkup:
+		if err := s.ReplyKeyboardRemove.ReadJSON(d); err != nil {
+			return err
+		}
+	case ForceReplySendAudioReplyMarkup:
+		if err := s.ForceReply.ReadJSON(d); err != nil {
+			return err
+		}
+	default:
+		return fmt.Errorf("inferred invalid type: %s", s.Type)
+	}
+	return nil
 }
 
 // WriteJSON implements json.Marshaler.
@@ -6576,6 +9090,11 @@ func (s SendContact) WriteJSON(e *json.Encoder) {
 		e.ObjField("allow_sending_without_reply")
 		s.AllowSendingWithoutReply.WriteJSON(e)
 	}
+	if s.ReplyMarkup != nil {
+		more.More()
+		e.ObjField("reply_markup")
+		s.ReplyMarkup.WriteJSON(e)
+	}
 	e.ObjEnd()
 }
 
@@ -6627,11 +9146,104 @@ func (s *SendContact) ReadJSON(d *json.Decoder) error {
 			if err := s.AllowSendingWithoutReply.ReadJSON(d); err != nil {
 				return err
 			}
+		case "reply_markup":
+			s.ReplyMarkup = nil
+			var elem SendContactReplyMarkup
+			if err := elem.ReadJSON(d); err != nil {
+				return err
+			}
+			s.ReplyMarkup = &elem
 		default:
 			return d.Skip()
 		}
 		return nil
 	})
+}
+
+// WriteJSON implements json.Marshaler.
+func (s SendContactReplyMarkup) WriteJSON(e *json.Encoder) {
+	switch s.Type {
+	case InlineKeyboardMarkupSendContactReplyMarkup:
+		s.InlineKeyboardMarkup.WriteJSON(e)
+	case ReplyKeyboardMarkupSendContactReplyMarkup:
+		s.ReplyKeyboardMarkup.WriteJSON(e)
+	case ReplyKeyboardRemoveSendContactReplyMarkup:
+		s.ReplyKeyboardRemove.WriteJSON(e)
+	case ForceReplySendContactReplyMarkup:
+		s.ForceReply.WriteJSON(e)
+	}
+}
+
+// ReadJSON reads value from json reader.
+func (s *SendContactReplyMarkup) ReadJSON(d *json.Decoder) error {
+	if s == nil {
+		return fmt.Errorf(`invalid: unable to decode SendContactReplyMarkup to nil`)
+	}
+	// Sum type fields.
+	if d.Next() != json.Object {
+		return fmt.Errorf("unexpected json type %q", d.Next())
+	}
+	var found bool
+	if err := d.Capture(func(d *json.Decoder) error {
+		return d.ObjBytes(func(d *json.Decoder, key []byte) error {
+			if found {
+				return d.Skip()
+			}
+			switch string(key) {
+			case "inline_keyboard":
+				found = true
+				s.Type = InlineKeyboardMarkupSendContactReplyMarkup
+			case "keyboard":
+				found = true
+				s.Type = ReplyKeyboardMarkupSendContactReplyMarkup
+			case "resize_keyboard":
+				found = true
+				s.Type = ReplyKeyboardMarkupSendContactReplyMarkup
+			case "one_time_keyboard":
+				found = true
+				s.Type = ReplyKeyboardMarkupSendContactReplyMarkup
+			case "remove_keyboard":
+				found = true
+				s.Type = ReplyKeyboardRemoveSendContactReplyMarkup
+			case "force_reply":
+				found = true
+				s.Type = ForceReplySendContactReplyMarkup
+			case "input_field_placeholder":
+				found = true
+				s.Type = ForceReplySendContactReplyMarkup
+			case "selective":
+				found = true
+				s.Type = ForceReplySendContactReplyMarkup
+			}
+			return d.Skip()
+		})
+	}); err != nil {
+		return fmt.Errorf("capture: %w", err)
+	}
+	if !found {
+		return fmt.Errorf("unable to detect sum type variant")
+	}
+	switch s.Type {
+	case InlineKeyboardMarkupSendContactReplyMarkup:
+		if err := s.InlineKeyboardMarkup.ReadJSON(d); err != nil {
+			return err
+		}
+	case ReplyKeyboardMarkupSendContactReplyMarkup:
+		if err := s.ReplyKeyboardMarkup.ReadJSON(d); err != nil {
+			return err
+		}
+	case ReplyKeyboardRemoveSendContactReplyMarkup:
+		if err := s.ReplyKeyboardRemove.ReadJSON(d); err != nil {
+			return err
+		}
+	case ForceReplySendContactReplyMarkup:
+		if err := s.ForceReply.ReadJSON(d); err != nil {
+			return err
+		}
+	default:
+		return fmt.Errorf("inferred invalid type: %s", s.Type)
+	}
+	return nil
 }
 
 // WriteJSON implements json.Marshaler.
@@ -6661,6 +9273,11 @@ func (s SendDice) WriteJSON(e *json.Encoder) {
 		more.More()
 		e.ObjField("allow_sending_without_reply")
 		s.AllowSendingWithoutReply.WriteJSON(e)
+	}
+	if s.ReplyMarkup != nil {
+		more.More()
+		e.ObjField("reply_markup")
+		s.ReplyMarkup.WriteJSON(e)
 	}
 	e.ObjEnd()
 }
@@ -6696,11 +9313,104 @@ func (s *SendDice) ReadJSON(d *json.Decoder) error {
 			if err := s.AllowSendingWithoutReply.ReadJSON(d); err != nil {
 				return err
 			}
+		case "reply_markup":
+			s.ReplyMarkup = nil
+			var elem SendDiceReplyMarkup
+			if err := elem.ReadJSON(d); err != nil {
+				return err
+			}
+			s.ReplyMarkup = &elem
 		default:
 			return d.Skip()
 		}
 		return nil
 	})
+}
+
+// WriteJSON implements json.Marshaler.
+func (s SendDiceReplyMarkup) WriteJSON(e *json.Encoder) {
+	switch s.Type {
+	case InlineKeyboardMarkupSendDiceReplyMarkup:
+		s.InlineKeyboardMarkup.WriteJSON(e)
+	case ReplyKeyboardMarkupSendDiceReplyMarkup:
+		s.ReplyKeyboardMarkup.WriteJSON(e)
+	case ReplyKeyboardRemoveSendDiceReplyMarkup:
+		s.ReplyKeyboardRemove.WriteJSON(e)
+	case ForceReplySendDiceReplyMarkup:
+		s.ForceReply.WriteJSON(e)
+	}
+}
+
+// ReadJSON reads value from json reader.
+func (s *SendDiceReplyMarkup) ReadJSON(d *json.Decoder) error {
+	if s == nil {
+		return fmt.Errorf(`invalid: unable to decode SendDiceReplyMarkup to nil`)
+	}
+	// Sum type fields.
+	if d.Next() != json.Object {
+		return fmt.Errorf("unexpected json type %q", d.Next())
+	}
+	var found bool
+	if err := d.Capture(func(d *json.Decoder) error {
+		return d.ObjBytes(func(d *json.Decoder, key []byte) error {
+			if found {
+				return d.Skip()
+			}
+			switch string(key) {
+			case "inline_keyboard":
+				found = true
+				s.Type = InlineKeyboardMarkupSendDiceReplyMarkup
+			case "keyboard":
+				found = true
+				s.Type = ReplyKeyboardMarkupSendDiceReplyMarkup
+			case "resize_keyboard":
+				found = true
+				s.Type = ReplyKeyboardMarkupSendDiceReplyMarkup
+			case "one_time_keyboard":
+				found = true
+				s.Type = ReplyKeyboardMarkupSendDiceReplyMarkup
+			case "remove_keyboard":
+				found = true
+				s.Type = ReplyKeyboardRemoveSendDiceReplyMarkup
+			case "force_reply":
+				found = true
+				s.Type = ForceReplySendDiceReplyMarkup
+			case "input_field_placeholder":
+				found = true
+				s.Type = ForceReplySendDiceReplyMarkup
+			case "selective":
+				found = true
+				s.Type = ForceReplySendDiceReplyMarkup
+			}
+			return d.Skip()
+		})
+	}); err != nil {
+		return fmt.Errorf("capture: %w", err)
+	}
+	if !found {
+		return fmt.Errorf("unable to detect sum type variant")
+	}
+	switch s.Type {
+	case InlineKeyboardMarkupSendDiceReplyMarkup:
+		if err := s.InlineKeyboardMarkup.ReadJSON(d); err != nil {
+			return err
+		}
+	case ReplyKeyboardMarkupSendDiceReplyMarkup:
+		if err := s.ReplyKeyboardMarkup.ReadJSON(d); err != nil {
+			return err
+		}
+	case ReplyKeyboardRemoveSendDiceReplyMarkup:
+		if err := s.ReplyKeyboardRemove.ReadJSON(d); err != nil {
+			return err
+		}
+	case ForceReplySendDiceReplyMarkup:
+		if err := s.ForceReply.ReadJSON(d); err != nil {
+			return err
+		}
+	default:
+		return fmt.Errorf("inferred invalid type: %s", s.Type)
+	}
+	return nil
 }
 
 // WriteJSON implements json.Marshaler.
@@ -6760,6 +9470,11 @@ func (s SendDocument) WriteJSON(e *json.Encoder) {
 		more.More()
 		e.ObjField("allow_sending_without_reply")
 		s.AllowSendingWithoutReply.WriteJSON(e)
+	}
+	if s.ReplyMarkup != nil {
+		more.More()
+		e.ObjField("reply_markup")
+		s.ReplyMarkup.WriteJSON(e)
 	}
 	e.ObjEnd()
 }
@@ -6828,11 +9543,104 @@ func (s *SendDocument) ReadJSON(d *json.Decoder) error {
 			if err := s.AllowSendingWithoutReply.ReadJSON(d); err != nil {
 				return err
 			}
+		case "reply_markup":
+			s.ReplyMarkup = nil
+			var elem SendDocumentReplyMarkup
+			if err := elem.ReadJSON(d); err != nil {
+				return err
+			}
+			s.ReplyMarkup = &elem
 		default:
 			return d.Skip()
 		}
 		return nil
 	})
+}
+
+// WriteJSON implements json.Marshaler.
+func (s SendDocumentReplyMarkup) WriteJSON(e *json.Encoder) {
+	switch s.Type {
+	case InlineKeyboardMarkupSendDocumentReplyMarkup:
+		s.InlineKeyboardMarkup.WriteJSON(e)
+	case ReplyKeyboardMarkupSendDocumentReplyMarkup:
+		s.ReplyKeyboardMarkup.WriteJSON(e)
+	case ReplyKeyboardRemoveSendDocumentReplyMarkup:
+		s.ReplyKeyboardRemove.WriteJSON(e)
+	case ForceReplySendDocumentReplyMarkup:
+		s.ForceReply.WriteJSON(e)
+	}
+}
+
+// ReadJSON reads value from json reader.
+func (s *SendDocumentReplyMarkup) ReadJSON(d *json.Decoder) error {
+	if s == nil {
+		return fmt.Errorf(`invalid: unable to decode SendDocumentReplyMarkup to nil`)
+	}
+	// Sum type fields.
+	if d.Next() != json.Object {
+		return fmt.Errorf("unexpected json type %q", d.Next())
+	}
+	var found bool
+	if err := d.Capture(func(d *json.Decoder) error {
+		return d.ObjBytes(func(d *json.Decoder, key []byte) error {
+			if found {
+				return d.Skip()
+			}
+			switch string(key) {
+			case "inline_keyboard":
+				found = true
+				s.Type = InlineKeyboardMarkupSendDocumentReplyMarkup
+			case "keyboard":
+				found = true
+				s.Type = ReplyKeyboardMarkupSendDocumentReplyMarkup
+			case "resize_keyboard":
+				found = true
+				s.Type = ReplyKeyboardMarkupSendDocumentReplyMarkup
+			case "one_time_keyboard":
+				found = true
+				s.Type = ReplyKeyboardMarkupSendDocumentReplyMarkup
+			case "remove_keyboard":
+				found = true
+				s.Type = ReplyKeyboardRemoveSendDocumentReplyMarkup
+			case "force_reply":
+				found = true
+				s.Type = ForceReplySendDocumentReplyMarkup
+			case "input_field_placeholder":
+				found = true
+				s.Type = ForceReplySendDocumentReplyMarkup
+			case "selective":
+				found = true
+				s.Type = ForceReplySendDocumentReplyMarkup
+			}
+			return d.Skip()
+		})
+	}); err != nil {
+		return fmt.Errorf("capture: %w", err)
+	}
+	if !found {
+		return fmt.Errorf("unable to detect sum type variant")
+	}
+	switch s.Type {
+	case InlineKeyboardMarkupSendDocumentReplyMarkup:
+		if err := s.InlineKeyboardMarkup.ReadJSON(d); err != nil {
+			return err
+		}
+	case ReplyKeyboardMarkupSendDocumentReplyMarkup:
+		if err := s.ReplyKeyboardMarkup.ReadJSON(d); err != nil {
+			return err
+		}
+	case ReplyKeyboardRemoveSendDocumentReplyMarkup:
+		if err := s.ReplyKeyboardRemove.ReadJSON(d); err != nil {
+			return err
+		}
+	case ForceReplySendDocumentReplyMarkup:
+		if err := s.ForceReply.ReadJSON(d); err != nil {
+			return err
+		}
+	default:
+		return fmt.Errorf("inferred invalid type: %s", s.Type)
+	}
+	return nil
 }
 
 // WriteJSON implements json.Marshaler.
@@ -7266,6 +10074,11 @@ func (s SendLocation) WriteJSON(e *json.Encoder) {
 		e.ObjField("allow_sending_without_reply")
 		s.AllowSendingWithoutReply.WriteJSON(e)
 	}
+	if s.ReplyMarkup != nil {
+		more.More()
+		e.ObjField("reply_markup")
+		s.ReplyMarkup.WriteJSON(e)
+	}
 	e.ObjEnd()
 }
 
@@ -7327,11 +10140,104 @@ func (s *SendLocation) ReadJSON(d *json.Decoder) error {
 			if err := s.AllowSendingWithoutReply.ReadJSON(d); err != nil {
 				return err
 			}
+		case "reply_markup":
+			s.ReplyMarkup = nil
+			var elem SendLocationReplyMarkup
+			if err := elem.ReadJSON(d); err != nil {
+				return err
+			}
+			s.ReplyMarkup = &elem
 		default:
 			return d.Skip()
 		}
 		return nil
 	})
+}
+
+// WriteJSON implements json.Marshaler.
+func (s SendLocationReplyMarkup) WriteJSON(e *json.Encoder) {
+	switch s.Type {
+	case InlineKeyboardMarkupSendLocationReplyMarkup:
+		s.InlineKeyboardMarkup.WriteJSON(e)
+	case ReplyKeyboardMarkupSendLocationReplyMarkup:
+		s.ReplyKeyboardMarkup.WriteJSON(e)
+	case ReplyKeyboardRemoveSendLocationReplyMarkup:
+		s.ReplyKeyboardRemove.WriteJSON(e)
+	case ForceReplySendLocationReplyMarkup:
+		s.ForceReply.WriteJSON(e)
+	}
+}
+
+// ReadJSON reads value from json reader.
+func (s *SendLocationReplyMarkup) ReadJSON(d *json.Decoder) error {
+	if s == nil {
+		return fmt.Errorf(`invalid: unable to decode SendLocationReplyMarkup to nil`)
+	}
+	// Sum type fields.
+	if d.Next() != json.Object {
+		return fmt.Errorf("unexpected json type %q", d.Next())
+	}
+	var found bool
+	if err := d.Capture(func(d *json.Decoder) error {
+		return d.ObjBytes(func(d *json.Decoder, key []byte) error {
+			if found {
+				return d.Skip()
+			}
+			switch string(key) {
+			case "inline_keyboard":
+				found = true
+				s.Type = InlineKeyboardMarkupSendLocationReplyMarkup
+			case "keyboard":
+				found = true
+				s.Type = ReplyKeyboardMarkupSendLocationReplyMarkup
+			case "resize_keyboard":
+				found = true
+				s.Type = ReplyKeyboardMarkupSendLocationReplyMarkup
+			case "one_time_keyboard":
+				found = true
+				s.Type = ReplyKeyboardMarkupSendLocationReplyMarkup
+			case "remove_keyboard":
+				found = true
+				s.Type = ReplyKeyboardRemoveSendLocationReplyMarkup
+			case "force_reply":
+				found = true
+				s.Type = ForceReplySendLocationReplyMarkup
+			case "input_field_placeholder":
+				found = true
+				s.Type = ForceReplySendLocationReplyMarkup
+			case "selective":
+				found = true
+				s.Type = ForceReplySendLocationReplyMarkup
+			}
+			return d.Skip()
+		})
+	}); err != nil {
+		return fmt.Errorf("capture: %w", err)
+	}
+	if !found {
+		return fmt.Errorf("unable to detect sum type variant")
+	}
+	switch s.Type {
+	case InlineKeyboardMarkupSendLocationReplyMarkup:
+		if err := s.InlineKeyboardMarkup.ReadJSON(d); err != nil {
+			return err
+		}
+	case ReplyKeyboardMarkupSendLocationReplyMarkup:
+		if err := s.ReplyKeyboardMarkup.ReadJSON(d); err != nil {
+			return err
+		}
+	case ReplyKeyboardRemoveSendLocationReplyMarkup:
+		if err := s.ReplyKeyboardRemove.ReadJSON(d); err != nil {
+			return err
+		}
+	case ForceReplySendLocationReplyMarkup:
+		if err := s.ForceReply.ReadJSON(d); err != nil {
+			return err
+		}
+	default:
+		return fmt.Errorf("inferred invalid type: %s", s.Type)
+	}
+	return nil
 }
 
 // WriteJSON implements json.Marshaler.
@@ -7348,7 +10254,7 @@ func (s SendMediaGroup) WriteJSON(e *json.Encoder) {
 	e.ArrStart()
 	for _, elem := range s.Media {
 		more.More()
-		e.Str(elem)
+		elem.WriteJSON(e)
 	}
 	e.ArrEnd()
 	more.Up()
@@ -7384,10 +10290,8 @@ func (s *SendMediaGroup) ReadJSON(d *json.Decoder) error {
 		case "media":
 			s.Media = nil
 			if err := d.Arr(func(d *json.Decoder) error {
-				var elem string
-				v, err := d.Str()
-				elem = string(v)
-				if err != nil {
+				var elem SendMediaGroupMediaItem
+				if err := elem.ReadJSON(d); err != nil {
 					return err
 				}
 				s.Media = append(s.Media, elem)
@@ -7415,6 +10319,90 @@ func (s *SendMediaGroup) ReadJSON(d *json.Decoder) error {
 		}
 		return nil
 	})
+}
+
+// WriteJSON implements json.Marshaler.
+func (s SendMediaGroupMediaItem) WriteJSON(e *json.Encoder) {
+	switch s.Type {
+	case InputMediaAudioSendMediaGroupMediaItem:
+		s.InputMediaAudio.WriteJSON(e)
+	case InputMediaDocumentSendMediaGroupMediaItem:
+		s.InputMediaDocument.WriteJSON(e)
+	case InputMediaPhotoSendMediaGroupMediaItem:
+		s.InputMediaPhoto.WriteJSON(e)
+	case InputMediaVideoSendMediaGroupMediaItem:
+		s.InputMediaVideo.WriteJSON(e)
+	}
+}
+
+// ReadJSON reads value from json reader.
+func (s *SendMediaGroupMediaItem) ReadJSON(d *json.Decoder) error {
+	if s == nil {
+		return fmt.Errorf(`invalid: unable to decode SendMediaGroupMediaItem to nil`)
+	}
+	// Sum type discriminator.
+	if d.Next() != json.Object {
+		return fmt.Errorf("unexpected json type %q", d.Next())
+	}
+	var found bool
+	if err := d.Capture(func(d *json.Decoder) error {
+		return d.ObjBytes(func(d *json.Decoder, key []byte) error {
+			if found {
+				return d.Skip()
+			}
+			switch string(key) {
+			case "type":
+				typ, err := d.Str()
+				if err != nil {
+					return err
+				}
+				switch typ {
+				case "audio":
+					s.Type = InputMediaAudioSendMediaGroupMediaItem
+					found = true
+				case "document":
+					s.Type = InputMediaDocumentSendMediaGroupMediaItem
+					found = true
+				case "photo":
+					s.Type = InputMediaPhotoSendMediaGroupMediaItem
+					found = true
+				case "video":
+					s.Type = InputMediaVideoSendMediaGroupMediaItem
+					found = true
+				default:
+					return fmt.Errorf("unknown type %s", typ)
+				}
+				return nil
+			}
+			return d.Skip()
+		})
+	}); err != nil {
+		return fmt.Errorf("capture: %w", err)
+	}
+	if !found {
+		return fmt.Errorf("unable to detect sum type variant")
+	}
+	switch s.Type {
+	case InputMediaAudioSendMediaGroupMediaItem:
+		if err := s.InputMediaAudio.ReadJSON(d); err != nil {
+			return err
+		}
+	case InputMediaDocumentSendMediaGroupMediaItem:
+		if err := s.InputMediaDocument.ReadJSON(d); err != nil {
+			return err
+		}
+	case InputMediaPhotoSendMediaGroupMediaItem:
+		if err := s.InputMediaPhoto.ReadJSON(d); err != nil {
+			return err
+		}
+	case InputMediaVideoSendMediaGroupMediaItem:
+		if err := s.InputMediaVideo.ReadJSON(d); err != nil {
+			return err
+		}
+	default:
+		return fmt.Errorf("inferred invalid type: %s", s.Type)
+	}
+	return nil
 }
 
 // WriteJSON implements json.Marshaler.
@@ -7464,6 +10452,11 @@ func (s SendMessage) WriteJSON(e *json.Encoder) {
 		more.More()
 		e.ObjField("allow_sending_without_reply")
 		s.AllowSendingWithoutReply.WriteJSON(e)
+	}
+	if s.ReplyMarkup != nil {
+		more.More()
+		e.ObjField("reply_markup")
+		s.ReplyMarkup.WriteJSON(e)
 	}
 	e.ObjEnd()
 }
@@ -7522,11 +10515,104 @@ func (s *SendMessage) ReadJSON(d *json.Decoder) error {
 			if err := s.AllowSendingWithoutReply.ReadJSON(d); err != nil {
 				return err
 			}
+		case "reply_markup":
+			s.ReplyMarkup = nil
+			var elem SendMessageReplyMarkup
+			if err := elem.ReadJSON(d); err != nil {
+				return err
+			}
+			s.ReplyMarkup = &elem
 		default:
 			return d.Skip()
 		}
 		return nil
 	})
+}
+
+// WriteJSON implements json.Marshaler.
+func (s SendMessageReplyMarkup) WriteJSON(e *json.Encoder) {
+	switch s.Type {
+	case InlineKeyboardMarkupSendMessageReplyMarkup:
+		s.InlineKeyboardMarkup.WriteJSON(e)
+	case ReplyKeyboardMarkupSendMessageReplyMarkup:
+		s.ReplyKeyboardMarkup.WriteJSON(e)
+	case ReplyKeyboardRemoveSendMessageReplyMarkup:
+		s.ReplyKeyboardRemove.WriteJSON(e)
+	case ForceReplySendMessageReplyMarkup:
+		s.ForceReply.WriteJSON(e)
+	}
+}
+
+// ReadJSON reads value from json reader.
+func (s *SendMessageReplyMarkup) ReadJSON(d *json.Decoder) error {
+	if s == nil {
+		return fmt.Errorf(`invalid: unable to decode SendMessageReplyMarkup to nil`)
+	}
+	// Sum type fields.
+	if d.Next() != json.Object {
+		return fmt.Errorf("unexpected json type %q", d.Next())
+	}
+	var found bool
+	if err := d.Capture(func(d *json.Decoder) error {
+		return d.ObjBytes(func(d *json.Decoder, key []byte) error {
+			if found {
+				return d.Skip()
+			}
+			switch string(key) {
+			case "inline_keyboard":
+				found = true
+				s.Type = InlineKeyboardMarkupSendMessageReplyMarkup
+			case "keyboard":
+				found = true
+				s.Type = ReplyKeyboardMarkupSendMessageReplyMarkup
+			case "resize_keyboard":
+				found = true
+				s.Type = ReplyKeyboardMarkupSendMessageReplyMarkup
+			case "one_time_keyboard":
+				found = true
+				s.Type = ReplyKeyboardMarkupSendMessageReplyMarkup
+			case "remove_keyboard":
+				found = true
+				s.Type = ReplyKeyboardRemoveSendMessageReplyMarkup
+			case "force_reply":
+				found = true
+				s.Type = ForceReplySendMessageReplyMarkup
+			case "input_field_placeholder":
+				found = true
+				s.Type = ForceReplySendMessageReplyMarkup
+			case "selective":
+				found = true
+				s.Type = ForceReplySendMessageReplyMarkup
+			}
+			return d.Skip()
+		})
+	}); err != nil {
+		return fmt.Errorf("capture: %w", err)
+	}
+	if !found {
+		return fmt.Errorf("unable to detect sum type variant")
+	}
+	switch s.Type {
+	case InlineKeyboardMarkupSendMessageReplyMarkup:
+		if err := s.InlineKeyboardMarkup.ReadJSON(d); err != nil {
+			return err
+		}
+	case ReplyKeyboardMarkupSendMessageReplyMarkup:
+		if err := s.ReplyKeyboardMarkup.ReadJSON(d); err != nil {
+			return err
+		}
+	case ReplyKeyboardRemoveSendMessageReplyMarkup:
+		if err := s.ReplyKeyboardRemove.ReadJSON(d); err != nil {
+			return err
+		}
+	case ForceReplySendMessageReplyMarkup:
+		if err := s.ForceReply.ReadJSON(d); err != nil {
+			return err
+		}
+	default:
+		return fmt.Errorf("inferred invalid type: %s", s.Type)
+	}
+	return nil
 }
 
 // WriteJSON implements json.Marshaler.
@@ -7576,6 +10662,11 @@ func (s SendPhoto) WriteJSON(e *json.Encoder) {
 		more.More()
 		e.ObjField("allow_sending_without_reply")
 		s.AllowSendingWithoutReply.WriteJSON(e)
+	}
+	if s.ReplyMarkup != nil {
+		more.More()
+		e.ObjField("reply_markup")
+		s.ReplyMarkup.WriteJSON(e)
 	}
 	e.ObjEnd()
 }
@@ -7634,11 +10725,104 @@ func (s *SendPhoto) ReadJSON(d *json.Decoder) error {
 			if err := s.AllowSendingWithoutReply.ReadJSON(d); err != nil {
 				return err
 			}
+		case "reply_markup":
+			s.ReplyMarkup = nil
+			var elem SendPhotoReplyMarkup
+			if err := elem.ReadJSON(d); err != nil {
+				return err
+			}
+			s.ReplyMarkup = &elem
 		default:
 			return d.Skip()
 		}
 		return nil
 	})
+}
+
+// WriteJSON implements json.Marshaler.
+func (s SendPhotoReplyMarkup) WriteJSON(e *json.Encoder) {
+	switch s.Type {
+	case InlineKeyboardMarkupSendPhotoReplyMarkup:
+		s.InlineKeyboardMarkup.WriteJSON(e)
+	case ReplyKeyboardMarkupSendPhotoReplyMarkup:
+		s.ReplyKeyboardMarkup.WriteJSON(e)
+	case ReplyKeyboardRemoveSendPhotoReplyMarkup:
+		s.ReplyKeyboardRemove.WriteJSON(e)
+	case ForceReplySendPhotoReplyMarkup:
+		s.ForceReply.WriteJSON(e)
+	}
+}
+
+// ReadJSON reads value from json reader.
+func (s *SendPhotoReplyMarkup) ReadJSON(d *json.Decoder) error {
+	if s == nil {
+		return fmt.Errorf(`invalid: unable to decode SendPhotoReplyMarkup to nil`)
+	}
+	// Sum type fields.
+	if d.Next() != json.Object {
+		return fmt.Errorf("unexpected json type %q", d.Next())
+	}
+	var found bool
+	if err := d.Capture(func(d *json.Decoder) error {
+		return d.ObjBytes(func(d *json.Decoder, key []byte) error {
+			if found {
+				return d.Skip()
+			}
+			switch string(key) {
+			case "inline_keyboard":
+				found = true
+				s.Type = InlineKeyboardMarkupSendPhotoReplyMarkup
+			case "keyboard":
+				found = true
+				s.Type = ReplyKeyboardMarkupSendPhotoReplyMarkup
+			case "resize_keyboard":
+				found = true
+				s.Type = ReplyKeyboardMarkupSendPhotoReplyMarkup
+			case "one_time_keyboard":
+				found = true
+				s.Type = ReplyKeyboardMarkupSendPhotoReplyMarkup
+			case "remove_keyboard":
+				found = true
+				s.Type = ReplyKeyboardRemoveSendPhotoReplyMarkup
+			case "force_reply":
+				found = true
+				s.Type = ForceReplySendPhotoReplyMarkup
+			case "input_field_placeholder":
+				found = true
+				s.Type = ForceReplySendPhotoReplyMarkup
+			case "selective":
+				found = true
+				s.Type = ForceReplySendPhotoReplyMarkup
+			}
+			return d.Skip()
+		})
+	}); err != nil {
+		return fmt.Errorf("capture: %w", err)
+	}
+	if !found {
+		return fmt.Errorf("unable to detect sum type variant")
+	}
+	switch s.Type {
+	case InlineKeyboardMarkupSendPhotoReplyMarkup:
+		if err := s.InlineKeyboardMarkup.ReadJSON(d); err != nil {
+			return err
+		}
+	case ReplyKeyboardMarkupSendPhotoReplyMarkup:
+		if err := s.ReplyKeyboardMarkup.ReadJSON(d); err != nil {
+			return err
+		}
+	case ReplyKeyboardRemoveSendPhotoReplyMarkup:
+		if err := s.ReplyKeyboardRemove.ReadJSON(d); err != nil {
+			return err
+		}
+	case ForceReplySendPhotoReplyMarkup:
+		if err := s.ForceReply.ReadJSON(d); err != nil {
+			return err
+		}
+	default:
+		return fmt.Errorf("inferred invalid type: %s", s.Type)
+	}
+	return nil
 }
 
 // WriteJSON implements json.Marshaler.
@@ -7733,6 +10917,11 @@ func (s SendPoll) WriteJSON(e *json.Encoder) {
 		more.More()
 		e.ObjField("allow_sending_without_reply")
 		s.AllowSendingWithoutReply.WriteJSON(e)
+	}
+	if s.ReplyMarkup != nil {
+		more.More()
+		e.ObjField("reply_markup")
+		s.ReplyMarkup.WriteJSON(e)
 	}
 	e.ObjEnd()
 }
@@ -7840,11 +11029,104 @@ func (s *SendPoll) ReadJSON(d *json.Decoder) error {
 			if err := s.AllowSendingWithoutReply.ReadJSON(d); err != nil {
 				return err
 			}
+		case "reply_markup":
+			s.ReplyMarkup = nil
+			var elem SendPollReplyMarkup
+			if err := elem.ReadJSON(d); err != nil {
+				return err
+			}
+			s.ReplyMarkup = &elem
 		default:
 			return d.Skip()
 		}
 		return nil
 	})
+}
+
+// WriteJSON implements json.Marshaler.
+func (s SendPollReplyMarkup) WriteJSON(e *json.Encoder) {
+	switch s.Type {
+	case InlineKeyboardMarkupSendPollReplyMarkup:
+		s.InlineKeyboardMarkup.WriteJSON(e)
+	case ReplyKeyboardMarkupSendPollReplyMarkup:
+		s.ReplyKeyboardMarkup.WriteJSON(e)
+	case ReplyKeyboardRemoveSendPollReplyMarkup:
+		s.ReplyKeyboardRemove.WriteJSON(e)
+	case ForceReplySendPollReplyMarkup:
+		s.ForceReply.WriteJSON(e)
+	}
+}
+
+// ReadJSON reads value from json reader.
+func (s *SendPollReplyMarkup) ReadJSON(d *json.Decoder) error {
+	if s == nil {
+		return fmt.Errorf(`invalid: unable to decode SendPollReplyMarkup to nil`)
+	}
+	// Sum type fields.
+	if d.Next() != json.Object {
+		return fmt.Errorf("unexpected json type %q", d.Next())
+	}
+	var found bool
+	if err := d.Capture(func(d *json.Decoder) error {
+		return d.ObjBytes(func(d *json.Decoder, key []byte) error {
+			if found {
+				return d.Skip()
+			}
+			switch string(key) {
+			case "inline_keyboard":
+				found = true
+				s.Type = InlineKeyboardMarkupSendPollReplyMarkup
+			case "keyboard":
+				found = true
+				s.Type = ReplyKeyboardMarkupSendPollReplyMarkup
+			case "resize_keyboard":
+				found = true
+				s.Type = ReplyKeyboardMarkupSendPollReplyMarkup
+			case "one_time_keyboard":
+				found = true
+				s.Type = ReplyKeyboardMarkupSendPollReplyMarkup
+			case "remove_keyboard":
+				found = true
+				s.Type = ReplyKeyboardRemoveSendPollReplyMarkup
+			case "force_reply":
+				found = true
+				s.Type = ForceReplySendPollReplyMarkup
+			case "input_field_placeholder":
+				found = true
+				s.Type = ForceReplySendPollReplyMarkup
+			case "selective":
+				found = true
+				s.Type = ForceReplySendPollReplyMarkup
+			}
+			return d.Skip()
+		})
+	}); err != nil {
+		return fmt.Errorf("capture: %w", err)
+	}
+	if !found {
+		return fmt.Errorf("unable to detect sum type variant")
+	}
+	switch s.Type {
+	case InlineKeyboardMarkupSendPollReplyMarkup:
+		if err := s.InlineKeyboardMarkup.ReadJSON(d); err != nil {
+			return err
+		}
+	case ReplyKeyboardMarkupSendPollReplyMarkup:
+		if err := s.ReplyKeyboardMarkup.ReadJSON(d); err != nil {
+			return err
+		}
+	case ReplyKeyboardRemoveSendPollReplyMarkup:
+		if err := s.ReplyKeyboardRemove.ReadJSON(d); err != nil {
+			return err
+		}
+	case ForceReplySendPollReplyMarkup:
+		if err := s.ForceReply.ReadJSON(d); err != nil {
+			return err
+		}
+	default:
+		return fmt.Errorf("inferred invalid type: %s", s.Type)
+	}
+	return nil
 }
 
 // WriteJSON implements json.Marshaler.
@@ -7872,6 +11154,11 @@ func (s SendSticker) WriteJSON(e *json.Encoder) {
 		more.More()
 		e.ObjField("allow_sending_without_reply")
 		s.AllowSendingWithoutReply.WriteJSON(e)
+	}
+	if s.ReplyMarkup != nil {
+		more.More()
+		e.ObjField("reply_markup")
+		s.ReplyMarkup.WriteJSON(e)
 	}
 	e.ObjEnd()
 }
@@ -7908,11 +11195,104 @@ func (s *SendSticker) ReadJSON(d *json.Decoder) error {
 			if err := s.AllowSendingWithoutReply.ReadJSON(d); err != nil {
 				return err
 			}
+		case "reply_markup":
+			s.ReplyMarkup = nil
+			var elem SendStickerReplyMarkup
+			if err := elem.ReadJSON(d); err != nil {
+				return err
+			}
+			s.ReplyMarkup = &elem
 		default:
 			return d.Skip()
 		}
 		return nil
 	})
+}
+
+// WriteJSON implements json.Marshaler.
+func (s SendStickerReplyMarkup) WriteJSON(e *json.Encoder) {
+	switch s.Type {
+	case InlineKeyboardMarkupSendStickerReplyMarkup:
+		s.InlineKeyboardMarkup.WriteJSON(e)
+	case ReplyKeyboardMarkupSendStickerReplyMarkup:
+		s.ReplyKeyboardMarkup.WriteJSON(e)
+	case ReplyKeyboardRemoveSendStickerReplyMarkup:
+		s.ReplyKeyboardRemove.WriteJSON(e)
+	case ForceReplySendStickerReplyMarkup:
+		s.ForceReply.WriteJSON(e)
+	}
+}
+
+// ReadJSON reads value from json reader.
+func (s *SendStickerReplyMarkup) ReadJSON(d *json.Decoder) error {
+	if s == nil {
+		return fmt.Errorf(`invalid: unable to decode SendStickerReplyMarkup to nil`)
+	}
+	// Sum type fields.
+	if d.Next() != json.Object {
+		return fmt.Errorf("unexpected json type %q", d.Next())
+	}
+	var found bool
+	if err := d.Capture(func(d *json.Decoder) error {
+		return d.ObjBytes(func(d *json.Decoder, key []byte) error {
+			if found {
+				return d.Skip()
+			}
+			switch string(key) {
+			case "inline_keyboard":
+				found = true
+				s.Type = InlineKeyboardMarkupSendStickerReplyMarkup
+			case "keyboard":
+				found = true
+				s.Type = ReplyKeyboardMarkupSendStickerReplyMarkup
+			case "resize_keyboard":
+				found = true
+				s.Type = ReplyKeyboardMarkupSendStickerReplyMarkup
+			case "one_time_keyboard":
+				found = true
+				s.Type = ReplyKeyboardMarkupSendStickerReplyMarkup
+			case "remove_keyboard":
+				found = true
+				s.Type = ReplyKeyboardRemoveSendStickerReplyMarkup
+			case "force_reply":
+				found = true
+				s.Type = ForceReplySendStickerReplyMarkup
+			case "input_field_placeholder":
+				found = true
+				s.Type = ForceReplySendStickerReplyMarkup
+			case "selective":
+				found = true
+				s.Type = ForceReplySendStickerReplyMarkup
+			}
+			return d.Skip()
+		})
+	}); err != nil {
+		return fmt.Errorf("capture: %w", err)
+	}
+	if !found {
+		return fmt.Errorf("unable to detect sum type variant")
+	}
+	switch s.Type {
+	case InlineKeyboardMarkupSendStickerReplyMarkup:
+		if err := s.InlineKeyboardMarkup.ReadJSON(d); err != nil {
+			return err
+		}
+	case ReplyKeyboardMarkupSendStickerReplyMarkup:
+		if err := s.ReplyKeyboardMarkup.ReadJSON(d); err != nil {
+			return err
+		}
+	case ReplyKeyboardRemoveSendStickerReplyMarkup:
+		if err := s.ReplyKeyboardRemove.ReadJSON(d); err != nil {
+			return err
+		}
+	case ForceReplySendStickerReplyMarkup:
+		if err := s.ForceReply.ReadJSON(d); err != nil {
+			return err
+		}
+	default:
+		return fmt.Errorf("inferred invalid type: %s", s.Type)
+	}
+	return nil
 }
 
 // WriteJSON implements json.Marshaler.
@@ -7969,6 +11349,11 @@ func (s SendVenue) WriteJSON(e *json.Encoder) {
 		more.More()
 		e.ObjField("allow_sending_without_reply")
 		s.AllowSendingWithoutReply.WriteJSON(e)
+	}
+	if s.ReplyMarkup != nil {
+		more.More()
+		e.ObjField("reply_markup")
+		s.ReplyMarkup.WriteJSON(e)
 	}
 	e.ObjEnd()
 }
@@ -8043,11 +11428,104 @@ func (s *SendVenue) ReadJSON(d *json.Decoder) error {
 			if err := s.AllowSendingWithoutReply.ReadJSON(d); err != nil {
 				return err
 			}
+		case "reply_markup":
+			s.ReplyMarkup = nil
+			var elem SendVenueReplyMarkup
+			if err := elem.ReadJSON(d); err != nil {
+				return err
+			}
+			s.ReplyMarkup = &elem
 		default:
 			return d.Skip()
 		}
 		return nil
 	})
+}
+
+// WriteJSON implements json.Marshaler.
+func (s SendVenueReplyMarkup) WriteJSON(e *json.Encoder) {
+	switch s.Type {
+	case InlineKeyboardMarkupSendVenueReplyMarkup:
+		s.InlineKeyboardMarkup.WriteJSON(e)
+	case ReplyKeyboardMarkupSendVenueReplyMarkup:
+		s.ReplyKeyboardMarkup.WriteJSON(e)
+	case ReplyKeyboardRemoveSendVenueReplyMarkup:
+		s.ReplyKeyboardRemove.WriteJSON(e)
+	case ForceReplySendVenueReplyMarkup:
+		s.ForceReply.WriteJSON(e)
+	}
+}
+
+// ReadJSON reads value from json reader.
+func (s *SendVenueReplyMarkup) ReadJSON(d *json.Decoder) error {
+	if s == nil {
+		return fmt.Errorf(`invalid: unable to decode SendVenueReplyMarkup to nil`)
+	}
+	// Sum type fields.
+	if d.Next() != json.Object {
+		return fmt.Errorf("unexpected json type %q", d.Next())
+	}
+	var found bool
+	if err := d.Capture(func(d *json.Decoder) error {
+		return d.ObjBytes(func(d *json.Decoder, key []byte) error {
+			if found {
+				return d.Skip()
+			}
+			switch string(key) {
+			case "inline_keyboard":
+				found = true
+				s.Type = InlineKeyboardMarkupSendVenueReplyMarkup
+			case "keyboard":
+				found = true
+				s.Type = ReplyKeyboardMarkupSendVenueReplyMarkup
+			case "resize_keyboard":
+				found = true
+				s.Type = ReplyKeyboardMarkupSendVenueReplyMarkup
+			case "one_time_keyboard":
+				found = true
+				s.Type = ReplyKeyboardMarkupSendVenueReplyMarkup
+			case "remove_keyboard":
+				found = true
+				s.Type = ReplyKeyboardRemoveSendVenueReplyMarkup
+			case "force_reply":
+				found = true
+				s.Type = ForceReplySendVenueReplyMarkup
+			case "input_field_placeholder":
+				found = true
+				s.Type = ForceReplySendVenueReplyMarkup
+			case "selective":
+				found = true
+				s.Type = ForceReplySendVenueReplyMarkup
+			}
+			return d.Skip()
+		})
+	}); err != nil {
+		return fmt.Errorf("capture: %w", err)
+	}
+	if !found {
+		return fmt.Errorf("unable to detect sum type variant")
+	}
+	switch s.Type {
+	case InlineKeyboardMarkupSendVenueReplyMarkup:
+		if err := s.InlineKeyboardMarkup.ReadJSON(d); err != nil {
+			return err
+		}
+	case ReplyKeyboardMarkupSendVenueReplyMarkup:
+		if err := s.ReplyKeyboardMarkup.ReadJSON(d); err != nil {
+			return err
+		}
+	case ReplyKeyboardRemoveSendVenueReplyMarkup:
+		if err := s.ReplyKeyboardRemove.ReadJSON(d); err != nil {
+			return err
+		}
+	case ForceReplySendVenueReplyMarkup:
+		if err := s.ForceReply.ReadJSON(d); err != nil {
+			return err
+		}
+	default:
+		return fmt.Errorf("inferred invalid type: %s", s.Type)
+	}
+	return nil
 }
 
 // WriteJSON implements json.Marshaler.
@@ -8122,6 +11600,11 @@ func (s SendVideo) WriteJSON(e *json.Encoder) {
 		more.More()
 		e.ObjField("allow_sending_without_reply")
 		s.AllowSendingWithoutReply.WriteJSON(e)
+	}
+	if s.ReplyMarkup != nil {
+		more.More()
+		e.ObjField("reply_markup")
+		s.ReplyMarkup.WriteJSON(e)
 	}
 	e.ObjEnd()
 }
@@ -8205,6 +11688,13 @@ func (s *SendVideo) ReadJSON(d *json.Decoder) error {
 			if err := s.AllowSendingWithoutReply.ReadJSON(d); err != nil {
 				return err
 			}
+		case "reply_markup":
+			s.ReplyMarkup = nil
+			var elem SendVideoReplyMarkup
+			if err := elem.ReadJSON(d); err != nil {
+				return err
+			}
+			s.ReplyMarkup = &elem
 		default:
 			return d.Skip()
 		}
@@ -8252,6 +11742,11 @@ func (s SendVideoNote) WriteJSON(e *json.Encoder) {
 		more.More()
 		e.ObjField("allow_sending_without_reply")
 		s.AllowSendingWithoutReply.WriteJSON(e)
+	}
+	if s.ReplyMarkup != nil {
+		more.More()
+		e.ObjField("reply_markup")
+		s.ReplyMarkup.WriteJSON(e)
 	}
 	e.ObjEnd()
 }
@@ -8303,11 +11798,190 @@ func (s *SendVideoNote) ReadJSON(d *json.Decoder) error {
 			if err := s.AllowSendingWithoutReply.ReadJSON(d); err != nil {
 				return err
 			}
+		case "reply_markup":
+			s.ReplyMarkup = nil
+			var elem SendVideoNoteReplyMarkup
+			if err := elem.ReadJSON(d); err != nil {
+				return err
+			}
+			s.ReplyMarkup = &elem
 		default:
 			return d.Skip()
 		}
 		return nil
 	})
+}
+
+// WriteJSON implements json.Marshaler.
+func (s SendVideoNoteReplyMarkup) WriteJSON(e *json.Encoder) {
+	switch s.Type {
+	case InlineKeyboardMarkupSendVideoNoteReplyMarkup:
+		s.InlineKeyboardMarkup.WriteJSON(e)
+	case ReplyKeyboardMarkupSendVideoNoteReplyMarkup:
+		s.ReplyKeyboardMarkup.WriteJSON(e)
+	case ReplyKeyboardRemoveSendVideoNoteReplyMarkup:
+		s.ReplyKeyboardRemove.WriteJSON(e)
+	case ForceReplySendVideoNoteReplyMarkup:
+		s.ForceReply.WriteJSON(e)
+	}
+}
+
+// ReadJSON reads value from json reader.
+func (s *SendVideoNoteReplyMarkup) ReadJSON(d *json.Decoder) error {
+	if s == nil {
+		return fmt.Errorf(`invalid: unable to decode SendVideoNoteReplyMarkup to nil`)
+	}
+	// Sum type fields.
+	if d.Next() != json.Object {
+		return fmt.Errorf("unexpected json type %q", d.Next())
+	}
+	var found bool
+	if err := d.Capture(func(d *json.Decoder) error {
+		return d.ObjBytes(func(d *json.Decoder, key []byte) error {
+			if found {
+				return d.Skip()
+			}
+			switch string(key) {
+			case "inline_keyboard":
+				found = true
+				s.Type = InlineKeyboardMarkupSendVideoNoteReplyMarkup
+			case "keyboard":
+				found = true
+				s.Type = ReplyKeyboardMarkupSendVideoNoteReplyMarkup
+			case "resize_keyboard":
+				found = true
+				s.Type = ReplyKeyboardMarkupSendVideoNoteReplyMarkup
+			case "one_time_keyboard":
+				found = true
+				s.Type = ReplyKeyboardMarkupSendVideoNoteReplyMarkup
+			case "remove_keyboard":
+				found = true
+				s.Type = ReplyKeyboardRemoveSendVideoNoteReplyMarkup
+			case "force_reply":
+				found = true
+				s.Type = ForceReplySendVideoNoteReplyMarkup
+			case "input_field_placeholder":
+				found = true
+				s.Type = ForceReplySendVideoNoteReplyMarkup
+			case "selective":
+				found = true
+				s.Type = ForceReplySendVideoNoteReplyMarkup
+			}
+			return d.Skip()
+		})
+	}); err != nil {
+		return fmt.Errorf("capture: %w", err)
+	}
+	if !found {
+		return fmt.Errorf("unable to detect sum type variant")
+	}
+	switch s.Type {
+	case InlineKeyboardMarkupSendVideoNoteReplyMarkup:
+		if err := s.InlineKeyboardMarkup.ReadJSON(d); err != nil {
+			return err
+		}
+	case ReplyKeyboardMarkupSendVideoNoteReplyMarkup:
+		if err := s.ReplyKeyboardMarkup.ReadJSON(d); err != nil {
+			return err
+		}
+	case ReplyKeyboardRemoveSendVideoNoteReplyMarkup:
+		if err := s.ReplyKeyboardRemove.ReadJSON(d); err != nil {
+			return err
+		}
+	case ForceReplySendVideoNoteReplyMarkup:
+		if err := s.ForceReply.ReadJSON(d); err != nil {
+			return err
+		}
+	default:
+		return fmt.Errorf("inferred invalid type: %s", s.Type)
+	}
+	return nil
+}
+
+// WriteJSON implements json.Marshaler.
+func (s SendVideoReplyMarkup) WriteJSON(e *json.Encoder) {
+	switch s.Type {
+	case InlineKeyboardMarkupSendVideoReplyMarkup:
+		s.InlineKeyboardMarkup.WriteJSON(e)
+	case ReplyKeyboardMarkupSendVideoReplyMarkup:
+		s.ReplyKeyboardMarkup.WriteJSON(e)
+	case ReplyKeyboardRemoveSendVideoReplyMarkup:
+		s.ReplyKeyboardRemove.WriteJSON(e)
+	case ForceReplySendVideoReplyMarkup:
+		s.ForceReply.WriteJSON(e)
+	}
+}
+
+// ReadJSON reads value from json reader.
+func (s *SendVideoReplyMarkup) ReadJSON(d *json.Decoder) error {
+	if s == nil {
+		return fmt.Errorf(`invalid: unable to decode SendVideoReplyMarkup to nil`)
+	}
+	// Sum type fields.
+	if d.Next() != json.Object {
+		return fmt.Errorf("unexpected json type %q", d.Next())
+	}
+	var found bool
+	if err := d.Capture(func(d *json.Decoder) error {
+		return d.ObjBytes(func(d *json.Decoder, key []byte) error {
+			if found {
+				return d.Skip()
+			}
+			switch string(key) {
+			case "inline_keyboard":
+				found = true
+				s.Type = InlineKeyboardMarkupSendVideoReplyMarkup
+			case "keyboard":
+				found = true
+				s.Type = ReplyKeyboardMarkupSendVideoReplyMarkup
+			case "resize_keyboard":
+				found = true
+				s.Type = ReplyKeyboardMarkupSendVideoReplyMarkup
+			case "one_time_keyboard":
+				found = true
+				s.Type = ReplyKeyboardMarkupSendVideoReplyMarkup
+			case "remove_keyboard":
+				found = true
+				s.Type = ReplyKeyboardRemoveSendVideoReplyMarkup
+			case "force_reply":
+				found = true
+				s.Type = ForceReplySendVideoReplyMarkup
+			case "input_field_placeholder":
+				found = true
+				s.Type = ForceReplySendVideoReplyMarkup
+			case "selective":
+				found = true
+				s.Type = ForceReplySendVideoReplyMarkup
+			}
+			return d.Skip()
+		})
+	}); err != nil {
+		return fmt.Errorf("capture: %w", err)
+	}
+	if !found {
+		return fmt.Errorf("unable to detect sum type variant")
+	}
+	switch s.Type {
+	case InlineKeyboardMarkupSendVideoReplyMarkup:
+		if err := s.InlineKeyboardMarkup.ReadJSON(d); err != nil {
+			return err
+		}
+	case ReplyKeyboardMarkupSendVideoReplyMarkup:
+		if err := s.ReplyKeyboardMarkup.ReadJSON(d); err != nil {
+			return err
+		}
+	case ReplyKeyboardRemoveSendVideoReplyMarkup:
+		if err := s.ReplyKeyboardRemove.ReadJSON(d); err != nil {
+			return err
+		}
+	case ForceReplySendVideoReplyMarkup:
+		if err := s.ForceReply.ReadJSON(d); err != nil {
+			return err
+		}
+	default:
+		return fmt.Errorf("inferred invalid type: %s", s.Type)
+	}
+	return nil
 }
 
 // WriteJSON implements json.Marshaler.
@@ -8362,6 +12036,11 @@ func (s SendVoice) WriteJSON(e *json.Encoder) {
 		more.More()
 		e.ObjField("allow_sending_without_reply")
 		s.AllowSendingWithoutReply.WriteJSON(e)
+	}
+	if s.ReplyMarkup != nil {
+		more.More()
+		e.ObjField("reply_markup")
+		s.ReplyMarkup.WriteJSON(e)
 	}
 	e.ObjEnd()
 }
@@ -8425,11 +12104,104 @@ func (s *SendVoice) ReadJSON(d *json.Decoder) error {
 			if err := s.AllowSendingWithoutReply.ReadJSON(d); err != nil {
 				return err
 			}
+		case "reply_markup":
+			s.ReplyMarkup = nil
+			var elem SendVoiceReplyMarkup
+			if err := elem.ReadJSON(d); err != nil {
+				return err
+			}
+			s.ReplyMarkup = &elem
 		default:
 			return d.Skip()
 		}
 		return nil
 	})
+}
+
+// WriteJSON implements json.Marshaler.
+func (s SendVoiceReplyMarkup) WriteJSON(e *json.Encoder) {
+	switch s.Type {
+	case InlineKeyboardMarkupSendVoiceReplyMarkup:
+		s.InlineKeyboardMarkup.WriteJSON(e)
+	case ReplyKeyboardMarkupSendVoiceReplyMarkup:
+		s.ReplyKeyboardMarkup.WriteJSON(e)
+	case ReplyKeyboardRemoveSendVoiceReplyMarkup:
+		s.ReplyKeyboardRemove.WriteJSON(e)
+	case ForceReplySendVoiceReplyMarkup:
+		s.ForceReply.WriteJSON(e)
+	}
+}
+
+// ReadJSON reads value from json reader.
+func (s *SendVoiceReplyMarkup) ReadJSON(d *json.Decoder) error {
+	if s == nil {
+		return fmt.Errorf(`invalid: unable to decode SendVoiceReplyMarkup to nil`)
+	}
+	// Sum type fields.
+	if d.Next() != json.Object {
+		return fmt.Errorf("unexpected json type %q", d.Next())
+	}
+	var found bool
+	if err := d.Capture(func(d *json.Decoder) error {
+		return d.ObjBytes(func(d *json.Decoder, key []byte) error {
+			if found {
+				return d.Skip()
+			}
+			switch string(key) {
+			case "inline_keyboard":
+				found = true
+				s.Type = InlineKeyboardMarkupSendVoiceReplyMarkup
+			case "keyboard":
+				found = true
+				s.Type = ReplyKeyboardMarkupSendVoiceReplyMarkup
+			case "resize_keyboard":
+				found = true
+				s.Type = ReplyKeyboardMarkupSendVoiceReplyMarkup
+			case "one_time_keyboard":
+				found = true
+				s.Type = ReplyKeyboardMarkupSendVoiceReplyMarkup
+			case "remove_keyboard":
+				found = true
+				s.Type = ReplyKeyboardRemoveSendVoiceReplyMarkup
+			case "force_reply":
+				found = true
+				s.Type = ForceReplySendVoiceReplyMarkup
+			case "input_field_placeholder":
+				found = true
+				s.Type = ForceReplySendVoiceReplyMarkup
+			case "selective":
+				found = true
+				s.Type = ForceReplySendVoiceReplyMarkup
+			}
+			return d.Skip()
+		})
+	}); err != nil {
+		return fmt.Errorf("capture: %w", err)
+	}
+	if !found {
+		return fmt.Errorf("unable to detect sum type variant")
+	}
+	switch s.Type {
+	case InlineKeyboardMarkupSendVoiceReplyMarkup:
+		if err := s.InlineKeyboardMarkup.ReadJSON(d); err != nil {
+			return err
+		}
+	case ReplyKeyboardMarkupSendVoiceReplyMarkup:
+		if err := s.ReplyKeyboardMarkup.ReadJSON(d); err != nil {
+			return err
+		}
+	case ReplyKeyboardRemoveSendVoiceReplyMarkup:
+		if err := s.ReplyKeyboardRemove.ReadJSON(d); err != nil {
+			return err
+		}
+	case ForceReplySendVoiceReplyMarkup:
+		if err := s.ForceReply.ReadJSON(d); err != nil {
+			return err
+		}
+	default:
+		return fmt.Errorf("inferred invalid type: %s", s.Type)
+	}
+	return nil
 }
 
 // WriteJSON implements json.Marshaler.

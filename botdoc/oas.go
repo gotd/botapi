@@ -8,7 +8,9 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/ogen-go/jx"
 	"github.com/ogen-go/ogen"
+	"golang.org/x/xerrors"
 )
 
 const (
@@ -144,17 +146,12 @@ func (a API) typeOAS(f Field) *ogen.Schema {
 		case "String or String":
 			p.Type = "string"
 		default:
-			if len(t.Sum) > 0 {
-				for _, s := range t.Sum {
-					if one := a.typeOAS(Field{Type: s}); one != nil {
-						p.OneOf = append(p.OneOf, *one)
-					}
-				}
-				// TODO(ernado): Implement
-				return nil
+			for _, s := range t.Sum {
+				p.OneOf = append(p.OneOf, ogen.Schema{
+					Ref: "#/components/schemas/" + s.Name,
+				})
 			}
-			fmt.Println("unknown", t.Item)
-			return nil
+			return p
 		}
 	}
 	if p.Ref != "" {
@@ -165,16 +162,14 @@ func (a API) typeOAS(f Field) *ogen.Schema {
 
 func (a API) fieldOAS(parent *ogen.Schema, f Field) *ogen.Schema {
 	p := a.typeOAS(f)
-	if !f.Optional {
+	if parent != nil && !f.Optional {
 		parent.Required = append(parent.Required, f.Name)
 	}
 	return p
 }
 
 // OAS generates OpenAPI v3 Specification from API definition.
-//
-//nolint:dupl // TODO(ernado): refactor
-func (a API) OAS() *ogen.Spec {
+func (a API) OAS() (*ogen.Spec, error) {
 	c := &ogen.Components{
 		Schemas:   map[string]ogen.Schema{},
 		Responses: map[string]ogen.Response{},
@@ -187,19 +182,75 @@ func (a API) OAS() *ogen.Spec {
 			Type:        "object",
 			Properties:  map[string]ogen.Schema{},
 		}
+		if d.Ret != nil && d.Ret.Kind == KindSum {
+			s.Properties = nil
+			p := a.typeOAS(Field{Type: *d.Ret})
+			s.OneOf = p.OneOf
+			c.Schemas[d.Name] = s
+			continue
+		}
 		for _, f := range d.Fields {
-			if p := a.fieldOAS(&s, f); p != nil {
-				s.Properties[f.Name] = *p
-				s.XPropertiesOrder = append(s.XPropertiesOrder, f.Name)
+			p := a.fieldOAS(&s, f)
+			if p == nil {
+				return nil, xerrors.Errorf("unable to generate type for %s", f.Type)
 			}
+			s.Properties[f.Name] = *p
+			s.XPropertiesOrder = append(s.XPropertiesOrder, f.Name)
 		}
 		c.Schemas[d.Name] = s
 	}
 
-	c.Schemas["InlineKeyboardMarkup"] = ogen.Schema{
-		Description: "Hack",
-		Type:        "string",
+	// Second pass for sum types.
+	discriminator := map[string]*ogen.Discriminator{}
+Schemas:
+	for k, s := range c.Schemas {
+		if len(s.OneOf) == 0 {
+			continue
+		}
+		for _, o := range s.OneOf {
+			if o.Ref == "" {
+				continue Schemas
+			}
+			target := path.Base(o.Ref)
+			one, ok := c.Schemas[target]
+			if !ok {
+				return nil, xerrors.Errorf("failed to find %s of $s in schemas", target, k)
+			}
+			var def []byte
+			for _, name := range []string{
+				"type",
+				"source",
+			} {
+				p, ok := one.Properties[name]
+				if !ok {
+					continue
+				}
+				if len(p.Default) == 0 {
+					continue
+				}
+
+				def = p.Default
+				if s.Discriminator == nil {
+					s.Discriminator = &ogen.Discriminator{
+						PropertyName: name,
+						Mapping:      map[string]string{},
+					}
+				}
+				break
+			}
+			if len(def) == 0 {
+				continue
+			}
+			discriminator[o.Ref] = s.Discriminator
+			v, err := jx.DecodeBytes(def).Str()
+			if err != nil {
+				return nil, xerrors.Errorf("failed to decode default: %w", err)
+			}
+			s.Discriminator.Mapping[v] = path.Base(o.Ref)
+		}
+		c.Schemas[k] = s
 	}
+
 	c.Schemas["InlineQueryResult"] = ogen.Schema{
 		Description: "Hack",
 		Type:        "string",
@@ -297,10 +348,39 @@ func (a API) OAS() *ogen.Spec {
 			Properties:  map[string]ogen.Schema{},
 		}
 		for _, f := range m.Fields {
-			if p := a.fieldOAS(&s, f); p != nil {
-				s.Properties[f.Name] = *p
-				s.XPropertiesOrder = append(s.XPropertiesOrder, f.Name)
+			p := a.fieldOAS(&s, f)
+			oneOf := p.OneOf
+			if p.Items != nil {
+				oneOf = p.Items.OneOf
 			}
+			var d *ogen.Discriminator
+			for _, s := range oneOf {
+				if d != nil {
+					break
+				}
+				d = discriminator[s.Ref]
+			}
+			if d != nil {
+				df := &ogen.Discriminator{
+					PropertyName: d.PropertyName,
+					Mapping:      map[string]string{},
+				}
+				// Copy only existing variants of oneOf.
+				for _, o := range oneOf {
+					for k, v := range d.Mapping {
+						if v == path.Base(o.Ref) {
+							df.Mapping[k] = v
+						}
+					}
+				}
+				if p.Items != nil {
+					p.Items.Discriminator = df
+				} else {
+					p.Discriminator = df
+				}
+			}
+			s.Properties[f.Name] = *p
+			s.XPropertiesOrder = append(s.XPropertiesOrder, f.Name)
 		}
 
 		schemaName := m.Name
@@ -370,5 +450,5 @@ func (a API) OAS() *ogen.Spec {
 		},
 		Paths:      p,
 		Components: c,
-	}
+	}, nil
 }

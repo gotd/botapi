@@ -220,7 +220,10 @@ func Extract(doc *goquery.Document) (a API) {
 		}
 
 		// Detect definition of sum-types.
-		var probablySum bool
+		var (
+			probablySum    bool
+			probablyMarker string
+		)
 		for _, sumMarker := range []string{
 			`It should be one of`,
 			`Telegram clients currently support the following`,
@@ -228,12 +231,19 @@ func Extract(doc *goquery.Document) (a API) {
 		} {
 			if strings.Contains(d.Description, sumMarker) {
 				probablySum = true
+				probablyMarker = sumMarker
 			}
 		}
 		if s.Is("ul") && probablySum {
 			t := &Type{
 				Kind: KindSum,
 			}
+			if strings.Contains(d.Description, `It should be one of`) {
+				d.Description = strings.TrimSpace(
+					strings.ReplaceAll(d.Description, `It should be one of`, ``),
+				)
+			}
+			d.Description = strings.ReplaceAll(d.Description, probablyMarker, "")
 			s.Find("li").Each(func(i int, s *goquery.Selection) {
 				t.Sum = append(t.Sum, ParseType(s.Text()))
 			})
