@@ -96,8 +96,9 @@ github.com/modern-go/concurrent v0.0.0-20180228061459-e0a39a4cb421/go.mod h1:6dJ
 github.com/modern-go/reflect2 v0.0.0-20180701023420-4b7aa43c6742/go.mod h1:bx2lNnkwVCuqBIxFjflWJWanXIb3RllmbCylyMrvgv0=
 github.com/modern-go/reflect2 v1.0.2 h1:xBagoLtFs94CBntxluKeaWgTMpvLxC4ur3nMaC9Gz0M=
 github.com/modern-go/reflect2 v1.0.2/go.mod h1:yWuevngMOJpCy52FWWMvUC8ws7m/LJsjYzDa0/r8luk=
-github.com/ogen-go/jx v0.11.1 h1:9wwGDym76nawyGVuLb9Gotg9JZomFGuOjFNXRhVFtHA=
 github.com/ogen-go/jx v0.11.1/go.mod h1:VQwKIVG6Z7dqiufvEjzY1t/66pWKvJMro5dOx9t9PjU=
+github.com/ogen-go/jx v0.13.1 h1:c7DHu4p8U3DYkIUT4xqMCmYkhz3m/lSwRUHiUObAmHg=
+github.com/ogen-go/jx v0.13.1/go.mod h1:VQwKIVG6Z7dqiufvEjzY1t/66pWKvJMro5dOx9t9PjU=
 github.com/ogen-go/ogen v0.0.0-20211101070901-7cbbad0112d9 h1:saiT5ip38X9cE7tedc222lbqDIeqjVlv60BDzg6VO4U=
 github.com/ogen-go/ogen v0.0.0-20211101070901-7cbbad0112d9/go.mod h1:v1hqNSGuqhQafpcMRaMOrkoQjo17SScINRnIeRn751I=
 github.com/pkg/diff v0.0.0-20210226163009-20ebb0f2a09e/go.mod h1:pJLUxLENpZxwdsKMEsNbx1VGcRFpLqf3715MtcvvzbA=

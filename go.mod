@@ -8,7 +8,7 @@ require (
 	github.com/go-chi/chi/v5 v5.0.5
 	github.com/google/uuid v1.3.0
 	github.com/gotd/td v0.51.2
-	github.com/ogen-go/jx v0.11.1
+	github.com/ogen-go/jx v0.13.1
 	github.com/ogen-go/ogen v0.0.0-20211101070901-7cbbad0112d9
 	github.com/stretchr/testify v1.7.0
 	go.opentelemetry.io/otel v1.1.0
