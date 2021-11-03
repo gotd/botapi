@@ -214,7 +214,7 @@ Schemas:
 			target := path.Base(o.Ref)
 			one, ok := c.Schemas[target]
 			if !ok {
-				return nil, xerrors.Errorf("failed to find %s of $s in schemas", target, k)
+				return nil, xerrors.Errorf("failed to find %s of %s in schemas", target, k)
 			}
 			var def []byte
 			for _, name := range []string{
