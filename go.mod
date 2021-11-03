@@ -8,14 +8,15 @@ require (
 	github.com/go-chi/chi/v5 v5.0.5
 	github.com/google/uuid v1.3.0
 	github.com/gotd/td v0.51.2
-	github.com/ogen-go/jx v0.13.1
-	github.com/ogen-go/ogen v0.0.0-20211101070901-7cbbad0112d9
+	github.com/ogen-go/errors v0.4.0
+	github.com/ogen-go/jx v0.13.3
+	github.com/ogen-go/ogen v0.0.0-20211103155652-e82a1cecaf69
 	github.com/stretchr/testify v1.7.0
 	go.opentelemetry.io/otel v1.1.0
 	go.opentelemetry.io/otel/metric v0.24.0
 	go.opentelemetry.io/otel/trace v1.1.0
 	go.uber.org/zap v1.19.1
-	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1
+	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
 	gopkg.in/tucnak/telebot.v2 v2.4.0
 )
 

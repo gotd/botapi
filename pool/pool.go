@@ -5,7 +5,6 @@ import (
 	"context"
 	"crypto/sha256"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"os"
 	"strconv"
@@ -13,8 +12,8 @@ import (
 	"sync"
 	"time"
 
+	"github.com/ogen-go/errors"
 	"go.uber.org/zap"
-	"golang.org/x/xerrors"
 
 	"github.com/gotd/td/session"
 	"github.com/gotd/td/telegram"
@@ -40,7 +39,7 @@ func (s *fileStorage) Store(ctx context.Context, id string, data []byte) error {
 		// Blank initial session.
 	} else if err == nil {
 		if err := json.Unmarshal(b, &decoded); err != nil {
-			return xerrors.Errorf("unmarshal session file: %w", err)
+			return errors.Wrap(err, "unmarshal session file")
 		}
 	}
 	if decoded.Data == nil {

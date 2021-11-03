@@ -13,7 +13,7 @@ import (
 	"path/filepath"
 
 	"github.com/PuerkitoBio/goquery"
-	"golang.org/x/xerrors"
+	"github.com/ogen-go/errors"
 
 	"github.com/gotd/botapi/botdoc"
 )
@@ -29,28 +29,28 @@ func run(ctx context.Context) error {
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, arg.URL, nil)
 	if err != nil {
-		return xerrors.Errorf("req: %w", err)
+		return errors.Wrap(err, "req")
 	}
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
-		return xerrors.Errorf("do: %w", err)
+		return errors.Wrap(err, "do")
 	}
 
 	defer func() { _ = res.Body.Close() }()
 	switch res.StatusCode {
 	case http.StatusOK: // ok
 	default:
-		return xerrors.Errorf("code %d: %s", res.StatusCode, res.Status)
+		return errors.Errorf("code %d: %s", res.StatusCode, res.Status)
 	}
 
 	data, err := io.ReadAll(res.Body)
 	if err != nil {
-		return xerrors.Errorf("read: %w", err)
+		return errors.Wrap(err, "read")
 	}
 
 	doc, err := goquery.NewDocumentFromReader(bytes.NewReader(data))
 	if err != nil {
-		return xerrors.Errorf("parse: %w", err)
+		return errors.Wrap(err, "parse")
 	}
 
 	api := botdoc.Extract(doc)
@@ -59,14 +59,14 @@ func run(ctx context.Context) error {
 	e.SetIndent("", "  ")
 	s, err := api.OAS()
 	if err != nil {
-		return xerrors.Errorf("generate: %w", err)
+		return errors.Wrap(err, "generate")
 	}
 	if err := e.Encode(s); err != nil {
-		return xerrors.Errorf("encode: %w", err)
+		return errors.Wrap(err, "encode")
 	}
 
 	if err := os.WriteFile(arg.Target, buf.Bytes(), 0600); err != nil {
-		return xerrors.Errorf("write: %w", err)
+		return errors.Wrap(err, "write")
 	}
 
 	return nil

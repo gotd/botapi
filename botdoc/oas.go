@@ -8,9 +8,9 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/ogen-go/errors"
 	"github.com/ogen-go/jx"
 	"github.com/ogen-go/ogen"
-	"golang.org/x/xerrors"
 )
 
 const (
@@ -192,7 +192,7 @@ func (a API) OAS() (*ogen.Spec, error) {
 		for _, f := range d.Fields {
 			p := a.fieldOAS(&s, f)
 			if p == nil {
-				return nil, xerrors.Errorf("unable to generate type for %s", f.Type)
+				return nil, errors.Errorf("unable to generate type for %s", f.Type)
 			}
 			s.Properties[f.Name] = *p
 			s.XPropertiesOrder = append(s.XPropertiesOrder, f.Name)
@@ -214,7 +214,7 @@ Schemas:
 			target := path.Base(o.Ref)
 			one, ok := c.Schemas[target]
 			if !ok {
-				return nil, xerrors.Errorf("failed to find %s of %s in schemas", target, k)
+				return nil, errors.Errorf("failed to find %s of %s in schemas", target, k)
 			}
 			var def []byte
 			for _, name := range []string{
@@ -244,7 +244,7 @@ Schemas:
 			discriminator[o.Ref] = s.Discriminator
 			v, err := jx.DecodeBytes(def).Str()
 			if err != nil {
-				return nil, xerrors.Errorf("failed to decode default: %w", err)
+				return nil, errors.Wrap(err, "failed to decode default")
 			}
 			s.Discriminator.Mapping[v] = path.Base(o.Ref)
 		}
