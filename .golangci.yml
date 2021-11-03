@@ -44,7 +44,7 @@ linters:
     - gocritic
     - gofmt
     - goimports
-    - golint
+    - revive
     - gosec
     - gosimple
     - govet
@@ -106,10 +106,10 @@ issues:
 
     - path: internal\.go
       text: "should have.+comment"
-      linters: [golint]
+      linters: [revive]
 
     # Allow underscores in package names.
-    - linters: [golint, stylecheck]
+    - linters: [revive, stylecheck]
       text: "underscores? in package names?"
 
     - linters: [staticcheck]
@@ -117,4 +117,4 @@ issues:
 
     # TODO: Rewrite
     - path: pool\.go
-      linters: [golint, govet, gocritic, misspell]
+      linters: [revive, govet, gocritic, misspell]

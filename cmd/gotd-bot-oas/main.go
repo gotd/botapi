@@ -27,7 +27,7 @@ func run(ctx context.Context) error {
 	flag.StringVar(&arg.Target, "target", filepath.Join("_oas", "openapi.json"), "output file")
 	flag.Parse()
 
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, arg.URL, nil)
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, arg.URL, http.NoBody)
 	if err != nil {
 		return errors.Wrap(err, "req")
 	}
@@ -65,7 +65,7 @@ func run(ctx context.Context) error {
 		return errors.Wrap(err, "encode")
 	}
 
-	if err := os.WriteFile(arg.Target, buf.Bytes(), 0600); err != nil {
+	if err := os.WriteFile(arg.Target, buf.Bytes(), 0o600); err != nil {
 		return errors.Wrap(err, "write")
 	}
 
