@@ -9,7 +9,7 @@ require (
 	github.com/google/uuid v1.3.0
 	github.com/gotd/td v0.51.2
 	github.com/ogen-go/errors v0.4.0
-	github.com/ogen-go/jx v0.13.3
+	github.com/ogen-go/jx v0.14.0
 	github.com/ogen-go/ogen v0.0.0-20211103155652-e82a1cecaf69
 	github.com/stretchr/testify v1.7.0
 	go.opentelemetry.io/otel v1.1.0
