@@ -15,11 +15,13 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/go-faster/errors"
+	"github.com/go-faster/jx"
 	"github.com/google/uuid"
-	"github.com/ogen-go/errors"
 	"github.com/ogen-go/ogen/conv"
 	ht "github.com/ogen-go/ogen/http"
 	"github.com/ogen-go/ogen/json"
@@ -58,6 +60,8 @@ var (
 	_ = otel.GetTracerProvider
 	_ = metric.NewNoopMeterProvider
 	_ = regexp.MustCompile
+	_ = jx.Null
+	_ = sync.Pool{}
 )
 
 // Ref: #/components/schemas/addStickerToSet
@@ -116,6 +120,12 @@ type AnswerShippingQuery struct {
 	Ok              bool             `json:"ok"`
 	ShippingOptions []ShippingOption `json:"shipping_options"`
 	ErrorMessage    OptString        `json:"error_message"`
+}
+
+// Ref: #/components/schemas/approveChatJoinRequest
+type ApproveChatJoinRequest struct {
+	ChatID ID  `json:"chat_id"`
+	UserID int `json:"user_id"`
 }
 
 // Ref: #/components/schemas/Audio
@@ -593,9 +603,11 @@ func NewForceReplyCopyMessageReplyMarkup(v ForceReply) CopyMessageReplyMarkup {
 
 // Ref: #/components/schemas/createChatInviteLink
 type CreateChatInviteLink struct {
-	ChatID      ID     `json:"chat_id"`
-	ExpireDate  OptInt `json:"expire_date"`
-	MemberLimit OptInt `json:"member_limit"`
+	ChatID             ID        `json:"chat_id"`
+	Name               OptString `json:"name"`
+	ExpireDate         OptInt    `json:"expire_date"`
+	MemberLimit        OptInt    `json:"member_limit"`
+	CreatesJoinRequest OptBool   `json:"creates_join_request"`
 }
 
 // Ref: #/components/schemas/createNewStickerSet
@@ -608,6 +620,12 @@ type CreateNewStickerSet struct {
 	Emojis        string          `json:"emojis"`
 	ContainsMasks OptBool         `json:"contains_masks"`
 	MaskPosition  OptMaskPosition `json:"mask_position"`
+}
+
+// Ref: #/components/schemas/declineChatJoinRequest
+type DeclineChatJoinRequest struct {
+	ChatID ID  `json:"chat_id"`
+	UserID int `json:"user_id"`
 }
 
 // Ref: #/components/schemas/deleteChatPhoto
@@ -660,10 +678,12 @@ type Document struct {
 
 // Ref: #/components/schemas/editChatInviteLink
 type EditChatInviteLink struct {
-	ChatID      ID     `json:"chat_id"`
-	InviteLink  string `json:"invite_link"`
-	ExpireDate  OptInt `json:"expire_date"`
-	MemberLimit OptInt `json:"member_limit"`
+	ChatID             ID        `json:"chat_id"`
+	InviteLink         string    `json:"invite_link"`
+	Name               OptString `json:"name"`
+	ExpireDate         OptInt    `json:"expire_date"`
+	MemberLimit        OptInt    `json:"member_limit"`
+	CreatesJoinRequest OptBool   `json:"creates_join_request"`
 }
 
 // Ref: #/components/schemas/editMessageCaption
@@ -742,9 +762,9 @@ type EncryptedPassportElement struct {
 
 // Ref: #/components/schemas/Error
 type Error struct {
-	Description string      `json:"description"`
-	ErrorCode   int         `json:"error_code"`
 	Ok          bool        `json:"ok"`
+	ErrorCode   int         `json:"error_code"`
+	Description string      `json:"description"`
 	Parameters  OptResponse `json:"parameters"`
 }
 
@@ -759,10 +779,12 @@ func (*ErrorStatusCode) answerCallbackQueryRes()             {}
 func (*ErrorStatusCode) answerInlineQueryRes()               {}
 func (*ErrorStatusCode) answerPreCheckoutQueryRes()          {}
 func (*ErrorStatusCode) answerShippingQueryRes()             {}
+func (*ErrorStatusCode) approveChatJoinRequestRes()          {}
 func (*ErrorStatusCode) banChatMemberRes()                   {}
 func (*ErrorStatusCode) copyMessageRes()                     {}
 func (*ErrorStatusCode) createChatInviteLinkRes()            {}
 func (*ErrorStatusCode) createNewStickerSetRes()             {}
+func (*ErrorStatusCode) declineChatJoinRequestRes()          {}
 func (*ErrorStatusCode) deleteChatPhotoRes()                 {}
 func (*ErrorStatusCode) deleteChatStickerSetRes()            {}
 func (*ErrorStatusCode) deleteMessageRes()                   {}
@@ -1003,9 +1025,6 @@ type InlineKeyboardMarkup struct {
 }
 
 type InlineQueryResult string
-
-func (a *InlineQueryResult) wrap(v string)  { *a = InlineQueryResult(v) }
-func (a *InlineQueryResult) unwrap() string { return string(*a) }
 
 // Ref: #/components/schemas/InputMedia
 // InputMedia represents sum type.
@@ -3394,8 +3413,8 @@ type RestrictChatMember struct {
 
 // Ref: #/components/schemas/Result
 type Result struct {
-	Ok     bool    `json:"ok"`
 	Result OptBool `json:"result"`
+	Ok     bool    `json:"ok"`
 }
 
 func (*Result) addStickerToSetRes()                 {}
@@ -3403,10 +3422,12 @@ func (*Result) answerCallbackQueryRes()             {}
 func (*Result) answerInlineQueryRes()               {}
 func (*Result) answerPreCheckoutQueryRes()          {}
 func (*Result) answerShippingQueryRes()             {}
+func (*Result) approveChatJoinRequestRes()          {}
 func (*Result) banChatMemberRes()                   {}
 func (*Result) copyMessageRes()                     {}
 func (*Result) createChatInviteLinkRes()            {}
 func (*Result) createNewStickerSetRes()             {}
+func (*Result) declineChatJoinRequestRes()          {}
 func (*Result) deleteChatPhotoRes()                 {}
 func (*Result) deleteChatStickerSetRes()            {}
 func (*Result) deleteMessageRes()                   {}
@@ -3459,8 +3480,8 @@ func (*Result) uploadStickerFileRes()               {}
 
 // Ref: #/components/schemas/ResultMsg
 type ResultMsg struct {
-	Ok     bool       `json:"ok"`
 	Result OptMessage `json:"result"`
+	Ok     bool       `json:"ok"`
 }
 
 func (*ResultMsg) forwardMessageRes() {}
@@ -3482,8 +3503,8 @@ func (*ResultMsg) sendVoiceRes()      {}
 
 // Ref: #/components/schemas/ResultUsr
 type ResultUsr struct {
-	Ok     bool    `json:"ok"`
 	Result OptUser `json:"result"`
+	Ok     bool    `json:"ok"`
 }
 
 func (*ResultUsr) getMeRes() {}

@@ -10,7 +10,7 @@ require (
 	github.com/gotd/td v0.51.2
 	github.com/ogen-go/errors v0.4.0
 	github.com/ogen-go/jx v0.13.3
-	github.com/ogen-go/ogen v0.0.0-20211103155652-e82a1cecaf69
+	github.com/ogen-go/ogen v0.0.0-20211110145353-06bb02ae87f0
 	github.com/stretchr/testify v1.7.0
 	go.opentelemetry.io/otel v1.1.0
 	go.opentelemetry.io/otel/metric v0.24.0
@@ -18,6 +18,11 @@ require (
 	go.uber.org/zap v1.19.1
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
 	gopkg.in/tucnak/telebot.v2 v2.4.0
+)
+
+require (
+	github.com/go-faster/errors v0.5.0
+	github.com/go-faster/jx v0.23.2
 )
 
 require (

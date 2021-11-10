@@ -21,11 +21,17 @@ func resultFor(s ogen.Schema) ogen.Schema {
 	return ogen.Schema{
 		Type:     "object",
 		Required: []string{"ok"},
-		Properties: map[string]ogen.Schema{
-			"result": s,
-			"ok": {
-				Type:    "boolean",
-				Default: []byte(`true`),
+		Properties: ogen.Properties{
+			{
+				Name:   "result",
+				Schema: s,
+			},
+			{
+				Name: "ok",
+				Schema: ogen.Schema{
+					Type:    "boolean",
+					Default: []byte(`true`),
+				},
 			},
 		},
 	}
@@ -168,6 +174,15 @@ func (a API) fieldOAS(parent *ogen.Schema, f Field) *ogen.Schema {
 	return p
 }
 
+func prop(s ogen.Properties, k string) (ogen.Schema, bool) {
+	for _, p := range s {
+		if p.Name == k {
+			return p.Schema, true
+		}
+	}
+	return ogen.Schema{}, false
+}
+
 // OAS generates OpenAPI v3 Specification from API definition.
 func (a API) OAS() (*ogen.Spec, error) {
 	c := &ogen.Components{
@@ -180,7 +195,6 @@ func (a API) OAS() (*ogen.Spec, error) {
 		s := ogen.Schema{
 			Description: fixTypos(d.Description),
 			Type:        "object",
-			Properties:  map[string]ogen.Schema{},
 		}
 		if d.Ret != nil && d.Ret.Kind == KindSum {
 			s.Properties = nil
@@ -194,8 +208,10 @@ func (a API) OAS() (*ogen.Spec, error) {
 			if p == nil {
 				return nil, errors.Errorf("unable to generate type for %s", f.Type)
 			}
-			s.Properties[f.Name] = *p
-			s.XPropertiesOrder = append(s.XPropertiesOrder, f.Name)
+			s.Properties = append(s.Properties, ogen.Property{
+				Name:   f.Name,
+				Schema: *p,
+			})
 		}
 		c.Schemas[d.Name] = s
 	}
@@ -221,7 +237,7 @@ Schemas:
 				"type",
 				"source",
 			} {
-				p, ok := one.Properties[name]
+				p, ok := prop(one.Properties, name)
 				if !ok {
 					continue
 				}
@@ -276,19 +292,25 @@ Schemas:
 	c.Schemas["Response"] = ogen.Schema{
 		Description: "Contains information about why a request was unsuccessful.",
 		Type:        "object",
-		Properties: map[string]ogen.Schema{
-			"migrate_to_chat_id": {
-				Description: "The group has been migrated to a supergroup with the specified identifier. " +
-					"This number may be greater than 32 bits and some programming languages may have " +
-					"difficulty/silent defects in interpreting it. But it is smaller than 52 bits, " +
-					"so a signed 64 bit integer or double-precision float type are safe for storing " +
-					"this identifier.",
-				Type:   "integer",
-				Format: "int64",
+		Properties: ogen.Properties{
+			{
+				Name: "migrate_to_chat_id",
+				Schema: ogen.Schema{
+					Description: "The group has been migrated to a supergroup with the specified identifier. " +
+						"This number may be greater than 32 bits and some programming languages may have " +
+						"difficulty/silent defects in interpreting it. But it is smaller than 52 bits, " +
+						"so a signed 64 bit integer or double-precision float type are safe for storing " +
+						"this identifier.",
+					Type:   "integer",
+					Format: "int64",
+				},
 			},
-			"retry_after": {
-				Description: "In case of exceeding flood control, the number of seconds left to wait before the request can be repeated",
-				Type:        "integer",
+			{
+				Name: "retry_after",
+				Schema: ogen.Schema{
+					Description: "In case of exceeding flood control, the number of seconds left to wait before the request can be repeated",
+					Type:        "integer",
+				},
 			},
 		},
 	}
@@ -297,19 +319,31 @@ Schemas:
 		Required: []string{
 			"ok", "error_code", "description",
 		},
-		Properties: map[string]ogen.Schema{
-			"ok": {
-				Default: []byte(`false`),
-				Type:    "boolean",
+		Properties: ogen.Properties{
+			{
+				Name: "ok",
+				Schema: ogen.Schema{
+					Default: []byte(`false`),
+					Type:    "boolean",
+				},
 			},
-			"error_code": {
-				Type: "integer",
+			{
+				Name: "error_code",
+				Schema: ogen.Schema{
+					Type: "integer",
+				},
 			},
-			"description": {
-				Type: "string",
+			{
+				Name: "description",
+				Schema: ogen.Schema{
+					Type: "string",
+				},
 			},
-			"parameters": {
-				Ref: "#/components/schemas/Response",
+			{
+				Name: "parameters",
+				Schema: ogen.Schema{
+					Ref: "#/components/schemas/Response",
+				},
 			},
 		},
 	}
@@ -345,7 +379,6 @@ Schemas:
 		s := ogen.Schema{
 			Description: fmt.Sprintf("Input for %s", m.Name),
 			Type:        "object",
-			Properties:  map[string]ogen.Schema{},
 		}
 		for _, f := range m.Fields {
 			p := a.fieldOAS(&s, f)
@@ -379,8 +412,10 @@ Schemas:
 					p.Discriminator = df
 				}
 			}
-			s.Properties[f.Name] = *p
-			s.XPropertiesOrder = append(s.XPropertiesOrder, f.Name)
+			s.Properties = append(s.Properties, ogen.Property{
+				Name:   f.Name,
+				Schema: *p,
+			})
 		}
 
 		schemaName := m.Name

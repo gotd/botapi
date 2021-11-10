@@ -15,11 +15,13 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/go-faster/errors"
+	"github.com/go-faster/jx"
 	"github.com/google/uuid"
-	"github.com/ogen-go/errors"
 	"github.com/ogen-go/ogen/conv"
 	ht "github.com/ogen-go/ogen/http"
 	"github.com/ogen-go/ogen/json"
@@ -58,2174 +60,2234 @@ var (
 	_ = otel.GetTracerProvider
 	_ = metric.NewNoopMeterProvider
 	_ = regexp.MustCompile
+	_ = jx.Null
+	_ = sync.Pool{}
 )
 
-func NewAddStickerToSetHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `AddStickerToSet`,
-			trace.WithAttributes(otelogen.OperationID(`addStickerToSet`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeAddStickerToSetRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.AddStickerToSet(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeAddStickerToSetResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewAnswerCallbackQueryHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `AnswerCallbackQuery`,
-			trace.WithAttributes(otelogen.OperationID(`answerCallbackQuery`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeAnswerCallbackQueryRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.AnswerCallbackQuery(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeAnswerCallbackQueryResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewAnswerInlineQueryHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `AnswerInlineQuery`,
-			trace.WithAttributes(otelogen.OperationID(`answerInlineQuery`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeAnswerInlineQueryRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.AnswerInlineQuery(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeAnswerInlineQueryResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewAnswerPreCheckoutQueryHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `AnswerPreCheckoutQuery`,
-			trace.WithAttributes(otelogen.OperationID(`answerPreCheckoutQuery`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeAnswerPreCheckoutQueryRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.AnswerPreCheckoutQuery(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeAnswerPreCheckoutQueryResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewAnswerShippingQueryHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `AnswerShippingQuery`,
-			trace.WithAttributes(otelogen.OperationID(`answerShippingQuery`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeAnswerShippingQueryRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.AnswerShippingQuery(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeAnswerShippingQueryResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewBanChatMemberHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `BanChatMember`,
-			trace.WithAttributes(otelogen.OperationID(`banChatMember`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeBanChatMemberRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.BanChatMember(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeBanChatMemberResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewCopyMessageHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `CopyMessage`,
-			trace.WithAttributes(otelogen.OperationID(`copyMessage`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeCopyMessageRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.CopyMessage(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeCopyMessageResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewCreateChatInviteLinkHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `CreateChatInviteLink`,
-			trace.WithAttributes(otelogen.OperationID(`createChatInviteLink`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeCreateChatInviteLinkRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.CreateChatInviteLink(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeCreateChatInviteLinkResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewCreateNewStickerSetHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `CreateNewStickerSet`,
-			trace.WithAttributes(otelogen.OperationID(`createNewStickerSet`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeCreateNewStickerSetRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.CreateNewStickerSet(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeCreateNewStickerSetResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewDeleteChatPhotoHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `DeleteChatPhoto`,
-			trace.WithAttributes(otelogen.OperationID(`deleteChatPhoto`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeDeleteChatPhotoRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.DeleteChatPhoto(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeDeleteChatPhotoResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewDeleteChatStickerSetHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `DeleteChatStickerSet`,
-			trace.WithAttributes(otelogen.OperationID(`deleteChatStickerSet`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeDeleteChatStickerSetRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.DeleteChatStickerSet(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeDeleteChatStickerSetResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewDeleteMessageHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `DeleteMessage`,
-			trace.WithAttributes(otelogen.OperationID(`deleteMessage`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeDeleteMessageRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.DeleteMessage(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeDeleteMessageResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewDeleteMyCommandsHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `DeleteMyCommands`,
-			trace.WithAttributes(otelogen.OperationID(`deleteMyCommands`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeDeleteMyCommandsRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.DeleteMyCommands(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeDeleteMyCommandsResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewDeleteStickerFromSetHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `DeleteStickerFromSet`,
-			trace.WithAttributes(otelogen.OperationID(`deleteStickerFromSet`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeDeleteStickerFromSetRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.DeleteStickerFromSet(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeDeleteStickerFromSetResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewDeleteWebhookHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `DeleteWebhook`,
-			trace.WithAttributes(otelogen.OperationID(`deleteWebhook`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeDeleteWebhookRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.DeleteWebhook(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeDeleteWebhookResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewEditChatInviteLinkHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `EditChatInviteLink`,
-			trace.WithAttributes(otelogen.OperationID(`editChatInviteLink`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeEditChatInviteLinkRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.EditChatInviteLink(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeEditChatInviteLinkResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewEditMessageCaptionHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `EditMessageCaption`,
-			trace.WithAttributes(otelogen.OperationID(`editMessageCaption`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeEditMessageCaptionRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.EditMessageCaption(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeEditMessageCaptionResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewEditMessageLiveLocationHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `EditMessageLiveLocation`,
-			trace.WithAttributes(otelogen.OperationID(`editMessageLiveLocation`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeEditMessageLiveLocationRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.EditMessageLiveLocation(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeEditMessageLiveLocationResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewEditMessageMediaHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `EditMessageMedia`,
-			trace.WithAttributes(otelogen.OperationID(`editMessageMedia`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeEditMessageMediaRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.EditMessageMedia(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeEditMessageMediaResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewEditMessageReplyMarkupHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `EditMessageReplyMarkup`,
-			trace.WithAttributes(otelogen.OperationID(`editMessageReplyMarkup`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeEditMessageReplyMarkupRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.EditMessageReplyMarkup(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeEditMessageReplyMarkupResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewEditMessageTextHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `EditMessageText`,
-			trace.WithAttributes(otelogen.OperationID(`editMessageText`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeEditMessageTextRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.EditMessageText(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeEditMessageTextResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewExportChatInviteLinkHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `ExportChatInviteLink`,
-			trace.WithAttributes(otelogen.OperationID(`exportChatInviteLink`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeExportChatInviteLinkRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.ExportChatInviteLink(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeExportChatInviteLinkResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewForwardMessageHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `ForwardMessage`,
-			trace.WithAttributes(otelogen.OperationID(`forwardMessage`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeForwardMessageRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.ForwardMessage(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeForwardMessageResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewGetChatHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `GetChat`,
-			trace.WithAttributes(otelogen.OperationID(`getChat`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeGetChatRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.GetChat(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeGetChatResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewGetChatAdministratorsHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `GetChatAdministrators`,
-			trace.WithAttributes(otelogen.OperationID(`getChatAdministrators`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeGetChatAdministratorsRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.GetChatAdministrators(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeGetChatAdministratorsResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewGetChatMemberHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `GetChatMember`,
-			trace.WithAttributes(otelogen.OperationID(`getChatMember`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeGetChatMemberRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.GetChatMember(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeGetChatMemberResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewGetChatMemberCountHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `GetChatMemberCount`,
-			trace.WithAttributes(otelogen.OperationID(`getChatMemberCount`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeGetChatMemberCountRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.GetChatMemberCount(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeGetChatMemberCountResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewGetFileHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `GetFile`,
-			trace.WithAttributes(otelogen.OperationID(`getFile`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeGetFileRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.GetFile(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeGetFileResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewGetGameHighScoresHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `GetGameHighScores`,
-			trace.WithAttributes(otelogen.OperationID(`getGameHighScores`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeGetGameHighScoresRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.GetGameHighScores(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeGetGameHighScoresResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewGetMeHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `GetMe`,
-			trace.WithAttributes(otelogen.OperationID(`getMe`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-
-		response, err := s.GetMe(ctx)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeGetMeResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewGetMyCommandsHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `GetMyCommands`,
-			trace.WithAttributes(otelogen.OperationID(`getMyCommands`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeGetMyCommandsRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.GetMyCommands(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeGetMyCommandsResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewGetStickerSetHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `GetStickerSet`,
-			trace.WithAttributes(otelogen.OperationID(`getStickerSet`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeGetStickerSetRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.GetStickerSet(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeGetStickerSetResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewGetUpdatesHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `GetUpdates`,
-			trace.WithAttributes(otelogen.OperationID(`getUpdates`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeGetUpdatesRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.GetUpdates(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeGetUpdatesResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewGetUserProfilePhotosHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `GetUserProfilePhotos`,
-			trace.WithAttributes(otelogen.OperationID(`getUserProfilePhotos`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeGetUserProfilePhotosRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.GetUserProfilePhotos(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeGetUserProfilePhotosResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewLeaveChatHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `LeaveChat`,
-			trace.WithAttributes(otelogen.OperationID(`leaveChat`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeLeaveChatRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.LeaveChat(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeLeaveChatResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewPinChatMessageHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `PinChatMessage`,
-			trace.WithAttributes(otelogen.OperationID(`pinChatMessage`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodePinChatMessageRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.PinChatMessage(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodePinChatMessageResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewPromoteChatMemberHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `PromoteChatMember`,
-			trace.WithAttributes(otelogen.OperationID(`promoteChatMember`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodePromoteChatMemberRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.PromoteChatMember(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodePromoteChatMemberResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewRestrictChatMemberHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `RestrictChatMember`,
-			trace.WithAttributes(otelogen.OperationID(`restrictChatMember`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeRestrictChatMemberRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.RestrictChatMember(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeRestrictChatMemberResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewRevokeChatInviteLinkHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `RevokeChatInviteLink`,
-			trace.WithAttributes(otelogen.OperationID(`revokeChatInviteLink`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeRevokeChatInviteLinkRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.RevokeChatInviteLink(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeRevokeChatInviteLinkResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewSendAnimationHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `SendAnimation`,
-			trace.WithAttributes(otelogen.OperationID(`sendAnimation`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeSendAnimationRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.SendAnimation(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeSendAnimationResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewSendAudioHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `SendAudio`,
-			trace.WithAttributes(otelogen.OperationID(`sendAudio`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeSendAudioRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.SendAudio(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeSendAudioResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewSendChatActionHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `SendChatAction`,
-			trace.WithAttributes(otelogen.OperationID(`sendChatAction`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeSendChatActionRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.SendChatAction(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeSendChatActionResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewSendContactHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `SendContact`,
-			trace.WithAttributes(otelogen.OperationID(`sendContact`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeSendContactRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.SendContact(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeSendContactResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewSendDiceHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `SendDice`,
-			trace.WithAttributes(otelogen.OperationID(`sendDice`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeSendDiceRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.SendDice(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeSendDiceResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewSendDocumentHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `SendDocument`,
-			trace.WithAttributes(otelogen.OperationID(`sendDocument`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeSendDocumentRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.SendDocument(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeSendDocumentResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewSendGameHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `SendGame`,
-			trace.WithAttributes(otelogen.OperationID(`sendGame`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeSendGameRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.SendGame(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeSendGameResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewSendInvoiceHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `SendInvoice`,
-			trace.WithAttributes(otelogen.OperationID(`sendInvoice`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeSendInvoiceRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.SendInvoice(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeSendInvoiceResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewSendLocationHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `SendLocation`,
-			trace.WithAttributes(otelogen.OperationID(`sendLocation`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeSendLocationRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.SendLocation(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeSendLocationResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewSendMediaGroupHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `SendMediaGroup`,
-			trace.WithAttributes(otelogen.OperationID(`sendMediaGroup`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeSendMediaGroupRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.SendMediaGroup(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeSendMediaGroupResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewSendMessageHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `SendMessage`,
-			trace.WithAttributes(otelogen.OperationID(`sendMessage`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeSendMessageRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.SendMessage(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeSendMessageResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewSendPhotoHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `SendPhoto`,
-			trace.WithAttributes(otelogen.OperationID(`sendPhoto`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeSendPhotoRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.SendPhoto(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeSendPhotoResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewSendPollHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `SendPoll`,
-			trace.WithAttributes(otelogen.OperationID(`sendPoll`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeSendPollRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.SendPoll(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeSendPollResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewSendStickerHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `SendSticker`,
-			trace.WithAttributes(otelogen.OperationID(`sendSticker`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeSendStickerRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.SendSticker(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeSendStickerResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewSendVenueHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `SendVenue`,
-			trace.WithAttributes(otelogen.OperationID(`sendVenue`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeSendVenueRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.SendVenue(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeSendVenueResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewSendVideoHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `SendVideo`,
-			trace.WithAttributes(otelogen.OperationID(`sendVideo`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeSendVideoRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.SendVideo(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeSendVideoResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewSendVideoNoteHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `SendVideoNote`,
-			trace.WithAttributes(otelogen.OperationID(`sendVideoNote`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeSendVideoNoteRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.SendVideoNote(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeSendVideoNoteResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewSendVoiceHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `SendVoice`,
-			trace.WithAttributes(otelogen.OperationID(`sendVoice`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeSendVoiceRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.SendVoice(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeSendVoiceResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewSetChatAdministratorCustomTitleHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `SetChatAdministratorCustomTitle`,
-			trace.WithAttributes(otelogen.OperationID(`setChatAdministratorCustomTitle`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeSetChatAdministratorCustomTitleRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.SetChatAdministratorCustomTitle(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeSetChatAdministratorCustomTitleResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewSetChatDescriptionHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `SetChatDescription`,
-			trace.WithAttributes(otelogen.OperationID(`setChatDescription`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeSetChatDescriptionRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.SetChatDescription(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeSetChatDescriptionResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewSetChatPermissionsHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `SetChatPermissions`,
-			trace.WithAttributes(otelogen.OperationID(`setChatPermissions`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeSetChatPermissionsRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.SetChatPermissions(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeSetChatPermissionsResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewSetChatPhotoHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `SetChatPhoto`,
-			trace.WithAttributes(otelogen.OperationID(`setChatPhoto`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeSetChatPhotoRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.SetChatPhoto(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeSetChatPhotoResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewSetChatStickerSetHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `SetChatStickerSet`,
-			trace.WithAttributes(otelogen.OperationID(`setChatStickerSet`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeSetChatStickerSetRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.SetChatStickerSet(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeSetChatStickerSetResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewSetChatTitleHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `SetChatTitle`,
-			trace.WithAttributes(otelogen.OperationID(`setChatTitle`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeSetChatTitleRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.SetChatTitle(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeSetChatTitleResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewSetGameScoreHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `SetGameScore`,
-			trace.WithAttributes(otelogen.OperationID(`setGameScore`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeSetGameScoreRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.SetGameScore(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeSetGameScoreResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewSetMyCommandsHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `SetMyCommands`,
-			trace.WithAttributes(otelogen.OperationID(`setMyCommands`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeSetMyCommandsRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.SetMyCommands(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeSetMyCommandsResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewSetPassportDataErrorsHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `SetPassportDataErrors`,
-			trace.WithAttributes(otelogen.OperationID(`setPassportDataErrors`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeSetPassportDataErrorsRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.SetPassportDataErrors(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeSetPassportDataErrorsResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewSetStickerPositionInSetHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `SetStickerPositionInSet`,
-			trace.WithAttributes(otelogen.OperationID(`setStickerPositionInSet`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeSetStickerPositionInSetRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.SetStickerPositionInSet(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeSetStickerPositionInSetResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewSetStickerSetThumbHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `SetStickerSetThumb`,
-			trace.WithAttributes(otelogen.OperationID(`setStickerSetThumb`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeSetStickerSetThumbRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.SetStickerSetThumb(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeSetStickerSetThumbResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewSetWebhookHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `SetWebhook`,
-			trace.WithAttributes(otelogen.OperationID(`setWebhook`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeSetWebhookRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.SetWebhook(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeSetWebhookResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewStopMessageLiveLocationHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `StopMessageLiveLocation`,
-			trace.WithAttributes(otelogen.OperationID(`stopMessageLiveLocation`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeStopMessageLiveLocationRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.StopMessageLiveLocation(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeStopMessageLiveLocationResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewStopPollHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `StopPoll`,
-			trace.WithAttributes(otelogen.OperationID(`stopPoll`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeStopPollRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.StopPoll(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeStopPollResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewUnbanChatMemberHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `UnbanChatMember`,
-			trace.WithAttributes(otelogen.OperationID(`unbanChatMember`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeUnbanChatMemberRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.UnbanChatMember(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeUnbanChatMemberResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewUnpinAllChatMessagesHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `UnpinAllChatMessages`,
-			trace.WithAttributes(otelogen.OperationID(`unpinAllChatMessages`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeUnpinAllChatMessagesRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.UnpinAllChatMessages(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeUnpinAllChatMessagesResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewUnpinChatMessageHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `UnpinChatMessage`,
-			trace.WithAttributes(otelogen.OperationID(`unpinChatMessage`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeUnpinChatMessageRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.UnpinChatMessage(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeUnpinChatMessageResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
-	}
-}
-
-func NewUploadStickerFileHandler(s Server, opts ...Option) func(w http.ResponseWriter, r *http.Request) {
-	cfg := newConfig(opts...)
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := cfg.Tracer.Start(r.Context(), `UploadStickerFile`,
-			trace.WithAttributes(otelogen.OperationID(`uploadStickerFile`)),
-			trace.WithSpanKind(trace.SpanKindServer),
-		)
-		defer span.End()
-		request, err := decodeUploadStickerFileRequest(r, span)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-
-		response, err := s.UploadStickerFile(ctx, request)
-		if err != nil {
-			span.RecordError(err)
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		if err := encodeUploadStickerFileResponse(response, w, span); err != nil {
-			span.RecordError(err)
-			return
-		}
+// HandleAddStickerToSetRequest handles addStickerToSet operation.
+//
+// POST /addStickerToSet
+func (s *Server) HandleAddStickerToSetRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `AddStickerToSet`,
+		trace.WithAttributes(otelogen.OperationID(`addStickerToSet`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeAddStickerToSetRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.AddStickerToSet(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeAddStickerToSetResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleAnswerCallbackQueryRequest handles answerCallbackQuery operation.
+//
+// POST /answerCallbackQuery
+func (s *Server) HandleAnswerCallbackQueryRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `AnswerCallbackQuery`,
+		trace.WithAttributes(otelogen.OperationID(`answerCallbackQuery`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeAnswerCallbackQueryRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.AnswerCallbackQuery(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeAnswerCallbackQueryResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleAnswerInlineQueryRequest handles answerInlineQuery operation.
+//
+// POST /answerInlineQuery
+func (s *Server) HandleAnswerInlineQueryRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `AnswerInlineQuery`,
+		trace.WithAttributes(otelogen.OperationID(`answerInlineQuery`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeAnswerInlineQueryRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.AnswerInlineQuery(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeAnswerInlineQueryResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleAnswerPreCheckoutQueryRequest handles answerPreCheckoutQuery operation.
+//
+// POST /answerPreCheckoutQuery
+func (s *Server) HandleAnswerPreCheckoutQueryRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `AnswerPreCheckoutQuery`,
+		trace.WithAttributes(otelogen.OperationID(`answerPreCheckoutQuery`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeAnswerPreCheckoutQueryRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.AnswerPreCheckoutQuery(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeAnswerPreCheckoutQueryResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleAnswerShippingQueryRequest handles answerShippingQuery operation.
+//
+// POST /answerShippingQuery
+func (s *Server) HandleAnswerShippingQueryRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `AnswerShippingQuery`,
+		trace.WithAttributes(otelogen.OperationID(`answerShippingQuery`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeAnswerShippingQueryRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.AnswerShippingQuery(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeAnswerShippingQueryResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleApproveChatJoinRequestRequest handles approveChatJoinRequest operation.
+//
+// POST /approveChatJoinRequest
+func (s *Server) HandleApproveChatJoinRequestRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `ApproveChatJoinRequest`,
+		trace.WithAttributes(otelogen.OperationID(`approveChatJoinRequest`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeApproveChatJoinRequestRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.ApproveChatJoinRequest(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeApproveChatJoinRequestResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleBanChatMemberRequest handles banChatMember operation.
+//
+// POST /banChatMember
+func (s *Server) HandleBanChatMemberRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `BanChatMember`,
+		trace.WithAttributes(otelogen.OperationID(`banChatMember`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeBanChatMemberRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.BanChatMember(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeBanChatMemberResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleCopyMessageRequest handles copyMessage operation.
+//
+// POST /copyMessage
+func (s *Server) HandleCopyMessageRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `CopyMessage`,
+		trace.WithAttributes(otelogen.OperationID(`copyMessage`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeCopyMessageRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.CopyMessage(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeCopyMessageResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleCreateChatInviteLinkRequest handles createChatInviteLink operation.
+//
+// POST /createChatInviteLink
+func (s *Server) HandleCreateChatInviteLinkRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `CreateChatInviteLink`,
+		trace.WithAttributes(otelogen.OperationID(`createChatInviteLink`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeCreateChatInviteLinkRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.CreateChatInviteLink(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeCreateChatInviteLinkResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleCreateNewStickerSetRequest handles createNewStickerSet operation.
+//
+// POST /createNewStickerSet
+func (s *Server) HandleCreateNewStickerSetRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `CreateNewStickerSet`,
+		trace.WithAttributes(otelogen.OperationID(`createNewStickerSet`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeCreateNewStickerSetRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.CreateNewStickerSet(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeCreateNewStickerSetResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleDeclineChatJoinRequestRequest handles declineChatJoinRequest operation.
+//
+// POST /declineChatJoinRequest
+func (s *Server) HandleDeclineChatJoinRequestRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `DeclineChatJoinRequest`,
+		trace.WithAttributes(otelogen.OperationID(`declineChatJoinRequest`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeDeclineChatJoinRequestRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.DeclineChatJoinRequest(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeDeclineChatJoinRequestResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleDeleteChatPhotoRequest handles deleteChatPhoto operation.
+//
+// POST /deleteChatPhoto
+func (s *Server) HandleDeleteChatPhotoRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `DeleteChatPhoto`,
+		trace.WithAttributes(otelogen.OperationID(`deleteChatPhoto`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeDeleteChatPhotoRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.DeleteChatPhoto(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeDeleteChatPhotoResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleDeleteChatStickerSetRequest handles deleteChatStickerSet operation.
+//
+// POST /deleteChatStickerSet
+func (s *Server) HandleDeleteChatStickerSetRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `DeleteChatStickerSet`,
+		trace.WithAttributes(otelogen.OperationID(`deleteChatStickerSet`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeDeleteChatStickerSetRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.DeleteChatStickerSet(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeDeleteChatStickerSetResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleDeleteMessageRequest handles deleteMessage operation.
+//
+// POST /deleteMessage
+func (s *Server) HandleDeleteMessageRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `DeleteMessage`,
+		trace.WithAttributes(otelogen.OperationID(`deleteMessage`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeDeleteMessageRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.DeleteMessage(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeDeleteMessageResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleDeleteMyCommandsRequest handles deleteMyCommands operation.
+//
+// POST /deleteMyCommands
+func (s *Server) HandleDeleteMyCommandsRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `DeleteMyCommands`,
+		trace.WithAttributes(otelogen.OperationID(`deleteMyCommands`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeDeleteMyCommandsRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.DeleteMyCommands(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeDeleteMyCommandsResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleDeleteStickerFromSetRequest handles deleteStickerFromSet operation.
+//
+// POST /deleteStickerFromSet
+func (s *Server) HandleDeleteStickerFromSetRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `DeleteStickerFromSet`,
+		trace.WithAttributes(otelogen.OperationID(`deleteStickerFromSet`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeDeleteStickerFromSetRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.DeleteStickerFromSet(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeDeleteStickerFromSetResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleDeleteWebhookRequest handles deleteWebhook operation.
+//
+// POST /deleteWebhook
+func (s *Server) HandleDeleteWebhookRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `DeleteWebhook`,
+		trace.WithAttributes(otelogen.OperationID(`deleteWebhook`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeDeleteWebhookRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.DeleteWebhook(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeDeleteWebhookResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleEditChatInviteLinkRequest handles editChatInviteLink operation.
+//
+// POST /editChatInviteLink
+func (s *Server) HandleEditChatInviteLinkRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `EditChatInviteLink`,
+		trace.WithAttributes(otelogen.OperationID(`editChatInviteLink`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeEditChatInviteLinkRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.EditChatInviteLink(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeEditChatInviteLinkResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleEditMessageCaptionRequest handles editMessageCaption operation.
+//
+// POST /editMessageCaption
+func (s *Server) HandleEditMessageCaptionRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `EditMessageCaption`,
+		trace.WithAttributes(otelogen.OperationID(`editMessageCaption`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeEditMessageCaptionRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.EditMessageCaption(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeEditMessageCaptionResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleEditMessageLiveLocationRequest handles editMessageLiveLocation operation.
+//
+// POST /editMessageLiveLocation
+func (s *Server) HandleEditMessageLiveLocationRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `EditMessageLiveLocation`,
+		trace.WithAttributes(otelogen.OperationID(`editMessageLiveLocation`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeEditMessageLiveLocationRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.EditMessageLiveLocation(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeEditMessageLiveLocationResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleEditMessageMediaRequest handles editMessageMedia operation.
+//
+// POST /editMessageMedia
+func (s *Server) HandleEditMessageMediaRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `EditMessageMedia`,
+		trace.WithAttributes(otelogen.OperationID(`editMessageMedia`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeEditMessageMediaRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.EditMessageMedia(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeEditMessageMediaResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleEditMessageReplyMarkupRequest handles editMessageReplyMarkup operation.
+//
+// POST /editMessageReplyMarkup
+func (s *Server) HandleEditMessageReplyMarkupRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `EditMessageReplyMarkup`,
+		trace.WithAttributes(otelogen.OperationID(`editMessageReplyMarkup`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeEditMessageReplyMarkupRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.EditMessageReplyMarkup(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeEditMessageReplyMarkupResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleEditMessageTextRequest handles editMessageText operation.
+//
+// POST /editMessageText
+func (s *Server) HandleEditMessageTextRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `EditMessageText`,
+		trace.WithAttributes(otelogen.OperationID(`editMessageText`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeEditMessageTextRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.EditMessageText(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeEditMessageTextResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleExportChatInviteLinkRequest handles exportChatInviteLink operation.
+//
+// POST /exportChatInviteLink
+func (s *Server) HandleExportChatInviteLinkRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `ExportChatInviteLink`,
+		trace.WithAttributes(otelogen.OperationID(`exportChatInviteLink`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeExportChatInviteLinkRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.ExportChatInviteLink(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeExportChatInviteLinkResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleForwardMessageRequest handles forwardMessage operation.
+//
+// POST /forwardMessage
+func (s *Server) HandleForwardMessageRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `ForwardMessage`,
+		trace.WithAttributes(otelogen.OperationID(`forwardMessage`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeForwardMessageRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.ForwardMessage(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeForwardMessageResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleGetChatRequest handles getChat operation.
+//
+// POST /getChat
+func (s *Server) HandleGetChatRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `GetChat`,
+		trace.WithAttributes(otelogen.OperationID(`getChat`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeGetChatRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.GetChat(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeGetChatResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleGetChatAdministratorsRequest handles getChatAdministrators operation.
+//
+// POST /getChatAdministrators
+func (s *Server) HandleGetChatAdministratorsRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `GetChatAdministrators`,
+		trace.WithAttributes(otelogen.OperationID(`getChatAdministrators`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeGetChatAdministratorsRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.GetChatAdministrators(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeGetChatAdministratorsResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleGetChatMemberRequest handles getChatMember operation.
+//
+// POST /getChatMember
+func (s *Server) HandleGetChatMemberRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `GetChatMember`,
+		trace.WithAttributes(otelogen.OperationID(`getChatMember`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeGetChatMemberRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.GetChatMember(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeGetChatMemberResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleGetChatMemberCountRequest handles getChatMemberCount operation.
+//
+// POST /getChatMemberCount
+func (s *Server) HandleGetChatMemberCountRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `GetChatMemberCount`,
+		trace.WithAttributes(otelogen.OperationID(`getChatMemberCount`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeGetChatMemberCountRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.GetChatMemberCount(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeGetChatMemberCountResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleGetFileRequest handles getFile operation.
+//
+// POST /getFile
+func (s *Server) HandleGetFileRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `GetFile`,
+		trace.WithAttributes(otelogen.OperationID(`getFile`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeGetFileRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.GetFile(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeGetFileResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleGetGameHighScoresRequest handles getGameHighScores operation.
+//
+// POST /getGameHighScores
+func (s *Server) HandleGetGameHighScoresRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `GetGameHighScores`,
+		trace.WithAttributes(otelogen.OperationID(`getGameHighScores`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeGetGameHighScoresRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.GetGameHighScores(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeGetGameHighScoresResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleGetMeRequest handles getMe operation.
+//
+// POST /getMe
+func (s *Server) HandleGetMeRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `GetMe`,
+		trace.WithAttributes(otelogen.OperationID(`getMe`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+
+	response, err := s.h.GetMe(ctx)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeGetMeResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleGetMyCommandsRequest handles getMyCommands operation.
+//
+// POST /getMyCommands
+func (s *Server) HandleGetMyCommandsRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `GetMyCommands`,
+		trace.WithAttributes(otelogen.OperationID(`getMyCommands`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeGetMyCommandsRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.GetMyCommands(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeGetMyCommandsResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleGetStickerSetRequest handles getStickerSet operation.
+//
+// POST /getStickerSet
+func (s *Server) HandleGetStickerSetRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `GetStickerSet`,
+		trace.WithAttributes(otelogen.OperationID(`getStickerSet`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeGetStickerSetRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.GetStickerSet(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeGetStickerSetResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleGetUpdatesRequest handles getUpdates operation.
+//
+// POST /getUpdates
+func (s *Server) HandleGetUpdatesRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `GetUpdates`,
+		trace.WithAttributes(otelogen.OperationID(`getUpdates`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeGetUpdatesRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.GetUpdates(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeGetUpdatesResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleGetUserProfilePhotosRequest handles getUserProfilePhotos operation.
+//
+// POST /getUserProfilePhotos
+func (s *Server) HandleGetUserProfilePhotosRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `GetUserProfilePhotos`,
+		trace.WithAttributes(otelogen.OperationID(`getUserProfilePhotos`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeGetUserProfilePhotosRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.GetUserProfilePhotos(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeGetUserProfilePhotosResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleLeaveChatRequest handles leaveChat operation.
+//
+// POST /leaveChat
+func (s *Server) HandleLeaveChatRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `LeaveChat`,
+		trace.WithAttributes(otelogen.OperationID(`leaveChat`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeLeaveChatRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.LeaveChat(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeLeaveChatResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandlePinChatMessageRequest handles pinChatMessage operation.
+//
+// POST /pinChatMessage
+func (s *Server) HandlePinChatMessageRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `PinChatMessage`,
+		trace.WithAttributes(otelogen.OperationID(`pinChatMessage`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodePinChatMessageRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.PinChatMessage(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodePinChatMessageResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandlePromoteChatMemberRequest handles promoteChatMember operation.
+//
+// POST /promoteChatMember
+func (s *Server) HandlePromoteChatMemberRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `PromoteChatMember`,
+		trace.WithAttributes(otelogen.OperationID(`promoteChatMember`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodePromoteChatMemberRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.PromoteChatMember(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodePromoteChatMemberResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleRestrictChatMemberRequest handles restrictChatMember operation.
+//
+// POST /restrictChatMember
+func (s *Server) HandleRestrictChatMemberRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `RestrictChatMember`,
+		trace.WithAttributes(otelogen.OperationID(`restrictChatMember`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeRestrictChatMemberRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.RestrictChatMember(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeRestrictChatMemberResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleRevokeChatInviteLinkRequest handles revokeChatInviteLink operation.
+//
+// POST /revokeChatInviteLink
+func (s *Server) HandleRevokeChatInviteLinkRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `RevokeChatInviteLink`,
+		trace.WithAttributes(otelogen.OperationID(`revokeChatInviteLink`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeRevokeChatInviteLinkRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.RevokeChatInviteLink(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeRevokeChatInviteLinkResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleSendAnimationRequest handles sendAnimation operation.
+//
+// POST /sendAnimation
+func (s *Server) HandleSendAnimationRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `SendAnimation`,
+		trace.WithAttributes(otelogen.OperationID(`sendAnimation`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeSendAnimationRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.SendAnimation(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeSendAnimationResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleSendAudioRequest handles sendAudio operation.
+//
+// POST /sendAudio
+func (s *Server) HandleSendAudioRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `SendAudio`,
+		trace.WithAttributes(otelogen.OperationID(`sendAudio`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeSendAudioRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.SendAudio(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeSendAudioResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleSendChatActionRequest handles sendChatAction operation.
+//
+// POST /sendChatAction
+func (s *Server) HandleSendChatActionRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `SendChatAction`,
+		trace.WithAttributes(otelogen.OperationID(`sendChatAction`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeSendChatActionRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.SendChatAction(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeSendChatActionResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleSendContactRequest handles sendContact operation.
+//
+// POST /sendContact
+func (s *Server) HandleSendContactRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `SendContact`,
+		trace.WithAttributes(otelogen.OperationID(`sendContact`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeSendContactRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.SendContact(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeSendContactResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleSendDiceRequest handles sendDice operation.
+//
+// POST /sendDice
+func (s *Server) HandleSendDiceRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `SendDice`,
+		trace.WithAttributes(otelogen.OperationID(`sendDice`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeSendDiceRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.SendDice(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeSendDiceResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleSendDocumentRequest handles sendDocument operation.
+//
+// POST /sendDocument
+func (s *Server) HandleSendDocumentRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `SendDocument`,
+		trace.WithAttributes(otelogen.OperationID(`sendDocument`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeSendDocumentRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.SendDocument(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeSendDocumentResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleSendGameRequest handles sendGame operation.
+//
+// POST /sendGame
+func (s *Server) HandleSendGameRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `SendGame`,
+		trace.WithAttributes(otelogen.OperationID(`sendGame`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeSendGameRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.SendGame(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeSendGameResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleSendInvoiceRequest handles sendInvoice operation.
+//
+// POST /sendInvoice
+func (s *Server) HandleSendInvoiceRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `SendInvoice`,
+		trace.WithAttributes(otelogen.OperationID(`sendInvoice`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeSendInvoiceRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.SendInvoice(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeSendInvoiceResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleSendLocationRequest handles sendLocation operation.
+//
+// POST /sendLocation
+func (s *Server) HandleSendLocationRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `SendLocation`,
+		trace.WithAttributes(otelogen.OperationID(`sendLocation`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeSendLocationRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.SendLocation(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeSendLocationResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleSendMediaGroupRequest handles sendMediaGroup operation.
+//
+// POST /sendMediaGroup
+func (s *Server) HandleSendMediaGroupRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `SendMediaGroup`,
+		trace.WithAttributes(otelogen.OperationID(`sendMediaGroup`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeSendMediaGroupRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.SendMediaGroup(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeSendMediaGroupResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleSendMessageRequest handles sendMessage operation.
+//
+// POST /sendMessage
+func (s *Server) HandleSendMessageRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `SendMessage`,
+		trace.WithAttributes(otelogen.OperationID(`sendMessage`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeSendMessageRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.SendMessage(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeSendMessageResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleSendPhotoRequest handles sendPhoto operation.
+//
+// POST /sendPhoto
+func (s *Server) HandleSendPhotoRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `SendPhoto`,
+		trace.WithAttributes(otelogen.OperationID(`sendPhoto`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeSendPhotoRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.SendPhoto(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeSendPhotoResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleSendPollRequest handles sendPoll operation.
+//
+// POST /sendPoll
+func (s *Server) HandleSendPollRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `SendPoll`,
+		trace.WithAttributes(otelogen.OperationID(`sendPoll`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeSendPollRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.SendPoll(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeSendPollResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleSendStickerRequest handles sendSticker operation.
+//
+// POST /sendSticker
+func (s *Server) HandleSendStickerRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `SendSticker`,
+		trace.WithAttributes(otelogen.OperationID(`sendSticker`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeSendStickerRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.SendSticker(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeSendStickerResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleSendVenueRequest handles sendVenue operation.
+//
+// POST /sendVenue
+func (s *Server) HandleSendVenueRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `SendVenue`,
+		trace.WithAttributes(otelogen.OperationID(`sendVenue`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeSendVenueRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.SendVenue(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeSendVenueResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleSendVideoRequest handles sendVideo operation.
+//
+// POST /sendVideo
+func (s *Server) HandleSendVideoRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `SendVideo`,
+		trace.WithAttributes(otelogen.OperationID(`sendVideo`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeSendVideoRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.SendVideo(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeSendVideoResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleSendVideoNoteRequest handles sendVideoNote operation.
+//
+// POST /sendVideoNote
+func (s *Server) HandleSendVideoNoteRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `SendVideoNote`,
+		trace.WithAttributes(otelogen.OperationID(`sendVideoNote`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeSendVideoNoteRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.SendVideoNote(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeSendVideoNoteResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleSendVoiceRequest handles sendVoice operation.
+//
+// POST /sendVoice
+func (s *Server) HandleSendVoiceRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `SendVoice`,
+		trace.WithAttributes(otelogen.OperationID(`sendVoice`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeSendVoiceRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.SendVoice(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeSendVoiceResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleSetChatAdministratorCustomTitleRequest handles setChatAdministratorCustomTitle operation.
+//
+// POST /setChatAdministratorCustomTitle
+func (s *Server) HandleSetChatAdministratorCustomTitleRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `SetChatAdministratorCustomTitle`,
+		trace.WithAttributes(otelogen.OperationID(`setChatAdministratorCustomTitle`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeSetChatAdministratorCustomTitleRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.SetChatAdministratorCustomTitle(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeSetChatAdministratorCustomTitleResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleSetChatDescriptionRequest handles setChatDescription operation.
+//
+// POST /setChatDescription
+func (s *Server) HandleSetChatDescriptionRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `SetChatDescription`,
+		trace.WithAttributes(otelogen.OperationID(`setChatDescription`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeSetChatDescriptionRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.SetChatDescription(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeSetChatDescriptionResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleSetChatPermissionsRequest handles setChatPermissions operation.
+//
+// POST /setChatPermissions
+func (s *Server) HandleSetChatPermissionsRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `SetChatPermissions`,
+		trace.WithAttributes(otelogen.OperationID(`setChatPermissions`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeSetChatPermissionsRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.SetChatPermissions(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeSetChatPermissionsResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleSetChatPhotoRequest handles setChatPhoto operation.
+//
+// POST /setChatPhoto
+func (s *Server) HandleSetChatPhotoRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `SetChatPhoto`,
+		trace.WithAttributes(otelogen.OperationID(`setChatPhoto`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeSetChatPhotoRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.SetChatPhoto(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeSetChatPhotoResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleSetChatStickerSetRequest handles setChatStickerSet operation.
+//
+// POST /setChatStickerSet
+func (s *Server) HandleSetChatStickerSetRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `SetChatStickerSet`,
+		trace.WithAttributes(otelogen.OperationID(`setChatStickerSet`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeSetChatStickerSetRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.SetChatStickerSet(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeSetChatStickerSetResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleSetChatTitleRequest handles setChatTitle operation.
+//
+// POST /setChatTitle
+func (s *Server) HandleSetChatTitleRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `SetChatTitle`,
+		trace.WithAttributes(otelogen.OperationID(`setChatTitle`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeSetChatTitleRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.SetChatTitle(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeSetChatTitleResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleSetGameScoreRequest handles setGameScore operation.
+//
+// POST /setGameScore
+func (s *Server) HandleSetGameScoreRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `SetGameScore`,
+		trace.WithAttributes(otelogen.OperationID(`setGameScore`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeSetGameScoreRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.SetGameScore(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeSetGameScoreResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleSetMyCommandsRequest handles setMyCommands operation.
+//
+// POST /setMyCommands
+func (s *Server) HandleSetMyCommandsRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `SetMyCommands`,
+		trace.WithAttributes(otelogen.OperationID(`setMyCommands`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeSetMyCommandsRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.SetMyCommands(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeSetMyCommandsResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleSetPassportDataErrorsRequest handles setPassportDataErrors operation.
+//
+// POST /setPassportDataErrors
+func (s *Server) HandleSetPassportDataErrorsRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `SetPassportDataErrors`,
+		trace.WithAttributes(otelogen.OperationID(`setPassportDataErrors`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeSetPassportDataErrorsRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.SetPassportDataErrors(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeSetPassportDataErrorsResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleSetStickerPositionInSetRequest handles setStickerPositionInSet operation.
+//
+// POST /setStickerPositionInSet
+func (s *Server) HandleSetStickerPositionInSetRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `SetStickerPositionInSet`,
+		trace.WithAttributes(otelogen.OperationID(`setStickerPositionInSet`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeSetStickerPositionInSetRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.SetStickerPositionInSet(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeSetStickerPositionInSetResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleSetStickerSetThumbRequest handles setStickerSetThumb operation.
+//
+// POST /setStickerSetThumb
+func (s *Server) HandleSetStickerSetThumbRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `SetStickerSetThumb`,
+		trace.WithAttributes(otelogen.OperationID(`setStickerSetThumb`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeSetStickerSetThumbRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.SetStickerSetThumb(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeSetStickerSetThumbResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleSetWebhookRequest handles setWebhook operation.
+//
+// POST /setWebhook
+func (s *Server) HandleSetWebhookRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `SetWebhook`,
+		trace.WithAttributes(otelogen.OperationID(`setWebhook`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeSetWebhookRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.SetWebhook(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeSetWebhookResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleStopMessageLiveLocationRequest handles stopMessageLiveLocation operation.
+//
+// POST /stopMessageLiveLocation
+func (s *Server) HandleStopMessageLiveLocationRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `StopMessageLiveLocation`,
+		trace.WithAttributes(otelogen.OperationID(`stopMessageLiveLocation`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeStopMessageLiveLocationRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.StopMessageLiveLocation(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeStopMessageLiveLocationResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleStopPollRequest handles stopPoll operation.
+//
+// POST /stopPoll
+func (s *Server) HandleStopPollRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `StopPoll`,
+		trace.WithAttributes(otelogen.OperationID(`stopPoll`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeStopPollRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.StopPoll(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeStopPollResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleUnbanChatMemberRequest handles unbanChatMember operation.
+//
+// POST /unbanChatMember
+func (s *Server) HandleUnbanChatMemberRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `UnbanChatMember`,
+		trace.WithAttributes(otelogen.OperationID(`unbanChatMember`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeUnbanChatMemberRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.UnbanChatMember(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeUnbanChatMemberResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleUnpinAllChatMessagesRequest handles unpinAllChatMessages operation.
+//
+// POST /unpinAllChatMessages
+func (s *Server) HandleUnpinAllChatMessagesRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `UnpinAllChatMessages`,
+		trace.WithAttributes(otelogen.OperationID(`unpinAllChatMessages`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeUnpinAllChatMessagesRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.UnpinAllChatMessages(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeUnpinAllChatMessagesResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleUnpinChatMessageRequest handles unpinChatMessage operation.
+//
+// POST /unpinChatMessage
+func (s *Server) HandleUnpinChatMessageRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `UnpinChatMessage`,
+		trace.WithAttributes(otelogen.OperationID(`unpinChatMessage`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeUnpinChatMessageRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.UnpinChatMessage(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeUnpinChatMessageResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleUploadStickerFileRequest handles uploadStickerFile operation.
+//
+// POST /uploadStickerFile
+func (s *Server) HandleUploadStickerFileRequest(w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `UploadStickerFile`,
+		trace.WithAttributes(otelogen.OperationID(`uploadStickerFile`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeUploadStickerFileRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.UploadStickerFile(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := encodeUploadStickerFileResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
 	}
 }
 

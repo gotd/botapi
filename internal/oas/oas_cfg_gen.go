@@ -15,11 +15,13 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/go-faster/errors"
+	"github.com/go-faster/jx"
 	"github.com/google/uuid"
-	"github.com/ogen-go/errors"
 	"github.com/ogen-go/ogen/conv"
 	ht "github.com/ogen-go/ogen/http"
 	"github.com/ogen-go/ogen/json"
@@ -58,14 +60,34 @@ var (
 	_ = otel.GetTracerProvider
 	_ = metric.NewNoopMeterProvider
 	_ = regexp.MustCompile
+	_ = jx.Null
+	_ = sync.Pool{}
 )
+
+// bufPool is pool of bytes.Buffer for encoding and decoding.
+var bufPool = &sync.Pool{
+	New: func() interface{} {
+		return new(bytes.Buffer)
+	},
+}
+
+// getBuf returns buffer from pool.
+func getBuf() *bytes.Buffer {
+	return bufPool.Get().(*bytes.Buffer)
+}
+
+// putBuf puts buffer to pool.
+func putBuf(b *bytes.Buffer) {
+	b.Reset()
+	bufPool.Put(b)
+}
 
 type config struct {
 	TracerProvider trace.TracerProvider
 	Tracer         trace.Tracer
 	MeterProvider  metric.MeterProvider
 	Meter          metric.Meter
-	Client         HTTPClient
+	Client         ht.Client
 }
 
 func newConfig(opts ...Option) config {
@@ -106,7 +128,8 @@ func WithTracerProvider(provider trace.TracerProvider) Option {
 	})
 }
 
-func WithHTTPClient(client HTTPClient) Option {
+// WithClient specifies http client to use.
+func WithClient(client ht.Client) Option {
 	return optionFunc(func(cfg *config) {
 		if client != nil {
 			cfg.Client = client

@@ -15,11 +15,13 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/go-faster/errors"
+	"github.com/go-faster/jx"
 	"github.com/google/uuid"
-	"github.com/ogen-go/errors"
 	"github.com/ogen-go/ogen/conv"
 	ht "github.com/ogen-go/ogen/http"
 	"github.com/ogen-go/ogen/json"
@@ -58,12 +60,11 @@ var (
 	_ = otel.GetTracerProvider
 	_ = metric.NewNoopMeterProvider
 	_ = regexp.MustCompile
+	_ = jx.Null
+	_ = sync.Pool{}
 )
 
-type HTTPClient interface {
-	Do(req *http.Request) (*http.Response, error)
-}
-
+// Client implements OAS client.
 type Client struct {
 	serverURL *url.URL
 	cfg       config
@@ -94,7 +95,9 @@ func NewClient(serverURL string, opts ...Option) (*Client, error) {
 	return c, nil
 }
 
-// AddStickerToSet implements addStickerToSet operation.
+// AddStickerToSet invokes addStickerToSet operation.
+//
+// POST /addStickerToSet
 func (c *Client) AddStickerToSet(ctx context.Context, request AddStickerToSet) (res AddStickerToSetRes, err error) {
 	startTime := time.Now()
 	ctx, span := c.cfg.Tracer.Start(ctx, `AddStickerToSet`,
@@ -112,16 +115,22 @@ func (c *Client) AddStickerToSet(ctx context.Context, request AddStickerToSet) (
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeAddStickerToSetRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeAddStickerToSetRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/addStickerToSet"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -140,9 +149,12 @@ func (c *Client) AddStickerToSet(ctx context.Context, request AddStickerToSet) (
 	return result, nil
 }
 
-// AnswerCallbackQuery implements answerCallbackQuery operation.
+// AnswerCallbackQuery invokes answerCallbackQuery operation.
+//
+// POST /answerCallbackQuery
 func (c *Client) AnswerCallbackQuery(ctx context.Context, request AnswerCallbackQuery) (res AnswerCallbackQueryRes, err error) {
 	if err := func() error {
+
 		if err := request.Validate(); err != nil {
 			return err
 		}
@@ -166,16 +178,22 @@ func (c *Client) AnswerCallbackQuery(ctx context.Context, request AnswerCallback
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeAnswerCallbackQueryRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeAnswerCallbackQueryRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/answerCallbackQuery"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -194,9 +212,12 @@ func (c *Client) AnswerCallbackQuery(ctx context.Context, request AnswerCallback
 	return result, nil
 }
 
-// AnswerInlineQuery implements answerInlineQuery operation.
+// AnswerInlineQuery invokes answerInlineQuery operation.
+//
+// POST /answerInlineQuery
 func (c *Client) AnswerInlineQuery(ctx context.Context, request AnswerInlineQuery) (res AnswerInlineQueryRes, err error) {
 	if err := func() error {
+
 		if err := request.Validate(); err != nil {
 			return err
 		}
@@ -220,16 +241,22 @@ func (c *Client) AnswerInlineQuery(ctx context.Context, request AnswerInlineQuer
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeAnswerInlineQueryRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeAnswerInlineQueryRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/answerInlineQuery"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -248,7 +275,9 @@ func (c *Client) AnswerInlineQuery(ctx context.Context, request AnswerInlineQuer
 	return result, nil
 }
 
-// AnswerPreCheckoutQuery implements answerPreCheckoutQuery operation.
+// AnswerPreCheckoutQuery invokes answerPreCheckoutQuery operation.
+//
+// POST /answerPreCheckoutQuery
 func (c *Client) AnswerPreCheckoutQuery(ctx context.Context, request AnswerPreCheckoutQuery) (res AnswerPreCheckoutQueryRes, err error) {
 	startTime := time.Now()
 	ctx, span := c.cfg.Tracer.Start(ctx, `AnswerPreCheckoutQuery`,
@@ -266,16 +295,22 @@ func (c *Client) AnswerPreCheckoutQuery(ctx context.Context, request AnswerPreCh
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeAnswerPreCheckoutQueryRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeAnswerPreCheckoutQueryRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/answerPreCheckoutQuery"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -294,9 +329,12 @@ func (c *Client) AnswerPreCheckoutQuery(ctx context.Context, request AnswerPreCh
 	return result, nil
 }
 
-// AnswerShippingQuery implements answerShippingQuery operation.
+// AnswerShippingQuery invokes answerShippingQuery operation.
+//
+// POST /answerShippingQuery
 func (c *Client) AnswerShippingQuery(ctx context.Context, request AnswerShippingQuery) (res AnswerShippingQueryRes, err error) {
 	if err := func() error {
+
 		if err := request.Validate(); err != nil {
 			return err
 		}
@@ -320,16 +358,22 @@ func (c *Client) AnswerShippingQuery(ctx context.Context, request AnswerShipping
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeAnswerShippingQueryRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeAnswerShippingQueryRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/answerShippingQuery"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -348,7 +392,63 @@ func (c *Client) AnswerShippingQuery(ctx context.Context, request AnswerShipping
 	return result, nil
 }
 
-// BanChatMember implements banChatMember operation.
+// ApproveChatJoinRequest invokes approveChatJoinRequest operation.
+//
+// POST /approveChatJoinRequest
+func (c *Client) ApproveChatJoinRequest(ctx context.Context, request ApproveChatJoinRequest) (res ApproveChatJoinRequestRes, err error) {
+	startTime := time.Now()
+	ctx, span := c.cfg.Tracer.Start(ctx, `ApproveChatJoinRequest`,
+		trace.WithAttributes(otelogen.OperationID(`approveChatJoinRequest`)),
+		trace.WithSpanKind(trace.SpanKindClient),
+	)
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			c.errors.Add(ctx, 1)
+		} else {
+			elapsedDuration := time.Since(startTime)
+			c.duration.Record(ctx, elapsedDuration.Microseconds())
+		}
+		span.End()
+	}()
+	c.requests.Add(ctx, 1)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeApproveChatJoinRequestRequestJSON(request, span)
+	if err != nil {
+		return res, err
+	}
+	defer putBuf(buf)
+	reqBody = buf
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/approveChatJoinRequest"
+
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeApproveChatJoinRequestResponse(resp, span)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
+// BanChatMember invokes banChatMember operation.
+//
+// POST /banChatMember
 func (c *Client) BanChatMember(ctx context.Context, request BanChatMember) (res BanChatMemberRes, err error) {
 	startTime := time.Now()
 	ctx, span := c.cfg.Tracer.Start(ctx, `BanChatMember`,
@@ -366,16 +466,22 @@ func (c *Client) BanChatMember(ctx context.Context, request BanChatMember) (res 
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeBanChatMemberRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeBanChatMemberRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/banChatMember"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -394,9 +500,12 @@ func (c *Client) BanChatMember(ctx context.Context, request BanChatMember) (res 
 	return result, nil
 }
 
-// CopyMessage implements copyMessage operation.
+// CopyMessage invokes copyMessage operation.
+//
+// POST /copyMessage
 func (c *Client) CopyMessage(ctx context.Context, request CopyMessage) (res CopyMessageRes, err error) {
 	if err := func() error {
+
 		if err := request.Validate(); err != nil {
 			return err
 		}
@@ -420,16 +529,22 @@ func (c *Client) CopyMessage(ctx context.Context, request CopyMessage) (res Copy
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeCopyMessageRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeCopyMessageRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/copyMessage"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -448,8 +563,19 @@ func (c *Client) CopyMessage(ctx context.Context, request CopyMessage) (res Copy
 	return result, nil
 }
 
-// CreateChatInviteLink implements createChatInviteLink operation.
+// CreateChatInviteLink invokes createChatInviteLink operation.
+//
+// POST /createChatInviteLink
 func (c *Client) CreateChatInviteLink(ctx context.Context, request CreateChatInviteLink) (res CreateChatInviteLinkRes, err error) {
+	if err := func() error {
+
+		if err := request.Validate(); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return res, errors.Wrap(err, "validate")
+	}
 	startTime := time.Now()
 	ctx, span := c.cfg.Tracer.Start(ctx, `CreateChatInviteLink`,
 		trace.WithAttributes(otelogen.OperationID(`createChatInviteLink`)),
@@ -466,16 +592,22 @@ func (c *Client) CreateChatInviteLink(ctx context.Context, request CreateChatInv
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeCreateChatInviteLinkRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeCreateChatInviteLinkRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/createChatInviteLink"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -494,9 +626,12 @@ func (c *Client) CreateChatInviteLink(ctx context.Context, request CreateChatInv
 	return result, nil
 }
 
-// CreateNewStickerSet implements createNewStickerSet operation.
+// CreateNewStickerSet invokes createNewStickerSet operation.
+//
+// POST /createNewStickerSet
 func (c *Client) CreateNewStickerSet(ctx context.Context, request CreateNewStickerSet) (res CreateNewStickerSetRes, err error) {
 	if err := func() error {
+
 		if err := request.Validate(); err != nil {
 			return err
 		}
@@ -520,16 +655,22 @@ func (c *Client) CreateNewStickerSet(ctx context.Context, request CreateNewStick
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeCreateNewStickerSetRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeCreateNewStickerSetRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/createNewStickerSet"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -548,7 +689,63 @@ func (c *Client) CreateNewStickerSet(ctx context.Context, request CreateNewStick
 	return result, nil
 }
 
-// DeleteChatPhoto implements deleteChatPhoto operation.
+// DeclineChatJoinRequest invokes declineChatJoinRequest operation.
+//
+// POST /declineChatJoinRequest
+func (c *Client) DeclineChatJoinRequest(ctx context.Context, request DeclineChatJoinRequest) (res DeclineChatJoinRequestRes, err error) {
+	startTime := time.Now()
+	ctx, span := c.cfg.Tracer.Start(ctx, `DeclineChatJoinRequest`,
+		trace.WithAttributes(otelogen.OperationID(`declineChatJoinRequest`)),
+		trace.WithSpanKind(trace.SpanKindClient),
+	)
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			c.errors.Add(ctx, 1)
+		} else {
+			elapsedDuration := time.Since(startTime)
+			c.duration.Record(ctx, elapsedDuration.Microseconds())
+		}
+		span.End()
+	}()
+	c.requests.Add(ctx, 1)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeDeclineChatJoinRequestRequestJSON(request, span)
+	if err != nil {
+		return res, err
+	}
+	defer putBuf(buf)
+	reqBody = buf
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/declineChatJoinRequest"
+
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeDeclineChatJoinRequestResponse(resp, span)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
+// DeleteChatPhoto invokes deleteChatPhoto operation.
+//
+// POST /deleteChatPhoto
 func (c *Client) DeleteChatPhoto(ctx context.Context, request DeleteChatPhoto) (res DeleteChatPhotoRes, err error) {
 	startTime := time.Now()
 	ctx, span := c.cfg.Tracer.Start(ctx, `DeleteChatPhoto`,
@@ -566,16 +763,22 @@ func (c *Client) DeleteChatPhoto(ctx context.Context, request DeleteChatPhoto) (
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeDeleteChatPhotoRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeDeleteChatPhotoRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/deleteChatPhoto"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -594,7 +797,9 @@ func (c *Client) DeleteChatPhoto(ctx context.Context, request DeleteChatPhoto) (
 	return result, nil
 }
 
-// DeleteChatStickerSet implements deleteChatStickerSet operation.
+// DeleteChatStickerSet invokes deleteChatStickerSet operation.
+//
+// POST /deleteChatStickerSet
 func (c *Client) DeleteChatStickerSet(ctx context.Context, request DeleteChatStickerSet) (res DeleteChatStickerSetRes, err error) {
 	startTime := time.Now()
 	ctx, span := c.cfg.Tracer.Start(ctx, `DeleteChatStickerSet`,
@@ -612,16 +817,22 @@ func (c *Client) DeleteChatStickerSet(ctx context.Context, request DeleteChatSti
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeDeleteChatStickerSetRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeDeleteChatStickerSetRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/deleteChatStickerSet"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -640,7 +851,9 @@ func (c *Client) DeleteChatStickerSet(ctx context.Context, request DeleteChatSti
 	return result, nil
 }
 
-// DeleteMessage implements deleteMessage operation.
+// DeleteMessage invokes deleteMessage operation.
+//
+// POST /deleteMessage
 func (c *Client) DeleteMessage(ctx context.Context, request DeleteMessage) (res DeleteMessageRes, err error) {
 	startTime := time.Now()
 	ctx, span := c.cfg.Tracer.Start(ctx, `DeleteMessage`,
@@ -658,16 +871,22 @@ func (c *Client) DeleteMessage(ctx context.Context, request DeleteMessage) (res 
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeDeleteMessageRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeDeleteMessageRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/deleteMessage"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -686,7 +905,9 @@ func (c *Client) DeleteMessage(ctx context.Context, request DeleteMessage) (res 
 	return result, nil
 }
 
-// DeleteMyCommands implements deleteMyCommands operation.
+// DeleteMyCommands invokes deleteMyCommands operation.
+//
+// POST /deleteMyCommands
 func (c *Client) DeleteMyCommands(ctx context.Context, request DeleteMyCommands) (res DeleteMyCommandsRes, err error) {
 	startTime := time.Now()
 	ctx, span := c.cfg.Tracer.Start(ctx, `DeleteMyCommands`,
@@ -704,16 +925,22 @@ func (c *Client) DeleteMyCommands(ctx context.Context, request DeleteMyCommands)
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeDeleteMyCommandsRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeDeleteMyCommandsRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/deleteMyCommands"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -732,7 +959,9 @@ func (c *Client) DeleteMyCommands(ctx context.Context, request DeleteMyCommands)
 	return result, nil
 }
 
-// DeleteStickerFromSet implements deleteStickerFromSet operation.
+// DeleteStickerFromSet invokes deleteStickerFromSet operation.
+//
+// POST /deleteStickerFromSet
 func (c *Client) DeleteStickerFromSet(ctx context.Context, request DeleteStickerFromSet) (res DeleteStickerFromSetRes, err error) {
 	startTime := time.Now()
 	ctx, span := c.cfg.Tracer.Start(ctx, `DeleteStickerFromSet`,
@@ -750,16 +979,22 @@ func (c *Client) DeleteStickerFromSet(ctx context.Context, request DeleteSticker
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeDeleteStickerFromSetRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeDeleteStickerFromSetRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/deleteStickerFromSet"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -778,7 +1013,9 @@ func (c *Client) DeleteStickerFromSet(ctx context.Context, request DeleteSticker
 	return result, nil
 }
 
-// DeleteWebhook implements deleteWebhook operation.
+// DeleteWebhook invokes deleteWebhook operation.
+//
+// POST /deleteWebhook
 func (c *Client) DeleteWebhook(ctx context.Context, request DeleteWebhook) (res DeleteWebhookRes, err error) {
 	startTime := time.Now()
 	ctx, span := c.cfg.Tracer.Start(ctx, `DeleteWebhook`,
@@ -796,16 +1033,22 @@ func (c *Client) DeleteWebhook(ctx context.Context, request DeleteWebhook) (res 
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeDeleteWebhookRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeDeleteWebhookRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/deleteWebhook"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -824,8 +1067,19 @@ func (c *Client) DeleteWebhook(ctx context.Context, request DeleteWebhook) (res 
 	return result, nil
 }
 
-// EditChatInviteLink implements editChatInviteLink operation.
+// EditChatInviteLink invokes editChatInviteLink operation.
+//
+// POST /editChatInviteLink
 func (c *Client) EditChatInviteLink(ctx context.Context, request EditChatInviteLink) (res EditChatInviteLinkRes, err error) {
+	if err := func() error {
+
+		if err := request.Validate(); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return res, errors.Wrap(err, "validate")
+	}
 	startTime := time.Now()
 	ctx, span := c.cfg.Tracer.Start(ctx, `EditChatInviteLink`,
 		trace.WithAttributes(otelogen.OperationID(`editChatInviteLink`)),
@@ -842,16 +1096,22 @@ func (c *Client) EditChatInviteLink(ctx context.Context, request EditChatInviteL
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeEditChatInviteLinkRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeEditChatInviteLinkRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/editChatInviteLink"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -870,9 +1130,12 @@ func (c *Client) EditChatInviteLink(ctx context.Context, request EditChatInviteL
 	return result, nil
 }
 
-// EditMessageCaption implements editMessageCaption operation.
+// EditMessageCaption invokes editMessageCaption operation.
+//
+// POST /editMessageCaption
 func (c *Client) EditMessageCaption(ctx context.Context, request EditMessageCaption) (res EditMessageCaptionRes, err error) {
 	if err := func() error {
+
 		if err := request.Validate(); err != nil {
 			return err
 		}
@@ -896,16 +1159,22 @@ func (c *Client) EditMessageCaption(ctx context.Context, request EditMessageCapt
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeEditMessageCaptionRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeEditMessageCaptionRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/editMessageCaption"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -924,9 +1193,12 @@ func (c *Client) EditMessageCaption(ctx context.Context, request EditMessageCapt
 	return result, nil
 }
 
-// EditMessageLiveLocation implements editMessageLiveLocation operation.
+// EditMessageLiveLocation invokes editMessageLiveLocation operation.
+//
+// POST /editMessageLiveLocation
 func (c *Client) EditMessageLiveLocation(ctx context.Context, request EditMessageLiveLocation) (res EditMessageLiveLocationRes, err error) {
 	if err := func() error {
+
 		if err := request.Validate(); err != nil {
 			return err
 		}
@@ -950,16 +1222,22 @@ func (c *Client) EditMessageLiveLocation(ctx context.Context, request EditMessag
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeEditMessageLiveLocationRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeEditMessageLiveLocationRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/editMessageLiveLocation"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -978,9 +1256,12 @@ func (c *Client) EditMessageLiveLocation(ctx context.Context, request EditMessag
 	return result, nil
 }
 
-// EditMessageMedia implements editMessageMedia operation.
+// EditMessageMedia invokes editMessageMedia operation.
+//
+// POST /editMessageMedia
 func (c *Client) EditMessageMedia(ctx context.Context, request EditMessageMedia) (res EditMessageMediaRes, err error) {
 	if err := func() error {
+
 		if err := request.Validate(); err != nil {
 			return err
 		}
@@ -1004,16 +1285,22 @@ func (c *Client) EditMessageMedia(ctx context.Context, request EditMessageMedia)
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeEditMessageMediaRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeEditMessageMediaRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/editMessageMedia"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -1032,9 +1319,12 @@ func (c *Client) EditMessageMedia(ctx context.Context, request EditMessageMedia)
 	return result, nil
 }
 
-// EditMessageReplyMarkup implements editMessageReplyMarkup operation.
+// EditMessageReplyMarkup invokes editMessageReplyMarkup operation.
+//
+// POST /editMessageReplyMarkup
 func (c *Client) EditMessageReplyMarkup(ctx context.Context, request EditMessageReplyMarkup) (res EditMessageReplyMarkupRes, err error) {
 	if err := func() error {
+
 		if err := request.Validate(); err != nil {
 			return err
 		}
@@ -1058,16 +1348,22 @@ func (c *Client) EditMessageReplyMarkup(ctx context.Context, request EditMessage
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeEditMessageReplyMarkupRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeEditMessageReplyMarkupRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/editMessageReplyMarkup"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -1086,9 +1382,12 @@ func (c *Client) EditMessageReplyMarkup(ctx context.Context, request EditMessage
 	return result, nil
 }
 
-// EditMessageText implements editMessageText operation.
+// EditMessageText invokes editMessageText operation.
+//
+// POST /editMessageText
 func (c *Client) EditMessageText(ctx context.Context, request EditMessageText) (res EditMessageTextRes, err error) {
 	if err := func() error {
+
 		if err := request.Validate(); err != nil {
 			return err
 		}
@@ -1112,16 +1411,22 @@ func (c *Client) EditMessageText(ctx context.Context, request EditMessageText) (
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeEditMessageTextRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeEditMessageTextRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/editMessageText"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -1140,7 +1445,9 @@ func (c *Client) EditMessageText(ctx context.Context, request EditMessageText) (
 	return result, nil
 }
 
-// ExportChatInviteLink implements exportChatInviteLink operation.
+// ExportChatInviteLink invokes exportChatInviteLink operation.
+//
+// POST /exportChatInviteLink
 func (c *Client) ExportChatInviteLink(ctx context.Context, request ExportChatInviteLink) (res ExportChatInviteLinkRes, err error) {
 	startTime := time.Now()
 	ctx, span := c.cfg.Tracer.Start(ctx, `ExportChatInviteLink`,
@@ -1158,16 +1465,22 @@ func (c *Client) ExportChatInviteLink(ctx context.Context, request ExportChatInv
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeExportChatInviteLinkRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeExportChatInviteLinkRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/exportChatInviteLink"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -1186,7 +1499,9 @@ func (c *Client) ExportChatInviteLink(ctx context.Context, request ExportChatInv
 	return result, nil
 }
 
-// ForwardMessage implements forwardMessage operation.
+// ForwardMessage invokes forwardMessage operation.
+//
+// POST /forwardMessage
 func (c *Client) ForwardMessage(ctx context.Context, request ForwardMessage) (res ForwardMessageRes, err error) {
 	startTime := time.Now()
 	ctx, span := c.cfg.Tracer.Start(ctx, `ForwardMessage`,
@@ -1204,16 +1519,22 @@ func (c *Client) ForwardMessage(ctx context.Context, request ForwardMessage) (re
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeForwardMessageRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeForwardMessageRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/forwardMessage"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -1232,7 +1553,9 @@ func (c *Client) ForwardMessage(ctx context.Context, request ForwardMessage) (re
 	return result, nil
 }
 
-// GetChat implements getChat operation.
+// GetChat invokes getChat operation.
+//
+// POST /getChat
 func (c *Client) GetChat(ctx context.Context, request GetChat) (res GetChatRes, err error) {
 	startTime := time.Now()
 	ctx, span := c.cfg.Tracer.Start(ctx, `GetChat`,
@@ -1250,16 +1573,22 @@ func (c *Client) GetChat(ctx context.Context, request GetChat) (res GetChatRes, 
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeGetChatRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeGetChatRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/getChat"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -1278,7 +1607,9 @@ func (c *Client) GetChat(ctx context.Context, request GetChat) (res GetChatRes, 
 	return result, nil
 }
 
-// GetChatAdministrators implements getChatAdministrators operation.
+// GetChatAdministrators invokes getChatAdministrators operation.
+//
+// POST /getChatAdministrators
 func (c *Client) GetChatAdministrators(ctx context.Context, request GetChatAdministrators) (res GetChatAdministratorsRes, err error) {
 	startTime := time.Now()
 	ctx, span := c.cfg.Tracer.Start(ctx, `GetChatAdministrators`,
@@ -1296,16 +1627,22 @@ func (c *Client) GetChatAdministrators(ctx context.Context, request GetChatAdmin
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeGetChatAdministratorsRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeGetChatAdministratorsRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/getChatAdministrators"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -1324,7 +1661,9 @@ func (c *Client) GetChatAdministrators(ctx context.Context, request GetChatAdmin
 	return result, nil
 }
 
-// GetChatMember implements getChatMember operation.
+// GetChatMember invokes getChatMember operation.
+//
+// POST /getChatMember
 func (c *Client) GetChatMember(ctx context.Context, request GetChatMember) (res GetChatMemberRes, err error) {
 	startTime := time.Now()
 	ctx, span := c.cfg.Tracer.Start(ctx, `GetChatMember`,
@@ -1342,16 +1681,22 @@ func (c *Client) GetChatMember(ctx context.Context, request GetChatMember) (res 
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeGetChatMemberRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeGetChatMemberRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/getChatMember"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -1370,7 +1715,9 @@ func (c *Client) GetChatMember(ctx context.Context, request GetChatMember) (res 
 	return result, nil
 }
 
-// GetChatMemberCount implements getChatMemberCount operation.
+// GetChatMemberCount invokes getChatMemberCount operation.
+//
+// POST /getChatMemberCount
 func (c *Client) GetChatMemberCount(ctx context.Context, request GetChatMemberCount) (res GetChatMemberCountRes, err error) {
 	startTime := time.Now()
 	ctx, span := c.cfg.Tracer.Start(ctx, `GetChatMemberCount`,
@@ -1388,16 +1735,22 @@ func (c *Client) GetChatMemberCount(ctx context.Context, request GetChatMemberCo
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeGetChatMemberCountRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeGetChatMemberCountRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/getChatMemberCount"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -1416,7 +1769,9 @@ func (c *Client) GetChatMemberCount(ctx context.Context, request GetChatMemberCo
 	return result, nil
 }
 
-// GetFile implements getFile operation.
+// GetFile invokes getFile operation.
+//
+// POST /getFile
 func (c *Client) GetFile(ctx context.Context, request GetFile) (res GetFileRes, err error) {
 	startTime := time.Now()
 	ctx, span := c.cfg.Tracer.Start(ctx, `GetFile`,
@@ -1434,16 +1789,22 @@ func (c *Client) GetFile(ctx context.Context, request GetFile) (res GetFileRes, 
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeGetFileRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeGetFileRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/getFile"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -1462,7 +1823,9 @@ func (c *Client) GetFile(ctx context.Context, request GetFile) (res GetFileRes, 
 	return result, nil
 }
 
-// GetGameHighScores implements getGameHighScores operation.
+// GetGameHighScores invokes getGameHighScores operation.
+//
+// POST /getGameHighScores
 func (c *Client) GetGameHighScores(ctx context.Context, request GetGameHighScores) (res GetGameHighScoresRes, err error) {
 	startTime := time.Now()
 	ctx, span := c.cfg.Tracer.Start(ctx, `GetGameHighScores`,
@@ -1480,16 +1843,22 @@ func (c *Client) GetGameHighScores(ctx context.Context, request GetGameHighScore
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeGetGameHighScoresRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeGetGameHighScoresRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/getGameHighScores"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -1508,7 +1877,9 @@ func (c *Client) GetGameHighScores(ctx context.Context, request GetGameHighScore
 	return result, nil
 }
 
-// GetMe implements getMe operation.
+// GetMe invokes getMe operation.
+//
+// POST /getMe
 func (c *Client) GetMe(ctx context.Context) (res GetMeRes, err error) {
 	startTime := time.Now()
 	ctx, span := c.cfg.Tracer.Start(ctx, `GetMe`,
@@ -1546,7 +1917,9 @@ func (c *Client) GetMe(ctx context.Context) (res GetMeRes, err error) {
 	return result, nil
 }
 
-// GetMyCommands implements getMyCommands operation.
+// GetMyCommands invokes getMyCommands operation.
+//
+// POST /getMyCommands
 func (c *Client) GetMyCommands(ctx context.Context, request GetMyCommands) (res GetMyCommandsRes, err error) {
 	startTime := time.Now()
 	ctx, span := c.cfg.Tracer.Start(ctx, `GetMyCommands`,
@@ -1564,16 +1937,22 @@ func (c *Client) GetMyCommands(ctx context.Context, request GetMyCommands) (res 
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeGetMyCommandsRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeGetMyCommandsRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/getMyCommands"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -1592,7 +1971,9 @@ func (c *Client) GetMyCommands(ctx context.Context, request GetMyCommands) (res 
 	return result, nil
 }
 
-// GetStickerSet implements getStickerSet operation.
+// GetStickerSet invokes getStickerSet operation.
+//
+// POST /getStickerSet
 func (c *Client) GetStickerSet(ctx context.Context, request GetStickerSet) (res GetStickerSetRes, err error) {
 	startTime := time.Now()
 	ctx, span := c.cfg.Tracer.Start(ctx, `GetStickerSet`,
@@ -1610,16 +1991,22 @@ func (c *Client) GetStickerSet(ctx context.Context, request GetStickerSet) (res 
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeGetStickerSetRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeGetStickerSetRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/getStickerSet"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -1638,9 +2025,12 @@ func (c *Client) GetStickerSet(ctx context.Context, request GetStickerSet) (res 
 	return result, nil
 }
 
-// GetUpdates implements getUpdates operation.
+// GetUpdates invokes getUpdates operation.
+//
+// POST /getUpdates
 func (c *Client) GetUpdates(ctx context.Context, request GetUpdates) (res GetUpdatesRes, err error) {
 	if err := func() error {
+
 		if err := request.Validate(); err != nil {
 			return err
 		}
@@ -1664,16 +2054,22 @@ func (c *Client) GetUpdates(ctx context.Context, request GetUpdates) (res GetUpd
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeGetUpdatesRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeGetUpdatesRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/getUpdates"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -1692,9 +2088,12 @@ func (c *Client) GetUpdates(ctx context.Context, request GetUpdates) (res GetUpd
 	return result, nil
 }
 
-// GetUserProfilePhotos implements getUserProfilePhotos operation.
+// GetUserProfilePhotos invokes getUserProfilePhotos operation.
+//
+// POST /getUserProfilePhotos
 func (c *Client) GetUserProfilePhotos(ctx context.Context, request GetUserProfilePhotos) (res GetUserProfilePhotosRes, err error) {
 	if err := func() error {
+
 		if err := request.Validate(); err != nil {
 			return err
 		}
@@ -1718,16 +2117,22 @@ func (c *Client) GetUserProfilePhotos(ctx context.Context, request GetUserProfil
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeGetUserProfilePhotosRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeGetUserProfilePhotosRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/getUserProfilePhotos"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -1746,7 +2151,9 @@ func (c *Client) GetUserProfilePhotos(ctx context.Context, request GetUserProfil
 	return result, nil
 }
 
-// LeaveChat implements leaveChat operation.
+// LeaveChat invokes leaveChat operation.
+//
+// POST /leaveChat
 func (c *Client) LeaveChat(ctx context.Context, request LeaveChat) (res LeaveChatRes, err error) {
 	startTime := time.Now()
 	ctx, span := c.cfg.Tracer.Start(ctx, `LeaveChat`,
@@ -1764,16 +2171,22 @@ func (c *Client) LeaveChat(ctx context.Context, request LeaveChat) (res LeaveCha
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeLeaveChatRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeLeaveChatRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/leaveChat"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -1792,7 +2205,9 @@ func (c *Client) LeaveChat(ctx context.Context, request LeaveChat) (res LeaveCha
 	return result, nil
 }
 
-// PinChatMessage implements pinChatMessage operation.
+// PinChatMessage invokes pinChatMessage operation.
+//
+// POST /pinChatMessage
 func (c *Client) PinChatMessage(ctx context.Context, request PinChatMessage) (res PinChatMessageRes, err error) {
 	startTime := time.Now()
 	ctx, span := c.cfg.Tracer.Start(ctx, `PinChatMessage`,
@@ -1810,16 +2225,22 @@ func (c *Client) PinChatMessage(ctx context.Context, request PinChatMessage) (re
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodePinChatMessageRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodePinChatMessageRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/pinChatMessage"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -1838,7 +2259,9 @@ func (c *Client) PinChatMessage(ctx context.Context, request PinChatMessage) (re
 	return result, nil
 }
 
-// PromoteChatMember implements promoteChatMember operation.
+// PromoteChatMember invokes promoteChatMember operation.
+//
+// POST /promoteChatMember
 func (c *Client) PromoteChatMember(ctx context.Context, request PromoteChatMember) (res PromoteChatMemberRes, err error) {
 	startTime := time.Now()
 	ctx, span := c.cfg.Tracer.Start(ctx, `PromoteChatMember`,
@@ -1856,16 +2279,22 @@ func (c *Client) PromoteChatMember(ctx context.Context, request PromoteChatMembe
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodePromoteChatMemberRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodePromoteChatMemberRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/promoteChatMember"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -1884,7 +2313,9 @@ func (c *Client) PromoteChatMember(ctx context.Context, request PromoteChatMembe
 	return result, nil
 }
 
-// RestrictChatMember implements restrictChatMember operation.
+// RestrictChatMember invokes restrictChatMember operation.
+//
+// POST /restrictChatMember
 func (c *Client) RestrictChatMember(ctx context.Context, request RestrictChatMember) (res RestrictChatMemberRes, err error) {
 	startTime := time.Now()
 	ctx, span := c.cfg.Tracer.Start(ctx, `RestrictChatMember`,
@@ -1902,16 +2333,22 @@ func (c *Client) RestrictChatMember(ctx context.Context, request RestrictChatMem
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeRestrictChatMemberRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeRestrictChatMemberRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/restrictChatMember"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -1930,7 +2367,9 @@ func (c *Client) RestrictChatMember(ctx context.Context, request RestrictChatMem
 	return result, nil
 }
 
-// RevokeChatInviteLink implements revokeChatInviteLink operation.
+// RevokeChatInviteLink invokes revokeChatInviteLink operation.
+//
+// POST /revokeChatInviteLink
 func (c *Client) RevokeChatInviteLink(ctx context.Context, request RevokeChatInviteLink) (res RevokeChatInviteLinkRes, err error) {
 	startTime := time.Now()
 	ctx, span := c.cfg.Tracer.Start(ctx, `RevokeChatInviteLink`,
@@ -1948,16 +2387,22 @@ func (c *Client) RevokeChatInviteLink(ctx context.Context, request RevokeChatInv
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeRevokeChatInviteLinkRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeRevokeChatInviteLinkRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/revokeChatInviteLink"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -1976,9 +2421,12 @@ func (c *Client) RevokeChatInviteLink(ctx context.Context, request RevokeChatInv
 	return result, nil
 }
 
-// SendAnimation implements sendAnimation operation.
+// SendAnimation invokes sendAnimation operation.
+//
+// POST /sendAnimation
 func (c *Client) SendAnimation(ctx context.Context, request SendAnimation) (res SendAnimationRes, err error) {
 	if err := func() error {
+
 		if err := request.Validate(); err != nil {
 			return err
 		}
@@ -2002,16 +2450,22 @@ func (c *Client) SendAnimation(ctx context.Context, request SendAnimation) (res 
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeSendAnimationRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeSendAnimationRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/sendAnimation"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -2030,9 +2484,12 @@ func (c *Client) SendAnimation(ctx context.Context, request SendAnimation) (res 
 	return result, nil
 }
 
-// SendAudio implements sendAudio operation.
+// SendAudio invokes sendAudio operation.
+//
+// POST /sendAudio
 func (c *Client) SendAudio(ctx context.Context, request SendAudio) (res SendAudioRes, err error) {
 	if err := func() error {
+
 		if err := request.Validate(); err != nil {
 			return err
 		}
@@ -2056,16 +2513,22 @@ func (c *Client) SendAudio(ctx context.Context, request SendAudio) (res SendAudi
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeSendAudioRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeSendAudioRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/sendAudio"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -2084,7 +2547,9 @@ func (c *Client) SendAudio(ctx context.Context, request SendAudio) (res SendAudi
 	return result, nil
 }
 
-// SendChatAction implements sendChatAction operation.
+// SendChatAction invokes sendChatAction operation.
+//
+// POST /sendChatAction
 func (c *Client) SendChatAction(ctx context.Context, request SendChatAction) (res SendChatActionRes, err error) {
 	startTime := time.Now()
 	ctx, span := c.cfg.Tracer.Start(ctx, `SendChatAction`,
@@ -2102,16 +2567,22 @@ func (c *Client) SendChatAction(ctx context.Context, request SendChatAction) (re
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeSendChatActionRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeSendChatActionRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/sendChatAction"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -2130,9 +2601,12 @@ func (c *Client) SendChatAction(ctx context.Context, request SendChatAction) (re
 	return result, nil
 }
 
-// SendContact implements sendContact operation.
+// SendContact invokes sendContact operation.
+//
+// POST /sendContact
 func (c *Client) SendContact(ctx context.Context, request SendContact) (res SendContactRes, err error) {
 	if err := func() error {
+
 		if err := request.Validate(); err != nil {
 			return err
 		}
@@ -2156,16 +2630,22 @@ func (c *Client) SendContact(ctx context.Context, request SendContact) (res Send
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeSendContactRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeSendContactRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/sendContact"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -2184,9 +2664,12 @@ func (c *Client) SendContact(ctx context.Context, request SendContact) (res Send
 	return result, nil
 }
 
-// SendDice implements sendDice operation.
+// SendDice invokes sendDice operation.
+//
+// POST /sendDice
 func (c *Client) SendDice(ctx context.Context, request SendDice) (res SendDiceRes, err error) {
 	if err := func() error {
+
 		if err := request.Validate(); err != nil {
 			return err
 		}
@@ -2210,16 +2693,22 @@ func (c *Client) SendDice(ctx context.Context, request SendDice) (res SendDiceRe
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeSendDiceRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeSendDiceRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/sendDice"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -2238,9 +2727,12 @@ func (c *Client) SendDice(ctx context.Context, request SendDice) (res SendDiceRe
 	return result, nil
 }
 
-// SendDocument implements sendDocument operation.
+// SendDocument invokes sendDocument operation.
+//
+// POST /sendDocument
 func (c *Client) SendDocument(ctx context.Context, request SendDocument) (res SendDocumentRes, err error) {
 	if err := func() error {
+
 		if err := request.Validate(); err != nil {
 			return err
 		}
@@ -2264,16 +2756,22 @@ func (c *Client) SendDocument(ctx context.Context, request SendDocument) (res Se
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeSendDocumentRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeSendDocumentRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/sendDocument"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -2292,9 +2790,12 @@ func (c *Client) SendDocument(ctx context.Context, request SendDocument) (res Se
 	return result, nil
 }
 
-// SendGame implements sendGame operation.
+// SendGame invokes sendGame operation.
+//
+// POST /sendGame
 func (c *Client) SendGame(ctx context.Context, request SendGame) (res SendGameRes, err error) {
 	if err := func() error {
+
 		if err := request.Validate(); err != nil {
 			return err
 		}
@@ -2318,16 +2819,22 @@ func (c *Client) SendGame(ctx context.Context, request SendGame) (res SendGameRe
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeSendGameRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeSendGameRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/sendGame"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -2346,9 +2853,12 @@ func (c *Client) SendGame(ctx context.Context, request SendGame) (res SendGameRe
 	return result, nil
 }
 
-// SendInvoice implements sendInvoice operation.
+// SendInvoice invokes sendInvoice operation.
+//
+// POST /sendInvoice
 func (c *Client) SendInvoice(ctx context.Context, request SendInvoice) (res SendInvoiceRes, err error) {
 	if err := func() error {
+
 		if err := request.Validate(); err != nil {
 			return err
 		}
@@ -2372,16 +2882,22 @@ func (c *Client) SendInvoice(ctx context.Context, request SendInvoice) (res Send
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeSendInvoiceRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeSendInvoiceRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/sendInvoice"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -2400,9 +2916,12 @@ func (c *Client) SendInvoice(ctx context.Context, request SendInvoice) (res Send
 	return result, nil
 }
 
-// SendLocation implements sendLocation operation.
+// SendLocation invokes sendLocation operation.
+//
+// POST /sendLocation
 func (c *Client) SendLocation(ctx context.Context, request SendLocation) (res SendLocationRes, err error) {
 	if err := func() error {
+
 		if err := request.Validate(); err != nil {
 			return err
 		}
@@ -2426,16 +2945,22 @@ func (c *Client) SendLocation(ctx context.Context, request SendLocation) (res Se
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeSendLocationRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeSendLocationRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/sendLocation"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -2454,9 +2979,12 @@ func (c *Client) SendLocation(ctx context.Context, request SendLocation) (res Se
 	return result, nil
 }
 
-// SendMediaGroup implements sendMediaGroup operation.
+// SendMediaGroup invokes sendMediaGroup operation.
+//
+// POST /sendMediaGroup
 func (c *Client) SendMediaGroup(ctx context.Context, request SendMediaGroup) (res SendMediaGroupRes, err error) {
 	if err := func() error {
+
 		if err := request.Validate(); err != nil {
 			return err
 		}
@@ -2480,16 +3008,22 @@ func (c *Client) SendMediaGroup(ctx context.Context, request SendMediaGroup) (re
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeSendMediaGroupRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeSendMediaGroupRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/sendMediaGroup"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -2508,9 +3042,12 @@ func (c *Client) SendMediaGroup(ctx context.Context, request SendMediaGroup) (re
 	return result, nil
 }
 
-// SendMessage implements sendMessage operation.
+// SendMessage invokes sendMessage operation.
+//
+// POST /sendMessage
 func (c *Client) SendMessage(ctx context.Context, request SendMessage) (res SendMessageRes, err error) {
 	if err := func() error {
+
 		if err := request.Validate(); err != nil {
 			return err
 		}
@@ -2534,16 +3071,22 @@ func (c *Client) SendMessage(ctx context.Context, request SendMessage) (res Send
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeSendMessageRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeSendMessageRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/sendMessage"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -2562,9 +3105,12 @@ func (c *Client) SendMessage(ctx context.Context, request SendMessage) (res Send
 	return result, nil
 }
 
-// SendPhoto implements sendPhoto operation.
+// SendPhoto invokes sendPhoto operation.
+//
+// POST /sendPhoto
 func (c *Client) SendPhoto(ctx context.Context, request SendPhoto) (res SendPhotoRes, err error) {
 	if err := func() error {
+
 		if err := request.Validate(); err != nil {
 			return err
 		}
@@ -2588,16 +3134,22 @@ func (c *Client) SendPhoto(ctx context.Context, request SendPhoto) (res SendPhot
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeSendPhotoRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeSendPhotoRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/sendPhoto"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -2616,9 +3168,12 @@ func (c *Client) SendPhoto(ctx context.Context, request SendPhoto) (res SendPhot
 	return result, nil
 }
 
-// SendPoll implements sendPoll operation.
+// SendPoll invokes sendPoll operation.
+//
+// POST /sendPoll
 func (c *Client) SendPoll(ctx context.Context, request SendPoll) (res SendPollRes, err error) {
 	if err := func() error {
+
 		if err := request.Validate(); err != nil {
 			return err
 		}
@@ -2642,16 +3197,22 @@ func (c *Client) SendPoll(ctx context.Context, request SendPoll) (res SendPollRe
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeSendPollRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeSendPollRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/sendPoll"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -2670,9 +3231,12 @@ func (c *Client) SendPoll(ctx context.Context, request SendPoll) (res SendPollRe
 	return result, nil
 }
 
-// SendSticker implements sendSticker operation.
+// SendSticker invokes sendSticker operation.
+//
+// POST /sendSticker
 func (c *Client) SendSticker(ctx context.Context, request SendSticker) (res SendStickerRes, err error) {
 	if err := func() error {
+
 		if err := request.Validate(); err != nil {
 			return err
 		}
@@ -2696,16 +3260,22 @@ func (c *Client) SendSticker(ctx context.Context, request SendSticker) (res Send
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeSendStickerRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeSendStickerRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/sendSticker"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -2724,9 +3294,12 @@ func (c *Client) SendSticker(ctx context.Context, request SendSticker) (res Send
 	return result, nil
 }
 
-// SendVenue implements sendVenue operation.
+// SendVenue invokes sendVenue operation.
+//
+// POST /sendVenue
 func (c *Client) SendVenue(ctx context.Context, request SendVenue) (res SendVenueRes, err error) {
 	if err := func() error {
+
 		if err := request.Validate(); err != nil {
 			return err
 		}
@@ -2750,16 +3323,22 @@ func (c *Client) SendVenue(ctx context.Context, request SendVenue) (res SendVenu
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeSendVenueRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeSendVenueRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/sendVenue"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -2778,9 +3357,12 @@ func (c *Client) SendVenue(ctx context.Context, request SendVenue) (res SendVenu
 	return result, nil
 }
 
-// SendVideo implements sendVideo operation.
+// SendVideo invokes sendVideo operation.
+//
+// POST /sendVideo
 func (c *Client) SendVideo(ctx context.Context, request SendVideo) (res SendVideoRes, err error) {
 	if err := func() error {
+
 		if err := request.Validate(); err != nil {
 			return err
 		}
@@ -2804,16 +3386,22 @@ func (c *Client) SendVideo(ctx context.Context, request SendVideo) (res SendVide
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeSendVideoRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeSendVideoRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/sendVideo"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -2832,9 +3420,12 @@ func (c *Client) SendVideo(ctx context.Context, request SendVideo) (res SendVide
 	return result, nil
 }
 
-// SendVideoNote implements sendVideoNote operation.
+// SendVideoNote invokes sendVideoNote operation.
+//
+// POST /sendVideoNote
 func (c *Client) SendVideoNote(ctx context.Context, request SendVideoNote) (res SendVideoNoteRes, err error) {
 	if err := func() error {
+
 		if err := request.Validate(); err != nil {
 			return err
 		}
@@ -2858,16 +3449,22 @@ func (c *Client) SendVideoNote(ctx context.Context, request SendVideoNote) (res 
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeSendVideoNoteRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeSendVideoNoteRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/sendVideoNote"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -2886,9 +3483,12 @@ func (c *Client) SendVideoNote(ctx context.Context, request SendVideoNote) (res 
 	return result, nil
 }
 
-// SendVoice implements sendVoice operation.
+// SendVoice invokes sendVoice operation.
+//
+// POST /sendVoice
 func (c *Client) SendVoice(ctx context.Context, request SendVoice) (res SendVoiceRes, err error) {
 	if err := func() error {
+
 		if err := request.Validate(); err != nil {
 			return err
 		}
@@ -2912,16 +3512,22 @@ func (c *Client) SendVoice(ctx context.Context, request SendVoice) (res SendVoic
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeSendVoiceRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeSendVoiceRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/sendVoice"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -2940,9 +3546,12 @@ func (c *Client) SendVoice(ctx context.Context, request SendVoice) (res SendVoic
 	return result, nil
 }
 
-// SetChatAdministratorCustomTitle implements setChatAdministratorCustomTitle operation.
+// SetChatAdministratorCustomTitle invokes setChatAdministratorCustomTitle operation.
+//
+// POST /setChatAdministratorCustomTitle
 func (c *Client) SetChatAdministratorCustomTitle(ctx context.Context, request SetChatAdministratorCustomTitle) (res SetChatAdministratorCustomTitleRes, err error) {
 	if err := func() error {
+
 		if err := request.Validate(); err != nil {
 			return err
 		}
@@ -2966,16 +3575,22 @@ func (c *Client) SetChatAdministratorCustomTitle(ctx context.Context, request Se
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeSetChatAdministratorCustomTitleRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeSetChatAdministratorCustomTitleRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/setChatAdministratorCustomTitle"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -2994,9 +3609,12 @@ func (c *Client) SetChatAdministratorCustomTitle(ctx context.Context, request Se
 	return result, nil
 }
 
-// SetChatDescription implements setChatDescription operation.
+// SetChatDescription invokes setChatDescription operation.
+//
+// POST /setChatDescription
 func (c *Client) SetChatDescription(ctx context.Context, request SetChatDescription) (res SetChatDescriptionRes, err error) {
 	if err := func() error {
+
 		if err := request.Validate(); err != nil {
 			return err
 		}
@@ -3020,16 +3638,22 @@ func (c *Client) SetChatDescription(ctx context.Context, request SetChatDescript
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeSetChatDescriptionRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeSetChatDescriptionRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/setChatDescription"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -3048,7 +3672,9 @@ func (c *Client) SetChatDescription(ctx context.Context, request SetChatDescript
 	return result, nil
 }
 
-// SetChatPermissions implements setChatPermissions operation.
+// SetChatPermissions invokes setChatPermissions operation.
+//
+// POST /setChatPermissions
 func (c *Client) SetChatPermissions(ctx context.Context, request SetChatPermissions) (res SetChatPermissionsRes, err error) {
 	startTime := time.Now()
 	ctx, span := c.cfg.Tracer.Start(ctx, `SetChatPermissions`,
@@ -3066,16 +3692,22 @@ func (c *Client) SetChatPermissions(ctx context.Context, request SetChatPermissi
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeSetChatPermissionsRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeSetChatPermissionsRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/setChatPermissions"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -3094,7 +3726,9 @@ func (c *Client) SetChatPermissions(ctx context.Context, request SetChatPermissi
 	return result, nil
 }
 
-// SetChatPhoto implements setChatPhoto operation.
+// SetChatPhoto invokes setChatPhoto operation.
+//
+// POST /setChatPhoto
 func (c *Client) SetChatPhoto(ctx context.Context, request SetChatPhoto) (res SetChatPhotoRes, err error) {
 	startTime := time.Now()
 	ctx, span := c.cfg.Tracer.Start(ctx, `SetChatPhoto`,
@@ -3112,16 +3746,22 @@ func (c *Client) SetChatPhoto(ctx context.Context, request SetChatPhoto) (res Se
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeSetChatPhotoRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeSetChatPhotoRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/setChatPhoto"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -3140,7 +3780,9 @@ func (c *Client) SetChatPhoto(ctx context.Context, request SetChatPhoto) (res Se
 	return result, nil
 }
 
-// SetChatStickerSet implements setChatStickerSet operation.
+// SetChatStickerSet invokes setChatStickerSet operation.
+//
+// POST /setChatStickerSet
 func (c *Client) SetChatStickerSet(ctx context.Context, request SetChatStickerSet) (res SetChatStickerSetRes, err error) {
 	startTime := time.Now()
 	ctx, span := c.cfg.Tracer.Start(ctx, `SetChatStickerSet`,
@@ -3158,16 +3800,22 @@ func (c *Client) SetChatStickerSet(ctx context.Context, request SetChatStickerSe
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeSetChatStickerSetRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeSetChatStickerSetRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/setChatStickerSet"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -3186,9 +3834,12 @@ func (c *Client) SetChatStickerSet(ctx context.Context, request SetChatStickerSe
 	return result, nil
 }
 
-// SetChatTitle implements setChatTitle operation.
+// SetChatTitle invokes setChatTitle operation.
+//
+// POST /setChatTitle
 func (c *Client) SetChatTitle(ctx context.Context, request SetChatTitle) (res SetChatTitleRes, err error) {
 	if err := func() error {
+
 		if err := request.Validate(); err != nil {
 			return err
 		}
@@ -3212,16 +3863,22 @@ func (c *Client) SetChatTitle(ctx context.Context, request SetChatTitle) (res Se
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeSetChatTitleRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeSetChatTitleRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/setChatTitle"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -3240,7 +3897,9 @@ func (c *Client) SetChatTitle(ctx context.Context, request SetChatTitle) (res Se
 	return result, nil
 }
 
-// SetGameScore implements setGameScore operation.
+// SetGameScore invokes setGameScore operation.
+//
+// POST /setGameScore
 func (c *Client) SetGameScore(ctx context.Context, request SetGameScore) (res SetGameScoreRes, err error) {
 	startTime := time.Now()
 	ctx, span := c.cfg.Tracer.Start(ctx, `SetGameScore`,
@@ -3258,16 +3917,22 @@ func (c *Client) SetGameScore(ctx context.Context, request SetGameScore) (res Se
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeSetGameScoreRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeSetGameScoreRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/setGameScore"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -3286,9 +3951,12 @@ func (c *Client) SetGameScore(ctx context.Context, request SetGameScore) (res Se
 	return result, nil
 }
 
-// SetMyCommands implements setMyCommands operation.
+// SetMyCommands invokes setMyCommands operation.
+//
+// POST /setMyCommands
 func (c *Client) SetMyCommands(ctx context.Context, request SetMyCommands) (res SetMyCommandsRes, err error) {
 	if err := func() error {
+
 		if err := request.Validate(); err != nil {
 			return err
 		}
@@ -3312,16 +3980,22 @@ func (c *Client) SetMyCommands(ctx context.Context, request SetMyCommands) (res 
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeSetMyCommandsRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeSetMyCommandsRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/setMyCommands"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -3340,9 +4014,12 @@ func (c *Client) SetMyCommands(ctx context.Context, request SetMyCommands) (res 
 	return result, nil
 }
 
-// SetPassportDataErrors implements setPassportDataErrors operation.
+// SetPassportDataErrors invokes setPassportDataErrors operation.
+//
+// POST /setPassportDataErrors
 func (c *Client) SetPassportDataErrors(ctx context.Context, request SetPassportDataErrors) (res SetPassportDataErrorsRes, err error) {
 	if err := func() error {
+
 		if err := request.Validate(); err != nil {
 			return err
 		}
@@ -3366,16 +4043,22 @@ func (c *Client) SetPassportDataErrors(ctx context.Context, request SetPassportD
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeSetPassportDataErrorsRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeSetPassportDataErrorsRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/setPassportDataErrors"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -3394,7 +4077,9 @@ func (c *Client) SetPassportDataErrors(ctx context.Context, request SetPassportD
 	return result, nil
 }
 
-// SetStickerPositionInSet implements setStickerPositionInSet operation.
+// SetStickerPositionInSet invokes setStickerPositionInSet operation.
+//
+// POST /setStickerPositionInSet
 func (c *Client) SetStickerPositionInSet(ctx context.Context, request SetStickerPositionInSet) (res SetStickerPositionInSetRes, err error) {
 	startTime := time.Now()
 	ctx, span := c.cfg.Tracer.Start(ctx, `SetStickerPositionInSet`,
@@ -3412,16 +4097,22 @@ func (c *Client) SetStickerPositionInSet(ctx context.Context, request SetSticker
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeSetStickerPositionInSetRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeSetStickerPositionInSetRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/setStickerPositionInSet"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -3440,7 +4131,9 @@ func (c *Client) SetStickerPositionInSet(ctx context.Context, request SetSticker
 	return result, nil
 }
 
-// SetStickerSetThumb implements setStickerSetThumb operation.
+// SetStickerSetThumb invokes setStickerSetThumb operation.
+//
+// POST /setStickerSetThumb
 func (c *Client) SetStickerSetThumb(ctx context.Context, request SetStickerSetThumb) (res SetStickerSetThumbRes, err error) {
 	startTime := time.Now()
 	ctx, span := c.cfg.Tracer.Start(ctx, `SetStickerSetThumb`,
@@ -3458,16 +4151,22 @@ func (c *Client) SetStickerSetThumb(ctx context.Context, request SetStickerSetTh
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeSetStickerSetThumbRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeSetStickerSetThumbRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/setStickerSetThumb"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -3486,7 +4185,9 @@ func (c *Client) SetStickerSetThumb(ctx context.Context, request SetStickerSetTh
 	return result, nil
 }
 
-// SetWebhook implements setWebhook operation.
+// SetWebhook invokes setWebhook operation.
+//
+// POST /setWebhook
 func (c *Client) SetWebhook(ctx context.Context, request SetWebhook) (res SetWebhookRes, err error) {
 	startTime := time.Now()
 	ctx, span := c.cfg.Tracer.Start(ctx, `SetWebhook`,
@@ -3504,16 +4205,22 @@ func (c *Client) SetWebhook(ctx context.Context, request SetWebhook) (res SetWeb
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeSetWebhookRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeSetWebhookRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/setWebhook"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -3532,9 +4239,12 @@ func (c *Client) SetWebhook(ctx context.Context, request SetWebhook) (res SetWeb
 	return result, nil
 }
 
-// StopMessageLiveLocation implements stopMessageLiveLocation operation.
+// StopMessageLiveLocation invokes stopMessageLiveLocation operation.
+//
+// POST /stopMessageLiveLocation
 func (c *Client) StopMessageLiveLocation(ctx context.Context, request StopMessageLiveLocation) (res StopMessageLiveLocationRes, err error) {
 	if err := func() error {
+
 		if err := request.Validate(); err != nil {
 			return err
 		}
@@ -3558,16 +4268,22 @@ func (c *Client) StopMessageLiveLocation(ctx context.Context, request StopMessag
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeStopMessageLiveLocationRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeStopMessageLiveLocationRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/stopMessageLiveLocation"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -3586,9 +4302,12 @@ func (c *Client) StopMessageLiveLocation(ctx context.Context, request StopMessag
 	return result, nil
 }
 
-// StopPoll implements stopPoll operation.
+// StopPoll invokes stopPoll operation.
+//
+// POST /stopPoll
 func (c *Client) StopPoll(ctx context.Context, request StopPoll) (res StopPollRes, err error) {
 	if err := func() error {
+
 		if err := request.Validate(); err != nil {
 			return err
 		}
@@ -3612,16 +4331,22 @@ func (c *Client) StopPoll(ctx context.Context, request StopPoll) (res StopPollRe
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeStopPollRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeStopPollRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/stopPoll"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -3640,7 +4365,9 @@ func (c *Client) StopPoll(ctx context.Context, request StopPoll) (res StopPollRe
 	return result, nil
 }
 
-// UnbanChatMember implements unbanChatMember operation.
+// UnbanChatMember invokes unbanChatMember operation.
+//
+// POST /unbanChatMember
 func (c *Client) UnbanChatMember(ctx context.Context, request UnbanChatMember) (res UnbanChatMemberRes, err error) {
 	startTime := time.Now()
 	ctx, span := c.cfg.Tracer.Start(ctx, `UnbanChatMember`,
@@ -3658,16 +4385,22 @@ func (c *Client) UnbanChatMember(ctx context.Context, request UnbanChatMember) (
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeUnbanChatMemberRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeUnbanChatMemberRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/unbanChatMember"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -3686,7 +4419,9 @@ func (c *Client) UnbanChatMember(ctx context.Context, request UnbanChatMember) (
 	return result, nil
 }
 
-// UnpinAllChatMessages implements unpinAllChatMessages operation.
+// UnpinAllChatMessages invokes unpinAllChatMessages operation.
+//
+// POST /unpinAllChatMessages
 func (c *Client) UnpinAllChatMessages(ctx context.Context, request UnpinAllChatMessages) (res UnpinAllChatMessagesRes, err error) {
 	startTime := time.Now()
 	ctx, span := c.cfg.Tracer.Start(ctx, `UnpinAllChatMessages`,
@@ -3704,16 +4439,22 @@ func (c *Client) UnpinAllChatMessages(ctx context.Context, request UnpinAllChatM
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeUnpinAllChatMessagesRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeUnpinAllChatMessagesRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/unpinAllChatMessages"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -3732,7 +4473,9 @@ func (c *Client) UnpinAllChatMessages(ctx context.Context, request UnpinAllChatM
 	return result, nil
 }
 
-// UnpinChatMessage implements unpinChatMessage operation.
+// UnpinChatMessage invokes unpinChatMessage operation.
+//
+// POST /unpinChatMessage
 func (c *Client) UnpinChatMessage(ctx context.Context, request UnpinChatMessage) (res UnpinChatMessageRes, err error) {
 	startTime := time.Now()
 	ctx, span := c.cfg.Tracer.Start(ctx, `UnpinChatMessage`,
@@ -3750,16 +4493,22 @@ func (c *Client) UnpinChatMessage(ctx context.Context, request UnpinChatMessage)
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeUnpinChatMessageRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeUnpinChatMessageRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/unpinChatMessage"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
@@ -3778,7 +4527,9 @@ func (c *Client) UnpinChatMessage(ctx context.Context, request UnpinChatMessage)
 	return result, nil
 }
 
-// UploadStickerFile implements uploadStickerFile operation.
+// UploadStickerFile invokes uploadStickerFile operation.
+//
+// POST /uploadStickerFile
 func (c *Client) UploadStickerFile(ctx context.Context, request UploadStickerFile) (res UploadStickerFileRes, err error) {
 	startTime := time.Now()
 	ctx, span := c.cfg.Tracer.Start(ctx, `UploadStickerFile`,
@@ -3796,16 +4547,22 @@ func (c *Client) UploadStickerFile(ctx context.Context, request UploadStickerFil
 		span.End()
 	}()
 	c.requests.Add(ctx, 1)
-	buf, contentType, err := encodeUploadStickerFileRequest(request, span)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeUploadStickerFileRequestJSON(request, span)
 	if err != nil {
 		return res, err
 	}
-	defer json.PutBuffer(buf)
+	defer putBuf(buf)
+	reqBody = buf
 
 	u := uri.Clone(c.serverURL)
 	u.Path += "/uploadStickerFile"
 
-	r := ht.NewRequest(ctx, "POST", u, buf)
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
 	defer ht.PutRequest(r)
 
 	r.Header.Set("Content-Type", contentType)
