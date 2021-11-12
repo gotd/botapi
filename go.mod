@@ -22,7 +22,7 @@ require (
 
 require (
 	github.com/go-faster/errors v0.5.0
-	github.com/go-faster/jx v0.23.2
+	github.com/go-faster/jx v0.23.3
 )
 
 require (
