@@ -18,7 +18,6 @@ import (
 	"sync"
 	"time"
 
-	"github.com/go-chi/chi/v5"
 	"github.com/go-faster/errors"
 	"github.com/go-faster/jx"
 	"github.com/google/uuid"
@@ -40,7 +39,6 @@ var (
 	_ = strings.Builder{}
 	_ = errors.Is
 	_ = sort.Ints
-	_ = chi.Context{}
 	_ = http.MethodGet
 	_ = io.Copy
 	_ = json.Marshal
@@ -64,10 +62,35 @@ var (
 	_ = sync.Pool{}
 )
 
+func (s AddStickerToSet) Validate() error {
+	var failures []validate.FieldError
+	if err := func() error {
+		if s.MaskPosition.Set {
+			if err := func() error {
+				if err := s.MaskPosition.Value.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return err
+			}
+		}
+		return nil
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "mask_position",
+			Error: err,
+		})
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+	return nil
+}
 func (s Animation) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-
 		if err := (validate.Int{
 			MinSet:       true,
 			Min:          0,
@@ -86,7 +109,6 @@ func (s Animation) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if err := (validate.Int{
 			MinSet:       true,
 			Min:          0,
@@ -105,7 +127,6 @@ func (s Animation) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if err := (validate.Int{
 			MinSet:       true,
 			Min:          0,
@@ -124,10 +145,8 @@ func (s Animation) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if s.Thumb.Set {
 			if err := func() error {
-
 				if err := s.Thumb.Value.Validate(); err != nil {
 					return err
 				}
@@ -137,7 +156,6 @@ func (s Animation) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -153,10 +171,8 @@ func (s Animation) Validate() error {
 func (s AnswerCallbackQuery) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-
 		if s.Text.Set {
 			if err := func() error {
-
 				if err := (validate.String{
 					MinLength:    0,
 					MinLengthSet: false,
@@ -174,7 +190,6 @@ func (s AnswerCallbackQuery) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -193,7 +208,6 @@ func (s AnswerInlineQuery) Validate() error {
 		if s.Results == nil {
 			return errors.New("nil is invalid value")
 		}
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -202,10 +216,8 @@ func (s AnswerInlineQuery) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if s.SwitchPmParameter.Set {
 			if err := func() error {
-
 				if err := (validate.String{
 					MinLength:    1,
 					MinLengthSet: true,
@@ -223,7 +235,6 @@ func (s AnswerInlineQuery) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -239,11 +250,9 @@ func (s AnswerInlineQuery) Validate() error {
 func (s AnswerShippingQuery) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-
 		var failures []validate.FieldError
 		for i, elem := range s.ShippingOptions {
 			if err := func() error {
-
 				if err := elem.Validate(); err != nil {
 					return err
 				}
@@ -273,7 +282,6 @@ func (s AnswerShippingQuery) Validate() error {
 func (s Audio) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-
 		if err := (validate.Int{
 			MinSet:       true,
 			Min:          0,
@@ -292,10 +300,8 @@ func (s Audio) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if s.Thumb.Set {
 			if err := func() error {
-
 				if err := s.Thumb.Value.Validate(); err != nil {
 					return err
 				}
@@ -305,7 +311,6 @@ func (s Audio) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -321,7 +326,6 @@ func (s Audio) Validate() error {
 func (s BotCommand) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-
 		if err := (validate.String{
 			MinLength:    1,
 			MinLengthSet: true,
@@ -341,7 +345,6 @@ func (s BotCommand) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if err := (validate.String{
 			MinLength:    3,
 			MinLengthSet: true,
@@ -368,12 +371,10 @@ func (s BotCommand) Validate() error {
 func (s Chat) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-
 		if s.PinnedMessage == nil {
 			return nil // optional
 		}
 		if err := func() error {
-
 			if err := s.PinnedMessage.Validate(); err != nil {
 				return err
 			}
@@ -389,10 +390,8 @@ func (s Chat) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if s.Location.Set {
 			if err := func() error {
-
 				if err := s.Location.Value.Validate(); err != nil {
 					return err
 				}
@@ -402,7 +401,6 @@ func (s Chat) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -418,7 +416,17 @@ func (s Chat) Validate() error {
 func (s ChatLocation) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-
+		if err := s.Location.Validate(); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "location",
+			Error: err,
+		})
+	}
+	if err := func() error {
 		if err := (validate.String{
 			MinLength:    1,
 			MinLengthSet: true,
@@ -445,10 +453,8 @@ func (s ChatLocation) Validate() error {
 func (s CopyMessage) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-
 		if s.Caption.Set {
 			if err := func() error {
-
 				if err := (validate.String{
 					MinLength:    0,
 					MinLengthSet: false,
@@ -466,7 +472,6 @@ func (s CopyMessage) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -475,12 +480,10 @@ func (s CopyMessage) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if s.ReplyMarkup == nil {
 			return nil // optional
 		}
 		if err := func() error {
-
 			if err := s.ReplyMarkup.Validate(); err != nil {
 				return err
 			}
@@ -503,13 +506,11 @@ func (s CopyMessage) Validate() error {
 func (s CopyMessageReplyMarkup) Validate() error {
 	switch s.Type {
 	case InlineKeyboardMarkupCopyMessageReplyMarkup:
-
 		if err := s.InlineKeyboardMarkup.Validate(); err != nil {
 			return err
 		}
 		return nil
 	case ReplyKeyboardMarkupCopyMessageReplyMarkup:
-
 		if err := s.ReplyKeyboardMarkup.Validate(); err != nil {
 			return err
 		}
@@ -517,7 +518,6 @@ func (s CopyMessageReplyMarkup) Validate() error {
 	case ReplyKeyboardRemoveCopyMessageReplyMarkup:
 		return nil // no validation needed
 	case ForceReplyCopyMessageReplyMarkup:
-
 		if err := s.ForceReply.Validate(); err != nil {
 			return err
 		}
@@ -530,10 +530,8 @@ func (s CopyMessageReplyMarkup) Validate() error {
 func (s CreateChatInviteLink) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-
 		if s.Name.Set {
 			if err := func() error {
-
 				if err := (validate.String{
 					MinLength:    0,
 					MinLengthSet: false,
@@ -551,7 +549,6 @@ func (s CreateChatInviteLink) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -567,7 +564,6 @@ func (s CreateChatInviteLink) Validate() error {
 func (s CreateNewStickerSet) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-
 		if err := (validate.String{
 			MinLength:    1,
 			MinLengthSet: true,
@@ -587,7 +583,6 @@ func (s CreateNewStickerSet) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if err := (validate.String{
 			MinLength:    1,
 			MinLengthSet: true,
@@ -606,6 +601,25 @@ func (s CreateNewStickerSet) Validate() error {
 			Error: err,
 		})
 	}
+	if err := func() error {
+		if s.MaskPosition.Set {
+			if err := func() error {
+				if err := s.MaskPosition.Value.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return err
+			}
+		}
+		return nil
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "mask_position",
+			Error: err,
+		})
+	}
 	if len(failures) > 0 {
 		return &validate.Error{Fields: failures}
 	}
@@ -614,10 +628,8 @@ func (s CreateNewStickerSet) Validate() error {
 func (s Document) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-
 		if s.Thumb.Set {
 			if err := func() error {
-
 				if err := s.Thumb.Value.Validate(); err != nil {
 					return err
 				}
@@ -627,7 +639,6 @@ func (s Document) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -643,10 +654,8 @@ func (s Document) Validate() error {
 func (s EditChatInviteLink) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-
 		if s.Name.Set {
 			if err := func() error {
-
 				if err := (validate.String{
 					MinLength:    0,
 					MinLengthSet: false,
@@ -664,7 +673,6 @@ func (s EditChatInviteLink) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -680,10 +688,8 @@ func (s EditChatInviteLink) Validate() error {
 func (s EditMessageCaption) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-
 		if s.Caption.Set {
 			if err := func() error {
-
 				if err := (validate.String{
 					MinLength:    0,
 					MinLengthSet: false,
@@ -701,7 +707,6 @@ func (s EditMessageCaption) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -710,10 +715,8 @@ func (s EditMessageCaption) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if s.ReplyMarkup.Set {
 			if err := func() error {
-
 				if err := s.ReplyMarkup.Value.Validate(); err != nil {
 					return err
 				}
@@ -723,7 +726,6 @@ func (s EditMessageCaption) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -739,10 +741,49 @@ func (s EditMessageCaption) Validate() error {
 func (s EditMessageLiveLocation) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-
+		if f := float64(s.Latitude); math.IsInf(f, 0) || math.IsNaN(f) {
+			return errors.Errorf("%f float value is invalid", f)
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "latitude",
+			Error: err,
+		})
+	}
+	if err := func() error {
+		if f := float64(s.Longitude); math.IsInf(f, 0) || math.IsNaN(f) {
+			return errors.Errorf("%f float value is invalid", f)
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "longitude",
+			Error: err,
+		})
+	}
+	if err := func() error {
+		if s.HorizontalAccuracy.Set {
+			if err := func() error {
+				if f := float64(s.HorizontalAccuracy.Value); math.IsInf(f, 0) || math.IsNaN(f) {
+					return errors.Errorf("%f float value is invalid", f)
+				}
+				return nil
+			}(); err != nil {
+				return err
+			}
+		}
+		return nil
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "horizontal_accuracy",
+			Error: err,
+		})
+	}
+	if err := func() error {
 		if s.ReplyMarkup.Set {
 			if err := func() error {
-
 				if err := s.ReplyMarkup.Value.Validate(); err != nil {
 					return err
 				}
@@ -752,7 +793,6 @@ func (s EditMessageLiveLocation) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -768,7 +808,6 @@ func (s EditMessageLiveLocation) Validate() error {
 func (s EditMessageMedia) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-
 		if err := s.Media.Validate(); err != nil {
 			return err
 		}
@@ -780,10 +819,8 @@ func (s EditMessageMedia) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if s.ReplyMarkup.Set {
 			if err := func() error {
-
 				if err := s.ReplyMarkup.Value.Validate(); err != nil {
 					return err
 				}
@@ -793,7 +830,6 @@ func (s EditMessageMedia) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -809,10 +845,8 @@ func (s EditMessageMedia) Validate() error {
 func (s EditMessageReplyMarkup) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-
 		if s.ReplyMarkup.Set {
 			if err := func() error {
-
 				if err := s.ReplyMarkup.Value.Validate(); err != nil {
 					return err
 				}
@@ -822,7 +856,6 @@ func (s EditMessageReplyMarkup) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -838,7 +871,6 @@ func (s EditMessageReplyMarkup) Validate() error {
 func (s EditMessageText) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-
 		if err := (validate.String{
 			MinLength:    1,
 			MinLengthSet: true,
@@ -858,10 +890,8 @@ func (s EditMessageText) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if s.ReplyMarkup.Set {
 			if err := func() error {
-
 				if err := s.ReplyMarkup.Value.Validate(); err != nil {
 					return err
 				}
@@ -871,7 +901,6 @@ func (s EditMessageText) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -887,10 +916,8 @@ func (s EditMessageText) Validate() error {
 func (s ForceReply) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-
 		if s.InputFieldPlaceholder.Set {
 			if err := func() error {
-
 				if err := (validate.String{
 					MinLength:    1,
 					MinLengthSet: true,
@@ -908,7 +935,6 @@ func (s ForceReply) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -927,11 +953,9 @@ func (s Game) Validate() error {
 		if s.Photo == nil {
 			return errors.New("nil is invalid value")
 		}
-
 		var failures []validate.FieldError
 		for i, elem := range s.Photo {
 			if err := func() error {
-
 				if err := elem.Validate(); err != nil {
 					return err
 				}
@@ -954,10 +978,8 @@ func (s Game) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if s.Text.Set {
 			if err := func() error {
-
 				if err := (validate.String{
 					MinLength:    0,
 					MinLengthSet: false,
@@ -975,7 +997,6 @@ func (s Game) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -984,10 +1005,8 @@ func (s Game) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if s.Animation.Set {
 			if err := func() error {
-
 				if err := s.Animation.Value.Validate(); err != nil {
 					return err
 				}
@@ -997,7 +1016,6 @@ func (s Game) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -1013,10 +1031,8 @@ func (s Game) Validate() error {
 func (s GetUpdates) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-
 		if s.Limit.Set {
 			if err := func() error {
-
 				if err := (validate.Int{
 					MinSet:       true,
 					Min:          1,
@@ -1033,7 +1049,6 @@ func (s GetUpdates) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -1049,10 +1064,8 @@ func (s GetUpdates) Validate() error {
 func (s GetUserProfilePhotos) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-
 		if s.Limit.Set {
 			if err := func() error {
-
 				if err := (validate.Int{
 					MinSet:       true,
 					Min:          1,
@@ -1069,7 +1082,6 @@ func (s GetUserProfilePhotos) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -1088,14 +1100,12 @@ func (s InlineKeyboardMarkup) Validate() error {
 		if s.InlineKeyboard == nil {
 			return errors.New("nil is invalid value")
 		}
-
 		var failures []validate.FieldError
 		for i, elem := range s.InlineKeyboard {
 			if err := func() error {
 				if elem == nil {
 					return errors.New("nil is invalid value")
 				}
-
 				return nil
 			}(); err != nil {
 				failures = append(failures, validate.FieldError{
@@ -1122,31 +1132,26 @@ func (s InlineKeyboardMarkup) Validate() error {
 func (s InputMedia) Validate() error {
 	switch s.Type {
 	case InputMediaAnimationInputMedia:
-
 		if err := s.InputMediaAnimation.Validate(); err != nil {
 			return err
 		}
 		return nil
 	case InputMediaDocumentInputMedia:
-
 		if err := s.InputMediaDocument.Validate(); err != nil {
 			return err
 		}
 		return nil
 	case InputMediaAudioInputMedia:
-
 		if err := s.InputMediaAudio.Validate(); err != nil {
 			return err
 		}
 		return nil
 	case InputMediaPhotoInputMedia:
-
 		if err := s.InputMediaPhoto.Validate(); err != nil {
 			return err
 		}
 		return nil
 	case InputMediaVideoInputMedia:
-
 		if err := s.InputMediaVideo.Validate(); err != nil {
 			return err
 		}
@@ -1159,10 +1164,8 @@ func (s InputMedia) Validate() error {
 func (s InputMediaAnimation) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-
 		if s.Caption.Set {
 			if err := func() error {
-
 				if err := (validate.String{
 					MinLength:    0,
 					MinLengthSet: false,
@@ -1180,7 +1183,6 @@ func (s InputMediaAnimation) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -1189,10 +1191,8 @@ func (s InputMediaAnimation) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if s.Width.Set {
 			if err := func() error {
-
 				if err := (validate.Int{
 					MinSet:       true,
 					Min:          0,
@@ -1209,7 +1209,6 @@ func (s InputMediaAnimation) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -1218,10 +1217,8 @@ func (s InputMediaAnimation) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if s.Height.Set {
 			if err := func() error {
-
 				if err := (validate.Int{
 					MinSet:       true,
 					Min:          0,
@@ -1238,7 +1235,6 @@ func (s InputMediaAnimation) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -1247,10 +1243,8 @@ func (s InputMediaAnimation) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if s.Duration.Set {
 			if err := func() error {
-
 				if err := (validate.Int{
 					MinSet:       true,
 					Min:          0,
@@ -1267,7 +1261,6 @@ func (s InputMediaAnimation) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -1283,10 +1276,8 @@ func (s InputMediaAnimation) Validate() error {
 func (s InputMediaAudio) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-
 		if s.Caption.Set {
 			if err := func() error {
-
 				if err := (validate.String{
 					MinLength:    0,
 					MinLengthSet: false,
@@ -1304,7 +1295,6 @@ func (s InputMediaAudio) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -1313,10 +1303,8 @@ func (s InputMediaAudio) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if s.Duration.Set {
 			if err := func() error {
-
 				if err := (validate.Int{
 					MinSet:       true,
 					Min:          0,
@@ -1333,7 +1321,6 @@ func (s InputMediaAudio) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -1349,10 +1336,8 @@ func (s InputMediaAudio) Validate() error {
 func (s InputMediaDocument) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-
 		if s.Caption.Set {
 			if err := func() error {
-
 				if err := (validate.String{
 					MinLength:    0,
 					MinLengthSet: false,
@@ -1370,7 +1355,6 @@ func (s InputMediaDocument) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -1386,10 +1370,8 @@ func (s InputMediaDocument) Validate() error {
 func (s InputMediaPhoto) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-
 		if s.Caption.Set {
 			if err := func() error {
-
 				if err := (validate.String{
 					MinLength:    0,
 					MinLengthSet: false,
@@ -1407,7 +1389,6 @@ func (s InputMediaPhoto) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -1423,10 +1404,8 @@ func (s InputMediaPhoto) Validate() error {
 func (s InputMediaVideo) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-
 		if s.Caption.Set {
 			if err := func() error {
-
 				if err := (validate.String{
 					MinLength:    0,
 					MinLengthSet: false,
@@ -1444,7 +1423,6 @@ func (s InputMediaVideo) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -1453,10 +1431,8 @@ func (s InputMediaVideo) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if s.Width.Set {
 			if err := func() error {
-
 				if err := (validate.Int{
 					MinSet:       true,
 					Min:          0,
@@ -1473,7 +1449,6 @@ func (s InputMediaVideo) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -1482,10 +1457,8 @@ func (s InputMediaVideo) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if s.Height.Set {
 			if err := func() error {
-
 				if err := (validate.Int{
 					MinSet:       true,
 					Min:          0,
@@ -1502,7 +1475,6 @@ func (s InputMediaVideo) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -1511,10 +1483,8 @@ func (s InputMediaVideo) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if s.Duration.Set {
 			if err := func() error {
-
 				if err := (validate.Int{
 					MinSet:       true,
 					Min:          0,
@@ -1531,7 +1501,6 @@ func (s InputMediaVideo) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -1544,13 +1513,99 @@ func (s InputMediaVideo) Validate() error {
 	}
 	return nil
 }
+func (s Location) Validate() error {
+	var failures []validate.FieldError
+	if err := func() error {
+		if f := float64(s.Longitude); math.IsInf(f, 0) || math.IsNaN(f) {
+			return errors.Errorf("%f float value is invalid", f)
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "longitude",
+			Error: err,
+		})
+	}
+	if err := func() error {
+		if f := float64(s.Latitude); math.IsInf(f, 0) || math.IsNaN(f) {
+			return errors.Errorf("%f float value is invalid", f)
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "latitude",
+			Error: err,
+		})
+	}
+	if err := func() error {
+		if s.HorizontalAccuracy.Set {
+			if err := func() error {
+				if f := float64(s.HorizontalAccuracy.Value); math.IsInf(f, 0) || math.IsNaN(f) {
+					return errors.Errorf("%f float value is invalid", f)
+				}
+				return nil
+			}(); err != nil {
+				return err
+			}
+		}
+		return nil
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "horizontal_accuracy",
+			Error: err,
+		})
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+	return nil
+}
+func (s MaskPosition) Validate() error {
+	var failures []validate.FieldError
+	if err := func() error {
+		if f := float64(s.XShift); math.IsInf(f, 0) || math.IsNaN(f) {
+			return errors.Errorf("%f float value is invalid", f)
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "x_shift",
+			Error: err,
+		})
+	}
+	if err := func() error {
+		if f := float64(s.YShift); math.IsInf(f, 0) || math.IsNaN(f) {
+			return errors.Errorf("%f float value is invalid", f)
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "y_shift",
+			Error: err,
+		})
+	}
+	if err := func() error {
+		if f := float64(s.Scale); math.IsInf(f, 0) || math.IsNaN(f) {
+			return errors.Errorf("%f float value is invalid", f)
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "scale",
+			Error: err,
+		})
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+	return nil
+}
 func (s Message) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-
 		if s.SenderChat.Set {
 			if err := func() error {
-
 				if err := s.SenderChat.Value.Validate(); err != nil {
 					return err
 				}
@@ -1560,7 +1615,6 @@ func (s Message) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -1569,7 +1623,6 @@ func (s Message) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if err := s.Chat.Validate(); err != nil {
 			return err
 		}
@@ -1581,10 +1634,8 @@ func (s Message) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if s.ForwardFromChat.Set {
 			if err := func() error {
-
 				if err := s.ForwardFromChat.Value.Validate(); err != nil {
 					return err
 				}
@@ -1594,7 +1645,6 @@ func (s Message) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -1603,12 +1653,10 @@ func (s Message) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if s.ReplyToMessage == nil {
 			return nil // optional
 		}
 		if err := func() error {
-
 			if err := s.ReplyToMessage.Validate(); err != nil {
 				return err
 			}
@@ -1624,10 +1672,8 @@ func (s Message) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if s.Text.Set {
 			if err := func() error {
-
 				if err := (validate.String{
 					MinLength:    0,
 					MinLengthSet: false,
@@ -1645,7 +1691,6 @@ func (s Message) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -1654,10 +1699,8 @@ func (s Message) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if s.Animation.Set {
 			if err := func() error {
-
 				if err := s.Animation.Value.Validate(); err != nil {
 					return err
 				}
@@ -1667,7 +1710,6 @@ func (s Message) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -1676,10 +1718,8 @@ func (s Message) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if s.Audio.Set {
 			if err := func() error {
-
 				if err := s.Audio.Value.Validate(); err != nil {
 					return err
 				}
@@ -1689,7 +1729,6 @@ func (s Message) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -1698,10 +1737,8 @@ func (s Message) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if s.Document.Set {
 			if err := func() error {
-
 				if err := s.Document.Value.Validate(); err != nil {
 					return err
 				}
@@ -1711,7 +1748,6 @@ func (s Message) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -1720,11 +1756,9 @@ func (s Message) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		var failures []validate.FieldError
 		for i, elem := range s.Photo {
 			if err := func() error {
-
 				if err := elem.Validate(); err != nil {
 					return err
 				}
@@ -1747,10 +1781,8 @@ func (s Message) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if s.Sticker.Set {
 			if err := func() error {
-
 				if err := s.Sticker.Value.Validate(); err != nil {
 					return err
 				}
@@ -1760,7 +1792,6 @@ func (s Message) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -1769,10 +1800,8 @@ func (s Message) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if s.Video.Set {
 			if err := func() error {
-
 				if err := s.Video.Value.Validate(); err != nil {
 					return err
 				}
@@ -1782,7 +1811,6 @@ func (s Message) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -1791,10 +1819,8 @@ func (s Message) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if s.VideoNote.Set {
 			if err := func() error {
-
 				if err := s.VideoNote.Value.Validate(); err != nil {
 					return err
 				}
@@ -1804,7 +1830,6 @@ func (s Message) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -1813,10 +1838,8 @@ func (s Message) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if s.Voice.Set {
 			if err := func() error {
-
 				if err := s.Voice.Value.Validate(); err != nil {
 					return err
 				}
@@ -1826,7 +1849,6 @@ func (s Message) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -1835,10 +1857,8 @@ func (s Message) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if s.Caption.Set {
 			if err := func() error {
-
 				if err := (validate.String{
 					MinLength:    0,
 					MinLengthSet: false,
@@ -1856,7 +1876,6 @@ func (s Message) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -1865,10 +1884,8 @@ func (s Message) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if s.Game.Set {
 			if err := func() error {
-
 				if err := s.Game.Value.Validate(); err != nil {
 					return err
 				}
@@ -1878,7 +1895,6 @@ func (s Message) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -1887,10 +1903,8 @@ func (s Message) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if s.Poll.Set {
 			if err := func() error {
-
 				if err := s.Poll.Value.Validate(); err != nil {
 					return err
 				}
@@ -1900,7 +1914,6 @@ func (s Message) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -1909,11 +1922,47 @@ func (s Message) Validate() error {
 		})
 	}
 	if err := func() error {
-
+		if s.Venue.Set {
+			if err := func() error {
+				if err := s.Venue.Value.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return err
+			}
+		}
+		return nil
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "venue",
+			Error: err,
+		})
+	}
+	if err := func() error {
+		if s.Location.Set {
+			if err := func() error {
+				if err := s.Location.Value.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return err
+			}
+		}
+		return nil
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "location",
+			Error: err,
+		})
+	}
+	if err := func() error {
 		var failures []validate.FieldError
 		for i, elem := range s.NewChatPhoto {
 			if err := func() error {
-
 				if err := elem.Validate(); err != nil {
 					return err
 				}
@@ -1936,12 +1985,10 @@ func (s Message) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if s.PinnedMessage == nil {
 			return nil // optional
 		}
 		if err := func() error {
-
 			if err := s.PinnedMessage.Validate(); err != nil {
 				return err
 			}
@@ -1957,10 +2004,8 @@ func (s Message) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if s.PassportData.Set {
 			if err := func() error {
-
 				if err := s.PassportData.Value.Validate(); err != nil {
 					return err
 				}
@@ -1970,7 +2015,6 @@ func (s Message) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -1979,10 +2023,8 @@ func (s Message) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if s.VoiceChatEnded.Set {
 			if err := func() error {
-
 				if err := s.VoiceChatEnded.Value.Validate(); err != nil {
 					return err
 				}
@@ -1992,7 +2034,6 @@ func (s Message) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -2001,10 +2042,8 @@ func (s Message) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if s.ReplyMarkup.Set {
 			if err := func() error {
-
 				if err := s.ReplyMarkup.Value.Validate(); err != nil {
 					return err
 				}
@@ -2014,7 +2053,6 @@ func (s Message) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -2034,7 +2072,6 @@ func (s PassportData) Validate() error {
 		if s.Data == nil {
 			return errors.New("nil is invalid value")
 		}
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -2060,7 +2097,6 @@ func (s PassportElementError) Validate() error {
 	case PassportElementErrorFilePassportElementError:
 		return nil // no validation needed
 	case PassportElementErrorFilesPassportElementError:
-
 		if err := s.PassportElementErrorFiles.Validate(); err != nil {
 			return err
 		}
@@ -2068,7 +2104,6 @@ func (s PassportElementError) Validate() error {
 	case PassportElementErrorTranslationFilePassportElementError:
 		return nil // no validation needed
 	case PassportElementErrorTranslationFilesPassportElementError:
-
 		if err := s.PassportElementErrorTranslationFiles.Validate(); err != nil {
 			return err
 		}
@@ -2086,7 +2121,6 @@ func (s PassportElementErrorFiles) Validate() error {
 		if s.FileHashes == nil {
 			return errors.New("nil is invalid value")
 		}
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -2105,7 +2139,6 @@ func (s PassportElementErrorTranslationFiles) Validate() error {
 		if s.FileHashes == nil {
 			return errors.New("nil is invalid value")
 		}
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -2121,7 +2154,6 @@ func (s PassportElementErrorTranslationFiles) Validate() error {
 func (s PhotoSize) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-
 		if err := (validate.Int{
 			MinSet:       true,
 			Min:          0,
@@ -2140,7 +2172,6 @@ func (s PhotoSize) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if err := (validate.Int{
 			MinSet:       true,
 			Min:          0,
@@ -2166,7 +2197,6 @@ func (s PhotoSize) Validate() error {
 func (s Poll) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-
 		if err := (validate.String{
 			MinLength:    1,
 			MinLengthSet: true,
@@ -2189,11 +2219,9 @@ func (s Poll) Validate() error {
 		if s.Options == nil {
 			return errors.New("nil is invalid value")
 		}
-
 		var failures []validate.FieldError
 		for i, elem := range s.Options {
 			if err := func() error {
-
 				if err := elem.Validate(); err != nil {
 					return err
 				}
@@ -2216,10 +2244,8 @@ func (s Poll) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if s.Explanation.Set {
 			if err := func() error {
-
 				if err := (validate.String{
 					MinLength:    0,
 					MinLengthSet: false,
@@ -2237,7 +2263,6 @@ func (s Poll) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -2253,7 +2278,6 @@ func (s Poll) Validate() error {
 func (s PollOption) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-
 		if err := (validate.String{
 			MinLength:    1,
 			MinLengthSet: true,
@@ -2283,14 +2307,12 @@ func (s ReplyKeyboardMarkup) Validate() error {
 		if s.Keyboard == nil {
 			return errors.New("nil is invalid value")
 		}
-
 		var failures []validate.FieldError
 		for i, elem := range s.Keyboard {
 			if err := func() error {
 				if elem == nil {
 					return errors.New("nil is invalid value")
 				}
-
 				return nil
 			}(); err != nil {
 				failures = append(failures, validate.FieldError{
@@ -2310,10 +2332,8 @@ func (s ReplyKeyboardMarkup) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if s.InputFieldPlaceholder.Set {
 			if err := func() error {
-
 				if err := (validate.String{
 					MinLength:    1,
 					MinLengthSet: true,
@@ -2331,7 +2351,6 @@ func (s ReplyKeyboardMarkup) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -2347,10 +2366,8 @@ func (s ReplyKeyboardMarkup) Validate() error {
 func (s ResultMsg) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-
 		if s.Result.Set {
 			if err := func() error {
-
 				if err := s.Result.Value.Validate(); err != nil {
 					return err
 				}
@@ -2360,7 +2377,6 @@ func (s ResultMsg) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -2376,10 +2392,8 @@ func (s ResultMsg) Validate() error {
 func (s SendAnimation) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-
 		if s.Duration.Set {
 			if err := func() error {
-
 				if err := (validate.Int{
 					MinSet:       true,
 					Min:          0,
@@ -2396,7 +2410,6 @@ func (s SendAnimation) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -2405,10 +2418,8 @@ func (s SendAnimation) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if s.Width.Set {
 			if err := func() error {
-
 				if err := (validate.Int{
 					MinSet:       true,
 					Min:          0,
@@ -2425,7 +2436,6 @@ func (s SendAnimation) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -2434,10 +2444,8 @@ func (s SendAnimation) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if s.Height.Set {
 			if err := func() error {
-
 				if err := (validate.Int{
 					MinSet:       true,
 					Min:          0,
@@ -2454,7 +2462,6 @@ func (s SendAnimation) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -2463,10 +2470,8 @@ func (s SendAnimation) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if s.Caption.Set {
 			if err := func() error {
-
 				if err := (validate.String{
 					MinLength:    0,
 					MinLengthSet: false,
@@ -2484,7 +2489,6 @@ func (s SendAnimation) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -2493,12 +2497,10 @@ func (s SendAnimation) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if s.ReplyMarkup == nil {
 			return nil // optional
 		}
 		if err := func() error {
-
 			if err := s.ReplyMarkup.Validate(); err != nil {
 				return err
 			}
@@ -2521,13 +2523,11 @@ func (s SendAnimation) Validate() error {
 func (s SendAnimationReplyMarkup) Validate() error {
 	switch s.Type {
 	case InlineKeyboardMarkupSendAnimationReplyMarkup:
-
 		if err := s.InlineKeyboardMarkup.Validate(); err != nil {
 			return err
 		}
 		return nil
 	case ReplyKeyboardMarkupSendAnimationReplyMarkup:
-
 		if err := s.ReplyKeyboardMarkup.Validate(); err != nil {
 			return err
 		}
@@ -2535,7 +2535,6 @@ func (s SendAnimationReplyMarkup) Validate() error {
 	case ReplyKeyboardRemoveSendAnimationReplyMarkup:
 		return nil // no validation needed
 	case ForceReplySendAnimationReplyMarkup:
-
 		if err := s.ForceReply.Validate(); err != nil {
 			return err
 		}
@@ -2548,10 +2547,8 @@ func (s SendAnimationReplyMarkup) Validate() error {
 func (s SendAudio) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-
 		if s.Caption.Set {
 			if err := func() error {
-
 				if err := (validate.String{
 					MinLength:    0,
 					MinLengthSet: false,
@@ -2569,7 +2566,6 @@ func (s SendAudio) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -2578,10 +2574,8 @@ func (s SendAudio) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if s.Duration.Set {
 			if err := func() error {
-
 				if err := (validate.Int{
 					MinSet:       true,
 					Min:          0,
@@ -2598,7 +2592,6 @@ func (s SendAudio) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -2607,12 +2600,10 @@ func (s SendAudio) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if s.ReplyMarkup == nil {
 			return nil // optional
 		}
 		if err := func() error {
-
 			if err := s.ReplyMarkup.Validate(); err != nil {
 				return err
 			}
@@ -2635,13 +2626,11 @@ func (s SendAudio) Validate() error {
 func (s SendAudioReplyMarkup) Validate() error {
 	switch s.Type {
 	case InlineKeyboardMarkupSendAudioReplyMarkup:
-
 		if err := s.InlineKeyboardMarkup.Validate(); err != nil {
 			return err
 		}
 		return nil
 	case ReplyKeyboardMarkupSendAudioReplyMarkup:
-
 		if err := s.ReplyKeyboardMarkup.Validate(); err != nil {
 			return err
 		}
@@ -2649,7 +2638,6 @@ func (s SendAudioReplyMarkup) Validate() error {
 	case ReplyKeyboardRemoveSendAudioReplyMarkup:
 		return nil // no validation needed
 	case ForceReplySendAudioReplyMarkup:
-
 		if err := s.ForceReply.Validate(); err != nil {
 			return err
 		}
@@ -2662,12 +2650,10 @@ func (s SendAudioReplyMarkup) Validate() error {
 func (s SendContact) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-
 		if s.ReplyMarkup == nil {
 			return nil // optional
 		}
 		if err := func() error {
-
 			if err := s.ReplyMarkup.Validate(); err != nil {
 				return err
 			}
@@ -2690,13 +2676,11 @@ func (s SendContact) Validate() error {
 func (s SendContactReplyMarkup) Validate() error {
 	switch s.Type {
 	case InlineKeyboardMarkupSendContactReplyMarkup:
-
 		if err := s.InlineKeyboardMarkup.Validate(); err != nil {
 			return err
 		}
 		return nil
 	case ReplyKeyboardMarkupSendContactReplyMarkup:
-
 		if err := s.ReplyKeyboardMarkup.Validate(); err != nil {
 			return err
 		}
@@ -2704,7 +2688,6 @@ func (s SendContactReplyMarkup) Validate() error {
 	case ReplyKeyboardRemoveSendContactReplyMarkup:
 		return nil // no validation needed
 	case ForceReplySendContactReplyMarkup:
-
 		if err := s.ForceReply.Validate(); err != nil {
 			return err
 		}
@@ -2717,12 +2700,10 @@ func (s SendContactReplyMarkup) Validate() error {
 func (s SendDice) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-
 		if s.ReplyMarkup == nil {
 			return nil // optional
 		}
 		if err := func() error {
-
 			if err := s.ReplyMarkup.Validate(); err != nil {
 				return err
 			}
@@ -2745,13 +2726,11 @@ func (s SendDice) Validate() error {
 func (s SendDiceReplyMarkup) Validate() error {
 	switch s.Type {
 	case InlineKeyboardMarkupSendDiceReplyMarkup:
-
 		if err := s.InlineKeyboardMarkup.Validate(); err != nil {
 			return err
 		}
 		return nil
 	case ReplyKeyboardMarkupSendDiceReplyMarkup:
-
 		if err := s.ReplyKeyboardMarkup.Validate(); err != nil {
 			return err
 		}
@@ -2759,7 +2738,6 @@ func (s SendDiceReplyMarkup) Validate() error {
 	case ReplyKeyboardRemoveSendDiceReplyMarkup:
 		return nil // no validation needed
 	case ForceReplySendDiceReplyMarkup:
-
 		if err := s.ForceReply.Validate(); err != nil {
 			return err
 		}
@@ -2772,10 +2750,8 @@ func (s SendDiceReplyMarkup) Validate() error {
 func (s SendDocument) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-
 		if s.Caption.Set {
 			if err := func() error {
-
 				if err := (validate.String{
 					MinLength:    0,
 					MinLengthSet: false,
@@ -2793,7 +2769,6 @@ func (s SendDocument) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -2802,12 +2777,10 @@ func (s SendDocument) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if s.ReplyMarkup == nil {
 			return nil // optional
 		}
 		if err := func() error {
-
 			if err := s.ReplyMarkup.Validate(); err != nil {
 				return err
 			}
@@ -2830,13 +2803,11 @@ func (s SendDocument) Validate() error {
 func (s SendDocumentReplyMarkup) Validate() error {
 	switch s.Type {
 	case InlineKeyboardMarkupSendDocumentReplyMarkup:
-
 		if err := s.InlineKeyboardMarkup.Validate(); err != nil {
 			return err
 		}
 		return nil
 	case ReplyKeyboardMarkupSendDocumentReplyMarkup:
-
 		if err := s.ReplyKeyboardMarkup.Validate(); err != nil {
 			return err
 		}
@@ -2844,7 +2815,6 @@ func (s SendDocumentReplyMarkup) Validate() error {
 	case ReplyKeyboardRemoveSendDocumentReplyMarkup:
 		return nil // no validation needed
 	case ForceReplySendDocumentReplyMarkup:
-
 		if err := s.ForceReply.Validate(); err != nil {
 			return err
 		}
@@ -2857,10 +2827,8 @@ func (s SendDocumentReplyMarkup) Validate() error {
 func (s SendGame) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-
 		if s.ReplyMarkup.Set {
 			if err := func() error {
-
 				if err := s.ReplyMarkup.Value.Validate(); err != nil {
 					return err
 				}
@@ -2870,7 +2838,6 @@ func (s SendGame) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -2886,7 +2853,6 @@ func (s SendGame) Validate() error {
 func (s SendInvoice) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-
 		if err := (validate.String{
 			MinLength:    1,
 			MinLengthSet: true,
@@ -2906,7 +2872,6 @@ func (s SendInvoice) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if err := (validate.String{
 			MinLength:    1,
 			MinLengthSet: true,
@@ -2929,7 +2894,6 @@ func (s SendInvoice) Validate() error {
 		if s.Prices == nil {
 			return errors.New("nil is invalid value")
 		}
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -2938,10 +2902,8 @@ func (s SendInvoice) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if s.PhotoWidth.Set {
 			if err := func() error {
-
 				if err := (validate.Int{
 					MinSet:       true,
 					Min:          0,
@@ -2958,7 +2920,6 @@ func (s SendInvoice) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -2967,10 +2928,8 @@ func (s SendInvoice) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if s.PhotoHeight.Set {
 			if err := func() error {
-
 				if err := (validate.Int{
 					MinSet:       true,
 					Min:          0,
@@ -2987,7 +2946,6 @@ func (s SendInvoice) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -2996,10 +2954,8 @@ func (s SendInvoice) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if s.ReplyMarkup.Set {
 			if err := func() error {
-
 				if err := s.ReplyMarkup.Value.Validate(); err != nil {
 					return err
 				}
@@ -3009,7 +2965,6 @@ func (s SendInvoice) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -3025,12 +2980,51 @@ func (s SendInvoice) Validate() error {
 func (s SendLocation) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-
+		if f := float64(s.Latitude); math.IsInf(f, 0) || math.IsNaN(f) {
+			return errors.Errorf("%f float value is invalid", f)
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "latitude",
+			Error: err,
+		})
+	}
+	if err := func() error {
+		if f := float64(s.Longitude); math.IsInf(f, 0) || math.IsNaN(f) {
+			return errors.Errorf("%f float value is invalid", f)
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "longitude",
+			Error: err,
+		})
+	}
+	if err := func() error {
+		if s.HorizontalAccuracy.Set {
+			if err := func() error {
+				if f := float64(s.HorizontalAccuracy.Value); math.IsInf(f, 0) || math.IsNaN(f) {
+					return errors.Errorf("%f float value is invalid", f)
+				}
+				return nil
+			}(); err != nil {
+				return err
+			}
+		}
+		return nil
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "horizontal_accuracy",
+			Error: err,
+		})
+	}
+	if err := func() error {
 		if s.ReplyMarkup == nil {
 			return nil // optional
 		}
 		if err := func() error {
-
 			if err := s.ReplyMarkup.Validate(); err != nil {
 				return err
 			}
@@ -3053,13 +3047,11 @@ func (s SendLocation) Validate() error {
 func (s SendLocationReplyMarkup) Validate() error {
 	switch s.Type {
 	case InlineKeyboardMarkupSendLocationReplyMarkup:
-
 		if err := s.InlineKeyboardMarkup.Validate(); err != nil {
 			return err
 		}
 		return nil
 	case ReplyKeyboardMarkupSendLocationReplyMarkup:
-
 		if err := s.ReplyKeyboardMarkup.Validate(); err != nil {
 			return err
 		}
@@ -3067,7 +3059,6 @@ func (s SendLocationReplyMarkup) Validate() error {
 	case ReplyKeyboardRemoveSendLocationReplyMarkup:
 		return nil // no validation needed
 	case ForceReplySendLocationReplyMarkup:
-
 		if err := s.ForceReply.Validate(); err != nil {
 			return err
 		}
@@ -3083,11 +3074,9 @@ func (s SendMediaGroup) Validate() error {
 		if s.Media == nil {
 			return errors.New("nil is invalid value")
 		}
-
 		var failures []validate.FieldError
 		for i, elem := range s.Media {
 			if err := func() error {
-
 				if err := elem.Validate(); err != nil {
 					return err
 				}
@@ -3117,25 +3106,21 @@ func (s SendMediaGroup) Validate() error {
 func (s SendMediaGroupMediaItem) Validate() error {
 	switch s.Type {
 	case InputMediaAudioSendMediaGroupMediaItem:
-
 		if err := s.InputMediaAudio.Validate(); err != nil {
 			return err
 		}
 		return nil
 	case InputMediaDocumentSendMediaGroupMediaItem:
-
 		if err := s.InputMediaDocument.Validate(); err != nil {
 			return err
 		}
 		return nil
 	case InputMediaPhotoSendMediaGroupMediaItem:
-
 		if err := s.InputMediaPhoto.Validate(); err != nil {
 			return err
 		}
 		return nil
 	case InputMediaVideoSendMediaGroupMediaItem:
-
 		if err := s.InputMediaVideo.Validate(); err != nil {
 			return err
 		}
@@ -3148,7 +3133,6 @@ func (s SendMediaGroupMediaItem) Validate() error {
 func (s SendMessage) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-
 		if err := (validate.String{
 			MinLength:    1,
 			MinLengthSet: true,
@@ -3168,12 +3152,10 @@ func (s SendMessage) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if s.ReplyMarkup == nil {
 			return nil // optional
 		}
 		if err := func() error {
-
 			if err := s.ReplyMarkup.Validate(); err != nil {
 				return err
 			}
@@ -3196,13 +3178,11 @@ func (s SendMessage) Validate() error {
 func (s SendMessageReplyMarkup) Validate() error {
 	switch s.Type {
 	case InlineKeyboardMarkupSendMessageReplyMarkup:
-
 		if err := s.InlineKeyboardMarkup.Validate(); err != nil {
 			return err
 		}
 		return nil
 	case ReplyKeyboardMarkupSendMessageReplyMarkup:
-
 		if err := s.ReplyKeyboardMarkup.Validate(); err != nil {
 			return err
 		}
@@ -3210,7 +3190,6 @@ func (s SendMessageReplyMarkup) Validate() error {
 	case ReplyKeyboardRemoveSendMessageReplyMarkup:
 		return nil // no validation needed
 	case ForceReplySendMessageReplyMarkup:
-
 		if err := s.ForceReply.Validate(); err != nil {
 			return err
 		}
@@ -3223,10 +3202,8 @@ func (s SendMessageReplyMarkup) Validate() error {
 func (s SendPhoto) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-
 		if s.Caption.Set {
 			if err := func() error {
-
 				if err := (validate.String{
 					MinLength:    0,
 					MinLengthSet: false,
@@ -3244,7 +3221,6 @@ func (s SendPhoto) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -3253,12 +3229,10 @@ func (s SendPhoto) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if s.ReplyMarkup == nil {
 			return nil // optional
 		}
 		if err := func() error {
-
 			if err := s.ReplyMarkup.Validate(); err != nil {
 				return err
 			}
@@ -3281,13 +3255,11 @@ func (s SendPhoto) Validate() error {
 func (s SendPhotoReplyMarkup) Validate() error {
 	switch s.Type {
 	case InlineKeyboardMarkupSendPhotoReplyMarkup:
-
 		if err := s.InlineKeyboardMarkup.Validate(); err != nil {
 			return err
 		}
 		return nil
 	case ReplyKeyboardMarkupSendPhotoReplyMarkup:
-
 		if err := s.ReplyKeyboardMarkup.Validate(); err != nil {
 			return err
 		}
@@ -3295,7 +3267,6 @@ func (s SendPhotoReplyMarkup) Validate() error {
 	case ReplyKeyboardRemoveSendPhotoReplyMarkup:
 		return nil // no validation needed
 	case ForceReplySendPhotoReplyMarkup:
-
 		if err := s.ForceReply.Validate(); err != nil {
 			return err
 		}
@@ -3308,7 +3279,6 @@ func (s SendPhotoReplyMarkup) Validate() error {
 func (s SendPoll) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-
 		if err := (validate.String{
 			MinLength:    1,
 			MinLengthSet: true,
@@ -3331,7 +3301,6 @@ func (s SendPoll) Validate() error {
 		if s.Options == nil {
 			return errors.New("nil is invalid value")
 		}
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -3340,10 +3309,8 @@ func (s SendPoll) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if s.Explanation.Set {
 			if err := func() error {
-
 				if err := (validate.String{
 					MinLength:    0,
 					MinLengthSet: false,
@@ -3361,7 +3328,6 @@ func (s SendPoll) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -3370,12 +3336,10 @@ func (s SendPoll) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if s.ReplyMarkup == nil {
 			return nil // optional
 		}
 		if err := func() error {
-
 			if err := s.ReplyMarkup.Validate(); err != nil {
 				return err
 			}
@@ -3398,13 +3362,11 @@ func (s SendPoll) Validate() error {
 func (s SendPollReplyMarkup) Validate() error {
 	switch s.Type {
 	case InlineKeyboardMarkupSendPollReplyMarkup:
-
 		if err := s.InlineKeyboardMarkup.Validate(); err != nil {
 			return err
 		}
 		return nil
 	case ReplyKeyboardMarkupSendPollReplyMarkup:
-
 		if err := s.ReplyKeyboardMarkup.Validate(); err != nil {
 			return err
 		}
@@ -3412,7 +3374,6 @@ func (s SendPollReplyMarkup) Validate() error {
 	case ReplyKeyboardRemoveSendPollReplyMarkup:
 		return nil // no validation needed
 	case ForceReplySendPollReplyMarkup:
-
 		if err := s.ForceReply.Validate(); err != nil {
 			return err
 		}
@@ -3425,12 +3386,10 @@ func (s SendPollReplyMarkup) Validate() error {
 func (s SendSticker) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-
 		if s.ReplyMarkup == nil {
 			return nil // optional
 		}
 		if err := func() error {
-
 			if err := s.ReplyMarkup.Validate(); err != nil {
 				return err
 			}
@@ -3453,13 +3412,11 @@ func (s SendSticker) Validate() error {
 func (s SendStickerReplyMarkup) Validate() error {
 	switch s.Type {
 	case InlineKeyboardMarkupSendStickerReplyMarkup:
-
 		if err := s.InlineKeyboardMarkup.Validate(); err != nil {
 			return err
 		}
 		return nil
 	case ReplyKeyboardMarkupSendStickerReplyMarkup:
-
 		if err := s.ReplyKeyboardMarkup.Validate(); err != nil {
 			return err
 		}
@@ -3467,7 +3424,6 @@ func (s SendStickerReplyMarkup) Validate() error {
 	case ReplyKeyboardRemoveSendStickerReplyMarkup:
 		return nil // no validation needed
 	case ForceReplySendStickerReplyMarkup:
-
 		if err := s.ForceReply.Validate(); err != nil {
 			return err
 		}
@@ -3480,12 +3436,32 @@ func (s SendStickerReplyMarkup) Validate() error {
 func (s SendVenue) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-
+		if f := float64(s.Latitude); math.IsInf(f, 0) || math.IsNaN(f) {
+			return errors.Errorf("%f float value is invalid", f)
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "latitude",
+			Error: err,
+		})
+	}
+	if err := func() error {
+		if f := float64(s.Longitude); math.IsInf(f, 0) || math.IsNaN(f) {
+			return errors.Errorf("%f float value is invalid", f)
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "longitude",
+			Error: err,
+		})
+	}
+	if err := func() error {
 		if s.ReplyMarkup == nil {
 			return nil // optional
 		}
 		if err := func() error {
-
 			if err := s.ReplyMarkup.Validate(); err != nil {
 				return err
 			}
@@ -3508,13 +3484,11 @@ func (s SendVenue) Validate() error {
 func (s SendVenueReplyMarkup) Validate() error {
 	switch s.Type {
 	case InlineKeyboardMarkupSendVenueReplyMarkup:
-
 		if err := s.InlineKeyboardMarkup.Validate(); err != nil {
 			return err
 		}
 		return nil
 	case ReplyKeyboardMarkupSendVenueReplyMarkup:
-
 		if err := s.ReplyKeyboardMarkup.Validate(); err != nil {
 			return err
 		}
@@ -3522,7 +3496,6 @@ func (s SendVenueReplyMarkup) Validate() error {
 	case ReplyKeyboardRemoveSendVenueReplyMarkup:
 		return nil // no validation needed
 	case ForceReplySendVenueReplyMarkup:
-
 		if err := s.ForceReply.Validate(); err != nil {
 			return err
 		}
@@ -3535,10 +3508,8 @@ func (s SendVenueReplyMarkup) Validate() error {
 func (s SendVideo) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-
 		if s.Duration.Set {
 			if err := func() error {
-
 				if err := (validate.Int{
 					MinSet:       true,
 					Min:          0,
@@ -3555,7 +3526,6 @@ func (s SendVideo) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -3564,10 +3534,8 @@ func (s SendVideo) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if s.Width.Set {
 			if err := func() error {
-
 				if err := (validate.Int{
 					MinSet:       true,
 					Min:          0,
@@ -3584,7 +3552,6 @@ func (s SendVideo) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -3593,10 +3560,8 @@ func (s SendVideo) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if s.Height.Set {
 			if err := func() error {
-
 				if err := (validate.Int{
 					MinSet:       true,
 					Min:          0,
@@ -3613,7 +3578,6 @@ func (s SendVideo) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -3622,10 +3586,8 @@ func (s SendVideo) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if s.Caption.Set {
 			if err := func() error {
-
 				if err := (validate.String{
 					MinLength:    0,
 					MinLengthSet: false,
@@ -3643,7 +3605,6 @@ func (s SendVideo) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -3652,12 +3613,10 @@ func (s SendVideo) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if s.ReplyMarkup == nil {
 			return nil // optional
 		}
 		if err := func() error {
-
 			if err := s.ReplyMarkup.Validate(); err != nil {
 				return err
 			}
@@ -3680,10 +3639,8 @@ func (s SendVideo) Validate() error {
 func (s SendVideoNote) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-
 		if s.Duration.Set {
 			if err := func() error {
-
 				if err := (validate.Int{
 					MinSet:       true,
 					Min:          0,
@@ -3700,7 +3657,6 @@ func (s SendVideoNote) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -3709,12 +3665,10 @@ func (s SendVideoNote) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if s.ReplyMarkup == nil {
 			return nil // optional
 		}
 		if err := func() error {
-
 			if err := s.ReplyMarkup.Validate(); err != nil {
 				return err
 			}
@@ -3737,13 +3691,11 @@ func (s SendVideoNote) Validate() error {
 func (s SendVideoNoteReplyMarkup) Validate() error {
 	switch s.Type {
 	case InlineKeyboardMarkupSendVideoNoteReplyMarkup:
-
 		if err := s.InlineKeyboardMarkup.Validate(); err != nil {
 			return err
 		}
 		return nil
 	case ReplyKeyboardMarkupSendVideoNoteReplyMarkup:
-
 		if err := s.ReplyKeyboardMarkup.Validate(); err != nil {
 			return err
 		}
@@ -3751,7 +3703,6 @@ func (s SendVideoNoteReplyMarkup) Validate() error {
 	case ReplyKeyboardRemoveSendVideoNoteReplyMarkup:
 		return nil // no validation needed
 	case ForceReplySendVideoNoteReplyMarkup:
-
 		if err := s.ForceReply.Validate(); err != nil {
 			return err
 		}
@@ -3764,13 +3715,11 @@ func (s SendVideoNoteReplyMarkup) Validate() error {
 func (s SendVideoReplyMarkup) Validate() error {
 	switch s.Type {
 	case InlineKeyboardMarkupSendVideoReplyMarkup:
-
 		if err := s.InlineKeyboardMarkup.Validate(); err != nil {
 			return err
 		}
 		return nil
 	case ReplyKeyboardMarkupSendVideoReplyMarkup:
-
 		if err := s.ReplyKeyboardMarkup.Validate(); err != nil {
 			return err
 		}
@@ -3778,7 +3727,6 @@ func (s SendVideoReplyMarkup) Validate() error {
 	case ReplyKeyboardRemoveSendVideoReplyMarkup:
 		return nil // no validation needed
 	case ForceReplySendVideoReplyMarkup:
-
 		if err := s.ForceReply.Validate(); err != nil {
 			return err
 		}
@@ -3791,10 +3739,8 @@ func (s SendVideoReplyMarkup) Validate() error {
 func (s SendVoice) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-
 		if s.Caption.Set {
 			if err := func() error {
-
 				if err := (validate.String{
 					MinLength:    0,
 					MinLengthSet: false,
@@ -3812,7 +3758,6 @@ func (s SendVoice) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -3821,10 +3766,8 @@ func (s SendVoice) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if s.Duration.Set {
 			if err := func() error {
-
 				if err := (validate.Int{
 					MinSet:       true,
 					Min:          0,
@@ -3841,7 +3784,6 @@ func (s SendVoice) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -3850,12 +3792,10 @@ func (s SendVoice) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if s.ReplyMarkup == nil {
 			return nil // optional
 		}
 		if err := func() error {
-
 			if err := s.ReplyMarkup.Validate(); err != nil {
 				return err
 			}
@@ -3878,13 +3818,11 @@ func (s SendVoice) Validate() error {
 func (s SendVoiceReplyMarkup) Validate() error {
 	switch s.Type {
 	case InlineKeyboardMarkupSendVoiceReplyMarkup:
-
 		if err := s.InlineKeyboardMarkup.Validate(); err != nil {
 			return err
 		}
 		return nil
 	case ReplyKeyboardMarkupSendVoiceReplyMarkup:
-
 		if err := s.ReplyKeyboardMarkup.Validate(); err != nil {
 			return err
 		}
@@ -3892,7 +3830,6 @@ func (s SendVoiceReplyMarkup) Validate() error {
 	case ReplyKeyboardRemoveSendVoiceReplyMarkup:
 		return nil // no validation needed
 	case ForceReplySendVoiceReplyMarkup:
-
 		if err := s.ForceReply.Validate(); err != nil {
 			return err
 		}
@@ -3905,7 +3842,6 @@ func (s SendVoiceReplyMarkup) Validate() error {
 func (s SetChatAdministratorCustomTitle) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-
 		if err := (validate.String{
 			MinLength:    0,
 			MinLengthSet: false,
@@ -3932,10 +3868,8 @@ func (s SetChatAdministratorCustomTitle) Validate() error {
 func (s SetChatDescription) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-
 		if s.Description.Set {
 			if err := func() error {
-
 				if err := (validate.String{
 					MinLength:    0,
 					MinLengthSet: false,
@@ -3953,7 +3887,6 @@ func (s SetChatDescription) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -3969,7 +3902,6 @@ func (s SetChatDescription) Validate() error {
 func (s SetChatTitle) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-
 		if err := (validate.String{
 			MinLength:    1,
 			MinLengthSet: true,
@@ -3999,11 +3931,9 @@ func (s SetMyCommands) Validate() error {
 		if s.Commands == nil {
 			return errors.New("nil is invalid value")
 		}
-
 		var failures []validate.FieldError
 		for i, elem := range s.Commands {
 			if err := func() error {
-
 				if err := elem.Validate(); err != nil {
 					return err
 				}
@@ -4036,11 +3966,9 @@ func (s SetPassportDataErrors) Validate() error {
 		if s.Errors == nil {
 			return errors.New("nil is invalid value")
 		}
-
 		var failures []validate.FieldError
 		for i, elem := range s.Errors {
 			if err := func() error {
-
 				if err := elem.Validate(); err != nil {
 					return err
 				}
@@ -4073,7 +4001,6 @@ func (s ShippingOption) Validate() error {
 		if s.Prices == nil {
 			return errors.New("nil is invalid value")
 		}
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -4089,7 +4016,6 @@ func (s ShippingOption) Validate() error {
 func (s Sticker) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-
 		if err := (validate.Int{
 			MinSet:       true,
 			Min:          0,
@@ -4108,7 +4034,6 @@ func (s Sticker) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if err := (validate.Int{
 			MinSet:       true,
 			Min:          0,
@@ -4127,10 +4052,8 @@ func (s Sticker) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if s.Thumb.Set {
 			if err := func() error {
-
 				if err := s.Thumb.Value.Validate(); err != nil {
 					return err
 				}
@@ -4140,11 +4063,29 @@ func (s Sticker) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
 			Name:  "thumb",
+			Error: err,
+		})
+	}
+	if err := func() error {
+		if s.MaskPosition.Set {
+			if err := func() error {
+				if err := s.MaskPosition.Value.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return err
+			}
+		}
+		return nil
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "mask_position",
 			Error: err,
 		})
 	}
@@ -4156,10 +4097,8 @@ func (s Sticker) Validate() error {
 func (s StopMessageLiveLocation) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-
 		if s.ReplyMarkup.Set {
 			if err := func() error {
-
 				if err := s.ReplyMarkup.Value.Validate(); err != nil {
 					return err
 				}
@@ -4169,7 +4108,6 @@ func (s StopMessageLiveLocation) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -4185,10 +4123,8 @@ func (s StopMessageLiveLocation) Validate() error {
 func (s StopPoll) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-
 		if s.ReplyMarkup.Set {
 			if err := func() error {
-
 				if err := s.ReplyMarkup.Value.Validate(); err != nil {
 					return err
 				}
@@ -4198,7 +4134,6 @@ func (s StopPoll) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -4211,10 +4146,27 @@ func (s StopPoll) Validate() error {
 	}
 	return nil
 }
+func (s Venue) Validate() error {
+	var failures []validate.FieldError
+	if err := func() error {
+		if err := s.Location.Validate(); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "location",
+			Error: err,
+		})
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+	return nil
+}
 func (s Video) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-
 		if err := (validate.Int{
 			MinSet:       true,
 			Min:          0,
@@ -4233,7 +4185,6 @@ func (s Video) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if err := (validate.Int{
 			MinSet:       true,
 			Min:          0,
@@ -4252,7 +4203,6 @@ func (s Video) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if err := (validate.Int{
 			MinSet:       true,
 			Min:          0,
@@ -4271,10 +4221,8 @@ func (s Video) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if s.Thumb.Set {
 			if err := func() error {
-
 				if err := s.Thumb.Value.Validate(); err != nil {
 					return err
 				}
@@ -4284,7 +4232,6 @@ func (s Video) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -4300,7 +4247,6 @@ func (s Video) Validate() error {
 func (s VideoNote) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-
 		if err := (validate.Int{
 			MinSet:       true,
 			Min:          0,
@@ -4319,10 +4265,8 @@ func (s VideoNote) Validate() error {
 		})
 	}
 	if err := func() error {
-
 		if s.Thumb.Set {
 			if err := func() error {
-
 				if err := s.Thumb.Value.Validate(); err != nil {
 					return err
 				}
@@ -4332,7 +4276,6 @@ func (s VideoNote) Validate() error {
 			}
 		}
 		return nil
-
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
@@ -4348,7 +4291,6 @@ func (s VideoNote) Validate() error {
 func (s Voice) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-
 		if err := (validate.Int{
 			MinSet:       true,
 			Min:          0,
@@ -4374,7 +4316,6 @@ func (s Voice) Validate() error {
 func (s VoiceChatEnded) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
-
 		if err := (validate.Int{
 			MinSet:       true,
 			Min:          0,
