@@ -7,7 +7,7 @@ require (
 	github.com/gin-gonic/gin v1.7.4 // indirect
 	github.com/go-chi/chi/v5 v5.0.5
 	github.com/google/uuid v1.3.0
-	github.com/gotd/td v0.52.0-alpha.0
+	github.com/gotd/td v0.52.0
 	github.com/ogen-go/errors v0.4.0
 	github.com/ogen-go/jx v0.13.3
 	github.com/ogen-go/ogen v0.0.0-20211112233848-eea0b2034233
