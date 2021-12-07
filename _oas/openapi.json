@@ -2424,7 +2424,10 @@
           {
             "$ref": "#/components/schemas/ChatMemberBanned"
           }
-        ]
+        ],
+        "discriminator": {
+          "propertyName": "status"
+        }
       },
       "ChatMemberAdministrator": {
         "description": "Represents a chat member that has some additional privileges.",
@@ -5464,7 +5467,7 @@
           }
         ],
         "discriminator": {
-          "propertyName": "source",
+          "propertyName": "type",
           "mapping": {
             "data": "PassportElementErrorDataField",
             "file": "PassportElementErrorFile",
