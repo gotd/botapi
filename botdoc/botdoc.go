@@ -149,12 +149,13 @@ const (
 	sectionMethods = "methods"
 )
 
+var typosReplacer = strings.NewReplacer(
+	`unpriviledged`, `unprivileged`,
+	`Url`, `URL`,
+)
+
 func fixTypos(s string) string {
-	r := strings.NewReplacer(
-		`unpriviledged`, `unprivileged`,
-		`Url`, `URL`,
-	)
-	return r.Replace(s)
+	return typosReplacer.Replace(s)
 }
 
 // Extract API definition from goquery document.
