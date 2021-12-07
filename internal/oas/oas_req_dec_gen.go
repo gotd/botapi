@@ -276,6 +276,32 @@ func decodeBanChatMemberRequest(r *http.Request, span trace.Span) (req BanChatMe
 	}
 }
 
+func decodeBanChatSenderChatRequest(r *http.Request, span trace.Span) (req BanChatSenderChat, err error) {
+	switch r.Header.Get("Content-Type") {
+	case "application/json":
+		var request BanChatSenderChat
+		buf := getBuf()
+		defer putBuf(buf)
+		if _, err := io.Copy(buf, r.Body); err != nil {
+			return req, err
+		}
+		d := jx.GetDecoder()
+		defer jx.PutDecoder(d)
+		d.ResetBytes(buf.Bytes())
+		if err := func() error {
+			if err := request.Decode(d); err != nil {
+				return err
+			}
+			return nil
+		}(); err != nil {
+			return req, err
+		}
+		return request, nil
+	default:
+		return req, errors.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
+	}
+}
+
 func decodeCopyMessageRequest(r *http.Request, span trace.Span) (req CopyMessage, err error) {
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
@@ -2250,6 +2276,32 @@ func decodeUnbanChatMemberRequest(r *http.Request, span trace.Span) (req UnbanCh
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
 		var request UnbanChatMember
+		buf := getBuf()
+		defer putBuf(buf)
+		if _, err := io.Copy(buf, r.Body); err != nil {
+			return req, err
+		}
+		d := jx.GetDecoder()
+		defer jx.PutDecoder(d)
+		d.ResetBytes(buf.Bytes())
+		if err := func() error {
+			if err := request.Decode(d); err != nil {
+				return err
+			}
+			return nil
+		}(); err != nil {
+			return req, err
+		}
+		return request, nil
+	default:
+		return req, errors.Errorf("unexpected content-type: %s", r.Header.Get("Content-Type"))
+	}
+}
+
+func decodeUnbanChatSenderChatRequest(r *http.Request, span trace.Span) (req UnbanChatSenderChat, err error) {
+	switch r.Header.Get("Content-Type") {
+	case "application/json":
+		var request UnbanChatSenderChat
 		buf := getBuf()
 		defer putBuf(buf)
 		if _, err := io.Copy(buf, r.Body); err != nil {

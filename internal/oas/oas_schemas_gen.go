@@ -151,6 +151,13 @@ type BanChatMember struct {
 	RevokeMessages OptBool `json:"revoke_messages"`
 }
 
+// Ref: #/components/schemas/banChatSenderChat
+type BanChatSenderChat struct {
+	ChatID       ID     `json:"chat_id"`
+	SenderChatID int    `json:"sender_chat_id"`
+	UntilDate    OptInt `json:"until_date"`
+}
+
 // Ref: #/components/schemas/BotCommand
 type BotCommand struct {
 	Command     string `json:"command"`
@@ -408,6 +415,17 @@ type BotCommandScopeDefault struct {
 // Ref: #/components/schemas/CallbackGame
 type CallbackGame struct{}
 
+// Ref: #/components/schemas/CallbackQuery
+type CallbackQuery struct {
+	ID              string     `json:"id"`
+	From            User       `json:"from"`
+	Message         OptMessage `json:"message"`
+	InlineMessageID OptString  `json:"inline_message_id"`
+	ChatInstance    string     `json:"chat_instance"`
+	Data            OptString  `json:"data"`
+	GameShortName   OptString  `json:"game_short_name"`
+}
+
 // Ref: #/components/schemas/Chat
 type Chat struct {
 	ID                    int                `json:"id"`
@@ -418,22 +436,289 @@ type Chat struct {
 	LastName              OptString          `json:"last_name"`
 	Photo                 OptChatPhoto       `json:"photo"`
 	Bio                   OptString          `json:"bio"`
+	HasPrivateForwards    OptBool            `json:"has_private_forwards"`
 	Description           OptString          `json:"description"`
 	InviteLink            OptString          `json:"invite_link"`
 	PinnedMessage         *Message           `json:"pinned_message"`
 	Permissions           OptChatPermissions `json:"permissions"`
 	SlowModeDelay         OptInt             `json:"slow_mode_delay"`
 	MessageAutoDeleteTime OptInt             `json:"message_auto_delete_time"`
+	HasProtectedContent   OptBool            `json:"has_protected_content"`
 	StickerSetName        OptString          `json:"sticker_set_name"`
 	CanSetStickerSet      OptBool            `json:"can_set_sticker_set"`
 	LinkedChatID          OptInt             `json:"linked_chat_id"`
 	Location              OptChatLocation    `json:"location"`
 }
 
+// Ref: #/components/schemas/ChatInviteLink
+type ChatInviteLink struct {
+	InviteLink              string    `json:"invite_link"`
+	Creator                 User      `json:"creator"`
+	CreatesJoinRequest      bool      `json:"creates_join_request"`
+	IsPrimary               bool      `json:"is_primary"`
+	IsRevoked               bool      `json:"is_revoked"`
+	Name                    OptString `json:"name"`
+	ExpireDate              OptInt    `json:"expire_date"`
+	MemberLimit             OptInt    `json:"member_limit"`
+	PendingJoinRequestCount OptInt    `json:"pending_join_request_count"`
+}
+
+// Ref: #/components/schemas/ChatJoinRequest
+type ChatJoinRequest struct {
+	Chat       Chat              `json:"chat"`
+	From       User              `json:"from"`
+	Date       int               `json:"date"`
+	Bio        OptString         `json:"bio"`
+	InviteLink OptChatInviteLink `json:"invite_link"`
+}
+
 // Ref: #/components/schemas/ChatLocation
 type ChatLocation struct {
 	Location Location `json:"location"`
 	Address  string   `json:"address"`
+}
+
+// Ref: #/components/schemas/ChatMember
+// ChatMember represents sum type.
+type ChatMember struct {
+	Type                    ChatMemberType // switch on this field
+	ChatMemberOwner         ChatMemberOwner
+	ChatMemberAdministrator ChatMemberAdministrator
+	ChatMemberMember        ChatMemberMember
+	ChatMemberRestricted    ChatMemberRestricted
+	ChatMemberLeft          ChatMemberLeft
+	ChatMemberBanned        ChatMemberBanned
+}
+
+// ChatMemberType is oneOf type of ChatMember.
+type ChatMemberType string
+
+// Possible values for ChatMemberType.
+const (
+	ChatMemberOwnerChatMember         ChatMemberType = "ChatMemberOwner"
+	ChatMemberAdministratorChatMember ChatMemberType = "ChatMemberAdministrator"
+	ChatMemberMemberChatMember        ChatMemberType = "ChatMemberMember"
+	ChatMemberRestrictedChatMember    ChatMemberType = "ChatMemberRestricted"
+	ChatMemberLeftChatMember          ChatMemberType = "ChatMemberLeft"
+	ChatMemberBannedChatMember        ChatMemberType = "ChatMemberBanned"
+)
+
+// IsChatMemberOwner reports whether ChatMember is ChatMemberOwner.
+func (s ChatMember) IsChatMemberOwner() bool { return s.Type == ChatMemberOwnerChatMember }
+
+// IsChatMemberAdministrator reports whether ChatMember is ChatMemberAdministrator.
+func (s ChatMember) IsChatMemberAdministrator() bool {
+	return s.Type == ChatMemberAdministratorChatMember
+}
+
+// IsChatMemberMember reports whether ChatMember is ChatMemberMember.
+func (s ChatMember) IsChatMemberMember() bool { return s.Type == ChatMemberMemberChatMember }
+
+// IsChatMemberRestricted reports whether ChatMember is ChatMemberRestricted.
+func (s ChatMember) IsChatMemberRestricted() bool { return s.Type == ChatMemberRestrictedChatMember }
+
+// IsChatMemberLeft reports whether ChatMember is ChatMemberLeft.
+func (s ChatMember) IsChatMemberLeft() bool { return s.Type == ChatMemberLeftChatMember }
+
+// IsChatMemberBanned reports whether ChatMember is ChatMemberBanned.
+func (s ChatMember) IsChatMemberBanned() bool { return s.Type == ChatMemberBannedChatMember }
+
+// SetChatMemberOwner sets ChatMember to ChatMemberOwner.
+func (s *ChatMember) SetChatMemberOwner(v ChatMemberOwner) {
+	s.Type = ChatMemberOwnerChatMember
+	s.ChatMemberOwner = v
+}
+
+// GetChatMemberOwner returns ChatMemberOwner and true boolean if ChatMember is ChatMemberOwner.
+func (s ChatMember) GetChatMemberOwner() (v ChatMemberOwner, ok bool) {
+	if !s.IsChatMemberOwner() {
+		return v, false
+	}
+	return s.ChatMemberOwner, true
+}
+
+// NewChatMemberOwnerChatMember returns new ChatMember from ChatMemberOwner.
+func NewChatMemberOwnerChatMember(v ChatMemberOwner) ChatMember {
+	var s ChatMember
+	s.SetChatMemberOwner(v)
+	return s
+}
+
+// SetChatMemberAdministrator sets ChatMember to ChatMemberAdministrator.
+func (s *ChatMember) SetChatMemberAdministrator(v ChatMemberAdministrator) {
+	s.Type = ChatMemberAdministratorChatMember
+	s.ChatMemberAdministrator = v
+}
+
+// GetChatMemberAdministrator returns ChatMemberAdministrator and true boolean if ChatMember is ChatMemberAdministrator.
+func (s ChatMember) GetChatMemberAdministrator() (v ChatMemberAdministrator, ok bool) {
+	if !s.IsChatMemberAdministrator() {
+		return v, false
+	}
+	return s.ChatMemberAdministrator, true
+}
+
+// NewChatMemberAdministratorChatMember returns new ChatMember from ChatMemberAdministrator.
+func NewChatMemberAdministratorChatMember(v ChatMemberAdministrator) ChatMember {
+	var s ChatMember
+	s.SetChatMemberAdministrator(v)
+	return s
+}
+
+// SetChatMemberMember sets ChatMember to ChatMemberMember.
+func (s *ChatMember) SetChatMemberMember(v ChatMemberMember) {
+	s.Type = ChatMemberMemberChatMember
+	s.ChatMemberMember = v
+}
+
+// GetChatMemberMember returns ChatMemberMember and true boolean if ChatMember is ChatMemberMember.
+func (s ChatMember) GetChatMemberMember() (v ChatMemberMember, ok bool) {
+	if !s.IsChatMemberMember() {
+		return v, false
+	}
+	return s.ChatMemberMember, true
+}
+
+// NewChatMemberMemberChatMember returns new ChatMember from ChatMemberMember.
+func NewChatMemberMemberChatMember(v ChatMemberMember) ChatMember {
+	var s ChatMember
+	s.SetChatMemberMember(v)
+	return s
+}
+
+// SetChatMemberRestricted sets ChatMember to ChatMemberRestricted.
+func (s *ChatMember) SetChatMemberRestricted(v ChatMemberRestricted) {
+	s.Type = ChatMemberRestrictedChatMember
+	s.ChatMemberRestricted = v
+}
+
+// GetChatMemberRestricted returns ChatMemberRestricted and true boolean if ChatMember is ChatMemberRestricted.
+func (s ChatMember) GetChatMemberRestricted() (v ChatMemberRestricted, ok bool) {
+	if !s.IsChatMemberRestricted() {
+		return v, false
+	}
+	return s.ChatMemberRestricted, true
+}
+
+// NewChatMemberRestrictedChatMember returns new ChatMember from ChatMemberRestricted.
+func NewChatMemberRestrictedChatMember(v ChatMemberRestricted) ChatMember {
+	var s ChatMember
+	s.SetChatMemberRestricted(v)
+	return s
+}
+
+// SetChatMemberLeft sets ChatMember to ChatMemberLeft.
+func (s *ChatMember) SetChatMemberLeft(v ChatMemberLeft) {
+	s.Type = ChatMemberLeftChatMember
+	s.ChatMemberLeft = v
+}
+
+// GetChatMemberLeft returns ChatMemberLeft and true boolean if ChatMember is ChatMemberLeft.
+func (s ChatMember) GetChatMemberLeft() (v ChatMemberLeft, ok bool) {
+	if !s.IsChatMemberLeft() {
+		return v, false
+	}
+	return s.ChatMemberLeft, true
+}
+
+// NewChatMemberLeftChatMember returns new ChatMember from ChatMemberLeft.
+func NewChatMemberLeftChatMember(v ChatMemberLeft) ChatMember {
+	var s ChatMember
+	s.SetChatMemberLeft(v)
+	return s
+}
+
+// SetChatMemberBanned sets ChatMember to ChatMemberBanned.
+func (s *ChatMember) SetChatMemberBanned(v ChatMemberBanned) {
+	s.Type = ChatMemberBannedChatMember
+	s.ChatMemberBanned = v
+}
+
+// GetChatMemberBanned returns ChatMemberBanned and true boolean if ChatMember is ChatMemberBanned.
+func (s ChatMember) GetChatMemberBanned() (v ChatMemberBanned, ok bool) {
+	if !s.IsChatMemberBanned() {
+		return v, false
+	}
+	return s.ChatMemberBanned, true
+}
+
+// NewChatMemberBannedChatMember returns new ChatMember from ChatMemberBanned.
+func NewChatMemberBannedChatMember(v ChatMemberBanned) ChatMember {
+	var s ChatMember
+	s.SetChatMemberBanned(v)
+	return s
+}
+
+// Ref: #/components/schemas/ChatMemberAdministrator
+type ChatMemberAdministrator struct {
+	Status              string    `json:"status"`
+	User                User      `json:"user"`
+	CanBeEdited         bool      `json:"can_be_edited"`
+	IsAnonymous         bool      `json:"is_anonymous"`
+	CanManageChat       bool      `json:"can_manage_chat"`
+	CanDeleteMessages   bool      `json:"can_delete_messages"`
+	CanManageVoiceChats bool      `json:"can_manage_voice_chats"`
+	CanRestrictMembers  bool      `json:"can_restrict_members"`
+	CanPromoteMembers   bool      `json:"can_promote_members"`
+	CanChangeInfo       bool      `json:"can_change_info"`
+	CanInviteUsers      bool      `json:"can_invite_users"`
+	CanPostMessages     OptBool   `json:"can_post_messages"`
+	CanEditMessages     OptBool   `json:"can_edit_messages"`
+	CanPinMessages      OptBool   `json:"can_pin_messages"`
+	CustomTitle         OptString `json:"custom_title"`
+}
+
+// Ref: #/components/schemas/ChatMemberBanned
+type ChatMemberBanned struct {
+	Status    string `json:"status"`
+	User      User   `json:"user"`
+	UntilDate int    `json:"until_date"`
+}
+
+// Ref: #/components/schemas/ChatMemberLeft
+type ChatMemberLeft struct {
+	Status string `json:"status"`
+	User   User   `json:"user"`
+}
+
+// Ref: #/components/schemas/ChatMemberMember
+type ChatMemberMember struct {
+	Status string `json:"status"`
+	User   User   `json:"user"`
+}
+
+// Ref: #/components/schemas/ChatMemberOwner
+type ChatMemberOwner struct {
+	Status      string    `json:"status"`
+	User        User      `json:"user"`
+	IsAnonymous bool      `json:"is_anonymous"`
+	CustomTitle OptString `json:"custom_title"`
+}
+
+// Ref: #/components/schemas/ChatMemberRestricted
+type ChatMemberRestricted struct {
+	Status                string `json:"status"`
+	User                  User   `json:"user"`
+	IsMember              bool   `json:"is_member"`
+	CanChangeInfo         bool   `json:"can_change_info"`
+	CanInviteUsers        bool   `json:"can_invite_users"`
+	CanPinMessages        bool   `json:"can_pin_messages"`
+	CanSendMessages       bool   `json:"can_send_messages"`
+	CanSendMediaMessages  bool   `json:"can_send_media_messages"`
+	CanSendPolls          bool   `json:"can_send_polls"`
+	CanSendOtherMessages  bool   `json:"can_send_other_messages"`
+	CanAddWebPagePreviews bool   `json:"can_add_web_page_previews"`
+	UntilDate             int    `json:"until_date"`
+}
+
+// Ref: #/components/schemas/ChatMemberUpdated
+type ChatMemberUpdated struct {
+	Chat          Chat              `json:"chat"`
+	From          User              `json:"from"`
+	Date          int               `json:"date"`
+	OldChatMember ChatMember        `json:"old_chat_member"`
+	NewChatMember ChatMember        `json:"new_chat_member"`
+	InviteLink    OptChatInviteLink `json:"invite_link"`
 }
 
 // Ref: #/components/schemas/ChatPermissions
@@ -454,6 +739,15 @@ type ChatPhoto struct {
 	SmallFileUniqueID string `json:"small_file_unique_id"`
 	BigFileID         string `json:"big_file_id"`
 	BigFileUniqueID   string `json:"big_file_unique_id"`
+}
+
+// Ref: #/components/schemas/ChosenInlineResult
+type ChosenInlineResult struct {
+	ResultID        string      `json:"result_id"`
+	From            User        `json:"from"`
+	Location        OptLocation `json:"location"`
+	InlineMessageID OptString   `json:"inline_message_id"`
+	Query           string      `json:"query"`
 }
 
 // Ref: #/components/schemas/Contact
@@ -948,6 +1242,16 @@ type InlineKeyboardMarkup struct {
 	InlineKeyboard [][]InlineKeyboardButton `json:"inline_keyboard"`
 }
 
+// Ref: #/components/schemas/InlineQuery
+type InlineQuery struct {
+	ID       string      `json:"id"`
+	From     User        `json:"from"`
+	Query    string      `json:"query"`
+	Offset   string      `json:"offset"`
+	ChatType OptString   `json:"chat_type"`
+	Location OptLocation `json:"location"`
+}
+
 type InlineQueryResult string
 
 // Ref: #/components/schemas/InputMedia
@@ -1225,9 +1529,11 @@ type Message struct {
 	ForwardSignature              OptString                        `json:"forward_signature"`
 	ForwardSenderName             OptString                        `json:"forward_sender_name"`
 	ForwardDate                   OptInt                           `json:"forward_date"`
+	IsAutomaticForward            OptBool                          `json:"is_automatic_forward"`
 	ReplyToMessage                *Message                         `json:"reply_to_message"`
 	ViaBot                        OptUser                          `json:"via_bot"`
 	EditDate                      OptInt                           `json:"edit_date"`
+	HasProtectedContent           OptBool                          `json:"has_protected_content"`
 	MediaGroupID                  OptString                        `json:"media_group_id"`
 	AuthorSignature               OptString                        `json:"author_signature"`
 	Text                          OptString                        `json:"text"`
@@ -1401,6 +1707,44 @@ func (o OptBool) Get() (v bool, ok bool) {
 	return o.Value, true
 }
 
+// NewOptCallbackQuery returns new OptCallbackQuery with value set to v.
+func NewOptCallbackQuery(v CallbackQuery) OptCallbackQuery {
+	return OptCallbackQuery{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptCallbackQuery is optional CallbackQuery.
+type OptCallbackQuery struct {
+	Value CallbackQuery
+	Set   bool
+}
+
+// IsSet returns true if OptCallbackQuery was set.
+func (o OptCallbackQuery) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptCallbackQuery) Reset() {
+	var v CallbackQuery
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptCallbackQuery) SetTo(v CallbackQuery) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptCallbackQuery) Get() (v CallbackQuery, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
 // NewOptChat returns new OptChat with value set to v.
 func NewOptChat(v Chat) OptChat {
 	return OptChat{
@@ -1439,6 +1783,82 @@ func (o OptChat) Get() (v Chat, ok bool) {
 	return o.Value, true
 }
 
+// NewOptChatInviteLink returns new OptChatInviteLink with value set to v.
+func NewOptChatInviteLink(v ChatInviteLink) OptChatInviteLink {
+	return OptChatInviteLink{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptChatInviteLink is optional ChatInviteLink.
+type OptChatInviteLink struct {
+	Value ChatInviteLink
+	Set   bool
+}
+
+// IsSet returns true if OptChatInviteLink was set.
+func (o OptChatInviteLink) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptChatInviteLink) Reset() {
+	var v ChatInviteLink
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptChatInviteLink) SetTo(v ChatInviteLink) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptChatInviteLink) Get() (v ChatInviteLink, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// NewOptChatJoinRequest returns new OptChatJoinRequest with value set to v.
+func NewOptChatJoinRequest(v ChatJoinRequest) OptChatJoinRequest {
+	return OptChatJoinRequest{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptChatJoinRequest is optional ChatJoinRequest.
+type OptChatJoinRequest struct {
+	Value ChatJoinRequest
+	Set   bool
+}
+
+// IsSet returns true if OptChatJoinRequest was set.
+func (o OptChatJoinRequest) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptChatJoinRequest) Reset() {
+	var v ChatJoinRequest
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptChatJoinRequest) SetTo(v ChatJoinRequest) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptChatJoinRequest) Get() (v ChatJoinRequest, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
 // NewOptChatLocation returns new OptChatLocation with value set to v.
 func NewOptChatLocation(v ChatLocation) OptChatLocation {
 	return OptChatLocation{
@@ -1471,6 +1891,44 @@ func (o *OptChatLocation) SetTo(v ChatLocation) {
 
 // Get returns value and boolean that denotes whether value was set.
 func (o OptChatLocation) Get() (v ChatLocation, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// NewOptChatMemberUpdated returns new OptChatMemberUpdated with value set to v.
+func NewOptChatMemberUpdated(v ChatMemberUpdated) OptChatMemberUpdated {
+	return OptChatMemberUpdated{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptChatMemberUpdated is optional ChatMemberUpdated.
+type OptChatMemberUpdated struct {
+	Value ChatMemberUpdated
+	Set   bool
+}
+
+// IsSet returns true if OptChatMemberUpdated was set.
+func (o OptChatMemberUpdated) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptChatMemberUpdated) Reset() {
+	var v ChatMemberUpdated
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptChatMemberUpdated) SetTo(v ChatMemberUpdated) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptChatMemberUpdated) Get() (v ChatMemberUpdated, ok bool) {
 	if !o.Set {
 		return v, false
 	}
@@ -1547,6 +2005,44 @@ func (o *OptChatPhoto) SetTo(v ChatPhoto) {
 
 // Get returns value and boolean that denotes whether value was set.
 func (o OptChatPhoto) Get() (v ChatPhoto, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// NewOptChosenInlineResult returns new OptChosenInlineResult with value set to v.
+func NewOptChosenInlineResult(v ChosenInlineResult) OptChosenInlineResult {
+	return OptChosenInlineResult{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptChosenInlineResult is optional ChosenInlineResult.
+type OptChosenInlineResult struct {
+	Value ChosenInlineResult
+	Set   bool
+}
+
+// IsSet returns true if OptChosenInlineResult was set.
+func (o OptChosenInlineResult) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptChosenInlineResult) Reset() {
+	var v ChosenInlineResult
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptChosenInlineResult) SetTo(v ChosenInlineResult) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptChosenInlineResult) Get() (v ChosenInlineResult, ok bool) {
 	if !o.Set {
 		return v, false
 	}
@@ -1775,6 +2271,44 @@ func (o *OptInlineKeyboardMarkup) SetTo(v InlineKeyboardMarkup) {
 
 // Get returns value and boolean that denotes whether value was set.
 func (o OptInlineKeyboardMarkup) Get() (v InlineKeyboardMarkup, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// NewOptInlineQuery returns new OptInlineQuery with value set to v.
+func NewOptInlineQuery(v InlineQuery) OptInlineQuery {
+	return OptInlineQuery{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptInlineQuery is optional InlineQuery.
+type OptInlineQuery struct {
+	Value InlineQuery
+	Set   bool
+}
+
+// IsSet returns true if OptInlineQuery was set.
+func (o OptInlineQuery) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptInlineQuery) Reset() {
+	var v InlineQuery
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptInlineQuery) SetTo(v InlineQuery) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptInlineQuery) Get() (v InlineQuery, ok bool) {
 	if !o.Set {
 		return v, false
 	}
@@ -2313,6 +2847,82 @@ func (o OptPoll) Get() (v Poll, ok bool) {
 	return o.Value, true
 }
 
+// NewOptPollAnswer returns new OptPollAnswer with value set to v.
+func NewOptPollAnswer(v PollAnswer) OptPollAnswer {
+	return OptPollAnswer{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptPollAnswer is optional PollAnswer.
+type OptPollAnswer struct {
+	Value PollAnswer
+	Set   bool
+}
+
+// IsSet returns true if OptPollAnswer was set.
+func (o OptPollAnswer) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptPollAnswer) Reset() {
+	var v PollAnswer
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptPollAnswer) SetTo(v PollAnswer) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptPollAnswer) Get() (v PollAnswer, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// NewOptPreCheckoutQuery returns new OptPreCheckoutQuery with value set to v.
+func NewOptPreCheckoutQuery(v PreCheckoutQuery) OptPreCheckoutQuery {
+	return OptPreCheckoutQuery{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptPreCheckoutQuery is optional PreCheckoutQuery.
+type OptPreCheckoutQuery struct {
+	Value PreCheckoutQuery
+	Set   bool
+}
+
+// IsSet returns true if OptPreCheckoutQuery was set.
+func (o OptPreCheckoutQuery) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptPreCheckoutQuery) Reset() {
+	var v PreCheckoutQuery
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptPreCheckoutQuery) SetTo(v PreCheckoutQuery) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptPreCheckoutQuery) Get() (v PreCheckoutQuery, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
 // NewOptProximityAlertTriggered returns new OptProximityAlertTriggered with value set to v.
 func NewOptProximityAlertTriggered(v ProximityAlertTriggered) OptProximityAlertTriggered {
 	return OptProximityAlertTriggered{
@@ -2421,6 +3031,44 @@ func (o *OptShippingAddress) SetTo(v ShippingAddress) {
 
 // Get returns value and boolean that denotes whether value was set.
 func (o OptShippingAddress) Get() (v ShippingAddress, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// NewOptShippingQuery returns new OptShippingQuery with value set to v.
+func NewOptShippingQuery(v ShippingQuery) OptShippingQuery {
+	return OptShippingQuery{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptShippingQuery is optional ShippingQuery.
+type OptShippingQuery struct {
+	Value ShippingQuery
+	Set   bool
+}
+
+// IsSet returns true if OptShippingQuery was set.
+func (o OptShippingQuery) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptShippingQuery) Reset() {
+	var v ShippingQuery
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptShippingQuery) SetTo(v ShippingQuery) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptShippingQuery) Get() (v ShippingQuery, ok bool) {
 	if !o.Set {
 		return v, false
 	}
@@ -2573,6 +3221,44 @@ func (o *OptURL) SetTo(v url.URL) {
 
 // Get returns value and boolean that denotes whether value was set.
 func (o OptURL) Get() (v url.URL, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// NewOptUpdate returns new OptUpdate with value set to v.
+func NewOptUpdate(v Update) OptUpdate {
+	return OptUpdate{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptUpdate is optional Update.
+type OptUpdate struct {
+	Value Update
+	Set   bool
+}
+
+// IsSet returns true if OptUpdate was set.
+func (o OptUpdate) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptUpdate) Reset() {
+	var v Update
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptUpdate) SetTo(v Update) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptUpdate) Get() (v Update, ok bool) {
 	if !o.Set {
 		return v, false
 	}
@@ -3276,10 +3962,28 @@ type Poll struct {
 	CloseDate             OptInt          `json:"close_date"`
 }
 
+// Ref: #/components/schemas/PollAnswer
+type PollAnswer struct {
+	PollID    string `json:"poll_id"`
+	User      User   `json:"user"`
+	OptionIds []int  `json:"option_ids"`
+}
+
 // Ref: #/components/schemas/PollOption
 type PollOption struct {
 	Text       string `json:"text"`
 	VoterCount int    `json:"voter_count"`
+}
+
+// Ref: #/components/schemas/PreCheckoutQuery
+type PreCheckoutQuery struct {
+	ID               string       `json:"id"`
+	From             User         `json:"from"`
+	Currency         string       `json:"currency"`
+	TotalAmount      int          `json:"total_amount"`
+	InvoicePayload   string       `json:"invoice_payload"`
+	ShippingOptionID OptString    `json:"shipping_option_id"`
+	OrderInfo        OptOrderInfo `json:"order_info"`
 }
 
 // Ref: #/components/schemas/promoteChatMember
@@ -3341,14 +4045,22 @@ type Result struct {
 	Ok     bool    `json:"ok"`
 }
 
-// Ref: #/components/schemas/ResultMsg
-type ResultMsg struct {
+type ResultArrayOfUpdate []ResultUpdate
+
+// Ref: #/components/schemas/ResultMessage
+type ResultMessage struct {
 	Result OptMessage `json:"result"`
 	Ok     bool       `json:"ok"`
 }
 
-// Ref: #/components/schemas/ResultUsr
-type ResultUsr struct {
+// Ref: #/components/schemas/ResultUpdate
+type ResultUpdate struct {
+	Result OptUpdate `json:"result"`
+	Ok     bool      `json:"ok"`
+}
+
+// Ref: #/components/schemas/ResultUser
+type ResultUser struct {
 	Result OptUser `json:"result"`
 	Ok     bool    `json:"ok"`
 }
@@ -5567,6 +6279,14 @@ type ShippingOption struct {
 	Prices []LabeledPrice `json:"prices"`
 }
 
+// Ref: #/components/schemas/ShippingQuery
+type ShippingQuery struct {
+	ID              string          `json:"id"`
+	From            User            `json:"from"`
+	InvoicePayload  string          `json:"invoice_payload"`
+	ShippingAddress ShippingAddress `json:"shipping_address"`
+}
+
 // Ref: #/components/schemas/Sticker
 type Sticker struct {
 	FileID       string          `json:"file_id"`
@@ -5614,6 +6334,12 @@ type UnbanChatMember struct {
 	OnlyIfBanned OptBool `json:"only_if_banned"`
 }
 
+// Ref: #/components/schemas/unbanChatSenderChat
+type UnbanChatSenderChat struct {
+	ChatID       ID  `json:"chat_id"`
+	SenderChatID int `json:"sender_chat_id"`
+}
+
 // Ref: #/components/schemas/unpinAllChatMessages
 type UnpinAllChatMessages struct {
 	ChatID ID `json:"chat_id"`
@@ -5623,6 +6349,25 @@ type UnpinAllChatMessages struct {
 type UnpinChatMessage struct {
 	ChatID    ID     `json:"chat_id"`
 	MessageID OptInt `json:"message_id"`
+}
+
+// Ref: #/components/schemas/Update
+type Update struct {
+	UpdateID           int                   `json:"update_id"`
+	Message            OptMessage            `json:"message"`
+	EditedMessage      OptMessage            `json:"edited_message"`
+	ChannelPost        OptMessage            `json:"channel_post"`
+	EditedChannelPost  OptMessage            `json:"edited_channel_post"`
+	InlineQuery        OptInlineQuery        `json:"inline_query"`
+	ChosenInlineResult OptChosenInlineResult `json:"chosen_inline_result"`
+	CallbackQuery      OptCallbackQuery      `json:"callback_query"`
+	ShippingQuery      OptShippingQuery      `json:"shipping_query"`
+	PreCheckoutQuery   OptPreCheckoutQuery   `json:"pre_checkout_query"`
+	Poll               OptPoll               `json:"poll"`
+	PollAnswer         OptPollAnswer         `json:"poll_answer"`
+	MyChatMember       OptChatMemberUpdated  `json:"my_chat_member"`
+	ChatMember         OptChatMemberUpdated  `json:"chat_member"`
+	ChatJoinRequest    OptChatJoinRequest    `json:"chat_join_request"`
 }
 
 // Ref: #/components/schemas/uploadStickerFile

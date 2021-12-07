@@ -368,6 +368,32 @@ func (s BotCommand) Validate() error {
 	}
 	return nil
 }
+func (s CallbackQuery) Validate() error {
+	var failures []validate.FieldError
+	if err := func() error {
+		if s.Message.Set {
+			if err := func() error {
+				if err := s.Message.Value.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return err
+			}
+		}
+		return nil
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "message",
+			Error: err,
+		})
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+	return nil
+}
 func (s Chat) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
@@ -413,6 +439,24 @@ func (s Chat) Validate() error {
 	}
 	return nil
 }
+func (s ChatJoinRequest) Validate() error {
+	var failures []validate.FieldError
+	if err := func() error {
+		if err := s.Chat.Validate(); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "chat",
+			Error: err,
+		})
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+	return nil
+}
 func (s ChatLocation) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
@@ -442,6 +486,50 @@ func (s ChatLocation) Validate() error {
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
 			Name:  "address",
+			Error: err,
+		})
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+	return nil
+}
+func (s ChatMemberUpdated) Validate() error {
+	var failures []validate.FieldError
+	if err := func() error {
+		if err := s.Chat.Validate(); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "chat",
+			Error: err,
+		})
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+	return nil
+}
+func (s ChosenInlineResult) Validate() error {
+	var failures []validate.FieldError
+	if err := func() error {
+		if s.Location.Set {
+			if err := func() error {
+				if err := s.Location.Value.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return err
+			}
+		}
+		return nil
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "location",
 			Error: err,
 		})
 	}
@@ -1121,6 +1209,32 @@ func (s InlineKeyboardMarkup) Validate() error {
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
 			Name:  "inline_keyboard",
+			Error: err,
+		})
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+	return nil
+}
+func (s InlineQuery) Validate() error {
+	var failures []validate.FieldError
+	if err := func() error {
+		if s.Location.Set {
+			if err := func() error {
+				if err := s.Location.Value.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return err
+			}
+		}
+		return nil
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "location",
 			Error: err,
 		})
 	}
@@ -2275,6 +2389,24 @@ func (s Poll) Validate() error {
 	}
 	return nil
 }
+func (s PollAnswer) Validate() error {
+	var failures []validate.FieldError
+	if err := func() error {
+		if s.OptionIds == nil {
+			return errors.New("nil is invalid value")
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "option_ids",
+			Error: err,
+		})
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+	return nil
+}
 func (s PollOption) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
@@ -2363,7 +2495,56 @@ func (s ReplyKeyboardMarkup) Validate() error {
 	}
 	return nil
 }
-func (s ResultMsg) Validate() error {
+func (s ResultArrayOfUpdate) Validate() error {
+	if s == nil {
+		return errors.New("nil is invalid value")
+	}
+	var failures []validate.FieldError
+	for i, elem := range s {
+		if err := func() error {
+			if err := elem.Validate(); err != nil {
+				return err
+			}
+			return nil
+		}(); err != nil {
+			failures = append(failures, validate.FieldError{
+				Name:  fmt.Sprintf("[%d]", i),
+				Error: err,
+			})
+		}
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+	return nil
+}
+func (s ResultMessage) Validate() error {
+	var failures []validate.FieldError
+	if err := func() error {
+		if s.Result.Set {
+			if err := func() error {
+				if err := s.Result.Value.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return err
+			}
+		}
+		return nil
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "result",
+			Error: err,
+		})
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+	return nil
+}
+func (s ResultUpdate) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
 		if s.Result.Set {
@@ -4138,6 +4319,241 @@ func (s StopPoll) Validate() error {
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
 			Name:  "reply_markup",
+			Error: err,
+		})
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+	return nil
+}
+func (s Update) Validate() error {
+	var failures []validate.FieldError
+	if err := func() error {
+		if s.Message.Set {
+			if err := func() error {
+				if err := s.Message.Value.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return err
+			}
+		}
+		return nil
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "message",
+			Error: err,
+		})
+	}
+	if err := func() error {
+		if s.EditedMessage.Set {
+			if err := func() error {
+				if err := s.EditedMessage.Value.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return err
+			}
+		}
+		return nil
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "edited_message",
+			Error: err,
+		})
+	}
+	if err := func() error {
+		if s.ChannelPost.Set {
+			if err := func() error {
+				if err := s.ChannelPost.Value.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return err
+			}
+		}
+		return nil
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "channel_post",
+			Error: err,
+		})
+	}
+	if err := func() error {
+		if s.EditedChannelPost.Set {
+			if err := func() error {
+				if err := s.EditedChannelPost.Value.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return err
+			}
+		}
+		return nil
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "edited_channel_post",
+			Error: err,
+		})
+	}
+	if err := func() error {
+		if s.InlineQuery.Set {
+			if err := func() error {
+				if err := s.InlineQuery.Value.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return err
+			}
+		}
+		return nil
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "inline_query",
+			Error: err,
+		})
+	}
+	if err := func() error {
+		if s.ChosenInlineResult.Set {
+			if err := func() error {
+				if err := s.ChosenInlineResult.Value.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return err
+			}
+		}
+		return nil
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "chosen_inline_result",
+			Error: err,
+		})
+	}
+	if err := func() error {
+		if s.CallbackQuery.Set {
+			if err := func() error {
+				if err := s.CallbackQuery.Value.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return err
+			}
+		}
+		return nil
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "callback_query",
+			Error: err,
+		})
+	}
+	if err := func() error {
+		if s.Poll.Set {
+			if err := func() error {
+				if err := s.Poll.Value.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return err
+			}
+		}
+		return nil
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "poll",
+			Error: err,
+		})
+	}
+	if err := func() error {
+		if s.PollAnswer.Set {
+			if err := func() error {
+				if err := s.PollAnswer.Value.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return err
+			}
+		}
+		return nil
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "poll_answer",
+			Error: err,
+		})
+	}
+	if err := func() error {
+		if s.MyChatMember.Set {
+			if err := func() error {
+				if err := s.MyChatMember.Value.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return err
+			}
+		}
+		return nil
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "my_chat_member",
+			Error: err,
+		})
+	}
+	if err := func() error {
+		if s.ChatMember.Set {
+			if err := func() error {
+				if err := s.ChatMember.Value.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return err
+			}
+		}
+		return nil
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "chat_member",
+			Error: err,
+		})
+	}
+	if err := func() error {
+		if s.ChatJoinRequest.Set {
+			if err := func() error {
+				if err := s.ChatJoinRequest.Value.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return err
+			}
+		}
+		return nil
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "chat_join_request",
 			Error: err,
 		})
 	}
