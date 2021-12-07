@@ -300,6 +300,40 @@ func (s *Server) handleBanChatMemberRequest(args map[string]string, w http.Respo
 	}
 }
 
+// HandleBanChatSenderChatRequest handles banChatSenderChat operation.
+//
+// POST /banChatSenderChat
+func (s *Server) handleBanChatSenderChatRequest(args map[string]string, w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `BanChatSenderChat`,
+		trace.WithAttributes(otelogen.OperationID(`banChatSenderChat`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeBanChatSenderChatRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.BanChatSenderChat(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		var errRes *ErrorStatusCode
+		if errors.As(err, &errRes) {
+			encodeErrorResponse(*errRes, w, span)
+			return
+		}
+		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		return
+	}
+
+	if err := encodeBanChatSenderChatResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
 // HandleCopyMessageRequest handles copyMessage operation.
 //
 // POST /copyMessage
@@ -2567,6 +2601,40 @@ func (s *Server) handleUnbanChatMemberRequest(args map[string]string, w http.Res
 	}
 
 	if err := encodeUnbanChatMemberResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleUnbanChatSenderChatRequest handles unbanChatSenderChat operation.
+//
+// POST /unbanChatSenderChat
+func (s *Server) handleUnbanChatSenderChatRequest(args map[string]string, w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `UnbanChatSenderChat`,
+		trace.WithAttributes(otelogen.OperationID(`unbanChatSenderChat`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+	request, err := decodeUnbanChatSenderChatRequest(r, span)
+	if err != nil {
+		span.RecordError(err)
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := s.h.UnbanChatSenderChat(ctx, request)
+	if err != nil {
+		span.RecordError(err)
+		var errRes *ErrorStatusCode
+		if errors.As(err, &errRes) {
+			encodeErrorResponse(*errRes, w, span)
+			return
+		}
+		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		return
+	}
+
+	if err := encodeUnbanChatSenderChatResponse(response, w, span); err != nil {
 		span.RecordError(err)
 		return
 	}

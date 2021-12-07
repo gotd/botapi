@@ -149,12 +149,13 @@ const (
 	sectionMethods = "methods"
 )
 
+var typosReplacer = strings.NewReplacer(
+	`unpriviledged`, `unprivileged`,
+	`Url`, `URL`,
+)
+
 func fixTypos(s string) string {
-	r := strings.NewReplacer(
-		`unpriviledged`, `unprivileged`,
-		`Url`, `URL`,
-	)
-	return r.Replace(s)
+	return typosReplacer.Replace(s)
 }
 
 // Extract API definition from goquery document.
@@ -253,17 +254,45 @@ func Extract(doc *goquery.Document) (a API) {
 		}
 
 		if d.Ret == nil {
+			var links []string
+			s.Find("a").Each(func(i int, selection *goquery.Selection) {
+				if href, _ := selection.Attr("href"); strings.HasPrefix(href, "#") {
+					links = append(links, selection.Text())
+				}
+			})
 			const (
-				retPrefix = `On success, the`
-				retSuffix = ` is returned.`
+				retPrefix      = `On success, the`
+				retArrayPrefix = `an array of`
+				retSuffix      = ` is returned.`
 			)
 			var (
-				start = strings.Index(d.Description, retPrefix)
-				end   = strings.Index(d.Description, retSuffix)
+				start  = strings.Index(d.Description, retPrefix)
+				prefix = retPrefix
+				end    = strings.Index(d.Description, retSuffix)
 			)
+			if start < 0 {
+				start = strings.Index(strings.ToLower(d.Description), retArrayPrefix)
+				// Do not cut prefix.
+				prefix = ""
+			}
 			if start > 0 && end > start {
-				ret := strings.TrimSpace(d.Description[start+len(retPrefix) : end])
-				if idxSpace := strings.LastIndex(ret, " "); idxSpace > 0 {
+				ret := strings.TrimSpace(d.Description[start+len(prefix) : end])
+				ret = strings.TrimSuffix(ret, ".")
+				ret = strings.TrimSuffix(ret, "object")
+				ret = strings.TrimSuffix(ret, "objects")
+
+				var found bool
+				for _, link := range links {
+					if strings.Contains(ret, link) {
+						ret = link
+						found = true
+						break
+					}
+				}
+				if found && prefix == "" {
+					ret = "Array of " + ret
+				}
+				if idxSpace := strings.LastIndex(ret, " "); !found && idxSpace > 0 {
 					// Skipping verb like "sent".
 					ret = ret[idxSpace+1:]
 				}

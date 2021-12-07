@@ -503,6 +503,60 @@ func (c *Client) BanChatMember(ctx context.Context, request BanChatMember) (res 
 	return result, nil
 }
 
+// BanChatSenderChat invokes banChatSenderChat operation.
+//
+// POST /banChatSenderChat
+func (c *Client) BanChatSenderChat(ctx context.Context, request BanChatSenderChat) (res Result, err error) {
+	startTime := time.Now()
+	ctx, span := c.cfg.Tracer.Start(ctx, `BanChatSenderChat`,
+		trace.WithAttributes(otelogen.OperationID(`banChatSenderChat`)),
+		trace.WithSpanKind(trace.SpanKindClient),
+	)
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			c.errors.Add(ctx, 1)
+		} else {
+			elapsedDuration := time.Since(startTime)
+			c.duration.Record(ctx, elapsedDuration.Microseconds())
+		}
+		span.End()
+	}()
+	c.requests.Add(ctx, 1)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeBanChatSenderChatRequestJSON(request, span)
+	if err != nil {
+		return res, err
+	}
+	defer putBuf(buf)
+	reqBody = buf
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/banChatSenderChat"
+
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeBanChatSenderChatResponse(resp, span)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
 // CopyMessage invokes copyMessage operation.
 //
 // POST /copyMessage
@@ -1496,7 +1550,7 @@ func (c *Client) ExportChatInviteLink(ctx context.Context, request ExportChatInv
 // ForwardMessage invokes forwardMessage operation.
 //
 // POST /forwardMessage
-func (c *Client) ForwardMessage(ctx context.Context, request ForwardMessage) (res ResultMsg, err error) {
+func (c *Client) ForwardMessage(ctx context.Context, request ForwardMessage) (res ResultMessage, err error) {
 	startTime := time.Now()
 	ctx, span := c.cfg.Tracer.Start(ctx, `ForwardMessage`,
 		trace.WithAttributes(otelogen.OperationID(`forwardMessage`)),
@@ -1874,7 +1928,7 @@ func (c *Client) GetGameHighScores(ctx context.Context, request GetGameHighScore
 // GetMe invokes getMe operation.
 //
 // POST /getMe
-func (c *Client) GetMe(ctx context.Context) (res ResultUsr, err error) {
+func (c *Client) GetMe(ctx context.Context) (res ResultUser, err error) {
 	startTime := time.Now()
 	ctx, span := c.cfg.Tracer.Start(ctx, `GetMe`,
 		trace.WithAttributes(otelogen.OperationID(`getMe`)),
@@ -2022,7 +2076,7 @@ func (c *Client) GetStickerSet(ctx context.Context, request GetStickerSet) (res 
 // GetUpdates invokes getUpdates operation.
 //
 // POST /getUpdates
-func (c *Client) GetUpdates(ctx context.Context, request GetUpdates) (res Result, err error) {
+func (c *Client) GetUpdates(ctx context.Context, request GetUpdates) (res ResultArrayOfUpdate, err error) {
 	if err := func() error {
 		if err := request.Validate(); err != nil {
 			return err
@@ -2416,7 +2470,7 @@ func (c *Client) RevokeChatInviteLink(ctx context.Context, request RevokeChatInv
 // SendAnimation invokes sendAnimation operation.
 //
 // POST /sendAnimation
-func (c *Client) SendAnimation(ctx context.Context, request SendAnimation) (res ResultMsg, err error) {
+func (c *Client) SendAnimation(ctx context.Context, request SendAnimation) (res ResultMessage, err error) {
 	if err := func() error {
 		if err := request.Validate(); err != nil {
 			return err
@@ -2594,7 +2648,7 @@ func (c *Client) SendChatAction(ctx context.Context, request SendChatAction) (re
 // SendContact invokes sendContact operation.
 //
 // POST /sendContact
-func (c *Client) SendContact(ctx context.Context, request SendContact) (res ResultMsg, err error) {
+func (c *Client) SendContact(ctx context.Context, request SendContact) (res ResultMessage, err error) {
 	if err := func() error {
 		if err := request.Validate(); err != nil {
 			return err
@@ -2656,7 +2710,7 @@ func (c *Client) SendContact(ctx context.Context, request SendContact) (res Resu
 // SendDice invokes sendDice operation.
 //
 // POST /sendDice
-func (c *Client) SendDice(ctx context.Context, request SendDice) (res ResultMsg, err error) {
+func (c *Client) SendDice(ctx context.Context, request SendDice) (res ResultMessage, err error) {
 	if err := func() error {
 		if err := request.Validate(); err != nil {
 			return err
@@ -2718,7 +2772,7 @@ func (c *Client) SendDice(ctx context.Context, request SendDice) (res ResultMsg,
 // SendDocument invokes sendDocument operation.
 //
 // POST /sendDocument
-func (c *Client) SendDocument(ctx context.Context, request SendDocument) (res ResultMsg, err error) {
+func (c *Client) SendDocument(ctx context.Context, request SendDocument) (res ResultMessage, err error) {
 	if err := func() error {
 		if err := request.Validate(); err != nil {
 			return err
@@ -2780,7 +2834,7 @@ func (c *Client) SendDocument(ctx context.Context, request SendDocument) (res Re
 // SendGame invokes sendGame operation.
 //
 // POST /sendGame
-func (c *Client) SendGame(ctx context.Context, request SendGame) (res ResultMsg, err error) {
+func (c *Client) SendGame(ctx context.Context, request SendGame) (res ResultMessage, err error) {
 	if err := func() error {
 		if err := request.Validate(); err != nil {
 			return err
@@ -2842,7 +2896,7 @@ func (c *Client) SendGame(ctx context.Context, request SendGame) (res ResultMsg,
 // SendInvoice invokes sendInvoice operation.
 //
 // POST /sendInvoice
-func (c *Client) SendInvoice(ctx context.Context, request SendInvoice) (res ResultMsg, err error) {
+func (c *Client) SendInvoice(ctx context.Context, request SendInvoice) (res ResultMessage, err error) {
 	if err := func() error {
 		if err := request.Validate(); err != nil {
 			return err
@@ -2904,7 +2958,7 @@ func (c *Client) SendInvoice(ctx context.Context, request SendInvoice) (res Resu
 // SendLocation invokes sendLocation operation.
 //
 // POST /sendLocation
-func (c *Client) SendLocation(ctx context.Context, request SendLocation) (res ResultMsg, err error) {
+func (c *Client) SendLocation(ctx context.Context, request SendLocation) (res ResultMessage, err error) {
 	if err := func() error {
 		if err := request.Validate(); err != nil {
 			return err
@@ -3028,7 +3082,7 @@ func (c *Client) SendMediaGroup(ctx context.Context, request SendMediaGroup) (re
 // SendMessage invokes sendMessage operation.
 //
 // POST /sendMessage
-func (c *Client) SendMessage(ctx context.Context, request SendMessage) (res ResultMsg, err error) {
+func (c *Client) SendMessage(ctx context.Context, request SendMessage) (res ResultMessage, err error) {
 	if err := func() error {
 		if err := request.Validate(); err != nil {
 			return err
@@ -3090,7 +3144,7 @@ func (c *Client) SendMessage(ctx context.Context, request SendMessage) (res Resu
 // SendPhoto invokes sendPhoto operation.
 //
 // POST /sendPhoto
-func (c *Client) SendPhoto(ctx context.Context, request SendPhoto) (res ResultMsg, err error) {
+func (c *Client) SendPhoto(ctx context.Context, request SendPhoto) (res ResultMessage, err error) {
 	if err := func() error {
 		if err := request.Validate(); err != nil {
 			return err
@@ -3152,7 +3206,7 @@ func (c *Client) SendPhoto(ctx context.Context, request SendPhoto) (res ResultMs
 // SendPoll invokes sendPoll operation.
 //
 // POST /sendPoll
-func (c *Client) SendPoll(ctx context.Context, request SendPoll) (res ResultMsg, err error) {
+func (c *Client) SendPoll(ctx context.Context, request SendPoll) (res ResultMessage, err error) {
 	if err := func() error {
 		if err := request.Validate(); err != nil {
 			return err
@@ -3214,7 +3268,7 @@ func (c *Client) SendPoll(ctx context.Context, request SendPoll) (res ResultMsg,
 // SendSticker invokes sendSticker operation.
 //
 // POST /sendSticker
-func (c *Client) SendSticker(ctx context.Context, request SendSticker) (res ResultMsg, err error) {
+func (c *Client) SendSticker(ctx context.Context, request SendSticker) (res ResultMessage, err error) {
 	if err := func() error {
 		if err := request.Validate(); err != nil {
 			return err
@@ -3276,7 +3330,7 @@ func (c *Client) SendSticker(ctx context.Context, request SendSticker) (res Resu
 // SendVenue invokes sendVenue operation.
 //
 // POST /sendVenue
-func (c *Client) SendVenue(ctx context.Context, request SendVenue) (res ResultMsg, err error) {
+func (c *Client) SendVenue(ctx context.Context, request SendVenue) (res ResultMessage, err error) {
 	if err := func() error {
 		if err := request.Validate(); err != nil {
 			return err
@@ -3338,7 +3392,7 @@ func (c *Client) SendVenue(ctx context.Context, request SendVenue) (res ResultMs
 // SendVideo invokes sendVideo operation.
 //
 // POST /sendVideo
-func (c *Client) SendVideo(ctx context.Context, request SendVideo) (res ResultMsg, err error) {
+func (c *Client) SendVideo(ctx context.Context, request SendVideo) (res ResultMessage, err error) {
 	if err := func() error {
 		if err := request.Validate(); err != nil {
 			return err
@@ -3400,7 +3454,7 @@ func (c *Client) SendVideo(ctx context.Context, request SendVideo) (res ResultMs
 // SendVideoNote invokes sendVideoNote operation.
 //
 // POST /sendVideoNote
-func (c *Client) SendVideoNote(ctx context.Context, request SendVideoNote) (res ResultMsg, err error) {
+func (c *Client) SendVideoNote(ctx context.Context, request SendVideoNote) (res ResultMessage, err error) {
 	if err := func() error {
 		if err := request.Validate(); err != nil {
 			return err
@@ -3462,7 +3516,7 @@ func (c *Client) SendVideoNote(ctx context.Context, request SendVideoNote) (res 
 // SendVoice invokes sendVoice operation.
 //
 // POST /sendVoice
-func (c *Client) SendVoice(ctx context.Context, request SendVoice) (res ResultMsg, err error) {
+func (c *Client) SendVoice(ctx context.Context, request SendVoice) (res ResultMessage, err error) {
 	if err := func() error {
 		if err := request.Validate(); err != nil {
 			return err
@@ -4380,6 +4434,60 @@ func (c *Client) UnbanChatMember(ctx context.Context, request UnbanChatMember) (
 	defer resp.Body.Close()
 
 	result, err := decodeUnbanChatMemberResponse(resp, span)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
+// UnbanChatSenderChat invokes unbanChatSenderChat operation.
+//
+// POST /unbanChatSenderChat
+func (c *Client) UnbanChatSenderChat(ctx context.Context, request UnbanChatSenderChat) (res Result, err error) {
+	startTime := time.Now()
+	ctx, span := c.cfg.Tracer.Start(ctx, `UnbanChatSenderChat`,
+		trace.WithAttributes(otelogen.OperationID(`unbanChatSenderChat`)),
+		trace.WithSpanKind(trace.SpanKindClient),
+	)
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			c.errors.Add(ctx, 1)
+		} else {
+			elapsedDuration := time.Since(startTime)
+			c.duration.Record(ctx, elapsedDuration.Microseconds())
+		}
+		span.End()
+	}()
+	c.requests.Add(ctx, 1)
+	var (
+		contentType string
+		reqBody     io.Reader
+	)
+	contentType = "application/json"
+	buf, err := encodeUnbanChatSenderChatRequestJSON(request, span)
+	if err != nil {
+		return res, err
+	}
+	defer putBuf(buf)
+	reqBody = buf
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/unbanChatSenderChat"
+
+	r := ht.NewRequest(ctx, "POST", u, reqBody)
+	defer ht.PutRequest(r)
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeUnbanChatSenderChatResponse(resp, span)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}

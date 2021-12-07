@@ -707,6 +707,51 @@ func (s *BanChatMember) Decode(d *jx.Decoder) error {
 }
 
 // Encode implements json.Marshaler.
+func (s BanChatSenderChat) Encode(e *jx.Encoder) {
+	e.ObjStart()
+
+	e.FieldStart("chat_id")
+	s.ChatID.Encode(e)
+
+	e.FieldStart("sender_chat_id")
+	e.Int(s.SenderChatID)
+	if s.UntilDate.Set {
+		e.FieldStart("until_date")
+		s.UntilDate.Encode(e)
+	}
+	e.ObjEnd()
+}
+
+// Decode decodes BanChatSenderChat from json.
+func (s *BanChatSenderChat) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New(`invalid: unable to decode BanChatSenderChat to nil`)
+	}
+	return d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "chat_id":
+			if err := s.ChatID.Decode(d); err != nil {
+				return err
+			}
+		case "sender_chat_id":
+			v, err := d.Int()
+			s.SenderChatID = int(v)
+			if err != nil {
+				return err
+			}
+		case "until_date":
+			s.UntilDate.Reset()
+			if err := s.UntilDate.Decode(d); err != nil {
+				return err
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	})
+}
+
+// Encode implements json.Marshaler.
 func (s BotCommand) Encode(e *jx.Encoder) {
 	e.ObjStart()
 
@@ -1109,6 +1154,87 @@ func (s *CallbackGame) Decode(d *jx.Decoder) error {
 }
 
 // Encode implements json.Marshaler.
+func (s CallbackQuery) Encode(e *jx.Encoder) {
+	e.ObjStart()
+
+	e.FieldStart("id")
+	e.Str(s.ID)
+
+	e.FieldStart("from")
+	s.From.Encode(e)
+	if s.Message.Set {
+		e.FieldStart("message")
+		s.Message.Encode(e)
+	}
+	if s.InlineMessageID.Set {
+		e.FieldStart("inline_message_id")
+		s.InlineMessageID.Encode(e)
+	}
+
+	e.FieldStart("chat_instance")
+	e.Str(s.ChatInstance)
+	if s.Data.Set {
+		e.FieldStart("data")
+		s.Data.Encode(e)
+	}
+	if s.GameShortName.Set {
+		e.FieldStart("game_short_name")
+		s.GameShortName.Encode(e)
+	}
+	e.ObjEnd()
+}
+
+// Decode decodes CallbackQuery from json.
+func (s *CallbackQuery) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New(`invalid: unable to decode CallbackQuery to nil`)
+	}
+	return d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "id":
+			v, err := d.Str()
+			s.ID = string(v)
+			if err != nil {
+				return err
+			}
+		case "from":
+			if err := s.From.Decode(d); err != nil {
+				return err
+			}
+		case "message":
+			s.Message.Reset()
+			if err := s.Message.Decode(d); err != nil {
+				return err
+			}
+		case "inline_message_id":
+			s.InlineMessageID.Reset()
+			if err := s.InlineMessageID.Decode(d); err != nil {
+				return err
+			}
+		case "chat_instance":
+			v, err := d.Str()
+			s.ChatInstance = string(v)
+			if err != nil {
+				return err
+			}
+		case "data":
+			s.Data.Reset()
+			if err := s.Data.Decode(d); err != nil {
+				return err
+			}
+		case "game_short_name":
+			s.GameShortName.Reset()
+			if err := s.GameShortName.Decode(d); err != nil {
+				return err
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	})
+}
+
+// Encode implements json.Marshaler.
 func (s Chat) Encode(e *jx.Encoder) {
 	e.ObjStart()
 
@@ -1141,6 +1267,10 @@ func (s Chat) Encode(e *jx.Encoder) {
 		e.FieldStart("bio")
 		s.Bio.Encode(e)
 	}
+	if s.HasPrivateForwards.Set {
+		e.FieldStart("has_private_forwards")
+		s.HasPrivateForwards.Encode(e)
+	}
 	if s.Description.Set {
 		e.FieldStart("description")
 		s.Description.Encode(e)
@@ -1164,6 +1294,10 @@ func (s Chat) Encode(e *jx.Encoder) {
 	if s.MessageAutoDeleteTime.Set {
 		e.FieldStart("message_auto_delete_time")
 		s.MessageAutoDeleteTime.Encode(e)
+	}
+	if s.HasProtectedContent.Set {
+		e.FieldStart("has_protected_content")
+		s.HasProtectedContent.Encode(e)
 	}
 	if s.StickerSetName.Set {
 		e.FieldStart("sticker_set_name")
@@ -1233,6 +1367,11 @@ func (s *Chat) Decode(d *jx.Decoder) error {
 			if err := s.Bio.Decode(d); err != nil {
 				return err
 			}
+		case "has_private_forwards":
+			s.HasPrivateForwards.Reset()
+			if err := s.HasPrivateForwards.Decode(d); err != nil {
+				return err
+			}
 		case "description":
 			s.Description.Reset()
 			if err := s.Description.Decode(d); err != nil {
@@ -1265,6 +1404,11 @@ func (s *Chat) Decode(d *jx.Decoder) error {
 			if err := s.MessageAutoDeleteTime.Decode(d); err != nil {
 				return err
 			}
+		case "has_protected_content":
+			s.HasProtectedContent.Reset()
+			if err := s.HasProtectedContent.Decode(d); err != nil {
+				return err
+			}
 		case "sticker_set_name":
 			s.StickerSetName.Reset()
 			if err := s.StickerSetName.Decode(d); err != nil {
@@ -1283,6 +1427,166 @@ func (s *Chat) Decode(d *jx.Decoder) error {
 		case "location":
 			s.Location.Reset()
 			if err := s.Location.Decode(d); err != nil {
+				return err
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	})
+}
+
+// Encode implements json.Marshaler.
+func (s ChatInviteLink) Encode(e *jx.Encoder) {
+	e.ObjStart()
+
+	e.FieldStart("invite_link")
+	e.Str(s.InviteLink)
+
+	e.FieldStart("creator")
+	s.Creator.Encode(e)
+
+	e.FieldStart("creates_join_request")
+	e.Bool(s.CreatesJoinRequest)
+
+	e.FieldStart("is_primary")
+	e.Bool(s.IsPrimary)
+
+	e.FieldStart("is_revoked")
+	e.Bool(s.IsRevoked)
+	if s.Name.Set {
+		e.FieldStart("name")
+		s.Name.Encode(e)
+	}
+	if s.ExpireDate.Set {
+		e.FieldStart("expire_date")
+		s.ExpireDate.Encode(e)
+	}
+	if s.MemberLimit.Set {
+		e.FieldStart("member_limit")
+		s.MemberLimit.Encode(e)
+	}
+	if s.PendingJoinRequestCount.Set {
+		e.FieldStart("pending_join_request_count")
+		s.PendingJoinRequestCount.Encode(e)
+	}
+	e.ObjEnd()
+}
+
+// Decode decodes ChatInviteLink from json.
+func (s *ChatInviteLink) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New(`invalid: unable to decode ChatInviteLink to nil`)
+	}
+	return d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "invite_link":
+			v, err := d.Str()
+			s.InviteLink = string(v)
+			if err != nil {
+				return err
+			}
+		case "creator":
+			if err := s.Creator.Decode(d); err != nil {
+				return err
+			}
+		case "creates_join_request":
+			v, err := d.Bool()
+			s.CreatesJoinRequest = bool(v)
+			if err != nil {
+				return err
+			}
+		case "is_primary":
+			v, err := d.Bool()
+			s.IsPrimary = bool(v)
+			if err != nil {
+				return err
+			}
+		case "is_revoked":
+			v, err := d.Bool()
+			s.IsRevoked = bool(v)
+			if err != nil {
+				return err
+			}
+		case "name":
+			s.Name.Reset()
+			if err := s.Name.Decode(d); err != nil {
+				return err
+			}
+		case "expire_date":
+			s.ExpireDate.Reset()
+			if err := s.ExpireDate.Decode(d); err != nil {
+				return err
+			}
+		case "member_limit":
+			s.MemberLimit.Reset()
+			if err := s.MemberLimit.Decode(d); err != nil {
+				return err
+			}
+		case "pending_join_request_count":
+			s.PendingJoinRequestCount.Reset()
+			if err := s.PendingJoinRequestCount.Decode(d); err != nil {
+				return err
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	})
+}
+
+// Encode implements json.Marshaler.
+func (s ChatJoinRequest) Encode(e *jx.Encoder) {
+	e.ObjStart()
+
+	e.FieldStart("chat")
+	s.Chat.Encode(e)
+
+	e.FieldStart("from")
+	s.From.Encode(e)
+
+	e.FieldStart("date")
+	e.Int(s.Date)
+	if s.Bio.Set {
+		e.FieldStart("bio")
+		s.Bio.Encode(e)
+	}
+	if s.InviteLink.Set {
+		e.FieldStart("invite_link")
+		s.InviteLink.Encode(e)
+	}
+	e.ObjEnd()
+}
+
+// Decode decodes ChatJoinRequest from json.
+func (s *ChatJoinRequest) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New(`invalid: unable to decode ChatJoinRequest to nil`)
+	}
+	return d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "chat":
+			if err := s.Chat.Decode(d); err != nil {
+				return err
+			}
+		case "from":
+			if err := s.From.Decode(d); err != nil {
+				return err
+			}
+		case "date":
+			v, err := d.Int()
+			s.Date = int(v)
+			if err != nil {
+				return err
+			}
+		case "bio":
+			s.Bio.Reset()
+			if err := s.Bio.Decode(d); err != nil {
+				return err
+			}
+		case "invite_link":
+			s.InviteLink.Reset()
+			if err := s.InviteLink.Decode(d); err != nil {
 				return err
 			}
 		default:
@@ -1319,6 +1623,624 @@ func (s *ChatLocation) Decode(d *jx.Decoder) error {
 			v, err := d.Str()
 			s.Address = string(v)
 			if err != nil {
+				return err
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	})
+}
+
+// Encode encodes ChatMember as json.
+func (s ChatMember) Encode(e *jx.Encoder) {
+	switch s.Type {
+	case ChatMemberOwnerChatMember:
+		s.ChatMemberOwner.Encode(e)
+	case ChatMemberAdministratorChatMember:
+		s.ChatMemberAdministrator.Encode(e)
+	case ChatMemberMemberChatMember:
+		s.ChatMemberMember.Encode(e)
+	case ChatMemberRestrictedChatMember:
+		s.ChatMemberRestricted.Encode(e)
+	case ChatMemberLeftChatMember:
+		s.ChatMemberLeft.Encode(e)
+	case ChatMemberBannedChatMember:
+		s.ChatMemberBanned.Encode(e)
+	}
+}
+
+// Decode decodes ChatMember from json.
+func (s *ChatMember) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New(`invalid: unable to decode ChatMember to nil`)
+	}
+	// Sum type discriminator.
+	if d.Next() != jx.Object {
+		return errors.Errorf("unexpected json type %q", d.Next())
+	}
+	var found bool
+	if err := d.Capture(func(d *jx.Decoder) error {
+		return d.ObjBytes(func(d *jx.Decoder, key []byte) error {
+			if found {
+				return d.Skip()
+			}
+			switch string(key) {
+			case "status":
+				typ, err := d.Str()
+				if err != nil {
+					return err
+				}
+				switch typ {
+				case "ChatMemberAdministrator":
+					s.Type = ChatMemberAdministratorChatMember
+					found = true
+				case "ChatMemberBanned":
+					s.Type = ChatMemberBannedChatMember
+					found = true
+				case "ChatMemberLeft":
+					s.Type = ChatMemberLeftChatMember
+					found = true
+				case "ChatMemberMember":
+					s.Type = ChatMemberMemberChatMember
+					found = true
+				case "ChatMemberOwner":
+					s.Type = ChatMemberOwnerChatMember
+					found = true
+				case "ChatMemberRestricted":
+					s.Type = ChatMemberRestrictedChatMember
+					found = true
+				default:
+					return errors.Errorf("unknown type %s", typ)
+				}
+				return nil
+			}
+			return d.Skip()
+		})
+	}); err != nil {
+		return errors.Wrap(err, "capture")
+	}
+	if !found {
+		return errors.New("unable to detect sum type variant")
+	}
+	switch s.Type {
+	case ChatMemberOwnerChatMember:
+		if err := s.ChatMemberOwner.Decode(d); err != nil {
+			return err
+		}
+	case ChatMemberAdministratorChatMember:
+		if err := s.ChatMemberAdministrator.Decode(d); err != nil {
+			return err
+		}
+	case ChatMemberMemberChatMember:
+		if err := s.ChatMemberMember.Decode(d); err != nil {
+			return err
+		}
+	case ChatMemberRestrictedChatMember:
+		if err := s.ChatMemberRestricted.Decode(d); err != nil {
+			return err
+		}
+	case ChatMemberLeftChatMember:
+		if err := s.ChatMemberLeft.Decode(d); err != nil {
+			return err
+		}
+	case ChatMemberBannedChatMember:
+		if err := s.ChatMemberBanned.Decode(d); err != nil {
+			return err
+		}
+	default:
+		return errors.Errorf("inferred invalid type: %s", s.Type)
+	}
+	return nil
+}
+
+// Encode implements json.Marshaler.
+func (s ChatMemberAdministrator) Encode(e *jx.Encoder) {
+	e.ObjStart()
+
+	e.FieldStart("status")
+	e.Str(s.Status)
+
+	e.FieldStart("user")
+	s.User.Encode(e)
+
+	e.FieldStart("can_be_edited")
+	e.Bool(s.CanBeEdited)
+
+	e.FieldStart("is_anonymous")
+	e.Bool(s.IsAnonymous)
+
+	e.FieldStart("can_manage_chat")
+	e.Bool(s.CanManageChat)
+
+	e.FieldStart("can_delete_messages")
+	e.Bool(s.CanDeleteMessages)
+
+	e.FieldStart("can_manage_voice_chats")
+	e.Bool(s.CanManageVoiceChats)
+
+	e.FieldStart("can_restrict_members")
+	e.Bool(s.CanRestrictMembers)
+
+	e.FieldStart("can_promote_members")
+	e.Bool(s.CanPromoteMembers)
+
+	e.FieldStart("can_change_info")
+	e.Bool(s.CanChangeInfo)
+
+	e.FieldStart("can_invite_users")
+	e.Bool(s.CanInviteUsers)
+	if s.CanPostMessages.Set {
+		e.FieldStart("can_post_messages")
+		s.CanPostMessages.Encode(e)
+	}
+	if s.CanEditMessages.Set {
+		e.FieldStart("can_edit_messages")
+		s.CanEditMessages.Encode(e)
+	}
+	if s.CanPinMessages.Set {
+		e.FieldStart("can_pin_messages")
+		s.CanPinMessages.Encode(e)
+	}
+	if s.CustomTitle.Set {
+		e.FieldStart("custom_title")
+		s.CustomTitle.Encode(e)
+	}
+	e.ObjEnd()
+}
+
+// Decode decodes ChatMemberAdministrator from json.
+func (s *ChatMemberAdministrator) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New(`invalid: unable to decode ChatMemberAdministrator to nil`)
+	}
+	return d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "status":
+			v, err := d.Str()
+			s.Status = string(v)
+			if err != nil {
+				return err
+			}
+		case "user":
+			if err := s.User.Decode(d); err != nil {
+				return err
+			}
+		case "can_be_edited":
+			v, err := d.Bool()
+			s.CanBeEdited = bool(v)
+			if err != nil {
+				return err
+			}
+		case "is_anonymous":
+			v, err := d.Bool()
+			s.IsAnonymous = bool(v)
+			if err != nil {
+				return err
+			}
+		case "can_manage_chat":
+			v, err := d.Bool()
+			s.CanManageChat = bool(v)
+			if err != nil {
+				return err
+			}
+		case "can_delete_messages":
+			v, err := d.Bool()
+			s.CanDeleteMessages = bool(v)
+			if err != nil {
+				return err
+			}
+		case "can_manage_voice_chats":
+			v, err := d.Bool()
+			s.CanManageVoiceChats = bool(v)
+			if err != nil {
+				return err
+			}
+		case "can_restrict_members":
+			v, err := d.Bool()
+			s.CanRestrictMembers = bool(v)
+			if err != nil {
+				return err
+			}
+		case "can_promote_members":
+			v, err := d.Bool()
+			s.CanPromoteMembers = bool(v)
+			if err != nil {
+				return err
+			}
+		case "can_change_info":
+			v, err := d.Bool()
+			s.CanChangeInfo = bool(v)
+			if err != nil {
+				return err
+			}
+		case "can_invite_users":
+			v, err := d.Bool()
+			s.CanInviteUsers = bool(v)
+			if err != nil {
+				return err
+			}
+		case "can_post_messages":
+			s.CanPostMessages.Reset()
+			if err := s.CanPostMessages.Decode(d); err != nil {
+				return err
+			}
+		case "can_edit_messages":
+			s.CanEditMessages.Reset()
+			if err := s.CanEditMessages.Decode(d); err != nil {
+				return err
+			}
+		case "can_pin_messages":
+			s.CanPinMessages.Reset()
+			if err := s.CanPinMessages.Decode(d); err != nil {
+				return err
+			}
+		case "custom_title":
+			s.CustomTitle.Reset()
+			if err := s.CustomTitle.Decode(d); err != nil {
+				return err
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	})
+}
+
+// Encode implements json.Marshaler.
+func (s ChatMemberBanned) Encode(e *jx.Encoder) {
+	e.ObjStart()
+
+	e.FieldStart("status")
+	e.Str(s.Status)
+
+	e.FieldStart("user")
+	s.User.Encode(e)
+
+	e.FieldStart("until_date")
+	e.Int(s.UntilDate)
+	e.ObjEnd()
+}
+
+// Decode decodes ChatMemberBanned from json.
+func (s *ChatMemberBanned) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New(`invalid: unable to decode ChatMemberBanned to nil`)
+	}
+	return d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "status":
+			v, err := d.Str()
+			s.Status = string(v)
+			if err != nil {
+				return err
+			}
+		case "user":
+			if err := s.User.Decode(d); err != nil {
+				return err
+			}
+		case "until_date":
+			v, err := d.Int()
+			s.UntilDate = int(v)
+			if err != nil {
+				return err
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	})
+}
+
+// Encode implements json.Marshaler.
+func (s ChatMemberLeft) Encode(e *jx.Encoder) {
+	e.ObjStart()
+
+	e.FieldStart("status")
+	e.Str(s.Status)
+
+	e.FieldStart("user")
+	s.User.Encode(e)
+	e.ObjEnd()
+}
+
+// Decode decodes ChatMemberLeft from json.
+func (s *ChatMemberLeft) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New(`invalid: unable to decode ChatMemberLeft to nil`)
+	}
+	return d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "status":
+			v, err := d.Str()
+			s.Status = string(v)
+			if err != nil {
+				return err
+			}
+		case "user":
+			if err := s.User.Decode(d); err != nil {
+				return err
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	})
+}
+
+// Encode implements json.Marshaler.
+func (s ChatMemberMember) Encode(e *jx.Encoder) {
+	e.ObjStart()
+
+	e.FieldStart("status")
+	e.Str(s.Status)
+
+	e.FieldStart("user")
+	s.User.Encode(e)
+	e.ObjEnd()
+}
+
+// Decode decodes ChatMemberMember from json.
+func (s *ChatMemberMember) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New(`invalid: unable to decode ChatMemberMember to nil`)
+	}
+	return d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "status":
+			v, err := d.Str()
+			s.Status = string(v)
+			if err != nil {
+				return err
+			}
+		case "user":
+			if err := s.User.Decode(d); err != nil {
+				return err
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	})
+}
+
+// Encode implements json.Marshaler.
+func (s ChatMemberOwner) Encode(e *jx.Encoder) {
+	e.ObjStart()
+
+	e.FieldStart("status")
+	e.Str(s.Status)
+
+	e.FieldStart("user")
+	s.User.Encode(e)
+
+	e.FieldStart("is_anonymous")
+	e.Bool(s.IsAnonymous)
+	if s.CustomTitle.Set {
+		e.FieldStart("custom_title")
+		s.CustomTitle.Encode(e)
+	}
+	e.ObjEnd()
+}
+
+// Decode decodes ChatMemberOwner from json.
+func (s *ChatMemberOwner) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New(`invalid: unable to decode ChatMemberOwner to nil`)
+	}
+	return d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "status":
+			v, err := d.Str()
+			s.Status = string(v)
+			if err != nil {
+				return err
+			}
+		case "user":
+			if err := s.User.Decode(d); err != nil {
+				return err
+			}
+		case "is_anonymous":
+			v, err := d.Bool()
+			s.IsAnonymous = bool(v)
+			if err != nil {
+				return err
+			}
+		case "custom_title":
+			s.CustomTitle.Reset()
+			if err := s.CustomTitle.Decode(d); err != nil {
+				return err
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	})
+}
+
+// Encode implements json.Marshaler.
+func (s ChatMemberRestricted) Encode(e *jx.Encoder) {
+	e.ObjStart()
+
+	e.FieldStart("status")
+	e.Str(s.Status)
+
+	e.FieldStart("user")
+	s.User.Encode(e)
+
+	e.FieldStart("is_member")
+	e.Bool(s.IsMember)
+
+	e.FieldStart("can_change_info")
+	e.Bool(s.CanChangeInfo)
+
+	e.FieldStart("can_invite_users")
+	e.Bool(s.CanInviteUsers)
+
+	e.FieldStart("can_pin_messages")
+	e.Bool(s.CanPinMessages)
+
+	e.FieldStart("can_send_messages")
+	e.Bool(s.CanSendMessages)
+
+	e.FieldStart("can_send_media_messages")
+	e.Bool(s.CanSendMediaMessages)
+
+	e.FieldStart("can_send_polls")
+	e.Bool(s.CanSendPolls)
+
+	e.FieldStart("can_send_other_messages")
+	e.Bool(s.CanSendOtherMessages)
+
+	e.FieldStart("can_add_web_page_previews")
+	e.Bool(s.CanAddWebPagePreviews)
+
+	e.FieldStart("until_date")
+	e.Int(s.UntilDate)
+	e.ObjEnd()
+}
+
+// Decode decodes ChatMemberRestricted from json.
+func (s *ChatMemberRestricted) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New(`invalid: unable to decode ChatMemberRestricted to nil`)
+	}
+	return d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "status":
+			v, err := d.Str()
+			s.Status = string(v)
+			if err != nil {
+				return err
+			}
+		case "user":
+			if err := s.User.Decode(d); err != nil {
+				return err
+			}
+		case "is_member":
+			v, err := d.Bool()
+			s.IsMember = bool(v)
+			if err != nil {
+				return err
+			}
+		case "can_change_info":
+			v, err := d.Bool()
+			s.CanChangeInfo = bool(v)
+			if err != nil {
+				return err
+			}
+		case "can_invite_users":
+			v, err := d.Bool()
+			s.CanInviteUsers = bool(v)
+			if err != nil {
+				return err
+			}
+		case "can_pin_messages":
+			v, err := d.Bool()
+			s.CanPinMessages = bool(v)
+			if err != nil {
+				return err
+			}
+		case "can_send_messages":
+			v, err := d.Bool()
+			s.CanSendMessages = bool(v)
+			if err != nil {
+				return err
+			}
+		case "can_send_media_messages":
+			v, err := d.Bool()
+			s.CanSendMediaMessages = bool(v)
+			if err != nil {
+				return err
+			}
+		case "can_send_polls":
+			v, err := d.Bool()
+			s.CanSendPolls = bool(v)
+			if err != nil {
+				return err
+			}
+		case "can_send_other_messages":
+			v, err := d.Bool()
+			s.CanSendOtherMessages = bool(v)
+			if err != nil {
+				return err
+			}
+		case "can_add_web_page_previews":
+			v, err := d.Bool()
+			s.CanAddWebPagePreviews = bool(v)
+			if err != nil {
+				return err
+			}
+		case "until_date":
+			v, err := d.Int()
+			s.UntilDate = int(v)
+			if err != nil {
+				return err
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	})
+}
+
+// Encode implements json.Marshaler.
+func (s ChatMemberUpdated) Encode(e *jx.Encoder) {
+	e.ObjStart()
+
+	e.FieldStart("chat")
+	s.Chat.Encode(e)
+
+	e.FieldStart("from")
+	s.From.Encode(e)
+
+	e.FieldStart("date")
+	e.Int(s.Date)
+
+	e.FieldStart("old_chat_member")
+	s.OldChatMember.Encode(e)
+
+	e.FieldStart("new_chat_member")
+	s.NewChatMember.Encode(e)
+	if s.InviteLink.Set {
+		e.FieldStart("invite_link")
+		s.InviteLink.Encode(e)
+	}
+	e.ObjEnd()
+}
+
+// Decode decodes ChatMemberUpdated from json.
+func (s *ChatMemberUpdated) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New(`invalid: unable to decode ChatMemberUpdated to nil`)
+	}
+	return d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "chat":
+			if err := s.Chat.Decode(d); err != nil {
+				return err
+			}
+		case "from":
+			if err := s.From.Decode(d); err != nil {
+				return err
+			}
+		case "date":
+			v, err := d.Int()
+			s.Date = int(v)
+			if err != nil {
+				return err
+			}
+		case "old_chat_member":
+			if err := s.OldChatMember.Decode(d); err != nil {
+				return err
+			}
+		case "new_chat_member":
+			if err := s.NewChatMember.Decode(d); err != nil {
+				return err
+			}
+		case "invite_link":
+			s.InviteLink.Reset()
+			if err := s.InviteLink.Decode(d); err != nil {
 				return err
 			}
 		default:
@@ -1466,6 +2388,69 @@ func (s *ChatPhoto) Decode(d *jx.Decoder) error {
 		case "big_file_unique_id":
 			v, err := d.Str()
 			s.BigFileUniqueID = string(v)
+			if err != nil {
+				return err
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	})
+}
+
+// Encode implements json.Marshaler.
+func (s ChosenInlineResult) Encode(e *jx.Encoder) {
+	e.ObjStart()
+
+	e.FieldStart("result_id")
+	e.Str(s.ResultID)
+
+	e.FieldStart("from")
+	s.From.Encode(e)
+	if s.Location.Set {
+		e.FieldStart("location")
+		s.Location.Encode(e)
+	}
+	if s.InlineMessageID.Set {
+		e.FieldStart("inline_message_id")
+		s.InlineMessageID.Encode(e)
+	}
+
+	e.FieldStart("query")
+	e.Str(s.Query)
+	e.ObjEnd()
+}
+
+// Decode decodes ChosenInlineResult from json.
+func (s *ChosenInlineResult) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New(`invalid: unable to decode ChosenInlineResult to nil`)
+	}
+	return d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "result_id":
+			v, err := d.Str()
+			s.ResultID = string(v)
+			if err != nil {
+				return err
+			}
+		case "from":
+			if err := s.From.Decode(d); err != nil {
+				return err
+			}
+		case "location":
+			s.Location.Reset()
+			if err := s.Location.Decode(d); err != nil {
+				return err
+			}
+		case "inline_message_id":
+			s.InlineMessageID.Reset()
+			if err := s.InlineMessageID.Decode(d); err != nil {
+				return err
+			}
+		case "query":
+			v, err := d.Str()
+			s.Query = string(v)
 			if err != nil {
 				return err
 			}
@@ -3781,6 +4766,78 @@ func (s *InlineKeyboardMarkup) Decode(d *jx.Decoder) error {
 	})
 }
 
+// Encode implements json.Marshaler.
+func (s InlineQuery) Encode(e *jx.Encoder) {
+	e.ObjStart()
+
+	e.FieldStart("id")
+	e.Str(s.ID)
+
+	e.FieldStart("from")
+	s.From.Encode(e)
+
+	e.FieldStart("query")
+	e.Str(s.Query)
+
+	e.FieldStart("offset")
+	e.Str(s.Offset)
+	if s.ChatType.Set {
+		e.FieldStart("chat_type")
+		s.ChatType.Encode(e)
+	}
+	if s.Location.Set {
+		e.FieldStart("location")
+		s.Location.Encode(e)
+	}
+	e.ObjEnd()
+}
+
+// Decode decodes InlineQuery from json.
+func (s *InlineQuery) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New(`invalid: unable to decode InlineQuery to nil`)
+	}
+	return d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "id":
+			v, err := d.Str()
+			s.ID = string(v)
+			if err != nil {
+				return err
+			}
+		case "from":
+			if err := s.From.Decode(d); err != nil {
+				return err
+			}
+		case "query":
+			v, err := d.Str()
+			s.Query = string(v)
+			if err != nil {
+				return err
+			}
+		case "offset":
+			v, err := d.Str()
+			s.Offset = string(v)
+			if err != nil {
+				return err
+			}
+		case "chat_type":
+			s.ChatType.Reset()
+			if err := s.ChatType.Decode(d); err != nil {
+				return err
+			}
+		case "location":
+			s.Location.Reset()
+			if err := s.Location.Decode(d); err != nil {
+				return err
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	})
+}
+
 // Encode encodes InlineQueryResult as json.
 func (s InlineQueryResult) Encode(e *jx.Encoder) {
 	unwrapped := string(s)
@@ -4860,6 +5917,10 @@ func (s Message) Encode(e *jx.Encoder) {
 		e.FieldStart("forward_date")
 		s.ForwardDate.Encode(e)
 	}
+	if s.IsAutomaticForward.Set {
+		e.FieldStart("is_automatic_forward")
+		s.IsAutomaticForward.Encode(e)
+	}
 	if s.ReplyToMessage != nil {
 		e.FieldStart("reply_to_message")
 		s.ReplyToMessage.Encode(e)
@@ -4871,6 +5932,10 @@ func (s Message) Encode(e *jx.Encoder) {
 	if s.EditDate.Set {
 		e.FieldStart("edit_date")
 		s.EditDate.Encode(e)
+	}
+	if s.HasProtectedContent.Set {
+		e.FieldStart("has_protected_content")
+		s.HasProtectedContent.Encode(e)
 	}
 	if s.MediaGroupID.Set {
 		e.FieldStart("media_group_id")
@@ -5126,6 +6191,11 @@ func (s *Message) Decode(d *jx.Decoder) error {
 			if err := s.ForwardDate.Decode(d); err != nil {
 				return err
 			}
+		case "is_automatic_forward":
+			s.IsAutomaticForward.Reset()
+			if err := s.IsAutomaticForward.Decode(d); err != nil {
+				return err
+			}
 		case "reply_to_message":
 			s.ReplyToMessage = nil
 			var elem Message
@@ -5141,6 +6211,11 @@ func (s *Message) Decode(d *jx.Decoder) error {
 		case "edit_date":
 			s.EditDate.Reset()
 			if err := s.EditDate.Decode(d); err != nil {
+				return err
+			}
+		case "has_protected_content":
+			s.HasProtectedContent.Reset()
+			if err := s.HasProtectedContent.Decode(d); err != nil {
 				return err
 			}
 		case "media_group_id":
@@ -5570,6 +6645,28 @@ func (o *OptBool) Decode(d *jx.Decoder) error {
 	}
 }
 
+// Encode encodes CallbackQuery as json.
+func (o OptCallbackQuery) Encode(e *jx.Encoder) {
+	o.Value.Encode(e)
+}
+
+// Decode decodes CallbackQuery from json.
+func (o *OptCallbackQuery) Decode(d *jx.Decoder) error {
+	if o == nil {
+		return errors.New(`invalid: unable to decode OptCallbackQuery to nil`)
+	}
+	switch d.Next() {
+	case jx.Object:
+		o.Set = true
+		if err := o.Value.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	default:
+		return errors.Errorf(`unexpected type %q while reading OptCallbackQuery`, d.Next())
+	}
+}
+
 // Encode encodes Chat as json.
 func (o OptChat) Encode(e *jx.Encoder) {
 	o.Value.Encode(e)
@@ -5592,6 +6689,50 @@ func (o *OptChat) Decode(d *jx.Decoder) error {
 	}
 }
 
+// Encode encodes ChatInviteLink as json.
+func (o OptChatInviteLink) Encode(e *jx.Encoder) {
+	o.Value.Encode(e)
+}
+
+// Decode decodes ChatInviteLink from json.
+func (o *OptChatInviteLink) Decode(d *jx.Decoder) error {
+	if o == nil {
+		return errors.New(`invalid: unable to decode OptChatInviteLink to nil`)
+	}
+	switch d.Next() {
+	case jx.Object:
+		o.Set = true
+		if err := o.Value.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	default:
+		return errors.Errorf(`unexpected type %q while reading OptChatInviteLink`, d.Next())
+	}
+}
+
+// Encode encodes ChatJoinRequest as json.
+func (o OptChatJoinRequest) Encode(e *jx.Encoder) {
+	o.Value.Encode(e)
+}
+
+// Decode decodes ChatJoinRequest from json.
+func (o *OptChatJoinRequest) Decode(d *jx.Decoder) error {
+	if o == nil {
+		return errors.New(`invalid: unable to decode OptChatJoinRequest to nil`)
+	}
+	switch d.Next() {
+	case jx.Object:
+		o.Set = true
+		if err := o.Value.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	default:
+		return errors.Errorf(`unexpected type %q while reading OptChatJoinRequest`, d.Next())
+	}
+}
+
 // Encode encodes ChatLocation as json.
 func (o OptChatLocation) Encode(e *jx.Encoder) {
 	o.Value.Encode(e)
@@ -5611,6 +6752,28 @@ func (o *OptChatLocation) Decode(d *jx.Decoder) error {
 		return nil
 	default:
 		return errors.Errorf(`unexpected type %q while reading OptChatLocation`, d.Next())
+	}
+}
+
+// Encode encodes ChatMemberUpdated as json.
+func (o OptChatMemberUpdated) Encode(e *jx.Encoder) {
+	o.Value.Encode(e)
+}
+
+// Decode decodes ChatMemberUpdated from json.
+func (o *OptChatMemberUpdated) Decode(d *jx.Decoder) error {
+	if o == nil {
+		return errors.New(`invalid: unable to decode OptChatMemberUpdated to nil`)
+	}
+	switch d.Next() {
+	case jx.Object:
+		o.Set = true
+		if err := o.Value.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	default:
+		return errors.Errorf(`unexpected type %q while reading OptChatMemberUpdated`, d.Next())
 	}
 }
 
@@ -5655,6 +6818,28 @@ func (o *OptChatPhoto) Decode(d *jx.Decoder) error {
 		return nil
 	default:
 		return errors.Errorf(`unexpected type %q while reading OptChatPhoto`, d.Next())
+	}
+}
+
+// Encode encodes ChosenInlineResult as json.
+func (o OptChosenInlineResult) Encode(e *jx.Encoder) {
+	o.Value.Encode(e)
+}
+
+// Decode decodes ChosenInlineResult from json.
+func (o *OptChosenInlineResult) Decode(d *jx.Decoder) error {
+	if o == nil {
+		return errors.New(`invalid: unable to decode OptChosenInlineResult to nil`)
+	}
+	switch d.Next() {
+	case jx.Object:
+		o.Set = true
+		if err := o.Value.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	default:
+		return errors.Errorf(`unexpected type %q while reading OptChosenInlineResult`, d.Next())
 	}
 }
 
@@ -5789,6 +6974,28 @@ func (o *OptInlineKeyboardMarkup) Decode(d *jx.Decoder) error {
 		return nil
 	default:
 		return errors.Errorf(`unexpected type %q while reading OptInlineKeyboardMarkup`, d.Next())
+	}
+}
+
+// Encode encodes InlineQuery as json.
+func (o OptInlineQuery) Encode(e *jx.Encoder) {
+	o.Value.Encode(e)
+}
+
+// Decode decodes InlineQuery from json.
+func (o *OptInlineQuery) Decode(d *jx.Decoder) error {
+	if o == nil {
+		return errors.New(`invalid: unable to decode OptInlineQuery to nil`)
+	}
+	switch d.Next() {
+	case jx.Object:
+		o.Set = true
+		if err := o.Value.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	default:
+		return errors.Errorf(`unexpected type %q while reading OptInlineQuery`, d.Next())
 	}
 }
 
@@ -6104,6 +7311,50 @@ func (o *OptPoll) Decode(d *jx.Decoder) error {
 	}
 }
 
+// Encode encodes PollAnswer as json.
+func (o OptPollAnswer) Encode(e *jx.Encoder) {
+	o.Value.Encode(e)
+}
+
+// Decode decodes PollAnswer from json.
+func (o *OptPollAnswer) Decode(d *jx.Decoder) error {
+	if o == nil {
+		return errors.New(`invalid: unable to decode OptPollAnswer to nil`)
+	}
+	switch d.Next() {
+	case jx.Object:
+		o.Set = true
+		if err := o.Value.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	default:
+		return errors.Errorf(`unexpected type %q while reading OptPollAnswer`, d.Next())
+	}
+}
+
+// Encode encodes PreCheckoutQuery as json.
+func (o OptPreCheckoutQuery) Encode(e *jx.Encoder) {
+	o.Value.Encode(e)
+}
+
+// Decode decodes PreCheckoutQuery from json.
+func (o *OptPreCheckoutQuery) Decode(d *jx.Decoder) error {
+	if o == nil {
+		return errors.New(`invalid: unable to decode OptPreCheckoutQuery to nil`)
+	}
+	switch d.Next() {
+	case jx.Object:
+		o.Set = true
+		if err := o.Value.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	default:
+		return errors.Errorf(`unexpected type %q while reading OptPreCheckoutQuery`, d.Next())
+	}
+}
+
 // Encode encodes ProximityAlertTriggered as json.
 func (o OptProximityAlertTriggered) Encode(e *jx.Encoder) {
 	o.Value.Encode(e)
@@ -6167,6 +7418,28 @@ func (o *OptShippingAddress) Decode(d *jx.Decoder) error {
 		return nil
 	default:
 		return errors.Errorf(`unexpected type %q while reading OptShippingAddress`, d.Next())
+	}
+}
+
+// Encode encodes ShippingQuery as json.
+func (o OptShippingQuery) Encode(e *jx.Encoder) {
+	o.Value.Encode(e)
+}
+
+// Decode decodes ShippingQuery from json.
+func (o *OptShippingQuery) Decode(d *jx.Decoder) error {
+	if o == nil {
+		return errors.New(`invalid: unable to decode OptShippingQuery to nil`)
+	}
+	switch d.Next() {
+	case jx.Object:
+		o.Set = true
+		if err := o.Value.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	default:
+		return errors.Errorf(`unexpected type %q while reading OptShippingQuery`, d.Next())
 	}
 }
 
@@ -6259,6 +7532,28 @@ func (o *OptURL) Decode(d *jx.Decoder) error {
 		return nil
 	default:
 		return errors.Errorf(`unexpected type %q while reading OptURL`, d.Next())
+	}
+}
+
+// Encode encodes Update as json.
+func (o OptUpdate) Encode(e *jx.Encoder) {
+	o.Value.Encode(e)
+}
+
+// Decode decodes Update from json.
+func (o *OptUpdate) Decode(d *jx.Decoder) error {
+	if o == nil {
+		return errors.New(`invalid: unable to decode OptUpdate to nil`)
+	}
+	switch d.Next() {
+	case jx.Object:
+		o.Set = true
+		if err := o.Value.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	default:
+		return errors.Errorf(`unexpected type %q while reading OptUpdate`, d.Next())
 	}
 }
 
@@ -6580,7 +7875,7 @@ func (s *PassportElementError) Decode(d *jx.Decoder) error {
 				return d.Skip()
 			}
 			switch string(key) {
-			case "source":
+			case "type":
 				typ, err := d.Str()
 				if err != nil {
 					return err
@@ -7531,6 +8826,63 @@ func (s *Poll) Decode(d *jx.Decoder) error {
 }
 
 // Encode implements json.Marshaler.
+func (s PollAnswer) Encode(e *jx.Encoder) {
+	e.ObjStart()
+
+	e.FieldStart("poll_id")
+	e.Str(s.PollID)
+
+	e.FieldStart("user")
+	s.User.Encode(e)
+
+	e.FieldStart("option_ids")
+	e.ArrStart()
+	for _, elem := range s.OptionIds {
+		e.Int(elem)
+	}
+	e.ArrEnd()
+	e.ObjEnd()
+}
+
+// Decode decodes PollAnswer from json.
+func (s *PollAnswer) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New(`invalid: unable to decode PollAnswer to nil`)
+	}
+	return d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "poll_id":
+			v, err := d.Str()
+			s.PollID = string(v)
+			if err != nil {
+				return err
+			}
+		case "user":
+			if err := s.User.Decode(d); err != nil {
+				return err
+			}
+		case "option_ids":
+			s.OptionIds = nil
+			if err := d.Arr(func(d *jx.Decoder) error {
+				var elem int
+				v, err := d.Int()
+				elem = int(v)
+				if err != nil {
+					return err
+				}
+				s.OptionIds = append(s.OptionIds, elem)
+				return nil
+			}); err != nil {
+				return err
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	})
+}
+
+// Encode implements json.Marshaler.
 func (s PollOption) Encode(e *jx.Encoder) {
 	e.ObjStart()
 
@@ -7559,6 +8911,87 @@ func (s *PollOption) Decode(d *jx.Decoder) error {
 			v, err := d.Int()
 			s.VoterCount = int(v)
 			if err != nil {
+				return err
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	})
+}
+
+// Encode implements json.Marshaler.
+func (s PreCheckoutQuery) Encode(e *jx.Encoder) {
+	e.ObjStart()
+
+	e.FieldStart("id")
+	e.Str(s.ID)
+
+	e.FieldStart("from")
+	s.From.Encode(e)
+
+	e.FieldStart("currency")
+	e.Str(s.Currency)
+
+	e.FieldStart("total_amount")
+	e.Int(s.TotalAmount)
+
+	e.FieldStart("invoice_payload")
+	e.Str(s.InvoicePayload)
+	if s.ShippingOptionID.Set {
+		e.FieldStart("shipping_option_id")
+		s.ShippingOptionID.Encode(e)
+	}
+	if s.OrderInfo.Set {
+		e.FieldStart("order_info")
+		s.OrderInfo.Encode(e)
+	}
+	e.ObjEnd()
+}
+
+// Decode decodes PreCheckoutQuery from json.
+func (s *PreCheckoutQuery) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New(`invalid: unable to decode PreCheckoutQuery to nil`)
+	}
+	return d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "id":
+			v, err := d.Str()
+			s.ID = string(v)
+			if err != nil {
+				return err
+			}
+		case "from":
+			if err := s.From.Decode(d); err != nil {
+				return err
+			}
+		case "currency":
+			v, err := d.Str()
+			s.Currency = string(v)
+			if err != nil {
+				return err
+			}
+		case "total_amount":
+			v, err := d.Int()
+			s.TotalAmount = int(v)
+			if err != nil {
+				return err
+			}
+		case "invoice_payload":
+			v, err := d.Str()
+			s.InvoicePayload = string(v)
+			if err != nil {
+				return err
+			}
+		case "shipping_option_id":
+			s.ShippingOptionID.Reset()
+			if err := s.ShippingOptionID.Decode(d); err != nil {
+				return err
+			}
+		case "order_info":
+			s.OrderInfo.Reset()
+			if err := s.OrderInfo.Decode(d); err != nil {
 				return err
 			}
 		default:
@@ -7999,8 +9432,44 @@ func (s *Result) Decode(d *jx.Decoder) error {
 	})
 }
 
+// Encode encodes ResultArrayOfUpdate as json.
+func (s ResultArrayOfUpdate) Encode(e *jx.Encoder) {
+	unwrapped := []ResultUpdate(s)
+	e.ArrStart()
+	for _, elem := range unwrapped {
+		elem.Encode(e)
+	}
+	e.ArrEnd()
+}
+
+// Decode decodes ResultArrayOfUpdate from json.
+func (s *ResultArrayOfUpdate) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New(`invalid: unable to decode ResultArrayOfUpdate to nil`)
+	}
+	var unwrapped []ResultUpdate
+	if err := func() error {
+		unwrapped = nil
+		if err := d.Arr(func(d *jx.Decoder) error {
+			var elem ResultUpdate
+			if err := elem.Decode(d); err != nil {
+				return err
+			}
+			unwrapped = append(unwrapped, elem)
+			return nil
+		}); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = ResultArrayOfUpdate(unwrapped)
+	return nil
+}
+
 // Encode implements json.Marshaler.
-func (s ResultMsg) Encode(e *jx.Encoder) {
+func (s ResultMessage) Encode(e *jx.Encoder) {
 	e.ObjStart()
 	if s.Result.Set {
 		e.FieldStart("result")
@@ -8012,10 +9481,10 @@ func (s ResultMsg) Encode(e *jx.Encoder) {
 	e.ObjEnd()
 }
 
-// Decode decodes ResultMsg from json.
-func (s *ResultMsg) Decode(d *jx.Decoder) error {
+// Decode decodes ResultMessage from json.
+func (s *ResultMessage) Decode(d *jx.Decoder) error {
 	if s == nil {
-		return errors.New(`invalid: unable to decode ResultMsg to nil`)
+		return errors.New(`invalid: unable to decode ResultMessage to nil`)
 	}
 	return d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
@@ -8038,7 +9507,7 @@ func (s *ResultMsg) Decode(d *jx.Decoder) error {
 }
 
 // Encode implements json.Marshaler.
-func (s ResultUsr) Encode(e *jx.Encoder) {
+func (s ResultUpdate) Encode(e *jx.Encoder) {
 	e.ObjStart()
 	if s.Result.Set {
 		e.FieldStart("result")
@@ -8050,10 +9519,48 @@ func (s ResultUsr) Encode(e *jx.Encoder) {
 	e.ObjEnd()
 }
 
-// Decode decodes ResultUsr from json.
-func (s *ResultUsr) Decode(d *jx.Decoder) error {
+// Decode decodes ResultUpdate from json.
+func (s *ResultUpdate) Decode(d *jx.Decoder) error {
 	if s == nil {
-		return errors.New(`invalid: unable to decode ResultUsr to nil`)
+		return errors.New(`invalid: unable to decode ResultUpdate to nil`)
+	}
+	return d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "result":
+			s.Result.Reset()
+			if err := s.Result.Decode(d); err != nil {
+				return err
+			}
+		case "ok":
+			v, err := d.Bool()
+			s.Ok = bool(v)
+			if err != nil {
+				return err
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	})
+}
+
+// Encode implements json.Marshaler.
+func (s ResultUser) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	if s.Result.Set {
+		e.FieldStart("result")
+		s.Result.Encode(e)
+	}
+
+	e.FieldStart("ok")
+	e.Bool(s.Ok)
+	e.ObjEnd()
+}
+
+// Decode decodes ResultUser from json.
+func (s *ResultUser) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New(`invalid: unable to decode ResultUser to nil`)
 	}
 	return d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
@@ -12304,6 +13811,58 @@ func (s *ShippingOption) Decode(d *jx.Decoder) error {
 }
 
 // Encode implements json.Marshaler.
+func (s ShippingQuery) Encode(e *jx.Encoder) {
+	e.ObjStart()
+
+	e.FieldStart("id")
+	e.Str(s.ID)
+
+	e.FieldStart("from")
+	s.From.Encode(e)
+
+	e.FieldStart("invoice_payload")
+	e.Str(s.InvoicePayload)
+
+	e.FieldStart("shipping_address")
+	s.ShippingAddress.Encode(e)
+	e.ObjEnd()
+}
+
+// Decode decodes ShippingQuery from json.
+func (s *ShippingQuery) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New(`invalid: unable to decode ShippingQuery to nil`)
+	}
+	return d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "id":
+			v, err := d.Str()
+			s.ID = string(v)
+			if err != nil {
+				return err
+			}
+		case "from":
+			if err := s.From.Decode(d); err != nil {
+				return err
+			}
+		case "invoice_payload":
+			v, err := d.Str()
+			s.InvoicePayload = string(v)
+			if err != nil {
+				return err
+			}
+		case "shipping_address":
+			if err := s.ShippingAddress.Decode(d); err != nil {
+				return err
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	})
+}
+
+// Encode implements json.Marshaler.
 func (s Sticker) Encode(e *jx.Encoder) {
 	e.ObjStart()
 
@@ -12645,6 +14204,42 @@ func (s *UnbanChatMember) Decode(d *jx.Decoder) error {
 }
 
 // Encode implements json.Marshaler.
+func (s UnbanChatSenderChat) Encode(e *jx.Encoder) {
+	e.ObjStart()
+
+	e.FieldStart("chat_id")
+	s.ChatID.Encode(e)
+
+	e.FieldStart("sender_chat_id")
+	e.Int(s.SenderChatID)
+	e.ObjEnd()
+}
+
+// Decode decodes UnbanChatSenderChat from json.
+func (s *UnbanChatSenderChat) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New(`invalid: unable to decode UnbanChatSenderChat to nil`)
+	}
+	return d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "chat_id":
+			if err := s.ChatID.Decode(d); err != nil {
+				return err
+			}
+		case "sender_chat_id":
+			v, err := d.Int()
+			s.SenderChatID = int(v)
+			if err != nil {
+				return err
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	})
+}
+
+// Encode implements json.Marshaler.
 func (s UnpinAllChatMessages) Encode(e *jx.Encoder) {
 	e.ObjStart()
 
@@ -12698,6 +14293,161 @@ func (s *UnpinChatMessage) Decode(d *jx.Decoder) error {
 		case "message_id":
 			s.MessageID.Reset()
 			if err := s.MessageID.Decode(d); err != nil {
+				return err
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	})
+}
+
+// Encode implements json.Marshaler.
+func (s Update) Encode(e *jx.Encoder) {
+	e.ObjStart()
+
+	e.FieldStart("update_id")
+	e.Int(s.UpdateID)
+	if s.Message.Set {
+		e.FieldStart("message")
+		s.Message.Encode(e)
+	}
+	if s.EditedMessage.Set {
+		e.FieldStart("edited_message")
+		s.EditedMessage.Encode(e)
+	}
+	if s.ChannelPost.Set {
+		e.FieldStart("channel_post")
+		s.ChannelPost.Encode(e)
+	}
+	if s.EditedChannelPost.Set {
+		e.FieldStart("edited_channel_post")
+		s.EditedChannelPost.Encode(e)
+	}
+	if s.InlineQuery.Set {
+		e.FieldStart("inline_query")
+		s.InlineQuery.Encode(e)
+	}
+	if s.ChosenInlineResult.Set {
+		e.FieldStart("chosen_inline_result")
+		s.ChosenInlineResult.Encode(e)
+	}
+	if s.CallbackQuery.Set {
+		e.FieldStart("callback_query")
+		s.CallbackQuery.Encode(e)
+	}
+	if s.ShippingQuery.Set {
+		e.FieldStart("shipping_query")
+		s.ShippingQuery.Encode(e)
+	}
+	if s.PreCheckoutQuery.Set {
+		e.FieldStart("pre_checkout_query")
+		s.PreCheckoutQuery.Encode(e)
+	}
+	if s.Poll.Set {
+		e.FieldStart("poll")
+		s.Poll.Encode(e)
+	}
+	if s.PollAnswer.Set {
+		e.FieldStart("poll_answer")
+		s.PollAnswer.Encode(e)
+	}
+	if s.MyChatMember.Set {
+		e.FieldStart("my_chat_member")
+		s.MyChatMember.Encode(e)
+	}
+	if s.ChatMember.Set {
+		e.FieldStart("chat_member")
+		s.ChatMember.Encode(e)
+	}
+	if s.ChatJoinRequest.Set {
+		e.FieldStart("chat_join_request")
+		s.ChatJoinRequest.Encode(e)
+	}
+	e.ObjEnd()
+}
+
+// Decode decodes Update from json.
+func (s *Update) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New(`invalid: unable to decode Update to nil`)
+	}
+	return d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "update_id":
+			v, err := d.Int()
+			s.UpdateID = int(v)
+			if err != nil {
+				return err
+			}
+		case "message":
+			s.Message.Reset()
+			if err := s.Message.Decode(d); err != nil {
+				return err
+			}
+		case "edited_message":
+			s.EditedMessage.Reset()
+			if err := s.EditedMessage.Decode(d); err != nil {
+				return err
+			}
+		case "channel_post":
+			s.ChannelPost.Reset()
+			if err := s.ChannelPost.Decode(d); err != nil {
+				return err
+			}
+		case "edited_channel_post":
+			s.EditedChannelPost.Reset()
+			if err := s.EditedChannelPost.Decode(d); err != nil {
+				return err
+			}
+		case "inline_query":
+			s.InlineQuery.Reset()
+			if err := s.InlineQuery.Decode(d); err != nil {
+				return err
+			}
+		case "chosen_inline_result":
+			s.ChosenInlineResult.Reset()
+			if err := s.ChosenInlineResult.Decode(d); err != nil {
+				return err
+			}
+		case "callback_query":
+			s.CallbackQuery.Reset()
+			if err := s.CallbackQuery.Decode(d); err != nil {
+				return err
+			}
+		case "shipping_query":
+			s.ShippingQuery.Reset()
+			if err := s.ShippingQuery.Decode(d); err != nil {
+				return err
+			}
+		case "pre_checkout_query":
+			s.PreCheckoutQuery.Reset()
+			if err := s.PreCheckoutQuery.Decode(d); err != nil {
+				return err
+			}
+		case "poll":
+			s.Poll.Reset()
+			if err := s.Poll.Decode(d); err != nil {
+				return err
+			}
+		case "poll_answer":
+			s.PollAnswer.Reset()
+			if err := s.PollAnswer.Decode(d); err != nil {
+				return err
+			}
+		case "my_chat_member":
+			s.MyChatMember.Reset()
+			if err := s.MyChatMember.Decode(d); err != nil {
+				return err
+			}
+		case "chat_member":
+			s.ChatMember.Reset()
+			if err := s.ChatMember.Decode(d); err != nil {
+				return err
+			}
+		case "chat_join_request":
+			s.ChatJoinRequest.Reset()
+			if err := s.ChatJoinRequest.Decode(d); err != nil {
 				return err
 			}
 		default:

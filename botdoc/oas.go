@@ -236,22 +236,25 @@ Schemas:
 			for _, name := range []string{
 				"type",
 				"source",
+				"status",
 			} {
 				p, ok := prop(one.Properties, name)
 				if !ok {
 					continue
 				}
-				if len(p.Default) == 0 {
-					continue
-				}
 
-				def = p.Default
 				if s.Discriminator == nil {
 					s.Discriminator = &ogen.Discriminator{
 						PropertyName: name,
 						Mapping:      map[string]string{},
 					}
 				}
+
+				if len(p.Default) == 0 {
+					continue
+				}
+				def = p.Default
+
 				break
 			}
 			if len(def) == 0 {
@@ -283,12 +286,29 @@ Schemas:
 	c.Schemas["ResultStr"] = resultFor(ogen.Schema{
 		Type: "string",
 	})
-	c.Schemas["ResultMsg"] = resultFor(ogen.Schema{
-		Ref: "#/components/schemas/Message",
-	})
-	c.Schemas["ResultUsr"] = resultFor(ogen.Schema{
-		Ref: "#/components/schemas/User",
-	})
+	addResponse := func(name, ref, description string) {
+		c.Responses[name] = ogen.Response{
+			Description: description,
+			Content: map[string]ogen.Media{
+				contentJSON: {
+					Schema: ogen.Schema{
+						Ref: ref,
+					},
+				},
+			},
+		}
+	}
+
+	wellKnownTypes := []string{
+		"Message", "Update", "User",
+	}
+	for _, t := range wellKnownTypes {
+		resultName := "Result" + t
+		c.Schemas[resultName] = resultFor(ogen.Schema{
+			Ref: "#/components/schemas/" + t,
+		})
+		addResponse(resultName, "#/components/schemas/"+resultName, "Result of method invocation")
+	}
 	c.Schemas["Response"] = ogen.Schema{
 		Description: "Contains information about why a request was unsuccessful.",
 		Type:        "object",
@@ -350,19 +370,8 @@ Schemas:
 	for _, name := range []string{
 		"Result",
 		"ResultStr",
-		"ResultMsg",
-		"ResultUsr",
 	} {
-		c.Responses[name] = ogen.Response{
-			Description: "Result of method invocation",
-			Content: map[string]ogen.Media{
-				contentJSON: {
-					Schema: ogen.Schema{
-						Ref: "#/components/schemas/" + name,
-					},
-				},
-			},
-		}
+		addResponse(name, "#/components/schemas/"+name, "Result of method invocation")
 	}
 	c.Responses["Error"] = ogen.Response{
 		Description: "Method invocation error",
@@ -427,18 +436,41 @@ Schemas:
 			Ref: "#/components/schemas/Result",
 		}
 		if t := m.Ret; t != nil {
-			switch t.Primitive {
-			case String:
-				response.Ref = "#/components/schemas/ResultStr"
-			case Boolean:
-				response.Ref = "#/components/schemas/Result"
+			getRef := func(t *Type) string {
+				switch t.Kind {
+				case KindPrimitive:
+					switch t.Primitive {
+					case String:
+						return "#/components/schemas/ResultStr"
+					case Boolean:
+						return "#/components/schemas/Result"
+					}
+				case KindObject:
+					for _, typ := range wellKnownTypes {
+						if typ == t.Name {
+							return "#/components/schemas/Result" + typ
+						}
+					}
+				}
+
+				return "#/components/schemas/Result"
 			}
-			switch t.Name {
-			case "Message":
-				response.Ref = "#/components/schemas/ResultMsg"
-			case "User":
-				response.Ref = "#/components/schemas/ResultUsr"
+			switch t.Kind {
+			case KindPrimitive, KindObject:
+				response.Ref = getRef(t)
+			case KindArray:
+				itemRef := getRef(t.Item)
+				resultName := "ResultArrayOf" + t.Item.Name
+				c.Schemas[resultName] = ogen.Schema{
+					Type: "array",
+					Items: &ogen.Schema{
+						Ref: itemRef,
+					},
+				}
+				addResponse(resultName, "#/components/schemas/"+resultName, "Result of method invocation")
+				response.Ref = "#/components/responses/" + resultName
 			}
+
 			if response.Ref == "" {
 				panic("Unable to infer result type")
 			}
