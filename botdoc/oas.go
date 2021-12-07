@@ -236,22 +236,25 @@ Schemas:
 			for _, name := range []string{
 				"type",
 				"source",
+				"status",
 			} {
 				p, ok := prop(one.Properties, name)
 				if !ok {
 					continue
 				}
-				if len(p.Default) == 0 {
-					continue
-				}
 
-				def = p.Default
 				if s.Discriminator == nil {
 					s.Discriminator = &ogen.Discriminator{
 						PropertyName: name,
 						Mapping:      map[string]string{},
 					}
 				}
+
+				if len(p.Default) == 0 {
+					continue
+				}
+				def = p.Default
+
 				break
 			}
 			if len(def) == 0 {
