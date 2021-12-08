@@ -441,12 +441,12 @@ Schemas:
 					`#/components/schemas/Result`,
 					`#/components/schemas/`,
 				)
-				c.Schemas[resultName] = ogen.Schema{
+				c.Schemas[resultName] = resultFor(ogen.Schema{
 					Type: "array",
 					Items: &ogen.Schema{
 						Ref: itemName,
 					},
-				}
+				})
 				addResponse(resultName, "#/components/schemas/"+resultName, "Result of method invocation")
 				response.Ref = "#/components/responses/" + resultName
 			}
