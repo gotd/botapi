@@ -283,8 +283,11 @@ Schemas:
 	c.Schemas["Result"] = resultFor(ogen.Schema{
 		Type: "boolean",
 	})
-	c.Schemas["ResultStr"] = resultFor(ogen.Schema{
+	c.Schemas["ResultString"] = resultFor(ogen.Schema{
 		Type: "string",
+	})
+	c.Schemas["ResultInt"] = resultFor(ogen.Schema{
+		Type: "integer",
 	})
 	addResponse := func(name, ref, description string) {
 		c.Responses[name] = ogen.Response{
@@ -300,7 +303,18 @@ Schemas:
 	}
 
 	wellKnownTypes := []string{
-		"Message", "Update", "User",
+		"Update",
+		"Message",
+		"User",
+		"Chat",
+		"File",
+		"Poll",
+		"BotCommand",
+		"GameHighScore",
+		"WebhookInfo",
+		"UserProfilePhotos",
+		"ChatMember",
+		"ChatInviteLink",
 	}
 	for _, t := range wellKnownTypes {
 		resultName := "Result" + t
@@ -369,7 +383,8 @@ Schemas:
 	}
 	for _, name := range []string{
 		"Result",
-		"ResultStr",
+		"ResultString",
+		"ResultInt",
 	} {
 		addResponse(name, "#/components/schemas/"+name, "Result of method invocation")
 	}
@@ -441,7 +456,9 @@ Schemas:
 				case KindPrimitive:
 					switch t.Primitive {
 					case String:
-						return "#/components/schemas/ResultStr"
+						return "#/components/schemas/ResultString"
+					case Integer:
+						return "#/components/schemas/ResultInt"
 					case Boolean:
 						return "#/components/schemas/Result"
 					}
@@ -461,10 +478,14 @@ Schemas:
 			case KindArray:
 				itemRef := getRef(t.Item)
 				resultName := "ResultArrayOf" + t.Item.Name
+				itemName := strings.ReplaceAll(itemRef,
+					`#/components/schemas/Result`,
+					`#/components/schemas/`,
+				)
 				c.Schemas[resultName] = ogen.Schema{
 					Type: "array",
 					Items: &ogen.Schema{
-						Ref: itemRef,
+						Ref: itemName,
 					},
 				}
 				addResponse(resultName, "#/components/schemas/"+resultName, "Result of method invocation")

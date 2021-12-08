@@ -557,6 +557,46 @@ func (c *Client) BanChatSenderChat(ctx context.Context, request BanChatSenderCha
 	return result, nil
 }
 
+// Close invokes close operation.
+//
+// POST /close
+func (c *Client) Close(ctx context.Context) (res Result, err error) {
+	startTime := time.Now()
+	ctx, span := c.cfg.Tracer.Start(ctx, `Close`,
+		trace.WithAttributes(otelogen.OperationID(`close`)),
+		trace.WithSpanKind(trace.SpanKindClient),
+	)
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			c.errors.Add(ctx, 1)
+		} else {
+			elapsedDuration := time.Since(startTime)
+			c.duration.Record(ctx, elapsedDuration.Microseconds())
+		}
+		span.End()
+	}()
+	c.requests.Add(ctx, 1)
+	u := uri.Clone(c.serverURL)
+	u.Path += "/close"
+
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	defer ht.PutRequest(r)
+
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeCloseResponse(resp, span)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
 // CopyMessage invokes copyMessage operation.
 //
 // POST /copyMessage
@@ -622,7 +662,7 @@ func (c *Client) CopyMessage(ctx context.Context, request CopyMessage) (res Resu
 // CreateChatInviteLink invokes createChatInviteLink operation.
 //
 // POST /createChatInviteLink
-func (c *Client) CreateChatInviteLink(ctx context.Context, request CreateChatInviteLink) (res Result, err error) {
+func (c *Client) CreateChatInviteLink(ctx context.Context, request CreateChatInviteLink) (res ResultChatInviteLink, err error) {
 	if err := func() error {
 		if err := request.Validate(); err != nil {
 			return err
@@ -1124,7 +1164,7 @@ func (c *Client) DeleteWebhook(ctx context.Context, request DeleteWebhook) (res 
 // EditChatInviteLink invokes editChatInviteLink operation.
 //
 // POST /editChatInviteLink
-func (c *Client) EditChatInviteLink(ctx context.Context, request EditChatInviteLink) (res Result, err error) {
+func (c *Client) EditChatInviteLink(ctx context.Context, request EditChatInviteLink) (res ResultChatInviteLink, err error) {
 	if err := func() error {
 		if err := request.Validate(); err != nil {
 			return err
@@ -1496,7 +1536,7 @@ func (c *Client) EditMessageText(ctx context.Context, request EditMessageText) (
 // ExportChatInviteLink invokes exportChatInviteLink operation.
 //
 // POST /exportChatInviteLink
-func (c *Client) ExportChatInviteLink(ctx context.Context, request ExportChatInviteLink) (res Result, err error) {
+func (c *Client) ExportChatInviteLink(ctx context.Context, request ExportChatInviteLink) (res ResultString, err error) {
 	startTime := time.Now()
 	ctx, span := c.cfg.Tracer.Start(ctx, `ExportChatInviteLink`,
 		trace.WithAttributes(otelogen.OperationID(`exportChatInviteLink`)),
@@ -1604,7 +1644,7 @@ func (c *Client) ForwardMessage(ctx context.Context, request ForwardMessage) (re
 // GetChat invokes getChat operation.
 //
 // POST /getChat
-func (c *Client) GetChat(ctx context.Context, request GetChat) (res Result, err error) {
+func (c *Client) GetChat(ctx context.Context, request GetChat) (res ResultChat, err error) {
 	startTime := time.Now()
 	ctx, span := c.cfg.Tracer.Start(ctx, `GetChat`,
 		trace.WithAttributes(otelogen.OperationID(`getChat`)),
@@ -1658,7 +1698,7 @@ func (c *Client) GetChat(ctx context.Context, request GetChat) (res Result, err 
 // GetChatAdministrators invokes getChatAdministrators operation.
 //
 // POST /getChatAdministrators
-func (c *Client) GetChatAdministrators(ctx context.Context, request GetChatAdministrators) (res Result, err error) {
+func (c *Client) GetChatAdministrators(ctx context.Context, request GetChatAdministrators) (res ResultArrayOfChatMember, err error) {
 	startTime := time.Now()
 	ctx, span := c.cfg.Tracer.Start(ctx, `GetChatAdministrators`,
 		trace.WithAttributes(otelogen.OperationID(`getChatAdministrators`)),
@@ -1712,7 +1752,7 @@ func (c *Client) GetChatAdministrators(ctx context.Context, request GetChatAdmin
 // GetChatMember invokes getChatMember operation.
 //
 // POST /getChatMember
-func (c *Client) GetChatMember(ctx context.Context, request GetChatMember) (res Result, err error) {
+func (c *Client) GetChatMember(ctx context.Context, request GetChatMember) (res ResultChatMember, err error) {
 	startTime := time.Now()
 	ctx, span := c.cfg.Tracer.Start(ctx, `GetChatMember`,
 		trace.WithAttributes(otelogen.OperationID(`getChatMember`)),
@@ -1766,7 +1806,7 @@ func (c *Client) GetChatMember(ctx context.Context, request GetChatMember) (res 
 // GetChatMemberCount invokes getChatMemberCount operation.
 //
 // POST /getChatMemberCount
-func (c *Client) GetChatMemberCount(ctx context.Context, request GetChatMemberCount) (res Result, err error) {
+func (c *Client) GetChatMemberCount(ctx context.Context, request GetChatMemberCount) (res ResultInt, err error) {
 	startTime := time.Now()
 	ctx, span := c.cfg.Tracer.Start(ctx, `GetChatMemberCount`,
 		trace.WithAttributes(otelogen.OperationID(`getChatMemberCount`)),
@@ -1874,7 +1914,7 @@ func (c *Client) GetFile(ctx context.Context, request GetFile) (res Result, err 
 // GetGameHighScores invokes getGameHighScores operation.
 //
 // POST /getGameHighScores
-func (c *Client) GetGameHighScores(ctx context.Context, request GetGameHighScores) (res Result, err error) {
+func (c *Client) GetGameHighScores(ctx context.Context, request GetGameHighScores) (res ResultArrayOfGameHighScore, err error) {
 	startTime := time.Now()
 	ctx, span := c.cfg.Tracer.Start(ctx, `GetGameHighScores`,
 		trace.WithAttributes(otelogen.OperationID(`getGameHighScores`)),
@@ -1968,7 +2008,7 @@ func (c *Client) GetMe(ctx context.Context) (res ResultUser, err error) {
 // GetMyCommands invokes getMyCommands operation.
 //
 // POST /getMyCommands
-func (c *Client) GetMyCommands(ctx context.Context, request GetMyCommands) (res Result, err error) {
+func (c *Client) GetMyCommands(ctx context.Context, request GetMyCommands) (res ResultArrayOfBotCommand, err error) {
 	startTime := time.Now()
 	ctx, span := c.cfg.Tracer.Start(ctx, `GetMyCommands`,
 		trace.WithAttributes(otelogen.OperationID(`getMyCommands`)),
@@ -2138,7 +2178,7 @@ func (c *Client) GetUpdates(ctx context.Context, request GetUpdates) (res Result
 // GetUserProfilePhotos invokes getUserProfilePhotos operation.
 //
 // POST /getUserProfilePhotos
-func (c *Client) GetUserProfilePhotos(ctx context.Context, request GetUserProfilePhotos) (res Result, err error) {
+func (c *Client) GetUserProfilePhotos(ctx context.Context, request GetUserProfilePhotos) (res ResultUserProfilePhotos, err error) {
 	if err := func() error {
 		if err := request.Validate(); err != nil {
 			return err
@@ -2197,6 +2237,46 @@ func (c *Client) GetUserProfilePhotos(ctx context.Context, request GetUserProfil
 	return result, nil
 }
 
+// GetWebhookInfo invokes getWebhookInfo operation.
+//
+// POST /getWebhookInfo
+func (c *Client) GetWebhookInfo(ctx context.Context) (res ResultWebhookInfo, err error) {
+	startTime := time.Now()
+	ctx, span := c.cfg.Tracer.Start(ctx, `GetWebhookInfo`,
+		trace.WithAttributes(otelogen.OperationID(`getWebhookInfo`)),
+		trace.WithSpanKind(trace.SpanKindClient),
+	)
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			c.errors.Add(ctx, 1)
+		} else {
+			elapsedDuration := time.Since(startTime)
+			c.duration.Record(ctx, elapsedDuration.Microseconds())
+		}
+		span.End()
+	}()
+	c.requests.Add(ctx, 1)
+	u := uri.Clone(c.serverURL)
+	u.Path += "/getWebhookInfo"
+
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	defer ht.PutRequest(r)
+
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeGetWebhookInfoResponse(resp, span)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
 // LeaveChat invokes leaveChat operation.
 //
 // POST /leaveChat
@@ -2244,6 +2324,46 @@ func (c *Client) LeaveChat(ctx context.Context, request LeaveChat) (res Result, 
 	defer resp.Body.Close()
 
 	result, err := decodeLeaveChatResponse(resp, span)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
+// LogOut invokes logOut operation.
+//
+// POST /logOut
+func (c *Client) LogOut(ctx context.Context) (res Result, err error) {
+	startTime := time.Now()
+	ctx, span := c.cfg.Tracer.Start(ctx, `LogOut`,
+		trace.WithAttributes(otelogen.OperationID(`logOut`)),
+		trace.WithSpanKind(trace.SpanKindClient),
+	)
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			c.errors.Add(ctx, 1)
+		} else {
+			elapsedDuration := time.Since(startTime)
+			c.duration.Record(ctx, elapsedDuration.Microseconds())
+		}
+		span.End()
+	}()
+	c.requests.Add(ctx, 1)
+	u := uri.Clone(c.serverURL)
+	u.Path += "/logOut"
+
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	defer ht.PutRequest(r)
+
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeLogOutResponse(resp, span)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -2416,7 +2536,7 @@ func (c *Client) RestrictChatMember(ctx context.Context, request RestrictChatMem
 // RevokeChatInviteLink invokes revokeChatInviteLink operation.
 //
 // POST /revokeChatInviteLink
-func (c *Client) RevokeChatInviteLink(ctx context.Context, request RevokeChatInviteLink) (res Result, err error) {
+func (c *Client) RevokeChatInviteLink(ctx context.Context, request RevokeChatInviteLink) (res ResultChatInviteLink, err error) {
 	startTime := time.Now()
 	ctx, span := c.cfg.Tracer.Start(ctx, `RevokeChatInviteLink`,
 		trace.WithAttributes(otelogen.OperationID(`revokeChatInviteLink`)),
@@ -2532,7 +2652,7 @@ func (c *Client) SendAnimation(ctx context.Context, request SendAnimation) (res 
 // SendAudio invokes sendAudio operation.
 //
 // POST /sendAudio
-func (c *Client) SendAudio(ctx context.Context, request SendAudio) (res Result, err error) {
+func (c *Client) SendAudio(ctx context.Context, request SendAudio) (res ResultMessage, err error) {
 	if err := func() error {
 		if err := request.Validate(); err != nil {
 			return err
@@ -3020,7 +3140,7 @@ func (c *Client) SendLocation(ctx context.Context, request SendLocation) (res Re
 // SendMediaGroup invokes sendMediaGroup operation.
 //
 // POST /sendMediaGroup
-func (c *Client) SendMediaGroup(ctx context.Context, request SendMediaGroup) (res Result, err error) {
+func (c *Client) SendMediaGroup(ctx context.Context, request SendMediaGroup) (res ResultArrayOfMessage, err error) {
 	if err := func() error {
 		if err := request.Validate(); err != nil {
 			return err
@@ -4328,7 +4448,7 @@ func (c *Client) StopMessageLiveLocation(ctx context.Context, request StopMessag
 // StopPoll invokes stopPoll operation.
 //
 // POST /stopPoll
-func (c *Client) StopPoll(ctx context.Context, request StopPoll) (res Result, err error) {
+func (c *Client) StopPoll(ctx context.Context, request StopPoll) (res ResultPoll, err error) {
 	if err := func() error {
 		if err := request.Validate(); err != nil {
 			return err

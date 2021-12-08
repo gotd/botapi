@@ -96,6 +96,10 @@ type Handler interface {
 	//
 	// POST /banChatSenderChat
 	BanChatSenderChat(ctx context.Context, req BanChatSenderChat) (Result, error)
+	// Close implements close operation.
+	//
+	// POST /close
+	Close(ctx context.Context) (Result, error)
 	// CopyMessage implements copyMessage operation.
 	//
 	// POST /copyMessage
@@ -103,7 +107,7 @@ type Handler interface {
 	// CreateChatInviteLink implements createChatInviteLink operation.
 	//
 	// POST /createChatInviteLink
-	CreateChatInviteLink(ctx context.Context, req CreateChatInviteLink) (Result, error)
+	CreateChatInviteLink(ctx context.Context, req CreateChatInviteLink) (ResultChatInviteLink, error)
 	// CreateNewStickerSet implements createNewStickerSet operation.
 	//
 	// POST /createNewStickerSet
@@ -139,7 +143,7 @@ type Handler interface {
 	// EditChatInviteLink implements editChatInviteLink operation.
 	//
 	// POST /editChatInviteLink
-	EditChatInviteLink(ctx context.Context, req EditChatInviteLink) (Result, error)
+	EditChatInviteLink(ctx context.Context, req EditChatInviteLink) (ResultChatInviteLink, error)
 	// EditMessageCaption implements editMessageCaption operation.
 	//
 	// POST /editMessageCaption
@@ -163,7 +167,7 @@ type Handler interface {
 	// ExportChatInviteLink implements exportChatInviteLink operation.
 	//
 	// POST /exportChatInviteLink
-	ExportChatInviteLink(ctx context.Context, req ExportChatInviteLink) (Result, error)
+	ExportChatInviteLink(ctx context.Context, req ExportChatInviteLink) (ResultString, error)
 	// ForwardMessage implements forwardMessage operation.
 	//
 	// POST /forwardMessage
@@ -171,19 +175,19 @@ type Handler interface {
 	// GetChat implements getChat operation.
 	//
 	// POST /getChat
-	GetChat(ctx context.Context, req GetChat) (Result, error)
+	GetChat(ctx context.Context, req GetChat) (ResultChat, error)
 	// GetChatAdministrators implements getChatAdministrators operation.
 	//
 	// POST /getChatAdministrators
-	GetChatAdministrators(ctx context.Context, req GetChatAdministrators) (Result, error)
+	GetChatAdministrators(ctx context.Context, req GetChatAdministrators) (ResultArrayOfChatMember, error)
 	// GetChatMember implements getChatMember operation.
 	//
 	// POST /getChatMember
-	GetChatMember(ctx context.Context, req GetChatMember) (Result, error)
+	GetChatMember(ctx context.Context, req GetChatMember) (ResultChatMember, error)
 	// GetChatMemberCount implements getChatMemberCount operation.
 	//
 	// POST /getChatMemberCount
-	GetChatMemberCount(ctx context.Context, req GetChatMemberCount) (Result, error)
+	GetChatMemberCount(ctx context.Context, req GetChatMemberCount) (ResultInt, error)
 	// GetFile implements getFile operation.
 	//
 	// POST /getFile
@@ -191,7 +195,7 @@ type Handler interface {
 	// GetGameHighScores implements getGameHighScores operation.
 	//
 	// POST /getGameHighScores
-	GetGameHighScores(ctx context.Context, req GetGameHighScores) (Result, error)
+	GetGameHighScores(ctx context.Context, req GetGameHighScores) (ResultArrayOfGameHighScore, error)
 	// GetMe implements getMe operation.
 	//
 	// POST /getMe
@@ -199,7 +203,7 @@ type Handler interface {
 	// GetMyCommands implements getMyCommands operation.
 	//
 	// POST /getMyCommands
-	GetMyCommands(ctx context.Context, req GetMyCommands) (Result, error)
+	GetMyCommands(ctx context.Context, req GetMyCommands) (ResultArrayOfBotCommand, error)
 	// GetStickerSet implements getStickerSet operation.
 	//
 	// POST /getStickerSet
@@ -211,11 +215,19 @@ type Handler interface {
 	// GetUserProfilePhotos implements getUserProfilePhotos operation.
 	//
 	// POST /getUserProfilePhotos
-	GetUserProfilePhotos(ctx context.Context, req GetUserProfilePhotos) (Result, error)
+	GetUserProfilePhotos(ctx context.Context, req GetUserProfilePhotos) (ResultUserProfilePhotos, error)
+	// GetWebhookInfo implements getWebhookInfo operation.
+	//
+	// POST /getWebhookInfo
+	GetWebhookInfo(ctx context.Context) (ResultWebhookInfo, error)
 	// LeaveChat implements leaveChat operation.
 	//
 	// POST /leaveChat
 	LeaveChat(ctx context.Context, req LeaveChat) (Result, error)
+	// LogOut implements logOut operation.
+	//
+	// POST /logOut
+	LogOut(ctx context.Context) (Result, error)
 	// PinChatMessage implements pinChatMessage operation.
 	//
 	// POST /pinChatMessage
@@ -231,7 +243,7 @@ type Handler interface {
 	// RevokeChatInviteLink implements revokeChatInviteLink operation.
 	//
 	// POST /revokeChatInviteLink
-	RevokeChatInviteLink(ctx context.Context, req RevokeChatInviteLink) (Result, error)
+	RevokeChatInviteLink(ctx context.Context, req RevokeChatInviteLink) (ResultChatInviteLink, error)
 	// SendAnimation implements sendAnimation operation.
 	//
 	// POST /sendAnimation
@@ -239,7 +251,7 @@ type Handler interface {
 	// SendAudio implements sendAudio operation.
 	//
 	// POST /sendAudio
-	SendAudio(ctx context.Context, req SendAudio) (Result, error)
+	SendAudio(ctx context.Context, req SendAudio) (ResultMessage, error)
 	// SendChatAction implements sendChatAction operation.
 	//
 	// POST /sendChatAction
@@ -271,7 +283,7 @@ type Handler interface {
 	// SendMediaGroup implements sendMediaGroup operation.
 	//
 	// POST /sendMediaGroup
-	SendMediaGroup(ctx context.Context, req SendMediaGroup) (Result, error)
+	SendMediaGroup(ctx context.Context, req SendMediaGroup) (ResultArrayOfMessage, error)
 	// SendMessage implements sendMessage operation.
 	//
 	// POST /sendMessage
@@ -359,7 +371,7 @@ type Handler interface {
 	// StopPoll implements stopPoll operation.
 	//
 	// POST /stopPoll
-	StopPoll(ctx context.Context, req StopPoll) (Result, error)
+	StopPoll(ctx context.Context, req StopPoll) (ResultPoll, error)
 	// UnbanChatMember implements unbanChatMember operation.
 	//
 	// POST /unbanChatMember
