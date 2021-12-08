@@ -213,8 +213,15 @@ func Extract(doc *goquery.Document) (a API) {
 				appendDefinition()
 			}
 		}
-		if strings.Contains(d.Description, `Returns True on success`) {
+		switch desc := d.Description; {
+		case strings.Contains(desc, `as String on success`):
+			t := newPrimitive(String)
+			d.Ret = &t
+		case strings.Contains(desc, `Returns True on success`):
 			t := newPrimitive(Boolean)
+			d.Ret = &t
+		case strings.Contains(desc, `Returns Int on success`):
+			t := newPrimitive(Integer)
 			d.Ret = &t
 		}
 
@@ -259,19 +266,33 @@ func Extract(doc *goquery.Document) (a API) {
 				}
 			})
 			const (
-				retPrefix      = `On success, the`
+				retPrefix      = `on success, the`
+				retPrefix2     = `returns a`
+				retPrefix3     = `returns the`
 				retArrayPrefix = `an array of`
-				retSuffix      = ` is returned.`
+				retArrayPrefix2 = `returns array of`
+				retSuffix      = ` is returned`
+				retSuffix2     = ` object`
+				retSuffix3     = ` objects`
 			)
 			var (
-				start  = strings.Index(d.Description, retPrefix)
-				prefix = retPrefix
-				end    = strings.Index(d.Description, retSuffix)
+				start, end int
+				prefix     string
 			)
-			if start < 0 {
-				start = strings.Index(strings.ToLower(d.Description), retArrayPrefix)
-				// Do not cut prefix.
+			start, prefix = IndexOneOf(strings.ToLower(d.Description),
+				retArrayPrefix,
+				retArrayPrefix2,
+				retPrefix,
+				retPrefix2,
+				retPrefix3,
+			)
+			if prefix == retArrayPrefix || prefix == retArrayPrefix2 {
+				// Do not cut prefix, if we do ParseType will be unable to detect an array clause.
 				prefix = ""
+			}
+			end, _ = IndexOneOf(strings.TrimSuffix(d.Description, "."), retSuffix, retSuffix2, retSuffix3)
+			if strings.Contains(d.Name, "getMyCommands") {
+				fmt.Println(d.Name)
 			}
 			if start > 0 && end > start {
 				ret := strings.TrimSpace(d.Description[start+len(prefix) : end])
