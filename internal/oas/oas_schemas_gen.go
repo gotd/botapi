@@ -1099,6 +1099,13 @@ type Game struct {
 	Animation    OptAnimation    `json:"animation"`
 }
 
+// Ref: #/components/schemas/GameHighScore
+type GameHighScore struct {
+	Position int  `json:"position"`
+	User     User `json:"user"`
+	Score    int  `json:"score"`
+}
+
 // Ref: #/components/schemas/getChat
 type GetChat struct {
 	ChatID ID `json:"chat_id"`
@@ -3264,6 +3271,44 @@ func (o OptUser) Get() (v User, ok bool) {
 	return o.Value, true
 }
 
+// NewOptUserProfilePhotos returns new OptUserProfilePhotos with value set to v.
+func NewOptUserProfilePhotos(v UserProfilePhotos) OptUserProfilePhotos {
+	return OptUserProfilePhotos{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptUserProfilePhotos is optional UserProfilePhotos.
+type OptUserProfilePhotos struct {
+	Value UserProfilePhotos
+	Set   bool
+}
+
+// IsSet returns true if OptUserProfilePhotos was set.
+func (o OptUserProfilePhotos) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptUserProfilePhotos) Reset() {
+	var v UserProfilePhotos
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptUserProfilePhotos) SetTo(v UserProfilePhotos) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptUserProfilePhotos) Get() (v UserProfilePhotos, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
 // NewOptVenue returns new OptVenue with value set to v.
 func NewOptVenue(v Venue) OptVenue {
 	return OptVenue{
@@ -3524,6 +3569,44 @@ func (o *OptVoiceChatScheduled) SetTo(v VoiceChatScheduled) {
 
 // Get returns value and boolean that denotes whether value was set.
 func (o OptVoiceChatScheduled) Get() (v VoiceChatScheduled, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// NewOptWebhookInfo returns new OptWebhookInfo with value set to v.
+func NewOptWebhookInfo(v WebhookInfo) OptWebhookInfo {
+	return OptWebhookInfo{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptWebhookInfo is optional WebhookInfo.
+type OptWebhookInfo struct {
+	Value WebhookInfo
+	Set   bool
+}
+
+// IsSet returns true if OptWebhookInfo was set.
+func (o OptWebhookInfo) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptWebhookInfo) Reset() {
+	var v WebhookInfo
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptWebhookInfo) SetTo(v WebhookInfo) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptWebhookInfo) Get() (v WebhookInfo, ok bool) {
 	if !o.Set {
 		return v, false
 	}
@@ -4006,9 +4089,39 @@ type Result struct {
 	Ok     bool    `json:"ok"`
 }
 
+type ResultArrayOfBotCommand []BotCommand
+
+type ResultArrayOfChatMember []ChatMember
+
+type ResultArrayOfGameHighScore []GameHighScore
+
 type ResultArrayOfMessage []Message
 
 type ResultArrayOfUpdate []Update
+
+// Ref: #/components/schemas/ResultChat
+type ResultChat struct {
+	Result OptChat `json:"result"`
+	Ok     bool    `json:"ok"`
+}
+
+// Ref: #/components/schemas/ResultChatInviteLink
+type ResultChatInviteLink struct {
+	Result OptChatInviteLink `json:"result"`
+	Ok     bool              `json:"ok"`
+}
+
+// Ref: #/components/schemas/ResultChatMember
+type ResultChatMember struct {
+	Result *ChatMember `json:"result"`
+	Ok     bool        `json:"ok"`
+}
+
+// Ref: #/components/schemas/ResultInt
+type ResultInt struct {
+	Result OptInt `json:"result"`
+	Ok     bool   `json:"ok"`
+}
 
 // Ref: #/components/schemas/ResultMessage
 type ResultMessage struct {
@@ -4016,10 +4129,34 @@ type ResultMessage struct {
 	Ok     bool       `json:"ok"`
 }
 
+// Ref: #/components/schemas/ResultPoll
+type ResultPoll struct {
+	Result OptPoll `json:"result"`
+	Ok     bool    `json:"ok"`
+}
+
+// Ref: #/components/schemas/ResultString
+type ResultString struct {
+	Result OptString `json:"result"`
+	Ok     bool      `json:"ok"`
+}
+
 // Ref: #/components/schemas/ResultUser
 type ResultUser struct {
 	Result OptUser `json:"result"`
 	Ok     bool    `json:"ok"`
+}
+
+// Ref: #/components/schemas/ResultUserProfilePhotos
+type ResultUserProfilePhotos struct {
+	Result OptUserProfilePhotos `json:"result"`
+	Ok     bool                 `json:"ok"`
+}
+
+// Ref: #/components/schemas/ResultWebhookInfo
+type ResultWebhookInfo struct {
+	Result OptWebhookInfo `json:"result"`
+	Ok     bool           `json:"ok"`
 }
 
 // Ref: #/components/schemas/revokeChatInviteLink
@@ -6346,6 +6483,12 @@ type User struct {
 	SupportsInlineQueries   OptBool   `json:"supports_inline_queries"`
 }
 
+// Ref: #/components/schemas/UserProfilePhotos
+type UserProfilePhotos struct {
+	TotalCount int           `json:"total_count"`
+	Photos     [][]PhotoSize `json:"photos"`
+}
+
 // Ref: #/components/schemas/Venue
 type Venue struct {
 	Location        Location  `json:"location"`
@@ -6406,3 +6549,15 @@ type VoiceChatScheduled struct {
 
 // Ref: #/components/schemas/VoiceChatStarted
 type VoiceChatStarted struct{}
+
+// Ref: #/components/schemas/WebhookInfo
+type WebhookInfo struct {
+	URL                  url.URL   `json:"url"`
+	HasCustomCertificate bool      `json:"has_custom_certificate"`
+	PendingUpdateCount   int       `json:"pending_update_count"`
+	IPAddress            OptString `json:"ip_address"`
+	LastErrorDate        OptInt    `json:"last_error_date"`
+	LastErrorMessage     OptString `json:"last_error_message"`
+	MaxConnections       OptInt    `json:"max_connections"`
+	AllowedUpdates       []string  `json:"allowed_updates"`
+}

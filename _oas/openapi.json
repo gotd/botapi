@@ -259,7 +259,7 @@
         },
         "responses": {
           "200": {
-            "$ref": "#/components/responses/Result"
+            "$ref": "#/components/responses/ResultChatInviteLink"
           },
           "default": {
             "$ref": "#/components/responses/Error"
@@ -475,7 +475,7 @@
         },
         "responses": {
           "200": {
-            "$ref": "#/components/responses/Result"
+            "$ref": "#/components/responses/ResultChatInviteLink"
           },
           "default": {
             "$ref": "#/components/responses/Error"
@@ -619,7 +619,7 @@
         },
         "responses": {
           "200": {
-            "$ref": "#/components/responses/Result"
+            "$ref": "#/components/responses/ResultString"
           },
           "default": {
             "$ref": "#/components/responses/Error"
@@ -667,7 +667,7 @@
         },
         "responses": {
           "200": {
-            "$ref": "#/components/responses/Result"
+            "$ref": "#/components/responses/ResultChat"
           },
           "default": {
             "$ref": "#/components/responses/Error"
@@ -691,7 +691,7 @@
         },
         "responses": {
           "200": {
-            "$ref": "#/components/responses/Result"
+            "$ref": "#/components/responses/ResultArrayOfChatMember"
           },
           "default": {
             "$ref": "#/components/responses/Error"
@@ -715,7 +715,7 @@
         },
         "responses": {
           "200": {
-            "$ref": "#/components/responses/Result"
+            "$ref": "#/components/responses/ResultChatMember"
           },
           "default": {
             "$ref": "#/components/responses/Error"
@@ -739,7 +739,7 @@
         },
         "responses": {
           "200": {
-            "$ref": "#/components/responses/Result"
+            "$ref": "#/components/responses/ResultInt"
           },
           "default": {
             "$ref": "#/components/responses/Error"
@@ -787,7 +787,7 @@
         },
         "responses": {
           "200": {
-            "$ref": "#/components/responses/Result"
+            "$ref": "#/components/responses/ResultArrayOfGameHighScore"
           },
           "default": {
             "$ref": "#/components/responses/Error"
@@ -825,7 +825,7 @@
         },
         "responses": {
           "200": {
-            "$ref": "#/components/responses/Result"
+            "$ref": "#/components/responses/ResultArrayOfBotCommand"
           },
           "default": {
             "$ref": "#/components/responses/Error"
@@ -897,7 +897,7 @@
         },
         "responses": {
           "200": {
-            "$ref": "#/components/responses/Result"
+            "$ref": "#/components/responses/ResultUserProfilePhotos"
           },
           "default": {
             "$ref": "#/components/responses/Error"
@@ -911,7 +911,7 @@
         "operationId": "getWebhookInfo",
         "responses": {
           "200": {
-            "$ref": "#/components/responses/Result"
+            "$ref": "#/components/responses/ResultWebhookInfo"
           },
           "default": {
             "$ref": "#/components/responses/Error"
@@ -1045,7 +1045,7 @@
         },
         "responses": {
           "200": {
-            "$ref": "#/components/responses/Result"
+            "$ref": "#/components/responses/ResultChatInviteLink"
           },
           "default": {
             "$ref": "#/components/responses/Error"
@@ -1813,7 +1813,7 @@
         },
         "responses": {
           "200": {
-            "$ref": "#/components/responses/Result"
+            "$ref": "#/components/responses/ResultPoll"
           },
           "default": {
             "$ref": "#/components/responses/Error"
@@ -6139,6 +6139,24 @@
           "ok"
         ]
       },
+      "ResultArrayOfBotCommand": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/BotCommand"
+        }
+      },
+      "ResultArrayOfChatMember": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/ChatMember"
+        }
+      },
+      "ResultArrayOfGameHighScore": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/GameHighScore"
+        }
+      },
       "ResultArrayOfMessage": {
         "type": "array",
         "items": {
@@ -6166,11 +6184,86 @@
           "ok"
         ]
       },
+      "ResultChat": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "$ref": "#/components/schemas/Chat"
+          },
+          "ok": {
+            "type": "boolean",
+            "default": true
+          }
+        },
+        "required": [
+          "ok"
+        ]
+      },
+      "ResultChatInviteLink": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "$ref": "#/components/schemas/ChatInviteLink"
+          },
+          "ok": {
+            "type": "boolean",
+            "default": true
+          }
+        },
+        "required": [
+          "ok"
+        ]
+      },
+      "ResultChatMember": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "$ref": "#/components/schemas/ChatMember"
+          },
+          "ok": {
+            "type": "boolean",
+            "default": true
+          }
+        },
+        "required": [
+          "ok"
+        ]
+      },
+      "ResultFile": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "$ref": "#/components/schemas/File"
+          },
+          "ok": {
+            "type": "boolean",
+            "default": true
+          }
+        },
+        "required": [
+          "ok"
+        ]
+      },
       "ResultGameHighScore": {
         "type": "object",
         "properties": {
           "result": {
             "$ref": "#/components/schemas/GameHighScore"
+          },
+          "ok": {
+            "type": "boolean",
+            "default": true
+          }
+        },
+        "required": [
+          "ok"
+        ]
+      },
+      "ResultInt": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "type": "integer"
           },
           "ok": {
             "type": "boolean",
@@ -6196,7 +6289,22 @@
           "ok"
         ]
       },
-      "ResultStr": {
+      "ResultPoll": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "$ref": "#/components/schemas/Poll"
+          },
+          "ok": {
+            "type": "boolean",
+            "default": true
+          }
+        },
+        "required": [
+          "ok"
+        ]
+      },
+      "ResultString": {
         "type": "object",
         "properties": {
           "result": {
@@ -6231,6 +6339,21 @@
         "properties": {
           "result": {
             "$ref": "#/components/schemas/User"
+          },
+          "ok": {
+            "type": "boolean",
+            "default": true
+          }
+        },
+        "required": [
+          "ok"
+        ]
+      },
+      "ResultUserProfilePhotos": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "$ref": "#/components/schemas/UserProfilePhotos"
           },
           "ok": {
             "type": "boolean",
@@ -9480,6 +9603,36 @@
           }
         }
       },
+      "ResultArrayOfBotCommand": {
+        "description": "Result of method invocation",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ResultArrayOfBotCommand"
+            }
+          }
+        }
+      },
+      "ResultArrayOfChatMember": {
+        "description": "Result of method invocation",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ResultArrayOfChatMember"
+            }
+          }
+        }
+      },
+      "ResultArrayOfGameHighScore": {
+        "description": "Result of method invocation",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ResultArrayOfGameHighScore"
+            }
+          }
+        }
+      },
       "ResultArrayOfMessage": {
         "description": "Result of method invocation",
         "content": {
@@ -9510,12 +9663,62 @@
           }
         }
       },
+      "ResultChat": {
+        "description": "Result of method invocation",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ResultChat"
+            }
+          }
+        }
+      },
+      "ResultChatInviteLink": {
+        "description": "Result of method invocation",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ResultChatInviteLink"
+            }
+          }
+        }
+      },
+      "ResultChatMember": {
+        "description": "Result of method invocation",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ResultChatMember"
+            }
+          }
+        }
+      },
+      "ResultFile": {
+        "description": "Result of method invocation",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ResultFile"
+            }
+          }
+        }
+      },
       "ResultGameHighScore": {
         "description": "Result of method invocation",
         "content": {
           "application/json": {
             "schema": {
               "$ref": "#/components/schemas/ResultGameHighScore"
+            }
+          }
+        }
+      },
+      "ResultInt": {
+        "description": "Result of method invocation",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ResultInt"
             }
           }
         }
@@ -9530,12 +9733,22 @@
           }
         }
       },
-      "ResultStr": {
+      "ResultPoll": {
         "description": "Result of method invocation",
         "content": {
           "application/json": {
             "schema": {
-              "$ref": "#/components/schemas/ResultStr"
+              "$ref": "#/components/schemas/ResultPoll"
+            }
+          }
+        }
+      },
+      "ResultString": {
+        "description": "Result of method invocation",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ResultString"
             }
           }
         }
@@ -9556,6 +9769,16 @@
           "application/json": {
             "schema": {
               "$ref": "#/components/schemas/ResultUser"
+            }
+          }
+        }
+      },
+      "ResultUserProfilePhotos": {
+        "description": "Result of method invocation",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ResultUserProfilePhotos"
             }
           }
         }

@@ -2495,6 +2495,41 @@ func (s ReplyKeyboardMarkup) Validate() error {
 	}
 	return nil
 }
+func (s ResultArrayOfBotCommand) Validate() error {
+	if s == nil {
+		return errors.New("nil is invalid value")
+	}
+	var failures []validate.FieldError
+	for i, elem := range s {
+		if err := func() error {
+			if err := elem.Validate(); err != nil {
+				return err
+			}
+			return nil
+		}(); err != nil {
+			failures = append(failures, validate.FieldError{
+				Name:  fmt.Sprintf("[%d]", i),
+				Error: err,
+			})
+		}
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+	return nil
+}
+func (s ResultArrayOfChatMember) Validate() error {
+	if s == nil {
+		return errors.New("nil is invalid value")
+	}
+	return nil
+}
+func (s ResultArrayOfGameHighScore) Validate() error {
+	if s == nil {
+		return errors.New("nil is invalid value")
+	}
+	return nil
+}
 func (s ResultArrayOfMessage) Validate() error {
 	if s == nil {
 		return errors.New("nil is invalid value")
@@ -2541,7 +2576,85 @@ func (s ResultArrayOfUpdate) Validate() error {
 	}
 	return nil
 }
+func (s ResultChat) Validate() error {
+	var failures []validate.FieldError
+	if err := func() error {
+		if s.Result.Set {
+			if err := func() error {
+				if err := s.Result.Value.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return err
+			}
+		}
+		return nil
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "result",
+			Error: err,
+		})
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+	return nil
+}
 func (s ResultMessage) Validate() error {
+	var failures []validate.FieldError
+	if err := func() error {
+		if s.Result.Set {
+			if err := func() error {
+				if err := s.Result.Value.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return err
+			}
+		}
+		return nil
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "result",
+			Error: err,
+		})
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+	return nil
+}
+func (s ResultPoll) Validate() error {
+	var failures []validate.FieldError
+	if err := func() error {
+		if s.Result.Set {
+			if err := func() error {
+				if err := s.Result.Value.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return err
+			}
+		}
+		return nil
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "result",
+			Error: err,
+		})
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+	return nil
+}
+func (s ResultUserProfilePhotos) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
 		if s.Result.Set {
@@ -4551,6 +4664,58 @@ func (s Update) Validate() error {
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
 			Name:  "chat_join_request",
+			Error: err,
+		})
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+	return nil
+}
+func (s UserProfilePhotos) Validate() error {
+	var failures []validate.FieldError
+	if err := func() error {
+		if s.Photos == nil {
+			return errors.New("nil is invalid value")
+		}
+		var failures []validate.FieldError
+		for i, elem := range s.Photos {
+			if err := func() error {
+				if elem == nil {
+					return errors.New("nil is invalid value")
+				}
+				var failures []validate.FieldError
+				for i, elem := range elem {
+					if err := func() error {
+						if err := elem.Validate(); err != nil {
+							return err
+						}
+						return nil
+					}(); err != nil {
+						failures = append(failures, validate.FieldError{
+							Name:  fmt.Sprintf("[%d]", i),
+							Error: err,
+						})
+					}
+				}
+				if len(failures) > 0 {
+					return &validate.Error{Fields: failures}
+				}
+				return nil
+			}(); err != nil {
+				failures = append(failures, validate.FieldError{
+					Name:  fmt.Sprintf("[%d]", i),
+					Error: err,
+				})
+			}
+		}
+		if len(failures) > 0 {
+			return &validate.Error{Fields: failures}
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "photos",
 			Error: err,
 		})
 	}

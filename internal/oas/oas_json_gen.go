@@ -4189,6 +4189,51 @@ func (s *Game) Decode(d *jx.Decoder) error {
 }
 
 // Encode implements json.Marshaler.
+func (s GameHighScore) Encode(e *jx.Encoder) {
+	e.ObjStart()
+
+	e.FieldStart("position")
+	e.Int(s.Position)
+
+	e.FieldStart("user")
+	s.User.Encode(e)
+
+	e.FieldStart("score")
+	e.Int(s.Score)
+	e.ObjEnd()
+}
+
+// Decode decodes GameHighScore from json.
+func (s *GameHighScore) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New(`invalid: unable to decode GameHighScore to nil`)
+	}
+	return d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "position":
+			v, err := d.Int()
+			s.Position = int(v)
+			if err != nil {
+				return err
+			}
+		case "user":
+			if err := s.User.Decode(d); err != nil {
+				return err
+			}
+		case "score":
+			v, err := d.Int()
+			s.Score = int(v)
+			if err != nil {
+				return err
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	})
+}
+
+// Encode implements json.Marshaler.
 func (s GetChat) Encode(e *jx.Encoder) {
 	e.ObjStart()
 
@@ -7548,6 +7593,28 @@ func (o *OptUser) Decode(d *jx.Decoder) error {
 	}
 }
 
+// Encode encodes UserProfilePhotos as json.
+func (o OptUserProfilePhotos) Encode(e *jx.Encoder) {
+	o.Value.Encode(e)
+}
+
+// Decode decodes UserProfilePhotos from json.
+func (o *OptUserProfilePhotos) Decode(d *jx.Decoder) error {
+	if o == nil {
+		return errors.New(`invalid: unable to decode OptUserProfilePhotos to nil`)
+	}
+	switch d.Next() {
+	case jx.Object:
+		o.Set = true
+		if err := o.Value.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	default:
+		return errors.Errorf(`unexpected type %q while reading OptUserProfilePhotos`, d.Next())
+	}
+}
+
 // Encode encodes Venue as json.
 func (o OptVenue) Encode(e *jx.Encoder) {
 	o.Value.Encode(e)
@@ -7699,6 +7766,28 @@ func (o *OptVoiceChatScheduled) Decode(d *jx.Decoder) error {
 		return nil
 	default:
 		return errors.Errorf(`unexpected type %q while reading OptVoiceChatScheduled`, d.Next())
+	}
+}
+
+// Encode encodes WebhookInfo as json.
+func (o OptWebhookInfo) Encode(e *jx.Encoder) {
+	o.Value.Encode(e)
+}
+
+// Decode decodes WebhookInfo from json.
+func (o *OptWebhookInfo) Decode(d *jx.Decoder) error {
+	if o == nil {
+		return errors.New(`invalid: unable to decode OptWebhookInfo to nil`)
+	}
+	switch d.Next() {
+	case jx.Object:
+		o.Set = true
+		if err := o.Value.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	default:
+		return errors.Errorf(`unexpected type %q while reading OptWebhookInfo`, d.Next())
 	}
 }
 
@@ -9401,6 +9490,114 @@ func (s *Result) Decode(d *jx.Decoder) error {
 	})
 }
 
+// Encode encodes ResultArrayOfBotCommand as json.
+func (s ResultArrayOfBotCommand) Encode(e *jx.Encoder) {
+	unwrapped := []BotCommand(s)
+	e.ArrStart()
+	for _, elem := range unwrapped {
+		elem.Encode(e)
+	}
+	e.ArrEnd()
+}
+
+// Decode decodes ResultArrayOfBotCommand from json.
+func (s *ResultArrayOfBotCommand) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New(`invalid: unable to decode ResultArrayOfBotCommand to nil`)
+	}
+	var unwrapped []BotCommand
+	if err := func() error {
+		unwrapped = nil
+		if err := d.Arr(func(d *jx.Decoder) error {
+			var elem BotCommand
+			if err := elem.Decode(d); err != nil {
+				return err
+			}
+			unwrapped = append(unwrapped, elem)
+			return nil
+		}); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = ResultArrayOfBotCommand(unwrapped)
+	return nil
+}
+
+// Encode encodes ResultArrayOfChatMember as json.
+func (s ResultArrayOfChatMember) Encode(e *jx.Encoder) {
+	unwrapped := []ChatMember(s)
+	e.ArrStart()
+	for _, elem := range unwrapped {
+		elem.Encode(e)
+	}
+	e.ArrEnd()
+}
+
+// Decode decodes ResultArrayOfChatMember from json.
+func (s *ResultArrayOfChatMember) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New(`invalid: unable to decode ResultArrayOfChatMember to nil`)
+	}
+	var unwrapped []ChatMember
+	if err := func() error {
+		unwrapped = nil
+		if err := d.Arr(func(d *jx.Decoder) error {
+			var elem ChatMember
+			if err := elem.Decode(d); err != nil {
+				return err
+			}
+			unwrapped = append(unwrapped, elem)
+			return nil
+		}); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = ResultArrayOfChatMember(unwrapped)
+	return nil
+}
+
+// Encode encodes ResultArrayOfGameHighScore as json.
+func (s ResultArrayOfGameHighScore) Encode(e *jx.Encoder) {
+	unwrapped := []GameHighScore(s)
+	e.ArrStart()
+	for _, elem := range unwrapped {
+		elem.Encode(e)
+	}
+	e.ArrEnd()
+}
+
+// Decode decodes ResultArrayOfGameHighScore from json.
+func (s *ResultArrayOfGameHighScore) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New(`invalid: unable to decode ResultArrayOfGameHighScore to nil`)
+	}
+	var unwrapped []GameHighScore
+	if err := func() error {
+		unwrapped = nil
+		if err := d.Arr(func(d *jx.Decoder) error {
+			var elem GameHighScore
+			if err := elem.Decode(d); err != nil {
+				return err
+			}
+			unwrapped = append(unwrapped, elem)
+			return nil
+		}); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = ResultArrayOfGameHighScore(unwrapped)
+	return nil
+}
+
 // Encode encodes ResultArrayOfMessage as json.
 func (s ResultArrayOfMessage) Encode(e *jx.Encoder) {
 	unwrapped := []Message(s)
@@ -9474,6 +9671,160 @@ func (s *ResultArrayOfUpdate) Decode(d *jx.Decoder) error {
 }
 
 // Encode implements json.Marshaler.
+func (s ResultChat) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	if s.Result.Set {
+		e.FieldStart("result")
+		s.Result.Encode(e)
+	}
+
+	e.FieldStart("ok")
+	e.Bool(s.Ok)
+	e.ObjEnd()
+}
+
+// Decode decodes ResultChat from json.
+func (s *ResultChat) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New(`invalid: unable to decode ResultChat to nil`)
+	}
+	return d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "result":
+			s.Result.Reset()
+			if err := s.Result.Decode(d); err != nil {
+				return err
+			}
+		case "ok":
+			v, err := d.Bool()
+			s.Ok = bool(v)
+			if err != nil {
+				return err
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	})
+}
+
+// Encode implements json.Marshaler.
+func (s ResultChatInviteLink) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	if s.Result.Set {
+		e.FieldStart("result")
+		s.Result.Encode(e)
+	}
+
+	e.FieldStart("ok")
+	e.Bool(s.Ok)
+	e.ObjEnd()
+}
+
+// Decode decodes ResultChatInviteLink from json.
+func (s *ResultChatInviteLink) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New(`invalid: unable to decode ResultChatInviteLink to nil`)
+	}
+	return d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "result":
+			s.Result.Reset()
+			if err := s.Result.Decode(d); err != nil {
+				return err
+			}
+		case "ok":
+			v, err := d.Bool()
+			s.Ok = bool(v)
+			if err != nil {
+				return err
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	})
+}
+
+// Encode implements json.Marshaler.
+func (s ResultChatMember) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	if s.Result != nil {
+		e.FieldStart("result")
+		s.Result.Encode(e)
+	}
+
+	e.FieldStart("ok")
+	e.Bool(s.Ok)
+	e.ObjEnd()
+}
+
+// Decode decodes ResultChatMember from json.
+func (s *ResultChatMember) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New(`invalid: unable to decode ResultChatMember to nil`)
+	}
+	return d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "result":
+			s.Result = nil
+			var elem ChatMember
+			if err := elem.Decode(d); err != nil {
+				return err
+			}
+			s.Result = &elem
+		case "ok":
+			v, err := d.Bool()
+			s.Ok = bool(v)
+			if err != nil {
+				return err
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	})
+}
+
+// Encode implements json.Marshaler.
+func (s ResultInt) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	if s.Result.Set {
+		e.FieldStart("result")
+		s.Result.Encode(e)
+	}
+
+	e.FieldStart("ok")
+	e.Bool(s.Ok)
+	e.ObjEnd()
+}
+
+// Decode decodes ResultInt from json.
+func (s *ResultInt) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New(`invalid: unable to decode ResultInt to nil`)
+	}
+	return d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "result":
+			s.Result.Reset()
+			if err := s.Result.Decode(d); err != nil {
+				return err
+			}
+		case "ok":
+			v, err := d.Bool()
+			s.Ok = bool(v)
+			if err != nil {
+				return err
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	})
+}
+
+// Encode implements json.Marshaler.
 func (s ResultMessage) Encode(e *jx.Encoder) {
 	e.ObjStart()
 	if s.Result.Set {
@@ -9512,6 +9863,82 @@ func (s *ResultMessage) Decode(d *jx.Decoder) error {
 }
 
 // Encode implements json.Marshaler.
+func (s ResultPoll) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	if s.Result.Set {
+		e.FieldStart("result")
+		s.Result.Encode(e)
+	}
+
+	e.FieldStart("ok")
+	e.Bool(s.Ok)
+	e.ObjEnd()
+}
+
+// Decode decodes ResultPoll from json.
+func (s *ResultPoll) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New(`invalid: unable to decode ResultPoll to nil`)
+	}
+	return d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "result":
+			s.Result.Reset()
+			if err := s.Result.Decode(d); err != nil {
+				return err
+			}
+		case "ok":
+			v, err := d.Bool()
+			s.Ok = bool(v)
+			if err != nil {
+				return err
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	})
+}
+
+// Encode implements json.Marshaler.
+func (s ResultString) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	if s.Result.Set {
+		e.FieldStart("result")
+		s.Result.Encode(e)
+	}
+
+	e.FieldStart("ok")
+	e.Bool(s.Ok)
+	e.ObjEnd()
+}
+
+// Decode decodes ResultString from json.
+func (s *ResultString) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New(`invalid: unable to decode ResultString to nil`)
+	}
+	return d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "result":
+			s.Result.Reset()
+			if err := s.Result.Decode(d); err != nil {
+				return err
+			}
+		case "ok":
+			v, err := d.Bool()
+			s.Ok = bool(v)
+			if err != nil {
+				return err
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	})
+}
+
+// Encode implements json.Marshaler.
 func (s ResultUser) Encode(e *jx.Encoder) {
 	e.ObjStart()
 	if s.Result.Set {
@@ -9528,6 +9955,82 @@ func (s ResultUser) Encode(e *jx.Encoder) {
 func (s *ResultUser) Decode(d *jx.Decoder) error {
 	if s == nil {
 		return errors.New(`invalid: unable to decode ResultUser to nil`)
+	}
+	return d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "result":
+			s.Result.Reset()
+			if err := s.Result.Decode(d); err != nil {
+				return err
+			}
+		case "ok":
+			v, err := d.Bool()
+			s.Ok = bool(v)
+			if err != nil {
+				return err
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	})
+}
+
+// Encode implements json.Marshaler.
+func (s ResultUserProfilePhotos) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	if s.Result.Set {
+		e.FieldStart("result")
+		s.Result.Encode(e)
+	}
+
+	e.FieldStart("ok")
+	e.Bool(s.Ok)
+	e.ObjEnd()
+}
+
+// Decode decodes ResultUserProfilePhotos from json.
+func (s *ResultUserProfilePhotos) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New(`invalid: unable to decode ResultUserProfilePhotos to nil`)
+	}
+	return d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "result":
+			s.Result.Reset()
+			if err := s.Result.Decode(d); err != nil {
+				return err
+			}
+		case "ok":
+			v, err := d.Bool()
+			s.Ok = bool(v)
+			if err != nil {
+				return err
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	})
+}
+
+// Encode implements json.Marshaler.
+func (s ResultWebhookInfo) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	if s.Result.Set {
+		e.FieldStart("result")
+		s.Result.Encode(e)
+	}
+
+	e.FieldStart("ok")
+	e.Bool(s.Ok)
+	e.ObjEnd()
+}
+
+// Decode decodes ResultWebhookInfo from json.
+func (s *ResultWebhookInfo) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New(`invalid: unable to decode ResultWebhookInfo to nil`)
 	}
 	return d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
@@ -14564,6 +15067,66 @@ func (s *User) Decode(d *jx.Decoder) error {
 }
 
 // Encode implements json.Marshaler.
+func (s UserProfilePhotos) Encode(e *jx.Encoder) {
+	e.ObjStart()
+
+	e.FieldStart("total_count")
+	e.Int(s.TotalCount)
+
+	e.FieldStart("photos")
+	e.ArrStart()
+	for _, elem := range s.Photos {
+		e.ArrStart()
+		for _, elem := range elem {
+			elem.Encode(e)
+		}
+		e.ArrEnd()
+	}
+	e.ArrEnd()
+	e.ObjEnd()
+}
+
+// Decode decodes UserProfilePhotos from json.
+func (s *UserProfilePhotos) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New(`invalid: unable to decode UserProfilePhotos to nil`)
+	}
+	return d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "total_count":
+			v, err := d.Int()
+			s.TotalCount = int(v)
+			if err != nil {
+				return err
+			}
+		case "photos":
+			s.Photos = nil
+			if err := d.Arr(func(d *jx.Decoder) error {
+				var elem []PhotoSize
+				elem = nil
+				if err := d.Arr(func(d *jx.Decoder) error {
+					var elemElem PhotoSize
+					if err := elemElem.Decode(d); err != nil {
+						return err
+					}
+					elem = append(elem, elemElem)
+					return nil
+				}); err != nil {
+					return err
+				}
+				s.Photos = append(s.Photos, elem)
+				return nil
+			}); err != nil {
+				return err
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	})
+}
+
+// Encode implements json.Marshaler.
 func (s Venue) Encode(e *jx.Encoder) {
 	e.ObjStart()
 
@@ -14995,6 +15558,111 @@ func (s *VoiceChatStarted) Decode(d *jx.Decoder) error {
 	}
 	return d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
+		default:
+			return d.Skip()
+		}
+		return nil
+	})
+}
+
+// Encode implements json.Marshaler.
+func (s WebhookInfo) Encode(e *jx.Encoder) {
+	e.ObjStart()
+
+	e.FieldStart("url")
+	json.EncodeURI(e, s.URL)
+
+	e.FieldStart("has_custom_certificate")
+	e.Bool(s.HasCustomCertificate)
+
+	e.FieldStart("pending_update_count")
+	e.Int(s.PendingUpdateCount)
+	if s.IPAddress.Set {
+		e.FieldStart("ip_address")
+		s.IPAddress.Encode(e)
+	}
+	if s.LastErrorDate.Set {
+		e.FieldStart("last_error_date")
+		s.LastErrorDate.Encode(e)
+	}
+	if s.LastErrorMessage.Set {
+		e.FieldStart("last_error_message")
+		s.LastErrorMessage.Encode(e)
+	}
+	if s.MaxConnections.Set {
+		e.FieldStart("max_connections")
+		s.MaxConnections.Encode(e)
+	}
+	if s.AllowedUpdates != nil {
+		e.FieldStart("allowed_updates")
+		e.ArrStart()
+		for _, elem := range s.AllowedUpdates {
+			e.Str(elem)
+		}
+		e.ArrEnd()
+	}
+	e.ObjEnd()
+}
+
+// Decode decodes WebhookInfo from json.
+func (s *WebhookInfo) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New(`invalid: unable to decode WebhookInfo to nil`)
+	}
+	return d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "url":
+			v, err := json.DecodeURI(d)
+			s.URL = v
+			if err != nil {
+				return err
+			}
+		case "has_custom_certificate":
+			v, err := d.Bool()
+			s.HasCustomCertificate = bool(v)
+			if err != nil {
+				return err
+			}
+		case "pending_update_count":
+			v, err := d.Int()
+			s.PendingUpdateCount = int(v)
+			if err != nil {
+				return err
+			}
+		case "ip_address":
+			s.IPAddress.Reset()
+			if err := s.IPAddress.Decode(d); err != nil {
+				return err
+			}
+		case "last_error_date":
+			s.LastErrorDate.Reset()
+			if err := s.LastErrorDate.Decode(d); err != nil {
+				return err
+			}
+		case "last_error_message":
+			s.LastErrorMessage.Reset()
+			if err := s.LastErrorMessage.Decode(d); err != nil {
+				return err
+			}
+		case "max_connections":
+			s.MaxConnections.Reset()
+			if err := s.MaxConnections.Decode(d); err != nil {
+				return err
+			}
+		case "allowed_updates":
+			s.AllowedUpdates = nil
+			if err := d.Arr(func(d *jx.Decoder) error {
+				var elem string
+				v, err := d.Str()
+				elem = string(v)
+				if err != nil {
+					return err
+				}
+				s.AllowedUpdates = append(s.AllowedUpdates, elem)
+				return nil
+			}); err != nil {
+				return err
+			}
 		default:
 			return d.Skip()
 		}

@@ -742,7 +742,7 @@ func decodeCopyMessageResponse(resp *http.Response, span trace.Span) (res Result
 	}
 }
 
-func decodeCreateChatInviteLinkResponse(resp *http.Response, span trace.Span) (res Result, err error) {
+func decodeCreateChatInviteLinkResponse(resp *http.Response, span trace.Span) (res ResultChatInviteLink, err error) {
 	switch resp.StatusCode {
 	case 200:
 		switch resp.Header.Get("Content-Type") {
@@ -757,7 +757,7 @@ func decodeCreateChatInviteLinkResponse(resp *http.Response, span trace.Span) (r
 			defer jx.PutDecoder(d)
 			d.ResetBytes(buf.Bytes())
 
-			var response Result
+			var response ResultChatInviteLink
 			if err := func() error {
 				if err := response.Decode(d); err != nil {
 					return err
@@ -1354,7 +1354,7 @@ func decodeDeleteWebhookResponse(resp *http.Response, span trace.Span) (res Resu
 	}
 }
 
-func decodeEditChatInviteLinkResponse(resp *http.Response, span trace.Span) (res Result, err error) {
+func decodeEditChatInviteLinkResponse(resp *http.Response, span trace.Span) (res ResultChatInviteLink, err error) {
 	switch resp.StatusCode {
 	case 200:
 		switch resp.Header.Get("Content-Type") {
@@ -1369,7 +1369,7 @@ func decodeEditChatInviteLinkResponse(resp *http.Response, span trace.Span) (res
 			defer jx.PutDecoder(d)
 			d.ResetBytes(buf.Bytes())
 
-			var response Result
+			var response ResultChatInviteLink
 			if err := func() error {
 				if err := response.Decode(d); err != nil {
 					return err
@@ -1762,7 +1762,7 @@ func decodeEditMessageTextResponse(resp *http.Response, span trace.Span) (res Re
 	}
 }
 
-func decodeExportChatInviteLinkResponse(resp *http.Response, span trace.Span) (res Result, err error) {
+func decodeExportChatInviteLinkResponse(resp *http.Response, span trace.Span) (res ResultString, err error) {
 	switch resp.StatusCode {
 	case 200:
 		switch resp.Header.Get("Content-Type") {
@@ -1777,7 +1777,7 @@ func decodeExportChatInviteLinkResponse(resp *http.Response, span trace.Span) (r
 			defer jx.PutDecoder(d)
 			d.ResetBytes(buf.Bytes())
 
-			var response Result
+			var response ResultString
 			if err := func() error {
 				if err := response.Decode(d); err != nil {
 					return err
@@ -1898,7 +1898,7 @@ func decodeForwardMessageResponse(resp *http.Response, span trace.Span) (res Res
 	}
 }
 
-func decodeGetChatResponse(resp *http.Response, span trace.Span) (res Result, err error) {
+func decodeGetChatResponse(resp *http.Response, span trace.Span) (res ResultChat, err error) {
 	switch resp.StatusCode {
 	case 200:
 		switch resp.Header.Get("Content-Type") {
@@ -1913,7 +1913,7 @@ func decodeGetChatResponse(resp *http.Response, span trace.Span) (res Result, er
 			defer jx.PutDecoder(d)
 			d.ResetBytes(buf.Bytes())
 
-			var response Result
+			var response ResultChat
 			if err := func() error {
 				if err := response.Decode(d); err != nil {
 					return err
@@ -1966,7 +1966,7 @@ func decodeGetChatResponse(resp *http.Response, span trace.Span) (res Result, er
 	}
 }
 
-func decodeGetChatAdministratorsResponse(resp *http.Response, span trace.Span) (res Result, err error) {
+func decodeGetChatAdministratorsResponse(resp *http.Response, span trace.Span) (res ResultArrayOfChatMember, err error) {
 	switch resp.StatusCode {
 	case 200:
 		switch resp.Header.Get("Content-Type") {
@@ -1981,7 +1981,87 @@ func decodeGetChatAdministratorsResponse(resp *http.Response, span trace.Span) (
 			defer jx.PutDecoder(d)
 			d.ResetBytes(buf.Bytes())
 
-			var response Result
+			var response ResultArrayOfChatMember
+			if err := func() error {
+				{
+					var unwrapped []ChatMember
+					unwrapped = nil
+					if err := d.Arr(func(d *jx.Decoder) error {
+						var elem ChatMember
+						if err := elem.Decode(d); err != nil {
+							return err
+						}
+						unwrapped = append(unwrapped, elem)
+						return nil
+					}); err != nil {
+						return err
+					}
+					response = ResultArrayOfChatMember(unwrapped)
+				}
+				return nil
+			}(); err != nil {
+				return res, err
+			}
+
+			return response, nil
+		default:
+			return res, errors.Errorf("unexpected content-type: %s", resp.Header.Get("Content-Type"))
+		}
+	default:
+		defRes, err := func() (res ErrorStatusCode, err error) {
+			switch resp.Header.Get("Content-Type") {
+			case "application/json":
+				buf := getBuf()
+				defer putBuf(buf)
+				if _, err := io.Copy(buf, resp.Body); err != nil {
+					return res, err
+				}
+
+				d := jx.GetDecoder()
+				defer jx.PutDecoder(d)
+				d.ResetBytes(buf.Bytes())
+
+				var response Error
+				if err := func() error {
+					if err := response.Decode(d); err != nil {
+						return err
+					}
+					return nil
+				}(); err != nil {
+					return res, err
+				}
+
+				return ErrorStatusCode{
+					StatusCode: resp.StatusCode,
+					Response:   response,
+				}, nil
+			default:
+				return res, errors.Errorf("unexpected content-type: %s", resp.Header.Get("Content-Type"))
+			}
+		}()
+		if err != nil {
+			return res, errors.Wrap(err, "default")
+		}
+		return res, errors.Wrap(&defRes, "error")
+	}
+}
+
+func decodeGetChatMemberResponse(resp *http.Response, span trace.Span) (res ResultChatMember, err error) {
+	switch resp.StatusCode {
+	case 200:
+		switch resp.Header.Get("Content-Type") {
+		case "application/json":
+			buf := getBuf()
+			defer putBuf(buf)
+			if _, err := io.Copy(buf, resp.Body); err != nil {
+				return res, err
+			}
+
+			d := jx.GetDecoder()
+			defer jx.PutDecoder(d)
+			d.ResetBytes(buf.Bytes())
+
+			var response ResultChatMember
 			if err := func() error {
 				if err := response.Decode(d); err != nil {
 					return err
@@ -2034,7 +2114,7 @@ func decodeGetChatAdministratorsResponse(resp *http.Response, span trace.Span) (
 	}
 }
 
-func decodeGetChatMemberResponse(resp *http.Response, span trace.Span) (res Result, err error) {
+func decodeGetChatMemberCountResponse(resp *http.Response, span trace.Span) (res ResultInt, err error) {
 	switch resp.StatusCode {
 	case 200:
 		switch resp.Header.Get("Content-Type") {
@@ -2049,75 +2129,7 @@ func decodeGetChatMemberResponse(resp *http.Response, span trace.Span) (res Resu
 			defer jx.PutDecoder(d)
 			d.ResetBytes(buf.Bytes())
 
-			var response Result
-			if err := func() error {
-				if err := response.Decode(d); err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return res, err
-			}
-
-			return response, nil
-		default:
-			return res, errors.Errorf("unexpected content-type: %s", resp.Header.Get("Content-Type"))
-		}
-	default:
-		defRes, err := func() (res ErrorStatusCode, err error) {
-			switch resp.Header.Get("Content-Type") {
-			case "application/json":
-				buf := getBuf()
-				defer putBuf(buf)
-				if _, err := io.Copy(buf, resp.Body); err != nil {
-					return res, err
-				}
-
-				d := jx.GetDecoder()
-				defer jx.PutDecoder(d)
-				d.ResetBytes(buf.Bytes())
-
-				var response Error
-				if err := func() error {
-					if err := response.Decode(d); err != nil {
-						return err
-					}
-					return nil
-				}(); err != nil {
-					return res, err
-				}
-
-				return ErrorStatusCode{
-					StatusCode: resp.StatusCode,
-					Response:   response,
-				}, nil
-			default:
-				return res, errors.Errorf("unexpected content-type: %s", resp.Header.Get("Content-Type"))
-			}
-		}()
-		if err != nil {
-			return res, errors.Wrap(err, "default")
-		}
-		return res, errors.Wrap(&defRes, "error")
-	}
-}
-
-func decodeGetChatMemberCountResponse(resp *http.Response, span trace.Span) (res Result, err error) {
-	switch resp.StatusCode {
-	case 200:
-		switch resp.Header.Get("Content-Type") {
-		case "application/json":
-			buf := getBuf()
-			defer putBuf(buf)
-			if _, err := io.Copy(buf, resp.Body); err != nil {
-				return res, err
-			}
-
-			d := jx.GetDecoder()
-			defer jx.PutDecoder(d)
-			d.ResetBytes(buf.Bytes())
-
-			var response Result
+			var response ResultInt
 			if err := func() error {
 				if err := response.Decode(d); err != nil {
 					return err
@@ -2238,7 +2250,7 @@ func decodeGetFileResponse(resp *http.Response, span trace.Span) (res Result, er
 	}
 }
 
-func decodeGetGameHighScoresResponse(resp *http.Response, span trace.Span) (res Result, err error) {
+func decodeGetGameHighScoresResponse(resp *http.Response, span trace.Span) (res ResultArrayOfGameHighScore, err error) {
 	switch resp.StatusCode {
 	case 200:
 		switch resp.Header.Get("Content-Type") {
@@ -2253,10 +2265,22 @@ func decodeGetGameHighScoresResponse(resp *http.Response, span trace.Span) (res 
 			defer jx.PutDecoder(d)
 			d.ResetBytes(buf.Bytes())
 
-			var response Result
+			var response ResultArrayOfGameHighScore
 			if err := func() error {
-				if err := response.Decode(d); err != nil {
-					return err
+				{
+					var unwrapped []GameHighScore
+					unwrapped = nil
+					if err := d.Arr(func(d *jx.Decoder) error {
+						var elem GameHighScore
+						if err := elem.Decode(d); err != nil {
+							return err
+						}
+						unwrapped = append(unwrapped, elem)
+						return nil
+					}); err != nil {
+						return err
+					}
+					response = ResultArrayOfGameHighScore(unwrapped)
 				}
 				return nil
 			}(); err != nil {
@@ -2374,7 +2398,7 @@ func decodeGetMeResponse(resp *http.Response, span trace.Span) (res ResultUser, 
 	}
 }
 
-func decodeGetMyCommandsResponse(resp *http.Response, span trace.Span) (res Result, err error) {
+func decodeGetMyCommandsResponse(resp *http.Response, span trace.Span) (res ResultArrayOfBotCommand, err error) {
 	switch resp.StatusCode {
 	case 200:
 		switch resp.Header.Get("Content-Type") {
@@ -2389,10 +2413,22 @@ func decodeGetMyCommandsResponse(resp *http.Response, span trace.Span) (res Resu
 			defer jx.PutDecoder(d)
 			d.ResetBytes(buf.Bytes())
 
-			var response Result
+			var response ResultArrayOfBotCommand
 			if err := func() error {
-				if err := response.Decode(d); err != nil {
-					return err
+				{
+					var unwrapped []BotCommand
+					unwrapped = nil
+					if err := d.Arr(func(d *jx.Decoder) error {
+						var elem BotCommand
+						if err := elem.Decode(d); err != nil {
+							return err
+						}
+						unwrapped = append(unwrapped, elem)
+						return nil
+					}); err != nil {
+						return err
+					}
+					response = ResultArrayOfBotCommand(unwrapped)
 				}
 				return nil
 			}(); err != nil {
@@ -2590,7 +2626,7 @@ func decodeGetUpdatesResponse(resp *http.Response, span trace.Span) (res ResultA
 	}
 }
 
-func decodeGetUserProfilePhotosResponse(resp *http.Response, span trace.Span) (res Result, err error) {
+func decodeGetUserProfilePhotosResponse(resp *http.Response, span trace.Span) (res ResultUserProfilePhotos, err error) {
 	switch resp.StatusCode {
 	case 200:
 		switch resp.Header.Get("Content-Type") {
@@ -2605,7 +2641,7 @@ func decodeGetUserProfilePhotosResponse(resp *http.Response, span trace.Span) (r
 			defer jx.PutDecoder(d)
 			d.ResetBytes(buf.Bytes())
 
-			var response Result
+			var response ResultUserProfilePhotos
 			if err := func() error {
 				if err := response.Decode(d); err != nil {
 					return err
@@ -2658,7 +2694,7 @@ func decodeGetUserProfilePhotosResponse(resp *http.Response, span trace.Span) (r
 	}
 }
 
-func decodeGetWebhookInfoResponse(resp *http.Response, span trace.Span) (res Result, err error) {
+func decodeGetWebhookInfoResponse(resp *http.Response, span trace.Span) (res ResultWebhookInfo, err error) {
 	switch resp.StatusCode {
 	case 200:
 		switch resp.Header.Get("Content-Type") {
@@ -2673,7 +2709,7 @@ func decodeGetWebhookInfoResponse(resp *http.Response, span trace.Span) (res Res
 			defer jx.PutDecoder(d)
 			d.ResetBytes(buf.Bytes())
 
-			var response Result
+			var response ResultWebhookInfo
 			if err := func() error {
 				if err := response.Decode(d); err != nil {
 					return err
@@ -3066,7 +3102,7 @@ func decodeRestrictChatMemberResponse(resp *http.Response, span trace.Span) (res
 	}
 }
 
-func decodeRevokeChatInviteLinkResponse(resp *http.Response, span trace.Span) (res Result, err error) {
+func decodeRevokeChatInviteLinkResponse(resp *http.Response, span trace.Span) (res ResultChatInviteLink, err error) {
 	switch resp.StatusCode {
 	case 200:
 		switch resp.Header.Get("Content-Type") {
@@ -3081,7 +3117,7 @@ func decodeRevokeChatInviteLinkResponse(resp *http.Response, span trace.Span) (r
 			defer jx.PutDecoder(d)
 			d.ResetBytes(buf.Bytes())
 
-			var response Result
+			var response ResultChatInviteLink
 			if err := func() error {
 				if err := response.Decode(d); err != nil {
 					return err
@@ -5254,7 +5290,7 @@ func decodeStopMessageLiveLocationResponse(resp *http.Response, span trace.Span)
 	}
 }
 
-func decodeStopPollResponse(resp *http.Response, span trace.Span) (res Result, err error) {
+func decodeStopPollResponse(resp *http.Response, span trace.Span) (res ResultPoll, err error) {
 	switch resp.StatusCode {
 	case 200:
 		switch resp.Header.Get("Content-Type") {
@@ -5269,7 +5305,7 @@ func decodeStopPollResponse(resp *http.Response, span trace.Span) (res Result, e
 			defer jx.PutDecoder(d)
 			d.ResetBytes(buf.Bytes())
 
-			var response Result
+			var response ResultPoll
 			if err := func() error {
 				if err := response.Decode(d); err != nil {
 					return err
