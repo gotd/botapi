@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strings"
 	"unicode"
+	"unicode/utf8"
 
 	"github.com/PuerkitoBio/goquery"
 )
@@ -125,6 +126,7 @@ type Field struct {
 	Type        Type
 	Name        string
 	Description string
+	Enum        []string
 	Optional    bool
 }
 
@@ -138,6 +140,7 @@ type Definition struct {
 
 // API definition.
 type API struct {
+	Version string
 	Types   []Definition
 	Methods []Definition
 }
@@ -165,6 +168,11 @@ func Extract(doc *goquery.Document) (a API) {
 		sec section
 	)
 	doc.Find("#dev_page_content").Children().Each(func(i int, s *goquery.Selection) {
+		if text := strings.TrimPrefix(s.Text(), "Bot API "); s.Is("p") &&
+			text != s.Text() &&
+			(a.Version == "" || text > a.Version) {
+			a.Version = text
+		}
 		if s.Is("h3") {
 			switch strings.TrimSpace(s.Text()) {
 			case "Available types":
@@ -291,9 +299,6 @@ func Extract(doc *goquery.Document) (a API) {
 				prefix = ""
 			}
 			end, _ = IndexOneOf(strings.TrimSuffix(d.Description, "."), retSuffix, retSuffix2, retSuffix3)
-			if strings.Contains(d.Name, "getMyCommands") {
-				fmt.Println(d.Name)
-			}
 			if start > 0 && end > start {
 				ret := strings.TrimSpace(d.Description[start+len(prefix) : end])
 				ret = strings.TrimSuffix(ret, ".")
@@ -359,18 +364,80 @@ func Extract(doc *goquery.Document) (a API) {
 			default:
 				return
 			}
-			optional := strings.HasPrefix(definition[fDescription], optPrefix)
+			name := definition[fName]
+			description := definition[fDescription]
+
+			optional := strings.HasPrefix(description, optPrefix)
 			if definition[fOptional] == "Optional" {
 				optional = true
 			}
+			typ := ParseType(definition[fType])
+
 			d.Fields = append(d.Fields, Field{
-				Name:        definition[fName],
-				Description: strings.TrimSuffix(strings.TrimPrefix(definition[fDescription], optPrefix), "."),
+				Name:        name,
+				Description: strings.TrimSuffix(strings.TrimPrefix(description, optPrefix), "."),
 				Optional:    optional,
-				Type:        ParseType(definition[fType]),
+				Enum:        collectEnum(typ, name, description),
+				Type:        typ,
 			})
 		})
 		appendDefinition()
 	})
 	return a
+}
+
+var discriminatorFields = []string{
+	"type",
+	"source",
+	"status",
+}
+
+func isDiscriminatorField(n string) bool {
+	for _, name := range discriminatorFields {
+		if name == n {
+			return true
+		}
+	}
+	return false
+}
+
+func collectEnum(typ Type, name, description string) []string {
+	if typ.Primitive != String || !isDiscriminatorField(name) {
+		return nil
+	}
+
+	const (
+		enumClause  = "can be"
+		oneOfClause = "one of"
+	)
+	idx, _ := IndexOneOf(strings.ToLower(description), enumClause, oneOfClause)
+	if idx < 0 {
+		return nil
+	}
+	return collectEnumValues(description[idx:])
+}
+
+func collectEnumValues(s string) (r []string) {
+	const (
+		start = '“'
+		end   = '”'
+	)
+
+	var (
+		i   = 0
+		idx = -1
+	)
+	for i < len(s) {
+		c, size := utf8.DecodeRuneInString(s[i:])
+		switch {
+		case c == start:
+			idx = i + size
+		case c == end:
+			r = append(r, s[idx:i])
+			idx = -1
+		}
+		i += size
+	}
+
+	return r
 }

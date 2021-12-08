@@ -39,3 +39,22 @@ func TestExtract(t *testing.T) {
 		}
 	}
 }
+
+func Test_collectEnumValues(t *testing.T) {
+	tests := []struct {
+		name  string
+		input string
+		wantR []string
+	}{
+		{
+			"Chat",
+			`Type of chat, can be either “private”, “group”, “supergroup” or “channel”`,
+			[]string{"private", "group", "supergroup", "channel"},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			require.Equal(t, tt.wantR, collectEnumValues(tt.input))
+		})
+	}
+}

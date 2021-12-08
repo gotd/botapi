@@ -428,7 +428,7 @@ type CallbackQuery struct {
 // Ref: #/components/schemas/Chat
 type Chat struct {
 	ID                    int                `json:"id"`
-	Type                  string             `json:"type"`
+	Type                  ChatType           `json:"type"`
 	Title                 OptString          `json:"title"`
 	Username              OptString          `json:"username"`
 	FirstName             OptString          `json:"first_name"`
@@ -740,6 +740,15 @@ type ChatPhoto struct {
 	BigFileUniqueID   string `json:"big_file_unique_id"`
 }
 
+type ChatType string
+
+const (
+	ChatTypePrivate    ChatType = "private"
+	ChatTypeGroup      ChatType = "group"
+	ChatTypeSupergroup ChatType = "supergroup"
+	ChatTypeChannel    ChatType = "channel"
+)
+
 // Ref: #/components/schemas/ChosenInlineResult
 type ChosenInlineResult struct {
 	ResultID        string      `json:"result_id"`
@@ -1043,17 +1052,35 @@ type EncryptedCredentials struct {
 
 // Ref: #/components/schemas/EncryptedPassportElement
 type EncryptedPassportElement struct {
-	Type        string          `json:"type"`
-	Data        OptString       `json:"data"`
-	PhoneNumber OptString       `json:"phone_number"`
-	Email       OptString       `json:"email"`
-	Files       []PassportFile  `json:"files"`
-	FrontSide   OptPassportFile `json:"front_side"`
-	ReverseSide OptPassportFile `json:"reverse_side"`
-	Selfie      OptPassportFile `json:"selfie"`
-	Translation []PassportFile  `json:"translation"`
-	Hash        string          `json:"hash"`
+	Type        EncryptedPassportElementType `json:"type"`
+	Data        OptString                    `json:"data"`
+	PhoneNumber OptString                    `json:"phone_number"`
+	Email       OptString                    `json:"email"`
+	Files       []PassportFile               `json:"files"`
+	FrontSide   OptPassportFile              `json:"front_side"`
+	ReverseSide OptPassportFile              `json:"reverse_side"`
+	Selfie      OptPassportFile              `json:"selfie"`
+	Translation []PassportFile               `json:"translation"`
+	Hash        string                       `json:"hash"`
 }
+
+type EncryptedPassportElementType string
+
+const (
+	EncryptedPassportElementTypePersonalDetails       EncryptedPassportElementType = "personal_details"
+	EncryptedPassportElementTypePassport              EncryptedPassportElementType = "passport"
+	EncryptedPassportElementTypeDriverLicense         EncryptedPassportElementType = "driver_license"
+	EncryptedPassportElementTypeIdentityCard          EncryptedPassportElementType = "identity_card"
+	EncryptedPassportElementTypeInternalPassport      EncryptedPassportElementType = "internal_passport"
+	EncryptedPassportElementTypeAddress               EncryptedPassportElementType = "address"
+	EncryptedPassportElementTypeUtilityBill           EncryptedPassportElementType = "utility_bill"
+	EncryptedPassportElementTypeBankStatement         EncryptedPassportElementType = "bank_statement"
+	EncryptedPassportElementTypeRentalAgreement       EncryptedPassportElementType = "rental_agreement"
+	EncryptedPassportElementTypePassportRegistration  EncryptedPassportElementType = "passport_registration"
+	EncryptedPassportElementTypeTemporaryRegistration EncryptedPassportElementType = "temporary_registration"
+	EncryptedPassportElementTypePhoneNumber           EncryptedPassportElementType = "phone_number"
+	EncryptedPassportElementTypeEmail                 EncryptedPassportElementType = "email"
+)
 
 // Ref: #/components/schemas/Error
 type Error struct {
@@ -1591,13 +1618,33 @@ type MessageAutoDeleteTimerChanged struct {
 
 // Ref: #/components/schemas/MessageEntity
 type MessageEntity struct {
-	Type     string    `json:"type"`
-	Offset   int       `json:"offset"`
-	Length   int       `json:"length"`
-	URL      OptURL    `json:"url"`
-	User     OptUser   `json:"user"`
-	Language OptString `json:"language"`
+	Type     MessageEntityType `json:"type"`
+	Offset   int               `json:"offset"`
+	Length   int               `json:"length"`
+	URL      OptURL            `json:"url"`
+	User     OptUser           `json:"user"`
+	Language OptString         `json:"language"`
 }
+
+type MessageEntityType string
+
+const (
+	MessageEntityTypeMention       MessageEntityType = "mention"
+	MessageEntityTypeHashtag       MessageEntityType = "hashtag"
+	MessageEntityTypeCashtag       MessageEntityType = "cashtag"
+	MessageEntityTypeBotCommand    MessageEntityType = "bot_command"
+	MessageEntityTypeURL           MessageEntityType = "url"
+	MessageEntityTypeEmail         MessageEntityType = "email"
+	MessageEntityTypePhoneNumber   MessageEntityType = "phone_number"
+	MessageEntityTypeBold          MessageEntityType = "bold"
+	MessageEntityTypeItalic        MessageEntityType = "italic"
+	MessageEntityTypeUnderline     MessageEntityType = "underline"
+	MessageEntityTypeStrikethrough MessageEntityType = "strikethrough"
+	MessageEntityTypeCode          MessageEntityType = "code"
+	MessageEntityTypePre           MessageEntityType = "pre"
+	MessageEntityTypeTextLink      MessageEntityType = "text_link"
+	MessageEntityTypeTextMention   MessageEntityType = "text_mention"
+)
 
 // NewOptAnimation returns new OptAnimation with value set to v.
 func NewOptAnimation(v Animation) OptAnimation {
@@ -3894,68 +3941,152 @@ func NewPassportElementErrorUnspecifiedPassportElementError(v PassportElementErr
 
 // Ref: #/components/schemas/PassportElementErrorDataField
 type PassportElementErrorDataField struct {
-	Source    string `json:"source"`
-	Type      string `json:"type"`
-	FieldName string `json:"field_name"`
-	DataHash  string `json:"data_hash"`
-	Message   string `json:"message"`
+	Source    string                            `json:"source"`
+	Type      PassportElementErrorDataFieldType `json:"type"`
+	FieldName string                            `json:"field_name"`
+	DataHash  string                            `json:"data_hash"`
+	Message   string                            `json:"message"`
 }
+
+type PassportElementErrorDataFieldType string
+
+const (
+	PassportElementErrorDataFieldTypePersonalDetails  PassportElementErrorDataFieldType = "personal_details"
+	PassportElementErrorDataFieldTypePassport         PassportElementErrorDataFieldType = "passport"
+	PassportElementErrorDataFieldTypeDriverLicense    PassportElementErrorDataFieldType = "driver_license"
+	PassportElementErrorDataFieldTypeIdentityCard     PassportElementErrorDataFieldType = "identity_card"
+	PassportElementErrorDataFieldTypeInternalPassport PassportElementErrorDataFieldType = "internal_passport"
+	PassportElementErrorDataFieldTypeAddress          PassportElementErrorDataFieldType = "address"
+)
 
 // Ref: #/components/schemas/PassportElementErrorFile
 type PassportElementErrorFile struct {
-	Source   string `json:"source"`
-	Type     string `json:"type"`
-	FileHash string `json:"file_hash"`
-	Message  string `json:"message"`
+	Source   string                       `json:"source"`
+	Type     PassportElementErrorFileType `json:"type"`
+	FileHash string                       `json:"file_hash"`
+	Message  string                       `json:"message"`
 }
+
+type PassportElementErrorFileType string
+
+const (
+	PassportElementErrorFileTypeUtilityBill           PassportElementErrorFileType = "utility_bill"
+	PassportElementErrorFileTypeBankStatement         PassportElementErrorFileType = "bank_statement"
+	PassportElementErrorFileTypeRentalAgreement       PassportElementErrorFileType = "rental_agreement"
+	PassportElementErrorFileTypePassportRegistration  PassportElementErrorFileType = "passport_registration"
+	PassportElementErrorFileTypeTemporaryRegistration PassportElementErrorFileType = "temporary_registration"
+)
 
 // Ref: #/components/schemas/PassportElementErrorFiles
 type PassportElementErrorFiles struct {
-	Source     string   `json:"source"`
-	Type       string   `json:"type"`
-	FileHashes []string `json:"file_hashes"`
-	Message    string   `json:"message"`
+	Source     string                        `json:"source"`
+	Type       PassportElementErrorFilesType `json:"type"`
+	FileHashes []string                      `json:"file_hashes"`
+	Message    string                        `json:"message"`
 }
+
+type PassportElementErrorFilesType string
+
+const (
+	PassportElementErrorFilesTypeUtilityBill           PassportElementErrorFilesType = "utility_bill"
+	PassportElementErrorFilesTypeBankStatement         PassportElementErrorFilesType = "bank_statement"
+	PassportElementErrorFilesTypeRentalAgreement       PassportElementErrorFilesType = "rental_agreement"
+	PassportElementErrorFilesTypePassportRegistration  PassportElementErrorFilesType = "passport_registration"
+	PassportElementErrorFilesTypeTemporaryRegistration PassportElementErrorFilesType = "temporary_registration"
+)
 
 // Ref: #/components/schemas/PassportElementErrorFrontSide
 type PassportElementErrorFrontSide struct {
-	Source   string `json:"source"`
-	Type     string `json:"type"`
-	FileHash string `json:"file_hash"`
-	Message  string `json:"message"`
+	Source   string                            `json:"source"`
+	Type     PassportElementErrorFrontSideType `json:"type"`
+	FileHash string                            `json:"file_hash"`
+	Message  string                            `json:"message"`
 }
+
+type PassportElementErrorFrontSideType string
+
+const (
+	PassportElementErrorFrontSideTypePassport         PassportElementErrorFrontSideType = "passport"
+	PassportElementErrorFrontSideTypeDriverLicense    PassportElementErrorFrontSideType = "driver_license"
+	PassportElementErrorFrontSideTypeIdentityCard     PassportElementErrorFrontSideType = "identity_card"
+	PassportElementErrorFrontSideTypeInternalPassport PassportElementErrorFrontSideType = "internal_passport"
+)
 
 // Ref: #/components/schemas/PassportElementErrorReverseSide
 type PassportElementErrorReverseSide struct {
-	Source   string `json:"source"`
-	Type     string `json:"type"`
-	FileHash string `json:"file_hash"`
-	Message  string `json:"message"`
+	Source   string                              `json:"source"`
+	Type     PassportElementErrorReverseSideType `json:"type"`
+	FileHash string                              `json:"file_hash"`
+	Message  string                              `json:"message"`
 }
+
+type PassportElementErrorReverseSideType string
+
+const (
+	PassportElementErrorReverseSideTypeDriverLicense PassportElementErrorReverseSideType = "driver_license"
+	PassportElementErrorReverseSideTypeIdentityCard  PassportElementErrorReverseSideType = "identity_card"
+)
 
 // Ref: #/components/schemas/PassportElementErrorSelfie
 type PassportElementErrorSelfie struct {
-	Source   string `json:"source"`
-	Type     string `json:"type"`
-	FileHash string `json:"file_hash"`
-	Message  string `json:"message"`
+	Source   string                         `json:"source"`
+	Type     PassportElementErrorSelfieType `json:"type"`
+	FileHash string                         `json:"file_hash"`
+	Message  string                         `json:"message"`
 }
+
+type PassportElementErrorSelfieType string
+
+const (
+	PassportElementErrorSelfieTypePassport         PassportElementErrorSelfieType = "passport"
+	PassportElementErrorSelfieTypeDriverLicense    PassportElementErrorSelfieType = "driver_license"
+	PassportElementErrorSelfieTypeIdentityCard     PassportElementErrorSelfieType = "identity_card"
+	PassportElementErrorSelfieTypeInternalPassport PassportElementErrorSelfieType = "internal_passport"
+)
 
 // Ref: #/components/schemas/PassportElementErrorTranslationFile
 type PassportElementErrorTranslationFile struct {
-	Source   string `json:"source"`
-	Type     string `json:"type"`
-	FileHash string `json:"file_hash"`
-	Message  string `json:"message"`
+	Source   string                                  `json:"source"`
+	Type     PassportElementErrorTranslationFileType `json:"type"`
+	FileHash string                                  `json:"file_hash"`
+	Message  string                                  `json:"message"`
 }
+
+type PassportElementErrorTranslationFileType string
+
+const (
+	PassportElementErrorTranslationFileTypePassport              PassportElementErrorTranslationFileType = "passport"
+	PassportElementErrorTranslationFileTypeDriverLicense         PassportElementErrorTranslationFileType = "driver_license"
+	PassportElementErrorTranslationFileTypeIdentityCard          PassportElementErrorTranslationFileType = "identity_card"
+	PassportElementErrorTranslationFileTypeInternalPassport      PassportElementErrorTranslationFileType = "internal_passport"
+	PassportElementErrorTranslationFileTypeUtilityBill           PassportElementErrorTranslationFileType = "utility_bill"
+	PassportElementErrorTranslationFileTypeBankStatement         PassportElementErrorTranslationFileType = "bank_statement"
+	PassportElementErrorTranslationFileTypeRentalAgreement       PassportElementErrorTranslationFileType = "rental_agreement"
+	PassportElementErrorTranslationFileTypePassportRegistration  PassportElementErrorTranslationFileType = "passport_registration"
+	PassportElementErrorTranslationFileTypeTemporaryRegistration PassportElementErrorTranslationFileType = "temporary_registration"
+)
 
 // Ref: #/components/schemas/PassportElementErrorTranslationFiles
 type PassportElementErrorTranslationFiles struct {
-	Source     string   `json:"source"`
-	Type       string   `json:"type"`
-	FileHashes []string `json:"file_hashes"`
-	Message    string   `json:"message"`
+	Source     string                                   `json:"source"`
+	Type       PassportElementErrorTranslationFilesType `json:"type"`
+	FileHashes []string                                 `json:"file_hashes"`
+	Message    string                                   `json:"message"`
 }
+
+type PassportElementErrorTranslationFilesType string
+
+const (
+	PassportElementErrorTranslationFilesTypePassport              PassportElementErrorTranslationFilesType = "passport"
+	PassportElementErrorTranslationFilesTypeDriverLicense         PassportElementErrorTranslationFilesType = "driver_license"
+	PassportElementErrorTranslationFilesTypeIdentityCard          PassportElementErrorTranslationFilesType = "identity_card"
+	PassportElementErrorTranslationFilesTypeInternalPassport      PassportElementErrorTranslationFilesType = "internal_passport"
+	PassportElementErrorTranslationFilesTypeUtilityBill           PassportElementErrorTranslationFilesType = "utility_bill"
+	PassportElementErrorTranslationFilesTypeBankStatement         PassportElementErrorTranslationFilesType = "bank_statement"
+	PassportElementErrorTranslationFilesTypeRentalAgreement       PassportElementErrorTranslationFilesType = "rental_agreement"
+	PassportElementErrorTranslationFilesTypePassportRegistration  PassportElementErrorTranslationFilesType = "passport_registration"
+	PassportElementErrorTranslationFilesTypeTemporaryRegistration PassportElementErrorTranslationFilesType = "temporary_registration"
+)
 
 // Ref: #/components/schemas/PassportElementErrorUnspecified
 type PassportElementErrorUnspecified struct {
@@ -3997,7 +4128,7 @@ type Poll struct {
 	TotalVoterCount       int             `json:"total_voter_count"`
 	IsClosed              bool            `json:"is_closed"`
 	IsAnonymous           bool            `json:"is_anonymous"`
-	Type                  string          `json:"type"`
+	Type                  PollType        `json:"type"`
 	AllowsMultipleAnswers bool            `json:"allows_multiple_answers"`
 	CorrectOptionID       OptInt          `json:"correct_option_id"`
 	Explanation           OptString       `json:"explanation"`
@@ -4018,6 +4149,13 @@ type PollOption struct {
 	Text       string `json:"text"`
 	VoterCount int    `json:"voter_count"`
 }
+
+type PollType string
+
+const (
+	PollTypeRegular PollType = "regular"
+	PollTypeQuiz    PollType = "quiz"
+)
 
 // Ref: #/components/schemas/PreCheckoutQuery
 type PreCheckoutQuery struct {

@@ -397,6 +397,17 @@ func (s CallbackQuery) Validate() error {
 func (s Chat) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
+		if err := s.Type.Validate(); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "type",
+			Error: err,
+		})
+	}
+	if err := func() error {
 		if s.PinnedMessage == nil {
 			return nil // optional
 		}
@@ -512,6 +523,20 @@ func (s ChatMemberUpdated) Validate() error {
 	}
 	return nil
 }
+func (s ChatType) Validate() error {
+	switch s {
+	case "private":
+		return nil
+	case "group":
+		return nil
+	case "supergroup":
+		return nil
+	case "channel":
+		return nil
+	default:
+		return errors.Errorf("invalid value: %v", s)
+	}
+}
 func (s ChosenInlineResult) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
@@ -564,6 +589,31 @@ func (s CopyMessage) Validate() error {
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
 			Name:  "caption",
+			Error: err,
+		})
+	}
+	if err := func() error {
+		var failures []validate.FieldError
+		for i, elem := range s.CaptionEntities {
+			if err := func() error {
+				if err := elem.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				failures = append(failures, validate.FieldError{
+					Name:  fmt.Sprintf("[%d]", i),
+					Error: err,
+				})
+			}
+		}
+		if len(failures) > 0 {
+			return &validate.Error{Fields: failures}
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "caption_entities",
 			Error: err,
 		})
 	}
@@ -803,6 +853,31 @@ func (s EditMessageCaption) Validate() error {
 		})
 	}
 	if err := func() error {
+		var failures []validate.FieldError
+		for i, elem := range s.CaptionEntities {
+			if err := func() error {
+				if err := elem.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				failures = append(failures, validate.FieldError{
+					Name:  fmt.Sprintf("[%d]", i),
+					Error: err,
+				})
+			}
+		}
+		if len(failures) > 0 {
+			return &validate.Error{Fields: failures}
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "caption_entities",
+			Error: err,
+		})
+	}
+	if err := func() error {
 		if s.ReplyMarkup.Set {
 			if err := func() error {
 				if err := s.ReplyMarkup.Value.Validate(); err != nil {
@@ -978,6 +1053,31 @@ func (s EditMessageText) Validate() error {
 		})
 	}
 	if err := func() error {
+		var failures []validate.FieldError
+		for i, elem := range s.Entities {
+			if err := func() error {
+				if err := elem.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				failures = append(failures, validate.FieldError{
+					Name:  fmt.Sprintf("[%d]", i),
+					Error: err,
+				})
+			}
+		}
+		if len(failures) > 0 {
+			return &validate.Error{Fields: failures}
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "entities",
+			Error: err,
+		})
+	}
+	if err := func() error {
 		if s.ReplyMarkup.Set {
 			if err := func() error {
 				if err := s.ReplyMarkup.Value.Validate(); err != nil {
@@ -1000,6 +1100,56 @@ func (s EditMessageText) Validate() error {
 		return &validate.Error{Fields: failures}
 	}
 	return nil
+}
+func (s EncryptedPassportElement) Validate() error {
+	var failures []validate.FieldError
+	if err := func() error {
+		if err := s.Type.Validate(); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "type",
+			Error: err,
+		})
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+	return nil
+}
+func (s EncryptedPassportElementType) Validate() error {
+	switch s {
+	case "personal_details":
+		return nil
+	case "passport":
+		return nil
+	case "driver_license":
+		return nil
+	case "identity_card":
+		return nil
+	case "internal_passport":
+		return nil
+	case "address":
+		return nil
+	case "utility_bill":
+		return nil
+	case "bank_statement":
+		return nil
+	case "rental_agreement":
+		return nil
+	case "passport_registration":
+		return nil
+	case "temporary_registration":
+		return nil
+	case "phone_number":
+		return nil
+	case "email":
+		return nil
+	default:
+		return errors.Errorf("invalid value: %v", s)
+	}
 }
 func (s ForceReply) Validate() error {
 	var failures []validate.FieldError
@@ -1089,6 +1239,31 @@ func (s Game) Validate() error {
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
 			Name:  "text",
+			Error: err,
+		})
+	}
+	if err := func() error {
+		var failures []validate.FieldError
+		for i, elem := range s.TextEntities {
+			if err := func() error {
+				if err := elem.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				failures = append(failures, validate.FieldError{
+					Name:  fmt.Sprintf("[%d]", i),
+					Error: err,
+				})
+			}
+		}
+		if len(failures) > 0 {
+			return &validate.Error{Fields: failures}
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "text_entities",
 			Error: err,
 		})
 	}
@@ -1305,6 +1480,31 @@ func (s InputMediaAnimation) Validate() error {
 		})
 	}
 	if err := func() error {
+		var failures []validate.FieldError
+		for i, elem := range s.CaptionEntities {
+			if err := func() error {
+				if err := elem.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				failures = append(failures, validate.FieldError{
+					Name:  fmt.Sprintf("[%d]", i),
+					Error: err,
+				})
+			}
+		}
+		if len(failures) > 0 {
+			return &validate.Error{Fields: failures}
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "caption_entities",
+			Error: err,
+		})
+	}
+	if err := func() error {
 		if s.Width.Set {
 			if err := func() error {
 				if err := (validate.Int{
@@ -1417,6 +1617,31 @@ func (s InputMediaAudio) Validate() error {
 		})
 	}
 	if err := func() error {
+		var failures []validate.FieldError
+		for i, elem := range s.CaptionEntities {
+			if err := func() error {
+				if err := elem.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				failures = append(failures, validate.FieldError{
+					Name:  fmt.Sprintf("[%d]", i),
+					Error: err,
+				})
+			}
+		}
+		if len(failures) > 0 {
+			return &validate.Error{Fields: failures}
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "caption_entities",
+			Error: err,
+		})
+	}
+	if err := func() error {
 		if s.Duration.Set {
 			if err := func() error {
 				if err := (validate.Int{
@@ -1476,6 +1701,31 @@ func (s InputMediaDocument) Validate() error {
 			Error: err,
 		})
 	}
+	if err := func() error {
+		var failures []validate.FieldError
+		for i, elem := range s.CaptionEntities {
+			if err := func() error {
+				if err := elem.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				failures = append(failures, validate.FieldError{
+					Name:  fmt.Sprintf("[%d]", i),
+					Error: err,
+				})
+			}
+		}
+		if len(failures) > 0 {
+			return &validate.Error{Fields: failures}
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "caption_entities",
+			Error: err,
+		})
+	}
 	if len(failures) > 0 {
 		return &validate.Error{Fields: failures}
 	}
@@ -1510,6 +1760,31 @@ func (s InputMediaPhoto) Validate() error {
 			Error: err,
 		})
 	}
+	if err := func() error {
+		var failures []validate.FieldError
+		for i, elem := range s.CaptionEntities {
+			if err := func() error {
+				if err := elem.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				failures = append(failures, validate.FieldError{
+					Name:  fmt.Sprintf("[%d]", i),
+					Error: err,
+				})
+			}
+		}
+		if len(failures) > 0 {
+			return &validate.Error{Fields: failures}
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "caption_entities",
+			Error: err,
+		})
+	}
 	if len(failures) > 0 {
 		return &validate.Error{Fields: failures}
 	}
@@ -1541,6 +1816,31 @@ func (s InputMediaVideo) Validate() error {
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
 			Name:  "caption",
+			Error: err,
+		})
+	}
+	if err := func() error {
+		var failures []validate.FieldError
+		for i, elem := range s.CaptionEntities {
+			if err := func() error {
+				if err := elem.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				failures = append(failures, validate.FieldError{
+					Name:  fmt.Sprintf("[%d]", i),
+					Error: err,
+				})
+			}
+		}
+		if len(failures) > 0 {
+			return &validate.Error{Fields: failures}
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "caption_entities",
 			Error: err,
 		})
 	}
@@ -1813,6 +2113,31 @@ func (s Message) Validate() error {
 		})
 	}
 	if err := func() error {
+		var failures []validate.FieldError
+		for i, elem := range s.Entities {
+			if err := func() error {
+				if err := elem.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				failures = append(failures, validate.FieldError{
+					Name:  fmt.Sprintf("[%d]", i),
+					Error: err,
+				})
+			}
+		}
+		if len(failures) > 0 {
+			return &validate.Error{Fields: failures}
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "entities",
+			Error: err,
+		})
+	}
+	if err := func() error {
 		if s.Animation.Set {
 			if err := func() error {
 				if err := s.Animation.Value.Validate(); err != nil {
@@ -1998,6 +2323,31 @@ func (s Message) Validate() error {
 		})
 	}
 	if err := func() error {
+		var failures []validate.FieldError
+		for i, elem := range s.CaptionEntities {
+			if err := func() error {
+				if err := elem.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				failures = append(failures, validate.FieldError{
+					Name:  fmt.Sprintf("[%d]", i),
+					Error: err,
+				})
+			}
+		}
+		if len(failures) > 0 {
+			return &validate.Error{Fields: failures}
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "caption_entities",
+			Error: err,
+		})
+	}
+	if err := func() error {
 		if s.Game.Set {
 			if err := func() error {
 				if err := s.Game.Value.Validate(); err != nil {
@@ -2179,12 +2529,83 @@ func (s Message) Validate() error {
 	}
 	return nil
 }
+func (s MessageEntity) Validate() error {
+	var failures []validate.FieldError
+	if err := func() error {
+		if err := s.Type.Validate(); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "type",
+			Error: err,
+		})
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+	return nil
+}
+func (s MessageEntityType) Validate() error {
+	switch s {
+	case "mention":
+		return nil
+	case "hashtag":
+		return nil
+	case "cashtag":
+		return nil
+	case "bot_command":
+		return nil
+	case "url":
+		return nil
+	case "email":
+		return nil
+	case "phone_number":
+		return nil
+	case "bold":
+		return nil
+	case "italic":
+		return nil
+	case "underline":
+		return nil
+	case "strikethrough":
+		return nil
+	case "code":
+		return nil
+	case "pre":
+		return nil
+	case "text_link":
+		return nil
+	case "text_mention":
+		return nil
+	default:
+		return errors.Errorf("invalid value: %v", s)
+	}
+}
 
 func (s PassportData) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
 		if s.Data == nil {
 			return errors.New("nil is invalid value")
+		}
+		var failures []validate.FieldError
+		for i, elem := range s.Data {
+			if err := func() error {
+				if err := elem.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				failures = append(failures, validate.FieldError{
+					Name:  fmt.Sprintf("[%d]", i),
+					Error: err,
+				})
+			}
+		}
+		if len(failures) > 0 {
+			return &validate.Error{Fields: failures}
 		}
 		return nil
 	}(); err != nil {
@@ -2201,22 +2622,40 @@ func (s PassportData) Validate() error {
 func (s PassportElementError) Validate() error {
 	switch s.Type {
 	case PassportElementErrorDataFieldPassportElementError:
-		return nil // no validation needed
+		if err := s.PassportElementErrorDataField.Validate(); err != nil {
+			return err
+		}
+		return nil
 	case PassportElementErrorFrontSidePassportElementError:
-		return nil // no validation needed
+		if err := s.PassportElementErrorFrontSide.Validate(); err != nil {
+			return err
+		}
+		return nil
 	case PassportElementErrorReverseSidePassportElementError:
-		return nil // no validation needed
+		if err := s.PassportElementErrorReverseSide.Validate(); err != nil {
+			return err
+		}
+		return nil
 	case PassportElementErrorSelfiePassportElementError:
-		return nil // no validation needed
+		if err := s.PassportElementErrorSelfie.Validate(); err != nil {
+			return err
+		}
+		return nil
 	case PassportElementErrorFilePassportElementError:
-		return nil // no validation needed
+		if err := s.PassportElementErrorFile.Validate(); err != nil {
+			return err
+		}
+		return nil
 	case PassportElementErrorFilesPassportElementError:
 		if err := s.PassportElementErrorFiles.Validate(); err != nil {
 			return err
 		}
 		return nil
 	case PassportElementErrorTranslationFilePassportElementError:
-		return nil // no validation needed
+		if err := s.PassportElementErrorTranslationFile.Validate(); err != nil {
+			return err
+		}
+		return nil
 	case PassportElementErrorTranslationFilesPassportElementError:
 		if err := s.PassportElementErrorTranslationFiles.Validate(); err != nil {
 			return err
@@ -2229,8 +2668,89 @@ func (s PassportElementError) Validate() error {
 	}
 }
 
+func (s PassportElementErrorDataField) Validate() error {
+	var failures []validate.FieldError
+	if err := func() error {
+		if err := s.Type.Validate(); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "type",
+			Error: err,
+		})
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+	return nil
+}
+func (s PassportElementErrorDataFieldType) Validate() error {
+	switch s {
+	case "personal_details":
+		return nil
+	case "passport":
+		return nil
+	case "driver_license":
+		return nil
+	case "identity_card":
+		return nil
+	case "internal_passport":
+		return nil
+	case "address":
+		return nil
+	default:
+		return errors.Errorf("invalid value: %v", s)
+	}
+}
+func (s PassportElementErrorFile) Validate() error {
+	var failures []validate.FieldError
+	if err := func() error {
+		if err := s.Type.Validate(); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "type",
+			Error: err,
+		})
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+	return nil
+}
+func (s PassportElementErrorFileType) Validate() error {
+	switch s {
+	case "utility_bill":
+		return nil
+	case "bank_statement":
+		return nil
+	case "rental_agreement":
+		return nil
+	case "passport_registration":
+		return nil
+	case "temporary_registration":
+		return nil
+	default:
+		return errors.Errorf("invalid value: %v", s)
+	}
+}
 func (s PassportElementErrorFiles) Validate() error {
 	var failures []validate.FieldError
+	if err := func() error {
+		if err := s.Type.Validate(); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "type",
+			Error: err,
+		})
+	}
 	if err := func() error {
 		if s.FileHashes == nil {
 			return errors.New("nil is invalid value")
@@ -2247,8 +2767,169 @@ func (s PassportElementErrorFiles) Validate() error {
 	}
 	return nil
 }
+func (s PassportElementErrorFilesType) Validate() error {
+	switch s {
+	case "utility_bill":
+		return nil
+	case "bank_statement":
+		return nil
+	case "rental_agreement":
+		return nil
+	case "passport_registration":
+		return nil
+	case "temporary_registration":
+		return nil
+	default:
+		return errors.Errorf("invalid value: %v", s)
+	}
+}
+func (s PassportElementErrorFrontSide) Validate() error {
+	var failures []validate.FieldError
+	if err := func() error {
+		if err := s.Type.Validate(); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "type",
+			Error: err,
+		})
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+	return nil
+}
+func (s PassportElementErrorFrontSideType) Validate() error {
+	switch s {
+	case "passport":
+		return nil
+	case "driver_license":
+		return nil
+	case "identity_card":
+		return nil
+	case "internal_passport":
+		return nil
+	default:
+		return errors.Errorf("invalid value: %v", s)
+	}
+}
+func (s PassportElementErrorReverseSide) Validate() error {
+	var failures []validate.FieldError
+	if err := func() error {
+		if err := s.Type.Validate(); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "type",
+			Error: err,
+		})
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+	return nil
+}
+func (s PassportElementErrorReverseSideType) Validate() error {
+	switch s {
+	case "driver_license":
+		return nil
+	case "identity_card":
+		return nil
+	default:
+		return errors.Errorf("invalid value: %v", s)
+	}
+}
+func (s PassportElementErrorSelfie) Validate() error {
+	var failures []validate.FieldError
+	if err := func() error {
+		if err := s.Type.Validate(); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "type",
+			Error: err,
+		})
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+	return nil
+}
+func (s PassportElementErrorSelfieType) Validate() error {
+	switch s {
+	case "passport":
+		return nil
+	case "driver_license":
+		return nil
+	case "identity_card":
+		return nil
+	case "internal_passport":
+		return nil
+	default:
+		return errors.Errorf("invalid value: %v", s)
+	}
+}
+func (s PassportElementErrorTranslationFile) Validate() error {
+	var failures []validate.FieldError
+	if err := func() error {
+		if err := s.Type.Validate(); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "type",
+			Error: err,
+		})
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+	return nil
+}
+func (s PassportElementErrorTranslationFileType) Validate() error {
+	switch s {
+	case "passport":
+		return nil
+	case "driver_license":
+		return nil
+	case "identity_card":
+		return nil
+	case "internal_passport":
+		return nil
+	case "utility_bill":
+		return nil
+	case "bank_statement":
+		return nil
+	case "rental_agreement":
+		return nil
+	case "passport_registration":
+		return nil
+	case "temporary_registration":
+		return nil
+	default:
+		return errors.Errorf("invalid value: %v", s)
+	}
+}
 func (s PassportElementErrorTranslationFiles) Validate() error {
 	var failures []validate.FieldError
+	if err := func() error {
+		if err := s.Type.Validate(); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "type",
+			Error: err,
+		})
+	}
 	if err := func() error {
 		if s.FileHashes == nil {
 			return errors.New("nil is invalid value")
@@ -2264,6 +2945,30 @@ func (s PassportElementErrorTranslationFiles) Validate() error {
 		return &validate.Error{Fields: failures}
 	}
 	return nil
+}
+func (s PassportElementErrorTranslationFilesType) Validate() error {
+	switch s {
+	case "passport":
+		return nil
+	case "driver_license":
+		return nil
+	case "identity_card":
+		return nil
+	case "internal_passport":
+		return nil
+	case "utility_bill":
+		return nil
+	case "bank_statement":
+		return nil
+	case "rental_agreement":
+		return nil
+	case "passport_registration":
+		return nil
+	case "temporary_registration":
+		return nil
+	default:
+		return errors.Errorf("invalid value: %v", s)
+	}
 }
 func (s PhotoSize) Validate() error {
 	var failures []validate.FieldError
@@ -2358,6 +3063,17 @@ func (s Poll) Validate() error {
 		})
 	}
 	if err := func() error {
+		if err := s.Type.Validate(); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "type",
+			Error: err,
+		})
+	}
+	if err := func() error {
 		if s.Explanation.Set {
 			if err := func() error {
 				if err := (validate.String{
@@ -2381,6 +3097,31 @@ func (s Poll) Validate() error {
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
 			Name:  "explanation",
+			Error: err,
+		})
+	}
+	if err := func() error {
+		var failures []validate.FieldError
+		for i, elem := range s.ExplanationEntities {
+			if err := func() error {
+				if err := elem.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				failures = append(failures, validate.FieldError{
+					Name:  fmt.Sprintf("[%d]", i),
+					Error: err,
+				})
+			}
+		}
+		if len(failures) > 0 {
+			return &validate.Error{Fields: failures}
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "explanation_entities",
 			Error: err,
 		})
 	}
@@ -2432,6 +3173,16 @@ func (s PollOption) Validate() error {
 		return &validate.Error{Fields: failures}
 	}
 	return nil
+}
+func (s PollType) Validate() error {
+	switch s {
+	case "regular":
+		return nil
+	case "quiz":
+		return nil
+	default:
+		return errors.Errorf("invalid value: %v", s)
+	}
 }
 func (s ReplyKeyboardMarkup) Validate() error {
 	var failures []validate.FieldError
@@ -2788,6 +3539,31 @@ func (s SendAnimation) Validate() error {
 		})
 	}
 	if err := func() error {
+		var failures []validate.FieldError
+		for i, elem := range s.CaptionEntities {
+			if err := func() error {
+				if err := elem.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				failures = append(failures, validate.FieldError{
+					Name:  fmt.Sprintf("[%d]", i),
+					Error: err,
+				})
+			}
+		}
+		if len(failures) > 0 {
+			return &validate.Error{Fields: failures}
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "caption_entities",
+			Error: err,
+		})
+	}
+	if err := func() error {
 		if s.ReplyMarkup == nil {
 			return nil // optional
 		}
@@ -2861,6 +3637,31 @@ func (s SendAudio) Validate() error {
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
 			Name:  "caption",
+			Error: err,
+		})
+	}
+	if err := func() error {
+		var failures []validate.FieldError
+		for i, elem := range s.CaptionEntities {
+			if err := func() error {
+				if err := elem.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				failures = append(failures, validate.FieldError{
+					Name:  fmt.Sprintf("[%d]", i),
+					Error: err,
+				})
+			}
+		}
+		if len(failures) > 0 {
+			return &validate.Error{Fields: failures}
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "caption_entities",
 			Error: err,
 		})
 	}
@@ -3064,6 +3865,31 @@ func (s SendDocument) Validate() error {
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
 			Name:  "caption",
+			Error: err,
+		})
+	}
+	if err := func() error {
+		var failures []validate.FieldError
+		for i, elem := range s.CaptionEntities {
+			if err := func() error {
+				if err := elem.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				failures = append(failures, validate.FieldError{
+					Name:  fmt.Sprintf("[%d]", i),
+					Error: err,
+				})
+			}
+		}
+		if len(failures) > 0 {
+			return &validate.Error{Fields: failures}
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "caption_entities",
 			Error: err,
 		})
 	}
@@ -3443,6 +4269,31 @@ func (s SendMessage) Validate() error {
 		})
 	}
 	if err := func() error {
+		var failures []validate.FieldError
+		for i, elem := range s.Entities {
+			if err := func() error {
+				if err := elem.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				failures = append(failures, validate.FieldError{
+					Name:  fmt.Sprintf("[%d]", i),
+					Error: err,
+				})
+			}
+		}
+		if len(failures) > 0 {
+			return &validate.Error{Fields: failures}
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "entities",
+			Error: err,
+		})
+	}
+	if err := func() error {
 		if s.ReplyMarkup == nil {
 			return nil // optional
 		}
@@ -3516,6 +4367,31 @@ func (s SendPhoto) Validate() error {
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
 			Name:  "caption",
+			Error: err,
+		})
+	}
+	if err := func() error {
+		var failures []validate.FieldError
+		for i, elem := range s.CaptionEntities {
+			if err := func() error {
+				if err := elem.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				failures = append(failures, validate.FieldError{
+					Name:  fmt.Sprintf("[%d]", i),
+					Error: err,
+				})
+			}
+		}
+		if len(failures) > 0 {
+			return &validate.Error{Fields: failures}
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "caption_entities",
 			Error: err,
 		})
 	}
@@ -3623,6 +4499,31 @@ func (s SendPoll) Validate() error {
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
 			Name:  "explanation",
+			Error: err,
+		})
+	}
+	if err := func() error {
+		var failures []validate.FieldError
+		for i, elem := range s.ExplanationEntities {
+			if err := func() error {
+				if err := elem.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				failures = append(failures, validate.FieldError{
+					Name:  fmt.Sprintf("[%d]", i),
+					Error: err,
+				})
+			}
+		}
+		if len(failures) > 0 {
+			return &validate.Error{Fields: failures}
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "explanation_entities",
 			Error: err,
 		})
 	}
@@ -3904,6 +4805,31 @@ func (s SendVideo) Validate() error {
 		})
 	}
 	if err := func() error {
+		var failures []validate.FieldError
+		for i, elem := range s.CaptionEntities {
+			if err := func() error {
+				if err := elem.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				failures = append(failures, validate.FieldError{
+					Name:  fmt.Sprintf("[%d]", i),
+					Error: err,
+				})
+			}
+		}
+		if len(failures) > 0 {
+			return &validate.Error{Fields: failures}
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "caption_entities",
+			Error: err,
+		})
+	}
+	if err := func() error {
 		if s.ReplyMarkup == nil {
 			return nil // optional
 		}
@@ -4053,6 +4979,31 @@ func (s SendVoice) Validate() error {
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
 			Name:  "caption",
+			Error: err,
+		})
+	}
+	if err := func() error {
+		var failures []validate.FieldError
+		for i, elem := range s.CaptionEntities {
+			if err := func() error {
+				if err := elem.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				failures = append(failures, validate.FieldError{
+					Name:  fmt.Sprintf("[%d]", i),
+					Error: err,
+				})
+			}
+		}
+		if len(failures) > 0 {
+			return &validate.Error{Fields: failures}
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "caption_entities",
 			Error: err,
 		})
 	}

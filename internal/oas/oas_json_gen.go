@@ -1233,7 +1233,7 @@ func (s Chat) Encode(e *jx.Encoder) {
 	e.Int(s.ID)
 
 	e.FieldStart("type")
-	e.Str(s.Type)
+	s.Type.Encode(e)
 	if s.Title.Set {
 		e.FieldStart("title")
 		s.Title.Encode(e)
@@ -1323,9 +1323,7 @@ func (s *Chat) Decode(d *jx.Decoder) error {
 				return err
 			}
 		case "type":
-			v, err := d.Str()
-			s.Type = string(v)
-			if err != nil {
+			if err := s.Type.Decode(d); err != nil {
 				return err
 			}
 		case "title":
@@ -2387,6 +2385,24 @@ func (s *ChatPhoto) Decode(d *jx.Decoder) error {
 		}
 		return nil
 	})
+}
+
+// Encode encodes ChatType as json.
+func (s ChatType) Encode(e *jx.Encoder) {
+	e.Str(string(s))
+}
+
+// Decode decodes ChatType from json.
+func (s *ChatType) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New(`invalid: unable to decode ChatType to nil`)
+	}
+	v, err := d.Str()
+	if err != nil {
+		return err
+	}
+	*s = ChatType(v)
+	return nil
 }
 
 // Encode implements json.Marshaler.
@@ -3764,7 +3780,7 @@ func (s EncryptedPassportElement) Encode(e *jx.Encoder) {
 	e.ObjStart()
 
 	e.FieldStart("type")
-	e.Str(s.Type)
+	s.Type.Encode(e)
 	if s.Data.Set {
 		e.FieldStart("data")
 		s.Data.Encode(e)
@@ -3819,9 +3835,7 @@ func (s *EncryptedPassportElement) Decode(d *jx.Decoder) error {
 	return d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "type":
-			v, err := d.Str()
-			s.Type = string(v)
-			if err != nil {
+			if err := s.Type.Decode(d); err != nil {
 				return err
 			}
 		case "data":
@@ -3889,6 +3903,24 @@ func (s *EncryptedPassportElement) Decode(d *jx.Decoder) error {
 		}
 		return nil
 	})
+}
+
+// Encode encodes EncryptedPassportElementType as json.
+func (s EncryptedPassportElementType) Encode(e *jx.Encoder) {
+	e.Str(string(s))
+}
+
+// Decode decodes EncryptedPassportElementType from json.
+func (s *EncryptedPassportElementType) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New(`invalid: unable to decode EncryptedPassportElementType to nil`)
+	}
+	v, err := d.Str()
+	if err != nil {
+		return err
+	}
+	*s = EncryptedPassportElementType(v)
+	return nil
 }
 
 // Encode implements json.Marshaler.
@@ -6544,7 +6576,7 @@ func (s MessageEntity) Encode(e *jx.Encoder) {
 	e.ObjStart()
 
 	e.FieldStart("type")
-	e.Str(s.Type)
+	s.Type.Encode(e)
 
 	e.FieldStart("offset")
 	e.Int(s.Offset)
@@ -6574,9 +6606,7 @@ func (s *MessageEntity) Decode(d *jx.Decoder) error {
 	return d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "type":
-			v, err := d.Str()
-			s.Type = string(v)
-			if err != nil {
+			if err := s.Type.Decode(d); err != nil {
 				return err
 			}
 		case "offset":
@@ -6611,6 +6641,24 @@ func (s *MessageEntity) Decode(d *jx.Decoder) error {
 		}
 		return nil
 	})
+}
+
+// Encode encodes MessageEntityType as json.
+func (s MessageEntityType) Encode(e *jx.Encoder) {
+	e.Str(string(s))
+}
+
+// Decode decodes MessageEntityType from json.
+func (s *MessageEntityType) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New(`invalid: unable to decode MessageEntityType to nil`)
+	}
+	v, err := d.Str()
+	if err != nil {
+		return err
+	}
+	*s = MessageEntityType(v)
+	return nil
 }
 
 // Encode encodes Animation as json.
@@ -8030,7 +8078,7 @@ func (s PassportElementErrorDataField) Encode(e *jx.Encoder) {
 	e.Str(s.Source)
 
 	e.FieldStart("type")
-	e.Str(s.Type)
+	s.Type.Encode(e)
 
 	e.FieldStart("field_name")
 	e.Str(s.FieldName)
@@ -8057,9 +8105,7 @@ func (s *PassportElementErrorDataField) Decode(d *jx.Decoder) error {
 				return err
 			}
 		case "type":
-			v, err := d.Str()
-			s.Type = string(v)
-			if err != nil {
+			if err := s.Type.Decode(d); err != nil {
 				return err
 			}
 		case "field_name":
@@ -8087,6 +8133,24 @@ func (s *PassportElementErrorDataField) Decode(d *jx.Decoder) error {
 	})
 }
 
+// Encode encodes PassportElementErrorDataFieldType as json.
+func (s PassportElementErrorDataFieldType) Encode(e *jx.Encoder) {
+	e.Str(string(s))
+}
+
+// Decode decodes PassportElementErrorDataFieldType from json.
+func (s *PassportElementErrorDataFieldType) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New(`invalid: unable to decode PassportElementErrorDataFieldType to nil`)
+	}
+	v, err := d.Str()
+	if err != nil {
+		return err
+	}
+	*s = PassportElementErrorDataFieldType(v)
+	return nil
+}
+
 // Encode implements json.Marshaler.
 func (s PassportElementErrorFile) Encode(e *jx.Encoder) {
 	e.ObjStart()
@@ -8095,7 +8159,7 @@ func (s PassportElementErrorFile) Encode(e *jx.Encoder) {
 	e.Str(s.Source)
 
 	e.FieldStart("type")
-	e.Str(s.Type)
+	s.Type.Encode(e)
 
 	e.FieldStart("file_hash")
 	e.Str(s.FileHash)
@@ -8119,9 +8183,7 @@ func (s *PassportElementErrorFile) Decode(d *jx.Decoder) error {
 				return err
 			}
 		case "type":
-			v, err := d.Str()
-			s.Type = string(v)
-			if err != nil {
+			if err := s.Type.Decode(d); err != nil {
 				return err
 			}
 		case "file_hash":
@@ -8143,6 +8205,24 @@ func (s *PassportElementErrorFile) Decode(d *jx.Decoder) error {
 	})
 }
 
+// Encode encodes PassportElementErrorFileType as json.
+func (s PassportElementErrorFileType) Encode(e *jx.Encoder) {
+	e.Str(string(s))
+}
+
+// Decode decodes PassportElementErrorFileType from json.
+func (s *PassportElementErrorFileType) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New(`invalid: unable to decode PassportElementErrorFileType to nil`)
+	}
+	v, err := d.Str()
+	if err != nil {
+		return err
+	}
+	*s = PassportElementErrorFileType(v)
+	return nil
+}
+
 // Encode implements json.Marshaler.
 func (s PassportElementErrorFiles) Encode(e *jx.Encoder) {
 	e.ObjStart()
@@ -8151,7 +8231,7 @@ func (s PassportElementErrorFiles) Encode(e *jx.Encoder) {
 	e.Str(s.Source)
 
 	e.FieldStart("type")
-	e.Str(s.Type)
+	s.Type.Encode(e)
 
 	e.FieldStart("file_hashes")
 	e.ArrStart()
@@ -8179,9 +8259,7 @@ func (s *PassportElementErrorFiles) Decode(d *jx.Decoder) error {
 				return err
 			}
 		case "type":
-			v, err := d.Str()
-			s.Type = string(v)
-			if err != nil {
+			if err := s.Type.Decode(d); err != nil {
 				return err
 			}
 		case "file_hashes":
@@ -8211,6 +8289,24 @@ func (s *PassportElementErrorFiles) Decode(d *jx.Decoder) error {
 	})
 }
 
+// Encode encodes PassportElementErrorFilesType as json.
+func (s PassportElementErrorFilesType) Encode(e *jx.Encoder) {
+	e.Str(string(s))
+}
+
+// Decode decodes PassportElementErrorFilesType from json.
+func (s *PassportElementErrorFilesType) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New(`invalid: unable to decode PassportElementErrorFilesType to nil`)
+	}
+	v, err := d.Str()
+	if err != nil {
+		return err
+	}
+	*s = PassportElementErrorFilesType(v)
+	return nil
+}
+
 // Encode implements json.Marshaler.
 func (s PassportElementErrorFrontSide) Encode(e *jx.Encoder) {
 	e.ObjStart()
@@ -8219,7 +8315,7 @@ func (s PassportElementErrorFrontSide) Encode(e *jx.Encoder) {
 	e.Str(s.Source)
 
 	e.FieldStart("type")
-	e.Str(s.Type)
+	s.Type.Encode(e)
 
 	e.FieldStart("file_hash")
 	e.Str(s.FileHash)
@@ -8243,9 +8339,7 @@ func (s *PassportElementErrorFrontSide) Decode(d *jx.Decoder) error {
 				return err
 			}
 		case "type":
-			v, err := d.Str()
-			s.Type = string(v)
-			if err != nil {
+			if err := s.Type.Decode(d); err != nil {
 				return err
 			}
 		case "file_hash":
@@ -8267,6 +8361,24 @@ func (s *PassportElementErrorFrontSide) Decode(d *jx.Decoder) error {
 	})
 }
 
+// Encode encodes PassportElementErrorFrontSideType as json.
+func (s PassportElementErrorFrontSideType) Encode(e *jx.Encoder) {
+	e.Str(string(s))
+}
+
+// Decode decodes PassportElementErrorFrontSideType from json.
+func (s *PassportElementErrorFrontSideType) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New(`invalid: unable to decode PassportElementErrorFrontSideType to nil`)
+	}
+	v, err := d.Str()
+	if err != nil {
+		return err
+	}
+	*s = PassportElementErrorFrontSideType(v)
+	return nil
+}
+
 // Encode implements json.Marshaler.
 func (s PassportElementErrorReverseSide) Encode(e *jx.Encoder) {
 	e.ObjStart()
@@ -8275,7 +8387,7 @@ func (s PassportElementErrorReverseSide) Encode(e *jx.Encoder) {
 	e.Str(s.Source)
 
 	e.FieldStart("type")
-	e.Str(s.Type)
+	s.Type.Encode(e)
 
 	e.FieldStart("file_hash")
 	e.Str(s.FileHash)
@@ -8299,9 +8411,7 @@ func (s *PassportElementErrorReverseSide) Decode(d *jx.Decoder) error {
 				return err
 			}
 		case "type":
-			v, err := d.Str()
-			s.Type = string(v)
-			if err != nil {
+			if err := s.Type.Decode(d); err != nil {
 				return err
 			}
 		case "file_hash":
@@ -8323,6 +8433,24 @@ func (s *PassportElementErrorReverseSide) Decode(d *jx.Decoder) error {
 	})
 }
 
+// Encode encodes PassportElementErrorReverseSideType as json.
+func (s PassportElementErrorReverseSideType) Encode(e *jx.Encoder) {
+	e.Str(string(s))
+}
+
+// Decode decodes PassportElementErrorReverseSideType from json.
+func (s *PassportElementErrorReverseSideType) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New(`invalid: unable to decode PassportElementErrorReverseSideType to nil`)
+	}
+	v, err := d.Str()
+	if err != nil {
+		return err
+	}
+	*s = PassportElementErrorReverseSideType(v)
+	return nil
+}
+
 // Encode implements json.Marshaler.
 func (s PassportElementErrorSelfie) Encode(e *jx.Encoder) {
 	e.ObjStart()
@@ -8331,7 +8459,7 @@ func (s PassportElementErrorSelfie) Encode(e *jx.Encoder) {
 	e.Str(s.Source)
 
 	e.FieldStart("type")
-	e.Str(s.Type)
+	s.Type.Encode(e)
 
 	e.FieldStart("file_hash")
 	e.Str(s.FileHash)
@@ -8355,9 +8483,7 @@ func (s *PassportElementErrorSelfie) Decode(d *jx.Decoder) error {
 				return err
 			}
 		case "type":
-			v, err := d.Str()
-			s.Type = string(v)
-			if err != nil {
+			if err := s.Type.Decode(d); err != nil {
 				return err
 			}
 		case "file_hash":
@@ -8379,6 +8505,24 @@ func (s *PassportElementErrorSelfie) Decode(d *jx.Decoder) error {
 	})
 }
 
+// Encode encodes PassportElementErrorSelfieType as json.
+func (s PassportElementErrorSelfieType) Encode(e *jx.Encoder) {
+	e.Str(string(s))
+}
+
+// Decode decodes PassportElementErrorSelfieType from json.
+func (s *PassportElementErrorSelfieType) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New(`invalid: unable to decode PassportElementErrorSelfieType to nil`)
+	}
+	v, err := d.Str()
+	if err != nil {
+		return err
+	}
+	*s = PassportElementErrorSelfieType(v)
+	return nil
+}
+
 // Encode implements json.Marshaler.
 func (s PassportElementErrorTranslationFile) Encode(e *jx.Encoder) {
 	e.ObjStart()
@@ -8387,7 +8531,7 @@ func (s PassportElementErrorTranslationFile) Encode(e *jx.Encoder) {
 	e.Str(s.Source)
 
 	e.FieldStart("type")
-	e.Str(s.Type)
+	s.Type.Encode(e)
 
 	e.FieldStart("file_hash")
 	e.Str(s.FileHash)
@@ -8411,9 +8555,7 @@ func (s *PassportElementErrorTranslationFile) Decode(d *jx.Decoder) error {
 				return err
 			}
 		case "type":
-			v, err := d.Str()
-			s.Type = string(v)
-			if err != nil {
+			if err := s.Type.Decode(d); err != nil {
 				return err
 			}
 		case "file_hash":
@@ -8435,6 +8577,24 @@ func (s *PassportElementErrorTranslationFile) Decode(d *jx.Decoder) error {
 	})
 }
 
+// Encode encodes PassportElementErrorTranslationFileType as json.
+func (s PassportElementErrorTranslationFileType) Encode(e *jx.Encoder) {
+	e.Str(string(s))
+}
+
+// Decode decodes PassportElementErrorTranslationFileType from json.
+func (s *PassportElementErrorTranslationFileType) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New(`invalid: unable to decode PassportElementErrorTranslationFileType to nil`)
+	}
+	v, err := d.Str()
+	if err != nil {
+		return err
+	}
+	*s = PassportElementErrorTranslationFileType(v)
+	return nil
+}
+
 // Encode implements json.Marshaler.
 func (s PassportElementErrorTranslationFiles) Encode(e *jx.Encoder) {
 	e.ObjStart()
@@ -8443,7 +8603,7 @@ func (s PassportElementErrorTranslationFiles) Encode(e *jx.Encoder) {
 	e.Str(s.Source)
 
 	e.FieldStart("type")
-	e.Str(s.Type)
+	s.Type.Encode(e)
 
 	e.FieldStart("file_hashes")
 	e.ArrStart()
@@ -8471,9 +8631,7 @@ func (s *PassportElementErrorTranslationFiles) Decode(d *jx.Decoder) error {
 				return err
 			}
 		case "type":
-			v, err := d.Str()
-			s.Type = string(v)
-			if err != nil {
+			if err := s.Type.Decode(d); err != nil {
 				return err
 			}
 		case "file_hashes":
@@ -8501,6 +8659,24 @@ func (s *PassportElementErrorTranslationFiles) Decode(d *jx.Decoder) error {
 		}
 		return nil
 	})
+}
+
+// Encode encodes PassportElementErrorTranslationFilesType as json.
+func (s PassportElementErrorTranslationFilesType) Encode(e *jx.Encoder) {
+	e.Str(string(s))
+}
+
+// Decode decodes PassportElementErrorTranslationFilesType from json.
+func (s *PassportElementErrorTranslationFilesType) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New(`invalid: unable to decode PassportElementErrorTranslationFilesType to nil`)
+	}
+	v, err := d.Str()
+	if err != nil {
+		return err
+	}
+	*s = PassportElementErrorTranslationFilesType(v)
+	return nil
 }
 
 // Encode implements json.Marshaler.
@@ -8752,7 +8928,7 @@ func (s Poll) Encode(e *jx.Encoder) {
 	e.Bool(s.IsAnonymous)
 
 	e.FieldStart("type")
-	e.Str(s.Type)
+	s.Type.Encode(e)
 
 	e.FieldStart("allows_multiple_answers")
 	e.Bool(s.AllowsMultipleAnswers)
@@ -8833,9 +9009,7 @@ func (s *Poll) Decode(d *jx.Decoder) error {
 				return err
 			}
 		case "type":
-			v, err := d.Str()
-			s.Type = string(v)
-			if err != nil {
+			if err := s.Type.Decode(d); err != nil {
 				return err
 			}
 		case "allows_multiple_answers":
@@ -8976,6 +9150,24 @@ func (s *PollOption) Decode(d *jx.Decoder) error {
 		}
 		return nil
 	})
+}
+
+// Encode encodes PollType as json.
+func (s PollType) Encode(e *jx.Encoder) {
+	e.Str(string(s))
+}
+
+// Decode decodes PollType from json.
+func (s *PollType) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New(`invalid: unable to decode PollType to nil`)
+	}
+	v, err := d.Str()
+	if err != nil {
+		return err
+	}
+	*s = PollType(v)
+	return nil
 }
 
 // Encode implements json.Marshaler.

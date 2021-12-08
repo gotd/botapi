@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"path"
-	"regexp"
 	"strconv"
 	"strings"
 
@@ -37,50 +36,13 @@ func resultFor(s ogen.Schema) ogen.Schema {
 	}
 }
 
-type bound struct {
-	Min int64
-	Max uint64
-}
-
-var (
-	charBoundRegex = regexp.MustCompile(`(\d+)-(\d+) characters`)
-	intBoundRegex  = regexp.MustCompile(`Values between (\d+)-(\d+) are accepted`)
-)
-
-func matchBounds(matches [][]byte) (a, b int) {
-	start, err := strconv.Atoi(string(matches[1]))
-	if err != nil {
-		return a, b
-	}
-	end, err := strconv.Atoi(string(matches[2]))
-	if err != nil {
-		return a, b
-	}
-	return start, end
-}
-
-func regexBounds(r *regexp.Regexp, s string) (a, b int) {
-	matches := r.FindSubmatch([]byte(s))
-	if len(matches) != 3 {
-		return a, b
-	}
-	return matchBounds(matches)
-}
-
-func stringBounds(s string) bound {
-	start, end := regexBounds(charBoundRegex, s)
-	return bound{Min: int64(start), Max: uint64(end)}
-}
-
-func intBounds(s string) bound {
-	start, end := regexBounds(intBoundRegex, s)
-	return bound{Min: int64(start), Max: uint64(end)}
-}
-
 func (a API) typeOAS(f Field) *ogen.Schema {
 	t := f.Type
 	p := &ogen.Schema{
 		Description: fixTypos(f.Description),
+	}
+	for _, value := range f.Enum {
+		p.Enum = append(p.Enum, strconv.AppendQuoteToASCII(nil, value))
 	}
 	switch t.Kind {
 	case KindPrimitive:
@@ -233,11 +195,8 @@ Schemas:
 				return nil, errors.Errorf("failed to find %s of %s in schemas", target, k)
 			}
 			var def []byte
-			for _, name := range []string{
-				"type",
-				"source",
-				"status",
-			} {
+
+			for _, name := range discriminatorFields {
 				p, ok := prop(one.Properties, name)
 				if !ok {
 					continue
@@ -528,7 +487,7 @@ Schemas:
 			Title:          "Telegram Bot API",
 			TermsOfService: "https://telegram.org/tos",
 			Description:    "API for Telegram bots",
-			Version:        "5.3",
+			Version:        a.Version,
 		},
 		Servers: []ogen.Server{
 			{
