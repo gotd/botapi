@@ -289,6 +289,11 @@ func Extract(doc *goquery.Document) (a API) {
 						break
 					}
 				}
+				// HACK: replace Array of Messages with Array of Message.
+				if ret == "Messages" && prefix == "" {
+					ret = "Message"
+				}
+				// HACK: if prefix is Array of, add it manually, so ParseType can detect it.
 				if found && prefix == "" {
 					ret = "Array of " + ret
 				}
