@@ -461,10 +461,14 @@ Schemas:
 			case KindArray:
 				itemRef := getRef(t.Item)
 				resultName := "ResultArrayOf" + t.Item.Name
+				itemName := strings.ReplaceAll(itemRef,
+					`#/components/schemas/Result`,
+					`#/components/schemas/`,
+				)
 				c.Schemas[resultName] = ogen.Schema{
 					Type: "array",
 					Items: &ogen.Schema{
-						Ref: itemRef,
+						Ref: itemName,
 					},
 				}
 				addResponse(resultName, "#/components/schemas/"+resultName, "Result of method invocation")
