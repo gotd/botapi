@@ -1983,20 +1983,8 @@ func decodeGetChatAdministratorsResponse(resp *http.Response, span trace.Span) (
 
 			var response ResultArrayOfChatMember
 			if err := func() error {
-				{
-					var unwrapped []ChatMember
-					unwrapped = nil
-					if err := d.Arr(func(d *jx.Decoder) error {
-						var elem ChatMember
-						if err := elem.Decode(d); err != nil {
-							return err
-						}
-						unwrapped = append(unwrapped, elem)
-						return nil
-					}); err != nil {
-						return err
-					}
-					response = ResultArrayOfChatMember(unwrapped)
+				if err := response.Decode(d); err != nil {
+					return err
 				}
 				return nil
 			}(); err != nil {
@@ -2267,20 +2255,8 @@ func decodeGetGameHighScoresResponse(resp *http.Response, span trace.Span) (res 
 
 			var response ResultArrayOfGameHighScore
 			if err := func() error {
-				{
-					var unwrapped []GameHighScore
-					unwrapped = nil
-					if err := d.Arr(func(d *jx.Decoder) error {
-						var elem GameHighScore
-						if err := elem.Decode(d); err != nil {
-							return err
-						}
-						unwrapped = append(unwrapped, elem)
-						return nil
-					}); err != nil {
-						return err
-					}
-					response = ResultArrayOfGameHighScore(unwrapped)
+				if err := response.Decode(d); err != nil {
+					return err
 				}
 				return nil
 			}(); err != nil {
@@ -2415,20 +2391,8 @@ func decodeGetMyCommandsResponse(resp *http.Response, span trace.Span) (res Resu
 
 			var response ResultArrayOfBotCommand
 			if err := func() error {
-				{
-					var unwrapped []BotCommand
-					unwrapped = nil
-					if err := d.Arr(func(d *jx.Decoder) error {
-						var elem BotCommand
-						if err := elem.Decode(d); err != nil {
-							return err
-						}
-						unwrapped = append(unwrapped, elem)
-						return nil
-					}); err != nil {
-						return err
-					}
-					response = ResultArrayOfBotCommand(unwrapped)
+				if err := response.Decode(d); err != nil {
+					return err
 				}
 				return nil
 			}(); err != nil {
@@ -2563,20 +2527,8 @@ func decodeGetUpdatesResponse(resp *http.Response, span trace.Span) (res ResultA
 
 			var response ResultArrayOfUpdate
 			if err := func() error {
-				{
-					var unwrapped []Update
-					unwrapped = nil
-					if err := d.Arr(func(d *jx.Decoder) error {
-						var elem Update
-						if err := elem.Decode(d); err != nil {
-							return err
-						}
-						unwrapped = append(unwrapped, elem)
-						return nil
-					}); err != nil {
-						return err
-					}
-					response = ResultArrayOfUpdate(unwrapped)
+				if err := response.Decode(d); err != nil {
+					return err
 				}
 				return nil
 			}(); err != nil {
@@ -3799,20 +3751,8 @@ func decodeSendMediaGroupResponse(resp *http.Response, span trace.Span) (res Res
 
 			var response ResultArrayOfMessage
 			if err := func() error {
-				{
-					var unwrapped []Message
-					unwrapped = nil
-					if err := d.Arr(func(d *jx.Decoder) error {
-						var elem Message
-						if err := elem.Decode(d); err != nil {
-							return err
-						}
-						unwrapped = append(unwrapped, elem)
-						return nil
-					}); err != nil {
-						return err
-					}
-					response = ResultArrayOfMessage(unwrapped)
+				if err := response.Decode(d); err != nil {
+					return err
 				}
 				return nil
 			}(); err != nil {

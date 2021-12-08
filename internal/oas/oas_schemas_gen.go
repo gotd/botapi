@@ -4227,15 +4227,35 @@ type Result struct {
 	Ok     bool    `json:"ok"`
 }
 
-type ResultArrayOfBotCommand []BotCommand
+// Ref: #/components/schemas/ResultArrayOfBotCommand
+type ResultArrayOfBotCommand struct {
+	Result []BotCommand `json:"result"`
+	Ok     bool         `json:"ok"`
+}
 
-type ResultArrayOfChatMember []ChatMember
+// Ref: #/components/schemas/ResultArrayOfChatMember
+type ResultArrayOfChatMember struct {
+	Result []ChatMember `json:"result"`
+	Ok     bool         `json:"ok"`
+}
 
-type ResultArrayOfGameHighScore []GameHighScore
+// Ref: #/components/schemas/ResultArrayOfGameHighScore
+type ResultArrayOfGameHighScore struct {
+	Result []GameHighScore `json:"result"`
+	Ok     bool            `json:"ok"`
+}
 
-type ResultArrayOfMessage []Message
+// Ref: #/components/schemas/ResultArrayOfMessage
+type ResultArrayOfMessage struct {
+	Result []Message `json:"result"`
+	Ok     bool      `json:"ok"`
+}
 
-type ResultArrayOfUpdate []Update
+// Ref: #/components/schemas/ResultArrayOfUpdate
+type ResultArrayOfUpdate struct {
+	Result []Update `json:"result"`
+	Ok     bool     `json:"ok"`
+}
 
 // Ref: #/components/schemas/ResultChat
 type ResultChat struct {

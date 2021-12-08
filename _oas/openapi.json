@@ -6242,34 +6242,94 @@
         ]
       },
       "ResultArrayOfBotCommand": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/BotCommand"
-        }
+        "type": "object",
+        "properties": {
+          "result": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BotCommand"
+            }
+          },
+          "ok": {
+            "type": "boolean",
+            "default": true
+          }
+        },
+        "required": [
+          "ok"
+        ]
       },
       "ResultArrayOfChatMember": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/ChatMember"
-        }
+        "type": "object",
+        "properties": {
+          "result": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ChatMember"
+            }
+          },
+          "ok": {
+            "type": "boolean",
+            "default": true
+          }
+        },
+        "required": [
+          "ok"
+        ]
       },
       "ResultArrayOfGameHighScore": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/GameHighScore"
-        }
+        "type": "object",
+        "properties": {
+          "result": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GameHighScore"
+            }
+          },
+          "ok": {
+            "type": "boolean",
+            "default": true
+          }
+        },
+        "required": [
+          "ok"
+        ]
       },
       "ResultArrayOfMessage": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/Message"
-        }
+        "type": "object",
+        "properties": {
+          "result": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Message"
+            }
+          },
+          "ok": {
+            "type": "boolean",
+            "default": true
+          }
+        },
+        "required": [
+          "ok"
+        ]
       },
       "ResultArrayOfUpdate": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/Update"
-        }
+        "type": "object",
+        "properties": {
+          "result": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Update"
+            }
+          },
+          "ok": {
+            "type": "boolean",
+            "default": true
+          }
+        },
+        "required": [
+          "ok"
+        ]
       },
       "ResultBotCommand": {
         "type": "object",

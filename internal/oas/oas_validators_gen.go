@@ -3247,57 +3247,63 @@ func (s ReplyKeyboardMarkup) Validate() error {
 	return nil
 }
 func (s ResultArrayOfBotCommand) Validate() error {
-	if s == nil {
-		return errors.New("nil is invalid value")
-	}
 	var failures []validate.FieldError
-	for i, elem := range s {
-		if err := func() error {
-			if err := elem.Validate(); err != nil {
-				return err
+	if err := func() error {
+		var failures []validate.FieldError
+		for i, elem := range s.Result {
+			if err := func() error {
+				if err := elem.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				failures = append(failures, validate.FieldError{
+					Name:  fmt.Sprintf("[%d]", i),
+					Error: err,
+				})
 			}
-			return nil
-		}(); err != nil {
-			failures = append(failures, validate.FieldError{
-				Name:  fmt.Sprintf("[%d]", i),
-				Error: err,
-			})
 		}
+		if len(failures) > 0 {
+			return &validate.Error{Fields: failures}
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "result",
+			Error: err,
+		})
 	}
 	if len(failures) > 0 {
 		return &validate.Error{Fields: failures}
 	}
 	return nil
 }
-func (s ResultArrayOfChatMember) Validate() error {
-	if s == nil {
-		return errors.New("nil is invalid value")
-	}
-	return nil
-}
-func (s ResultArrayOfGameHighScore) Validate() error {
-	if s == nil {
-		return errors.New("nil is invalid value")
-	}
-	return nil
-}
 func (s ResultArrayOfMessage) Validate() error {
-	if s == nil {
-		return errors.New("nil is invalid value")
-	}
 	var failures []validate.FieldError
-	for i, elem := range s {
-		if err := func() error {
-			if err := elem.Validate(); err != nil {
-				return err
+	if err := func() error {
+		var failures []validate.FieldError
+		for i, elem := range s.Result {
+			if err := func() error {
+				if err := elem.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				failures = append(failures, validate.FieldError{
+					Name:  fmt.Sprintf("[%d]", i),
+					Error: err,
+				})
 			}
-			return nil
-		}(); err != nil {
-			failures = append(failures, validate.FieldError{
-				Name:  fmt.Sprintf("[%d]", i),
-				Error: err,
-			})
 		}
+		if len(failures) > 0 {
+			return &validate.Error{Fields: failures}
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "result",
+			Error: err,
+		})
 	}
 	if len(failures) > 0 {
 		return &validate.Error{Fields: failures}
@@ -3305,22 +3311,31 @@ func (s ResultArrayOfMessage) Validate() error {
 	return nil
 }
 func (s ResultArrayOfUpdate) Validate() error {
-	if s == nil {
-		return errors.New("nil is invalid value")
-	}
 	var failures []validate.FieldError
-	for i, elem := range s {
-		if err := func() error {
-			if err := elem.Validate(); err != nil {
-				return err
+	if err := func() error {
+		var failures []validate.FieldError
+		for i, elem := range s.Result {
+			if err := func() error {
+				if err := elem.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				failures = append(failures, validate.FieldError{
+					Name:  fmt.Sprintf("[%d]", i),
+					Error: err,
+				})
 			}
-			return nil
-		}(); err != nil {
-			failures = append(failures, validate.FieldError{
-				Name:  fmt.Sprintf("[%d]", i),
-				Error: err,
-			})
 		}
+		if len(failures) > 0 {
+			return &validate.Error{Fields: failures}
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "result",
+			Error: err,
+		})
 	}
 	if len(failures) > 0 {
 		return &validate.Error{Fields: failures}

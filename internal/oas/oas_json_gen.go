@@ -9682,14 +9682,21 @@ func (s *Result) Decode(d *jx.Decoder) error {
 	})
 }
 
-// Encode encodes ResultArrayOfBotCommand as json.
+// Encode implements json.Marshaler.
 func (s ResultArrayOfBotCommand) Encode(e *jx.Encoder) {
-	unwrapped := []BotCommand(s)
-	e.ArrStart()
-	for _, elem := range unwrapped {
-		elem.Encode(e)
+	e.ObjStart()
+	if s.Result != nil {
+		e.FieldStart("result")
+		e.ArrStart()
+		for _, elem := range s.Result {
+			elem.Encode(e)
+		}
+		e.ArrEnd()
 	}
-	e.ArrEnd()
+
+	e.FieldStart("ok")
+	e.Bool(s.Ok)
+	e.ObjEnd()
 }
 
 // Decode decodes ResultArrayOfBotCommand from json.
@@ -9697,35 +9704,48 @@ func (s *ResultArrayOfBotCommand) Decode(d *jx.Decoder) error {
 	if s == nil {
 		return errors.New(`invalid: unable to decode ResultArrayOfBotCommand to nil`)
 	}
-	var unwrapped []BotCommand
-	if err := func() error {
-		unwrapped = nil
-		if err := d.Arr(func(d *jx.Decoder) error {
-			var elem BotCommand
-			if err := elem.Decode(d); err != nil {
+	return d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "result":
+			s.Result = nil
+			if err := d.Arr(func(d *jx.Decoder) error {
+				var elem BotCommand
+				if err := elem.Decode(d); err != nil {
+					return err
+				}
+				s.Result = append(s.Result, elem)
+				return nil
+			}); err != nil {
 				return err
 			}
-			unwrapped = append(unwrapped, elem)
-			return nil
-		}); err != nil {
-			return err
+		case "ok":
+			v, err := d.Bool()
+			s.Ok = bool(v)
+			if err != nil {
+				return err
+			}
+		default:
+			return d.Skip()
 		}
 		return nil
-	}(); err != nil {
-		return errors.Wrap(err, "alias")
-	}
-	*s = ResultArrayOfBotCommand(unwrapped)
-	return nil
+	})
 }
 
-// Encode encodes ResultArrayOfChatMember as json.
+// Encode implements json.Marshaler.
 func (s ResultArrayOfChatMember) Encode(e *jx.Encoder) {
-	unwrapped := []ChatMember(s)
-	e.ArrStart()
-	for _, elem := range unwrapped {
-		elem.Encode(e)
+	e.ObjStart()
+	if s.Result != nil {
+		e.FieldStart("result")
+		e.ArrStart()
+		for _, elem := range s.Result {
+			elem.Encode(e)
+		}
+		e.ArrEnd()
 	}
-	e.ArrEnd()
+
+	e.FieldStart("ok")
+	e.Bool(s.Ok)
+	e.ObjEnd()
 }
 
 // Decode decodes ResultArrayOfChatMember from json.
@@ -9733,35 +9753,48 @@ func (s *ResultArrayOfChatMember) Decode(d *jx.Decoder) error {
 	if s == nil {
 		return errors.New(`invalid: unable to decode ResultArrayOfChatMember to nil`)
 	}
-	var unwrapped []ChatMember
-	if err := func() error {
-		unwrapped = nil
-		if err := d.Arr(func(d *jx.Decoder) error {
-			var elem ChatMember
-			if err := elem.Decode(d); err != nil {
+	return d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "result":
+			s.Result = nil
+			if err := d.Arr(func(d *jx.Decoder) error {
+				var elem ChatMember
+				if err := elem.Decode(d); err != nil {
+					return err
+				}
+				s.Result = append(s.Result, elem)
+				return nil
+			}); err != nil {
 				return err
 			}
-			unwrapped = append(unwrapped, elem)
-			return nil
-		}); err != nil {
-			return err
+		case "ok":
+			v, err := d.Bool()
+			s.Ok = bool(v)
+			if err != nil {
+				return err
+			}
+		default:
+			return d.Skip()
 		}
 		return nil
-	}(); err != nil {
-		return errors.Wrap(err, "alias")
-	}
-	*s = ResultArrayOfChatMember(unwrapped)
-	return nil
+	})
 }
 
-// Encode encodes ResultArrayOfGameHighScore as json.
+// Encode implements json.Marshaler.
 func (s ResultArrayOfGameHighScore) Encode(e *jx.Encoder) {
-	unwrapped := []GameHighScore(s)
-	e.ArrStart()
-	for _, elem := range unwrapped {
-		elem.Encode(e)
+	e.ObjStart()
+	if s.Result != nil {
+		e.FieldStart("result")
+		e.ArrStart()
+		for _, elem := range s.Result {
+			elem.Encode(e)
+		}
+		e.ArrEnd()
 	}
-	e.ArrEnd()
+
+	e.FieldStart("ok")
+	e.Bool(s.Ok)
+	e.ObjEnd()
 }
 
 // Decode decodes ResultArrayOfGameHighScore from json.
@@ -9769,35 +9802,48 @@ func (s *ResultArrayOfGameHighScore) Decode(d *jx.Decoder) error {
 	if s == nil {
 		return errors.New(`invalid: unable to decode ResultArrayOfGameHighScore to nil`)
 	}
-	var unwrapped []GameHighScore
-	if err := func() error {
-		unwrapped = nil
-		if err := d.Arr(func(d *jx.Decoder) error {
-			var elem GameHighScore
-			if err := elem.Decode(d); err != nil {
+	return d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "result":
+			s.Result = nil
+			if err := d.Arr(func(d *jx.Decoder) error {
+				var elem GameHighScore
+				if err := elem.Decode(d); err != nil {
+					return err
+				}
+				s.Result = append(s.Result, elem)
+				return nil
+			}); err != nil {
 				return err
 			}
-			unwrapped = append(unwrapped, elem)
-			return nil
-		}); err != nil {
-			return err
+		case "ok":
+			v, err := d.Bool()
+			s.Ok = bool(v)
+			if err != nil {
+				return err
+			}
+		default:
+			return d.Skip()
 		}
 		return nil
-	}(); err != nil {
-		return errors.Wrap(err, "alias")
-	}
-	*s = ResultArrayOfGameHighScore(unwrapped)
-	return nil
+	})
 }
 
-// Encode encodes ResultArrayOfMessage as json.
+// Encode implements json.Marshaler.
 func (s ResultArrayOfMessage) Encode(e *jx.Encoder) {
-	unwrapped := []Message(s)
-	e.ArrStart()
-	for _, elem := range unwrapped {
-		elem.Encode(e)
+	e.ObjStart()
+	if s.Result != nil {
+		e.FieldStart("result")
+		e.ArrStart()
+		for _, elem := range s.Result {
+			elem.Encode(e)
+		}
+		e.ArrEnd()
 	}
-	e.ArrEnd()
+
+	e.FieldStart("ok")
+	e.Bool(s.Ok)
+	e.ObjEnd()
 }
 
 // Decode decodes ResultArrayOfMessage from json.
@@ -9805,35 +9851,48 @@ func (s *ResultArrayOfMessage) Decode(d *jx.Decoder) error {
 	if s == nil {
 		return errors.New(`invalid: unable to decode ResultArrayOfMessage to nil`)
 	}
-	var unwrapped []Message
-	if err := func() error {
-		unwrapped = nil
-		if err := d.Arr(func(d *jx.Decoder) error {
-			var elem Message
-			if err := elem.Decode(d); err != nil {
+	return d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "result":
+			s.Result = nil
+			if err := d.Arr(func(d *jx.Decoder) error {
+				var elem Message
+				if err := elem.Decode(d); err != nil {
+					return err
+				}
+				s.Result = append(s.Result, elem)
+				return nil
+			}); err != nil {
 				return err
 			}
-			unwrapped = append(unwrapped, elem)
-			return nil
-		}); err != nil {
-			return err
+		case "ok":
+			v, err := d.Bool()
+			s.Ok = bool(v)
+			if err != nil {
+				return err
+			}
+		default:
+			return d.Skip()
 		}
 		return nil
-	}(); err != nil {
-		return errors.Wrap(err, "alias")
-	}
-	*s = ResultArrayOfMessage(unwrapped)
-	return nil
+	})
 }
 
-// Encode encodes ResultArrayOfUpdate as json.
+// Encode implements json.Marshaler.
 func (s ResultArrayOfUpdate) Encode(e *jx.Encoder) {
-	unwrapped := []Update(s)
-	e.ArrStart()
-	for _, elem := range unwrapped {
-		elem.Encode(e)
+	e.ObjStart()
+	if s.Result != nil {
+		e.FieldStart("result")
+		e.ArrStart()
+		for _, elem := range s.Result {
+			elem.Encode(e)
+		}
+		e.ArrEnd()
 	}
-	e.ArrEnd()
+
+	e.FieldStart("ok")
+	e.Bool(s.Ok)
+	e.ObjEnd()
 }
 
 // Decode decodes ResultArrayOfUpdate from json.
@@ -9841,25 +9900,31 @@ func (s *ResultArrayOfUpdate) Decode(d *jx.Decoder) error {
 	if s == nil {
 		return errors.New(`invalid: unable to decode ResultArrayOfUpdate to nil`)
 	}
-	var unwrapped []Update
-	if err := func() error {
-		unwrapped = nil
-		if err := d.Arr(func(d *jx.Decoder) error {
-			var elem Update
-			if err := elem.Decode(d); err != nil {
+	return d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "result":
+			s.Result = nil
+			if err := d.Arr(func(d *jx.Decoder) error {
+				var elem Update
+				if err := elem.Decode(d); err != nil {
+					return err
+				}
+				s.Result = append(s.Result, elem)
+				return nil
+			}); err != nil {
 				return err
 			}
-			unwrapped = append(unwrapped, elem)
-			return nil
-		}); err != nil {
-			return err
+		case "ok":
+			v, err := d.Bool()
+			s.Ok = bool(v)
+			if err != nil {
+				return err
+			}
+		default:
+			return d.Skip()
 		}
 		return nil
-	}(); err != nil {
-		return errors.Wrap(err, "alias")
-	}
-	*s = ResultArrayOfUpdate(unwrapped)
-	return nil
+	})
 }
 
 // Encode implements json.Marshaler.
