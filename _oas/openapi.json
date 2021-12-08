@@ -4,7 +4,7 @@
     "title": "Telegram Bot API",
     "description": "API for Telegram bots",
     "termsOfService": "https://telegram.org/tos",
-    "version": "5.3"
+    "version": "5.5"
   },
   "servers": [
     {
@@ -2273,7 +2273,13 @@
           },
           "type": {
             "description": "Type of chat, can be either “private”, “group”, “supergroup” or “channel”",
-            "type": "string"
+            "type": "string",
+            "enum": [
+              "private",
+              "group",
+              "supergroup",
+              "channel"
+            ]
           },
           "title": {
             "description": "Title, for supergroups, channels and group chats",
@@ -2935,7 +2941,22 @@
         "properties": {
           "type": {
             "description": "Element type. One of “personal_details”, “passport”, “driver_license”, “identity_card”, “internal_passport”, “address”, “utility_bill”, “bank_statement”, “rental_agreement”, “passport_registration”, “temporary_registration”, “phone_number”, “email”",
-            "type": "string"
+            "type": "string",
+            "enum": [
+              "personal_details",
+              "passport",
+              "driver_license",
+              "identity_card",
+              "internal_passport",
+              "address",
+              "utility_bill",
+              "bank_statement",
+              "rental_agreement",
+              "passport_registration",
+              "temporary_registration",
+              "phone_number",
+              "email"
+            ]
           },
           "data": {
             "description": "Base64-encoded encrypted Telegram Passport element data provided by the user, available for “personal_details”, “passport”, “driver_license”, “identity_card”, “internal_passport” and “address” types. Can be decrypted and verified using the accompanying EncryptedCredentials",
@@ -5392,7 +5413,24 @@
         "properties": {
           "type": {
             "description": "Type of the entity. Can be “mention” (@username), “hashtag” (#hashtag), “cashtag” ($USD), “bot_command” (/start@jobs_bot), “url” (https://telegram.org), “email” (do-not-reply@telegram.org), “phone_number” (+1-212-555-0123), “bold” (bold text), “italic” (italic text), “underline” (underlined text), “strikethrough” (strikethrough text), “code” (monowidth string), “pre” (monowidth block), “text_link” (for clickable text URLs), “text_mention” (for users without usernames)",
-            "type": "string"
+            "type": "string",
+            "enum": [
+              "mention",
+              "hashtag",
+              "cashtag",
+              "bot_command",
+              "url",
+              "email",
+              "phone_number",
+              "bold",
+              "italic",
+              "underline",
+              "strikethrough",
+              "code",
+              "pre",
+              "text_link",
+              "text_mention"
+            ]
           },
           "offset": {
             "description": "Offset in UTF-16 code units to the start of the entity",
@@ -5534,7 +5572,15 @@
           },
           "type": {
             "description": "The section of the user's Telegram Passport which has the error, one of “personal_details”, “passport”, “driver_license”, “identity_card”, “internal_passport”, “address”",
-            "type": "string"
+            "type": "string",
+            "enum": [
+              "personal_details",
+              "passport",
+              "driver_license",
+              "identity_card",
+              "internal_passport",
+              "address"
+            ]
           },
           "field_name": {
             "description": "Name of the data field which has the error",
@@ -5568,7 +5614,14 @@
           },
           "type": {
             "description": "The section of the user's Telegram Passport which has the issue, one of “utility_bill”, “bank_statement”, “rental_agreement”, “passport_registration”, “temporary_registration”",
-            "type": "string"
+            "type": "string",
+            "enum": [
+              "utility_bill",
+              "bank_statement",
+              "rental_agreement",
+              "passport_registration",
+              "temporary_registration"
+            ]
           },
           "file_hash": {
             "description": "Base64-encoded file hash",
@@ -5597,7 +5650,14 @@
           },
           "type": {
             "description": "The section of the user's Telegram Passport which has the issue, one of “utility_bill”, “bank_statement”, “rental_agreement”, “passport_registration”, “temporary_registration”",
-            "type": "string"
+            "type": "string",
+            "enum": [
+              "utility_bill",
+              "bank_statement",
+              "rental_agreement",
+              "passport_registration",
+              "temporary_registration"
+            ]
           },
           "file_hashes": {
             "description": "List of base64-encoded file hashes",
@@ -5629,7 +5689,13 @@
           },
           "type": {
             "description": "The section of the user's Telegram Passport which has the issue, one of “passport”, “driver_license”, “identity_card”, “internal_passport”",
-            "type": "string"
+            "type": "string",
+            "enum": [
+              "passport",
+              "driver_license",
+              "identity_card",
+              "internal_passport"
+            ]
           },
           "file_hash": {
             "description": "Base64-encoded hash of the file with the front side of the document",
@@ -5658,7 +5724,11 @@
           },
           "type": {
             "description": "The section of the user's Telegram Passport which has the issue, one of “driver_license”, “identity_card”",
-            "type": "string"
+            "type": "string",
+            "enum": [
+              "driver_license",
+              "identity_card"
+            ]
           },
           "file_hash": {
             "description": "Base64-encoded hash of the file with the reverse side of the document",
@@ -5687,7 +5757,13 @@
           },
           "type": {
             "description": "The section of the user's Telegram Passport which has the issue, one of “passport”, “driver_license”, “identity_card”, “internal_passport”",
-            "type": "string"
+            "type": "string",
+            "enum": [
+              "passport",
+              "driver_license",
+              "identity_card",
+              "internal_passport"
+            ]
           },
           "file_hash": {
             "description": "Base64-encoded hash of the file with the selfie",
@@ -5716,7 +5792,18 @@
           },
           "type": {
             "description": "Type of element of the user's Telegram Passport which has the issue, one of “passport”, “driver_license”, “identity_card”, “internal_passport”, “utility_bill”, “bank_statement”, “rental_agreement”, “passport_registration”, “temporary_registration”",
-            "type": "string"
+            "type": "string",
+            "enum": [
+              "passport",
+              "driver_license",
+              "identity_card",
+              "internal_passport",
+              "utility_bill",
+              "bank_statement",
+              "rental_agreement",
+              "passport_registration",
+              "temporary_registration"
+            ]
           },
           "file_hash": {
             "description": "Base64-encoded file hash",
@@ -5745,7 +5832,18 @@
           },
           "type": {
             "description": "Type of element of the user's Telegram Passport which has the issue, one of “passport”, “driver_license”, “identity_card”, “internal_passport”, “utility_bill”, “bank_statement”, “rental_agreement”, “passport_registration”, “temporary_registration”",
-            "type": "string"
+            "type": "string",
+            "enum": [
+              "passport",
+              "driver_license",
+              "identity_card",
+              "internal_passport",
+              "utility_bill",
+              "bank_statement",
+              "rental_agreement",
+              "passport_registration",
+              "temporary_registration"
+            ]
           },
           "file_hashes": {
             "description": "List of base64-encoded file hashes",
@@ -5894,7 +5992,11 @@
           },
           "type": {
             "description": "Poll type, currently can be “regular” or “quiz”",
-            "type": "string"
+            "type": "string",
+            "enum": [
+              "regular",
+              "quiz"
+            ]
           },
           "allows_multiple_answers": {
             "description": "True, if the poll allows multiple answers",
