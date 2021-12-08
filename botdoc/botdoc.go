@@ -212,8 +212,6 @@ func Extract(doc *goquery.Document) (a API) {
 				}
 				appendDefinition()
 			}
-
-			return
 		}
 		if strings.Contains(d.Description, `Returns True on success`) {
 			t := newPrimitive(Boolean)
@@ -307,6 +305,9 @@ func Extract(doc *goquery.Document) (a API) {
 		}
 
 		if !s.Is("table") {
+			if strings.Contains(d.Description, "Requires no parameters") {
+				appendDefinition()
+			}
 			return
 		}
 
