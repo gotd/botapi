@@ -715,10 +715,6 @@ func (s BanChatSenderChat) Encode(e *jx.Encoder) {
 
 	e.FieldStart("sender_chat_id")
 	e.Int(s.SenderChatID)
-	if s.UntilDate.Set {
-		e.FieldStart("until_date")
-		s.UntilDate.Encode(e)
-	}
 	e.ObjEnd()
 }
 
@@ -737,11 +733,6 @@ func (s *BanChatSenderChat) Decode(d *jx.Decoder) error {
 			v, err := d.Int()
 			s.SenderChatID = int(v)
 			if err != nil {
-				return err
-			}
-		case "until_date":
-			s.UntilDate.Reset()
-			if err := s.UntilDate.Decode(d); err != nil {
 				return err
 			}
 		default:
@@ -7535,28 +7526,6 @@ func (o *OptURL) Decode(d *jx.Decoder) error {
 	}
 }
 
-// Encode encodes Update as json.
-func (o OptUpdate) Encode(e *jx.Encoder) {
-	o.Value.Encode(e)
-}
-
-// Decode decodes Update from json.
-func (o *OptUpdate) Decode(d *jx.Decoder) error {
-	if o == nil {
-		return errors.New(`invalid: unable to decode OptUpdate to nil`)
-	}
-	switch d.Next() {
-	case jx.Object:
-		o.Set = true
-		if err := o.Value.Decode(d); err != nil {
-			return err
-		}
-		return nil
-	default:
-		return errors.Errorf(`unexpected type %q while reading OptUpdate`, d.Next())
-	}
-}
-
 // Encode encodes User as json.
 func (o OptUser) Encode(e *jx.Encoder) {
 	o.Value.Encode(e)
@@ -9432,9 +9401,45 @@ func (s *Result) Decode(d *jx.Decoder) error {
 	})
 }
 
+// Encode encodes ResultArrayOfMessage as json.
+func (s ResultArrayOfMessage) Encode(e *jx.Encoder) {
+	unwrapped := []Message(s)
+	e.ArrStart()
+	for _, elem := range unwrapped {
+		elem.Encode(e)
+	}
+	e.ArrEnd()
+}
+
+// Decode decodes ResultArrayOfMessage from json.
+func (s *ResultArrayOfMessage) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New(`invalid: unable to decode ResultArrayOfMessage to nil`)
+	}
+	var unwrapped []Message
+	if err := func() error {
+		unwrapped = nil
+		if err := d.Arr(func(d *jx.Decoder) error {
+			var elem Message
+			if err := elem.Decode(d); err != nil {
+				return err
+			}
+			unwrapped = append(unwrapped, elem)
+			return nil
+		}); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = ResultArrayOfMessage(unwrapped)
+	return nil
+}
+
 // Encode encodes ResultArrayOfUpdate as json.
 func (s ResultArrayOfUpdate) Encode(e *jx.Encoder) {
-	unwrapped := []ResultUpdate(s)
+	unwrapped := []Update(s)
 	e.ArrStart()
 	for _, elem := range unwrapped {
 		elem.Encode(e)
@@ -9447,11 +9452,11 @@ func (s *ResultArrayOfUpdate) Decode(d *jx.Decoder) error {
 	if s == nil {
 		return errors.New(`invalid: unable to decode ResultArrayOfUpdate to nil`)
 	}
-	var unwrapped []ResultUpdate
+	var unwrapped []Update
 	if err := func() error {
 		unwrapped = nil
 		if err := d.Arr(func(d *jx.Decoder) error {
-			var elem ResultUpdate
+			var elem Update
 			if err := elem.Decode(d); err != nil {
 				return err
 			}
@@ -9485,44 +9490,6 @@ func (s ResultMessage) Encode(e *jx.Encoder) {
 func (s *ResultMessage) Decode(d *jx.Decoder) error {
 	if s == nil {
 		return errors.New(`invalid: unable to decode ResultMessage to nil`)
-	}
-	return d.ObjBytes(func(d *jx.Decoder, k []byte) error {
-		switch string(k) {
-		case "result":
-			s.Result.Reset()
-			if err := s.Result.Decode(d); err != nil {
-				return err
-			}
-		case "ok":
-			v, err := d.Bool()
-			s.Ok = bool(v)
-			if err != nil {
-				return err
-			}
-		default:
-			return d.Skip()
-		}
-		return nil
-	})
-}
-
-// Encode implements json.Marshaler.
-func (s ResultUpdate) Encode(e *jx.Encoder) {
-	e.ObjStart()
-	if s.Result.Set {
-		e.FieldStart("result")
-		s.Result.Encode(e)
-	}
-
-	e.FieldStart("ok")
-	e.Bool(s.Ok)
-	e.ObjEnd()
-}
-
-// Decode decodes ResultUpdate from json.
-func (s *ResultUpdate) Decode(d *jx.Decoder) error {
-	if s == nil {
-		return errors.New(`invalid: unable to decode ResultUpdate to nil`)
 	}
 	return d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {

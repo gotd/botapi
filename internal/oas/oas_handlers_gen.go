@@ -334,6 +334,34 @@ func (s *Server) handleBanChatSenderChatRequest(args map[string]string, w http.R
 	}
 }
 
+// HandleCloseRequest handles close operation.
+//
+// POST /close
+func (s *Server) handleCloseRequest(args map[string]string, w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `Close`,
+		trace.WithAttributes(otelogen.OperationID(`close`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+
+	response, err := s.h.Close(ctx)
+	if err != nil {
+		span.RecordError(err)
+		var errRes *ErrorStatusCode
+		if errors.As(err, &errRes) {
+			encodeErrorResponse(*errRes, w, span)
+			return
+		}
+		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		return
+	}
+
+	if err := encodeCloseResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
 // HandleCopyMessageRequest handles copyMessage operation.
 //
 // POST /copyMessage
@@ -1314,6 +1342,34 @@ func (s *Server) handleGetUserProfilePhotosRequest(args map[string]string, w htt
 	}
 }
 
+// HandleGetWebhookInfoRequest handles getWebhookInfo operation.
+//
+// POST /getWebhookInfo
+func (s *Server) handleGetWebhookInfoRequest(args map[string]string, w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `GetWebhookInfo`,
+		trace.WithAttributes(otelogen.OperationID(`getWebhookInfo`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+
+	response, err := s.h.GetWebhookInfo(ctx)
+	if err != nil {
+		span.RecordError(err)
+		var errRes *ErrorStatusCode
+		if errors.As(err, &errRes) {
+			encodeErrorResponse(*errRes, w, span)
+			return
+		}
+		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		return
+	}
+
+	if err := encodeGetWebhookInfoResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
 // HandleLeaveChatRequest handles leaveChat operation.
 //
 // POST /leaveChat
@@ -1343,6 +1399,34 @@ func (s *Server) handleLeaveChatRequest(args map[string]string, w http.ResponseW
 	}
 
 	if err := encodeLeaveChatResponse(response, w, span); err != nil {
+		span.RecordError(err)
+		return
+	}
+}
+
+// HandleLogOutRequest handles logOut operation.
+//
+// POST /logOut
+func (s *Server) handleLogOutRequest(args map[string]string, w http.ResponseWriter, r *http.Request) {
+	ctx, span := s.cfg.Tracer.Start(r.Context(), `LogOut`,
+		trace.WithAttributes(otelogen.OperationID(`logOut`)),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+
+	response, err := s.h.LogOut(ctx)
+	if err != nil {
+		span.RecordError(err)
+		var errRes *ErrorStatusCode
+		if errors.As(err, &errRes) {
+			encodeErrorResponse(*errRes, w, span)
+			return
+		}
+		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		return
+	}
+
+	if err := encodeLogOutResponse(response, w, span); err != nil {
 		span.RecordError(err)
 		return
 	}

@@ -174,6 +174,20 @@ func encodeBanChatSenderChatResponse(response Result, w http.ResponseWriter, spa
 	return nil
 }
 
+func encodeCloseResponse(response Result, w http.ResponseWriter, span trace.Span) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	e := jx.GetEncoder()
+	defer jx.PutEncoder(e)
+
+	response.Encode(e)
+	if _, err := e.WriteTo(w); err != nil {
+		return errors.Wrap(err, "write")
+	}
+
+	return nil
+}
+
 func encodeCopyMessageResponse(response Result, w http.ResponseWriter, span trace.Span) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
@@ -580,7 +594,35 @@ func encodeGetUserProfilePhotosResponse(response Result, w http.ResponseWriter, 
 	return nil
 }
 
+func encodeGetWebhookInfoResponse(response Result, w http.ResponseWriter, span trace.Span) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	e := jx.GetEncoder()
+	defer jx.PutEncoder(e)
+
+	response.Encode(e)
+	if _, err := e.WriteTo(w); err != nil {
+		return errors.Wrap(err, "write")
+	}
+
+	return nil
+}
+
 func encodeLeaveChatResponse(response Result, w http.ResponseWriter, span trace.Span) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	e := jx.GetEncoder()
+	defer jx.PutEncoder(e)
+
+	response.Encode(e)
+	if _, err := e.WriteTo(w); err != nil {
+		return errors.Wrap(err, "write")
+	}
+
+	return nil
+}
+
+func encodeLogOutResponse(response Result, w http.ResponseWriter, span trace.Span) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 	e := jx.GetEncoder()
@@ -664,7 +706,7 @@ func encodeSendAnimationResponse(response ResultMessage, w http.ResponseWriter, 
 	return nil
 }
 
-func encodeSendAudioResponse(response Result, w http.ResponseWriter, span trace.Span) error {
+func encodeSendAudioResponse(response ResultMessage, w http.ResponseWriter, span trace.Span) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 	e := jx.GetEncoder()
@@ -776,7 +818,7 @@ func encodeSendLocationResponse(response ResultMessage, w http.ResponseWriter, s
 	return nil
 }
 
-func encodeSendMediaGroupResponse(response Result, w http.ResponseWriter, span trace.Span) error {
+func encodeSendMediaGroupResponse(response ResultArrayOfMessage, w http.ResponseWriter, span trace.Span) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 	e := jx.GetEncoder()

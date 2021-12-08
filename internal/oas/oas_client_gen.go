@@ -557,6 +557,46 @@ func (c *Client) BanChatSenderChat(ctx context.Context, request BanChatSenderCha
 	return result, nil
 }
 
+// Close invokes close operation.
+//
+// POST /close
+func (c *Client) Close(ctx context.Context) (res Result, err error) {
+	startTime := time.Now()
+	ctx, span := c.cfg.Tracer.Start(ctx, `Close`,
+		trace.WithAttributes(otelogen.OperationID(`close`)),
+		trace.WithSpanKind(trace.SpanKindClient),
+	)
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			c.errors.Add(ctx, 1)
+		} else {
+			elapsedDuration := time.Since(startTime)
+			c.duration.Record(ctx, elapsedDuration.Microseconds())
+		}
+		span.End()
+	}()
+	c.requests.Add(ctx, 1)
+	u := uri.Clone(c.serverURL)
+	u.Path += "/close"
+
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	defer ht.PutRequest(r)
+
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeCloseResponse(resp, span)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
 // CopyMessage invokes copyMessage operation.
 //
 // POST /copyMessage
@@ -2197,6 +2237,46 @@ func (c *Client) GetUserProfilePhotos(ctx context.Context, request GetUserProfil
 	return result, nil
 }
 
+// GetWebhookInfo invokes getWebhookInfo operation.
+//
+// POST /getWebhookInfo
+func (c *Client) GetWebhookInfo(ctx context.Context) (res Result, err error) {
+	startTime := time.Now()
+	ctx, span := c.cfg.Tracer.Start(ctx, `GetWebhookInfo`,
+		trace.WithAttributes(otelogen.OperationID(`getWebhookInfo`)),
+		trace.WithSpanKind(trace.SpanKindClient),
+	)
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			c.errors.Add(ctx, 1)
+		} else {
+			elapsedDuration := time.Since(startTime)
+			c.duration.Record(ctx, elapsedDuration.Microseconds())
+		}
+		span.End()
+	}()
+	c.requests.Add(ctx, 1)
+	u := uri.Clone(c.serverURL)
+	u.Path += "/getWebhookInfo"
+
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	defer ht.PutRequest(r)
+
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeGetWebhookInfoResponse(resp, span)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
 // LeaveChat invokes leaveChat operation.
 //
 // POST /leaveChat
@@ -2244,6 +2324,46 @@ func (c *Client) LeaveChat(ctx context.Context, request LeaveChat) (res Result, 
 	defer resp.Body.Close()
 
 	result, err := decodeLeaveChatResponse(resp, span)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
+// LogOut invokes logOut operation.
+//
+// POST /logOut
+func (c *Client) LogOut(ctx context.Context) (res Result, err error) {
+	startTime := time.Now()
+	ctx, span := c.cfg.Tracer.Start(ctx, `LogOut`,
+		trace.WithAttributes(otelogen.OperationID(`logOut`)),
+		trace.WithSpanKind(trace.SpanKindClient),
+	)
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			c.errors.Add(ctx, 1)
+		} else {
+			elapsedDuration := time.Since(startTime)
+			c.duration.Record(ctx, elapsedDuration.Microseconds())
+		}
+		span.End()
+	}()
+	c.requests.Add(ctx, 1)
+	u := uri.Clone(c.serverURL)
+	u.Path += "/logOut"
+
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	defer ht.PutRequest(r)
+
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeLogOutResponse(resp, span)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -2532,7 +2652,7 @@ func (c *Client) SendAnimation(ctx context.Context, request SendAnimation) (res 
 // SendAudio invokes sendAudio operation.
 //
 // POST /sendAudio
-func (c *Client) SendAudio(ctx context.Context, request SendAudio) (res Result, err error) {
+func (c *Client) SendAudio(ctx context.Context, request SendAudio) (res ResultMessage, err error) {
 	if err := func() error {
 		if err := request.Validate(); err != nil {
 			return err
@@ -3020,7 +3140,7 @@ func (c *Client) SendLocation(ctx context.Context, request SendLocation) (res Re
 // SendMediaGroup invokes sendMediaGroup operation.
 //
 // POST /sendMediaGroup
-func (c *Client) SendMediaGroup(ctx context.Context, request SendMediaGroup) (res Result, err error) {
+func (c *Client) SendMediaGroup(ctx context.Context, request SendMediaGroup) (res ResultArrayOfMessage, err error) {
 	if err := func() error {
 		if err := request.Validate(); err != nil {
 			return err

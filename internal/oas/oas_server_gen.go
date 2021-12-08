@@ -96,6 +96,10 @@ type Handler interface {
 	//
 	// POST /banChatSenderChat
 	BanChatSenderChat(ctx context.Context, req BanChatSenderChat) (Result, error)
+	// Close implements close operation.
+	//
+	// POST /close
+	Close(ctx context.Context) (Result, error)
 	// CopyMessage implements copyMessage operation.
 	//
 	// POST /copyMessage
@@ -212,10 +216,18 @@ type Handler interface {
 	//
 	// POST /getUserProfilePhotos
 	GetUserProfilePhotos(ctx context.Context, req GetUserProfilePhotos) (Result, error)
+	// GetWebhookInfo implements getWebhookInfo operation.
+	//
+	// POST /getWebhookInfo
+	GetWebhookInfo(ctx context.Context) (Result, error)
 	// LeaveChat implements leaveChat operation.
 	//
 	// POST /leaveChat
 	LeaveChat(ctx context.Context, req LeaveChat) (Result, error)
+	// LogOut implements logOut operation.
+	//
+	// POST /logOut
+	LogOut(ctx context.Context) (Result, error)
 	// PinChatMessage implements pinChatMessage operation.
 	//
 	// POST /pinChatMessage
@@ -239,7 +251,7 @@ type Handler interface {
 	// SendAudio implements sendAudio operation.
 	//
 	// POST /sendAudio
-	SendAudio(ctx context.Context, req SendAudio) (Result, error)
+	SendAudio(ctx context.Context, req SendAudio) (ResultMessage, error)
 	// SendChatAction implements sendChatAction operation.
 	//
 	// POST /sendChatAction
@@ -271,7 +283,7 @@ type Handler interface {
 	// SendMediaGroup implements sendMediaGroup operation.
 	//
 	// POST /sendMediaGroup
-	SendMediaGroup(ctx context.Context, req SendMediaGroup) (Result, error)
+	SendMediaGroup(ctx context.Context, req SendMediaGroup) (ResultArrayOfMessage, error)
 	// SendMessage implements sendMessage operation.
 	//
 	// POST /sendMessage

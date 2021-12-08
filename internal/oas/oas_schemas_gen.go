@@ -153,9 +153,8 @@ type BanChatMember struct {
 
 // Ref: #/components/schemas/banChatSenderChat
 type BanChatSenderChat struct {
-	ChatID       ID     `json:"chat_id"`
-	SenderChatID int    `json:"sender_chat_id"`
-	UntilDate    OptInt `json:"until_date"`
+	ChatID       ID  `json:"chat_id"`
+	SenderChatID int `json:"sender_chat_id"`
 }
 
 // Ref: #/components/schemas/BotCommand
@@ -3227,44 +3226,6 @@ func (o OptURL) Get() (v url.URL, ok bool) {
 	return o.Value, true
 }
 
-// NewOptUpdate returns new OptUpdate with value set to v.
-func NewOptUpdate(v Update) OptUpdate {
-	return OptUpdate{
-		Value: v,
-		Set:   true,
-	}
-}
-
-// OptUpdate is optional Update.
-type OptUpdate struct {
-	Value Update
-	Set   bool
-}
-
-// IsSet returns true if OptUpdate was set.
-func (o OptUpdate) IsSet() bool { return o.Set }
-
-// Reset unsets value.
-func (o *OptUpdate) Reset() {
-	var v Update
-	o.Value = v
-	o.Set = false
-}
-
-// SetTo sets value to v.
-func (o *OptUpdate) SetTo(v Update) {
-	o.Set = true
-	o.Value = v
-}
-
-// Get returns value and boolean that denotes whether value was set.
-func (o OptUpdate) Get() (v Update, ok bool) {
-	if !o.Set {
-		return v, false
-	}
-	return o.Value, true
-}
-
 // NewOptUser returns new OptUser with value set to v.
 func NewOptUser(v User) OptUser {
 	return OptUser{
@@ -4045,18 +4006,14 @@ type Result struct {
 	Ok     bool    `json:"ok"`
 }
 
-type ResultArrayOfUpdate []ResultUpdate
+type ResultArrayOfMessage []Message
+
+type ResultArrayOfUpdate []Update
 
 // Ref: #/components/schemas/ResultMessage
 type ResultMessage struct {
 	Result OptMessage `json:"result"`
 	Ok     bool       `json:"ok"`
-}
-
-// Ref: #/components/schemas/ResultUpdate
-type ResultUpdate struct {
-	Result OptUpdate `json:"result"`
-	Ok     bool      `json:"ok"`
 }
 
 // Ref: #/components/schemas/ResultUser
