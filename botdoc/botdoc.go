@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strings"
 	"unicode"
+	"unicode/utf8"
 
 	"github.com/PuerkitoBio/goquery"
 )
@@ -125,6 +126,7 @@ type Field struct {
 	Type        Type
 	Name        string
 	Description string
+	Enum        []string
 	Optional    bool
 }
 
@@ -362,18 +364,80 @@ func Extract(doc *goquery.Document) (a API) {
 			default:
 				return
 			}
-			optional := strings.HasPrefix(definition[fDescription], optPrefix)
+			name := definition[fName]
+			description := definition[fDescription]
+
+			optional := strings.HasPrefix(description, optPrefix)
 			if definition[fOptional] == "Optional" {
 				optional = true
 			}
+			typ := ParseType(definition[fType])
+
 			d.Fields = append(d.Fields, Field{
-				Name:        definition[fName],
-				Description: strings.TrimSuffix(strings.TrimPrefix(definition[fDescription], optPrefix), "."),
+				Name:        name,
+				Description: strings.TrimSuffix(strings.TrimPrefix(description, optPrefix), "."),
 				Optional:    optional,
-				Type:        ParseType(definition[fType]),
+				Enum:        collectEnum(typ, name, description),
+				Type:        typ,
 			})
 		})
 		appendDefinition()
 	})
 	return a
+}
+
+var discriminatorFields = []string{
+	"type",
+	"source",
+	"status",
+}
+
+func isDiscriminatorField(n string) bool {
+	for _, name := range discriminatorFields {
+		if name == n {
+			return true
+		}
+	}
+	return false
+}
+
+func collectEnum(typ Type, name, description string) []string {
+	if typ.Primitive != String || !isDiscriminatorField(name) {
+		return nil
+	}
+
+	const (
+		enumClause  = "can be"
+		oneOfClause = "one of"
+	)
+	idx, _ := IndexOneOf(strings.ToLower(description), enumClause, oneOfClause)
+	if idx < 0 {
+		return nil
+	}
+	return collectEnumValues(description[idx:])
+}
+
+func collectEnumValues(s string) (r []string) {
+	const (
+		start = '“'
+		end   = '”'
+	)
+
+	var (
+		i   = 0
+		idx = -1
+	)
+	for i < len(s) {
+		c, size := utf8.DecodeRuneInString(s[i:])
+		switch {
+		case c == start:
+			idx = i + size
+		case c == end:
+			r = append(r, s[idx:i])
+			idx = -1
+		}
+		i += size
+	}
+
+	return r
 }
