@@ -138,6 +138,7 @@ type Definition struct {
 
 // API definition.
 type API struct {
+	Version string
 	Types   []Definition
 	Methods []Definition
 }
@@ -165,6 +166,11 @@ func Extract(doc *goquery.Document) (a API) {
 		sec section
 	)
 	doc.Find("#dev_page_content").Children().Each(func(i int, s *goquery.Selection) {
+		if text := strings.TrimPrefix(s.Text(), "Bot API "); s.Is("p") &&
+			text != s.Text() &&
+			(a.Version == "" || text > a.Version) {
+			a.Version = text
+		}
 		if s.Is("h3") {
 			switch strings.TrimSpace(s.Text()) {
 			case "Available types":
@@ -291,9 +297,6 @@ func Extract(doc *goquery.Document) (a API) {
 				prefix = ""
 			}
 			end, _ = IndexOneOf(strings.TrimSuffix(d.Description, "."), retSuffix, retSuffix2, retSuffix3)
-			if strings.Contains(d.Name, "getMyCommands") {
-				fmt.Println(d.Name)
-			}
 			if start > 0 && end > start {
 				ret := strings.TrimSpace(d.Description[start+len(prefix) : end])
 				ret = strings.TrimSuffix(ret, ".")

@@ -528,7 +528,7 @@ Schemas:
 			Title:          "Telegram Bot API",
 			TermsOfService: "https://telegram.org/tos",
 			Description:    "API for Telegram bots",
-			Version:        "5.3",
+			Version:        a.Version,
 		},
 		Servers: []ogen.Server{
 			{
