@@ -266,14 +266,14 @@ func Extract(doc *goquery.Document) (a API) {
 				}
 			})
 			const (
-				retPrefix      = `on success, the`
-				retPrefix2     = `returns a`
-				retPrefix3     = `returns the`
-				retArrayPrefix = `an array of`
+				retPrefix       = `on success, the`
+				retPrefix2      = `returns a`
+				retPrefix3      = `returns the`
+				retArrayPrefix  = `an array of`
 				retArrayPrefix2 = `returns array of`
-				retSuffix      = ` is returned`
-				retSuffix2     = ` object`
-				retSuffix3     = ` objects`
+				retSuffix       = ` is returned`
+				retSuffix2      = ` object`
+				retSuffix3      = ` objects`
 			)
 			var (
 				start, end int
