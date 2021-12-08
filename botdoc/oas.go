@@ -300,7 +300,12 @@ Schemas:
 	}
 
 	wellKnownTypes := []string{
-		"Message", "Update", "User",
+		"Message",
+		"Update",
+		"User",
+		"WebhookInfo",
+		"BotCommand",
+		"GameHighScore",
 	}
 	for _, t := range wellKnownTypes {
 		resultName := "Result" + t
