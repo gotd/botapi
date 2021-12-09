@@ -242,6 +242,7 @@ func Extract(doc *goquery.Document) (a API) {
 			`It should be one of`,
 			`Telegram clients currently support the following`,
 			`Currently, the following`,
+			`This object represents one result of`,
 		} {
 			if strings.Contains(d.Description, sumMarker) {
 				probablySum = true
@@ -252,12 +253,7 @@ func Extract(doc *goquery.Document) (a API) {
 			t := &Type{
 				Kind: KindSum,
 			}
-			if strings.Contains(d.Description, `It should be one of`) {
-				d.Description = strings.TrimSpace(
-					strings.ReplaceAll(d.Description, `It should be one of`, ``),
-				)
-			}
-			d.Description = strings.ReplaceAll(d.Description, probablyMarker, "")
+			d.Description = strings.TrimSpace(strings.ReplaceAll(d.Description, probablyMarker, ""))
 			s.Find("li").Each(func(i int, s *goquery.Selection) {
 				t.Sum = append(t.Sum, ParseType(s.Text()))
 			})
@@ -391,6 +387,7 @@ func Extract(doc *goquery.Document) (a API) {
 
 var discriminatorFields = []string{
 	"type",
+	"chat_type",
 	"source",
 	"status",
 }

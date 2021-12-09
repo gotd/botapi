@@ -228,11 +228,6 @@ Schemas:
 		}
 		c.Schemas[k] = s
 	}
-
-	c.Schemas["InlineQueryResult"] = ogen.Schema{
-		Description: "Hack",
-		Type:        "string",
-	}
 	c.Schemas["ID"] = ogen.Schema{
 		OneOf: []ogen.Schema{
 			{Type: "string"},
