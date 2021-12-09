@@ -2,34 +2,17 @@
 package main
 
 import (
-	"context"
 	"flag"
 	"net/http"
-	"strings"
 	"time"
 
 	"github.com/go-chi/chi/v5"
 	"go.uber.org/zap"
 
-	"github.com/gotd/td/telegram"
-
+	"github.com/gotd/botapi/internal/botapi"
+	"github.com/gotd/botapi/internal/oas"
 	"github.com/gotd/botapi/internal/pool"
 )
-
-type handleContext struct {
-	Method  string
-	Client  *telegram.Client
-	Writer  http.ResponseWriter
-	Request *http.Request
-}
-
-type handler struct {
-	handlers map[string]func(ctx context.Context, h handleContext) error
-}
-
-func (h handler) On(method string, f func(ctx context.Context, h handleContext) error) {
-	h.handlers[strings.ToLower(method)] = f
-}
 
 func main() {
 	var (
@@ -38,6 +21,7 @@ func main() {
 		addr      = flag.String("addr", "localhost:8081", "http listen addr")
 		keepalive = flag.Duration("keepalive", time.Second*5, "client keepalive")
 		statePath = flag.String("state", "", "path to state file (json)")
+		debug     = flag.Bool("debug", false, "enables debug mode")
 	)
 	flag.Parse()
 
@@ -63,39 +47,21 @@ func main() {
 	}
 	go p.RunGC(*keepalive)
 
-	h := handler{
-		handlers: map[string]func(ctx context.Context, h handleContext) error{},
-	}
-	h.On("getMe", getMe)
+	handler := botapi.NewBotAPI(p, *debug)
+	server := oas.NewServer(handler)
 
 	// https://api.telegram.org/bot123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11/getMe
 	r := chi.NewRouter()
 	r.Post("/bot{token}/{method}", func(w http.ResponseWriter, r *http.Request) {
 		token, err := pool.ParseToken(chi.URLParam(r, "token"))
 		if err != nil {
-			w.WriteHeader(http.StatusBadRequest)
+			botapi.NotFound(w, r)
 			return
 		}
+		r.WithContext(botapi.PropagateToken(r.Context(), token))
 
-		method := strings.ToLower(chi.URLParam(r, "method"))
-		handler, ok := h.handlers[method]
-		if !ok {
-			w.WriteHeader(http.StatusNotFound)
-			return
-		}
-
-		ctx := r.Context()
-		if err := p.Do(ctx, token, func(client *telegram.Client) error {
-			return handler(ctx, handleContext{
-				Method:  method,
-				Client:  client,
-				Writer:  w,
-				Request: r,
-			})
-		}); err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			return
-		}
+		r.URL.Path = chi.URLParam(r, "method")
+		server.ServeHTTP(w, r)
 	})
 
 	if err := http.ListenAndServe(*addr, r); err != nil {
