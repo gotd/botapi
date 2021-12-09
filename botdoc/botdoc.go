@@ -282,12 +282,14 @@ func Extract(doc *goquery.Document) (a API) {
 				retSuffix       = ` is returned`
 				retSuffix2      = ` object`
 				retSuffix3      = ` objects`
+				retSuffix4      = ` on success`
 			)
 			var (
 				start, end int
 				prefix     string
 			)
-			start, prefix = IndexOneOf(strings.ToLower(d.Description),
+			loweredDesc := strings.TrimSuffix(strings.ToLower(d.Description), ".")
+			start, prefix = IndexOneOf(loweredDesc,
 				retArrayPrefix,
 				retArrayPrefix2,
 				retPrefix,
@@ -298,7 +300,8 @@ func Extract(doc *goquery.Document) (a API) {
 				// Do not cut prefix, if we do ParseType will be unable to detect an array clause.
 				prefix = ""
 			}
-			end, _ = IndexOneOf(strings.TrimSuffix(d.Description, "."), retSuffix, retSuffix2, retSuffix3)
+
+			end, _ = IndexOneOf(loweredDesc, retSuffix, retSuffix2, retSuffix3, retSuffix4)
 			if start > 0 && end > start {
 				ret := strings.TrimSpace(d.Description[start+len(prefix) : end])
 				ret = strings.TrimSuffix(ret, ".")

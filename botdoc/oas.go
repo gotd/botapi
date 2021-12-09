@@ -264,6 +264,7 @@ Schemas:
 	wellKnownTypes := []string{
 		"Update",
 		"Message",
+		"MessageId",
 		"User",
 		"Chat",
 		"File",
