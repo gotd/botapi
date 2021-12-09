@@ -13,7 +13,7 @@ import (
 	"path/filepath"
 
 	"github.com/PuerkitoBio/goquery"
-	"github.com/ogen-go/errors"
+	"github.com/go-faster/errors"
 
 	"github.com/gotd/botapi/botdoc"
 )

@@ -13,7 +13,7 @@ import (
 
 	"github.com/gotd/td/telegram"
 
-	"github.com/gotd/botapi/pool"
+	"github.com/gotd/botapi/internal/pool"
 )
 
 type handleContext struct {
