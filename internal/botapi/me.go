@@ -9,7 +9,7 @@ import (
 	"github.com/gotd/botapi/internal/oas"
 )
 
-func convertUser(user *tg.User) oas.User {
+func convertToUser(user *tg.User) oas.User {
 	return oas.User{
 		ID:                      int(user.ID),
 		IsBot:                   user.Bot,
@@ -34,7 +34,7 @@ func (b *BotAPI) GetMe(ctx context.Context) (oas.ResultUser, error) {
 	}
 
 	return oas.ResultUser{
-		Result: oas.NewOptUser(convertUser(self)),
+		Result: oas.NewOptUser(convertToUser(self)),
 		Ok:     true,
 	}, nil
 }
@@ -55,5 +55,5 @@ func (b *BotAPI) LogOut(ctx context.Context) (oas.Result, error) {
 		return oas.Result{}, err
 	}
 
-	return resultOK(r), &NotImplementedError{}
+	return resultOK(r), nil
 }
