@@ -11,16 +11,16 @@ type bound struct {
 }
 
 var (
-	charBoundRegex = regexp.MustCompile(`(\d+)-(\d+) characters`)
-	intBoundRegex  = regexp.MustCompile(`Values between (\d+)-(\d+) are accepted`)
+	charBoundRegex = regexp.MustCompile(`(?P<start>\d+)-(?P<end>\d+) (characters|bytes)`)
+	intBoundRegex  = regexp.MustCompile(`(?:between|;) (?P<start>\d+)(?:-|\sand\s)(?P<end>\d+)`)
 )
 
-func matchBounds(matches [][]byte) (a, b int) {
-	start, err := strconv.Atoi(string(matches[1]))
+func matchBounds(r *regexp.Regexp, matches []string) (a, b int) {
+	start, err := strconv.Atoi(matches[r.SubexpIndex("start")])
 	if err != nil {
 		return a, b
 	}
-	end, err := strconv.Atoi(string(matches[2]))
+	end, err := strconv.Atoi(matches[r.SubexpIndex("end")])
 	if err != nil {
 		return a, b
 	}
@@ -28,11 +28,11 @@ func matchBounds(matches [][]byte) (a, b int) {
 }
 
 func regexBounds(r *regexp.Regexp, s string) (a, b int) {
-	matches := r.FindSubmatch([]byte(s))
-	if len(matches) != 3 {
+	matches := r.FindStringSubmatch(s)
+	if len(matches) < 3 {
 		return a, b
 	}
-	return matchBounds(matches)
+	return matchBounds(r, matches)
 }
 
 func stringBounds(s string) bound {
