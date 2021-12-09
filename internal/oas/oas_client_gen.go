@@ -600,7 +600,7 @@ func (c *Client) Close(ctx context.Context) (res Result, err error) {
 // CopyMessage invokes copyMessage operation.
 //
 // POST /copyMessage
-func (c *Client) CopyMessage(ctx context.Context, request CopyMessage) (res Result, err error) {
+func (c *Client) CopyMessage(ctx context.Context, request CopyMessage) (res ResultMessageId, err error) {
 	if err := func() error {
 		if err := request.Validate(); err != nil {
 			return err
@@ -4726,7 +4726,7 @@ func (c *Client) UnpinChatMessage(ctx context.Context, request UnpinChatMessage)
 // UploadStickerFile invokes uploadStickerFile operation.
 //
 // POST /uploadStickerFile
-func (c *Client) UploadStickerFile(ctx context.Context, request UploadStickerFile) (res Result, err error) {
+func (c *Client) UploadStickerFile(ctx context.Context, request UploadStickerFile) (res ResultFile, err error) {
 	startTime := time.Now()
 	ctx, span := c.cfg.Tracer.Start(ctx, `UploadStickerFile`,
 		trace.WithAttributes(otelogen.OperationID(`uploadStickerFile`)),

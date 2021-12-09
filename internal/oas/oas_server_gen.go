@@ -103,7 +103,7 @@ type Handler interface {
 	// CopyMessage implements copyMessage operation.
 	//
 	// POST /copyMessage
-	CopyMessage(ctx context.Context, req CopyMessage) (Result, error)
+	CopyMessage(ctx context.Context, req CopyMessage) (ResultMessageId, error)
 	// CreateChatInviteLink implements createChatInviteLink operation.
 	//
 	// POST /createChatInviteLink
@@ -391,7 +391,7 @@ type Handler interface {
 	// UploadStickerFile implements uploadStickerFile operation.
 	//
 	// POST /uploadStickerFile
-	UploadStickerFile(ctx context.Context, req UploadStickerFile) (Result, error)
+	UploadStickerFile(ctx context.Context, req UploadStickerFile) (ResultFile, error)
 	// NewError creates ErrorStatusCode from error returned by handler.
 	//
 	// Used for common default response.

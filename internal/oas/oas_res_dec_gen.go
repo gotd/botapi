@@ -674,7 +674,7 @@ func decodeCloseResponse(resp *http.Response, span trace.Span) (res Result, err 
 	}
 }
 
-func decodeCopyMessageResponse(resp *http.Response, span trace.Span) (res Result, err error) {
+func decodeCopyMessageResponse(resp *http.Response, span trace.Span) (res ResultMessageId, err error) {
 	switch resp.StatusCode {
 	case 200:
 		switch resp.Header.Get("Content-Type") {
@@ -689,7 +689,7 @@ func decodeCopyMessageResponse(resp *http.Response, span trace.Span) (res Result
 			defer jx.PutDecoder(d)
 			d.ResetBytes(buf.Bytes())
 
-			var response Result
+			var response ResultMessageId
 			if err := func() error {
 				if err := response.Decode(d); err != nil {
 					return err
@@ -5570,7 +5570,7 @@ func decodeUnpinChatMessageResponse(resp *http.Response, span trace.Span) (res R
 	}
 }
 
-func decodeUploadStickerFileResponse(resp *http.Response, span trace.Span) (res Result, err error) {
+func decodeUploadStickerFileResponse(resp *http.Response, span trace.Span) (res ResultFile, err error) {
 	switch resp.StatusCode {
 	case 200:
 		switch resp.Header.Get("Content-Type") {
@@ -5585,7 +5585,7 @@ func decodeUploadStickerFileResponse(resp *http.Response, span trace.Span) (res 
 			defer jx.PutDecoder(d)
 			d.ResetBytes(buf.Bytes())
 
-			var response Result
+			var response ResultFile
 			if err := func() error {
 				if err := response.Decode(d); err != nil {
 					return err

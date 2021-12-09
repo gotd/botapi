@@ -1101,6 +1101,14 @@ type ExportChatInviteLink struct {
 	ChatID ID `json:"chat_id"`
 }
 
+// Ref: #/components/schemas/File
+type File struct {
+	FileID       string    `json:"file_id"`
+	FileUniqueID string    `json:"file_unique_id"`
+	FileSize     OptInt    `json:"file_size"`
+	FilePath     OptString `json:"file_path"`
+}
+
 // Ref: #/components/schemas/ForceReply
 type ForceReply struct {
 	ForceReply            bool      `json:"force_reply"`
@@ -1277,15 +1285,934 @@ type InlineKeyboardMarkup struct {
 
 // Ref: #/components/schemas/InlineQuery
 type InlineQuery struct {
-	ID       string      `json:"id"`
-	From     User        `json:"from"`
-	Query    string      `json:"query"`
-	Offset   string      `json:"offset"`
-	ChatType OptString   `json:"chat_type"`
-	Location OptLocation `json:"location"`
+	ID       string                 `json:"id"`
+	From     User                   `json:"from"`
+	Query    string                 `json:"query"`
+	Offset   string                 `json:"offset"`
+	ChatType OptInlineQueryChatType `json:"chat_type"`
+	Location OptLocation            `json:"location"`
 }
 
-type InlineQueryResult string
+type InlineQueryChatType string
+
+const (
+	InlineQueryChatTypeSender     InlineQueryChatType = "sender"
+	InlineQueryChatTypePrivate    InlineQueryChatType = "private"
+	InlineQueryChatTypeGroup      InlineQueryChatType = "group"
+	InlineQueryChatTypeSupergroup InlineQueryChatType = "supergroup"
+	InlineQueryChatTypeChannel    InlineQueryChatType = "channel"
+)
+
+// Ref: #/components/schemas/InlineQueryResult
+// InlineQueryResult represents sum type.
+type InlineQueryResult struct {
+	Type                            InlineQueryResultType // switch on this field
+	InlineQueryResultCachedAudio    InlineQueryResultCachedAudio
+	InlineQueryResultCachedDocument InlineQueryResultCachedDocument
+	InlineQueryResultCachedGif      InlineQueryResultCachedGif
+	InlineQueryResultCachedMpeg4Gif InlineQueryResultCachedMpeg4Gif
+	InlineQueryResultCachedPhoto    InlineQueryResultCachedPhoto
+	InlineQueryResultCachedSticker  InlineQueryResultCachedSticker
+	InlineQueryResultCachedVideo    InlineQueryResultCachedVideo
+	InlineQueryResultCachedVoice    InlineQueryResultCachedVoice
+	InlineQueryResultArticle        InlineQueryResultArticle
+	InlineQueryResultAudio          InlineQueryResultAudio
+	InlineQueryResultContact        InlineQueryResultContact
+	InlineQueryResultGame           InlineQueryResultGame
+	InlineQueryResultDocument       InlineQueryResultDocument
+	InlineQueryResultGif            InlineQueryResultGif
+	InlineQueryResultLocation       InlineQueryResultLocation
+	InlineQueryResultMpeg4Gif       InlineQueryResultMpeg4Gif
+	InlineQueryResultPhoto          InlineQueryResultPhoto
+	InlineQueryResultVenue          InlineQueryResultVenue
+	InlineQueryResultVideo          InlineQueryResultVideo
+	InlineQueryResultVoice          InlineQueryResultVoice
+}
+
+// InlineQueryResultType is oneOf type of InlineQueryResult.
+type InlineQueryResultType string
+
+// Possible values for InlineQueryResultType.
+const (
+	InlineQueryResultCachedAudioInlineQueryResult    InlineQueryResultType = "InlineQueryResultCachedAudio"
+	InlineQueryResultCachedDocumentInlineQueryResult InlineQueryResultType = "InlineQueryResultCachedDocument"
+	InlineQueryResultCachedGifInlineQueryResult      InlineQueryResultType = "InlineQueryResultCachedGif"
+	InlineQueryResultCachedMpeg4GifInlineQueryResult InlineQueryResultType = "InlineQueryResultCachedMpeg4Gif"
+	InlineQueryResultCachedPhotoInlineQueryResult    InlineQueryResultType = "InlineQueryResultCachedPhoto"
+	InlineQueryResultCachedStickerInlineQueryResult  InlineQueryResultType = "InlineQueryResultCachedSticker"
+	InlineQueryResultCachedVideoInlineQueryResult    InlineQueryResultType = "InlineQueryResultCachedVideo"
+	InlineQueryResultCachedVoiceInlineQueryResult    InlineQueryResultType = "InlineQueryResultCachedVoice"
+	InlineQueryResultArticleInlineQueryResult        InlineQueryResultType = "InlineQueryResultArticle"
+	InlineQueryResultAudioInlineQueryResult          InlineQueryResultType = "InlineQueryResultAudio"
+	InlineQueryResultContactInlineQueryResult        InlineQueryResultType = "InlineQueryResultContact"
+	InlineQueryResultGameInlineQueryResult           InlineQueryResultType = "InlineQueryResultGame"
+	InlineQueryResultDocumentInlineQueryResult       InlineQueryResultType = "InlineQueryResultDocument"
+	InlineQueryResultGifInlineQueryResult            InlineQueryResultType = "InlineQueryResultGif"
+	InlineQueryResultLocationInlineQueryResult       InlineQueryResultType = "InlineQueryResultLocation"
+	InlineQueryResultMpeg4GifInlineQueryResult       InlineQueryResultType = "InlineQueryResultMpeg4Gif"
+	InlineQueryResultPhotoInlineQueryResult          InlineQueryResultType = "InlineQueryResultPhoto"
+	InlineQueryResultVenueInlineQueryResult          InlineQueryResultType = "InlineQueryResultVenue"
+	InlineQueryResultVideoInlineQueryResult          InlineQueryResultType = "InlineQueryResultVideo"
+	InlineQueryResultVoiceInlineQueryResult          InlineQueryResultType = "InlineQueryResultVoice"
+)
+
+// IsInlineQueryResultCachedAudio reports whether InlineQueryResult is InlineQueryResultCachedAudio.
+func (s InlineQueryResult) IsInlineQueryResultCachedAudio() bool {
+	return s.Type == InlineQueryResultCachedAudioInlineQueryResult
+}
+
+// IsInlineQueryResultCachedDocument reports whether InlineQueryResult is InlineQueryResultCachedDocument.
+func (s InlineQueryResult) IsInlineQueryResultCachedDocument() bool {
+	return s.Type == InlineQueryResultCachedDocumentInlineQueryResult
+}
+
+// IsInlineQueryResultCachedGif reports whether InlineQueryResult is InlineQueryResultCachedGif.
+func (s InlineQueryResult) IsInlineQueryResultCachedGif() bool {
+	return s.Type == InlineQueryResultCachedGifInlineQueryResult
+}
+
+// IsInlineQueryResultCachedMpeg4Gif reports whether InlineQueryResult is InlineQueryResultCachedMpeg4Gif.
+func (s InlineQueryResult) IsInlineQueryResultCachedMpeg4Gif() bool {
+	return s.Type == InlineQueryResultCachedMpeg4GifInlineQueryResult
+}
+
+// IsInlineQueryResultCachedPhoto reports whether InlineQueryResult is InlineQueryResultCachedPhoto.
+func (s InlineQueryResult) IsInlineQueryResultCachedPhoto() bool {
+	return s.Type == InlineQueryResultCachedPhotoInlineQueryResult
+}
+
+// IsInlineQueryResultCachedSticker reports whether InlineQueryResult is InlineQueryResultCachedSticker.
+func (s InlineQueryResult) IsInlineQueryResultCachedSticker() bool {
+	return s.Type == InlineQueryResultCachedStickerInlineQueryResult
+}
+
+// IsInlineQueryResultCachedVideo reports whether InlineQueryResult is InlineQueryResultCachedVideo.
+func (s InlineQueryResult) IsInlineQueryResultCachedVideo() bool {
+	return s.Type == InlineQueryResultCachedVideoInlineQueryResult
+}
+
+// IsInlineQueryResultCachedVoice reports whether InlineQueryResult is InlineQueryResultCachedVoice.
+func (s InlineQueryResult) IsInlineQueryResultCachedVoice() bool {
+	return s.Type == InlineQueryResultCachedVoiceInlineQueryResult
+}
+
+// IsInlineQueryResultArticle reports whether InlineQueryResult is InlineQueryResultArticle.
+func (s InlineQueryResult) IsInlineQueryResultArticle() bool {
+	return s.Type == InlineQueryResultArticleInlineQueryResult
+}
+
+// IsInlineQueryResultAudio reports whether InlineQueryResult is InlineQueryResultAudio.
+func (s InlineQueryResult) IsInlineQueryResultAudio() bool {
+	return s.Type == InlineQueryResultAudioInlineQueryResult
+}
+
+// IsInlineQueryResultContact reports whether InlineQueryResult is InlineQueryResultContact.
+func (s InlineQueryResult) IsInlineQueryResultContact() bool {
+	return s.Type == InlineQueryResultContactInlineQueryResult
+}
+
+// IsInlineQueryResultGame reports whether InlineQueryResult is InlineQueryResultGame.
+func (s InlineQueryResult) IsInlineQueryResultGame() bool {
+	return s.Type == InlineQueryResultGameInlineQueryResult
+}
+
+// IsInlineQueryResultDocument reports whether InlineQueryResult is InlineQueryResultDocument.
+func (s InlineQueryResult) IsInlineQueryResultDocument() bool {
+	return s.Type == InlineQueryResultDocumentInlineQueryResult
+}
+
+// IsInlineQueryResultGif reports whether InlineQueryResult is InlineQueryResultGif.
+func (s InlineQueryResult) IsInlineQueryResultGif() bool {
+	return s.Type == InlineQueryResultGifInlineQueryResult
+}
+
+// IsInlineQueryResultLocation reports whether InlineQueryResult is InlineQueryResultLocation.
+func (s InlineQueryResult) IsInlineQueryResultLocation() bool {
+	return s.Type == InlineQueryResultLocationInlineQueryResult
+}
+
+// IsInlineQueryResultMpeg4Gif reports whether InlineQueryResult is InlineQueryResultMpeg4Gif.
+func (s InlineQueryResult) IsInlineQueryResultMpeg4Gif() bool {
+	return s.Type == InlineQueryResultMpeg4GifInlineQueryResult
+}
+
+// IsInlineQueryResultPhoto reports whether InlineQueryResult is InlineQueryResultPhoto.
+func (s InlineQueryResult) IsInlineQueryResultPhoto() bool {
+	return s.Type == InlineQueryResultPhotoInlineQueryResult
+}
+
+// IsInlineQueryResultVenue reports whether InlineQueryResult is InlineQueryResultVenue.
+func (s InlineQueryResult) IsInlineQueryResultVenue() bool {
+	return s.Type == InlineQueryResultVenueInlineQueryResult
+}
+
+// IsInlineQueryResultVideo reports whether InlineQueryResult is InlineQueryResultVideo.
+func (s InlineQueryResult) IsInlineQueryResultVideo() bool {
+	return s.Type == InlineQueryResultVideoInlineQueryResult
+}
+
+// IsInlineQueryResultVoice reports whether InlineQueryResult is InlineQueryResultVoice.
+func (s InlineQueryResult) IsInlineQueryResultVoice() bool {
+	return s.Type == InlineQueryResultVoiceInlineQueryResult
+}
+
+// SetInlineQueryResultCachedAudio sets InlineQueryResult to InlineQueryResultCachedAudio.
+func (s *InlineQueryResult) SetInlineQueryResultCachedAudio(v InlineQueryResultCachedAudio) {
+	s.Type = InlineQueryResultCachedAudioInlineQueryResult
+	s.InlineQueryResultCachedAudio = v
+}
+
+// GetInlineQueryResultCachedAudio returns InlineQueryResultCachedAudio and true boolean if InlineQueryResult is InlineQueryResultCachedAudio.
+func (s InlineQueryResult) GetInlineQueryResultCachedAudio() (v InlineQueryResultCachedAudio, ok bool) {
+	if !s.IsInlineQueryResultCachedAudio() {
+		return v, false
+	}
+	return s.InlineQueryResultCachedAudio, true
+}
+
+// NewInlineQueryResultCachedAudioInlineQueryResult returns new InlineQueryResult from InlineQueryResultCachedAudio.
+func NewInlineQueryResultCachedAudioInlineQueryResult(v InlineQueryResultCachedAudio) InlineQueryResult {
+	var s InlineQueryResult
+	s.SetInlineQueryResultCachedAudio(v)
+	return s
+}
+
+// SetInlineQueryResultCachedDocument sets InlineQueryResult to InlineQueryResultCachedDocument.
+func (s *InlineQueryResult) SetInlineQueryResultCachedDocument(v InlineQueryResultCachedDocument) {
+	s.Type = InlineQueryResultCachedDocumentInlineQueryResult
+	s.InlineQueryResultCachedDocument = v
+}
+
+// GetInlineQueryResultCachedDocument returns InlineQueryResultCachedDocument and true boolean if InlineQueryResult is InlineQueryResultCachedDocument.
+func (s InlineQueryResult) GetInlineQueryResultCachedDocument() (v InlineQueryResultCachedDocument, ok bool) {
+	if !s.IsInlineQueryResultCachedDocument() {
+		return v, false
+	}
+	return s.InlineQueryResultCachedDocument, true
+}
+
+// NewInlineQueryResultCachedDocumentInlineQueryResult returns new InlineQueryResult from InlineQueryResultCachedDocument.
+func NewInlineQueryResultCachedDocumentInlineQueryResult(v InlineQueryResultCachedDocument) InlineQueryResult {
+	var s InlineQueryResult
+	s.SetInlineQueryResultCachedDocument(v)
+	return s
+}
+
+// SetInlineQueryResultCachedGif sets InlineQueryResult to InlineQueryResultCachedGif.
+func (s *InlineQueryResult) SetInlineQueryResultCachedGif(v InlineQueryResultCachedGif) {
+	s.Type = InlineQueryResultCachedGifInlineQueryResult
+	s.InlineQueryResultCachedGif = v
+}
+
+// GetInlineQueryResultCachedGif returns InlineQueryResultCachedGif and true boolean if InlineQueryResult is InlineQueryResultCachedGif.
+func (s InlineQueryResult) GetInlineQueryResultCachedGif() (v InlineQueryResultCachedGif, ok bool) {
+	if !s.IsInlineQueryResultCachedGif() {
+		return v, false
+	}
+	return s.InlineQueryResultCachedGif, true
+}
+
+// NewInlineQueryResultCachedGifInlineQueryResult returns new InlineQueryResult from InlineQueryResultCachedGif.
+func NewInlineQueryResultCachedGifInlineQueryResult(v InlineQueryResultCachedGif) InlineQueryResult {
+	var s InlineQueryResult
+	s.SetInlineQueryResultCachedGif(v)
+	return s
+}
+
+// SetInlineQueryResultCachedMpeg4Gif sets InlineQueryResult to InlineQueryResultCachedMpeg4Gif.
+func (s *InlineQueryResult) SetInlineQueryResultCachedMpeg4Gif(v InlineQueryResultCachedMpeg4Gif) {
+	s.Type = InlineQueryResultCachedMpeg4GifInlineQueryResult
+	s.InlineQueryResultCachedMpeg4Gif = v
+}
+
+// GetInlineQueryResultCachedMpeg4Gif returns InlineQueryResultCachedMpeg4Gif and true boolean if InlineQueryResult is InlineQueryResultCachedMpeg4Gif.
+func (s InlineQueryResult) GetInlineQueryResultCachedMpeg4Gif() (v InlineQueryResultCachedMpeg4Gif, ok bool) {
+	if !s.IsInlineQueryResultCachedMpeg4Gif() {
+		return v, false
+	}
+	return s.InlineQueryResultCachedMpeg4Gif, true
+}
+
+// NewInlineQueryResultCachedMpeg4GifInlineQueryResult returns new InlineQueryResult from InlineQueryResultCachedMpeg4Gif.
+func NewInlineQueryResultCachedMpeg4GifInlineQueryResult(v InlineQueryResultCachedMpeg4Gif) InlineQueryResult {
+	var s InlineQueryResult
+	s.SetInlineQueryResultCachedMpeg4Gif(v)
+	return s
+}
+
+// SetInlineQueryResultCachedPhoto sets InlineQueryResult to InlineQueryResultCachedPhoto.
+func (s *InlineQueryResult) SetInlineQueryResultCachedPhoto(v InlineQueryResultCachedPhoto) {
+	s.Type = InlineQueryResultCachedPhotoInlineQueryResult
+	s.InlineQueryResultCachedPhoto = v
+}
+
+// GetInlineQueryResultCachedPhoto returns InlineQueryResultCachedPhoto and true boolean if InlineQueryResult is InlineQueryResultCachedPhoto.
+func (s InlineQueryResult) GetInlineQueryResultCachedPhoto() (v InlineQueryResultCachedPhoto, ok bool) {
+	if !s.IsInlineQueryResultCachedPhoto() {
+		return v, false
+	}
+	return s.InlineQueryResultCachedPhoto, true
+}
+
+// NewInlineQueryResultCachedPhotoInlineQueryResult returns new InlineQueryResult from InlineQueryResultCachedPhoto.
+func NewInlineQueryResultCachedPhotoInlineQueryResult(v InlineQueryResultCachedPhoto) InlineQueryResult {
+	var s InlineQueryResult
+	s.SetInlineQueryResultCachedPhoto(v)
+	return s
+}
+
+// SetInlineQueryResultCachedSticker sets InlineQueryResult to InlineQueryResultCachedSticker.
+func (s *InlineQueryResult) SetInlineQueryResultCachedSticker(v InlineQueryResultCachedSticker) {
+	s.Type = InlineQueryResultCachedStickerInlineQueryResult
+	s.InlineQueryResultCachedSticker = v
+}
+
+// GetInlineQueryResultCachedSticker returns InlineQueryResultCachedSticker and true boolean if InlineQueryResult is InlineQueryResultCachedSticker.
+func (s InlineQueryResult) GetInlineQueryResultCachedSticker() (v InlineQueryResultCachedSticker, ok bool) {
+	if !s.IsInlineQueryResultCachedSticker() {
+		return v, false
+	}
+	return s.InlineQueryResultCachedSticker, true
+}
+
+// NewInlineQueryResultCachedStickerInlineQueryResult returns new InlineQueryResult from InlineQueryResultCachedSticker.
+func NewInlineQueryResultCachedStickerInlineQueryResult(v InlineQueryResultCachedSticker) InlineQueryResult {
+	var s InlineQueryResult
+	s.SetInlineQueryResultCachedSticker(v)
+	return s
+}
+
+// SetInlineQueryResultCachedVideo sets InlineQueryResult to InlineQueryResultCachedVideo.
+func (s *InlineQueryResult) SetInlineQueryResultCachedVideo(v InlineQueryResultCachedVideo) {
+	s.Type = InlineQueryResultCachedVideoInlineQueryResult
+	s.InlineQueryResultCachedVideo = v
+}
+
+// GetInlineQueryResultCachedVideo returns InlineQueryResultCachedVideo and true boolean if InlineQueryResult is InlineQueryResultCachedVideo.
+func (s InlineQueryResult) GetInlineQueryResultCachedVideo() (v InlineQueryResultCachedVideo, ok bool) {
+	if !s.IsInlineQueryResultCachedVideo() {
+		return v, false
+	}
+	return s.InlineQueryResultCachedVideo, true
+}
+
+// NewInlineQueryResultCachedVideoInlineQueryResult returns new InlineQueryResult from InlineQueryResultCachedVideo.
+func NewInlineQueryResultCachedVideoInlineQueryResult(v InlineQueryResultCachedVideo) InlineQueryResult {
+	var s InlineQueryResult
+	s.SetInlineQueryResultCachedVideo(v)
+	return s
+}
+
+// SetInlineQueryResultCachedVoice sets InlineQueryResult to InlineQueryResultCachedVoice.
+func (s *InlineQueryResult) SetInlineQueryResultCachedVoice(v InlineQueryResultCachedVoice) {
+	s.Type = InlineQueryResultCachedVoiceInlineQueryResult
+	s.InlineQueryResultCachedVoice = v
+}
+
+// GetInlineQueryResultCachedVoice returns InlineQueryResultCachedVoice and true boolean if InlineQueryResult is InlineQueryResultCachedVoice.
+func (s InlineQueryResult) GetInlineQueryResultCachedVoice() (v InlineQueryResultCachedVoice, ok bool) {
+	if !s.IsInlineQueryResultCachedVoice() {
+		return v, false
+	}
+	return s.InlineQueryResultCachedVoice, true
+}
+
+// NewInlineQueryResultCachedVoiceInlineQueryResult returns new InlineQueryResult from InlineQueryResultCachedVoice.
+func NewInlineQueryResultCachedVoiceInlineQueryResult(v InlineQueryResultCachedVoice) InlineQueryResult {
+	var s InlineQueryResult
+	s.SetInlineQueryResultCachedVoice(v)
+	return s
+}
+
+// SetInlineQueryResultArticle sets InlineQueryResult to InlineQueryResultArticle.
+func (s *InlineQueryResult) SetInlineQueryResultArticle(v InlineQueryResultArticle) {
+	s.Type = InlineQueryResultArticleInlineQueryResult
+	s.InlineQueryResultArticle = v
+}
+
+// GetInlineQueryResultArticle returns InlineQueryResultArticle and true boolean if InlineQueryResult is InlineQueryResultArticle.
+func (s InlineQueryResult) GetInlineQueryResultArticle() (v InlineQueryResultArticle, ok bool) {
+	if !s.IsInlineQueryResultArticle() {
+		return v, false
+	}
+	return s.InlineQueryResultArticle, true
+}
+
+// NewInlineQueryResultArticleInlineQueryResult returns new InlineQueryResult from InlineQueryResultArticle.
+func NewInlineQueryResultArticleInlineQueryResult(v InlineQueryResultArticle) InlineQueryResult {
+	var s InlineQueryResult
+	s.SetInlineQueryResultArticle(v)
+	return s
+}
+
+// SetInlineQueryResultAudio sets InlineQueryResult to InlineQueryResultAudio.
+func (s *InlineQueryResult) SetInlineQueryResultAudio(v InlineQueryResultAudio) {
+	s.Type = InlineQueryResultAudioInlineQueryResult
+	s.InlineQueryResultAudio = v
+}
+
+// GetInlineQueryResultAudio returns InlineQueryResultAudio and true boolean if InlineQueryResult is InlineQueryResultAudio.
+func (s InlineQueryResult) GetInlineQueryResultAudio() (v InlineQueryResultAudio, ok bool) {
+	if !s.IsInlineQueryResultAudio() {
+		return v, false
+	}
+	return s.InlineQueryResultAudio, true
+}
+
+// NewInlineQueryResultAudioInlineQueryResult returns new InlineQueryResult from InlineQueryResultAudio.
+func NewInlineQueryResultAudioInlineQueryResult(v InlineQueryResultAudio) InlineQueryResult {
+	var s InlineQueryResult
+	s.SetInlineQueryResultAudio(v)
+	return s
+}
+
+// SetInlineQueryResultContact sets InlineQueryResult to InlineQueryResultContact.
+func (s *InlineQueryResult) SetInlineQueryResultContact(v InlineQueryResultContact) {
+	s.Type = InlineQueryResultContactInlineQueryResult
+	s.InlineQueryResultContact = v
+}
+
+// GetInlineQueryResultContact returns InlineQueryResultContact and true boolean if InlineQueryResult is InlineQueryResultContact.
+func (s InlineQueryResult) GetInlineQueryResultContact() (v InlineQueryResultContact, ok bool) {
+	if !s.IsInlineQueryResultContact() {
+		return v, false
+	}
+	return s.InlineQueryResultContact, true
+}
+
+// NewInlineQueryResultContactInlineQueryResult returns new InlineQueryResult from InlineQueryResultContact.
+func NewInlineQueryResultContactInlineQueryResult(v InlineQueryResultContact) InlineQueryResult {
+	var s InlineQueryResult
+	s.SetInlineQueryResultContact(v)
+	return s
+}
+
+// SetInlineQueryResultGame sets InlineQueryResult to InlineQueryResultGame.
+func (s *InlineQueryResult) SetInlineQueryResultGame(v InlineQueryResultGame) {
+	s.Type = InlineQueryResultGameInlineQueryResult
+	s.InlineQueryResultGame = v
+}
+
+// GetInlineQueryResultGame returns InlineQueryResultGame and true boolean if InlineQueryResult is InlineQueryResultGame.
+func (s InlineQueryResult) GetInlineQueryResultGame() (v InlineQueryResultGame, ok bool) {
+	if !s.IsInlineQueryResultGame() {
+		return v, false
+	}
+	return s.InlineQueryResultGame, true
+}
+
+// NewInlineQueryResultGameInlineQueryResult returns new InlineQueryResult from InlineQueryResultGame.
+func NewInlineQueryResultGameInlineQueryResult(v InlineQueryResultGame) InlineQueryResult {
+	var s InlineQueryResult
+	s.SetInlineQueryResultGame(v)
+	return s
+}
+
+// SetInlineQueryResultDocument sets InlineQueryResult to InlineQueryResultDocument.
+func (s *InlineQueryResult) SetInlineQueryResultDocument(v InlineQueryResultDocument) {
+	s.Type = InlineQueryResultDocumentInlineQueryResult
+	s.InlineQueryResultDocument = v
+}
+
+// GetInlineQueryResultDocument returns InlineQueryResultDocument and true boolean if InlineQueryResult is InlineQueryResultDocument.
+func (s InlineQueryResult) GetInlineQueryResultDocument() (v InlineQueryResultDocument, ok bool) {
+	if !s.IsInlineQueryResultDocument() {
+		return v, false
+	}
+	return s.InlineQueryResultDocument, true
+}
+
+// NewInlineQueryResultDocumentInlineQueryResult returns new InlineQueryResult from InlineQueryResultDocument.
+func NewInlineQueryResultDocumentInlineQueryResult(v InlineQueryResultDocument) InlineQueryResult {
+	var s InlineQueryResult
+	s.SetInlineQueryResultDocument(v)
+	return s
+}
+
+// SetInlineQueryResultGif sets InlineQueryResult to InlineQueryResultGif.
+func (s *InlineQueryResult) SetInlineQueryResultGif(v InlineQueryResultGif) {
+	s.Type = InlineQueryResultGifInlineQueryResult
+	s.InlineQueryResultGif = v
+}
+
+// GetInlineQueryResultGif returns InlineQueryResultGif and true boolean if InlineQueryResult is InlineQueryResultGif.
+func (s InlineQueryResult) GetInlineQueryResultGif() (v InlineQueryResultGif, ok bool) {
+	if !s.IsInlineQueryResultGif() {
+		return v, false
+	}
+	return s.InlineQueryResultGif, true
+}
+
+// NewInlineQueryResultGifInlineQueryResult returns new InlineQueryResult from InlineQueryResultGif.
+func NewInlineQueryResultGifInlineQueryResult(v InlineQueryResultGif) InlineQueryResult {
+	var s InlineQueryResult
+	s.SetInlineQueryResultGif(v)
+	return s
+}
+
+// SetInlineQueryResultLocation sets InlineQueryResult to InlineQueryResultLocation.
+func (s *InlineQueryResult) SetInlineQueryResultLocation(v InlineQueryResultLocation) {
+	s.Type = InlineQueryResultLocationInlineQueryResult
+	s.InlineQueryResultLocation = v
+}
+
+// GetInlineQueryResultLocation returns InlineQueryResultLocation and true boolean if InlineQueryResult is InlineQueryResultLocation.
+func (s InlineQueryResult) GetInlineQueryResultLocation() (v InlineQueryResultLocation, ok bool) {
+	if !s.IsInlineQueryResultLocation() {
+		return v, false
+	}
+	return s.InlineQueryResultLocation, true
+}
+
+// NewInlineQueryResultLocationInlineQueryResult returns new InlineQueryResult from InlineQueryResultLocation.
+func NewInlineQueryResultLocationInlineQueryResult(v InlineQueryResultLocation) InlineQueryResult {
+	var s InlineQueryResult
+	s.SetInlineQueryResultLocation(v)
+	return s
+}
+
+// SetInlineQueryResultMpeg4Gif sets InlineQueryResult to InlineQueryResultMpeg4Gif.
+func (s *InlineQueryResult) SetInlineQueryResultMpeg4Gif(v InlineQueryResultMpeg4Gif) {
+	s.Type = InlineQueryResultMpeg4GifInlineQueryResult
+	s.InlineQueryResultMpeg4Gif = v
+}
+
+// GetInlineQueryResultMpeg4Gif returns InlineQueryResultMpeg4Gif and true boolean if InlineQueryResult is InlineQueryResultMpeg4Gif.
+func (s InlineQueryResult) GetInlineQueryResultMpeg4Gif() (v InlineQueryResultMpeg4Gif, ok bool) {
+	if !s.IsInlineQueryResultMpeg4Gif() {
+		return v, false
+	}
+	return s.InlineQueryResultMpeg4Gif, true
+}
+
+// NewInlineQueryResultMpeg4GifInlineQueryResult returns new InlineQueryResult from InlineQueryResultMpeg4Gif.
+func NewInlineQueryResultMpeg4GifInlineQueryResult(v InlineQueryResultMpeg4Gif) InlineQueryResult {
+	var s InlineQueryResult
+	s.SetInlineQueryResultMpeg4Gif(v)
+	return s
+}
+
+// SetInlineQueryResultPhoto sets InlineQueryResult to InlineQueryResultPhoto.
+func (s *InlineQueryResult) SetInlineQueryResultPhoto(v InlineQueryResultPhoto) {
+	s.Type = InlineQueryResultPhotoInlineQueryResult
+	s.InlineQueryResultPhoto = v
+}
+
+// GetInlineQueryResultPhoto returns InlineQueryResultPhoto and true boolean if InlineQueryResult is InlineQueryResultPhoto.
+func (s InlineQueryResult) GetInlineQueryResultPhoto() (v InlineQueryResultPhoto, ok bool) {
+	if !s.IsInlineQueryResultPhoto() {
+		return v, false
+	}
+	return s.InlineQueryResultPhoto, true
+}
+
+// NewInlineQueryResultPhotoInlineQueryResult returns new InlineQueryResult from InlineQueryResultPhoto.
+func NewInlineQueryResultPhotoInlineQueryResult(v InlineQueryResultPhoto) InlineQueryResult {
+	var s InlineQueryResult
+	s.SetInlineQueryResultPhoto(v)
+	return s
+}
+
+// SetInlineQueryResultVenue sets InlineQueryResult to InlineQueryResultVenue.
+func (s *InlineQueryResult) SetInlineQueryResultVenue(v InlineQueryResultVenue) {
+	s.Type = InlineQueryResultVenueInlineQueryResult
+	s.InlineQueryResultVenue = v
+}
+
+// GetInlineQueryResultVenue returns InlineQueryResultVenue and true boolean if InlineQueryResult is InlineQueryResultVenue.
+func (s InlineQueryResult) GetInlineQueryResultVenue() (v InlineQueryResultVenue, ok bool) {
+	if !s.IsInlineQueryResultVenue() {
+		return v, false
+	}
+	return s.InlineQueryResultVenue, true
+}
+
+// NewInlineQueryResultVenueInlineQueryResult returns new InlineQueryResult from InlineQueryResultVenue.
+func NewInlineQueryResultVenueInlineQueryResult(v InlineQueryResultVenue) InlineQueryResult {
+	var s InlineQueryResult
+	s.SetInlineQueryResultVenue(v)
+	return s
+}
+
+// SetInlineQueryResultVideo sets InlineQueryResult to InlineQueryResultVideo.
+func (s *InlineQueryResult) SetInlineQueryResultVideo(v InlineQueryResultVideo) {
+	s.Type = InlineQueryResultVideoInlineQueryResult
+	s.InlineQueryResultVideo = v
+}
+
+// GetInlineQueryResultVideo returns InlineQueryResultVideo and true boolean if InlineQueryResult is InlineQueryResultVideo.
+func (s InlineQueryResult) GetInlineQueryResultVideo() (v InlineQueryResultVideo, ok bool) {
+	if !s.IsInlineQueryResultVideo() {
+		return v, false
+	}
+	return s.InlineQueryResultVideo, true
+}
+
+// NewInlineQueryResultVideoInlineQueryResult returns new InlineQueryResult from InlineQueryResultVideo.
+func NewInlineQueryResultVideoInlineQueryResult(v InlineQueryResultVideo) InlineQueryResult {
+	var s InlineQueryResult
+	s.SetInlineQueryResultVideo(v)
+	return s
+}
+
+// SetInlineQueryResultVoice sets InlineQueryResult to InlineQueryResultVoice.
+func (s *InlineQueryResult) SetInlineQueryResultVoice(v InlineQueryResultVoice) {
+	s.Type = InlineQueryResultVoiceInlineQueryResult
+	s.InlineQueryResultVoice = v
+}
+
+// GetInlineQueryResultVoice returns InlineQueryResultVoice and true boolean if InlineQueryResult is InlineQueryResultVoice.
+func (s InlineQueryResult) GetInlineQueryResultVoice() (v InlineQueryResultVoice, ok bool) {
+	if !s.IsInlineQueryResultVoice() {
+		return v, false
+	}
+	return s.InlineQueryResultVoice, true
+}
+
+// NewInlineQueryResultVoiceInlineQueryResult returns new InlineQueryResult from InlineQueryResultVoice.
+func NewInlineQueryResultVoiceInlineQueryResult(v InlineQueryResultVoice) InlineQueryResult {
+	var s InlineQueryResult
+	s.SetInlineQueryResultVoice(v)
+	return s
+}
+
+// Ref: #/components/schemas/InlineQueryResultArticle
+type InlineQueryResultArticle struct {
+	Type                string                  `json:"type"`
+	ID                  string                  `json:"id"`
+	Title               string                  `json:"title"`
+	InputMessageContent InputMessageContent     `json:"input_message_content"`
+	ReplyMarkup         OptInlineKeyboardMarkup `json:"reply_markup"`
+	URL                 OptURL                  `json:"url"`
+	HideURL             OptBool                 `json:"hide_url"`
+	Description         OptString               `json:"description"`
+	ThumbURL            OptURL                  `json:"thumb_url"`
+	ThumbWidth          OptInt                  `json:"thumb_width"`
+	ThumbHeight         OptInt                  `json:"thumb_height"`
+}
+
+// Ref: #/components/schemas/InlineQueryResultAudio
+type InlineQueryResultAudio struct {
+	Type                string                  `json:"type"`
+	ID                  string                  `json:"id"`
+	AudioURL            url.URL                 `json:"audio_url"`
+	Title               string                  `json:"title"`
+	Caption             OptString               `json:"caption"`
+	ParseMode           OptString               `json:"parse_mode"`
+	CaptionEntities     []MessageEntity         `json:"caption_entities"`
+	Performer           OptString               `json:"performer"`
+	AudioDuration       OptInt                  `json:"audio_duration"`
+	ReplyMarkup         OptInlineKeyboardMarkup `json:"reply_markup"`
+	InputMessageContent *InputMessageContent    `json:"input_message_content"`
+}
+
+// Ref: #/components/schemas/InlineQueryResultCachedAudio
+type InlineQueryResultCachedAudio struct {
+	Type                string                  `json:"type"`
+	ID                  string                  `json:"id"`
+	AudioFileID         string                  `json:"audio_file_id"`
+	Caption             OptString               `json:"caption"`
+	ParseMode           OptString               `json:"parse_mode"`
+	CaptionEntities     []MessageEntity         `json:"caption_entities"`
+	ReplyMarkup         OptInlineKeyboardMarkup `json:"reply_markup"`
+	InputMessageContent *InputMessageContent    `json:"input_message_content"`
+}
+
+// Ref: #/components/schemas/InlineQueryResultCachedDocument
+type InlineQueryResultCachedDocument struct {
+	Type                string                  `json:"type"`
+	ID                  string                  `json:"id"`
+	Title               string                  `json:"title"`
+	DocumentFileID      string                  `json:"document_file_id"`
+	Description         OptString               `json:"description"`
+	Caption             OptString               `json:"caption"`
+	ParseMode           OptString               `json:"parse_mode"`
+	CaptionEntities     []MessageEntity         `json:"caption_entities"`
+	ReplyMarkup         OptInlineKeyboardMarkup `json:"reply_markup"`
+	InputMessageContent *InputMessageContent    `json:"input_message_content"`
+}
+
+// Ref: #/components/schemas/InlineQueryResultCachedGif
+type InlineQueryResultCachedGif struct {
+	Type                string                  `json:"type"`
+	ID                  string                  `json:"id"`
+	GIFFileID           string                  `json:"gif_file_id"`
+	Title               OptString               `json:"title"`
+	Caption             OptString               `json:"caption"`
+	ParseMode           OptString               `json:"parse_mode"`
+	CaptionEntities     []MessageEntity         `json:"caption_entities"`
+	ReplyMarkup         OptInlineKeyboardMarkup `json:"reply_markup"`
+	InputMessageContent *InputMessageContent    `json:"input_message_content"`
+}
+
+// Ref: #/components/schemas/InlineQueryResultCachedMpeg4Gif
+type InlineQueryResultCachedMpeg4Gif struct {
+	Type                string                  `json:"type"`
+	ID                  string                  `json:"id"`
+	Mpeg4FileID         string                  `json:"mpeg4_file_id"`
+	Title               OptString               `json:"title"`
+	Caption             OptString               `json:"caption"`
+	ParseMode           OptString               `json:"parse_mode"`
+	CaptionEntities     []MessageEntity         `json:"caption_entities"`
+	ReplyMarkup         OptInlineKeyboardMarkup `json:"reply_markup"`
+	InputMessageContent *InputMessageContent    `json:"input_message_content"`
+}
+
+// Ref: #/components/schemas/InlineQueryResultCachedPhoto
+type InlineQueryResultCachedPhoto struct {
+	Type                string                  `json:"type"`
+	ID                  string                  `json:"id"`
+	PhotoFileID         string                  `json:"photo_file_id"`
+	Title               OptString               `json:"title"`
+	Description         OptString               `json:"description"`
+	Caption             OptString               `json:"caption"`
+	ParseMode           OptString               `json:"parse_mode"`
+	CaptionEntities     []MessageEntity         `json:"caption_entities"`
+	ReplyMarkup         OptInlineKeyboardMarkup `json:"reply_markup"`
+	InputMessageContent *InputMessageContent    `json:"input_message_content"`
+}
+
+// Ref: #/components/schemas/InlineQueryResultCachedSticker
+type InlineQueryResultCachedSticker struct {
+	Type                string                  `json:"type"`
+	ID                  string                  `json:"id"`
+	StickerFileID       string                  `json:"sticker_file_id"`
+	ReplyMarkup         OptInlineKeyboardMarkup `json:"reply_markup"`
+	InputMessageContent *InputMessageContent    `json:"input_message_content"`
+}
+
+// Ref: #/components/schemas/InlineQueryResultCachedVideo
+type InlineQueryResultCachedVideo struct {
+	Type                string                  `json:"type"`
+	ID                  string                  `json:"id"`
+	VideoFileID         string                  `json:"video_file_id"`
+	Title               string                  `json:"title"`
+	Description         OptString               `json:"description"`
+	Caption             OptString               `json:"caption"`
+	ParseMode           OptString               `json:"parse_mode"`
+	CaptionEntities     []MessageEntity         `json:"caption_entities"`
+	ReplyMarkup         OptInlineKeyboardMarkup `json:"reply_markup"`
+	InputMessageContent *InputMessageContent    `json:"input_message_content"`
+}
+
+// Ref: #/components/schemas/InlineQueryResultCachedVoice
+type InlineQueryResultCachedVoice struct {
+	Type                string                  `json:"type"`
+	ID                  string                  `json:"id"`
+	VoiceFileID         string                  `json:"voice_file_id"`
+	Title               string                  `json:"title"`
+	Caption             OptString               `json:"caption"`
+	ParseMode           OptString               `json:"parse_mode"`
+	CaptionEntities     []MessageEntity         `json:"caption_entities"`
+	ReplyMarkup         OptInlineKeyboardMarkup `json:"reply_markup"`
+	InputMessageContent *InputMessageContent    `json:"input_message_content"`
+}
+
+// Ref: #/components/schemas/InlineQueryResultContact
+type InlineQueryResultContact struct {
+	Type                string                  `json:"type"`
+	ID                  string                  `json:"id"`
+	PhoneNumber         string                  `json:"phone_number"`
+	FirstName           string                  `json:"first_name"`
+	LastName            OptString               `json:"last_name"`
+	Vcard               OptString               `json:"vcard"`
+	ReplyMarkup         OptInlineKeyboardMarkup `json:"reply_markup"`
+	InputMessageContent *InputMessageContent    `json:"input_message_content"`
+	ThumbURL            OptURL                  `json:"thumb_url"`
+	ThumbWidth          OptInt                  `json:"thumb_width"`
+	ThumbHeight         OptInt                  `json:"thumb_height"`
+}
+
+// Ref: #/components/schemas/InlineQueryResultDocument
+type InlineQueryResultDocument struct {
+	Type                string                  `json:"type"`
+	ID                  string                  `json:"id"`
+	Title               string                  `json:"title"`
+	Caption             OptString               `json:"caption"`
+	ParseMode           OptString               `json:"parse_mode"`
+	CaptionEntities     []MessageEntity         `json:"caption_entities"`
+	DocumentURL         url.URL                 `json:"document_url"`
+	MimeType            string                  `json:"mime_type"`
+	Description         OptString               `json:"description"`
+	ReplyMarkup         OptInlineKeyboardMarkup `json:"reply_markup"`
+	InputMessageContent *InputMessageContent    `json:"input_message_content"`
+	ThumbURL            OptURL                  `json:"thumb_url"`
+	ThumbWidth          OptInt                  `json:"thumb_width"`
+	ThumbHeight         OptInt                  `json:"thumb_height"`
+}
+
+// Ref: #/components/schemas/InlineQueryResultGame
+type InlineQueryResultGame struct {
+	Type          string                  `json:"type"`
+	ID            string                  `json:"id"`
+	GameShortName string                  `json:"game_short_name"`
+	ReplyMarkup   OptInlineKeyboardMarkup `json:"reply_markup"`
+}
+
+// Ref: #/components/schemas/InlineQueryResultGif
+type InlineQueryResultGif struct {
+	Type                string                  `json:"type"`
+	ID                  string                  `json:"id"`
+	GIFURL              url.URL                 `json:"gif_url"`
+	GIFWidth            OptInt                  `json:"gif_width"`
+	GIFHeight           OptInt                  `json:"gif_height"`
+	GIFDuration         OptInt                  `json:"gif_duration"`
+	ThumbURL            url.URL                 `json:"thumb_url"`
+	ThumbMimeType       OptString               `json:"thumb_mime_type"`
+	Title               OptString               `json:"title"`
+	Caption             OptString               `json:"caption"`
+	ParseMode           OptString               `json:"parse_mode"`
+	CaptionEntities     []MessageEntity         `json:"caption_entities"`
+	ReplyMarkup         OptInlineKeyboardMarkup `json:"reply_markup"`
+	InputMessageContent *InputMessageContent    `json:"input_message_content"`
+}
+
+// Ref: #/components/schemas/InlineQueryResultLocation
+type InlineQueryResultLocation struct {
+	Type                 string                  `json:"type"`
+	ID                   string                  `json:"id"`
+	Latitude             float64                 `json:"latitude"`
+	Longitude            float64                 `json:"longitude"`
+	Title                string                  `json:"title"`
+	HorizontalAccuracy   OptFloat64              `json:"horizontal_accuracy"`
+	LivePeriod           OptInt                  `json:"live_period"`
+	Heading              OptInt                  `json:"heading"`
+	ProximityAlertRadius OptInt                  `json:"proximity_alert_radius"`
+	ReplyMarkup          OptInlineKeyboardMarkup `json:"reply_markup"`
+	InputMessageContent  *InputMessageContent    `json:"input_message_content"`
+	ThumbURL             OptURL                  `json:"thumb_url"`
+	ThumbWidth           OptInt                  `json:"thumb_width"`
+	ThumbHeight          OptInt                  `json:"thumb_height"`
+}
+
+// Ref: #/components/schemas/InlineQueryResultMpeg4Gif
+type InlineQueryResultMpeg4Gif struct {
+	Type                string                  `json:"type"`
+	ID                  string                  `json:"id"`
+	Mpeg4URL            url.URL                 `json:"mpeg4_url"`
+	Mpeg4Width          OptInt                  `json:"mpeg4_width"`
+	Mpeg4Height         OptInt                  `json:"mpeg4_height"`
+	Mpeg4Duration       OptInt                  `json:"mpeg4_duration"`
+	ThumbURL            url.URL                 `json:"thumb_url"`
+	ThumbMimeType       OptString               `json:"thumb_mime_type"`
+	Title               OptString               `json:"title"`
+	Caption             OptString               `json:"caption"`
+	ParseMode           OptString               `json:"parse_mode"`
+	CaptionEntities     []MessageEntity         `json:"caption_entities"`
+	ReplyMarkup         OptInlineKeyboardMarkup `json:"reply_markup"`
+	InputMessageContent *InputMessageContent    `json:"input_message_content"`
+}
+
+// Ref: #/components/schemas/InlineQueryResultPhoto
+type InlineQueryResultPhoto struct {
+	Type                string                  `json:"type"`
+	ID                  string                  `json:"id"`
+	PhotoURL            url.URL                 `json:"photo_url"`
+	ThumbURL            url.URL                 `json:"thumb_url"`
+	PhotoWidth          OptInt                  `json:"photo_width"`
+	PhotoHeight         OptInt                  `json:"photo_height"`
+	Title               OptString               `json:"title"`
+	Description         OptString               `json:"description"`
+	Caption             OptString               `json:"caption"`
+	ParseMode           OptString               `json:"parse_mode"`
+	CaptionEntities     []MessageEntity         `json:"caption_entities"`
+	ReplyMarkup         OptInlineKeyboardMarkup `json:"reply_markup"`
+	InputMessageContent *InputMessageContent    `json:"input_message_content"`
+}
+
+// Ref: #/components/schemas/InlineQueryResultVenue
+type InlineQueryResultVenue struct {
+	Type                string                  `json:"type"`
+	ID                  string                  `json:"id"`
+	Latitude            float64                 `json:"latitude"`
+	Longitude           float64                 `json:"longitude"`
+	Title               string                  `json:"title"`
+	Address             string                  `json:"address"`
+	FoursquareID        OptString               `json:"foursquare_id"`
+	FoursquareType      OptString               `json:"foursquare_type"`
+	GooglePlaceID       OptString               `json:"google_place_id"`
+	GooglePlaceType     OptString               `json:"google_place_type"`
+	ReplyMarkup         OptInlineKeyboardMarkup `json:"reply_markup"`
+	InputMessageContent *InputMessageContent    `json:"input_message_content"`
+	ThumbURL            OptURL                  `json:"thumb_url"`
+	ThumbWidth          OptInt                  `json:"thumb_width"`
+	ThumbHeight         OptInt                  `json:"thumb_height"`
+}
+
+// Ref: #/components/schemas/InlineQueryResultVideo
+type InlineQueryResultVideo struct {
+	Type                string                  `json:"type"`
+	ID                  string                  `json:"id"`
+	VideoURL            url.URL                 `json:"video_url"`
+	MimeType            string                  `json:"mime_type"`
+	ThumbURL            url.URL                 `json:"thumb_url"`
+	Title               string                  `json:"title"`
+	Caption             OptString               `json:"caption"`
+	ParseMode           OptString               `json:"parse_mode"`
+	CaptionEntities     []MessageEntity         `json:"caption_entities"`
+	VideoWidth          OptInt                  `json:"video_width"`
+	VideoHeight         OptInt                  `json:"video_height"`
+	VideoDuration       OptInt                  `json:"video_duration"`
+	Description         OptString               `json:"description"`
+	ReplyMarkup         OptInlineKeyboardMarkup `json:"reply_markup"`
+	InputMessageContent *InputMessageContent    `json:"input_message_content"`
+}
+
+// Ref: #/components/schemas/InlineQueryResultVoice
+type InlineQueryResultVoice struct {
+	Type                string                  `json:"type"`
+	ID                  string                  `json:"id"`
+	VoiceURL            url.URL                 `json:"voice_url"`
+	Title               string                  `json:"title"`
+	Caption             OptString               `json:"caption"`
+	ParseMode           OptString               `json:"parse_mode"`
+	CaptionEntities     []MessageEntity         `json:"caption_entities"`
+	VoiceDuration       OptInt                  `json:"voice_duration"`
+	ReplyMarkup         OptInlineKeyboardMarkup `json:"reply_markup"`
+	InputMessageContent *InputMessageContent    `json:"input_message_content"`
+}
+
+// Ref: #/components/schemas/InputContactMessageContent
+type InputContactMessageContent struct {
+	PhoneNumber string    `json:"phone_number"`
+	FirstName   string    `json:"first_name"`
+	LastName    OptString `json:"last_name"`
+	Vcard       OptString `json:"vcard"`
+}
+
+// Ref: #/components/schemas/InputInvoiceMessageContent
+type InputInvoiceMessageContent struct {
+	Title                     string         `json:"title"`
+	Description               string         `json:"description"`
+	Payload                   string         `json:"payload"`
+	ProviderToken             string         `json:"provider_token"`
+	Currency                  string         `json:"currency"`
+	Prices                    []LabeledPrice `json:"prices"`
+	MaxTipAmount              OptInt         `json:"max_tip_amount"`
+	SuggestedTipAmounts       []int          `json:"suggested_tip_amounts"`
+	ProviderData              OptString      `json:"provider_data"`
+	PhotoURL                  OptURL         `json:"photo_url"`
+	PhotoSize                 OptInt         `json:"photo_size"`
+	PhotoWidth                OptInt         `json:"photo_width"`
+	PhotoHeight               OptInt         `json:"photo_height"`
+	NeedName                  OptBool        `json:"need_name"`
+	NeedPhoneNumber           OptBool        `json:"need_phone_number"`
+	NeedEmail                 OptBool        `json:"need_email"`
+	NeedShippingAddress       OptBool        `json:"need_shipping_address"`
+	SendPhoneNumberToProvider OptBool        `json:"send_phone_number_to_provider"`
+	SendEmailToProvider       OptBool        `json:"send_email_to_provider"`
+	IsFlexible                OptBool        `json:"is_flexible"`
+}
+
+// Ref: #/components/schemas/InputLocationMessageContent
+type InputLocationMessageContent struct {
+	Latitude             float64    `json:"latitude"`
+	Longitude            float64    `json:"longitude"`
+	HorizontalAccuracy   OptFloat64 `json:"horizontal_accuracy"`
+	LivePeriod           OptInt     `json:"live_period"`
+	Heading              OptInt     `json:"heading"`
+	ProximityAlertRadius OptInt     `json:"proximity_alert_radius"`
+}
 
 // Ref: #/components/schemas/InputMedia
 // InputMedia represents sum type.
@@ -1490,6 +2417,179 @@ type InputMediaVideo struct {
 	SupportsStreaming OptBool         `json:"supports_streaming"`
 }
 
+// Ref: #/components/schemas/InputMessageContent
+// InputMessageContent represents sum type.
+type InputMessageContent struct {
+	Type                        InputMessageContentType // switch on this field
+	InputTextMessageContent     InputTextMessageContent
+	InputLocationMessageContent InputLocationMessageContent
+	InputVenueMessageContent    InputVenueMessageContent
+	InputContactMessageContent  InputContactMessageContent
+	InputInvoiceMessageContent  InputInvoiceMessageContent
+}
+
+// InputMessageContentType is oneOf type of InputMessageContent.
+type InputMessageContentType string
+
+// Possible values for InputMessageContentType.
+const (
+	InputTextMessageContentInputMessageContent     InputMessageContentType = "InputTextMessageContent"
+	InputLocationMessageContentInputMessageContent InputMessageContentType = "InputLocationMessageContent"
+	InputVenueMessageContentInputMessageContent    InputMessageContentType = "InputVenueMessageContent"
+	InputContactMessageContentInputMessageContent  InputMessageContentType = "InputContactMessageContent"
+	InputInvoiceMessageContentInputMessageContent  InputMessageContentType = "InputInvoiceMessageContent"
+)
+
+// IsInputTextMessageContent reports whether InputMessageContent is InputTextMessageContent.
+func (s InputMessageContent) IsInputTextMessageContent() bool {
+	return s.Type == InputTextMessageContentInputMessageContent
+}
+
+// IsInputLocationMessageContent reports whether InputMessageContent is InputLocationMessageContent.
+func (s InputMessageContent) IsInputLocationMessageContent() bool {
+	return s.Type == InputLocationMessageContentInputMessageContent
+}
+
+// IsInputVenueMessageContent reports whether InputMessageContent is InputVenueMessageContent.
+func (s InputMessageContent) IsInputVenueMessageContent() bool {
+	return s.Type == InputVenueMessageContentInputMessageContent
+}
+
+// IsInputContactMessageContent reports whether InputMessageContent is InputContactMessageContent.
+func (s InputMessageContent) IsInputContactMessageContent() bool {
+	return s.Type == InputContactMessageContentInputMessageContent
+}
+
+// IsInputInvoiceMessageContent reports whether InputMessageContent is InputInvoiceMessageContent.
+func (s InputMessageContent) IsInputInvoiceMessageContent() bool {
+	return s.Type == InputInvoiceMessageContentInputMessageContent
+}
+
+// SetInputTextMessageContent sets InputMessageContent to InputTextMessageContent.
+func (s *InputMessageContent) SetInputTextMessageContent(v InputTextMessageContent) {
+	s.Type = InputTextMessageContentInputMessageContent
+	s.InputTextMessageContent = v
+}
+
+// GetInputTextMessageContent returns InputTextMessageContent and true boolean if InputMessageContent is InputTextMessageContent.
+func (s InputMessageContent) GetInputTextMessageContent() (v InputTextMessageContent, ok bool) {
+	if !s.IsInputTextMessageContent() {
+		return v, false
+	}
+	return s.InputTextMessageContent, true
+}
+
+// NewInputTextMessageContentInputMessageContent returns new InputMessageContent from InputTextMessageContent.
+func NewInputTextMessageContentInputMessageContent(v InputTextMessageContent) InputMessageContent {
+	var s InputMessageContent
+	s.SetInputTextMessageContent(v)
+	return s
+}
+
+// SetInputLocationMessageContent sets InputMessageContent to InputLocationMessageContent.
+func (s *InputMessageContent) SetInputLocationMessageContent(v InputLocationMessageContent) {
+	s.Type = InputLocationMessageContentInputMessageContent
+	s.InputLocationMessageContent = v
+}
+
+// GetInputLocationMessageContent returns InputLocationMessageContent and true boolean if InputMessageContent is InputLocationMessageContent.
+func (s InputMessageContent) GetInputLocationMessageContent() (v InputLocationMessageContent, ok bool) {
+	if !s.IsInputLocationMessageContent() {
+		return v, false
+	}
+	return s.InputLocationMessageContent, true
+}
+
+// NewInputLocationMessageContentInputMessageContent returns new InputMessageContent from InputLocationMessageContent.
+func NewInputLocationMessageContentInputMessageContent(v InputLocationMessageContent) InputMessageContent {
+	var s InputMessageContent
+	s.SetInputLocationMessageContent(v)
+	return s
+}
+
+// SetInputVenueMessageContent sets InputMessageContent to InputVenueMessageContent.
+func (s *InputMessageContent) SetInputVenueMessageContent(v InputVenueMessageContent) {
+	s.Type = InputVenueMessageContentInputMessageContent
+	s.InputVenueMessageContent = v
+}
+
+// GetInputVenueMessageContent returns InputVenueMessageContent and true boolean if InputMessageContent is InputVenueMessageContent.
+func (s InputMessageContent) GetInputVenueMessageContent() (v InputVenueMessageContent, ok bool) {
+	if !s.IsInputVenueMessageContent() {
+		return v, false
+	}
+	return s.InputVenueMessageContent, true
+}
+
+// NewInputVenueMessageContentInputMessageContent returns new InputMessageContent from InputVenueMessageContent.
+func NewInputVenueMessageContentInputMessageContent(v InputVenueMessageContent) InputMessageContent {
+	var s InputMessageContent
+	s.SetInputVenueMessageContent(v)
+	return s
+}
+
+// SetInputContactMessageContent sets InputMessageContent to InputContactMessageContent.
+func (s *InputMessageContent) SetInputContactMessageContent(v InputContactMessageContent) {
+	s.Type = InputContactMessageContentInputMessageContent
+	s.InputContactMessageContent = v
+}
+
+// GetInputContactMessageContent returns InputContactMessageContent and true boolean if InputMessageContent is InputContactMessageContent.
+func (s InputMessageContent) GetInputContactMessageContent() (v InputContactMessageContent, ok bool) {
+	if !s.IsInputContactMessageContent() {
+		return v, false
+	}
+	return s.InputContactMessageContent, true
+}
+
+// NewInputContactMessageContentInputMessageContent returns new InputMessageContent from InputContactMessageContent.
+func NewInputContactMessageContentInputMessageContent(v InputContactMessageContent) InputMessageContent {
+	var s InputMessageContent
+	s.SetInputContactMessageContent(v)
+	return s
+}
+
+// SetInputInvoiceMessageContent sets InputMessageContent to InputInvoiceMessageContent.
+func (s *InputMessageContent) SetInputInvoiceMessageContent(v InputInvoiceMessageContent) {
+	s.Type = InputInvoiceMessageContentInputMessageContent
+	s.InputInvoiceMessageContent = v
+}
+
+// GetInputInvoiceMessageContent returns InputInvoiceMessageContent and true boolean if InputMessageContent is InputInvoiceMessageContent.
+func (s InputMessageContent) GetInputInvoiceMessageContent() (v InputInvoiceMessageContent, ok bool) {
+	if !s.IsInputInvoiceMessageContent() {
+		return v, false
+	}
+	return s.InputInvoiceMessageContent, true
+}
+
+// NewInputInvoiceMessageContentInputMessageContent returns new InputMessageContent from InputInvoiceMessageContent.
+func NewInputInvoiceMessageContentInputMessageContent(v InputInvoiceMessageContent) InputMessageContent {
+	var s InputMessageContent
+	s.SetInputInvoiceMessageContent(v)
+	return s
+}
+
+// Ref: #/components/schemas/InputTextMessageContent
+type InputTextMessageContent struct {
+	MessageText           string          `json:"message_text"`
+	ParseMode             OptString       `json:"parse_mode"`
+	Entities              []MessageEntity `json:"entities"`
+	DisableWebPagePreview OptBool         `json:"disable_web_page_preview"`
+}
+
+// Ref: #/components/schemas/InputVenueMessageContent
+type InputVenueMessageContent struct {
+	Latitude        float64   `json:"latitude"`
+	Longitude       float64   `json:"longitude"`
+	Title           string    `json:"title"`
+	Address         string    `json:"address"`
+	FoursquareID    OptString `json:"foursquare_id"`
+	FoursquareType  OptString `json:"foursquare_type"`
+	GooglePlaceID   OptString `json:"google_place_id"`
+	GooglePlaceType OptString `json:"google_place_type"`
+}
+
 // Ref: #/components/schemas/Invoice
 type Invoice struct {
 	Title          string `json:"title"`
@@ -1645,6 +2745,11 @@ const (
 	MessageEntityTypeTextLink      MessageEntityType = "text_link"
 	MessageEntityTypeTextMention   MessageEntityType = "text_mention"
 )
+
+// Ref: #/components/schemas/MessageId
+type MessageId struct {
+	MessageID int `json:"message_id"`
+}
 
 // NewOptAnimation returns new OptAnimation with value set to v.
 func NewOptAnimation(v Animation) OptAnimation {
@@ -2216,6 +3321,44 @@ func (o OptDocument) Get() (v Document, ok bool) {
 	return o.Value, true
 }
 
+// NewOptFile returns new OptFile with value set to v.
+func NewOptFile(v File) OptFile {
+	return OptFile{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptFile is optional File.
+type OptFile struct {
+	Value File
+	Set   bool
+}
+
+// IsSet returns true if OptFile was set.
+func (o OptFile) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptFile) Reset() {
+	var v File
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptFile) SetTo(v File) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptFile) Get() (v File, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
 // NewOptFloat64 returns new OptFloat64 with value set to v.
 func NewOptFloat64(v float64) OptFloat64 {
 	return OptFloat64{
@@ -2362,6 +3505,44 @@ func (o *OptInlineQuery) SetTo(v InlineQuery) {
 
 // Get returns value and boolean that denotes whether value was set.
 func (o OptInlineQuery) Get() (v InlineQuery, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// NewOptInlineQueryChatType returns new OptInlineQueryChatType with value set to v.
+func NewOptInlineQueryChatType(v InlineQueryChatType) OptInlineQueryChatType {
+	return OptInlineQueryChatType{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptInlineQueryChatType is optional InlineQueryChatType.
+type OptInlineQueryChatType struct {
+	Value InlineQueryChatType
+	Set   bool
+}
+
+// IsSet returns true if OptInlineQueryChatType was set.
+func (o OptInlineQueryChatType) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptInlineQueryChatType) Reset() {
+	var v InlineQueryChatType
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptInlineQueryChatType) SetTo(v InlineQueryChatType) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptInlineQueryChatType) Get() (v InlineQueryChatType, ok bool) {
 	if !o.Set {
 		return v, false
 	}
@@ -2704,6 +3885,44 @@ func (o *OptMessageAutoDeleteTimerChanged) SetTo(v MessageAutoDeleteTimerChanged
 
 // Get returns value and boolean that denotes whether value was set.
 func (o OptMessageAutoDeleteTimerChanged) Get() (v MessageAutoDeleteTimerChanged, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// NewOptMessageId returns new OptMessageId with value set to v.
+func NewOptMessageId(v MessageId) OptMessageId {
+	return OptMessageId{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptMessageId is optional MessageId.
+type OptMessageId struct {
+	Value MessageId
+	Set   bool
+}
+
+// IsSet returns true if OptMessageId was set.
+func (o OptMessageId) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptMessageId) Reset() {
+	var v MessageId
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptMessageId) SetTo(v MessageId) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptMessageId) Get() (v MessageId, ok bool) {
 	if !o.Set {
 		return v, false
 	}
@@ -4275,6 +5494,12 @@ type ResultChatMember struct {
 	Ok     bool        `json:"ok"`
 }
 
+// Ref: #/components/schemas/ResultFile
+type ResultFile struct {
+	Result OptFile `json:"result"`
+	Ok     bool    `json:"ok"`
+}
+
 // Ref: #/components/schemas/ResultInt
 type ResultInt struct {
 	Result OptInt `json:"result"`
@@ -4285,6 +5510,12 @@ type ResultInt struct {
 type ResultMessage struct {
 	Result OptMessage `json:"result"`
 	Ok     bool       `json:"ok"`
+}
+
+// Ref: #/components/schemas/ResultMessageId
+type ResultMessageId struct {
+	Result OptMessageId `json:"result"`
+	Ok     bool         `json:"ok"`
 }
 
 // Ref: #/components/schemas/ResultPoll

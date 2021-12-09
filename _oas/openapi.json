@@ -182,7 +182,7 @@
       }
     },
     "/banChatSenderChat": {
-      "description": "Use this method to ban a channel chat in a supergroup or a channel. The owner of the chat will not be able to send messages and join live streams on behalf of the chat, unless it is unbanned first. The bot must be an administrator in the supergroup or channel for this to work and must have the appropriate administrator rights. Returns True on success.",
+      "description": "Use this method to ban a channel chat in a supergroup or a channel. Until the chat is unbanned, the owner of the banned chat won't be able to send messages on behalf of any of their channels. The bot must be an administrator in the supergroup or channel for this to work and must have the appropriate administrator rights. Returns True on success.",
       "post": {
         "operationId": "banChatSenderChat",
         "requestBody": {
@@ -235,7 +235,7 @@
         },
         "responses": {
           "200": {
-            "$ref": "#/components/responses/Result"
+            "$ref": "#/components/responses/ResultMessageId"
           },
           "default": {
             "$ref": "#/components/responses/Error"
@@ -1933,7 +1933,7 @@
         },
         "responses": {
           "200": {
-            "$ref": "#/components/responses/Result"
+            "$ref": "#/components/responses/ResultFile"
           },
           "default": {
             "$ref": "#/components/responses/Error"
@@ -2388,7 +2388,9 @@
           },
           "member_limit": {
             "description": "Maximum number of users that can be members of the chat simultaneously after joining the chat via this invite link; 1-99999",
-            "type": "integer"
+            "type": "integer",
+            "maximum": 99999,
+            "minimum": 1
           },
           "pending_join_request_count": {
             "description": "Number of pending join requests created using this link",
@@ -3166,7 +3168,9 @@
           },
           "callback_data": {
             "description": "Data to be sent in a callback query to the bot when button is pressed, 1-64 bytes",
-            "type": "string"
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
           },
           "switch_inline_query": {
             "description": "If set, pressing the button will prompt the user to select one of their chats, open that chat and insert the bot's username and the specified inline query in the input field. Can be empty, in which case just the bot's username will be inserted.Note: This offers an easy way for users to start using your bot in inline mode when they are currently in a private chat with it. Especially useful when combined with switch_pm… actions – in this case the user will be automatically returned to the chat they switched from, skipping the chat selection screen",
@@ -3228,7 +3232,14 @@
           },
           "chat_type": {
             "description": "Type of the chat, from which the inline query was sent. Can be either “sender” for a private chat with the inline query sender, “private”, “group”, “supergroup”, or “channel”. The chat type should be always known for requests sent from official clients and most third-party clients, unless the request was sent from a secret chat",
-            "type": "string"
+            "type": "string",
+            "enum": [
+              "sender",
+              "private",
+              "group",
+              "supergroup",
+              "channel"
+            ]
           },
           "location": {
             "$ref": "#/components/schemas/Location"
@@ -3242,8 +3253,88 @@
         ]
       },
       "InlineQueryResult": {
-        "description": "Hack",
-        "type": "string"
+        "description": "an inline query. Telegram clients currently support results of the following 20 types:",
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/InlineQueryResultCachedAudio"
+          },
+          {
+            "$ref": "#/components/schemas/InlineQueryResultCachedDocument"
+          },
+          {
+            "$ref": "#/components/schemas/InlineQueryResultCachedGif"
+          },
+          {
+            "$ref": "#/components/schemas/InlineQueryResultCachedMpeg4Gif"
+          },
+          {
+            "$ref": "#/components/schemas/InlineQueryResultCachedPhoto"
+          },
+          {
+            "$ref": "#/components/schemas/InlineQueryResultCachedSticker"
+          },
+          {
+            "$ref": "#/components/schemas/InlineQueryResultCachedVideo"
+          },
+          {
+            "$ref": "#/components/schemas/InlineQueryResultCachedVoice"
+          },
+          {
+            "$ref": "#/components/schemas/InlineQueryResultArticle"
+          },
+          {
+            "$ref": "#/components/schemas/InlineQueryResultAudio"
+          },
+          {
+            "$ref": "#/components/schemas/InlineQueryResultContact"
+          },
+          {
+            "$ref": "#/components/schemas/InlineQueryResultGame"
+          },
+          {
+            "$ref": "#/components/schemas/InlineQueryResultDocument"
+          },
+          {
+            "$ref": "#/components/schemas/InlineQueryResultGif"
+          },
+          {
+            "$ref": "#/components/schemas/InlineQueryResultLocation"
+          },
+          {
+            "$ref": "#/components/schemas/InlineQueryResultMpeg4Gif"
+          },
+          {
+            "$ref": "#/components/schemas/InlineQueryResultPhoto"
+          },
+          {
+            "$ref": "#/components/schemas/InlineQueryResultVenue"
+          },
+          {
+            "$ref": "#/components/schemas/InlineQueryResultVideo"
+          },
+          {
+            "$ref": "#/components/schemas/InlineQueryResultVoice"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "article": "InlineQueryResultArticle",
+            "audio": "InlineQueryResultAudio",
+            "contact": "InlineQueryResultContact",
+            "document": "InlineQueryResultDocument",
+            "game": "InlineQueryResultGame",
+            "gif": "InlineQueryResultGif",
+            "location": "InlineQueryResultLocation",
+            "mpeg4_gif": "InlineQueryResultMpeg4Gif",
+            "photo": "InlineQueryResultPhoto",
+            "sticker": "InlineQueryResultCachedSticker",
+            "venue": "InlineQueryResultVenue",
+            "video": "InlineQueryResultVideo",
+            "voice": "InlineQueryResultVoice"
+          }
+        }
       },
       "InlineQueryResultArticle": {
         "description": "Represents a link to an article or web page.",
@@ -3317,7 +3408,9 @@
           },
           "id": {
             "description": "Unique identifier for this result, 1-64 bytes",
-            "type": "string"
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
           },
           "audio_url": {
             "description": "A valid URL for the audio file",
@@ -3379,7 +3472,9 @@
           },
           "id": {
             "description": "Unique identifier for this result, 1-64 bytes",
-            "type": "string"
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
           },
           "audio_file_id": {
             "description": "A valid file identifier for the audio file",
@@ -3425,7 +3520,9 @@
           },
           "id": {
             "description": "Unique identifier for this result, 1-64 bytes",
-            "type": "string"
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
           },
           "title": {
             "description": "Title for the result",
@@ -3480,7 +3577,9 @@
           },
           "id": {
             "description": "Unique identifier for this result, 1-64 bytes",
-            "type": "string"
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
           },
           "gif_file_id": {
             "description": "A valid file identifier for the GIF file",
@@ -3530,7 +3629,9 @@
           },
           "id": {
             "description": "Unique identifier for this result, 1-64 bytes",
-            "type": "string"
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
           },
           "mpeg4_file_id": {
             "description": "A valid file identifier for the MP4 file",
@@ -3580,7 +3681,9 @@
           },
           "id": {
             "description": "Unique identifier for this result, 1-64 bytes",
-            "type": "string"
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
           },
           "photo_file_id": {
             "description": "A valid file identifier of the photo",
@@ -3634,7 +3737,9 @@
           },
           "id": {
             "description": "Unique identifier for this result, 1-64 bytes",
-            "type": "string"
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
           },
           "sticker_file_id": {
             "description": "A valid file identifier of the sticker",
@@ -3664,7 +3769,9 @@
           },
           "id": {
             "description": "Unique identifier for this result, 1-64 bytes",
-            "type": "string"
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
           },
           "video_file_id": {
             "description": "A valid file identifier for the video file",
@@ -3719,7 +3826,9 @@
           },
           "id": {
             "description": "Unique identifier for this result, 1-64 bytes",
-            "type": "string"
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
           },
           "voice_file_id": {
             "description": "A valid file identifier for the voice message",
@@ -3786,7 +3895,8 @@
           },
           "vcard": {
             "description": "Additional data about the contact in the form of a vCard, 0-2048 bytes",
-            "type": "string"
+            "type": "string",
+            "maxLength": 2048
           },
           "reply_markup": {
             "$ref": "#/components/schemas/InlineKeyboardMarkup"
@@ -3830,7 +3940,9 @@
           },
           "id": {
             "description": "Unique identifier for this result, 1-64 bytes",
-            "type": "string"
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
           },
           "title": {
             "description": "Title for the result",
@@ -3908,7 +4020,9 @@
           },
           "id": {
             "description": "Unique identifier for this result, 1-64 bytes",
-            "type": "string"
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
           },
           "game_short_name": {
             "description": "Short name of the game",
@@ -3935,7 +4049,9 @@
           },
           "id": {
             "description": "Unique identifier for this result, 1-64 bytes",
-            "type": "string"
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
           },
           "gif_url": {
             "description": "A valid URL for the GIF file. File size must not exceed 1MB",
@@ -4034,15 +4150,21 @@
           },
           "live_period": {
             "description": "Period in seconds for which the location can be updated, should be between 60 and 86400",
-            "type": "integer"
+            "type": "integer",
+            "maximum": 86400,
+            "minimum": 60
           },
           "heading": {
             "description": "For live locations, a direction in which the user is moving, in degrees. Must be between 1 and 360 if specified",
-            "type": "integer"
+            "type": "integer",
+            "maximum": 360,
+            "minimum": 1
           },
           "proximity_alert_radius": {
             "description": "For live locations, a maximum distance for proximity alerts about approaching another chat member, in meters. Must be between 1 and 100000 if specified",
-            "type": "integer"
+            "type": "integer",
+            "maximum": 100000,
+            "minimum": 1
           },
           "reply_markup": {
             "$ref": "#/components/schemas/InlineKeyboardMarkup"
@@ -4087,7 +4209,9 @@
           },
           "id": {
             "description": "Unique identifier for this result, 1-64 bytes",
-            "type": "string"
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
           },
           "mpeg4_url": {
             "description": "A valid URL for the MP4 file. File size must not exceed 1MB",
@@ -4166,7 +4290,9 @@
           },
           "id": {
             "description": "Unique identifier for this result, 1-64 bytes",
-            "type": "string"
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
           },
           "photo_url": {
             "description": "A valid URL of the photo. Photo must be in JPEG format. Photo size must not exceed 5MB",
@@ -4317,7 +4443,9 @@
           },
           "id": {
             "description": "Unique identifier for this result, 1-64 bytes",
-            "type": "string"
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
           },
           "video_url": {
             "description": "A valid URL for the embedded video player or video file",
@@ -4402,7 +4530,9 @@
           },
           "id": {
             "description": "Unique identifier for this result, 1-64 bytes",
-            "type": "string"
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
           },
           "voice_url": {
             "description": "A valid URL for the voice recording",
@@ -4467,7 +4597,8 @@
           },
           "vcard": {
             "description": "Additional data about the contact in the form of a vCard, 0-2048 bytes",
-            "type": "string"
+            "type": "string",
+            "maxLength": 2048
           }
         },
         "required": [
@@ -4493,7 +4624,9 @@
           },
           "payload": {
             "description": "Bot-defined invoice payload, 1-128 bytes. This will not be displayed to the user, use for your internal processes",
-            "type": "string"
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1
           },
           "provider_token": {
             "description": "Payment provider token, obtained via Botfather",
@@ -4602,15 +4735,21 @@
           },
           "live_period": {
             "description": "Period in seconds for which the location can be updated, should be between 60 and 86400",
-            "type": "integer"
+            "type": "integer",
+            "maximum": 86400,
+            "minimum": 60
           },
           "heading": {
             "description": "For live locations, a direction in which the user is moving, in degrees. Must be between 1 and 360 if specified",
-            "type": "integer"
+            "type": "integer",
+            "maximum": 360,
+            "minimum": 1
           },
           "proximity_alert_radius": {
             "description": "For live locations, a maximum distance for proximity alerts about approaching another chat member, in meters. Must be between 1 and 100000 if specified",
-            "type": "integer"
+            "type": "integer",
+            "maximum": 100000,
+            "minimum": 1
           }
         },
         "required": [
@@ -5100,7 +5239,9 @@
           },
           "heading": {
             "description": "The direction in which user is moving, in degrees; 1-360. For active live locations only",
-            "type": "integer"
+            "type": "integer",
+            "maximum": 360,
+            "minimum": 1
           },
           "proximity_alert_radius": {
             "description": "Maximum distance for proximity alerts about approaching another chat member, in meters. For sent live locations only",
@@ -6451,6 +6592,21 @@
           "ok"
         ]
       },
+      "ResultMessageId": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "$ref": "#/components/schemas/MessageId"
+          },
+          "ok": {
+            "type": "boolean",
+            "default": true
+          }
+        },
+        "required": [
+          "ok"
+        ]
+      },
       "ResultPoll": {
         "type": "object",
         "properties": {
@@ -7447,7 +7603,9 @@
           },
           "member_limit": {
             "description": "Maximum number of users that can be members of the chat simultaneously after joining the chat via this invite link; 1-99999",
-            "type": "integer"
+            "type": "integer",
+            "maximum": 99999,
+            "minimum": 1
           },
           "creates_join_request": {
             "description": "True, if users joining the chat via the link need to be approved by chat administrators. If True, member_limit can't be specified",
@@ -7621,7 +7779,9 @@
           },
           "member_limit": {
             "description": "Maximum number of users that can be members of the chat simultaneously after joining the chat via this invite link; 1-99999",
-            "type": "integer"
+            "type": "integer",
+            "maximum": 99999,
+            "minimum": 1
           },
           "creates_join_request": {
             "description": "True, if users joining the chat via the link need to be approved by chat administrators. If True, member_limit can't be specified",
@@ -7698,11 +7858,15 @@
           },
           "heading": {
             "description": "Direction in which the user is moving, in degrees. Must be between 1 and 360 if specified",
-            "type": "integer"
+            "type": "integer",
+            "maximum": 360,
+            "minimum": 1
           },
           "proximity_alert_radius": {
             "description": "Maximum distance for proximity alerts about approaching another chat member, in meters. Must be between 1 and 100000 if specified",
-            "type": "integer"
+            "type": "integer",
+            "maximum": 100000,
+            "minimum": 1
           },
           "reply_markup": {
             "$ref": "#/components/schemas/InlineKeyboardMarkup"
@@ -8347,7 +8511,8 @@
           },
           "vcard": {
             "description": "Additional data about the contact in the form of a vCard, 0-2048 bytes",
-            "type": "string"
+            "type": "string",
+            "maxLength": 2048
           },
           "disable_notification": {
             "description": "Sends the message silently. Users will receive a notification with no sound",
@@ -8554,7 +8719,9 @@
           },
           "payload": {
             "description": "Bot-defined invoice payload, 1-128 bytes. This will not be displayed to the user, use for your internal processes",
-            "type": "string"
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1
           },
           "provider_token": {
             "description": "Payments provider token, obtained via Botfather",
@@ -8686,15 +8853,21 @@
           },
           "live_period": {
             "description": "Period in seconds for which the location will be updated (see Live Locations, should be between 60 and 86400",
-            "type": "integer"
+            "type": "integer",
+            "maximum": 86400,
+            "minimum": 60
           },
           "heading": {
             "description": "For live locations, a direction in which the user is moving, in degrees. Must be between 1 and 360 if specified",
-            "type": "integer"
+            "type": "integer",
+            "maximum": 360,
+            "minimum": 1
           },
           "proximity_alert_radius": {
             "description": "For live locations, a maximum distance for proximity alerts about approaching another chat member, in meters. Must be between 1 and 100000 if specified",
-            "type": "integer"
+            "type": "integer",
+            "maximum": 100000,
+            "minimum": 1
           },
           "disable_notification": {
             "description": "Sends the message silently. Users will receive a notification with no sound",
@@ -9891,6 +10064,16 @@
           "application/json": {
             "schema": {
               "$ref": "#/components/schemas/ResultMessage"
+            }
+          }
+        }
+      },
+      "ResultMessageId": {
+        "description": "Result of method invocation",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ResultMessageId"
             }
           }
         }
