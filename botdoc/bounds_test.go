@@ -45,7 +45,6 @@ func Test_intBounds(t *testing.T) {
 }
 
 func Test_stringBounds(t *testing.T) {
-
 	tests := []struct {
 		name  string
 		input string
@@ -63,7 +62,7 @@ func Test_stringBounds(t *testing.T) {
 			"Bot-defined invoice payload, 1-128 bytes.",
 			bound{
 				Min: 1,
-				Max: 100,
+				Max: 128,
 			},
 		},
 	}
