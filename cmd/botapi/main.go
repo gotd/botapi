@@ -2,22 +2,78 @@
 package main
 
 import (
+	"context"
 	"flag"
+	"fmt"
+	"net"
 	"net/http"
+	"os"
+	"os/signal"
 	"time"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/go-faster/errors"
 	"go.uber.org/zap"
+	"golang.org/x/sync/errgroup"
+
+	"github.com/gotd/td/constant"
 
 	"github.com/gotd/botapi/internal/botapi"
 	"github.com/gotd/botapi/internal/oas"
 	"github.com/gotd/botapi/internal/pool"
 )
 
-func main() {
+func listen(ctx context.Context, addr string, h http.Handler, logger *zap.Logger) error {
+	grp, ctx := errgroup.WithContext(ctx)
+
+	listenCfg := net.ListenConfig{}
+	l, err := listenCfg.Listen(ctx, "tcp", addr)
+	if err != nil {
+		return errors.Errorf("bind %q: %w", addr, err)
+	}
+	logger.Info("Listen",
+		zap.String("addr", addr),
+	)
+
+	srv := &http.Server{
+		Addr:    addr,
+		Handler: h,
+		BaseContext: func(listener net.Listener) context.Context {
+			return ctx
+		},
+	}
+
+	grp.Go(func() error {
+		<-ctx.Done()
+
+		// TODO: make it configurable
+		shutdownCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+		defer cancel()
+
+		if err := srv.Shutdown(shutdownCtx); err != nil {
+			return errors.Errorf("shutdown: %w", err)
+		}
+
+		return nil
+	})
+	grp.Go(func() error {
+		if err := srv.Serve(l); err != nil && !errors.Is(err, http.ErrServerClosed) {
+			return errors.Errorf("serve %q: %w", l.Addr(), err)
+		}
+		return nil
+	})
+
+	if err := grp.Wait(); err != nil {
+		return fmt.Errorf("http: %w", err)
+	}
+
+	return nil
+}
+
+func run(ctx context.Context) error {
 	var (
-		appID     = flag.Int("api-id", 0, "The api_id of application")
-		appHash   = flag.String("api-hash", "", "The api_hash of application")
+		appID     = flag.Int("api-id", constant.TestAppID, "The api_id of application")
+		appHash   = flag.String("api-hash", constant.TestAppHash, "The api_hash of application")
 		addr      = flag.String("addr", "localhost:8081", "http listen addr")
 		keepalive = flag.Duration("keepalive", time.Second*5, "client keepalive")
 		statePath = flag.String("state", "", "path to state file (json)")
@@ -27,28 +83,33 @@ func main() {
 
 	log, err := zap.NewDevelopment(zap.IncreaseLevel(zap.InfoLevel))
 	if err != nil {
-		panic(err)
+		return errors.Errorf("create logger: %w", err)
 	}
+	defer func() {
+		_ = log.Sync()
+	}()
 
 	var storage pool.StateStorage
 	if *statePath != "" {
 		storage = pool.NewFileStorage(*statePath)
 	}
 
-	log.Info("Start", zap.String("addr", *addr))
+	log.Info("Creating pool",
+		zap.Duration("keep_alive", *keepalive),
+		zap.String("storage", *statePath),
+		zap.Bool("debug", *debug),
+	)
 	p, err := pool.NewPool(pool.Options{
 		AppID:   *appID,
 		AppHash: *appHash,
 		Log:     log.Named("pool"),
 		Storage: storage,
+		Debug:   *debug,
 	})
 	if err != nil {
 		panic(err)
 	}
 	go p.RunGC(*keepalive)
-
-	handler := botapi.NewBotAPI(p, *debug)
-	server := oas.NewServer(handler)
 
 	// https://api.telegram.org/bot123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11/getMe
 	r := chi.NewRouter()
@@ -58,13 +119,25 @@ func main() {
 			botapi.NotFound(w, r)
 			return
 		}
-		r.WithContext(botapi.PropagateToken(r.Context(), token))
+		method := chi.URLParam(r, "method")
 
-		r.URL.Path = chi.URLParam(r, "method")
-		server.ServeHTTP(w, r)
+		log.Info("New request", zap.Int("bot_id", token.ID), zap.String("method", method))
+		_ = p.Do(r.Context(), token, func(client *botapi.BotAPI) error {
+			r.URL.Path = method
+			oas.NewServer(client).ServeHTTP(w, r)
+			return nil
+		})
 	})
 
-	if err := http.ListenAndServe(*addr, r); err != nil {
-		panic(err)
+	return listen(ctx, *addr, r, log.Named("http"))
+}
+
+func main() {
+	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt)
+	defer cancel()
+
+	if err := run(ctx); err != nil {
+		_, _ = fmt.Fprintf(os.Stderr, "%+v\n", err)
+		os.Exit(2)
 	}
 }

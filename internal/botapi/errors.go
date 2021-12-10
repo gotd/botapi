@@ -2,6 +2,7 @@ package botapi
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 
 	"github.com/go-faster/errors"
@@ -18,6 +19,19 @@ func (n *NotImplementedError) Error() string {
 	return "method not implemented yet"
 }
 
+// PeerNotFoundError reports that BotAPI cannot find this peer.
+type PeerNotFoundError struct {
+	ID oas.ID
+}
+
+// Error implements error.
+func (p *PeerNotFoundError) Error() string {
+	if p.ID.IsString() {
+		return fmt.Sprintf("peer %q not found", p.ID.String)
+	}
+	return fmt.Sprintf("peer %d not found", p.ID.Int64)
+}
+
 func errorOf(code int) oas.ErrorStatusCode {
 	return oas.ErrorStatusCode{
 		StatusCode: code,
@@ -32,9 +46,13 @@ func errorOf(code int) oas.ErrorStatusCode {
 func (b BotAPI) NewError(ctx context.Context, err error) oas.ErrorStatusCode {
 	var (
 		notImplemented *NotImplementedError
+		peerNotFound   *PeerNotFoundError
 	)
-	if errors.As(err, &notImplemented) {
+	switch {
+	case errors.As(err, &notImplemented):
 		return errorOf(http.StatusNotImplemented)
+	case errors.As(err, &peerNotFound):
+		return errorOf(http.StatusNotFound)
 	}
 
 	resp := errorOf(http.StatusInternalServerError)

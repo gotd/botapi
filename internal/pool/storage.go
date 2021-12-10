@@ -7,6 +7,7 @@ import (
 	"sync"
 
 	"github.com/go-faster/errors"
+
 	"github.com/gotd/td/session"
 )
 

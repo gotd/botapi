@@ -11,12 +11,18 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/gotd/td/telegram"
+	"github.com/gotd/td/telegram/updates"
+	"github.com/gotd/td/tg"
+
+	"github.com/gotd/botapi/internal/botapi"
+	"github.com/gotd/botapi/internal/peers"
 )
 
 // Pool of clients.
 type Pool struct {
 	appID   int
 	appHash string
+	debug   bool
 	log     *zap.Logger
 
 	storage    StateStorage
@@ -60,7 +66,7 @@ func (p *Pool) Kill(token Token) {
 //
 // Returns error if token is invalid. Block until client is available,
 // authentication error or context cancelled.
-func (p *Pool) Do(ctx context.Context, token Token, fn func(client *telegram.Client) error) error {
+func (p *Pool) Do(ctx context.Context, token Token, fn func(client *botapi.BotAPI) error) error {
 	p.clientsMux.Lock()
 	c, ok := p.clients[token]
 	p.clientsMux.Unlock()
@@ -68,11 +74,23 @@ func (p *Pool) Do(ctx context.Context, token Token, fn func(client *telegram.Cli
 	if ok {
 		// Happy path.
 		c.Use(p.now())
-		return fn(c.telegram)
+		return fn(c.api)
 	}
+	log := p.log.Named("client").With(zap.Int("id", token.ID))
 
+	peerStorage := peers.NewInmemoryStorage()
+	gaps := updates.New(updates.Config{
+		Handler: telegram.UpdateHandlerFunc(func(ctx context.Context, u tg.UpdatesClass) error {
+			return nil
+		}),
+		AccessHasher: peers.AccessHasher{
+			Storage: peerStorage,
+		},
+		Logger: log.Named("gaps"),
+	})
 	options := telegram.Options{
-		Logger: p.log.Named("client").With(zap.Int("id", token.ID)),
+		Logger:        log,
+		UpdateHandler: peers.UpdateHook(peerStorage, gaps),
 	}
 	if p.storage != nil {
 		options.SessionStorage = clientStorage{
@@ -86,7 +104,7 @@ func (p *Pool) Do(ctx context.Context, token Token, fn func(client *telegram.Cli
 	c = &client{
 		ctx:      tgContext,
 		cancel:   tgCancel,
-		telegram: tgClient,
+		api:      botapi.NewBotAPI(tgClient, peerStorage, p.debug),
 		token:    token,
 		lastUsed: p.now(),
 	}
@@ -101,7 +119,7 @@ func (p *Pool) Do(ctx context.Context, token Token, fn func(client *telegram.Cli
 			// Removing client from client list on close.
 			p.clientsMux.Lock()
 			c, ok := p.clients[token]
-			if ok && c.telegram == tgClient {
+			if ok && c.api.Client() == tgClient {
 				delete(p.clients, token)
 			}
 			p.clientsMux.Unlock()
@@ -155,7 +173,7 @@ func (p *Pool) Do(ctx context.Context, token Token, fn func(client *telegram.Cli
 		}
 		p.clientsMux.Unlock()
 
-		return fn(c.telegram)
+		return fn(c.api)
 	case <-ctx.Done():
 		return ctx.Err()
 	case <-tgContext.Done():
@@ -176,6 +194,7 @@ type Options struct {
 	AppHash string
 	Log     *zap.Logger
 	Storage StateStorage
+	Debug   bool
 }
 
 type StateStorage interface {
@@ -193,6 +212,7 @@ func NewPool(opt Options) (*Pool, error) {
 	p := &Pool{
 		appID:   opt.AppID,
 		appHash: opt.AppHash,
+		debug:   opt.Debug,
 		log:     opt.Log,
 		clients: map[Token]*client{},
 		storage: opt.Storage,

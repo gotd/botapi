@@ -5,7 +5,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/gotd/td/telegram"
+	"github.com/gotd/botapi/internal/botapi"
 )
 
 type client struct {
@@ -13,7 +13,7 @@ type client struct {
 	cancel context.CancelFunc
 
 	mux      sync.Mutex
-	telegram *telegram.Client
+	api      *botapi.BotAPI
 	token    Token
 	lastUsed time.Time
 }
