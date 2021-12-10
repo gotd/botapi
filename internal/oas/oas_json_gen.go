@@ -67,7 +67,7 @@ func (s AddStickerToSet) Encode(e *jx.Encoder) {
 	e.ObjStart()
 
 	e.FieldStart("user_id")
-	e.Int(s.UserID)
+	e.Int64(s.UserID)
 
 	e.FieldStart("name")
 	e.Str(s.Name)
@@ -97,8 +97,8 @@ func (s *AddStickerToSet) Decode(d *jx.Decoder) error {
 	return d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "user_id":
-			v, err := d.Int()
-			s.UserID = int(v)
+			v, err := d.Int64()
+			s.UserID = int64(v)
 			if err != nil {
 				return err
 			}
@@ -517,7 +517,7 @@ func (s ApproveChatJoinRequest) Encode(e *jx.Encoder) {
 	s.ChatID.Encode(e)
 
 	e.FieldStart("user_id")
-	e.Int(s.UserID)
+	e.Int64(s.UserID)
 	e.ObjEnd()
 }
 
@@ -533,8 +533,8 @@ func (s *ApproveChatJoinRequest) Decode(d *jx.Decoder) error {
 				return err
 			}
 		case "user_id":
-			v, err := d.Int()
-			s.UserID = int(v)
+			v, err := d.Int64()
+			s.UserID = int64(v)
 			if err != nil {
 				return err
 			}
@@ -654,7 +654,7 @@ func (s BanChatMember) Encode(e *jx.Encoder) {
 	s.ChatID.Encode(e)
 
 	e.FieldStart("user_id")
-	e.Int(s.UserID)
+	e.Int64(s.UserID)
 	if s.UntilDate.Set {
 		e.FieldStart("until_date")
 		s.UntilDate.Encode(e)
@@ -678,8 +678,8 @@ func (s *BanChatMember) Decode(d *jx.Decoder) error {
 				return err
 			}
 		case "user_id":
-			v, err := d.Int()
-			s.UserID = int(v)
+			v, err := d.Int64()
+			s.UserID = int64(v)
 			if err != nil {
 				return err
 			}
@@ -708,7 +708,7 @@ func (s BanChatSenderChat) Encode(e *jx.Encoder) {
 	s.ChatID.Encode(e)
 
 	e.FieldStart("sender_chat_id")
-	e.Int(s.SenderChatID)
+	e.Int64(s.SenderChatID)
 	e.ObjEnd()
 }
 
@@ -724,8 +724,8 @@ func (s *BanChatSenderChat) Decode(d *jx.Decoder) error {
 				return err
 			}
 		case "sender_chat_id":
-			v, err := d.Int()
-			s.SenderChatID = int(v)
+			v, err := d.Int64()
+			s.SenderChatID = int64(v)
 			if err != nil {
 				return err
 			}
@@ -1055,7 +1055,7 @@ func (s BotCommandScopeChatMember) Encode(e *jx.Encoder) {
 	s.ChatID.Encode(e)
 
 	e.FieldStart("user_id")
-	e.Int(s.UserID)
+	e.Int64(s.UserID)
 	e.ObjEnd()
 }
 
@@ -1077,8 +1077,8 @@ func (s *BotCommandScopeChatMember) Decode(d *jx.Decoder) error {
 				return err
 			}
 		case "user_id":
-			v, err := d.Int()
-			s.UserID = int(v)
+			v, err := d.Int64()
+			s.UserID = int64(v)
 			if err != nil {
 				return err
 			}
@@ -1224,7 +1224,7 @@ func (s Chat) Encode(e *jx.Encoder) {
 	e.ObjStart()
 
 	e.FieldStart("id")
-	e.Int(s.ID)
+	e.Int64(s.ID)
 
 	e.FieldStart("type")
 	s.Type.Encode(e)
@@ -1311,8 +1311,8 @@ func (s *Chat) Decode(d *jx.Decoder) error {
 	return d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "id":
-			v, err := d.Int()
-			s.ID = int(v)
+			v, err := d.Int64()
+			s.ID = int64(v)
 			if err != nil {
 				return err
 			}
@@ -2800,7 +2800,7 @@ func (s CreateNewStickerSet) Encode(e *jx.Encoder) {
 	e.ObjStart()
 
 	e.FieldStart("user_id")
-	e.Int(s.UserID)
+	e.Int64(s.UserID)
 
 	e.FieldStart("name")
 	e.Str(s.Name)
@@ -2837,8 +2837,8 @@ func (s *CreateNewStickerSet) Decode(d *jx.Decoder) error {
 	return d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "user_id":
-			v, err := d.Int()
-			s.UserID = int(v)
+			v, err := d.Int64()
+			s.UserID = int64(v)
 			if err != nil {
 				return err
 			}
@@ -2895,7 +2895,7 @@ func (s DeclineChatJoinRequest) Encode(e *jx.Encoder) {
 	s.ChatID.Encode(e)
 
 	e.FieldStart("user_id")
-	e.Int(s.UserID)
+	e.Int64(s.UserID)
 	e.ObjEnd()
 }
 
@@ -2911,8 +2911,8 @@ func (s *DeclineChatJoinRequest) Decode(d *jx.Decoder) error {
 				return err
 			}
 		case "user_id":
-			v, err := d.Int()
-			s.UserID = int(v)
+			v, err := d.Int64()
+			s.UserID = int64(v)
 			if err != nil {
 				return err
 			}
@@ -4377,7 +4377,7 @@ func (s GetChatMember) Encode(e *jx.Encoder) {
 	s.ChatID.Encode(e)
 
 	e.FieldStart("user_id")
-	e.Int(s.UserID)
+	e.Int64(s.UserID)
 	e.ObjEnd()
 }
 
@@ -4393,8 +4393,8 @@ func (s *GetChatMember) Decode(d *jx.Decoder) error {
 				return err
 			}
 		case "user_id":
-			v, err := d.Int()
-			s.UserID = int(v)
+			v, err := d.Int64()
+			s.UserID = int64(v)
 			if err != nil {
 				return err
 			}
@@ -4466,7 +4466,7 @@ func (s GetGameHighScores) Encode(e *jx.Encoder) {
 	e.ObjStart()
 
 	e.FieldStart("user_id")
-	e.Int(s.UserID)
+	e.Int64(s.UserID)
 	if s.ChatID.Set {
 		e.FieldStart("chat_id")
 		s.ChatID.Encode(e)
@@ -4490,8 +4490,8 @@ func (s *GetGameHighScores) Decode(d *jx.Decoder) error {
 	return d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "user_id":
-			v, err := d.Int()
-			s.UserID = int(v)
+			v, err := d.Int64()
+			s.UserID = int64(v)
 			if err != nil {
 				return err
 			}
@@ -4660,7 +4660,7 @@ func (s GetUserProfilePhotos) Encode(e *jx.Encoder) {
 	e.ObjStart()
 
 	e.FieldStart("user_id")
-	e.Int(s.UserID)
+	e.Int64(s.UserID)
 	if s.Offset.Set {
 		e.FieldStart("offset")
 		s.Offset.Encode(e)
@@ -4680,8 +4680,8 @@ func (s *GetUserProfilePhotos) Decode(d *jx.Decoder) error {
 	return d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "user_id":
-			v, err := d.Int()
-			s.UserID = int(v)
+			v, err := d.Int64()
+			s.UserID = int64(v)
 			if err != nil {
 				return err
 			}
@@ -4707,8 +4707,8 @@ func (s ID) Encode(e *jx.Encoder) {
 	switch s.Type {
 	case StringID:
 		e.Str(s.String)
-	case IntID:
-		e.Int(s.Int)
+	case Int64ID:
+		e.Int64(s.Int64)
 	}
 }
 
@@ -4727,12 +4727,12 @@ func (s *ID) Decode(d *jx.Decoder) error {
 		}
 		s.Type = StringID
 	case jx.Number:
-		v, err := d.Int()
-		s.Int = int(v)
+		v, err := d.Int64()
+		s.Int64 = int64(v)
 		if err != nil {
 			return err
 		}
-		s.Type = IntID
+		s.Type = Int64ID
 	default:
 		return errors.Errorf("unexpected json type %q", t)
 	}
@@ -12834,7 +12834,7 @@ func (s PromoteChatMember) Encode(e *jx.Encoder) {
 	s.ChatID.Encode(e)
 
 	e.FieldStart("user_id")
-	e.Int(s.UserID)
+	e.Int64(s.UserID)
 	if s.IsAnonymous.Set {
 		e.FieldStart("is_anonymous")
 		s.IsAnonymous.Encode(e)
@@ -12894,8 +12894,8 @@ func (s *PromoteChatMember) Decode(d *jx.Decoder) error {
 				return err
 			}
 		case "user_id":
-			v, err := d.Int()
-			s.UserID = int(v)
+			v, err := d.Int64()
+			s.UserID = int64(v)
 			if err != nil {
 				return err
 			}
@@ -13175,7 +13175,7 @@ func (s RestrictChatMember) Encode(e *jx.Encoder) {
 	s.ChatID.Encode(e)
 
 	e.FieldStart("user_id")
-	e.Int(s.UserID)
+	e.Int64(s.UserID)
 
 	e.FieldStart("permissions")
 	s.Permissions.Encode(e)
@@ -13198,8 +13198,8 @@ func (s *RestrictChatMember) Decode(d *jx.Decoder) error {
 				return err
 			}
 		case "user_id":
-			v, err := d.Int()
-			s.UserID = int(v)
+			v, err := d.Int64()
+			s.UserID = int64(v)
 			if err != nil {
 				return err
 			}
@@ -15068,7 +15068,7 @@ func (s SendGame) Encode(e *jx.Encoder) {
 	e.ObjStart()
 
 	e.FieldStart("chat_id")
-	e.Int(s.ChatID)
+	e.Int64(s.ChatID)
 
 	e.FieldStart("game_short_name")
 	e.Str(s.GameShortName)
@@ -15099,8 +15099,8 @@ func (s *SendGame) Decode(d *jx.Decoder) error {
 	return d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "chat_id":
-			v, err := d.Int()
-			s.ChatID = int(v)
+			v, err := d.Int64()
+			s.ChatID = int64(v)
 			if err != nil {
 				return err
 			}
@@ -17480,7 +17480,7 @@ func (s SetChatAdministratorCustomTitle) Encode(e *jx.Encoder) {
 	s.ChatID.Encode(e)
 
 	e.FieldStart("user_id")
-	e.Int(s.UserID)
+	e.Int64(s.UserID)
 
 	e.FieldStart("custom_title")
 	e.Str(s.CustomTitle)
@@ -17499,8 +17499,8 @@ func (s *SetChatAdministratorCustomTitle) Decode(d *jx.Decoder) error {
 				return err
 			}
 		case "user_id":
-			v, err := d.Int()
-			s.UserID = int(v)
+			v, err := d.Int64()
+			s.UserID = int64(v)
 			if err != nil {
 				return err
 			}
@@ -17700,7 +17700,7 @@ func (s SetGameScore) Encode(e *jx.Encoder) {
 	e.ObjStart()
 
 	e.FieldStart("user_id")
-	e.Int(s.UserID)
+	e.Int64(s.UserID)
 
 	e.FieldStart("score")
 	e.Int(s.Score)
@@ -17735,8 +17735,8 @@ func (s *SetGameScore) Decode(d *jx.Decoder) error {
 	return d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "user_id":
-			v, err := d.Int()
-			s.UserID = int(v)
+			v, err := d.Int64()
+			s.UserID = int64(v)
 			if err != nil {
 				return err
 			}
@@ -17842,7 +17842,7 @@ func (s SetPassportDataErrors) Encode(e *jx.Encoder) {
 	e.ObjStart()
 
 	e.FieldStart("user_id")
-	e.Int(s.UserID)
+	e.Int64(s.UserID)
 
 	e.FieldStart("errors")
 	e.ArrStart()
@@ -17861,8 +17861,8 @@ func (s *SetPassportDataErrors) Decode(d *jx.Decoder) error {
 	return d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "user_id":
-			v, err := d.Int()
-			s.UserID = int(v)
+			v, err := d.Int64()
+			s.UserID = int64(v)
 			if err != nil {
 				return err
 			}
@@ -17931,7 +17931,7 @@ func (s SetStickerSetThumb) Encode(e *jx.Encoder) {
 	e.Str(s.Name)
 
 	e.FieldStart("user_id")
-	e.Int(s.UserID)
+	e.Int64(s.UserID)
 	if s.Thumb.Set {
 		e.FieldStart("thumb")
 		s.Thumb.Encode(e)
@@ -17953,8 +17953,8 @@ func (s *SetStickerSetThumb) Decode(d *jx.Decoder) error {
 				return err
 			}
 		case "user_id":
-			v, err := d.Int()
-			s.UserID = int(v)
+			v, err := d.Int64()
+			s.UserID = int64(v)
 			if err != nil {
 				return err
 			}
@@ -18544,7 +18544,7 @@ func (s UnbanChatMember) Encode(e *jx.Encoder) {
 	s.ChatID.Encode(e)
 
 	e.FieldStart("user_id")
-	e.Int(s.UserID)
+	e.Int64(s.UserID)
 	if s.OnlyIfBanned.Set {
 		e.FieldStart("only_if_banned")
 		s.OnlyIfBanned.Encode(e)
@@ -18564,8 +18564,8 @@ func (s *UnbanChatMember) Decode(d *jx.Decoder) error {
 				return err
 			}
 		case "user_id":
-			v, err := d.Int()
-			s.UserID = int(v)
+			v, err := d.Int64()
+			s.UserID = int64(v)
 			if err != nil {
 				return err
 			}
@@ -18589,7 +18589,7 @@ func (s UnbanChatSenderChat) Encode(e *jx.Encoder) {
 	s.ChatID.Encode(e)
 
 	e.FieldStart("sender_chat_id")
-	e.Int(s.SenderChatID)
+	e.Int64(s.SenderChatID)
 	e.ObjEnd()
 }
 
@@ -18605,8 +18605,8 @@ func (s *UnbanChatSenderChat) Decode(d *jx.Decoder) error {
 				return err
 			}
 		case "sender_chat_id":
-			v, err := d.Int()
-			s.SenderChatID = int(v)
+			v, err := d.Int64()
+			s.SenderChatID = int64(v)
 			if err != nil {
 				return err
 			}
@@ -18840,7 +18840,7 @@ func (s UploadStickerFile) Encode(e *jx.Encoder) {
 	e.ObjStart()
 
 	e.FieldStart("user_id")
-	e.Int(s.UserID)
+	e.Int64(s.UserID)
 
 	e.FieldStart("png_sticker")
 	e.Str(s.PNGSticker)
@@ -18855,8 +18855,8 @@ func (s *UploadStickerFile) Decode(d *jx.Decoder) error {
 	return d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "user_id":
-			v, err := d.Int()
-			s.UserID = int(v)
+			v, err := d.Int64()
+			s.UserID = int64(v)
 			if err != nil {
 				return err
 			}
@@ -18878,7 +18878,7 @@ func (s User) Encode(e *jx.Encoder) {
 	e.ObjStart()
 
 	e.FieldStart("id")
-	e.Int(s.ID)
+	e.Int64(s.ID)
 
 	e.FieldStart("is_bot")
 	e.Bool(s.IsBot)
@@ -18920,8 +18920,8 @@ func (s *User) Decode(d *jx.Decoder) error {
 	return d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "id":
-			v, err := d.Int()
-			s.ID = int(v)
+			v, err := d.Int64()
+			s.ID = int64(v)
 			if err != nil {
 				return err
 			}

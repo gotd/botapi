@@ -68,7 +68,7 @@ func (s *ErrorStatusCode) Error() string {
 
 // Ref: #/components/schemas/addStickerToSet
 type AddStickerToSet struct {
-	UserID       int             `json:"user_id"`
+	UserID       int64           `json:"user_id"`
 	Name         string          `json:"name"`
 	PNGSticker   OptString       `json:"png_sticker"`
 	TgsSticker   OptString       `json:"tgs_sticker"`
@@ -126,8 +126,8 @@ type AnswerShippingQuery struct {
 
 // Ref: #/components/schemas/approveChatJoinRequest
 type ApproveChatJoinRequest struct {
-	ChatID ID  `json:"chat_id"`
-	UserID int `json:"user_id"`
+	ChatID ID    `json:"chat_id"`
+	UserID int64 `json:"user_id"`
 }
 
 // Ref: #/components/schemas/Audio
@@ -146,15 +146,15 @@ type Audio struct {
 // Ref: #/components/schemas/banChatMember
 type BanChatMember struct {
 	ChatID         ID      `json:"chat_id"`
-	UserID         int     `json:"user_id"`
+	UserID         int64   `json:"user_id"`
 	UntilDate      OptInt  `json:"until_date"`
 	RevokeMessages OptBool `json:"revoke_messages"`
 }
 
 // Ref: #/components/schemas/banChatSenderChat
 type BanChatSenderChat struct {
-	ChatID       ID  `json:"chat_id"`
-	SenderChatID int `json:"sender_chat_id"`
+	ChatID       ID    `json:"chat_id"`
+	SenderChatID int64 `json:"sender_chat_id"`
 }
 
 // Ref: #/components/schemas/BotCommand
@@ -403,7 +403,7 @@ type BotCommandScopeChatAdministrators struct {
 type BotCommandScopeChatMember struct {
 	Type   string `json:"type"`
 	ChatID ID     `json:"chat_id"`
-	UserID int    `json:"user_id"`
+	UserID int64  `json:"user_id"`
 }
 
 // Ref: #/components/schemas/BotCommandScopeDefault
@@ -427,7 +427,7 @@ type CallbackQuery struct {
 
 // Ref: #/components/schemas/Chat
 type Chat struct {
-	ID                    int                `json:"id"`
+	ID                    int64              `json:"id"`
 	Type                  ChatType           `json:"type"`
 	Title                 OptString          `json:"title"`
 	Username              OptString          `json:"username"`
@@ -445,7 +445,7 @@ type Chat struct {
 	HasProtectedContent   OptBool            `json:"has_protected_content"`
 	StickerSetName        OptString          `json:"sticker_set_name"`
 	CanSetStickerSet      OptBool            `json:"can_set_sticker_set"`
-	LinkedChatID          OptInt             `json:"linked_chat_id"`
+	LinkedChatID          OptInt64           `json:"linked_chat_id"`
 	Location              OptChatLocation    `json:"location"`
 }
 
@@ -763,7 +763,7 @@ type Contact struct {
 	PhoneNumber string    `json:"phone_number"`
 	FirstName   string    `json:"first_name"`
 	LastName    OptString `json:"last_name"`
-	UserID      OptInt    `json:"user_id"`
+	UserID      OptInt64  `json:"user_id"`
 	Vcard       OptString `json:"vcard"`
 }
 
@@ -916,7 +916,7 @@ type CreateChatInviteLink struct {
 
 // Ref: #/components/schemas/createNewStickerSet
 type CreateNewStickerSet struct {
-	UserID        int             `json:"user_id"`
+	UserID        int64           `json:"user_id"`
 	Name          string          `json:"name"`
 	Title         string          `json:"title"`
 	PNGSticker    OptString       `json:"png_sticker"`
@@ -928,8 +928,8 @@ type CreateNewStickerSet struct {
 
 // Ref: #/components/schemas/declineChatJoinRequest
 type DeclineChatJoinRequest struct {
-	ChatID ID  `json:"chat_id"`
-	UserID int `json:"user_id"`
+	ChatID ID    `json:"chat_id"`
+	UserID int64 `json:"user_id"`
 }
 
 // Ref: #/components/schemas/deleteChatPhoto
@@ -1153,8 +1153,8 @@ type GetChatAdministrators struct {
 
 // Ref: #/components/schemas/getChatMember
 type GetChatMember struct {
-	ChatID ID  `json:"chat_id"`
-	UserID int `json:"user_id"`
+	ChatID ID    `json:"chat_id"`
+	UserID int64 `json:"user_id"`
 }
 
 // Ref: #/components/schemas/getChatMemberCount
@@ -1169,8 +1169,8 @@ type GetFile struct {
 
 // Ref: #/components/schemas/getGameHighScores
 type GetGameHighScores struct {
-	UserID          int       `json:"user_id"`
-	ChatID          OptInt    `json:"chat_id"`
+	UserID          int64     `json:"user_id"`
+	ChatID          OptInt64  `json:"chat_id"`
 	MessageID       OptInt    `json:"message_id"`
 	InlineMessageID OptString `json:"inline_message_id"`
 }
@@ -1196,7 +1196,7 @@ type GetUpdates struct {
 
 // Ref: #/components/schemas/getUserProfilePhotos
 type GetUserProfilePhotos struct {
-	UserID int    `json:"user_id"`
+	UserID int64  `json:"user_id"`
 	Offset OptInt `json:"offset"`
 	Limit  OptInt `json:"limit"`
 }
@@ -1206,7 +1206,7 @@ type GetUserProfilePhotos struct {
 type ID struct {
 	Type   IDType // switch on this field
 	String string
-	Int    int
+	Int64  int64
 }
 
 // IDType is oneOf type of ID.
@@ -1215,14 +1215,14 @@ type IDType string
 // Possible values for IDType.
 const (
 	StringID IDType = "string"
-	IntID    IDType = "int"
+	Int64ID  IDType = "int64"
 )
 
 // IsString reports whether ID is string.
 func (s ID) IsString() bool { return s.Type == StringID }
 
-// IsInt reports whether ID is int.
-func (s ID) IsInt() bool { return s.Type == IntID }
+// IsInt64 reports whether ID is int64.
+func (s ID) IsInt64() bool { return s.Type == Int64ID }
 
 // SetString sets ID to string.
 func (s *ID) SetString(v string) {
@@ -1245,24 +1245,24 @@ func NewStringID(v string) ID {
 	return s
 }
 
-// SetInt sets ID to int.
-func (s *ID) SetInt(v int) {
-	s.Type = IntID
-	s.Int = v
+// SetInt64 sets ID to int64.
+func (s *ID) SetInt64(v int64) {
+	s.Type = Int64ID
+	s.Int64 = v
 }
 
-// GetInt returns int and true boolean if ID is int.
-func (s ID) GetInt() (v int, ok bool) {
-	if !s.IsInt() {
+// GetInt64 returns int64 and true boolean if ID is int64.
+func (s ID) GetInt64() (v int64, ok bool) {
+	if !s.IsInt64() {
 		return v, false
 	}
-	return s.Int, true
+	return s.Int64, true
 }
 
-// NewIntID returns new ID from int.
-func NewIntID(v int) ID {
+// NewInt64ID returns new ID from int64.
+func NewInt64ID(v int64) ID {
 	var s ID
-	s.SetInt(v)
+	s.SetInt64(v)
 	return s
 }
 
@@ -2696,8 +2696,8 @@ type Message struct {
 	SupergroupChatCreated         OptBool                          `json:"supergroup_chat_created"`
 	ChannelChatCreated            OptBool                          `json:"channel_chat_created"`
 	MessageAutoDeleteTimerChanged OptMessageAutoDeleteTimerChanged `json:"message_auto_delete_timer_changed"`
-	MigrateToChatID               OptInt                           `json:"migrate_to_chat_id"`
-	MigrateFromChatID             OptInt                           `json:"migrate_from_chat_id"`
+	MigrateToChatID               OptInt64                         `json:"migrate_to_chat_id"`
+	MigrateFromChatID             OptInt64                         `json:"migrate_from_chat_id"`
 	PinnedMessage                 *Message                         `json:"pinned_message"`
 	Invoice                       OptInvoice                       `json:"invoice"`
 	SuccessfulPayment             OptSuccessfulPayment             `json:"successful_payment"`
@@ -5390,7 +5390,7 @@ type PreCheckoutQuery struct {
 // Ref: #/components/schemas/promoteChatMember
 type PromoteChatMember struct {
 	ChatID              ID      `json:"chat_id"`
-	UserID              int     `json:"user_id"`
+	UserID              int64   `json:"user_id"`
 	IsAnonymous         OptBool `json:"is_anonymous"`
 	CanManageChat       OptBool `json:"can_manage_chat"`
 	CanPostMessages     OptBool `json:"can_post_messages"`
@@ -5435,7 +5435,7 @@ type Response struct {
 // Ref: #/components/schemas/restrictChatMember
 type RestrictChatMember struct {
 	ChatID      ID              `json:"chat_id"`
-	UserID      int             `json:"user_id"`
+	UserID      int64           `json:"user_id"`
 	Permissions ChatPermissions `json:"permissions"`
 	UntilDate   OptInt          `json:"until_date"`
 }
@@ -6250,7 +6250,7 @@ func NewForceReplySendDocumentReplyMarkup(v ForceReply) SendDocumentReplyMarkup 
 
 // Ref: #/components/schemas/sendGame
 type SendGame struct {
-	ChatID                   int                     `json:"chat_id"`
+	ChatID                   int64                   `json:"chat_id"`
 	GameShortName            string                  `json:"game_short_name"`
 	DisableNotification      OptBool                 `json:"disable_notification"`
 	ReplyToMessageID         OptInt                  `json:"reply_to_message_id"`
@@ -7664,7 +7664,7 @@ func NewForceReplySendVoiceReplyMarkup(v ForceReply) SendVoiceReplyMarkup {
 // Ref: #/components/schemas/setChatAdministratorCustomTitle
 type SetChatAdministratorCustomTitle struct {
 	ChatID      ID     `json:"chat_id"`
-	UserID      int    `json:"user_id"`
+	UserID      int64  `json:"user_id"`
 	CustomTitle string `json:"custom_title"`
 }
 
@@ -7700,11 +7700,11 @@ type SetChatTitle struct {
 
 // Ref: #/components/schemas/setGameScore
 type SetGameScore struct {
-	UserID             int       `json:"user_id"`
+	UserID             int64     `json:"user_id"`
 	Score              int       `json:"score"`
 	Force              OptBool   `json:"force"`
 	DisableEditMessage OptBool   `json:"disable_edit_message"`
-	ChatID             OptInt    `json:"chat_id"`
+	ChatID             OptInt64  `json:"chat_id"`
 	MessageID          OptInt    `json:"message_id"`
 	InlineMessageID    OptString `json:"inline_message_id"`
 }
@@ -7718,7 +7718,7 @@ type SetMyCommands struct {
 
 // Ref: #/components/schemas/setPassportDataErrors
 type SetPassportDataErrors struct {
-	UserID int                    `json:"user_id"`
+	UserID int64                  `json:"user_id"`
 	Errors []PassportElementError `json:"errors"`
 }
 
@@ -7731,7 +7731,7 @@ type SetStickerPositionInSet struct {
 // Ref: #/components/schemas/setStickerSetThumb
 type SetStickerSetThumb struct {
 	Name   string    `json:"name"`
-	UserID int       `json:"user_id"`
+	UserID int64     `json:"user_id"`
 	Thumb  OptString `json:"thumb"`
 }
 
@@ -7813,14 +7813,14 @@ type SuccessfulPayment struct {
 // Ref: #/components/schemas/unbanChatMember
 type UnbanChatMember struct {
 	ChatID       ID      `json:"chat_id"`
-	UserID       int     `json:"user_id"`
+	UserID       int64   `json:"user_id"`
 	OnlyIfBanned OptBool `json:"only_if_banned"`
 }
 
 // Ref: #/components/schemas/unbanChatSenderChat
 type UnbanChatSenderChat struct {
-	ChatID       ID  `json:"chat_id"`
-	SenderChatID int `json:"sender_chat_id"`
+	ChatID       ID    `json:"chat_id"`
+	SenderChatID int64 `json:"sender_chat_id"`
 }
 
 // Ref: #/components/schemas/unpinAllChatMessages
@@ -7855,13 +7855,13 @@ type Update struct {
 
 // Ref: #/components/schemas/uploadStickerFile
 type UploadStickerFile struct {
-	UserID     int    `json:"user_id"`
+	UserID     int64  `json:"user_id"`
 	PNGSticker string `json:"png_sticker"`
 }
 
 // Ref: #/components/schemas/User
 type User struct {
-	ID                      int       `json:"id"`
+	ID                      int64     `json:"id"`
 	IsBot                   bool      `json:"is_bot"`
 	FirstName               string    `json:"first_name"`
 	LastName                OptString `json:"last_name"`

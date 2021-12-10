@@ -2199,7 +2199,8 @@
           },
           "user_id": {
             "description": "Unique identifier of the target user",
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           }
         },
         "required": [
@@ -2269,7 +2270,8 @@
         "properties": {
           "id": {
             "description": "Unique identifier for this chat. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this identifier",
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           },
           "type": {
             "description": "Type of chat, can be either “private”, “group”, “supergroup” or “channel”",
@@ -2344,7 +2346,8 @@
           },
           "linked_chat_id": {
             "description": "Unique identifier for the linked chat, i.e. the discussion group identifier for a channel and vice versa; for supergroups and channel chats. This identifier may be greater than 32 bits and some programming languages may have difficulty/silent defects in interpreting it. But it is smaller than 52 bits, so a signed 64 bit integer or double-precision float type are safe for storing this identifier. Returned only in getChat",
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           },
           "location": {
             "$ref": "#/components/schemas/ChatLocation"
@@ -2851,7 +2854,8 @@
           },
           "user_id": {
             "description": "Contact's user identifier in Telegram. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a 64-bit integer or double-precision float type are safe for storing this identifier",
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           },
           "vcard": {
             "description": "Additional data about the contact in the form of a vCard",
@@ -3146,7 +3150,8 @@
             "type": "string"
           },
           {
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           }
         ]
       },
@@ -5488,11 +5493,13 @@
           },
           "migrate_to_chat_id": {
             "description": "The group has been migrated to a supergroup with the specified identifier. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this identifier",
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           },
           "migrate_from_chat_id": {
             "description": "The supergroup has been migrated from a group with the specified identifier. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this identifier",
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           },
           "pinned_message": {
             "$ref": "#/components/schemas/Message"
@@ -6359,7 +6366,8 @@
         "properties": {
           "migrate_to_chat_id": {
             "description": "The group has been migrated to a supergroup with the specified identifier. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this identifier",
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           },
           "retry_after": {
             "description": "In case of exceeding flood control, the number of seconds left to wait before the request can be repeated",
@@ -6982,7 +6990,8 @@
         "properties": {
           "id": {
             "description": "Unique identifier for this user or bot. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a 64-bit integer or double-precision float type are safe for storing this identifier",
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           },
           "is_bot": {
             "description": "True, if this user is a bot",
@@ -7307,7 +7316,8 @@
         "properties": {
           "user_id": {
             "description": "User identifier of sticker set owner",
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           },
           "name": {
             "description": "Sticker set name",
@@ -7469,7 +7479,8 @@
           },
           "user_id": {
             "description": "Unique identifier of the target user",
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           }
         },
         "required": [
@@ -7486,7 +7497,8 @@
           },
           "user_id": {
             "description": "Unique identifier of the target user",
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           },
           "until_date": {
             "description": "Date when the user will be unbanned, unix time. If user is banned for more than 366 days or less than 30 seconds from the current time they are considered to be banned forever. Applied for supergroups and channels only",
@@ -7511,7 +7523,8 @@
           },
           "sender_chat_id": {
             "description": "Unique identifier of the target sender chat",
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           }
         },
         "required": [
@@ -7622,7 +7635,8 @@
         "properties": {
           "user_id": {
             "description": "User identifier of created sticker set owner",
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           },
           "name": {
             "description": "Short name of sticker set, to be used in t.me/addstickers/ URLs (e.g., animals). Can contain only english letters, digits and underscores. Must begin with a letter, can't contain consecutive underscores and must end in “_by_\u003cbot username\u003e”. \u003cbot_username\u003e is case insensitive. 1-64 characters",
@@ -7672,7 +7686,8 @@
           },
           "user_id": {
             "description": "Unique identifier of the target user",
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           }
         },
         "required": [
@@ -8037,7 +8052,8 @@
           },
           "user_id": {
             "description": "Unique identifier of the target user",
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           }
         },
         "required": [
@@ -8076,11 +8092,13 @@
         "properties": {
           "user_id": {
             "description": "Target user id",
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           },
           "chat_id": {
             "description": "Required if inline_message_id is not specified. Unique identifier for the target chat",
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           },
           "message_id": {
             "description": "Required if inline_message_id is not specified. Identifier of the sent message",
@@ -8155,7 +8173,8 @@
         "properties": {
           "user_id": {
             "description": "Unique identifier of the target user",
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           },
           "offset": {
             "description": "Sequential number of the first photo to be returned. By default, all photos are returned",
@@ -8215,7 +8234,8 @@
           },
           "user_id": {
             "description": "Unique identifier of the target user",
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           },
           "is_anonymous": {
             "description": "Pass True, if the administrator's presence in the chat is hidden",
@@ -8276,7 +8296,8 @@
           },
           "user_id": {
             "description": "Unique identifier of the target user",
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           },
           "permissions": {
             "$ref": "#/components/schemas/ChatPermissions"
@@ -8671,7 +8692,8 @@
         "properties": {
           "chat_id": {
             "description": "Unique identifier for the target chat",
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           },
           "game_short_name": {
             "description": "Short name of the game, serves as the unique identifier for the game. Set up your games via Botfather",
@@ -9532,7 +9554,8 @@
           },
           "user_id": {
             "description": "Unique identifier of the target user",
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           },
           "custom_title": {
             "description": "New custom title for the administrator; 0-16 characters, emoji are not allowed",
@@ -9638,7 +9661,8 @@
         "properties": {
           "user_id": {
             "description": "User identifier",
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           },
           "score": {
             "description": "New score, must be non-negative",
@@ -9654,7 +9678,8 @@
           },
           "chat_id": {
             "description": "Required if inline_message_id is not specified. Unique identifier for the target chat",
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           },
           "message_id": {
             "description": "Required if inline_message_id is not specified. Identifier of the sent message",
@@ -9699,7 +9724,8 @@
         "properties": {
           "user_id": {
             "description": "User identifier",
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           },
           "errors": {
             "description": "A JSON-serialized array describing the errors",
@@ -9742,7 +9768,8 @@
           },
           "user_id": {
             "description": "User identifier of the sticker set owner",
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           },
           "thumb": {
             "description": "A PNG image with the thumbnail, must be up to 128 kilobytes in size and have width and height exactly 100px, or a TGS animation with the thumbnail up to 32 kilobytes in size; see https://core.telegram.org/animated_stickers#technical-requirements for animated sticker technical requirements. Pass a file_id as a String to send a file that already exists on the Telegram servers, pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. More info on Sending Files ». Animated sticker set thumbnail can't be uploaded via HTTP URL",
@@ -9840,7 +9867,8 @@
           },
           "user_id": {
             "description": "Unique identifier of the target user",
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           },
           "only_if_banned": {
             "description": "Do nothing if the user is not banned",
@@ -9861,7 +9889,8 @@
           },
           "sender_chat_id": {
             "description": "Unique identifier of the target sender chat",
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           }
         },
         "required": [
@@ -9903,7 +9932,8 @@
         "properties": {
           "user_id": {
             "description": "User identifier of sticker file owner",
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           },
           "png_sticker": {
             "description": "PNG image with the sticker, must be up to 512 kilobytes in size, dimensions must not exceed 512px, and either width or height must be exactly 512px. More info on Sending Files »",
