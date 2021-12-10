@@ -398,8 +398,7 @@
                 "$ref": "#/components/schemas/deleteMyCommands"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -446,8 +445,7 @@
                 "$ref": "#/components/schemas/deleteWebhook"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -820,8 +818,7 @@
                 "$ref": "#/components/schemas/getMyCommands"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -868,8 +865,7 @@
                 "$ref": "#/components/schemas/getUpdates"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {

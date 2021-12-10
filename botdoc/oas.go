@@ -343,7 +343,11 @@ Schemas:
 			Description: fmt.Sprintf("Input for %s", m.Name),
 			Type:        "object",
 		}
+		var hasConditionalRequired bool
 		for _, f := range m.Fields {
+			if strings.Contains(f.Description, "Required if") {
+				hasConditionalRequired = true
+			}
 			p := a.fieldOAS(&s, f)
 			oneOf := p.OneOf
 			if p.Items != nil {
@@ -436,30 +440,29 @@ Schemas:
 			}
 		}
 
+		requestSchema := ogen.Schema{Ref: "#/components/schemas/" + schemaName}
 		var reqBody *ogen.RequestBody
 		if len(m.Fields) > 0 {
 			reqBody = &ogen.RequestBody{
 				Content: map[string]ogen.Media{
-					contentJSON: {
-						Schema: ogen.Schema{
-							Ref: "#/components/schemas/" + schemaName,
-						},
-					},
+					contentJSON: {Schema: requestSchema},
 				},
-				Required: true,
+				Required: len(s.Required) > 0 || hasConditionalRequired,
 			}
 		}
-		p["/"+m.Name] = ogen.PathItem{
+		responses := ogen.Responses{
+			"200":     ogen.Response{Ref: "#/components/responses/" + path.Base(response.Ref)},
+			"default": ogen.Response{Ref: "#/components/responses/Error"},
+		}
+		item := ogen.PathItem{
 			Description: m.Description,
 			Post: &ogen.Operation{
 				OperationID: m.Name,
 				RequestBody: reqBody,
-				Responses: ogen.Responses{
-					"200":     ogen.Response{Ref: "#/components/responses/" + path.Base(response.Ref)},
-					"default": ogen.Response{Ref: "#/components/responses/Error"},
-				},
+				Responses:   responses,
 			},
 		}
+		p["/"+m.Name] = item
 	}
 	return &ogen.Spec{
 		OpenAPI: "3.0.3",
