@@ -385,22 +385,6 @@ func Extract(doc *goquery.Document) (a API) {
 	return a
 }
 
-var discriminatorFields = []string{
-	"type",
-	"chat_type",
-	"source",
-	"status",
-}
-
-func isDiscriminatorField(n string) bool {
-	for _, name := range discriminatorFields {
-		if name == n {
-			return true
-		}
-	}
-	return false
-}
-
 func collectEnum(typ Type, name, description string) []string {
 	if typ.Primitive != String || !isDiscriminatorField(name) {
 		return nil
