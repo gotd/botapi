@@ -242,6 +242,7 @@ func Extract(doc *goquery.Document) (a API) {
 			`It should be one of`,
 			`Telegram clients currently support the following`,
 			`Currently, the following`,
+			`This object represents one result of`,
 		} {
 			if strings.Contains(d.Description, sumMarker) {
 				probablySum = true
@@ -252,12 +253,7 @@ func Extract(doc *goquery.Document) (a API) {
 			t := &Type{
 				Kind: KindSum,
 			}
-			if strings.Contains(d.Description, `It should be one of`) {
-				d.Description = strings.TrimSpace(
-					strings.ReplaceAll(d.Description, `It should be one of`, ``),
-				)
-			}
-			d.Description = strings.ReplaceAll(d.Description, probablyMarker, "")
+			d.Description = strings.TrimSpace(strings.ReplaceAll(d.Description, probablyMarker, ""))
 			s.Find("li").Each(func(i int, s *goquery.Selection) {
 				t.Sum = append(t.Sum, ParseType(s.Text()))
 			})
@@ -282,12 +278,14 @@ func Extract(doc *goquery.Document) (a API) {
 				retSuffix       = ` is returned`
 				retSuffix2      = ` object`
 				retSuffix3      = ` objects`
+				retSuffix4      = ` on success`
 			)
 			var (
 				start, end int
 				prefix     string
 			)
-			start, prefix = IndexOneOf(strings.ToLower(d.Description),
+			loweredDesc := strings.TrimSuffix(strings.ToLower(d.Description), ".")
+			start, prefix = IndexOneOf(loweredDesc,
 				retArrayPrefix,
 				retArrayPrefix2,
 				retPrefix,
@@ -298,7 +296,8 @@ func Extract(doc *goquery.Document) (a API) {
 				// Do not cut prefix, if we do ParseType will be unable to detect an array clause.
 				prefix = ""
 			}
-			end, _ = IndexOneOf(strings.TrimSuffix(d.Description, "."), retSuffix, retSuffix2, retSuffix3)
+
+			end, _ = IndexOneOf(loweredDesc, retSuffix, retSuffix2, retSuffix3, retSuffix4)
 			if start > 0 && end > start {
 				ret := strings.TrimSpace(d.Description[start+len(prefix) : end])
 				ret = strings.TrimSuffix(ret, ".")
@@ -384,21 +383,6 @@ func Extract(doc *goquery.Document) (a API) {
 		appendDefinition()
 	})
 	return a
-}
-
-var discriminatorFields = []string{
-	"type",
-	"source",
-	"status",
-}
-
-func isDiscriminatorField(n string) bool {
-	for _, name := range discriminatorFields {
-		if name == n {
-			return true
-		}
-	}
-	return false
 }
 
 func collectEnum(typ Type, name, description string) []string {

@@ -1,4 +1,4 @@
-// Binary gotd-bot-api implements telegram-bot-api server using gotd.
+// Binary botapi implements telegram-bot-api server using gotd.
 package main
 
 import (

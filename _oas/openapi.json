@@ -182,7 +182,7 @@
       }
     },
     "/banChatSenderChat": {
-      "description": "Use this method to ban a channel chat in a supergroup or a channel. The owner of the chat will not be able to send messages and join live streams on behalf of the chat, unless it is unbanned first. The bot must be an administrator in the supergroup or channel for this to work and must have the appropriate administrator rights. Returns True on success.",
+      "description": "Use this method to ban a channel chat in a supergroup or a channel. Until the chat is unbanned, the owner of the banned chat won't be able to send messages on behalf of any of their channels. The bot must be an administrator in the supergroup or channel for this to work and must have the appropriate administrator rights. Returns True on success.",
       "post": {
         "operationId": "banChatSenderChat",
         "requestBody": {
@@ -235,7 +235,7 @@
         },
         "responses": {
           "200": {
-            "$ref": "#/components/responses/Result"
+            "$ref": "#/components/responses/ResultMessageId"
           },
           "default": {
             "$ref": "#/components/responses/Error"
@@ -1933,7 +1933,7 @@
         },
         "responses": {
           "200": {
-            "$ref": "#/components/responses/Result"
+            "$ref": "#/components/responses/ResultFile"
           },
           "default": {
             "$ref": "#/components/responses/Error"
@@ -2199,7 +2199,8 @@
           },
           "user_id": {
             "description": "Unique identifier of the target user",
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           }
         },
         "required": [
@@ -2269,7 +2270,8 @@
         "properties": {
           "id": {
             "description": "Unique identifier for this chat. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this identifier",
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           },
           "type": {
             "description": "Type of chat, can be either “private”, “group”, “supergroup” or “channel”",
@@ -2344,7 +2346,8 @@
           },
           "linked_chat_id": {
             "description": "Unique identifier for the linked chat, i.e. the discussion group identifier for a channel and vice versa; for supergroups and channel chats. This identifier may be greater than 32 bits and some programming languages may have difficulty/silent defects in interpreting it. But it is smaller than 52 bits, so a signed 64 bit integer or double-precision float type are safe for storing this identifier. Returned only in getChat",
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           },
           "location": {
             "$ref": "#/components/schemas/ChatLocation"
@@ -2388,7 +2391,9 @@
           },
           "member_limit": {
             "description": "Maximum number of users that can be members of the chat simultaneously after joining the chat via this invite link; 1-99999",
-            "type": "integer"
+            "type": "integer",
+            "maximum": 99999,
+            "minimum": 1
           },
           "pending_join_request_count": {
             "description": "Number of pending join requests created using this link",
@@ -2849,7 +2854,8 @@
           },
           "user_id": {
             "description": "Contact's user identifier in Telegram. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a 64-bit integer or double-precision float type are safe for storing this identifier",
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           },
           "vcard": {
             "description": "Additional data about the contact in the form of a vCard",
@@ -3144,7 +3150,8 @@
             "type": "string"
           },
           {
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           }
         ]
       },
@@ -3166,7 +3173,9 @@
           },
           "callback_data": {
             "description": "Data to be sent in a callback query to the bot when button is pressed, 1-64 bytes",
-            "type": "string"
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
           },
           "switch_inline_query": {
             "description": "If set, pressing the button will prompt the user to select one of their chats, open that chat and insert the bot's username and the specified inline query in the input field. Can be empty, in which case just the bot's username will be inserted.Note: This offers an easy way for users to start using your bot in inline mode when they are currently in a private chat with it. Especially useful when combined with switch_pm… actions – in this case the user will be automatically returned to the chat they switched from, skipping the chat selection screen",
@@ -3228,7 +3237,14 @@
           },
           "chat_type": {
             "description": "Type of the chat, from which the inline query was sent. Can be either “sender” for a private chat with the inline query sender, “private”, “group”, “supergroup”, or “channel”. The chat type should be always known for requests sent from official clients and most third-party clients, unless the request was sent from a secret chat",
-            "type": "string"
+            "type": "string",
+            "enum": [
+              "sender",
+              "private",
+              "group",
+              "supergroup",
+              "channel"
+            ]
           },
           "location": {
             "$ref": "#/components/schemas/Location"
@@ -3242,8 +3258,88 @@
         ]
       },
       "InlineQueryResult": {
-        "description": "Hack",
-        "type": "string"
+        "description": "an inline query. Telegram clients currently support results of the following 20 types:",
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/InlineQueryResultCachedAudio"
+          },
+          {
+            "$ref": "#/components/schemas/InlineQueryResultCachedDocument"
+          },
+          {
+            "$ref": "#/components/schemas/InlineQueryResultCachedGif"
+          },
+          {
+            "$ref": "#/components/schemas/InlineQueryResultCachedMpeg4Gif"
+          },
+          {
+            "$ref": "#/components/schemas/InlineQueryResultCachedPhoto"
+          },
+          {
+            "$ref": "#/components/schemas/InlineQueryResultCachedSticker"
+          },
+          {
+            "$ref": "#/components/schemas/InlineQueryResultCachedVideo"
+          },
+          {
+            "$ref": "#/components/schemas/InlineQueryResultCachedVoice"
+          },
+          {
+            "$ref": "#/components/schemas/InlineQueryResultArticle"
+          },
+          {
+            "$ref": "#/components/schemas/InlineQueryResultAudio"
+          },
+          {
+            "$ref": "#/components/schemas/InlineQueryResultContact"
+          },
+          {
+            "$ref": "#/components/schemas/InlineQueryResultGame"
+          },
+          {
+            "$ref": "#/components/schemas/InlineQueryResultDocument"
+          },
+          {
+            "$ref": "#/components/schemas/InlineQueryResultGif"
+          },
+          {
+            "$ref": "#/components/schemas/InlineQueryResultLocation"
+          },
+          {
+            "$ref": "#/components/schemas/InlineQueryResultMpeg4Gif"
+          },
+          {
+            "$ref": "#/components/schemas/InlineQueryResultPhoto"
+          },
+          {
+            "$ref": "#/components/schemas/InlineQueryResultVenue"
+          },
+          {
+            "$ref": "#/components/schemas/InlineQueryResultVideo"
+          },
+          {
+            "$ref": "#/components/schemas/InlineQueryResultVoice"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "article": "InlineQueryResultArticle",
+            "audio": "InlineQueryResultAudio",
+            "contact": "InlineQueryResultContact",
+            "document": "InlineQueryResultDocument",
+            "game": "InlineQueryResultGame",
+            "gif": "InlineQueryResultGif",
+            "location": "InlineQueryResultLocation",
+            "mpeg4_gif": "InlineQueryResultMpeg4Gif",
+            "photo": "InlineQueryResultPhoto",
+            "sticker": "InlineQueryResultCachedSticker",
+            "venue": "InlineQueryResultVenue",
+            "video": "InlineQueryResultVideo",
+            "voice": "InlineQueryResultVoice"
+          }
+        }
       },
       "InlineQueryResultArticle": {
         "description": "Represents a link to an article or web page.",
@@ -3317,7 +3413,9 @@
           },
           "id": {
             "description": "Unique identifier for this result, 1-64 bytes",
-            "type": "string"
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
           },
           "audio_url": {
             "description": "A valid URL for the audio file",
@@ -3379,7 +3477,9 @@
           },
           "id": {
             "description": "Unique identifier for this result, 1-64 bytes",
-            "type": "string"
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
           },
           "audio_file_id": {
             "description": "A valid file identifier for the audio file",
@@ -3425,7 +3525,9 @@
           },
           "id": {
             "description": "Unique identifier for this result, 1-64 bytes",
-            "type": "string"
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
           },
           "title": {
             "description": "Title for the result",
@@ -3480,7 +3582,9 @@
           },
           "id": {
             "description": "Unique identifier for this result, 1-64 bytes",
-            "type": "string"
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
           },
           "gif_file_id": {
             "description": "A valid file identifier for the GIF file",
@@ -3530,7 +3634,9 @@
           },
           "id": {
             "description": "Unique identifier for this result, 1-64 bytes",
-            "type": "string"
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
           },
           "mpeg4_file_id": {
             "description": "A valid file identifier for the MP4 file",
@@ -3580,7 +3686,9 @@
           },
           "id": {
             "description": "Unique identifier for this result, 1-64 bytes",
-            "type": "string"
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
           },
           "photo_file_id": {
             "description": "A valid file identifier of the photo",
@@ -3634,7 +3742,9 @@
           },
           "id": {
             "description": "Unique identifier for this result, 1-64 bytes",
-            "type": "string"
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
           },
           "sticker_file_id": {
             "description": "A valid file identifier of the sticker",
@@ -3664,7 +3774,9 @@
           },
           "id": {
             "description": "Unique identifier for this result, 1-64 bytes",
-            "type": "string"
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
           },
           "video_file_id": {
             "description": "A valid file identifier for the video file",
@@ -3719,7 +3831,9 @@
           },
           "id": {
             "description": "Unique identifier for this result, 1-64 bytes",
-            "type": "string"
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
           },
           "voice_file_id": {
             "description": "A valid file identifier for the voice message",
@@ -3786,7 +3900,8 @@
           },
           "vcard": {
             "description": "Additional data about the contact in the form of a vCard, 0-2048 bytes",
-            "type": "string"
+            "type": "string",
+            "maxLength": 2048
           },
           "reply_markup": {
             "$ref": "#/components/schemas/InlineKeyboardMarkup"
@@ -3830,7 +3945,9 @@
           },
           "id": {
             "description": "Unique identifier for this result, 1-64 bytes",
-            "type": "string"
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
           },
           "title": {
             "description": "Title for the result",
@@ -3908,7 +4025,9 @@
           },
           "id": {
             "description": "Unique identifier for this result, 1-64 bytes",
-            "type": "string"
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
           },
           "game_short_name": {
             "description": "Short name of the game",
@@ -3935,7 +4054,9 @@
           },
           "id": {
             "description": "Unique identifier for this result, 1-64 bytes",
-            "type": "string"
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
           },
           "gif_url": {
             "description": "A valid URL for the GIF file. File size must not exceed 1MB",
@@ -4034,15 +4155,21 @@
           },
           "live_period": {
             "description": "Period in seconds for which the location can be updated, should be between 60 and 86400",
-            "type": "integer"
+            "type": "integer",
+            "maximum": 86400,
+            "minimum": 60
           },
           "heading": {
             "description": "For live locations, a direction in which the user is moving, in degrees. Must be between 1 and 360 if specified",
-            "type": "integer"
+            "type": "integer",
+            "maximum": 360,
+            "minimum": 1
           },
           "proximity_alert_radius": {
             "description": "For live locations, a maximum distance for proximity alerts about approaching another chat member, in meters. Must be between 1 and 100000 if specified",
-            "type": "integer"
+            "type": "integer",
+            "maximum": 100000,
+            "minimum": 1
           },
           "reply_markup": {
             "$ref": "#/components/schemas/InlineKeyboardMarkup"
@@ -4087,7 +4214,9 @@
           },
           "id": {
             "description": "Unique identifier for this result, 1-64 bytes",
-            "type": "string"
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
           },
           "mpeg4_url": {
             "description": "A valid URL for the MP4 file. File size must not exceed 1MB",
@@ -4166,7 +4295,9 @@
           },
           "id": {
             "description": "Unique identifier for this result, 1-64 bytes",
-            "type": "string"
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
           },
           "photo_url": {
             "description": "A valid URL of the photo. Photo must be in JPEG format. Photo size must not exceed 5MB",
@@ -4317,7 +4448,9 @@
           },
           "id": {
             "description": "Unique identifier for this result, 1-64 bytes",
-            "type": "string"
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
           },
           "video_url": {
             "description": "A valid URL for the embedded video player or video file",
@@ -4402,7 +4535,9 @@
           },
           "id": {
             "description": "Unique identifier for this result, 1-64 bytes",
-            "type": "string"
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
           },
           "voice_url": {
             "description": "A valid URL for the voice recording",
@@ -4467,7 +4602,8 @@
           },
           "vcard": {
             "description": "Additional data about the contact in the form of a vCard, 0-2048 bytes",
-            "type": "string"
+            "type": "string",
+            "maxLength": 2048
           }
         },
         "required": [
@@ -4493,7 +4629,9 @@
           },
           "payload": {
             "description": "Bot-defined invoice payload, 1-128 bytes. This will not be displayed to the user, use for your internal processes",
-            "type": "string"
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1
           },
           "provider_token": {
             "description": "Payment provider token, obtained via Botfather",
@@ -4602,15 +4740,21 @@
           },
           "live_period": {
             "description": "Period in seconds for which the location can be updated, should be between 60 and 86400",
-            "type": "integer"
+            "type": "integer",
+            "maximum": 86400,
+            "minimum": 60
           },
           "heading": {
             "description": "For live locations, a direction in which the user is moving, in degrees. Must be between 1 and 360 if specified",
-            "type": "integer"
+            "type": "integer",
+            "maximum": 360,
+            "minimum": 1
           },
           "proximity_alert_radius": {
             "description": "For live locations, a maximum distance for proximity alerts about approaching another chat member, in meters. Must be between 1 and 100000 if specified",
-            "type": "integer"
+            "type": "integer",
+            "maximum": 100000,
+            "minimum": 1
           }
         },
         "required": [
@@ -5100,7 +5244,9 @@
           },
           "heading": {
             "description": "The direction in which user is moving, in degrees; 1-360. For active live locations only",
-            "type": "integer"
+            "type": "integer",
+            "maximum": 360,
+            "minimum": 1
           },
           "proximity_alert_radius": {
             "description": "Maximum distance for proximity alerts about approaching another chat member, in meters. For sent live locations only",
@@ -5347,11 +5493,13 @@
           },
           "migrate_to_chat_id": {
             "description": "The group has been migrated to a supergroup with the specified identifier. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this identifier",
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           },
           "migrate_from_chat_id": {
             "description": "The supergroup has been migrated from a group with the specified identifier. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this identifier",
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           },
           "pinned_message": {
             "$ref": "#/components/schemas/Message"
@@ -6218,7 +6366,8 @@
         "properties": {
           "migrate_to_chat_id": {
             "description": "The group has been migrated to a supergroup with the specified identifier. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this identifier",
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           },
           "retry_after": {
             "description": "In case of exceeding flood control, the number of seconds left to wait before the request can be repeated",
@@ -6242,34 +6391,94 @@
         ]
       },
       "ResultArrayOfBotCommand": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/BotCommand"
-        }
+        "type": "object",
+        "properties": {
+          "result": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BotCommand"
+            }
+          },
+          "ok": {
+            "type": "boolean",
+            "default": true
+          }
+        },
+        "required": [
+          "ok"
+        ]
       },
       "ResultArrayOfChatMember": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/ChatMember"
-        }
+        "type": "object",
+        "properties": {
+          "result": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ChatMember"
+            }
+          },
+          "ok": {
+            "type": "boolean",
+            "default": true
+          }
+        },
+        "required": [
+          "ok"
+        ]
       },
       "ResultArrayOfGameHighScore": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/GameHighScore"
-        }
+        "type": "object",
+        "properties": {
+          "result": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GameHighScore"
+            }
+          },
+          "ok": {
+            "type": "boolean",
+            "default": true
+          }
+        },
+        "required": [
+          "ok"
+        ]
       },
       "ResultArrayOfMessage": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/Message"
-        }
+        "type": "object",
+        "properties": {
+          "result": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Message"
+            }
+          },
+          "ok": {
+            "type": "boolean",
+            "default": true
+          }
+        },
+        "required": [
+          "ok"
+        ]
       },
       "ResultArrayOfUpdate": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/Update"
-        }
+        "type": "object",
+        "properties": {
+          "result": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Update"
+            }
+          },
+          "ok": {
+            "type": "boolean",
+            "default": true
+          }
+        },
+        "required": [
+          "ok"
+        ]
       },
       "ResultBotCommand": {
         "type": "object",
@@ -6381,6 +6590,21 @@
         "properties": {
           "result": {
             "$ref": "#/components/schemas/Message"
+          },
+          "ok": {
+            "type": "boolean",
+            "default": true
+          }
+        },
+        "required": [
+          "ok"
+        ]
+      },
+      "ResultMessageId": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "$ref": "#/components/schemas/MessageId"
           },
           "ok": {
             "type": "boolean",
@@ -6766,7 +6990,8 @@
         "properties": {
           "id": {
             "description": "Unique identifier for this user or bot. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a 64-bit integer or double-precision float type are safe for storing this identifier",
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           },
           "is_bot": {
             "description": "True, if this user is a bot",
@@ -7091,7 +7316,8 @@
         "properties": {
           "user_id": {
             "description": "User identifier of sticker set owner",
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           },
           "name": {
             "description": "Sticker set name",
@@ -7253,7 +7479,8 @@
           },
           "user_id": {
             "description": "Unique identifier of the target user",
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           }
         },
         "required": [
@@ -7270,7 +7497,8 @@
           },
           "user_id": {
             "description": "Unique identifier of the target user",
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           },
           "until_date": {
             "description": "Date when the user will be unbanned, unix time. If user is banned for more than 366 days or less than 30 seconds from the current time they are considered to be banned forever. Applied for supergroups and channels only",
@@ -7295,7 +7523,8 @@
           },
           "sender_chat_id": {
             "description": "Unique identifier of the target sender chat",
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           }
         },
         "required": [
@@ -7387,7 +7616,9 @@
           },
           "member_limit": {
             "description": "Maximum number of users that can be members of the chat simultaneously after joining the chat via this invite link; 1-99999",
-            "type": "integer"
+            "type": "integer",
+            "maximum": 99999,
+            "minimum": 1
           },
           "creates_join_request": {
             "description": "True, if users joining the chat via the link need to be approved by chat administrators. If True, member_limit can't be specified",
@@ -7404,7 +7635,8 @@
         "properties": {
           "user_id": {
             "description": "User identifier of created sticker set owner",
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           },
           "name": {
             "description": "Short name of sticker set, to be used in t.me/addstickers/ URLs (e.g., animals). Can contain only english letters, digits and underscores. Must begin with a letter, can't contain consecutive underscores and must end in “_by_\u003cbot username\u003e”. \u003cbot_username\u003e is case insensitive. 1-64 characters",
@@ -7454,7 +7686,8 @@
           },
           "user_id": {
             "description": "Unique identifier of the target user",
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           }
         },
         "required": [
@@ -7561,7 +7794,9 @@
           },
           "member_limit": {
             "description": "Maximum number of users that can be members of the chat simultaneously after joining the chat via this invite link; 1-99999",
-            "type": "integer"
+            "type": "integer",
+            "maximum": 99999,
+            "minimum": 1
           },
           "creates_join_request": {
             "description": "True, if users joining the chat via the link need to be approved by chat administrators. If True, member_limit can't be specified",
@@ -7638,11 +7873,15 @@
           },
           "heading": {
             "description": "Direction in which the user is moving, in degrees. Must be between 1 and 360 if specified",
-            "type": "integer"
+            "type": "integer",
+            "maximum": 360,
+            "minimum": 1
           },
           "proximity_alert_radius": {
             "description": "Maximum distance for proximity alerts about approaching another chat member, in meters. Must be between 1 and 100000 if specified",
-            "type": "integer"
+            "type": "integer",
+            "maximum": 100000,
+            "minimum": 1
           },
           "reply_markup": {
             "$ref": "#/components/schemas/InlineKeyboardMarkup"
@@ -7813,7 +8052,8 @@
           },
           "user_id": {
             "description": "Unique identifier of the target user",
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           }
         },
         "required": [
@@ -7852,11 +8092,13 @@
         "properties": {
           "user_id": {
             "description": "Target user id",
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           },
           "chat_id": {
             "description": "Required if inline_message_id is not specified. Unique identifier for the target chat",
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           },
           "message_id": {
             "description": "Required if inline_message_id is not specified. Identifier of the sent message",
@@ -7931,7 +8173,8 @@
         "properties": {
           "user_id": {
             "description": "Unique identifier of the target user",
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           },
           "offset": {
             "description": "Sequential number of the first photo to be returned. By default, all photos are returned",
@@ -7991,7 +8234,8 @@
           },
           "user_id": {
             "description": "Unique identifier of the target user",
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           },
           "is_anonymous": {
             "description": "Pass True, if the administrator's presence in the chat is hidden",
@@ -8052,7 +8296,8 @@
           },
           "user_id": {
             "description": "Unique identifier of the target user",
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           },
           "permissions": {
             "$ref": "#/components/schemas/ChatPermissions"
@@ -8287,7 +8532,8 @@
           },
           "vcard": {
             "description": "Additional data about the contact in the form of a vCard, 0-2048 bytes",
-            "type": "string"
+            "type": "string",
+            "maxLength": 2048
           },
           "disable_notification": {
             "description": "Sends the message silently. Users will receive a notification with no sound",
@@ -8446,7 +8692,8 @@
         "properties": {
           "chat_id": {
             "description": "Unique identifier for the target chat",
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           },
           "game_short_name": {
             "description": "Short name of the game, serves as the unique identifier for the game. Set up your games via Botfather",
@@ -8494,7 +8741,9 @@
           },
           "payload": {
             "description": "Bot-defined invoice payload, 1-128 bytes. This will not be displayed to the user, use for your internal processes",
-            "type": "string"
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1
           },
           "provider_token": {
             "description": "Payments provider token, obtained via Botfather",
@@ -8626,15 +8875,21 @@
           },
           "live_period": {
             "description": "Period in seconds for which the location will be updated (see Live Locations, should be between 60 and 86400",
-            "type": "integer"
+            "type": "integer",
+            "maximum": 86400,
+            "minimum": 60
           },
           "heading": {
             "description": "For live locations, a direction in which the user is moving, in degrees. Must be between 1 and 360 if specified",
-            "type": "integer"
+            "type": "integer",
+            "maximum": 360,
+            "minimum": 1
           },
           "proximity_alert_radius": {
             "description": "For live locations, a maximum distance for proximity alerts about approaching another chat member, in meters. Must be between 1 and 100000 if specified",
-            "type": "integer"
+            "type": "integer",
+            "maximum": 100000,
+            "minimum": 1
           },
           "disable_notification": {
             "description": "Sends the message silently. Users will receive a notification with no sound",
@@ -9299,7 +9554,8 @@
           },
           "user_id": {
             "description": "Unique identifier of the target user",
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           },
           "custom_title": {
             "description": "New custom title for the administrator; 0-16 characters, emoji are not allowed",
@@ -9405,7 +9661,8 @@
         "properties": {
           "user_id": {
             "description": "User identifier",
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           },
           "score": {
             "description": "New score, must be non-negative",
@@ -9421,7 +9678,8 @@
           },
           "chat_id": {
             "description": "Required if inline_message_id is not specified. Unique identifier for the target chat",
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           },
           "message_id": {
             "description": "Required if inline_message_id is not specified. Identifier of the sent message",
@@ -9466,7 +9724,8 @@
         "properties": {
           "user_id": {
             "description": "User identifier",
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           },
           "errors": {
             "description": "A JSON-serialized array describing the errors",
@@ -9509,7 +9768,8 @@
           },
           "user_id": {
             "description": "User identifier of the sticker set owner",
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           },
           "thumb": {
             "description": "A PNG image with the thumbnail, must be up to 128 kilobytes in size and have width and height exactly 100px, or a TGS animation with the thumbnail up to 32 kilobytes in size; see https://core.telegram.org/animated_stickers#technical-requirements for animated sticker technical requirements. Pass a file_id as a String to send a file that already exists on the Telegram servers, pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. More info on Sending Files ». Animated sticker set thumbnail can't be uploaded via HTTP URL",
@@ -9607,7 +9867,8 @@
           },
           "user_id": {
             "description": "Unique identifier of the target user",
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           },
           "only_if_banned": {
             "description": "Do nothing if the user is not banned",
@@ -9628,7 +9889,8 @@
           },
           "sender_chat_id": {
             "description": "Unique identifier of the target sender chat",
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           }
         },
         "required": [
@@ -9670,7 +9932,8 @@
         "properties": {
           "user_id": {
             "description": "User identifier of sticker file owner",
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           },
           "png_sticker": {
             "description": "PNG image with the sticker, must be up to 512 kilobytes in size, dimensions must not exceed 512px, and either width or height must be exactly 512px. More info on Sending Files »",
@@ -9831,6 +10094,16 @@
           "application/json": {
             "schema": {
               "$ref": "#/components/schemas/ResultMessage"
+            }
+          }
+        }
+      },
+      "ResultMessageId": {
+        "description": "Result of method invocation",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ResultMessageId"
             }
           }
         }

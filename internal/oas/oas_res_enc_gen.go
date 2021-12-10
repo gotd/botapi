@@ -188,7 +188,7 @@ func encodeCloseResponse(response Result, w http.ResponseWriter, span trace.Span
 	return nil
 }
 
-func encodeCopyMessageResponse(response Result, w http.ResponseWriter, span trace.Span) error {
+func encodeCopyMessageResponse(response ResultMessageId, w http.ResponseWriter, span trace.Span) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 	e := jx.GetEncoder()
@@ -1196,7 +1196,7 @@ func encodeUnpinChatMessageResponse(response Result, w http.ResponseWriter, span
 	return nil
 }
 
-func encodeUploadStickerFileResponse(response Result, w http.ResponseWriter, span trace.Span) error {
+func encodeUploadStickerFileResponse(response ResultFile, w http.ResponseWriter, span trace.Span) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 	e := jx.GetEncoder()
