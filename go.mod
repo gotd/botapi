@@ -10,7 +10,7 @@ require (
 	github.com/gotd/td v0.53.0
 	github.com/ogen-go/errors v0.4.0
 	github.com/ogen-go/jx v0.13.3
-	github.com/ogen-go/ogen v0.0.0-20211112233848-eea0b2034233
+	github.com/ogen-go/ogen v0.0.0-20211210192427-7093c025df6a
 	github.com/stretchr/testify v1.7.0
 	go.opentelemetry.io/otel v1.2.0
 	go.opentelemetry.io/otel/metric v0.25.0

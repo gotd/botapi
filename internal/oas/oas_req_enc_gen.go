@@ -272,12 +272,13 @@ func encodeDeleteMessageRequestJSON(req DeleteMessage, span trace.Span) (data *b
 	return buf, nil
 }
 
-func encodeDeleteMyCommandsRequestJSON(req DeleteMyCommands, span trace.Span) (data *bytes.Buffer, err error) {
+func encodeDeleteMyCommandsRequestJSON(req OptDeleteMyCommands, span trace.Span) (data *bytes.Buffer, err error) {
 	buf := getBuf()
 	e := jx.GetEncoder()
 	defer jx.PutEncoder(e)
-
-	req.Encode(e)
+	if req.Set {
+		req.Encode(e)
+	}
 	if _, err := e.WriteTo(buf); err != nil {
 		putBuf(buf)
 		return nil, err
@@ -300,12 +301,13 @@ func encodeDeleteStickerFromSetRequestJSON(req DeleteStickerFromSet, span trace.
 	return buf, nil
 }
 
-func encodeDeleteWebhookRequestJSON(req DeleteWebhook, span trace.Span) (data *bytes.Buffer, err error) {
+func encodeDeleteWebhookRequestJSON(req OptDeleteWebhook, span trace.Span) (data *bytes.Buffer, err error) {
 	buf := getBuf()
 	e := jx.GetEncoder()
 	defer jx.PutEncoder(e)
-
-	req.Encode(e)
+	if req.Set {
+		req.Encode(e)
+	}
 	if _, err := e.WriteTo(buf); err != nil {
 		putBuf(buf)
 		return nil, err
@@ -510,12 +512,13 @@ func encodeGetGameHighScoresRequestJSON(req GetGameHighScores, span trace.Span) 
 	return buf, nil
 }
 
-func encodeGetMyCommandsRequestJSON(req GetMyCommands, span trace.Span) (data *bytes.Buffer, err error) {
+func encodeGetMyCommandsRequestJSON(req OptGetMyCommands, span trace.Span) (data *bytes.Buffer, err error) {
 	buf := getBuf()
 	e := jx.GetEncoder()
 	defer jx.PutEncoder(e)
-
-	req.Encode(e)
+	if req.Set {
+		req.Encode(e)
+	}
 	if _, err := e.WriteTo(buf); err != nil {
 		putBuf(buf)
 		return nil, err
@@ -538,12 +541,13 @@ func encodeGetStickerSetRequestJSON(req GetStickerSet, span trace.Span) (data *b
 	return buf, nil
 }
 
-func encodeGetUpdatesRequestJSON(req GetUpdates, span trace.Span) (data *bytes.Buffer, err error) {
+func encodeGetUpdatesRequestJSON(req OptGetUpdates, span trace.Span) (data *bytes.Buffer, err error) {
 	buf := getBuf()
 	e := jx.GetEncoder()
 	defer jx.PutEncoder(e)
-
-	req.Encode(e)
+	if req.Set {
+		req.Encode(e)
+	}
 	if _, err := e.WriteTo(buf); err != nil {
 		putBuf(buf)
 		return nil, err

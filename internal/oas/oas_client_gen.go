@@ -1002,7 +1002,7 @@ func (c *Client) DeleteMessage(ctx context.Context, request DeleteMessage) (res 
 // DeleteMyCommands invokes deleteMyCommands operation.
 //
 // POST /deleteMyCommands
-func (c *Client) DeleteMyCommands(ctx context.Context, request DeleteMyCommands) (res Result, err error) {
+func (c *Client) DeleteMyCommands(ctx context.Context, request OptDeleteMyCommands) (res Result, err error) {
 	startTime := time.Now()
 	ctx, span := c.cfg.Tracer.Start(ctx, `DeleteMyCommands`,
 		trace.WithAttributes(otelogen.OperationID(`deleteMyCommands`)),
@@ -1110,7 +1110,7 @@ func (c *Client) DeleteStickerFromSet(ctx context.Context, request DeleteSticker
 // DeleteWebhook invokes deleteWebhook operation.
 //
 // POST /deleteWebhook
-func (c *Client) DeleteWebhook(ctx context.Context, request DeleteWebhook) (res Result, err error) {
+func (c *Client) DeleteWebhook(ctx context.Context, request OptDeleteWebhook) (res Result, err error) {
 	startTime := time.Now()
 	ctx, span := c.cfg.Tracer.Start(ctx, `DeleteWebhook`,
 		trace.WithAttributes(otelogen.OperationID(`deleteWebhook`)),
@@ -2008,7 +2008,7 @@ func (c *Client) GetMe(ctx context.Context) (res ResultUser, err error) {
 // GetMyCommands invokes getMyCommands operation.
 //
 // POST /getMyCommands
-func (c *Client) GetMyCommands(ctx context.Context, request GetMyCommands) (res ResultArrayOfBotCommand, err error) {
+func (c *Client) GetMyCommands(ctx context.Context, request OptGetMyCommands) (res ResultArrayOfBotCommand, err error) {
 	startTime := time.Now()
 	ctx, span := c.cfg.Tracer.Start(ctx, `GetMyCommands`,
 		trace.WithAttributes(otelogen.OperationID(`getMyCommands`)),
@@ -2116,11 +2116,19 @@ func (c *Client) GetStickerSet(ctx context.Context, request GetStickerSet) (res 
 // GetUpdates invokes getUpdates operation.
 //
 // POST /getUpdates
-func (c *Client) GetUpdates(ctx context.Context, request GetUpdates) (res ResultArrayOfUpdate, err error) {
+func (c *Client) GetUpdates(ctx context.Context, request OptGetUpdates) (res ResultArrayOfUpdate, err error) {
 	if err := func() error {
-		if err := request.Validate(); err != nil {
-			return err
+		if request.Set {
+			if err := func() error {
+				if err := request.Value.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return err
+			}
 		}
+		return nil
 		return nil
 	}(); err != nil {
 		return res, errors.Wrap(err, "validate")

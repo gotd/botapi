@@ -131,7 +131,7 @@ type Handler interface {
 	// DeleteMyCommands implements deleteMyCommands operation.
 	//
 	// POST /deleteMyCommands
-	DeleteMyCommands(ctx context.Context, req DeleteMyCommands) (Result, error)
+	DeleteMyCommands(ctx context.Context, req OptDeleteMyCommands) (Result, error)
 	// DeleteStickerFromSet implements deleteStickerFromSet operation.
 	//
 	// POST /deleteStickerFromSet
@@ -139,7 +139,7 @@ type Handler interface {
 	// DeleteWebhook implements deleteWebhook operation.
 	//
 	// POST /deleteWebhook
-	DeleteWebhook(ctx context.Context, req DeleteWebhook) (Result, error)
+	DeleteWebhook(ctx context.Context, req OptDeleteWebhook) (Result, error)
 	// EditChatInviteLink implements editChatInviteLink operation.
 	//
 	// POST /editChatInviteLink
@@ -203,7 +203,7 @@ type Handler interface {
 	// GetMyCommands implements getMyCommands operation.
 	//
 	// POST /getMyCommands
-	GetMyCommands(ctx context.Context, req GetMyCommands) (ResultArrayOfBotCommand, error)
+	GetMyCommands(ctx context.Context, req OptGetMyCommands) (ResultArrayOfBotCommand, error)
 	// GetStickerSet implements getStickerSet operation.
 	//
 	// POST /getStickerSet
@@ -211,7 +211,7 @@ type Handler interface {
 	// GetUpdates implements getUpdates operation.
 	//
 	// POST /getUpdates
-	GetUpdates(ctx context.Context, req GetUpdates) (ResultArrayOfUpdate, error)
+	GetUpdates(ctx context.Context, req OptGetUpdates) (ResultArrayOfUpdate, error)
 	// GetUserProfilePhotos implements getUserProfilePhotos operation.
 	//
 	// POST /getUserProfilePhotos

@@ -10456,6 +10456,50 @@ func (o *OptContact) Decode(d *jx.Decoder) error {
 	}
 }
 
+// Encode encodes DeleteMyCommands as json.
+func (o OptDeleteMyCommands) Encode(e *jx.Encoder) {
+	o.Value.Encode(e)
+}
+
+// Decode decodes DeleteMyCommands from json.
+func (o *OptDeleteMyCommands) Decode(d *jx.Decoder) error {
+	if o == nil {
+		return errors.New(`invalid: unable to decode OptDeleteMyCommands to nil`)
+	}
+	switch d.Next() {
+	case jx.Object:
+		o.Set = true
+		if err := o.Value.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	default:
+		return errors.Errorf(`unexpected type %q while reading OptDeleteMyCommands`, d.Next())
+	}
+}
+
+// Encode encodes DeleteWebhook as json.
+func (o OptDeleteWebhook) Encode(e *jx.Encoder) {
+	o.Value.Encode(e)
+}
+
+// Decode decodes DeleteWebhook from json.
+func (o *OptDeleteWebhook) Decode(d *jx.Decoder) error {
+	if o == nil {
+		return errors.New(`invalid: unable to decode OptDeleteWebhook to nil`)
+	}
+	switch d.Next() {
+	case jx.Object:
+		o.Set = true
+		if err := o.Value.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	default:
+		return errors.Errorf(`unexpected type %q while reading OptDeleteWebhook`, d.Next())
+	}
+}
+
 // Encode encodes Dice as json.
 func (o OptDice) Encode(e *jx.Encoder) {
 	o.Value.Encode(e)
@@ -10565,6 +10609,50 @@ func (o *OptGame) Decode(d *jx.Decoder) error {
 		return nil
 	default:
 		return errors.Errorf(`unexpected type %q while reading OptGame`, d.Next())
+	}
+}
+
+// Encode encodes GetMyCommands as json.
+func (o OptGetMyCommands) Encode(e *jx.Encoder) {
+	o.Value.Encode(e)
+}
+
+// Decode decodes GetMyCommands from json.
+func (o *OptGetMyCommands) Decode(d *jx.Decoder) error {
+	if o == nil {
+		return errors.New(`invalid: unable to decode OptGetMyCommands to nil`)
+	}
+	switch d.Next() {
+	case jx.Object:
+		o.Set = true
+		if err := o.Value.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	default:
+		return errors.Errorf(`unexpected type %q while reading OptGetMyCommands`, d.Next())
+	}
+}
+
+// Encode encodes GetUpdates as json.
+func (o OptGetUpdates) Encode(e *jx.Encoder) {
+	o.Value.Encode(e)
+}
+
+// Decode decodes GetUpdates from json.
+func (o *OptGetUpdates) Decode(d *jx.Decoder) error {
+	if o == nil {
+		return errors.New(`invalid: unable to decode OptGetUpdates to nil`)
+	}
+	switch d.Next() {
+	case jx.Object:
+		o.Set = true
+		if err := o.Value.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	default:
+		return errors.Errorf(`unexpected type %q while reading OptGetUpdates`, d.Next())
 	}
 }
 

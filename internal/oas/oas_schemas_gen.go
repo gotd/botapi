@@ -3245,6 +3245,82 @@ func (o OptContact) Get() (v Contact, ok bool) {
 	return o.Value, true
 }
 
+// NewOptDeleteMyCommands returns new OptDeleteMyCommands with value set to v.
+func NewOptDeleteMyCommands(v DeleteMyCommands) OptDeleteMyCommands {
+	return OptDeleteMyCommands{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptDeleteMyCommands is optional DeleteMyCommands.
+type OptDeleteMyCommands struct {
+	Value DeleteMyCommands
+	Set   bool
+}
+
+// IsSet returns true if OptDeleteMyCommands was set.
+func (o OptDeleteMyCommands) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptDeleteMyCommands) Reset() {
+	var v DeleteMyCommands
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptDeleteMyCommands) SetTo(v DeleteMyCommands) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptDeleteMyCommands) Get() (v DeleteMyCommands, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// NewOptDeleteWebhook returns new OptDeleteWebhook with value set to v.
+func NewOptDeleteWebhook(v DeleteWebhook) OptDeleteWebhook {
+	return OptDeleteWebhook{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptDeleteWebhook is optional DeleteWebhook.
+type OptDeleteWebhook struct {
+	Value DeleteWebhook
+	Set   bool
+}
+
+// IsSet returns true if OptDeleteWebhook was set.
+func (o OptDeleteWebhook) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptDeleteWebhook) Reset() {
+	var v DeleteWebhook
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptDeleteWebhook) SetTo(v DeleteWebhook) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptDeleteWebhook) Get() (v DeleteWebhook, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
 // NewOptDice returns new OptDice with value set to v.
 func NewOptDice(v Dice) OptDice {
 	return OptDice{
@@ -3429,6 +3505,82 @@ func (o *OptGame) SetTo(v Game) {
 
 // Get returns value and boolean that denotes whether value was set.
 func (o OptGame) Get() (v Game, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// NewOptGetMyCommands returns new OptGetMyCommands with value set to v.
+func NewOptGetMyCommands(v GetMyCommands) OptGetMyCommands {
+	return OptGetMyCommands{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptGetMyCommands is optional GetMyCommands.
+type OptGetMyCommands struct {
+	Value GetMyCommands
+	Set   bool
+}
+
+// IsSet returns true if OptGetMyCommands was set.
+func (o OptGetMyCommands) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptGetMyCommands) Reset() {
+	var v GetMyCommands
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptGetMyCommands) SetTo(v GetMyCommands) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptGetMyCommands) Get() (v GetMyCommands, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// NewOptGetUpdates returns new OptGetUpdates with value set to v.
+func NewOptGetUpdates(v GetUpdates) OptGetUpdates {
+	return OptGetUpdates{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptGetUpdates is optional GetUpdates.
+type OptGetUpdates struct {
+	Value GetUpdates
+	Set   bool
+}
+
+// IsSet returns true if OptGetUpdates was set.
+func (o OptGetUpdates) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptGetUpdates) Reset() {
+	var v GetUpdates
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptGetUpdates) SetTo(v GetUpdates) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptGetUpdates) Get() (v GetUpdates, ok bool) {
 	if !o.Set {
 		return v, false
 	}
