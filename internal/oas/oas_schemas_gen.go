@@ -2600,7 +2600,74 @@ type Invoice struct {
 }
 
 // Ref: #/components/schemas/KeyboardButton
+// KeyboardButton represents sum type.
 type KeyboardButton struct {
+	Type                 KeyboardButtonType // switch on this field
+	String               string
+	KeyboardButtonObject KeyboardButtonObject
+}
+
+// KeyboardButtonType is oneOf type of KeyboardButton.
+type KeyboardButtonType string
+
+// Possible values for KeyboardButtonType.
+const (
+	StringKeyboardButton               KeyboardButtonType = "string"
+	KeyboardButtonObjectKeyboardButton KeyboardButtonType = "KeyboardButtonObject"
+)
+
+// IsString reports whether KeyboardButton is string.
+func (s KeyboardButton) IsString() bool { return s.Type == StringKeyboardButton }
+
+// IsKeyboardButtonObject reports whether KeyboardButton is KeyboardButtonObject.
+func (s KeyboardButton) IsKeyboardButtonObject() bool {
+	return s.Type == KeyboardButtonObjectKeyboardButton
+}
+
+// SetString sets KeyboardButton to string.
+func (s *KeyboardButton) SetString(v string) {
+	s.Type = StringKeyboardButton
+	s.String = v
+}
+
+// GetString returns string and true boolean if KeyboardButton is string.
+func (s KeyboardButton) GetString() (v string, ok bool) {
+	if !s.IsString() {
+		return v, false
+	}
+	return s.String, true
+}
+
+// NewStringKeyboardButton returns new KeyboardButton from string.
+func NewStringKeyboardButton(v string) KeyboardButton {
+	var s KeyboardButton
+	s.SetString(v)
+	return s
+}
+
+// SetKeyboardButtonObject sets KeyboardButton to KeyboardButtonObject.
+func (s *KeyboardButton) SetKeyboardButtonObject(v KeyboardButtonObject) {
+	s.Type = KeyboardButtonObjectKeyboardButton
+	s.KeyboardButtonObject = v
+}
+
+// GetKeyboardButtonObject returns KeyboardButtonObject and true boolean if KeyboardButton is KeyboardButtonObject.
+func (s KeyboardButton) GetKeyboardButtonObject() (v KeyboardButtonObject, ok bool) {
+	if !s.IsKeyboardButtonObject() {
+		return v, false
+	}
+	return s.KeyboardButtonObject, true
+}
+
+// NewKeyboardButtonObjectKeyboardButton returns new KeyboardButton from KeyboardButtonObject.
+func NewKeyboardButtonObjectKeyboardButton(v KeyboardButtonObject) KeyboardButton {
+	var s KeyboardButton
+	s.SetKeyboardButtonObject(v)
+	return s
+}
+
+// Ref: #/components/schemas/KeyboardButtonObject
+type KeyboardButtonObject struct {
 	Text            string                    `json:"text"`
 	RequestContact  OptBool                   `json:"request_contact"`
 	RequestLocation OptBool                   `json:"request_location"`

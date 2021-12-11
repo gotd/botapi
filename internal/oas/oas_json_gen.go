@@ -4717,7 +4717,7 @@ func (s *ID) Decode(d *jx.Decoder) error {
 	if s == nil {
 		return errors.New(`invalid: unable to decode ID to nil`)
 	}
-	// Sum type primitive.
+	// Sum type type_discriminator.
 	switch t := d.Next(); t {
 	case jx.String:
 		v, err := d.Str()
@@ -9083,8 +9083,43 @@ func (s *Invoice) Decode(d *jx.Decoder) error {
 	})
 }
 
-// Encode implements json.Marshaler.
+// Encode encodes KeyboardButton as json.
 func (s KeyboardButton) Encode(e *jx.Encoder) {
+	switch s.Type {
+	case StringKeyboardButton:
+		e.Str(s.String)
+	case KeyboardButtonObjectKeyboardButton:
+		s.KeyboardButtonObject.Encode(e)
+	}
+}
+
+// Decode decodes KeyboardButton from json.
+func (s *KeyboardButton) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New(`invalid: unable to decode KeyboardButton to nil`)
+	}
+	// Sum type type_discriminator.
+	switch t := d.Next(); t {
+	case jx.String:
+		v, err := d.Str()
+		s.String = string(v)
+		if err != nil {
+			return err
+		}
+		s.Type = StringKeyboardButton
+	case jx.Object:
+		if err := s.KeyboardButtonObject.Decode(d); err != nil {
+			return err
+		}
+		s.Type = KeyboardButtonObjectKeyboardButton
+	default:
+		return errors.Errorf("unexpected json type %q", t)
+	}
+	return nil
+}
+
+// Encode implements json.Marshaler.
+func (s KeyboardButtonObject) Encode(e *jx.Encoder) {
 	e.ObjStart()
 
 	e.FieldStart("text")
@@ -9104,10 +9139,10 @@ func (s KeyboardButton) Encode(e *jx.Encoder) {
 	e.ObjEnd()
 }
 
-// Decode decodes KeyboardButton from json.
-func (s *KeyboardButton) Decode(d *jx.Decoder) error {
+// Decode decodes KeyboardButtonObject from json.
+func (s *KeyboardButtonObject) Decode(d *jx.Decoder) error {
 	if s == nil {
-		return errors.New(`invalid: unable to decode KeyboardButton to nil`)
+		return errors.New(`invalid: unable to decode KeyboardButtonObject to nil`)
 	}
 	return d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
