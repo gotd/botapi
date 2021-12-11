@@ -2066,7 +2066,6 @@
       },
       "BotCommandScope": {
         "description": "This object represents the scope to which bot commands are applied.  7 scopes are supported:",
-        "type": "object",
         "oneOf": [
           {
             "$ref": "#/components/schemas/BotCommandScopeDefault"
@@ -2453,7 +2452,6 @@
       },
       "ChatMember": {
         "description": "This object contains information about one member of a chat.  6 types of chat members are supported:",
-        "type": "object",
         "oneOf": [
           {
             "$ref": "#/components/schemas/ChatMemberOwner"
@@ -3255,7 +3253,6 @@
       },
       "InlineQueryResult": {
         "description": "an inline query. Telegram clients currently support results of the following 20 types:",
-        "type": "object",
         "oneOf": [
           {
             "$ref": "#/components/schemas/InlineQueryResultCachedAudio"
@@ -4760,7 +4757,6 @@
       },
       "InputMedia": {
         "description": "This object represents the content of a media message to be sent.",
-        "type": "object",
         "oneOf": [
           {
             "$ref": "#/components/schemas/InputMediaAnimation"
@@ -5040,7 +5036,6 @@
       },
       "InputMessageContent": {
         "description": "This object represents the content of a message to be sent as a result of an inline query.  5 types:",
-        "type": "object",
         "oneOf": [
           {
             "$ref": "#/components/schemas/InputTextMessageContent"
@@ -5167,6 +5162,17 @@
         ]
       },
       "KeyboardButton": {
+        "description": "This object represents one button of the reply keyboard. For simple text buttons String can be used instead of this object to specify text of the button. Optional fields request_contact, request_location, and request_poll are mutually exclusive.",
+        "oneOf": [
+          {
+            "type": "string"
+          },
+          {
+            "$ref": "#/components/schemas/KeyboardButtonObject"
+          }
+        ]
+      },
+      "KeyboardButtonObject": {
         "description": "This object represents one button of the reply keyboard. For simple text buttons String can be used instead of this object to specify text of the button. Optional fields request_contact, request_location, and request_poll are mutually exclusive.",
         "type": "object",
         "properties": {
@@ -5660,7 +5666,6 @@
       },
       "PassportElementError": {
         "description": "This object represents an error in the Telegram Passport element which was submitted that should be resolved by the user. :",
-        "type": "object",
         "oneOf": [
           {
             "$ref": "#/components/schemas/PassportElementErrorDataField"

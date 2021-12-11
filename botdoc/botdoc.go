@@ -196,6 +196,23 @@ func Extract(doc *goquery.Document) (a API) {
 					sec = sectionMethods
 				}
 			}
+			const canBeString = "String can be used instead of this object"
+			if strings.Contains(d.Description, canBeString) {
+				newName := d.Name + "Object"
+				a.Types = append(a.Types, Definition{
+					Name:        d.Name,
+					Description: d.Description,
+					Ret: &Type{
+						Name: d.Name,
+						Kind: KindSum,
+						Sum: []Type{
+							newPrimitive(String),
+							{Name: newName, Kind: KindObject},
+						},
+					},
+				})
+				d.Name = newName
+			}
 			switch sec {
 			case sectionMethods:
 				a.Methods = append(a.Methods, d)
