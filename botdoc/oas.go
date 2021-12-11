@@ -114,9 +114,7 @@ func (a API) typeOAS(f Field) *ogen.Schema {
 			p.Type = "string"
 		default:
 			for _, s := range t.Sum {
-				p.OneOf = append(p.OneOf, &ogen.Schema{
-					Ref: "#/components/schemas/" + s.Name,
-				})
+				p.OneOf = append(p.OneOf, a.typeOAS(Field{Type: s}))
 			}
 			return p
 		}
@@ -161,6 +159,7 @@ func (a API) OAS() (*ogen.Spec, error) {
 			s.Properties = nil
 			p := a.typeOAS(Field{Type: *d.Ret})
 			s.OneOf = p.OneOf
+			s.Type = ""
 			c.Schemas[d.Name] = s
 			continue
 		}
