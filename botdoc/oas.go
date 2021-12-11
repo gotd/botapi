@@ -16,8 +16,8 @@ const (
 	contentJSON = "application/json"
 )
 
-func resultFor(s ogen.Schema) ogen.Schema {
-	return ogen.Schema{
+func resultFor(s *ogen.Schema) *ogen.Schema {
+	return &ogen.Schema{
 		Type:     "object",
 		Required: []string{"ok"},
 		Properties: ogen.Properties{
@@ -27,7 +27,7 @@ func resultFor(s ogen.Schema) ogen.Schema {
 			},
 			{
 				Name: "ok",
-				Schema: ogen.Schema{
+				Schema: &ogen.Schema{
 					Type:    "boolean",
 					Default: []byte(`true`),
 				},
@@ -114,7 +114,7 @@ func (a API) typeOAS(f Field) *ogen.Schema {
 			p.Type = "string"
 		default:
 			for _, s := range t.Sum {
-				p.OneOf = append(p.OneOf, ogen.Schema{
+				p.OneOf = append(p.OneOf, &ogen.Schema{
 					Ref: "#/components/schemas/" + s.Name,
 				})
 			}
@@ -135,25 +135,25 @@ func (a API) fieldOAS(parent *ogen.Schema, f Field) *ogen.Schema {
 	return p
 }
 
-func prop(s ogen.Properties, k string) (ogen.Schema, bool) {
+func prop(s ogen.Properties, k string) (*ogen.Schema, bool) {
 	for _, p := range s {
 		if p.Name == k {
 			return p.Schema, true
 		}
 	}
-	return ogen.Schema{}, false
+	return nil, false
 }
 
 // OAS generates OpenAPI v3 Specification from API definition.
 func (a API) OAS() (*ogen.Spec, error) {
 	c := &ogen.Components{
-		Schemas:   map[string]ogen.Schema{},
-		Responses: map[string]ogen.Response{},
+		Schemas:   map[string]*ogen.Schema{},
+		Responses: map[string]*ogen.Response{},
 	}
 	p := ogen.Paths{}
 
 	for _, d := range a.Types {
-		s := ogen.Schema{
+		s := &ogen.Schema{
 			Description: fixTypos(d.Description),
 			Type:        "object",
 		}
@@ -165,13 +165,13 @@ func (a API) OAS() (*ogen.Spec, error) {
 			continue
 		}
 		for _, f := range d.Fields {
-			p := a.fieldOAS(&s, f)
+			p := a.fieldOAS(s, f)
 			if p == nil {
 				return nil, errors.Errorf("unable to generate type for %s", f.Type)
 			}
 			s.Properties = append(s.Properties, ogen.Property{
 				Name:   f.Name,
-				Schema: *p,
+				Schema: p,
 			})
 		}
 		c.Schemas[d.Name] = s
@@ -227,23 +227,23 @@ Schemas:
 		}
 		c.Schemas[k] = s
 	}
-	c.Schemas["ID"] = ogen.Schema{
-		OneOf: []ogen.Schema{
+	c.Schemas["ID"] = &ogen.Schema{
+		OneOf: []*ogen.Schema{
 			{Type: "string"},
 			{Type: "integer", Format: "int64"},
 		},
 	}
-	c.Schemas["Result"] = resultFor(ogen.Schema{
+	c.Schemas["Result"] = resultFor(&ogen.Schema{
 		Type: "boolean",
 	})
-	c.Schemas["ResultString"] = resultFor(ogen.Schema{
+	c.Schemas["ResultString"] = resultFor(&ogen.Schema{
 		Type: "string",
 	})
-	c.Schemas["ResultInt"] = resultFor(ogen.Schema{
+	c.Schemas["ResultInt"] = resultFor(&ogen.Schema{
 		Type: "integer",
 	})
 	addResponse := func(name, ref, description string) {
-		c.Responses[name] = ogen.Response{
+		c.Responses[name] = &ogen.Response{
 			Description: description,
 			Content: map[string]ogen.Media{
 				contentJSON: {
@@ -257,18 +257,18 @@ Schemas:
 
 	for _, t := range wellKnownTypes {
 		resultName := "Result" + t
-		c.Schemas[resultName] = resultFor(ogen.Schema{
+		c.Schemas[resultName] = resultFor(&ogen.Schema{
 			Ref: "#/components/schemas/" + t,
 		})
 		addResponse(resultName, "#/components/schemas/"+resultName, "Result of method invocation")
 	}
-	c.Schemas["Response"] = ogen.Schema{
+	c.Schemas["Response"] = &ogen.Schema{
 		Description: "Contains information about why a request was unsuccessful.",
 		Type:        "object",
 		Properties: ogen.Properties{
 			{
 				Name: "migrate_to_chat_id",
-				Schema: ogen.Schema{
+				Schema: &ogen.Schema{
 					Description: "The group has been migrated to a supergroup with the specified identifier. " +
 						"This number may be greater than 32 bits and some programming languages may have " +
 						"difficulty/silent defects in interpreting it. But it is smaller than 52 bits, " +
@@ -280,14 +280,14 @@ Schemas:
 			},
 			{
 				Name: "retry_after",
-				Schema: ogen.Schema{
+				Schema: &ogen.Schema{
 					Description: "In case of exceeding flood control, the number of seconds left to wait before the request can be repeated",
 					Type:        "integer",
 				},
 			},
 		},
 	}
-	c.Schemas["Error"] = ogen.Schema{
+	c.Schemas["Error"] = &ogen.Schema{
 		Type: "object",
 		Required: []string{
 			"ok", "error_code", "description",
@@ -295,26 +295,26 @@ Schemas:
 		Properties: ogen.Properties{
 			{
 				Name: "ok",
-				Schema: ogen.Schema{
+				Schema: &ogen.Schema{
 					Default: []byte(`false`),
 					Type:    "boolean",
 				},
 			},
 			{
 				Name: "error_code",
-				Schema: ogen.Schema{
+				Schema: &ogen.Schema{
 					Type: "integer",
 				},
 			},
 			{
 				Name: "description",
-				Schema: ogen.Schema{
+				Schema: &ogen.Schema{
 					Type: "string",
 				},
 			},
 			{
 				Name: "parameters",
-				Schema: ogen.Schema{
+				Schema: &ogen.Schema{
 					Ref: "#/components/schemas/Response",
 				},
 			},
@@ -327,7 +327,7 @@ Schemas:
 	} {
 		addResponse(name, "#/components/schemas/"+name, "Result of method invocation")
 	}
-	c.Responses["Error"] = ogen.Response{
+	c.Responses["Error"] = &ogen.Response{
 		Description: "Method invocation error",
 		Content: map[string]ogen.Media{
 			contentJSON: {
@@ -339,7 +339,7 @@ Schemas:
 	}
 
 	for _, m := range a.Methods {
-		s := ogen.Schema{
+		s := &ogen.Schema{
 			Description: fmt.Sprintf("Input for %s", m.Name),
 			Type:        "object",
 		}
@@ -348,7 +348,7 @@ Schemas:
 			if strings.Contains(f.Description, "Required if") {
 				hasConditionalRequired = true
 			}
-			p := a.fieldOAS(&s, f)
+			p := a.fieldOAS(s, f)
 			oneOf := p.OneOf
 			if p.Items != nil {
 				oneOf = p.Items.OneOf
@@ -381,7 +381,7 @@ Schemas:
 			}
 			s.Properties = append(s.Properties, ogen.Property{
 				Name:   f.Name,
-				Schema: *p,
+				Schema: p,
 			})
 		}
 
@@ -390,7 +390,7 @@ Schemas:
 			c.Schemas[schemaName] = s
 		}
 
-		response := ogen.Schema{
+		response := &ogen.Schema{
 			Ref: "#/components/schemas/Result",
 		}
 		if t := m.Ret; t != nil {
@@ -425,7 +425,7 @@ Schemas:
 					`#/components/schemas/Result`,
 					`#/components/schemas/`,
 				)
-				c.Schemas[resultName] = resultFor(ogen.Schema{
+				c.Schemas[resultName] = resultFor(&ogen.Schema{
 					Type: "array",
 					Items: &ogen.Schema{
 						Ref: itemName,
@@ -451,10 +451,10 @@ Schemas:
 			}
 		}
 		responses := ogen.Responses{
-			"200":     ogen.Response{Ref: "#/components/responses/" + path.Base(response.Ref)},
-			"default": ogen.Response{Ref: "#/components/responses/Error"},
+			"200":     &ogen.Response{Ref: "#/components/responses/" + path.Base(response.Ref)},
+			"default": &ogen.Response{Ref: "#/components/responses/Error"},
 		}
-		item := ogen.PathItem{
+		item := &ogen.PathItem{
 			Description: m.Description,
 			Post: &ogen.Operation{
 				OperationID: m.Name,
