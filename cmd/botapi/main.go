@@ -75,7 +75,7 @@ func run(ctx context.Context) error {
 		appID     = flag.Int("api-id", constant.TestAppID, "The api_id of application")
 		appHash   = flag.String("api-hash", constant.TestAppHash, "The api_hash of application")
 		addr      = flag.String("addr", "localhost:8081", "http listen addr")
-		keepalive = flag.Duration("keepalive", time.Second*5, "client keepalive")
+		keepalive = flag.Duration("keepalive", 5*time.Minute, "client keepalive")
 		statePath = flag.String("state", "", "path to state file (json)")
 		debug     = flag.Bool("debug", false, "enables debug mode")
 	)
