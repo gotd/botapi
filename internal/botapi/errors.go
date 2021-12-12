@@ -12,11 +12,16 @@ import (
 )
 
 // NotImplementedError is stub error for not implemented methods.
-type NotImplementedError struct{}
+type NotImplementedError struct {
+	Message string
+}
 
 // Error implements error.
 func (n *NotImplementedError) Error() string {
-	return "method not implemented yet"
+	if n.Message == "" {
+		return "method not implemented yet"
+	}
+	return n.Message
 }
 
 // PeerNotFoundError reports that BotAPI cannot find this peer.
@@ -32,6 +37,16 @@ func (p *PeerNotFoundError) Error() string {
 	return fmt.Sprintf("peer %d not found", p.ID.Int64)
 }
 
+// BadRequestError reports bad request.
+type BadRequestError struct {
+	Message string
+}
+
+// Error implements error.
+func (p *BadRequestError) Error() string {
+	return p.Message
+}
+
 func errorOf(code int) oas.ErrorStatusCode {
 	return oas.ErrorStatusCode{
 		StatusCode: code,
@@ -43,16 +58,19 @@ func errorOf(code int) oas.ErrorStatusCode {
 }
 
 // NewError maps error to status code.
-func (b BotAPI) NewError(ctx context.Context, err error) oas.ErrorStatusCode {
+func (b *BotAPI) NewError(ctx context.Context, err error) oas.ErrorStatusCode {
 	var (
 		notImplemented *NotImplementedError
 		peerNotFound   *PeerNotFoundError
+		badRequest     *BadRequestError
 	)
 	switch {
 	case errors.As(err, &notImplemented):
 		return errorOf(http.StatusNotImplemented)
 	case errors.As(err, &peerNotFound):
 		return errorOf(http.StatusNotFound)
+	case errors.As(err, &badRequest):
+		return errorOf(http.StatusBadRequest)
 	}
 
 	resp := errorOf(http.StatusInternalServerError)

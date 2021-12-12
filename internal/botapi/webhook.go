@@ -7,7 +7,7 @@ import (
 )
 
 // DeleteWebhook implements oas.Handler.
-func (b *BotAPI) DeleteWebhook(ctx context.Context, req oas.DeleteWebhook) (oas.Result, error) {
+func (b *BotAPI) DeleteWebhook(ctx context.Context, req oas.OptDeleteWebhook) (oas.Result, error) {
 	return oas.Result{}, &NotImplementedError{}
 }
 

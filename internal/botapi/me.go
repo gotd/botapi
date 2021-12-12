@@ -16,33 +16,35 @@ func convertToUser(user *tg.User) oas.User {
 		LastName:                optString(user.GetLastName),
 		Username:                optString(user.GetUsername),
 		LanguageCode:            optString(user.GetLangCode),
-		CanJoinGroups:           optBool(user.BotNochats),
-		CanReadAllGroupMessages: optBool(user.BotChatHistory),
-		SupportsInlineQueries:   optBool(user.BotInlinePlaceholder == ""),
+		CanJoinGroups:           oas.NewOptBool(user.BotNochats),
+		CanReadAllGroupMessages: oas.NewOptBool(user.BotChatHistory),
+		SupportsInlineQueries:   oas.NewOptBool(user.BotInlinePlaceholder == ""),
 	}
 }
 
 // GetMe implements oas.Handler.
 func (b *BotAPI) GetMe(ctx context.Context) (oas.ResultUser, error) {
-	self, err := b.client.Self(ctx)
+	me, err := b.client.Self(ctx)
 	if err != nil {
 		return oas.ResultUser{}, err
 	}
+	b.updateSelf(me)
 
 	return oas.ResultUser{
-		Result: oas.NewOptUser(convertToUser(self)),
+		Result: oas.NewOptUser(convertToUser(me)),
 		Ok:     true,
 	}, nil
 }
 
 // Close implements oas.Handler.
 func (b *BotAPI) Close(ctx context.Context) (oas.Result, error) {
+	// FIXME(tdakkota): kill BotAPI.
 	return resultOK(true), nil
 }
 
 // LogOut implements oas.Handler.
 func (b *BotAPI) LogOut(ctx context.Context) (oas.Result, error) {
-	r, err := b.client.API().AuthLogOut(ctx)
+	r, err := b.raw.AuthLogOut(ctx)
 	if err != nil {
 		return oas.Result{}, err
 	}

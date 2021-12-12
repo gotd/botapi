@@ -3,6 +3,11 @@ package botapi
 import (
 	"context"
 
+	"github.com/go-faster/errors"
+	"github.com/gotd/td/telegram/message/html"
+	"github.com/gotd/td/telegram/message/unpack"
+	"github.com/gotd/td/tg"
+
 	"github.com/gotd/botapi/internal/oas"
 )
 
@@ -58,7 +63,64 @@ func (b *BotAPI) SendMediaGroup(ctx context.Context, req oas.SendMediaGroup) (oa
 
 // SendMessage implements oas.Handler.
 func (b *BotAPI) SendMessage(ctx context.Context, req oas.SendMessage) (oas.ResultMessage, error) {
-	return oas.ResultMessage{}, &NotImplementedError{}
+	parseMode, isParseModeSet := req.ParseMode.Get()
+	if isParseModeSet && parseMode != "HTML" {
+		return oas.ResultMessage{}, &NotImplementedError{Message: "only HTML formatting is supported"}
+	}
+
+	p, err := b.resolveID(ctx, req.ChatID)
+	if err != nil {
+		return oas.ResultMessage{}, errors.Wrap(err, "resolve chatID")
+	}
+	s := &b.sender.To(p).Builder
+
+	if v, ok := req.DisableWebPagePreview.Get(); ok && v {
+		s = s.NoWebpage()
+	}
+	if v, ok := req.DisableNotification.Get(); ok && v {
+		s = s.Silent()
+	}
+	if v, ok := req.ReplyToMessageID.Get(); ok {
+		s = s.Reply(v)
+	}
+	if m := req.ReplyMarkup; m != nil {
+		mkp, err := b.convertToTelegramReplyMarkup(ctx, m)
+		if err != nil {
+			return oas.ResultMessage{}, errors.Wrap(err, "convert markup")
+		}
+		s = s.Markup(mkp)
+	}
+
+	var resp tg.UpdatesClass
+	if isParseModeSet {
+		// FIXME(tdakkota): set HTML user resolver.
+		// FIXME(tdakkota): random_id unpacking.
+		resp, err = s.StyledText(ctx, html.String(nil, req.Text))
+	} else {
+		// FIXME(tdakkota): get entities from request.
+		resp, err = s.Text(ctx, req.Text)
+	}
+
+	m, err := unpack.MessageClass(resp, err)
+	if err != nil {
+		return oas.ResultMessage{}, errors.Wrap(err, "send")
+	}
+
+	msg, ok := m.(*tg.Message)
+	if !ok {
+		return oas.ResultMessage{
+			Ok: true,
+		}, nil
+	}
+
+	resultMsg, err := b.convertPlainMessage(ctx, msg)
+	if err != nil {
+		return oas.ResultMessage{}, errors.Wrap(err, "get message")
+	}
+	return oas.ResultMessage{
+		Result: oas.NewOptMessage(resultMsg),
+		Ok:     true,
+	}, nil
 }
 
 // SendPhoto implements oas.Handler.

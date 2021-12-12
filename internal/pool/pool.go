@@ -8,6 +8,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/go-faster/errors"
 	"go.uber.org/zap"
 
 	"github.com/gotd/td/telegram"
@@ -78,18 +79,19 @@ func (p *Pool) Do(ctx context.Context, token Token, fn func(client *botapi.BotAP
 	}
 	log := p.log.Named("client").With(zap.Int("id", token.ID))
 
+	var handler telegram.UpdateHandlerFunc = func(ctx context.Context, u tg.UpdatesClass) error {
+		return nil
+	}
 	peerStorage := peers.NewInmemoryStorage()
 	gaps := updates.New(updates.Config{
-		Handler: telegram.UpdateHandlerFunc(func(ctx context.Context, u tg.UpdatesClass) error {
-			return nil
-		}),
+		Handler: handler,
 		AccessHasher: peers.AccessHasher{
 			Storage: peerStorage,
 		},
 		Logger: log.Named("gaps"),
 	})
 	options := telegram.Options{
-		Logger:        log,
+		Logger:        log.Named("client"),
 		UpdateHandler: peers.UpdateHook(peerStorage, gaps),
 	}
 	if p.storage != nil {
@@ -102,12 +104,16 @@ func (p *Pool) Do(ctx context.Context, token Token, fn func(client *botapi.BotAP
 
 	tgContext, tgCancel := context.WithCancel(context.Background())
 	c = &client{
-		ctx:      tgContext,
-		cancel:   tgCancel,
-		api:      botapi.NewBotAPI(tgClient, peerStorage, p.debug),
+		ctx:    tgContext,
+		cancel: tgCancel,
+		api: botapi.NewBotAPI(tgClient, gaps, peerStorage, botapi.Options{
+			Debug:  p.debug,
+			Logger: log.Named("botapi"),
+		}),
 		token:    token,
 		lastUsed: p.now(),
 	}
+	handler = c.api.UpdateHook
 
 	// Wait for initialization.
 	initializationResult := make(chan error, 1)
@@ -138,6 +144,10 @@ func (p *Pool) Do(ctx context.Context, token Token, fn func(client *botapi.BotAP
 				}
 			}
 
+			if err := c.api.Init(ctx); err != nil {
+				return errors.Wrap(err, "init BotAPI")
+			}
+
 			// Done.
 			select {
 			case initializationResult <- nil:
@@ -159,6 +169,7 @@ func (p *Pool) Do(ctx context.Context, token Token, fn func(client *botapi.BotAP
 	select {
 	case err := <-initializationResult:
 		if err != nil {
+			log.Warn("Initialize", zap.Error(err))
 			return err
 		}
 

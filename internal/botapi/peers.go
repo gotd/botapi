@@ -21,6 +21,20 @@ const (
 	MaxTDLibUserID = (1 << 40) - 1
 )
 
+func fullChatInputPeer(full tg.FullChat) tg.InputPeerClass {
+	switch full := full.(type) {
+	case *tg.Chat:
+		return &tg.InputPeerChat{ChatID: full.ID}
+	case *tg.Channel:
+		return &tg.InputPeerChannel{
+			ChannelID:  full.ID,
+			AccessHash: full.AccessHash,
+		}
+	default:
+		return &tg.InputPeerEmpty{}
+	}
+}
+
 func toTDLibID(p tg.InputPeerClass) int64 {
 	switch p := p.(type) {
 	case *tg.InputPeerUser:
@@ -28,7 +42,7 @@ func toTDLibID(p tg.InputPeerClass) int64 {
 	case *tg.InputPeerChat:
 		return -p.GetChatID()
 	case *tg.InputPeerChannel:
-		return ZeroTDLibChannelID - p.GetChannelID()
+		return ZeroTDLibChannelID - (p.GetChannelID() * -1)
 	default:
 		return 0
 	}
@@ -40,7 +54,8 @@ func fromTDLibID(id int64) int64 {
 	case IsChatTDLibID(id):
 		id = -id
 	case IsChannelTDLibID(id):
-		id += ZeroTDLibChannelID
+		id -= ZeroTDLibChannelID
+		id = -id
 	}
 	return id
 }
@@ -64,6 +79,61 @@ func IsChannelTDLibID(id int64) bool {
 
 }
 
+func (b *BotAPI) getChatByPeer(ctx context.Context, p tg.PeerClass) (oas.Chat, error) {
+	var chatID int64
+	switch p := p.(type) {
+	case *tg.PeerUser:
+		user, ok, err := b.peers.FindUser(ctx, p.UserID)
+		switch {
+		case err != nil:
+			return oas.Chat{}, errors.Wrapf(err, "find user: %d", p.UserID)
+		case !ok:
+			return oas.Chat{}, errors.Errorf("can't find user %d", p.UserID)
+		}
+		return oas.Chat{
+			ID:        toTDLibID(user.AsInputPeer()),
+			Type:      oas.ChatTypePrivate,
+			Username:  optString(user.GetUsername),
+			FirstName: optString(user.GetFirstName),
+			LastName:  optString(user.GetLastName),
+		}, nil
+	case *tg.PeerChat:
+		chatID = p.ChatID
+	case *tg.PeerChannel:
+		chatID = p.ChannelID
+	default:
+		return oas.Chat{}, errors.Errorf("unexpected type %T", p)
+	}
+
+	chat, ok, err := b.peers.FindChat(ctx, chatID)
+	switch {
+	case err != nil:
+		return oas.Chat{}, errors.Wrapf(err, "find chat: %d", chatID)
+	case !ok:
+		return oas.Chat{}, errors.Errorf("can't find chat %d", chatID)
+	}
+
+	r := oas.Chat{
+		ID:    toTDLibID(fullChatInputPeer(chat)),
+		Type:  oas.ChatTypeGroup,
+		Title: oas.NewOptString(chat.GetTitle()),
+		// TODO(tdakkota): set more fields, when gotd schema will be updated
+		HasProtectedContent: oas.OptBool{},
+	}
+	switch ch := chat.(type) {
+	case *tg.Chat:
+	case *tg.Channel:
+		if ch.Broadcast {
+			r.Type = oas.ChatTypeChannel
+		} else {
+			r.Type = oas.ChatTypeSupergroup
+		}
+		r.Username = optString(ch.GetUsername)
+	}
+
+	return r, nil
+}
+
 func (b *BotAPI) resolveID(ctx context.Context, id oas.ID) (tg.InputPeerClass, error) {
 	if id.IsInt64() {
 		return b.resolveIntID(ctx, id)
@@ -78,7 +148,7 @@ func (b *BotAPI) resolveID(ctx context.Context, id oas.ID) (tg.InputPeerClass, e
 
 	p, err := b.resolver.ResolveDomain(ctx, username)
 	if err != nil {
-		return nil, errors.Errorf("resolve: %w", err)
+		return nil, errors.Wrapf(err, "resolve %q: %w", username)
 	}
 	switch p.(type) {
 	case *tg.InputPeerChat, *tg.InputPeerChannel:
@@ -88,15 +158,15 @@ func (b *BotAPI) resolveID(ctx context.Context, id oas.ID) (tg.InputPeerClass, e
 	}
 }
 
-func (b *BotAPI) resolveUserID(ctx context.Context, id int64) (*tg.InputUser, error) {
+func (b *BotAPI) resolveUserID(ctx context.Context, id int64) (*tg.User, error) {
 	user, ok, err := b.peers.FindUser(ctx, id)
 	switch {
 	case err != nil:
-		return nil, errors.Errorf("find user: %d", id)
+		return nil, errors.Wrapf(err, "find user: %d", id)
 	case !ok:
 		return nil, &PeerNotFoundError{ID: oas.NewInt64ID(id)}
 	}
-	return user.AsInput(), nil
+	return user, nil
 }
 
 func (b *BotAPI) resolveIntID(ctx context.Context, chatID oas.ID) (tg.InputPeerClass, error) {
@@ -104,12 +174,9 @@ func (b *BotAPI) resolveIntID(ctx context.Context, chatID oas.ID) (tg.InputPeerC
 	cleanID := fromTDLibID(id)
 
 	if IsUserTDLibID(id) {
-		user, ok, err := b.peers.FindUser(ctx, cleanID)
-		switch {
-		case err != nil:
-			return nil, errors.Errorf("find user: %d", id)
-		case !ok:
-			return nil, &PeerNotFoundError{ID: chatID}
+		user, err := b.resolveUserID(ctx, cleanID)
+		if err != nil {
+			return nil, err
 		}
 		return user.AsInputPeer(), nil
 	}
@@ -117,7 +184,7 @@ func (b *BotAPI) resolveIntID(ctx context.Context, chatID oas.ID) (tg.InputPeerC
 	chat, ok, err := b.peers.FindChat(ctx, cleanID)
 	switch {
 	case err != nil:
-		return nil, errors.Errorf("find chat: %d", id)
+		return nil, errors.Wrapf(err, "find chat: %d", id)
 	case !ok:
 		return nil, &PeerNotFoundError{ID: chatID}
 	}
