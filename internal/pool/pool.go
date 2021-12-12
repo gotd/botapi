@@ -146,6 +146,9 @@ func (p *Pool) Do(ctx context.Context, token Token, fn func(client *botapi.BotAP
 			if err := c.api.Init(ctx); err != nil {
 				return errors.Wrap(err, "init BotAPI")
 			}
+			defer func() {
+				_ = gaps.Logout()
+			}()
 
 			// Done.
 			select {
