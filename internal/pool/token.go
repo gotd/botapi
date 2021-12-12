@@ -14,6 +14,7 @@ type Token struct {
 	Secret string // ABC-DEF1234ghIkl-zyx57W2v1u123ew11
 }
 
+// ParseToken parses bot token from given string.
 func ParseToken(s string) (Token, error) {
 	if s == "" {
 		return Token{}, errors.New("blank")

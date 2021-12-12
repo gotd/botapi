@@ -6,13 +6,14 @@ import (
 	"sync"
 
 	"github.com/go-faster/errors"
+	"go.uber.org/atomic"
+	"go.uber.org/zap"
+
 	"github.com/gotd/td/telegram"
 	"github.com/gotd/td/telegram/message"
 	"github.com/gotd/td/telegram/message/peer"
 	"github.com/gotd/td/telegram/updates"
 	"github.com/gotd/td/tg"
-	"go.uber.org/atomic"
-	"go.uber.org/zap"
 
 	"github.com/gotd/botapi/internal/oas"
 	"github.com/gotd/botapi/internal/peers"
@@ -40,7 +41,7 @@ type BotAPI struct {
 func NewBotAPI(
 	client *telegram.Client,
 	gaps *updates.Manager,
-	peers peers.Storage,
+	store peers.Storage,
 	opts Options,
 ) *BotAPI {
 	opts.setDefaults()
@@ -53,7 +54,7 @@ func NewBotAPI(
 		gaps:     gaps,
 		sender:   message.NewSender(raw).WithResolver(resolver),
 		resolver: resolver,
-		peers:    peers,
+		peers:    store,
 		debug:    opts.Debug,
 		logger:   opts.Logger,
 	}

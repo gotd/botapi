@@ -113,7 +113,6 @@ func (p *Pool) Do(ctx context.Context, token Token, fn func(client *botapi.BotAP
 		token:    token,
 		lastUsed: p.now(),
 	}
-	handler = c.api.UpdateHook
 
 	// Wait for initialization.
 	initializationResult := make(chan error, 1)

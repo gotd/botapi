@@ -6,9 +6,10 @@ import (
 	"strconv"
 
 	"github.com/go-faster/errors"
+	"go.uber.org/zap"
+
 	"github.com/gotd/td/fileid"
 	"github.com/gotd/td/tg"
-	"go.uber.org/zap"
 
 	"github.com/gotd/botapi/internal/oas"
 )
@@ -426,15 +427,15 @@ func (b *BotAPI) convertPlainMessage(ctx context.Context, m *tg.Message) (r oas.
 		case *tg.PeerUser:
 			u, err := b.resolveUserID(ctx, fromID.UserID)
 			if err != nil {
-				return errors.Errorf("get user", err)
+				return errors.Wrap(err, "get user")
 			}
-			r.From.SetTo(convertToUser(u))
+			user.SetTo(convertToUser(u))
 		case *tg.PeerChat, *tg.PeerChannel:
 			ch, err := b.getChatByPeer(ctx, fromID)
 			if err != nil {
-				return errors.Errorf("get chat", err)
+				return errors.Wrap(err, "get chat")
 			}
-			r.SenderChat.SetTo(ch)
+			chat.SetTo(ch)
 		}
 		return nil
 	}

@@ -5,6 +5,7 @@ import (
 	"net/url"
 
 	"github.com/go-faster/errors"
+
 	"github.com/gotd/td/telegram/message/markup"
 	"github.com/gotd/td/telegram/message/peer"
 	"github.com/gotd/td/tg"

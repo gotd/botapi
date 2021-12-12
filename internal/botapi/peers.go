@@ -76,7 +76,6 @@ func IsChannelTDLibID(id int64) bool {
 		id != ZeroTDLibChannelID &&
 		!IsChatTDLibID(id) &&
 		ZeroTDLibChannelID-MaxTDLibChannelID <= id
-
 }
 
 func (b *BotAPI) getChatByPeer(ctx context.Context, p tg.PeerClass) (oas.Chat, error) {
@@ -148,7 +147,7 @@ func (b *BotAPI) resolveID(ctx context.Context, id oas.ID) (tg.InputPeerClass, e
 
 	p, err := b.resolver.ResolveDomain(ctx, username)
 	if err != nil {
-		return nil, errors.Wrapf(err, "resolve %q: %w", username)
+		return nil, errors.Wrapf(err, "resolve %q", username)
 	}
 	switch p.(type) {
 	case *tg.InputPeerChat, *tg.InputPeerChannel:

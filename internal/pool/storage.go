@@ -44,7 +44,7 @@ func (s *fileStorage) Store(ctx context.Context, id string, data []byte) error {
 		return err
 	}
 
-	return os.WriteFile(s.path, b, 0600)
+	return os.WriteFile(s.path, b, 0o600)
 }
 
 func (s *fileStorage) Load(ctx context.Context, id string) ([]byte, error) {
