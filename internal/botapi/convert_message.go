@@ -457,7 +457,9 @@ func (b *BotAPI) convertPlainMessage(ctx context.Context, m *tg.Message) (r oas.
 		AuthorSignature: optString(m.GetPostAuthor),
 	}
 	if m.Out {
-		r.From.SetTo(convertToUser(b.self))
+		if self := b.getSelf(); self != nil {
+			r.From.SetTo(convertToUser(self))
+		}
 	} else if fromID, ok := m.GetFromID(); ok {
 		// FIXME(tdakkota): set service IDs.
 		//

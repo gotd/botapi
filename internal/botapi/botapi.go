@@ -82,35 +82,11 @@ func (b *BotAPI) updateSelf(user *tg.User) {
 	b.selfMux.Unlock()
 }
 
-// UpdateHook is update hook to update some states.
-func (b *BotAPI) UpdateHook(ctx context.Context, u tg.UpdatesClass) error {
-	type updateWithEntities interface {
-		tg.UpdatesClass
-		GetUsers() []tg.UserClass
-	}
-
-	t, ok := u.(updateWithEntities)
-	if !ok {
-		return nil
-	}
-
-	selfID := b.selfID.Load()
-	if selfID == 0 {
-		return nil
-	}
-
-	for _, user := range t.GetUsers() {
-		nonEmpty, ok := user.AsNotEmpty()
-		if !ok {
-			continue
-		}
-
-		if selfID == b.self.GetID() {
-			b.updateSelf(nonEmpty)
-		}
-	}
-
-	return nil
+func (b *BotAPI) getSelf() *tg.User {
+	b.selfMux.Lock()
+	self := b.self
+	b.selfMux.Unlock()
+	return self
 }
 
 // Client returns *telegram.Client used by this instance of BotAPI.
