@@ -10,19 +10,21 @@ import (
 
 func Test_toTDLibID(t *testing.T) {
 	tests := []struct {
-		name string
-		p    tg.InputPeerClass
+		name    string
+		tdlibID int64
+		p       tg.InputPeerClass
 	}{
-		{"User", &tg.InputPeerUser{UserID: 309570373}},
-		{"Bot", &tg.InputPeerUser{UserID: 140267078}},
-		{"Chat", &tg.InputPeerChat{ChatID: 365219918}},
-		{"Channel", &tg.InputPeerChat{ChatID: 1228418968}},
+		{"User", 309570373, &tg.InputPeerUser{UserID: 309570373}},
+		{"Bot", 140267078, &tg.InputPeerUser{UserID: 140267078}},
+		{"Chat", -365219918, &tg.InputPeerChat{ChatID: 365219918}},
+		{"Channel", -1001228418968, &tg.InputPeerChannel{ChannelID: 1228418968}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			a := require.New(t)
 
 			tdlibID := toTDLibID(tt.p)
+			a.Equal(tt.tdlibID, tdlibID)
 			var mtprotoID int64
 			switch t := tt.p.(type) {
 			case *tg.InputPeerUser:

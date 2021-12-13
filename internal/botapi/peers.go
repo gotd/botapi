@@ -42,7 +42,7 @@ func toTDLibID(p tg.InputPeerClass) int64 {
 	case *tg.InputPeerChat:
 		return -p.GetChatID()
 	case *tg.InputPeerChannel:
-		return ZeroTDLibChannelID - (p.GetChannelID() * -1)
+		return ZeroTDLibChannelID + (p.GetChannelID() * -1)
 	default:
 		return 0
 	}
