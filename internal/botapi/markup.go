@@ -2,7 +2,6 @@ package botapi
 
 import (
 	"context"
-	"net/url"
 
 	"github.com/go-faster/errors"
 
@@ -19,7 +18,7 @@ func (b *BotAPI) convertToTelegramInlineButton(
 ) (tg.KeyboardButtonClass, error) {
 	switch {
 	case button.URL.Set:
-		return markup.URL(button.Text, button.URL.Value.String()), nil
+		return markup.URL(button.Text, button.URL.Value), nil
 	case button.CallbackData.Set:
 		return markup.Callback(button.Text, []byte(button.CallbackData.Value)), nil
 	case button.CallbackGame != nil:
@@ -51,7 +50,7 @@ func (b *BotAPI) convertToTelegramInlineButton(
 			RequestWriteAccess: loginURL.RequestWriteAccess.Value,
 			Text:               button.Text,
 			FwdText:            loginURL.ForwardText.Value,
-			URL:                loginURL.URL.String(),
+			URL:                loginURL.URL,
 			Bot:                user,
 		}, nil
 	default:
@@ -142,11 +141,7 @@ func convertToBotAPIInlineReplyMarkup(mkp *tg.ReplyInlineMarkup) oas.InlineKeybo
 			button := oas.InlineKeyboardButton{Text: b.GetText()}
 			switch b := b.(type) {
 			case *tg.KeyboardButtonURL:
-				u, _ := url.Parse(b.URL)
-				if u == nil {
-					u = new(url.URL)
-				}
-				button.URL.SetTo(*u)
+				button.URL.SetTo(b.URL)
 			case *tg.KeyboardButtonCallback:
 				button.CallbackData.SetTo(string(b.Data))
 			case *tg.KeyboardButtonSwitchInline:
@@ -164,11 +159,7 @@ func convertToBotAPIInlineReplyMarkup(mkp *tg.ReplyInlineMarkup) oas.InlineKeybo
 				//
 				// See Message definition
 				// See https://github.com/tdlib/telegram-bot-api/blob/90f52477814a2d8a08c9ffb1d780fd179815d715/telegram-bot-api/Client.cpp#L1526
-				u, _ := url.Parse(b.URL)
-				if u == nil {
-					u = new(url.URL)
-				}
-				button.URL.SetTo(*u)
+				button.URL.SetTo(b.URL)
 			}
 			resultRow[i] = button
 		}

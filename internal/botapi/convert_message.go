@@ -2,7 +2,6 @@ package botapi
 
 import (
 	"context"
-	"net/url"
 	"strconv"
 
 	"github.com/go-faster/errors"
@@ -48,11 +47,7 @@ func (b *BotAPI) convertToBotAPIEntities(
 			e.Language.SetTo(entity.Language)
 		case *tg.MessageEntityTextURL:
 			e.Type = oas.MessageEntityTypeTextLink
-			u, _ := url.Parse(entity.URL)
-			if u == nil {
-				u = new(url.URL)
-			}
-			e.URL.SetTo(*u)
+			e.URL.SetTo(entity.URL)
 		case *tg.MessageEntityMentionName:
 			e.Type = oas.MessageEntityTypeTextMention
 			user, ok, err := b.peers.FindUser(ctx, entity.UserID)
