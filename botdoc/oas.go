@@ -69,10 +69,6 @@ func (a API) typeOAS(f Field) *ogen.Schema {
 			if b.Min > 0 {
 				p.MinLength = &b.Min
 			}
-
-			if strings.Contains(f.Name, "url") {
-				p.Format = "uri"
-			}
 		case Integer:
 			p.Type = "integer"
 			// Telegram uses int64 (int53, really) for IDs.
