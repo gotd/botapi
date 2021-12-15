@@ -5309,7 +5309,7 @@ func (s InlineQueryResultAudio) Encode(e *jx.Encoder) {
 	e.Str(s.ID)
 
 	e.FieldStart("audio_url")
-	json.EncodeURI(e, s.AudioURL)
+	e.Str(s.AudioURL)
 
 	e.FieldStart("title")
 	e.Str(s.Title)
@@ -5368,8 +5368,8 @@ func (s *InlineQueryResultAudio) Decode(d *jx.Decoder) error {
 				return err
 			}
 		case "audio_url":
-			v, err := json.DecodeURI(d)
-			s.AudioURL = v
+			v, err := d.Str()
+			s.AudioURL = string(v)
 			if err != nil {
 				return err
 			}
@@ -6464,7 +6464,7 @@ func (s InlineQueryResultDocument) Encode(e *jx.Encoder) {
 	}
 
 	e.FieldStart("document_url")
-	json.EncodeURI(e, s.DocumentURL)
+	e.Str(s.DocumentURL)
 
 	e.FieldStart("mime_type")
 	e.Str(s.MimeType)
@@ -6543,8 +6543,8 @@ func (s *InlineQueryResultDocument) Decode(d *jx.Decoder) error {
 				return err
 			}
 		case "document_url":
-			v, err := json.DecodeURI(d)
-			s.DocumentURL = v
+			v, err := d.Str()
+			s.DocumentURL = string(v)
 			if err != nil {
 				return err
 			}
@@ -6660,7 +6660,7 @@ func (s InlineQueryResultGif) Encode(e *jx.Encoder) {
 	e.Str(s.ID)
 
 	e.FieldStart("gif_url")
-	json.EncodeURI(e, s.GIFURL)
+	e.Str(s.GIFURL)
 	if s.GIFWidth.Set {
 		e.FieldStart("gif_width")
 		s.GIFWidth.Encode(e)
@@ -6675,7 +6675,7 @@ func (s InlineQueryResultGif) Encode(e *jx.Encoder) {
 	}
 
 	e.FieldStart("thumb_url")
-	json.EncodeURI(e, s.ThumbURL)
+	e.Str(s.ThumbURL)
 	if s.ThumbMimeType.Set {
 		e.FieldStart("thumb_mime_type")
 		s.ThumbMimeType.Encode(e)
@@ -6731,8 +6731,8 @@ func (s *InlineQueryResultGif) Decode(d *jx.Decoder) error {
 				return err
 			}
 		case "gif_url":
-			v, err := json.DecodeURI(d)
-			s.GIFURL = v
+			v, err := d.Str()
+			s.GIFURL = string(v)
 			if err != nil {
 				return err
 			}
@@ -6752,8 +6752,8 @@ func (s *InlineQueryResultGif) Decode(d *jx.Decoder) error {
 				return err
 			}
 		case "thumb_url":
-			v, err := json.DecodeURI(d)
-			s.ThumbURL = v
+			v, err := d.Str()
+			s.ThumbURL = string(v)
 			if err != nil {
 				return err
 			}
@@ -6967,7 +6967,7 @@ func (s InlineQueryResultMpeg4Gif) Encode(e *jx.Encoder) {
 	e.Str(s.ID)
 
 	e.FieldStart("mpeg4_url")
-	json.EncodeURI(e, s.Mpeg4URL)
+	e.Str(s.Mpeg4URL)
 	if s.Mpeg4Width.Set {
 		e.FieldStart("mpeg4_width")
 		s.Mpeg4Width.Encode(e)
@@ -6982,7 +6982,7 @@ func (s InlineQueryResultMpeg4Gif) Encode(e *jx.Encoder) {
 	}
 
 	e.FieldStart("thumb_url")
-	json.EncodeURI(e, s.ThumbURL)
+	e.Str(s.ThumbURL)
 	if s.ThumbMimeType.Set {
 		e.FieldStart("thumb_mime_type")
 		s.ThumbMimeType.Encode(e)
@@ -7038,8 +7038,8 @@ func (s *InlineQueryResultMpeg4Gif) Decode(d *jx.Decoder) error {
 				return err
 			}
 		case "mpeg4_url":
-			v, err := json.DecodeURI(d)
-			s.Mpeg4URL = v
+			v, err := d.Str()
+			s.Mpeg4URL = string(v)
 			if err != nil {
 				return err
 			}
@@ -7059,8 +7059,8 @@ func (s *InlineQueryResultMpeg4Gif) Decode(d *jx.Decoder) error {
 				return err
 			}
 		case "thumb_url":
-			v, err := json.DecodeURI(d)
-			s.ThumbURL = v
+			v, err := d.Str()
+			s.ThumbURL = string(v)
 			if err != nil {
 				return err
 			}
@@ -7126,10 +7126,10 @@ func (s InlineQueryResultPhoto) Encode(e *jx.Encoder) {
 	e.Str(s.ID)
 
 	e.FieldStart("photo_url")
-	json.EncodeURI(e, s.PhotoURL)
+	e.Str(s.PhotoURL)
 
 	e.FieldStart("thumb_url")
-	json.EncodeURI(e, s.ThumbURL)
+	e.Str(s.ThumbURL)
 	if s.PhotoWidth.Set {
 		e.FieldStart("photo_width")
 		s.PhotoWidth.Encode(e)
@@ -7193,14 +7193,14 @@ func (s *InlineQueryResultPhoto) Decode(d *jx.Decoder) error {
 				return err
 			}
 		case "photo_url":
-			v, err := json.DecodeURI(d)
-			s.PhotoURL = v
+			v, err := d.Str()
+			s.PhotoURL = string(v)
 			if err != nil {
 				return err
 			}
 		case "thumb_url":
-			v, err := json.DecodeURI(d)
-			s.ThumbURL = v
+			v, err := d.Str()
+			s.ThumbURL = string(v)
 			if err != nil {
 				return err
 			}
@@ -7433,13 +7433,13 @@ func (s InlineQueryResultVideo) Encode(e *jx.Encoder) {
 	e.Str(s.ID)
 
 	e.FieldStart("video_url")
-	json.EncodeURI(e, s.VideoURL)
+	e.Str(s.VideoURL)
 
 	e.FieldStart("mime_type")
 	e.Str(s.MimeType)
 
 	e.FieldStart("thumb_url")
-	json.EncodeURI(e, s.ThumbURL)
+	e.Str(s.ThumbURL)
 
 	e.FieldStart("title")
 	e.Str(s.Title)
@@ -7506,8 +7506,8 @@ func (s *InlineQueryResultVideo) Decode(d *jx.Decoder) error {
 				return err
 			}
 		case "video_url":
-			v, err := json.DecodeURI(d)
-			s.VideoURL = v
+			v, err := d.Str()
+			s.VideoURL = string(v)
 			if err != nil {
 				return err
 			}
@@ -7518,8 +7518,8 @@ func (s *InlineQueryResultVideo) Decode(d *jx.Decoder) error {
 				return err
 			}
 		case "thumb_url":
-			v, err := json.DecodeURI(d)
-			s.ThumbURL = v
+			v, err := d.Str()
+			s.ThumbURL = string(v)
 			if err != nil {
 				return err
 			}
@@ -7601,7 +7601,7 @@ func (s InlineQueryResultVoice) Encode(e *jx.Encoder) {
 	e.Str(s.ID)
 
 	e.FieldStart("voice_url")
-	json.EncodeURI(e, s.VoiceURL)
+	e.Str(s.VoiceURL)
 
 	e.FieldStart("title")
 	e.Str(s.Title)
@@ -7656,8 +7656,8 @@ func (s *InlineQueryResultVoice) Decode(d *jx.Decoder) error {
 				return err
 			}
 		case "voice_url":
-			v, err := json.DecodeURI(d)
-			s.VoiceURL = v
+			v, err := d.Str()
+			s.VoiceURL = string(v)
 			if err != nil {
 				return err
 			}
@@ -9347,7 +9347,7 @@ func (s LoginUrl) Encode(e *jx.Encoder) {
 	e.ObjStart()
 
 	e.FieldStart("url")
-	json.EncodeURI(e, s.URL)
+	e.Str(s.URL)
 	if s.ForwardText.Set {
 		e.FieldStart("forward_text")
 		s.ForwardText.Encode(e)
@@ -9371,8 +9371,8 @@ func (s *LoginUrl) Decode(d *jx.Decoder) error {
 	return d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "url":
-			v, err := json.DecodeURI(d)
-			s.URL = v
+			v, err := d.Str()
+			s.URL = string(v)
 			if err != nil {
 				return err
 			}
@@ -11290,30 +11290,6 @@ func (o *OptSuccessfulPayment) Decode(d *jx.Decoder) error {
 		return nil
 	default:
 		return errors.Errorf(`unexpected type %q while reading OptSuccessfulPayment`, d.Next())
-	}
-}
-
-// Encode encodes url.URL as json.
-func (o OptURL) Encode(e *jx.Encoder) {
-	json.EncodeURI(e, o.Value)
-}
-
-// Decode decodes url.URL from json.
-func (o *OptURL) Decode(d *jx.Decoder) error {
-	if o == nil {
-		return errors.New(`invalid: unable to decode OptURL to nil`)
-	}
-	switch d.Next() {
-	case jx.String:
-		o.Set = true
-		v, err := json.DecodeURI(d)
-		if err != nil {
-			return err
-		}
-		o.Value = v
-		return nil
-	default:
-		return errors.Errorf(`unexpected type %q while reading OptURL`, d.Next())
 	}
 }
 
@@ -18098,7 +18074,7 @@ func (s SetWebhook) Encode(e *jx.Encoder) {
 	e.ObjStart()
 
 	e.FieldStart("url")
-	json.EncodeURI(e, s.URL)
+	e.Str(s.URL)
 	if s.Certificate.Set {
 		e.FieldStart("certificate")
 		s.Certificate.Encode(e)
@@ -18134,8 +18110,8 @@ func (s *SetWebhook) Decode(d *jx.Decoder) error {
 	return d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "url":
-			v, err := json.DecodeURI(d)
-			s.URL = v
+			v, err := d.Str()
+			s.URL = string(v)
 			if err != nil {
 				return err
 			}
@@ -19601,7 +19577,7 @@ func (s WebhookInfo) Encode(e *jx.Encoder) {
 	e.ObjStart()
 
 	e.FieldStart("url")
-	json.EncodeURI(e, s.URL)
+	e.Str(s.URL)
 
 	e.FieldStart("has_custom_certificate")
 	e.Bool(s.HasCustomCertificate)
@@ -19643,8 +19619,8 @@ func (s *WebhookInfo) Decode(d *jx.Decoder) error {
 	return d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "url":
-			v, err := json.DecodeURI(d)
-			s.URL = v
+			v, err := d.Str()
+			s.URL = string(v)
 			if err != nil {
 				return err
 			}

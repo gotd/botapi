@@ -3159,8 +3159,7 @@
           },
           "url": {
             "description": "HTTP or tg:// url to be opened when the button is pressed. Links tg://user?id=\u003cuser_id\u003e can be used to mention a user by their ID without using a username, if this is allowed by their privacy settings",
-            "type": "string",
-            "format": "uri"
+            "type": "string"
           },
           "login_url": {
             "$ref": "#/components/schemas/LoginUrl"
@@ -3359,8 +3358,7 @@
           },
           "url": {
             "description": "URL of the result",
-            "type": "string",
-            "format": "uri"
+            "type": "string"
           },
           "hide_url": {
             "description": "Pass True, if you don't want the URL to be shown in the message",
@@ -3372,8 +3370,7 @@
           },
           "thumb_url": {
             "description": "URL of the thumbnail for the result",
-            "type": "string",
-            "format": "uri"
+            "type": "string"
           },
           "thumb_width": {
             "description": "Thumbnail width",
@@ -3412,8 +3409,7 @@
           },
           "audio_url": {
             "description": "A valid URL for the audio file",
-            "type": "string",
-            "format": "uri"
+            "type": "string"
           },
           "title": {
             "description": "Title",
@@ -3904,8 +3900,7 @@
           },
           "thumb_url": {
             "description": "URL of the thumbnail for the result",
-            "type": "string",
-            "format": "uri"
+            "type": "string"
           },
           "thumb_width": {
             "description": "Thumbnail width",
@@ -3964,8 +3959,7 @@
           },
           "document_url": {
             "description": "A valid URL for the file",
-            "type": "string",
-            "format": "uri"
+            "type": "string"
           },
           "mime_type": {
             "description": "Mime type of the content of the file, either “application/pdf” or “application/zip”",
@@ -3983,8 +3977,7 @@
           },
           "thumb_url": {
             "description": "URL of the thumbnail (JPEG only) for the file",
-            "type": "string",
-            "format": "uri"
+            "type": "string"
           },
           "thumb_width": {
             "description": "Thumbnail width",
@@ -4053,8 +4046,7 @@
           },
           "gif_url": {
             "description": "A valid URL for the GIF file. File size must not exceed 1MB",
-            "type": "string",
-            "format": "uri"
+            "type": "string"
           },
           "gif_width": {
             "description": "Width of the GIF",
@@ -4076,8 +4068,7 @@
           },
           "thumb_url": {
             "description": "URL of the static (JPEG or GIF) or animated (MPEG4) thumbnail for the result",
-            "type": "string",
-            "format": "uri"
+            "type": "string"
           },
           "thumb_mime_type": {
             "description": "MIME type of the thumbnail, must be one of “image/jpeg”, “image/gif”, or “video/mp4”. Defaults to “image/jpeg”",
@@ -4172,8 +4163,7 @@
           },
           "thumb_url": {
             "description": "URL of the thumbnail for the result",
-            "type": "string",
-            "format": "uri"
+            "type": "string"
           },
           "thumb_width": {
             "description": "Thumbnail width",
@@ -4213,8 +4203,7 @@
           },
           "mpeg4_url": {
             "description": "A valid URL for the MP4 file. File size must not exceed 1MB",
-            "type": "string",
-            "format": "uri"
+            "type": "string"
           },
           "mpeg4_width": {
             "description": "Video width",
@@ -4236,8 +4225,7 @@
           },
           "thumb_url": {
             "description": "URL of the static (JPEG or GIF) or animated (MPEG4) thumbnail for the result",
-            "type": "string",
-            "format": "uri"
+            "type": "string"
           },
           "thumb_mime_type": {
             "description": "MIME type of the thumbnail, must be one of “image/jpeg”, “image/gif”, or “video/mp4”. Defaults to “image/jpeg”",
@@ -4294,13 +4282,11 @@
           },
           "photo_url": {
             "description": "A valid URL of the photo. Photo must be in JPEG format. Photo size must not exceed 5MB",
-            "type": "string",
-            "format": "uri"
+            "type": "string"
           },
           "thumb_url": {
             "description": "URL of the thumbnail for the photo",
-            "type": "string",
-            "format": "uri"
+            "type": "string"
           },
           "photo_width": {
             "description": "Width of the photo",
@@ -4405,8 +4391,7 @@
           },
           "thumb_url": {
             "description": "URL of the thumbnail for the result",
-            "type": "string",
-            "format": "uri"
+            "type": "string"
           },
           "thumb_width": {
             "description": "Thumbnail width",
@@ -4447,8 +4432,7 @@
           },
           "video_url": {
             "description": "A valid URL for the embedded video player or video file",
-            "type": "string",
-            "format": "uri"
+            "type": "string"
           },
           "mime_type": {
             "description": "Mime type of the content of video url, “text/html” or “video/mp4”",
@@ -4456,8 +4440,7 @@
           },
           "thumb_url": {
             "description": "URL of the thumbnail (JPEG only) for the video",
-            "type": "string",
-            "format": "uri"
+            "type": "string"
           },
           "title": {
             "description": "Title for the result",
@@ -4534,8 +4517,7 @@
           },
           "voice_url": {
             "description": "A valid URL for the voice recording",
-            "type": "string",
-            "format": "uri"
+            "type": "string"
           },
           "title": {
             "description": "Recording title",
@@ -4658,8 +4640,7 @@
           },
           "photo_url": {
             "description": "URL of the product photo for the invoice. Can be a photo of the goods or a marketing image for a service. People like it better when they see what they are paying for",
-            "type": "string",
-            "format": "uri"
+            "type": "string"
           },
           "photo_size": {
             "description": "Photo size",
@@ -5266,8 +5247,7 @@
         "properties": {
           "url": {
             "description": "An HTTP URL to be opened with user authorization data added to the query string when the button is pressed. If the user refuses to provide authorization data, the original URL without information about the user will be opened. The data added is the same as described in Receiving authorization data.NOTE: You must always check the hash of the received data to verify the authentication and the integrity of the data as described in Checking authorization",
-            "type": "string",
-            "format": "uri"
+            "type": "string"
           },
           "forward_text": {
             "description": "New text of the button in forwarded messages",
@@ -5593,8 +5573,7 @@
           },
           "url": {
             "description": "For “text_link” only, url that will be opened after user taps on the text",
-            "type": "string",
-            "format": "uri"
+            "type": "string"
           },
           "user": {
             "$ref": "#/components/schemas/User"
@@ -7270,8 +7249,7 @@
         "properties": {
           "url": {
             "description": "Webhook URL, may be empty if webhook is not set up",
-            "type": "string",
-            "format": "uri"
+            "type": "string"
           },
           "has_custom_certificate": {
             "description": "True, if a custom certificate was provided for webhook certificate checks",
@@ -7365,8 +7343,7 @@
           },
           "url": {
             "description": "URL that will be opened by the user's client. If you have created a Game and accepted the conditions via @Botfather, specify the URL that opens your game — note that this will only work if the query comes from a callback_game button.Otherwise, you may use links like t.me/your_bot?start=XXXX that open your bot with a parameter",
-            "type": "string",
-            "format": "uri"
+            "type": "string"
           },
           "cache_time": {
             "description": "The maximum amount of time in seconds that the result of the callback query may be cached client-side. Telegram apps will support caching starting in version 3.14. Defaults to 0",
@@ -8782,8 +8759,7 @@
           },
           "photo_url": {
             "description": "URL of the product photo for the invoice. Can be a photo of the goods or a marketing image for a service. People like it better when they see what they are paying for",
-            "type": "string",
-            "format": "uri"
+            "type": "string"
           },
           "photo_size": {
             "description": "Photo size",
@@ -9788,8 +9764,7 @@
         "properties": {
           "url": {
             "description": "HTTPS url to send updates to. Use an empty string to remove webhook integration",
-            "type": "string",
-            "format": "uri"
+            "type": "string"
           },
           "certificate": {
             "description": "Upload your public key certificate so that the root certificate in use can be checked. See our self-signed guide for details",
