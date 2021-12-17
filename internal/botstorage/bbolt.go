@@ -5,14 +5,12 @@ import (
 	"encoding/binary"
 
 	"github.com/go-faster/errors"
-	"go.etcd.io/bbolt"
-	"go.uber.org/multierr"
-
 	"github.com/gotd/td/bin"
 	"github.com/gotd/td/session"
 	"github.com/gotd/td/telegram/peers"
 	"github.com/gotd/td/telegram/updates"
 	"github.com/gotd/td/tg"
+	"go.etcd.io/bbolt"
 )
 
 // BBoltStorage is bbolt-based storage.
@@ -68,6 +66,16 @@ func parseInt(v []byte) (int64, bool) {
 	return int64(i), true
 }
 
+func (b *BBoltStorage) viewBucket(prefix string, cb func(b *bbolt.Bucket, tx *bbolt.Tx) error) error {
+	return b.db.View(func(tx *bbolt.Tx) error {
+		b := tx.Bucket([]byte(prefix))
+		if b == nil {
+			return nil
+		}
+		return cb(b, tx)
+	})
+}
+
 func (b *BBoltStorage) batchBucket(prefix string, cb func(b *bbolt.Bucket, tx *bbolt.Tx) error) error {
 	return b.db.Update(func(tx *bbolt.Tx) error {
 		b, err := tx.CreateBucketIfNotExists([]byte(prefix))
@@ -87,7 +95,7 @@ func (b *BBoltStorage) Save(_ context.Context, key peers.Key, value peers.Value)
 
 // Find implements peers.Storage.
 func (b *BBoltStorage) Find(_ context.Context, key peers.Key) (value peers.Value, found bool, err error) {
-	err = b.batchBucket(hashPrefix+key.Prefix, func(b *bbolt.Bucket, tx *bbolt.Tx) error {
+	err = b.viewBucket(hashPrefix+key.Prefix, func(b *bbolt.Bucket, tx *bbolt.Tx) error {
 		storageKey := formatInt(key.ID)
 		val := b.Get(storageKey)
 		// Value not found.
@@ -96,7 +104,7 @@ func (b *BBoltStorage) Find(_ context.Context, key peers.Key) (value peers.Value
 		}
 		id, ok := parseInt(val)
 		if !ok {
-			return multierr.Append(errors.Errorf("got invalid value %+x", val), b.Delete(storageKey))
+			return errors.Errorf("got invalid value %+x", val)
 		}
 		value.AccessHash = id
 		found = true
@@ -158,7 +166,7 @@ func getMTProtoKey(b *bbolt.Bucket, id int64, d bin.Decoder) (bool, error) {
 	buf := bin.Buffer{Buf: data}
 	if err := d.Decode(&buf); err != nil {
 		// Ignore decode errors.
-		return false, b.Delete(key)
+		return false, nil
 	}
 	return true, nil
 }
@@ -190,7 +198,7 @@ func (b *BBoltStorage) SaveUserFulls(_ context.Context, users ...*tg.UserFull) e
 // FindUser implements BBoltStorage.
 func (b *BBoltStorage) FindUser(_ context.Context, id int64) (e *tg.User, found bool, err error) {
 	// Use batch to delete invalid keys.
-	err = b.batchBucket(userPrefix, func(b *bbolt.Bucket, tx *bbolt.Tx) error {
+	err = b.viewBucket(userPrefix, func(b *bbolt.Bucket, tx *bbolt.Tx) error {
 		e = new(tg.User)
 		found, err = getMTProtoKey(b, id, e)
 		return err
@@ -201,7 +209,7 @@ func (b *BBoltStorage) FindUser(_ context.Context, id int64) (e *tg.User, found 
 // FindUserFull implements BBoltStorage.
 func (b *BBoltStorage) FindUserFull(_ context.Context, id int64) (e *tg.UserFull, found bool, err error) {
 	// Use batch to delete invalid keys.
-	err = b.batchBucket(userFullPrefix, func(b *bbolt.Bucket, tx *bbolt.Tx) error {
+	err = b.viewBucket(userFullPrefix, func(b *bbolt.Bucket, tx *bbolt.Tx) error {
 		e = new(tg.UserFull)
 		found, err = getMTProtoKey(b, id, e)
 		return err
@@ -235,7 +243,7 @@ func (b *BBoltStorage) SaveChatFulls(_ context.Context, chats ...*tg.ChatFull) e
 
 // FindChat implements BBoltStorage.
 func (b *BBoltStorage) FindChat(_ context.Context, id int64) (e *tg.Chat, found bool, err error) {
-	err = b.batchBucket(chatPrefix, func(b *bbolt.Bucket, tx *bbolt.Tx) error {
+	err = b.viewBucket(chatPrefix, func(b *bbolt.Bucket, tx *bbolt.Tx) error {
 		e = new(tg.Chat)
 		found, err = getMTProtoKey(b, id, e)
 		return err
@@ -245,7 +253,7 @@ func (b *BBoltStorage) FindChat(_ context.Context, id int64) (e *tg.Chat, found 
 
 // FindChatFull implements BBoltStorage.
 func (b *BBoltStorage) FindChatFull(_ context.Context, id int64) (e *tg.ChatFull, found bool, err error) {
-	err = b.batchBucket(chatFullPrefix, func(b *bbolt.Bucket, tx *bbolt.Tx) error {
+	err = b.viewBucket(chatFullPrefix, func(b *bbolt.Bucket, tx *bbolt.Tx) error {
 		e = new(tg.ChatFull)
 		found, err = getMTProtoKey(b, id, e)
 		return err
@@ -279,7 +287,7 @@ func (b *BBoltStorage) SaveChannelFulls(_ context.Context, channels ...*tg.Chann
 
 // FindChannel implements BBoltStorage.
 func (b *BBoltStorage) FindChannel(_ context.Context, id int64) (e *tg.Channel, found bool, err error) {
-	err = b.batchBucket(channelPrefix, func(b *bbolt.Bucket, tx *bbolt.Tx) error {
+	err = b.viewBucket(channelPrefix, func(b *bbolt.Bucket, tx *bbolt.Tx) error {
 		e = new(tg.Channel)
 		found, err = getMTProtoKey(b, id, e)
 		return err
@@ -289,7 +297,7 @@ func (b *BBoltStorage) FindChannel(_ context.Context, id int64) (e *tg.Channel, 
 
 // FindChannelFull implements BBoltStorage.
 func (b *BBoltStorage) FindChannelFull(_ context.Context, id int64) (e *tg.ChannelFull, found bool, err error) {
-	err = b.batchBucket(channelFullPrefix, func(b *bbolt.Bucket, tx *bbolt.Tx) error {
+	err = b.viewBucket(channelFullPrefix, func(b *bbolt.Bucket, tx *bbolt.Tx) error {
 		e = new(tg.ChannelFull)
 		found, err = getMTProtoKey(b, id, e)
 		return err
@@ -315,7 +323,7 @@ func getStateField(b *bbolt.Bucket, key string, v *int) (bool, error) {
 	}
 	p, ok := parseInt(data)
 	if !ok {
-		return false, multierr.Append(errors.Errorf("decode %q", key), b.Delete(bytesKey))
+		return false, errors.Errorf("decode %q", key)
 	}
 	*v = int(p)
 	return true, nil
@@ -323,7 +331,7 @@ func getStateField(b *bbolt.Bucket, key string, v *int) (bool, error) {
 
 // GetState implements updates.StateStorage.
 func (b *BBoltStorage) GetState(_ int64) (state updates.State, found bool, err error) {
-	err = b.batchBucket(statePrefix, func(b *bbolt.Bucket, tx *bbolt.Tx) error {
+	err = b.viewBucket(statePrefix, func(b *bbolt.Bucket, tx *bbolt.Tx) error {
 		if ok, err := getStateField(b, ptsKey, &state.Pts); err != nil || !ok {
 			return err
 		}
@@ -420,8 +428,9 @@ func (b *BBoltStorage) SetDateSeq(_ int64, date, seq int) error {
 
 // GetChannelPts implements updates.StateStorage.
 func (b *BBoltStorage) GetChannelPts(_, channelID int64) (pts int, found bool, err error) {
-	err = b.batchBucket(channelsPtsPrefix, func(b *bbolt.Bucket, tx *bbolt.Tx) error {
-		b.Get(formatInt(channelID))
+	err = b.viewBucket(channelsPtsPrefix, func(b *bbolt.Bucket, tx *bbolt.Tx) error {
+		v, ok := parseInt(b.Get(formatInt(channelID)))
+		pts, found = int(v), ok
 		return nil
 	})
 	return pts, found, err
@@ -436,19 +445,18 @@ func (b *BBoltStorage) SetChannelPts(_, channelID int64, pts int) error {
 
 // ForEachChannels implements updates.StateStorage.
 func (b *BBoltStorage) ForEachChannels(_ int64, f func(channelID int64, pts int) error) error {
-	return b.batchBucket(channelsPtsPrefix, func(b *bbolt.Bucket, tx *bbolt.Tx) error {
+	return b.viewBucket(channelsPtsPrefix, func(b *bbolt.Bucket, tx *bbolt.Tx) error {
 		return b.ForEach(func(k, v []byte) error {
 			channelID, ok := parseInt(k)
 			if !ok {
-				// Delete invalid entries.
-				return b.Delete(k)
+				// Ignore invalid entries.
+				return nil
 			}
 			pts, ok := parseInt(v)
 			if !ok {
-				// Delete invalid entries.
-				return b.Delete(v)
+				// Ignore invalid entries.
+				return nil
 			}
-
 			return f(channelID, int(pts))
 		})
 	})
