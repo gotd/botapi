@@ -5,12 +5,13 @@ import (
 	"encoding/binary"
 
 	"github.com/go-faster/errors"
+	"go.etcd.io/bbolt"
+
 	"github.com/gotd/td/bin"
 	"github.com/gotd/td/session"
 	"github.com/gotd/td/telegram/peers"
 	"github.com/gotd/td/telegram/updates"
 	"github.com/gotd/td/tg"
-	"go.etcd.io/bbolt"
 )
 
 // BBoltStorage is bbolt-based storage.
@@ -157,18 +158,18 @@ func putMTProtoKey(b *bbolt.Bucket, e interface {
 	return nil
 }
 
-func getMTProtoKey(b *bbolt.Bucket, id int64, d bin.Decoder) (bool, error) {
+func getMTProtoKey(b *bbolt.Bucket, id int64, d bin.Decoder) bool {
 	key := formatInt(id)
 	data := b.Get(key)
 	if data == nil {
-		return false, nil
+		return false
 	}
 	buf := bin.Buffer{Buf: data}
 	if err := d.Decode(&buf); err != nil {
 		// Ignore decode errors.
-		return false, nil
+		return false
 	}
-	return true, nil
+	return true
 }
 
 // SaveUsers implements BBoltStorage.
@@ -200,8 +201,8 @@ func (b *BBoltStorage) FindUser(_ context.Context, id int64) (e *tg.User, found 
 	// Use batch to delete invalid keys.
 	err = b.viewBucket(userPrefix, func(b *bbolt.Bucket, tx *bbolt.Tx) error {
 		e = new(tg.User)
-		found, err = getMTProtoKey(b, id, e)
-		return err
+		found = getMTProtoKey(b, id, e)
+		return nil
 	})
 	return e, found, err
 }
@@ -211,8 +212,8 @@ func (b *BBoltStorage) FindUserFull(_ context.Context, id int64) (e *tg.UserFull
 	// Use batch to delete invalid keys.
 	err = b.viewBucket(userFullPrefix, func(b *bbolt.Bucket, tx *bbolt.Tx) error {
 		e = new(tg.UserFull)
-		found, err = getMTProtoKey(b, id, e)
-		return err
+		found = getMTProtoKey(b, id, e)
+		return nil
 	})
 	return e, found, err
 }
@@ -245,8 +246,8 @@ func (b *BBoltStorage) SaveChatFulls(_ context.Context, chats ...*tg.ChatFull) e
 func (b *BBoltStorage) FindChat(_ context.Context, id int64) (e *tg.Chat, found bool, err error) {
 	err = b.viewBucket(chatPrefix, func(b *bbolt.Bucket, tx *bbolt.Tx) error {
 		e = new(tg.Chat)
-		found, err = getMTProtoKey(b, id, e)
-		return err
+		found = getMTProtoKey(b, id, e)
+		return nil
 	})
 	return e, found, err
 }
@@ -255,8 +256,8 @@ func (b *BBoltStorage) FindChat(_ context.Context, id int64) (e *tg.Chat, found 
 func (b *BBoltStorage) FindChatFull(_ context.Context, id int64) (e *tg.ChatFull, found bool, err error) {
 	err = b.viewBucket(chatFullPrefix, func(b *bbolt.Bucket, tx *bbolt.Tx) error {
 		e = new(tg.ChatFull)
-		found, err = getMTProtoKey(b, id, e)
-		return err
+		found = getMTProtoKey(b, id, e)
+		return nil
 	})
 	return e, found, err
 }
@@ -289,8 +290,8 @@ func (b *BBoltStorage) SaveChannelFulls(_ context.Context, channels ...*tg.Chann
 func (b *BBoltStorage) FindChannel(_ context.Context, id int64) (e *tg.Channel, found bool, err error) {
 	err = b.viewBucket(channelPrefix, func(b *bbolt.Bucket, tx *bbolt.Tx) error {
 		e = new(tg.Channel)
-		found, err = getMTProtoKey(b, id, e)
-		return err
+		found = getMTProtoKey(b, id, e)
+		return nil
 	})
 	return e, found, err
 }
@@ -299,8 +300,8 @@ func (b *BBoltStorage) FindChannel(_ context.Context, id int64) (e *tg.Channel, 
 func (b *BBoltStorage) FindChannelFull(_ context.Context, id int64) (e *tg.ChannelFull, found bool, err error) {
 	err = b.viewBucket(channelFullPrefix, func(b *bbolt.Bucket, tx *bbolt.Tx) error {
 		e = new(tg.ChannelFull)
-		found, err = getMTProtoKey(b, id, e)
-		return err
+		found = getMTProtoKey(b, id, e)
+		return nil
 	})
 	return e, found, err
 }

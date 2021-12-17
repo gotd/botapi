@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/go-faster/errors"
+
 	"github.com/gotd/td/telegram/peers"
 
 	"github.com/gotd/botapi/internal/oas"
@@ -86,7 +87,7 @@ func (b *BotAPI) LeaveChat(ctx context.Context, req oas.LeaveChat) (oas.Result, 
 			return oas.Result{}, err
 		}
 	default:
-		return oas.Result{}, &BadRequestError{Message: "Bad Request: chat not found"}
+		return oas.Result{}, chatNotFound()
 	}
 	return resultOK(true), nil
 }

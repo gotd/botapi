@@ -72,7 +72,7 @@ func (b *BotAPI) resolveID(ctx context.Context, id oas.ID) (peers.Peer, error) {
 	case username[0] != '@':
 		parsedID, err := strconv.ParseInt(username, 10, 64)
 		if err != nil {
-			return nil, errors.Wrap(err, "parse id")
+			return nil, chatNotFound()
 		}
 		return b.resolveIntID(ctx, parsedID)
 	}

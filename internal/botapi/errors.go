@@ -6,9 +6,10 @@ import (
 
 	"github.com/go-faster/errors"
 	"github.com/go-faster/jx"
+	"go.uber.org/zap"
+
 	"github.com/gotd/td/telegram/peers"
 	"github.com/gotd/td/tgerr"
-	"go.uber.org/zap"
 
 	"github.com/gotd/botapi/internal/oas"
 )
@@ -51,6 +52,10 @@ func errorStatusCode(code int, description string) oas.ErrorStatusCode {
 			Description: description,
 		},
 	}
+}
+
+func chatNotFound() *BadRequestError {
+	return &BadRequestError{Message: "Bad Request: chat not found"}
 }
 
 // NewError maps error to status code.
