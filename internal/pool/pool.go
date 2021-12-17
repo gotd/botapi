@@ -3,9 +3,9 @@ package pool
 
 import (
 	"context"
+	"fmt"
 	"os"
 	"path/filepath"
-	"strconv"
 	"sync"
 	"time"
 
@@ -130,7 +130,7 @@ func (p *Pool) RunGC(timeout time.Duration) {
 func (p *Pool) createClient(token Token, initializationResult chan<- error) (_ *client, rErr error) {
 	log := p.log.Named("client").With(zap.Int("id", token.ID))
 
-	dbPath := filepath.Join(p.statePath, strconv.Itoa(token.ID))
+	dbPath := filepath.Join(p.statePath, fmt.Sprintf("%d.bbolt", token.ID))
 	db, err := bbolt.Open(dbPath, 0o666, bbolt.DefaultOptions)
 	if err != nil {
 		return nil, err
