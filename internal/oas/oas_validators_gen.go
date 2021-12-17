@@ -363,7 +363,7 @@ func (s BotCommand) Validate() error {
 	}
 	if err := func() error {
 		if err := (validate.String{
-			MinLength:    3,
+			MinLength:    1,
 			MinLengthSet: true,
 			MaxLength:    256,
 			MaxLengthSet: true,
