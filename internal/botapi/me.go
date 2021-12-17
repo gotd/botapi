@@ -24,14 +24,13 @@ func convertToUser(user *tg.User) oas.User {
 
 // GetMe implements oas.Handler.
 func (b *BotAPI) GetMe(ctx context.Context) (oas.ResultUser, error) {
-	me, err := b.client.Self(ctx)
+	me, err := b.peers.Self(ctx)
 	if err != nil {
 		return oas.ResultUser{}, err
 	}
-	b.updateSelf(me)
 
 	return oas.ResultUser{
-		Result: oas.NewOptUser(convertToUser(me)),
+		Result: oas.NewOptUser(convertToUser(me.Raw())),
 		Ok:     true,
 	}, nil
 }
@@ -44,10 +43,9 @@ func (b *BotAPI) Close(ctx context.Context) (oas.Result, error) {
 
 // LogOut implements oas.Handler.
 func (b *BotAPI) LogOut(ctx context.Context) (oas.Result, error) {
-	r, err := b.raw.AuthLogOut(ctx)
-	if err != nil {
+	if _, err := b.raw.AuthLogOut(ctx); err != nil {
 		return oas.Result{}, err
 	}
 
-	return resultOK(r), nil
+	return resultOK(true), nil
 }

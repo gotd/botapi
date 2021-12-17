@@ -4,9 +4,9 @@ import (
 	"context"
 
 	"github.com/go-faster/errors"
+	"github.com/gotd/td/telegram/peers"
 
 	"github.com/gotd/td/telegram/message/markup"
-	"github.com/gotd/td/telegram/message/peer"
 	"github.com/gotd/td/tg"
 
 	"github.com/gotd/botapi/internal/oas"
@@ -34,16 +34,16 @@ func (b *BotAPI) convertToTelegramInlineButton(
 
 		var user tg.InputUserClass = &tg.InputUserSelf{}
 		if v, ok := loginURL.BotUsername.Get(); ok && v != "" {
-			p, err := b.resolver.ResolveDomain(ctx, loginURL.BotUsername.Value)
+			p, err := b.peers.ResolveDomain(ctx, loginURL.BotUsername.Value)
 			if err != nil {
 				return nil, errors.Wrap(err, "resolve bot")
 			}
 
-			u, ok := peer.ToInputUser(p)
+			u, ok := p.(peers.User)
 			if !ok {
-				return nil, &BadRequestError{Message: "given username is not user"}
+				return nil, &BadRequestError{Message: "given username is not bot"}
 			}
-			user = u
+			user = u.InputUser()
 		}
 
 		return &tg.InputKeyboardButtonURLAuth{

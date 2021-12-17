@@ -50,11 +50,8 @@ func (b *BotAPI) convertToBotAPIEntities(
 			e.URL.SetTo(entity.URL)
 		case *tg.MessageEntityMentionName:
 			e.Type = oas.MessageEntityTypeTextMention
-			user, ok, err := b.peers.FindUser(ctx, entity.UserID)
-			if err != nil {
-				return nil, errors.Wrapf(err, "find user: %d", entity.UserID)
-			}
-			if ok {
+			user, err := b.resolveUserID(ctx, entity.UserID)
+			if err == nil {
 				e.User.SetTo(convertToUser(user))
 			}
 		case *tg.MessageEntityPhone:
@@ -181,9 +178,20 @@ func (b *BotAPI) setDocumentAttachment(ctx context.Context, d *tg.Document, r *o
 				})
 			}
 
-			stickerSet, err := b.raw.MessagesGetStickerSet(ctx, attr.Stickerset)
+			// TODO(tdakota): make stickerset cache
+			result, err := b.raw.MessagesGetStickerSet(ctx, &tg.MessagesGetStickerSetRequest{
+				Stickerset: attr.Stickerset,
+				Hash:       0,
+			})
 			if err != nil {
 				return errors.Wrap(err, "get sticker_set")
+			}
+			var stickerSet *tg.MessagesStickerSet
+			switch result := result.(type) {
+			case *tg.MessagesStickerSet:
+				stickerSet = result
+			default:
+				return errors.Errorf("unexpected type %T", result)
 			}
 
 			r.Sticker.SetTo(oas.Sticker{
@@ -441,19 +449,19 @@ func (b *BotAPI) convertPlainMessage(ctx context.Context, m *tg.Message) (r oas.
 	}
 
 	r = oas.Message{
-		MessageID: m.ID,
-		Date:      m.Date,
-		Chat:      ch,
-		EditDate:  optInt(m.GetEditDate),
-		// TODO(tdakkota): bump gotd version and implement
-		HasProtectedContent: oas.OptBool{},
+		MessageID:           m.ID,
+		Date:                m.Date,
+		Chat:                ch,
+		EditDate:            optInt(m.GetEditDate),
+		HasProtectedContent: ch.HasProtectedContent,
 		// TODO(tdakkota): generate media album ids
 		MediaGroupID:    oas.OptString{},
 		AuthorSignature: optString(m.GetPostAuthor),
 	}
 	if m.Out {
-		if self := b.getSelf(); self != nil {
-			r.From.SetTo(convertToUser(self))
+		self, err := b.peers.Self(ctx)
+		if err == nil {
+			r.From.SetTo(convertToUser(self.Raw()))
 		}
 	} else if fromID, ok := m.GetFromID(); ok {
 		// FIXME(tdakkota): set service IDs.

@@ -3,20 +3,17 @@ package botapi
 
 import (
 	"context"
-	"sync"
 
 	"github.com/go-faster/errors"
-	"go.uber.org/atomic"
+	"github.com/gotd/td/telegram/peers"
 	"go.uber.org/zap"
 
 	"github.com/gotd/td/telegram"
 	"github.com/gotd/td/telegram/message"
-	"github.com/gotd/td/telegram/message/peer"
 	"github.com/gotd/td/telegram/updates"
 	"github.com/gotd/td/tg"
 
 	"github.com/gotd/botapi/internal/oas"
-	"github.com/gotd/botapi/internal/peers"
 )
 
 // BotAPI is Bot API implementation.
@@ -25,13 +22,8 @@ type BotAPI struct {
 	raw    *tg.Client
 	gaps   *updates.Manager
 
-	sender   *message.Sender
-	resolver peer.Resolver
-	peers    peers.Storage
-
-	self    *tg.User
-	selfID  atomic.Int64
-	selfMux sync.Mutex
+	sender *message.Sender
+	peers  *peers.Manager
 
 	debug  bool
 	logger *zap.Logger
@@ -41,57 +33,40 @@ type BotAPI struct {
 func NewBotAPI(
 	client *telegram.Client,
 	gaps *updates.Manager,
-	store peers.Storage,
+	peer *peers.Manager,
 	opts Options,
 ) *BotAPI {
 	opts.setDefaults()
 
 	raw := client.API()
-	resolver := peer.SingleflightResolver(peer.Plain(raw))
 	return &BotAPI{
-		client:   client,
-		raw:      raw,
-		gaps:     gaps,
-		sender:   message.NewSender(raw).WithResolver(resolver),
-		resolver: resolver,
-		peers:    store,
-		debug:    opts.Debug,
-		logger:   opts.Logger,
+		client: client,
+		raw:    raw,
+		gaps:   gaps,
+		sender: message.NewSender(raw),
+		peers:  peer,
+		debug:  opts.Debug,
+		logger: opts.Logger,
 	}
 }
 
 // Init makes some initialization requests.
 func (b *BotAPI) Init(ctx context.Context) error {
-	me, err := b.client.Self(ctx)
-	if err != nil {
-		return errors.Wrap(err, "self")
+	if err := b.peers.Init(ctx); err != nil {
+		return errors.Wrap(err, "init peers")
 	}
 
-	if err := b.gaps.Auth(ctx, b.raw, me.ID, true, false); err != nil {
+	me, err := b.peers.Self(ctx)
+	if err != nil {
+		return errors.Wrap(err, "get self")
+	}
+
+	_, isBot := me.ToBot()
+	if err := b.gaps.Auth(ctx, b.raw, me.ID(), isBot, false); err != nil {
 		return errors.Wrap(err, "init gaps")
 	}
 
-	b.updateSelf(me)
 	return nil
-}
-
-func (b *BotAPI) updateSelf(user *tg.User) {
-	b.selfMux.Lock()
-	b.self = user
-	b.selfID.Store(user.ID)
-	b.selfMux.Unlock()
-}
-
-func (b *BotAPI) getSelf() *tg.User {
-	b.selfMux.Lock()
-	self := b.self
-	b.selfMux.Unlock()
-	return self
-}
-
-// Client returns *telegram.Client used by this instance of BotAPI.
-func (b *BotAPI) Client() *telegram.Client {
-	return b.client
 }
 
 // GetUpdates implements oas.Handler.
