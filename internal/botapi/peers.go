@@ -52,18 +52,23 @@ func (b *BotAPI) getChatByPeer(ctx context.Context, p tg.PeerClass) (oas.Chat, e
 	return r, nil
 }
 
-func (b *BotAPI) resolveID(ctx context.Context, id oas.ID) (tg.InputPeerClass, error) {
+func (b *BotAPI) resolveUserID(ctx context.Context, id int64) (*tg.User, error) {
+	user, err := b.peers.GetUser(ctx, &tg.InputUser{UserID: id})
+	if err != nil {
+		return nil, errors.Wrapf(err, "find user: %d", id)
+	}
+	return user.Raw(), nil
+}
+
+func (b *BotAPI) resolveID(ctx context.Context, id oas.ID) (peers.Peer, error) {
 	if id.IsInt64() {
 		return b.resolveIntID(ctx, id.Int64)
 	}
 
 	username := id.String
-	if len(username) < 1 {
-		return nil, &PeerNotFoundError{ID: id}
-	}
 	switch {
 	case len(username) < 1:
-		return nil, &PeerNotFoundError{ID: id}
+		return nil, &BadRequestError{Message: "Bad Request: chat_id is empty"}
 	case username[0] != '@':
 		parsedID, err := strconv.ParseInt(username, 10, 64)
 		if err != nil {
@@ -78,21 +83,13 @@ func (b *BotAPI) resolveID(ctx context.Context, id oas.ID) (tg.InputPeerClass, e
 	if err != nil {
 		return nil, errors.Wrapf(err, "resolve %q", username)
 	}
-	return p.InputPeer(), nil
+	return p, nil
 }
 
-func (b *BotAPI) resolveUserID(ctx context.Context, id int64) (*tg.User, error) {
-	user, err := b.peers.GetUser(ctx, &tg.InputUser{UserID: id})
-	if err != nil {
-		return nil, errors.Wrapf(err, "find user: %d", id)
-	}
-	return user.Raw(), nil
-}
-
-func (b *BotAPI) resolveIntID(ctx context.Context, id int64) (tg.InputPeerClass, error) {
+func (b *BotAPI) resolveIntID(ctx context.Context, id int64) (peers.Peer, error) {
 	p, err := b.peers.ResolveTDLibID(ctx, constant.TDLibPeerID(id))
 	if err != nil {
 		return nil, errors.Wrapf(err, "find peer %d", id)
 	}
-	return p.InputPeer(), nil
+	return p, nil
 }

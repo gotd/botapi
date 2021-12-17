@@ -73,7 +73,7 @@ func (b *BotAPI) SendMessage(ctx context.Context, req oas.SendMessage) (oas.Resu
 	if err != nil {
 		return oas.ResultMessage{}, errors.Wrap(err, "resolve chatID")
 	}
-	s := &b.sender.To(p).Builder
+	s := &b.sender.To(p.InputPeer()).Builder
 
 	if v, ok := req.DisableWebPagePreview.Get(); ok && v {
 		s = s.NoWebpage()
@@ -113,7 +113,7 @@ func (b *BotAPI) SendMessage(ctx context.Context, req oas.SendMessage) (oas.Resu
 		}, nil
 	}
 	if msg.PeerID == nil {
-		switch p := p.(type) {
+		switch p := p.InputPeer().(type) {
 		case *tg.InputPeerChat:
 			msg.PeerID = &tg.PeerChat{ChatID: p.ChatID}
 		case *tg.InputPeerUser:

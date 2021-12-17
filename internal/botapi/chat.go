@@ -3,6 +3,9 @@ package botapi
 import (
 	"context"
 
+	"github.com/go-faster/errors"
+	"github.com/gotd/td/telegram/peers"
+
 	"github.com/gotd/botapi/internal/oas"
 )
 
@@ -63,5 +66,27 @@ func (b *BotAPI) SetChatTitle(ctx context.Context, req oas.SetChatTitle) (oas.Re
 
 // LeaveChat implements oas.Handler.
 func (b *BotAPI) LeaveChat(ctx context.Context, req oas.LeaveChat) (oas.Result, error) {
-	return oas.Result{}, &NotImplementedError{}
+	p, err := b.resolveID(ctx, req.ChatID)
+	if err != nil {
+		return oas.Result{}, errors.Wrap(err, "resolve chatID")
+	}
+	switch p := p.(type) {
+	case peers.Chat:
+		if p.Left() {
+			break
+		}
+		if err := p.Leave(ctx, false); err != nil {
+			return oas.Result{}, err
+		}
+	case peers.Channel:
+		if p.Left() {
+			break
+		}
+		if err := p.Leave(ctx); err != nil {
+			return oas.Result{}, err
+		}
+	default:
+		return oas.Result{}, &BadRequestError{Message: "Bad Request: chat not found"}
+	}
+	return resultOK(true), nil
 }

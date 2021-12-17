@@ -54,7 +54,7 @@ func (b *BotAPI) convertToTelegramInlineButton(
 			Bot:                user,
 		}, nil
 	default:
-		return nil, &BadRequestError{Message: "text buttons are unallowed in the inline keyboard"}
+		return nil, &BadRequestError{Message: "Text buttons are unallowed in the inline keyboard"}
 	}
 }
 

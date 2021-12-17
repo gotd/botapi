@@ -2,11 +2,12 @@ package botapi
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 
 	"github.com/go-faster/errors"
 	"github.com/go-faster/jx"
+	"github.com/gotd/td/telegram/peers"
+	"github.com/gotd/td/tgerr"
 	"go.uber.org/zap"
 
 	"github.com/gotd/botapi/internal/oas"
@@ -25,19 +26,6 @@ func (n *NotImplementedError) Error() string {
 	return n.Message
 }
 
-// PeerNotFoundError reports that BotAPI cannot find this peer.
-type PeerNotFoundError struct {
-	ID oas.ID
-}
-
-// Error implements error.
-func (p *PeerNotFoundError) Error() string {
-	if p.ID.IsString() {
-		return fmt.Sprintf("peer %q not found", p.ID.String)
-	}
-	return fmt.Sprintf("peer %d not found", p.ID.Int64)
-}
-
 // BadRequestError reports bad request.
 type BadRequestError struct {
 	Message string
@@ -49,11 +37,18 @@ func (p *BadRequestError) Error() string {
 }
 
 func errorOf(code int) oas.ErrorStatusCode {
+	return errorStatusCode(code, "")
+}
+
+func errorStatusCode(code int, description string) oas.ErrorStatusCode {
+	if description == "" {
+		description = http.StatusText(code)
+	}
 	return oas.ErrorStatusCode{
 		StatusCode: code,
 		Response: oas.Error{
 			ErrorCode:   code,
-			Description: http.StatusText(code),
+			Description: description,
 		},
 	}
 }
@@ -65,7 +60,7 @@ func (b *BotAPI) NewError(ctx context.Context, err error) oas.ErrorStatusCode {
 
 	var (
 		notImplemented *NotImplementedError
-		peerNotFound   *PeerNotFoundError
+		peerNotFound   *peers.PeerNotFoundError
 		badRequest     *BadRequestError
 	)
 	// TODO(tdakkota): better error mapping.
@@ -73,9 +68,65 @@ func (b *BotAPI) NewError(ctx context.Context, err error) oas.ErrorStatusCode {
 	case errors.As(err, &notImplemented):
 		return errorOf(http.StatusNotImplemented)
 	case errors.As(err, &peerNotFound):
-		return errorOf(http.StatusNotFound)
+		return errorStatusCode(http.StatusBadRequest, "Bad Request: chat not found")
 	case errors.As(err, &badRequest):
-		return errorOf(http.StatusBadRequest)
+		return errorStatusCode(http.StatusBadRequest, badRequest.Message)
+	}
+
+	// See https://github.com/tdlib/telegram-bot-api/blob/90f52477814a2d8a08c9ffb1d780fd179815d715/telegram-bot-api/Client.cpp#L86.
+	if rpcErr, ok := tgerr.As(err); ok && rpcErr.Code == 400 {
+		var (
+			errorCode    = rpcErr.Code
+			errorMessage = rpcErr.Message
+		)
+		switch rpcErr.Type {
+		case "MESSAGE_NOT_MODIFIED":
+			errorMessage = "message is not modified: specified new message content " +
+				"and reply markup are exactly the same as a current content " +
+				"and reply markup of the message"
+		case "WC_CONVERT_URL_INVALID", "EXTERNAL_URL_INVALID":
+			errorMessage = "Wrong HTTP URL specified"
+		case "WEBPAGE_CURL_FAILED":
+			errorMessage = "Failed to get HTTP URL content"
+		case "WEBPAGE_MEDIA_EMPTY":
+			errorMessage = "Wrong type of the web page content"
+		case "MEDIA_GROUPED_INVALID":
+			errorMessage = "Can't use the media of the specified type in the album"
+		case "REPLY_MARKUP_TOO_LONG":
+			errorMessage = "reply markup is too long"
+		case "INPUT_USER_DEACTIVATED":
+			errorCode = 403
+			errorMessage = "Forbidden: user is deactivated"
+		case "USER_IS_BLOCKED":
+			errorCode = 403
+			errorMessage = "bot was blocked by the user"
+		case "USER_ADMIN_INVALID":
+			errorCode = 400
+			errorMessage = "user is an administrator of the chat"
+		case "File generation failed":
+			errorCode = 400
+			errorMessage = "can't upload file by URL"
+		case "CHAT_ABOUT_NOT_MODIFIED":
+			errorCode = 400
+			errorMessage = "chat description is not modified"
+		case "PACK_SHORT_NAME_INVALID":
+			errorCode = 400
+			errorMessage = "invalid sticker set name is specified"
+		case "PACK_SHORT_NAME_OCCUPIED":
+			errorCode = 400
+			errorMessage = "sticker set name is already occupied"
+		case "STICKER_EMOJI_INVALID":
+			errorCode = 400
+			errorMessage = "invalid sticker emojis"
+		case "QUERY_ID_INVALID":
+			errorCode = 400
+			errorMessage = "query is too old and response timeout expired or query ID is invalid"
+		case "MESSAGE_DELETE_FORBIDDEN":
+			errorCode = 400
+			errorMessage = "message can't be deleted"
+		}
+
+		return errorStatusCode(errorCode, errorMessage)
 	}
 
 	resp := errorOf(http.StatusInternalServerError)

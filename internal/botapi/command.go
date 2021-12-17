@@ -32,14 +32,14 @@ func (b *BotAPI) convertToBotCommandScopeClass(
 		if err != nil {
 			return nil, errors.Wrap(err, "resolve chatID")
 		}
-		return &tg.BotCommandScopePeer{Peer: p}, nil
+		return &tg.BotCommandScopePeer{Peer: p.InputPeer()}, nil
 	case oas.BotCommandScopeChatAdministratorsBotCommandScope:
 		chatID := scope.BotCommandScopeChatAdministrators.ChatID
 		p, err := b.resolveID(ctx, chatID)
 		if err != nil {
 			return nil, errors.Wrap(err, "resolve chatID")
 		}
-		return &tg.BotCommandScopePeerAdmins{Peer: p}, nil
+		return &tg.BotCommandScopePeerAdmins{Peer: p.InputPeer()}, nil
 	case oas.BotCommandScopeChatMemberBotCommandScope:
 		userID := scope.BotCommandScopeChatMember.UserID
 		user, err := b.resolveUserID(ctx, userID)
@@ -53,7 +53,7 @@ func (b *BotAPI) convertToBotCommandScopeClass(
 			return nil, errors.Wrap(err, "resolve chatID")
 		}
 		return &tg.BotCommandScopePeerUser{
-			Peer:   p,
+			Peer:   p.InputPeer(),
 			UserID: user.AsInput(),
 		}, nil
 	default:
