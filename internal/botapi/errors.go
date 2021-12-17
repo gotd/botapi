@@ -7,6 +7,7 @@ import (
 
 	"github.com/go-faster/errors"
 	"github.com/go-faster/jx"
+	"go.uber.org/zap"
 
 	"github.com/gotd/botapi/internal/oas"
 )
@@ -59,11 +60,15 @@ func errorOf(code int) oas.ErrorStatusCode {
 
 // NewError maps error to status code.
 func (b *BotAPI) NewError(ctx context.Context, err error) oas.ErrorStatusCode {
+	// TODO(tdakkota): pass request context info.
+	b.logger.Warn("Request error", zap.Error(err))
+
 	var (
 		notImplemented *NotImplementedError
 		peerNotFound   *PeerNotFoundError
 		badRequest     *BadRequestError
 	)
+	// TODO(tdakkota): better error mapping.
 	switch {
 	case errors.As(err, &notImplemented):
 		return errorOf(http.StatusNotImplemented)

@@ -5,6 +5,7 @@ import (
 	"context"
 	"os"
 	"path/filepath"
+	"strconv"
 	"sync"
 	"time"
 
@@ -129,7 +130,8 @@ func (p *Pool) RunGC(timeout time.Duration) {
 func (p *Pool) createClient(token Token, initializationResult chan<- error) (_ *client, rErr error) {
 	log := p.log.Named("client").With(zap.Int("id", token.ID))
 
-	db, err := bbolt.Open(filepath.Join(p.statePath), 0o666, bbolt.DefaultOptions)
+	dbPath := filepath.Join(p.statePath, strconv.Itoa(token.ID))
+	db, err := bbolt.Open(dbPath, 0o666, bbolt.DefaultOptions)
 	if err != nil {
 		return nil, err
 	}
@@ -175,6 +177,7 @@ func (p *Pool) createClient(token Token, initializationResult chan<- error) (_ *
 			Debug:  p.debug,
 			Logger: log.Named("botapi"),
 		}),
+		client:   tgClient,
 		token:    token,
 		lastUsed: time.Time{},
 	}
@@ -191,6 +194,7 @@ func (p *Pool) createClient(token Token, initializationResult chan<- error) (_ *
 			p.clientsMux.Unlock()
 			// Kill client.
 			c.Kill()
+			_ = db.Close()
 			// Stop waiting for result.
 			close(initializationResult)
 		}()

@@ -18,7 +18,7 @@ var maskCoordsNames = []string{"forehead", "eyes", "mouth", "chin"}
 func (b *BotAPI) convertToBotAPIEntities(
 	ctx context.Context,
 	entities []tg.MessageEntityClass,
-) (r []oas.MessageEntity, _ error) {
+) (r []oas.MessageEntity) {
 	for _, entity := range entities {
 		e := oas.MessageEntity{
 			Offset: entity.GetOffset(),
@@ -53,6 +53,7 @@ func (b *BotAPI) convertToBotAPIEntities(
 			user, err := b.resolveUserID(ctx, entity.UserID)
 			if err == nil {
 				e.User.SetTo(convertToUser(user))
+				b.logger.Warn("Resolve user", zap.Int64("user_id", entity.UserID))
 			}
 		case *tg.MessageEntityPhone:
 			e.Type = oas.MessageEntityTypePhoneNumber
@@ -66,7 +67,7 @@ func (b *BotAPI) convertToBotAPIEntities(
 		r = append(r, e)
 	}
 
-	return r, nil
+	return r
 }
 
 func (b *BotAPI) convertToBotAPIPhotoSizes(p tg.PhotoClass) (r []oas.PhotoSize) {
@@ -395,11 +396,7 @@ func (b *BotAPI) convertMessageMedia(ctx context.Context, media tg.MessageMediaC
 		}
 
 		if e := results.SolutionEntities; len(e) > 0 {
-			explanationEntities, err := b.convertToBotAPIEntities(ctx, e)
-			if err != nil {
-				return errors.Wrap(err, "get entities")
-			}
-			resultPoll.ExplanationEntities = explanationEntities
+			resultPoll.ExplanationEntities = b.convertToBotAPIEntities(ctx, e)
 		}
 
 		// SAFETY: length equality checked above.
@@ -516,11 +513,7 @@ func (b *BotAPI) convertPlainMessage(ctx context.Context, m *tg.Message) (r oas.
 		r.Text.SetTo(text)
 	}
 	if len(m.Entities) > 0 {
-		entities, err := b.convertToBotAPIEntities(ctx, m.Entities)
-		if err != nil {
-			return oas.Message{}, errors.Wrap(err, "get entities")
-		}
-		r.Entities = entities
+		r.Entities = b.convertToBotAPIEntities(ctx, m.Entities)
 	}
 
 	if err := b.convertMessageMedia(ctx, m.Media, &r); err != nil {

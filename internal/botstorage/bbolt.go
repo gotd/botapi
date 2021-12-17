@@ -5,13 +5,14 @@ import (
 	"encoding/binary"
 
 	"github.com/go-faster/errors"
+	"go.etcd.io/bbolt"
+	"go.uber.org/multierr"
+
 	"github.com/gotd/td/bin"
 	"github.com/gotd/td/session"
 	"github.com/gotd/td/telegram/peers"
 	"github.com/gotd/td/telegram/updates"
 	"github.com/gotd/td/tg"
-	"go.etcd.io/bbolt"
-	"go.uber.org/multierr"
 )
 
 // BBoltStorage is bbolt-based storage.
@@ -63,7 +64,7 @@ func parseInt(v []byte) (int64, bool) {
 	if len(v) < 8 {
 		return 0, false
 	}
-	i := binary.LittleEndian.Uint64(v[:])
+	i := binary.LittleEndian.Uint64(v)
 	return int64(i), true
 }
 
@@ -89,6 +90,10 @@ func (b *BBoltStorage) Find(_ context.Context, key peers.Key) (value peers.Value
 	err = b.batchBucket(hashPrefix+key.Prefix, func(b *bbolt.Bucket, tx *bbolt.Tx) error {
 		storageKey := formatInt(key.ID)
 		val := b.Get(storageKey)
+		// Value not found.
+		if val == nil {
+			return nil
+		}
 		id, ok := parseInt(val)
 		if !ok {
 			return multierr.Append(errors.Errorf("got invalid value %+x", val), b.Delete(storageKey))

@@ -94,9 +94,8 @@ func (b *BotAPI) SendMessage(ctx context.Context, req oas.SendMessage) (oas.Resu
 
 	var resp tg.UpdatesClass
 	if isParseModeSet {
-		// FIXME(tdakkota): set HTML user resolver.
 		// FIXME(tdakkota): random_id unpacking.
-		resp, err = s.StyledText(ctx, html.String(nil, req.Text))
+		resp, err = s.StyledText(ctx, html.String(b.peers.UserResolveHook(ctx), req.Text))
 	} else {
 		// FIXME(tdakkota): get entities from request.
 		resp, err = s.Text(ctx, req.Text)
@@ -112,6 +111,16 @@ func (b *BotAPI) SendMessage(ctx context.Context, req oas.SendMessage) (oas.Resu
 		return oas.ResultMessage{
 			Ok: true,
 		}, nil
+	}
+	if msg.PeerID == nil {
+		switch p := p.(type) {
+		case *tg.InputPeerChat:
+			msg.PeerID = &tg.PeerChat{ChatID: p.ChatID}
+		case *tg.InputPeerUser:
+			msg.PeerID = &tg.PeerUser{UserID: p.UserID}
+		case *tg.InputPeerChannel:
+			msg.PeerID = &tg.PeerChannel{ChannelID: p.ChannelID}
+		}
 	}
 
 	resultMsg, err := b.convertPlainMessage(ctx, msg)

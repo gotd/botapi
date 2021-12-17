@@ -76,12 +76,16 @@ func run(ctx context.Context) error {
 		appHash   = flag.String("api-hash", constant.TestAppHash, "The api_hash of application")
 		addr      = flag.String("addr", "localhost:8081", "http listen addr")
 		keepalive = flag.Duration("keepalive", 5*time.Minute, "client keepalive")
-		statePath = flag.String("state", "", "path to state file (json)")
+		statePath = flag.String("state", "state", "path to state file (json)")
 		debug     = flag.Bool("debug", false, "enables debug mode")
 	)
 	flag.Parse()
 
-	log, err := zap.NewDevelopment(zap.IncreaseLevel(zap.InfoLevel))
+	level := zap.InfoLevel
+	if *debug {
+		level = zap.DebugLevel
+	}
+	log, err := zap.NewDevelopment(zap.IncreaseLevel(level))
 	if err != nil {
 		return errors.Errorf("create logger: %w", err)
 	}
@@ -89,21 +93,15 @@ func run(ctx context.Context) error {
 		_ = log.Sync()
 	}()
 
-	var storage pool.StateStorage
-	if *statePath != "" {
-		storage = pool.NewFileStorage(*statePath)
-	}
-
 	log.Info("Creating pool",
 		zap.Duration("keep_alive", *keepalive),
 		zap.String("storage", *statePath),
 		zap.Bool("debug", *debug),
 	)
-	p, err := pool.NewPool(pool.Options{
+	p, err := pool.NewPool(*statePath, pool.Options{
 		AppID:   *appID,
 		AppHash: *appHash,
 		Log:     log.Named("pool"),
-		Storage: storage,
 		Debug:   *debug,
 	})
 	if err != nil {
@@ -121,12 +119,16 @@ func run(ctx context.Context) error {
 		}
 		method := chi.URLParam(r, "method")
 
-		log.Info("New request", zap.Int("bot_id", token.ID), zap.String("method", method))
-		_ = p.Do(r.Context(), token, func(client *botapi.BotAPI) error {
+		log := log.With(zap.Int("bot_id", token.ID), zap.String("method", method))
+
+		log.Info("New request")
+		if err := p.Do(r.Context(), token, func(client *botapi.BotAPI) error {
 			r.URL.Path = method
 			oas.NewServer(client).ServeHTTP(w, r)
 			return nil
-		})
+		}); err != nil {
+			log.Warn("Do error", zap.Error(err))
+		}
 	})
 
 	return listen(ctx, *addr, r, log.Named("http"))

@@ -5,11 +5,11 @@ import (
 	"context"
 
 	"github.com/go-faster/errors"
-	"github.com/gotd/td/telegram/peers"
 	"go.uber.org/zap"
 
 	"github.com/gotd/td/telegram"
 	"github.com/gotd/td/telegram/message"
+	"github.com/gotd/td/telegram/peers"
 	"github.com/gotd/td/telegram/updates"
 	"github.com/gotd/td/tg"
 
