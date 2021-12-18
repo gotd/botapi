@@ -7,7 +7,6 @@ import (
 	"github.com/go-faster/errors"
 	"go.uber.org/zap"
 
-	"github.com/gotd/td/telegram"
 	"github.com/gotd/td/telegram/message"
 	"github.com/gotd/td/telegram/peers"
 	"github.com/gotd/td/telegram/updates"
@@ -18,9 +17,8 @@ import (
 
 // BotAPI is Bot API implementation.
 type BotAPI struct {
-	client *telegram.Client
-	raw    *tg.Client
-	gaps   *updates.Manager
+	raw  *tg.Client
+	gaps *updates.Manager
 
 	sender *message.Sender
 	peers  *peers.Manager
@@ -31,16 +29,14 @@ type BotAPI struct {
 
 // NewBotAPI creates new BotAPI instance.
 func NewBotAPI(
-	client *telegram.Client,
+	raw *tg.Client,
 	gaps *updates.Manager,
 	peer *peers.Manager,
 	opts Options,
 ) *BotAPI {
 	opts.setDefaults()
 
-	raw := client.API()
 	return &BotAPI{
-		client: client,
 		raw:    raw,
 		gaps:   gaps,
 		sender: message.NewSender(raw),

@@ -146,11 +146,11 @@ func (p *Pool) createClient(token Token, initializationResult chan<- error) (_ *
 		return nil
 	}
 	pClient := new(tg.Client)
-	peerManager := peers.NewManager(pClient, peers.Options{
+	peerManager := peers.Options{
 		Storage: storage,
 		Cache:   storage,
 		Logger:  log.Named("peers"),
-	})
+	}.Build(pClient)
 	gaps := updates.New(updates.Config{
 		Handler: handler,
 		OnChannelTooLong: func(channelID int64) {
@@ -173,7 +173,7 @@ func (p *Pool) createClient(token Token, initializationResult chan<- error) (_ *
 	c := &client{
 		ctx:    tgContext,
 		cancel: tgCancel,
-		api: botapi.NewBotAPI(tgClient, gaps, peerManager, botapi.Options{
+		api: botapi.NewBotAPI(tgClient.API(), gaps, peerManager, botapi.Options{
 			Debug:  p.debug,
 			Logger: log.Named("botapi"),
 		}),

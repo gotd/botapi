@@ -5,8 +5,6 @@ import (
 
 	"github.com/go-faster/errors"
 
-	"github.com/gotd/td/telegram/peers"
-
 	"github.com/gotd/botapi/internal/oas"
 )
 
@@ -72,14 +70,10 @@ func (b *BotAPI) LeaveChat(ctx context.Context, req oas.LeaveChat) (oas.Result, 
 		return oas.Result{}, errors.Wrap(err, "resolve chatID")
 	}
 	switch p := p.(type) {
-	case peers.Chat:
-		if p.Left() {
-			break
-		}
-		if err := p.Leave(ctx, false); err != nil {
-			return oas.Result{}, err
-		}
-	case peers.Channel:
+	case interface {
+		Left() bool
+		Leave(ctx context.Context) error
+	}:
 		if p.Left() {
 			break
 		}

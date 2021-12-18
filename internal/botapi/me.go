@@ -16,9 +16,9 @@ func convertToUser(user *tg.User) oas.User {
 		LastName:                optString(user.GetLastName),
 		Username:                optString(user.GetUsername),
 		LanguageCode:            optString(user.GetLangCode),
-		CanJoinGroups:           oas.NewOptBool(user.BotNochats),
+		CanJoinGroups:           oas.NewOptBool(!user.BotNochats),
 		CanReadAllGroupMessages: oas.NewOptBool(user.BotChatHistory),
-		SupportsInlineQueries:   oas.NewOptBool(user.BotInlinePlaceholder == ""),
+		SupportsInlineQueries:   oas.NewOptBool(user.BotInlinePlaceholder != ""),
 	}
 }
 
