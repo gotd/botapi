@@ -28,7 +28,14 @@ func (b *BotAPI) GetChatMember(ctx context.Context, req oas.GetChatMember) (oas.
 
 // GetChatMemberCount implements oas.Handler.
 func (b *BotAPI) GetChatMemberCount(ctx context.Context, req oas.GetChatMemberCount) (oas.ResultInt, error) {
-	return oas.ResultInt{}, &NotImplementedError{}
+	ch, err := b.resolveChatID(ctx, req.ChatID)
+	if err != nil {
+		return oas.ResultInt{}, err
+	}
+	return oas.ResultInt{
+		Result: oas.NewOptInt(ch.ParticipantsCount()),
+		Ok:     true,
+	}, nil
 }
 
 // PromoteChatMember implements oas.Handler.

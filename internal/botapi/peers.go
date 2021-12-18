@@ -60,6 +60,32 @@ func (b *BotAPI) resolveUserID(ctx context.Context, id int64) (*tg.User, error) 
 	return user.Raw(), nil
 }
 
+type Chat interface {
+	peers.Peer
+	Left() bool
+	ParticipantsCount() int
+	Leave(ctx context.Context) error
+	SetTitle(ctx context.Context, title string) error
+	SetDescription(ctx context.Context, about string) error
+}
+
+var _ = []Chat{
+	peers.Chat{},
+	peers.Channel{},
+}
+
+func (b *BotAPI) resolveChatID(ctx context.Context, id oas.ID) (Chat, error) {
+	p, err := b.resolveID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+	ch, ok := p.(Chat)
+	if !ok {
+		return nil, chatNotFound()
+	}
+	return ch, nil
+}
+
 func (b *BotAPI) resolveID(ctx context.Context, id oas.ID) (peers.Peer, error) {
 	if id.IsInt64() {
 		return b.resolveIntID(ctx, id.Int64)

@@ -40,7 +40,14 @@ func (b *BotAPI) SetChatAdministratorCustomTitle(ctx context.Context, req oas.Se
 
 // SetChatDescription implements oas.Handler.
 func (b *BotAPI) SetChatDescription(ctx context.Context, req oas.SetChatDescription) (oas.Result, error) {
-	return oas.Result{}, &NotImplementedError{}
+	p, err := b.resolveChatID(ctx, req.ChatID)
+	if err != nil {
+		return oas.Result{}, errors.Wrap(err, "resolve chatID")
+	}
+	if err := p.SetDescription(ctx, req.Description.Value); err != nil {
+		return oas.Result{}, err
+	}
+	return resultOK(true), nil
 }
 
 // SetChatPermissions implements oas.Handler.
@@ -60,28 +67,26 @@ func (b *BotAPI) SetChatStickerSet(ctx context.Context, req oas.SetChatStickerSe
 
 // SetChatTitle implements oas.Handler.
 func (b *BotAPI) SetChatTitle(ctx context.Context, req oas.SetChatTitle) (oas.Result, error) {
-	return oas.Result{}, &NotImplementedError{}
+	p, err := b.resolveChatID(ctx, req.ChatID)
+	if err != nil {
+		return oas.Result{}, errors.Wrap(err, "resolve chatID")
+	}
+	if err := p.SetTitle(ctx, req.Title); err != nil {
+		return oas.Result{}, err
+	}
+	return resultOK(true), nil
 }
 
 // LeaveChat implements oas.Handler.
 func (b *BotAPI) LeaveChat(ctx context.Context, req oas.LeaveChat) (oas.Result, error) {
-	p, err := b.resolveID(ctx, req.ChatID)
+	p, err := b.resolveChatID(ctx, req.ChatID)
 	if err != nil {
 		return oas.Result{}, errors.Wrap(err, "resolve chatID")
 	}
-	switch p := p.(type) {
-	case interface {
-		Left() bool
-		Leave(ctx context.Context) error
-	}:
-		if p.Left() {
-			break
-		}
+	if !p.Left() {
 		if err := p.Leave(ctx); err != nil {
 			return oas.Result{}, err
 		}
-	default:
-		return oas.Result{}, chatNotFound()
 	}
 	return resultOK(true), nil
 }
