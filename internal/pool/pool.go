@@ -17,6 +17,7 @@ import (
 	"github.com/gotd/td/telegram"
 	"github.com/gotd/td/telegram/peers"
 	"github.com/gotd/td/telegram/updates"
+	updhook "github.com/gotd/td/telegram/updates/hook"
 	"github.com/gotd/td/tg"
 
 	"github.com/gotd/botapi/internal/botapi"
@@ -160,10 +161,14 @@ func (p *Pool) createClient(token Token, initializationResult chan<- error) (_ *
 		AccessHasher: peerManager,
 		Logger:       log.Named("gaps"),
 	})
+	h := peerManager.UpdateHook(gaps)
 	options := telegram.Options{
 		Logger:         log.Named("client"),
-		UpdateHandler:  peerManager.UpdateHook(gaps),
+		UpdateHandler:  h,
 		SessionStorage: storage,
+		Middlewares: []telegram.Middleware{
+			updhook.UpdateHook(h.Handle),
+		},
 	}
 	tgClient := telegram.NewClient(p.appID, p.appHash, options)
 	// FIXME(tdakkota): fix this
