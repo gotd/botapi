@@ -12,26 +12,31 @@ import (
 	"github.com/gotd/botapi/internal/oas"
 )
 
-func testWithChat(t *testing.T, cb func(a *require.Assertions, mock *tgmock.Mock, api *BotAPI)) {
+func testWithCache(t *testing.T, cb func(a *require.Assertions, mock *tgmock.Mock, api *BotAPI)) {
 	a := require.New(t)
 
 	mock, api := testBotAPI(t)
-	a.NoError(api.peers.Apply(context.Background(), nil, []tg.ChatClass{
-		&tg.Chat{ID: 10, ParticipantsCount: 10},
-	}))
+	a.NoError(api.peers.Apply(context.Background(),
+		[]tg.UserClass{
+			testUser(),
+		},
+		[]tg.ChatClass{
+			testChat(),
+		},
+	))
 
 	cb(a, mock, api)
 }
 
 func TestBotAPI_SetChatDescription(t *testing.T) {
 	ctx := context.Background()
-	testWithChat(t, func(a *require.Assertions, mock *tgmock.Mock, api *BotAPI) {
+	testWithCache(t, func(a *require.Assertions, mock *tgmock.Mock, api *BotAPI) {
 		mock.ExpectCall(&tg.MessagesEditChatAboutRequest{
 			Peer:  &tg.InputPeerChat{ChatID: 10},
 			About: "",
 		}).ThenTrue()
 		_, err := api.SetChatDescription(ctx, oas.SetChatDescription{
-			ChatID:      oas.NewInt64ID(chatID()),
+			ChatID:      oas.NewInt64ID(testChatID()),
 			Description: oas.OptString{},
 		})
 		a.NoError(err)
@@ -41,7 +46,7 @@ func TestBotAPI_SetChatDescription(t *testing.T) {
 			About: "aboba",
 		}).ThenTrue()
 		_, err = api.SetChatDescription(ctx, oas.SetChatDescription{
-			ChatID:      oas.NewInt64ID(chatID()),
+			ChatID:      oas.NewInt64ID(testChatID()),
 			Description: oas.NewOptString("aboba"),
 		})
 		a.NoError(err)
@@ -50,13 +55,13 @@ func TestBotAPI_SetChatDescription(t *testing.T) {
 
 func TestBotAPI_SetChatTitle(t *testing.T) {
 	ctx := context.Background()
-	testWithChat(t, func(a *require.Assertions, mock *tgmock.Mock, api *BotAPI) {
+	testWithCache(t, func(a *require.Assertions, mock *tgmock.Mock, api *BotAPI) {
 		mock.ExpectCall(&tg.MessagesEditChatTitleRequest{
 			ChatID: 10,
 			Title:  "aboba",
 		}).ThenResult(&tg.Updates{})
 		_, err := api.SetChatTitle(ctx, oas.SetChatTitle{
-			ChatID: oas.NewInt64ID(chatID()),
+			ChatID: oas.NewInt64ID(testChatID()),
 			Title:  "aboba",
 		})
 		a.NoError(err)
@@ -65,13 +70,13 @@ func TestBotAPI_SetChatTitle(t *testing.T) {
 
 func TestBotAPI_LeaveChat(t *testing.T) {
 	ctx := context.Background()
-	testWithChat(t, func(a *require.Assertions, mock *tgmock.Mock, api *BotAPI) {
+	testWithCache(t, func(a *require.Assertions, mock *tgmock.Mock, api *BotAPI) {
 		mock.ExpectCall(&tg.MessagesDeleteChatUserRequest{
 			ChatID: 10,
 			UserID: &tg.InputUserSelf{},
 		}).ThenResult(&tg.Updates{})
 		_, err := api.LeaveChat(ctx, oas.LeaveChat{
-			ChatID: oas.NewInt64ID(chatID()),
+			ChatID: oas.NewInt64ID(testChatID()),
 		})
 		a.NoError(err)
 	})

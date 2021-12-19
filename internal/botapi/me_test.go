@@ -16,18 +16,7 @@ func TestBotAPI_GetMe(t *testing.T) {
 	ctx := context.Background()
 	mock, api := testBotAPI(t)
 
-	user := &tg.User{
-		Self:                 true,
-		Bot:                  true,
-		ID:                   10,
-		AccessHash:           10,
-		FirstName:            "Elsa",
-		LastName:             "Jean",
-		Username:             "thebot",
-		BotInfoVersion:       1,
-		BotInlinePlaceholder: "aboba",
-	}
-	user.SetFlags()
+	user := testUser()
 
 	mock.ExpectCall(&tg.UsersGetUsersRequest{
 		ID: []tg.InputUserClass{&tg.InputUserSelf{}},

@@ -60,6 +60,7 @@ func (b *BotAPI) resolveUserID(ctx context.Context, id int64) (*tg.User, error) 
 	return user.Raw(), nil
 }
 
+// Chat is generic interface for peers.Chat, peers.Channel and friends.
 type Chat interface {
 	peers.Peer
 	Left() bool
