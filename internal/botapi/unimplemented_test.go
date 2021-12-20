@@ -9,6 +9,8 @@ import (
 	"github.com/gotd/botapi/internal/oas"
 )
 
+var _ oas.Handler = (*BotAPI)(nil)
+
 func TestUnimplemented(t *testing.T) {
 	ctx := context.Background()
 	a := require.New(t)

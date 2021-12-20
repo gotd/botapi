@@ -22,8 +22,8 @@ func (b *BotAPI) DeleteStickerFromSet(ctx context.Context, req oas.DeleteSticker
 }
 
 // GetStickerSet implements oas.Handler.
-func (b *BotAPI) GetStickerSet(ctx context.Context, req oas.GetStickerSet) (oas.Result, error) {
-	return oas.Result{}, &NotImplementedError{}
+func (b *BotAPI) GetStickerSet(ctx context.Context, req oas.GetStickerSet) (oas.ResultStickerSet, error) {
+	return oas.ResultStickerSet{}, &NotImplementedError{}
 }
 
 // SetStickerPositionInSet implements oas.Handler.
