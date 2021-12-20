@@ -11247,6 +11247,28 @@ func (o *OptSticker) Decode(d *jx.Decoder) error {
 	}
 }
 
+// Encode encodes StickerSet as json.
+func (o OptStickerSet) Encode(e *jx.Encoder) {
+	o.Value.Encode(e)
+}
+
+// Decode decodes StickerSet from json.
+func (o *OptStickerSet) Decode(d *jx.Decoder) error {
+	if o == nil {
+		return errors.New(`invalid: unable to decode OptStickerSet to nil`)
+	}
+	switch d.Next() {
+	case jx.Object:
+		o.Set = true
+		if err := o.Value.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	default:
+		return errors.Errorf(`unexpected type %q while reading OptStickerSet`, d.Next())
+	}
+}
+
 // Encode encodes string as json.
 func (o OptString) Encode(e *jx.Encoder) {
 	e.Str(string(o.Value))
@@ -13886,6 +13908,44 @@ func (s ResultPoll) Encode(e *jx.Encoder) {
 func (s *ResultPoll) Decode(d *jx.Decoder) error {
 	if s == nil {
 		return errors.New(`invalid: unable to decode ResultPoll to nil`)
+	}
+	return d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "result":
+			s.Result.Reset()
+			if err := s.Result.Decode(d); err != nil {
+				return err
+			}
+		case "ok":
+			v, err := d.Bool()
+			s.Ok = bool(v)
+			if err != nil {
+				return err
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	})
+}
+
+// Encode implements json.Marshaler.
+func (s ResultStickerSet) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	if s.Result.Set {
+		e.FieldStart("result")
+		s.Result.Encode(e)
+	}
+
+	e.FieldStart("ok")
+	e.Bool(s.Ok)
+	e.ObjEnd()
+}
+
+// Decode decodes ResultStickerSet from json.
+func (s *ResultStickerSet) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New(`invalid: unable to decode ResultStickerSet to nil`)
 	}
 	return d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
@@ -18440,6 +18500,90 @@ func (s *Sticker) Decode(d *jx.Decoder) error {
 		case "file_size":
 			s.FileSize.Reset()
 			if err := s.FileSize.Decode(d); err != nil {
+				return err
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	})
+}
+
+// Encode implements json.Marshaler.
+func (s StickerSet) Encode(e *jx.Encoder) {
+	e.ObjStart()
+
+	e.FieldStart("name")
+	e.Str(s.Name)
+
+	e.FieldStart("title")
+	e.Str(s.Title)
+
+	e.FieldStart("is_animated")
+	e.Bool(s.IsAnimated)
+
+	e.FieldStart("contains_masks")
+	e.Bool(s.ContainsMasks)
+
+	e.FieldStart("stickers")
+	e.ArrStart()
+	for _, elem := range s.Stickers {
+		elem.Encode(e)
+	}
+	e.ArrEnd()
+	if s.Thumb.Set {
+		e.FieldStart("thumb")
+		s.Thumb.Encode(e)
+	}
+	e.ObjEnd()
+}
+
+// Decode decodes StickerSet from json.
+func (s *StickerSet) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New(`invalid: unable to decode StickerSet to nil`)
+	}
+	return d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "name":
+			v, err := d.Str()
+			s.Name = string(v)
+			if err != nil {
+				return err
+			}
+		case "title":
+			v, err := d.Str()
+			s.Title = string(v)
+			if err != nil {
+				return err
+			}
+		case "is_animated":
+			v, err := d.Bool()
+			s.IsAnimated = bool(v)
+			if err != nil {
+				return err
+			}
+		case "contains_masks":
+			v, err := d.Bool()
+			s.ContainsMasks = bool(v)
+			if err != nil {
+				return err
+			}
+		case "stickers":
+			s.Stickers = nil
+			if err := d.Arr(func(d *jx.Decoder) error {
+				var elem Sticker
+				if err := elem.Decode(d); err != nil {
+					return err
+				}
+				s.Stickers = append(s.Stickers, elem)
+				return nil
+			}); err != nil {
+				return err
+			}
+		case "thumb":
+			s.Thumb.Reset()
+			if err := s.Thumb.Decode(d); err != nil {
 				return err
 			}
 		default:

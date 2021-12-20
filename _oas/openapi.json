@@ -761,7 +761,7 @@
         },
         "responses": {
           "200": {
-            "$ref": "#/components/responses/Result"
+            "$ref": "#/components/responses/ResultFile"
           },
           "default": {
             "$ref": "#/components/responses/Error"
@@ -846,7 +846,7 @@
         },
         "responses": {
           "200": {
-            "$ref": "#/components/responses/Result"
+            "$ref": "#/components/responses/ResultStickerSet"
           },
           "default": {
             "$ref": "#/components/responses/Error"
@@ -6610,6 +6610,21 @@
           "ok"
         ]
       },
+      "ResultStickerSet": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "$ref": "#/components/schemas/StickerSet"
+          },
+          "ok": {
+            "type": "boolean",
+            "default": true
+          }
+        },
+        "required": [
+          "ok"
+        ]
+      },
       "ResultString": {
         "type": "object",
         "properties": {
@@ -10090,6 +10105,16 @@
           "application/json": {
             "schema": {
               "$ref": "#/components/schemas/ResultPoll"
+            }
+          }
+        }
+      },
+      "ResultStickerSet": {
+        "description": "Result of method invocation",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ResultStickerSet"
             }
           }
         }

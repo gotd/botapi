@@ -496,7 +496,7 @@ func encodeGetChatMemberCountResponse(response ResultInt, w http.ResponseWriter,
 	return nil
 }
 
-func encodeGetFileResponse(response Result, w http.ResponseWriter, span trace.Span) error {
+func encodeGetFileResponse(response ResultFile, w http.ResponseWriter, span trace.Span) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 	e := jx.GetEncoder()
@@ -552,7 +552,7 @@ func encodeGetMyCommandsResponse(response ResultArrayOfBotCommand, w http.Respon
 	return nil
 }
 
-func encodeGetStickerSetResponse(response Result, w http.ResponseWriter, span trace.Span) error {
+func encodeGetStickerSetResponse(response ResultStickerSet, w http.ResponseWriter, span trace.Span) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 	e := jx.GetEncoder()

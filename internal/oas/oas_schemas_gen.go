@@ -4604,6 +4604,44 @@ func (o OptSticker) Get() (v Sticker, ok bool) {
 	return o.Value, true
 }
 
+// NewOptStickerSet returns new OptStickerSet with value set to v.
+func NewOptStickerSet(v StickerSet) OptStickerSet {
+	return OptStickerSet{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptStickerSet is optional StickerSet.
+type OptStickerSet struct {
+	Value StickerSet
+	Set   bool
+}
+
+// IsSet returns true if OptStickerSet was set.
+func (o OptStickerSet) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptStickerSet) Reset() {
+	var v StickerSet
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptStickerSet) SetTo(v StickerSet) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptStickerSet) Get() (v StickerSet, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
 // NewOptString returns new OptString with value set to v.
 func NewOptString(v string) OptString {
 	return OptString{
@@ -5703,6 +5741,12 @@ type ResultMessageId struct {
 type ResultPoll struct {
 	Result OptPoll `json:"result"`
 	Ok     bool    `json:"ok"`
+}
+
+// Ref: #/components/schemas/ResultStickerSet
+type ResultStickerSet struct {
+	Result OptStickerSet `json:"result"`
+	Ok     bool          `json:"ok"`
 }
 
 // Ref: #/components/schemas/ResultString
@@ -7963,6 +8007,16 @@ type Sticker struct {
 	SetName      OptString       `json:"set_name"`
 	MaskPosition OptMaskPosition `json:"mask_position"`
 	FileSize     OptInt          `json:"file_size"`
+}
+
+// Ref: #/components/schemas/StickerSet
+type StickerSet struct {
+	Name          string       `json:"name"`
+	Title         string       `json:"title"`
+	IsAnimated    bool         `json:"is_animated"`
+	ContainsMasks bool         `json:"contains_masks"`
+	Stickers      []Sticker    `json:"stickers"`
+	Thumb         OptPhotoSize `json:"thumb"`
 }
 
 // Ref: #/components/schemas/stopMessageLiveLocation
