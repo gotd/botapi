@@ -37,7 +37,8 @@ linters:
     - deadcode
     - depguard
     - dogsled
-    - dupl
+    # False positive: botapi has a lot of similar unimplemented methods
+    # - dupl
     - errcheck
     - gochecknoinits
     - goconst

@@ -94,7 +94,7 @@ type AnswerCallbackQuery struct {
 	CallbackQueryID string    `json:"callback_query_id"`
 	Text            OptString `json:"text"`
 	ShowAlert       OptBool   `json:"show_alert"`
-	URL             OptURL    `json:"url"`
+	URL             OptString `json:"url"`
 	CacheTime       OptInt    `json:"cache_time"`
 }
 
@@ -1269,7 +1269,7 @@ func NewInt64ID(v int64) ID {
 // Ref: #/components/schemas/InlineKeyboardButton
 type InlineKeyboardButton struct {
 	Text                         string        `json:"text"`
-	URL                          OptURL        `json:"url"`
+	URL                          OptString     `json:"url"`
 	LoginURL                     OptLoginUrl   `json:"login_url"`
 	CallbackData                 OptString     `json:"callback_data"`
 	SwitchInlineQuery            OptString     `json:"switch_inline_query"`
@@ -1883,10 +1883,10 @@ type InlineQueryResultArticle struct {
 	Title               string                  `json:"title"`
 	InputMessageContent InputMessageContent     `json:"input_message_content"`
 	ReplyMarkup         OptInlineKeyboardMarkup `json:"reply_markup"`
-	URL                 OptURL                  `json:"url"`
+	URL                 OptString               `json:"url"`
 	HideURL             OptBool                 `json:"hide_url"`
 	Description         OptString               `json:"description"`
-	ThumbURL            OptURL                  `json:"thumb_url"`
+	ThumbURL            OptString               `json:"thumb_url"`
 	ThumbWidth          OptInt                  `json:"thumb_width"`
 	ThumbHeight         OptInt                  `json:"thumb_height"`
 }
@@ -1895,7 +1895,7 @@ type InlineQueryResultArticle struct {
 type InlineQueryResultAudio struct {
 	Type                string                  `json:"type"`
 	ID                  string                  `json:"id"`
-	AudioURL            url.URL                 `json:"audio_url"`
+	AudioURL            string                  `json:"audio_url"`
 	Title               string                  `json:"title"`
 	Caption             OptString               `json:"caption"`
 	ParseMode           OptString               `json:"parse_mode"`
@@ -2018,7 +2018,7 @@ type InlineQueryResultContact struct {
 	Vcard               OptString               `json:"vcard"`
 	ReplyMarkup         OptInlineKeyboardMarkup `json:"reply_markup"`
 	InputMessageContent *InputMessageContent    `json:"input_message_content"`
-	ThumbURL            OptURL                  `json:"thumb_url"`
+	ThumbURL            OptString               `json:"thumb_url"`
 	ThumbWidth          OptInt                  `json:"thumb_width"`
 	ThumbHeight         OptInt                  `json:"thumb_height"`
 }
@@ -2031,12 +2031,12 @@ type InlineQueryResultDocument struct {
 	Caption             OptString               `json:"caption"`
 	ParseMode           OptString               `json:"parse_mode"`
 	CaptionEntities     []MessageEntity         `json:"caption_entities"`
-	DocumentURL         url.URL                 `json:"document_url"`
+	DocumentURL         string                  `json:"document_url"`
 	MimeType            string                  `json:"mime_type"`
 	Description         OptString               `json:"description"`
 	ReplyMarkup         OptInlineKeyboardMarkup `json:"reply_markup"`
 	InputMessageContent *InputMessageContent    `json:"input_message_content"`
-	ThumbURL            OptURL                  `json:"thumb_url"`
+	ThumbURL            OptString               `json:"thumb_url"`
 	ThumbWidth          OptInt                  `json:"thumb_width"`
 	ThumbHeight         OptInt                  `json:"thumb_height"`
 }
@@ -2053,11 +2053,11 @@ type InlineQueryResultGame struct {
 type InlineQueryResultGif struct {
 	Type                string                  `json:"type"`
 	ID                  string                  `json:"id"`
-	GIFURL              url.URL                 `json:"gif_url"`
+	GIFURL              string                  `json:"gif_url"`
 	GIFWidth            OptInt                  `json:"gif_width"`
 	GIFHeight           OptInt                  `json:"gif_height"`
 	GIFDuration         OptInt                  `json:"gif_duration"`
-	ThumbURL            url.URL                 `json:"thumb_url"`
+	ThumbURL            string                  `json:"thumb_url"`
 	ThumbMimeType       OptString               `json:"thumb_mime_type"`
 	Title               OptString               `json:"title"`
 	Caption             OptString               `json:"caption"`
@@ -2080,7 +2080,7 @@ type InlineQueryResultLocation struct {
 	ProximityAlertRadius OptInt                  `json:"proximity_alert_radius"`
 	ReplyMarkup          OptInlineKeyboardMarkup `json:"reply_markup"`
 	InputMessageContent  *InputMessageContent    `json:"input_message_content"`
-	ThumbURL             OptURL                  `json:"thumb_url"`
+	ThumbURL             OptString               `json:"thumb_url"`
 	ThumbWidth           OptInt                  `json:"thumb_width"`
 	ThumbHeight          OptInt                  `json:"thumb_height"`
 }
@@ -2089,11 +2089,11 @@ type InlineQueryResultLocation struct {
 type InlineQueryResultMpeg4Gif struct {
 	Type                string                  `json:"type"`
 	ID                  string                  `json:"id"`
-	Mpeg4URL            url.URL                 `json:"mpeg4_url"`
+	Mpeg4URL            string                  `json:"mpeg4_url"`
 	Mpeg4Width          OptInt                  `json:"mpeg4_width"`
 	Mpeg4Height         OptInt                  `json:"mpeg4_height"`
 	Mpeg4Duration       OptInt                  `json:"mpeg4_duration"`
-	ThumbURL            url.URL                 `json:"thumb_url"`
+	ThumbURL            string                  `json:"thumb_url"`
 	ThumbMimeType       OptString               `json:"thumb_mime_type"`
 	Title               OptString               `json:"title"`
 	Caption             OptString               `json:"caption"`
@@ -2107,8 +2107,8 @@ type InlineQueryResultMpeg4Gif struct {
 type InlineQueryResultPhoto struct {
 	Type                string                  `json:"type"`
 	ID                  string                  `json:"id"`
-	PhotoURL            url.URL                 `json:"photo_url"`
-	ThumbURL            url.URL                 `json:"thumb_url"`
+	PhotoURL            string                  `json:"photo_url"`
+	ThumbURL            string                  `json:"thumb_url"`
 	PhotoWidth          OptInt                  `json:"photo_width"`
 	PhotoHeight         OptInt                  `json:"photo_height"`
 	Title               OptString               `json:"title"`
@@ -2134,7 +2134,7 @@ type InlineQueryResultVenue struct {
 	GooglePlaceType     OptString               `json:"google_place_type"`
 	ReplyMarkup         OptInlineKeyboardMarkup `json:"reply_markup"`
 	InputMessageContent *InputMessageContent    `json:"input_message_content"`
-	ThumbURL            OptURL                  `json:"thumb_url"`
+	ThumbURL            OptString               `json:"thumb_url"`
 	ThumbWidth          OptInt                  `json:"thumb_width"`
 	ThumbHeight         OptInt                  `json:"thumb_height"`
 }
@@ -2143,9 +2143,9 @@ type InlineQueryResultVenue struct {
 type InlineQueryResultVideo struct {
 	Type                string                  `json:"type"`
 	ID                  string                  `json:"id"`
-	VideoURL            url.URL                 `json:"video_url"`
+	VideoURL            string                  `json:"video_url"`
 	MimeType            string                  `json:"mime_type"`
-	ThumbURL            url.URL                 `json:"thumb_url"`
+	ThumbURL            string                  `json:"thumb_url"`
 	Title               string                  `json:"title"`
 	Caption             OptString               `json:"caption"`
 	ParseMode           OptString               `json:"parse_mode"`
@@ -2162,7 +2162,7 @@ type InlineQueryResultVideo struct {
 type InlineQueryResultVoice struct {
 	Type                string                  `json:"type"`
 	ID                  string                  `json:"id"`
-	VoiceURL            url.URL                 `json:"voice_url"`
+	VoiceURL            string                  `json:"voice_url"`
 	Title               string                  `json:"title"`
 	Caption             OptString               `json:"caption"`
 	ParseMode           OptString               `json:"parse_mode"`
@@ -2191,7 +2191,7 @@ type InputInvoiceMessageContent struct {
 	MaxTipAmount              OptInt         `json:"max_tip_amount"`
 	SuggestedTipAmounts       []int          `json:"suggested_tip_amounts"`
 	ProviderData              OptString      `json:"provider_data"`
-	PhotoURL                  OptURL         `json:"photo_url"`
+	PhotoURL                  OptString      `json:"photo_url"`
 	PhotoSize                 OptInt         `json:"photo_size"`
 	PhotoWidth                OptInt         `json:"photo_width"`
 	PhotoHeight               OptInt         `json:"photo_height"`
@@ -2702,7 +2702,7 @@ type Location struct {
 
 // Ref: #/components/schemas/LoginUrl
 type LoginUrl struct {
-	URL                url.URL   `json:"url"`
+	URL                string    `json:"url"`
 	ForwardText        OptString `json:"forward_text"`
 	BotUsername        OptString `json:"bot_username"`
 	RequestWriteAccess OptBool   `json:"request_write_access"`
@@ -2788,7 +2788,7 @@ type MessageEntity struct {
 	Type     MessageEntityType `json:"type"`
 	Offset   int               `json:"offset"`
 	Length   int               `json:"length"`
-	URL      OptURL            `json:"url"`
+	URL      OptString         `json:"url"`
 	User     OptUser           `json:"user"`
 	Language OptString         `json:"language"`
 }
@@ -4680,44 +4680,6 @@ func (o OptSuccessfulPayment) Get() (v SuccessfulPayment, ok bool) {
 	return o.Value, true
 }
 
-// NewOptURL returns new OptURL with value set to v.
-func NewOptURL(v url.URL) OptURL {
-	return OptURL{
-		Value: v,
-		Set:   true,
-	}
-}
-
-// OptURL is optional url.URL.
-type OptURL struct {
-	Value url.URL
-	Set   bool
-}
-
-// IsSet returns true if OptURL was set.
-func (o OptURL) IsSet() bool { return o.Set }
-
-// Reset unsets value.
-func (o *OptURL) Reset() {
-	var v url.URL
-	o.Value = v
-	o.Set = false
-}
-
-// SetTo sets value to v.
-func (o *OptURL) SetTo(v url.URL) {
-	o.Set = true
-	o.Value = v
-}
-
-// Get returns value and boolean that denotes whether value was set.
-func (o OptURL) Get() (v url.URL, ok bool) {
-	if !o.Set {
-		return v, false
-	}
-	return o.Value, true
-}
-
 // NewOptUser returns new OptUser with value set to v.
 func NewOptUser(v User) OptUser {
 	return OptUser{
@@ -6490,7 +6452,7 @@ type SendInvoice struct {
 	SuggestedTipAmounts       []int                   `json:"suggested_tip_amounts"`
 	StartParameter            OptString               `json:"start_parameter"`
 	ProviderData              OptString               `json:"provider_data"`
-	PhotoURL                  OptURL                  `json:"photo_url"`
+	PhotoURL                  OptString               `json:"photo_url"`
 	PhotoSize                 OptInt                  `json:"photo_size"`
 	PhotoWidth                OptInt                  `json:"photo_width"`
 	PhotoHeight               OptInt                  `json:"photo_height"`
@@ -7956,7 +7918,7 @@ type SetStickerSetThumb struct {
 
 // Ref: #/components/schemas/setWebhook
 type SetWebhook struct {
-	URL                url.URL   `json:"url"`
+	URL                string    `json:"url"`
 	Certificate        OptString `json:"certificate"`
 	IPAddress          OptString `json:"ip_address"`
 	MaxConnections     OptInt    `json:"max_connections"`
@@ -8160,7 +8122,7 @@ type VoiceChatStarted struct{}
 
 // Ref: #/components/schemas/WebhookInfo
 type WebhookInfo struct {
-	URL                  url.URL   `json:"url"`
+	URL                  string    `json:"url"`
 	HasCustomCertificate bool      `json:"has_custom_certificate"`
 	PendingUpdateCount   int       `json:"pending_update_count"`
 	IPAddress            OptString `json:"ip_address"`

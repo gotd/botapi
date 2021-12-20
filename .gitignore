@@ -16,3 +16,6 @@
 *.iml
 out
 gen
+
+# Bot db files
+state/*.bbolt

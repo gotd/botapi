@@ -7,8 +7,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/ogen-go/errors"
-	"github.com/ogen-go/jx"
+	"github.com/go-faster/errors"
+	"github.com/go-faster/jx"
 	"github.com/ogen-go/ogen"
 )
 
@@ -68,10 +68,6 @@ func (a API) typeOAS(f Field) *ogen.Schema {
 			}
 			if b.Min > 0 {
 				p.MinLength = &b.Min
-			}
-
-			if strings.Contains(f.Name, "url") {
-				p.Format = "uri"
 			}
 		case Integer:
 			p.Type = "integer"
