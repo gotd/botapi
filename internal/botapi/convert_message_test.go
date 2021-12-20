@@ -74,7 +74,7 @@ func TestBotAPI_convertToBotAPIEntities(t *testing.T) {
 			"MentionName",
 			&tg.MessageEntityMentionName{Offset: 1, Length: 10, UserID: 10},
 			oas.MessageEntity{Type: oas.MessageEntityTypeTextMention, Offset: 1, Length: 10,
-				User: oas.NewOptUser(convertToUser(testUser()))},
+				User: oas.NewOptUser(convertToBotAPIUser(testUser()))},
 		},
 		{
 			"Phone",
@@ -101,7 +101,7 @@ func TestBotAPI_convertToBotAPIEntities(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			testWithCache(t, func(a *require.Assertions, mock *tgmock.Mock, api *BotAPI) {
-				require.Equal(t,
+				a.Equal(
 					[]oas.MessageEntity{tt.wantR},
 					api.convertToBotAPIEntities(ctx, []tg.MessageEntityClass{tt.input}),
 				)

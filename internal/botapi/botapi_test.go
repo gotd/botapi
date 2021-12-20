@@ -5,6 +5,10 @@ import (
 
 	"go.uber.org/zap/zaptest"
 
+	"github.com/gotd/td/tgerr"
+
+	"github.com/gotd/td/bin"
+
 	"github.com/gotd/td/constant"
 
 	"github.com/gotd/td/telegram/peers"
@@ -29,6 +33,10 @@ func testBotAPI(t *testing.T) (*tgmock.Mock, *BotAPI) {
 			Logger: logger.Named("botapi"),
 		},
 	)
+}
+
+func testError() *tgerr.Error {
+	return tgerr.New(1337, "TEST_ERROR")
 }
 
 func testChatID() int64 {
@@ -82,5 +90,13 @@ func testCommandsBotAPI() []oas.BotCommand {
 			Command:     "freeburger",
 			Description: "trolling",
 		},
+	}
+}
+
+func setFlags(b bin.Object) {
+	if v, ok := b.(interface {
+		SetFlags()
+	}); ok {
+		v.SetFlags()
 	}
 }

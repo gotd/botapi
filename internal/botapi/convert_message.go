@@ -52,7 +52,7 @@ func (b *BotAPI) convertToBotAPIEntities(
 			e.Type = oas.MessageEntityTypeTextMention
 			user, err := b.resolveUserID(ctx, entity.UserID)
 			if err == nil {
-				e.User.SetTo(convertToUser(user))
+				e.User.SetTo(convertToBotAPIUser(user))
 				b.logger.Warn("Resolve user", zap.Int64("user_id", entity.UserID))
 			}
 		case *tg.MessageEntityPhone:
@@ -178,32 +178,19 @@ func (b *BotAPI) setDocumentAttachment(ctx context.Context, d *tg.Document, r *o
 					Scale:  coords.Zoom,
 				})
 			}
-
-			// TODO(tdakota): make stickerset cache
-			result, err := b.raw.MessagesGetStickerSet(ctx, &tg.MessagesGetStickerSetRequest{
-				Stickerset: attr.Stickerset,
-				Hash:       0,
-			})
+			result, err := b.getStickerSet(ctx, attr.Stickerset)
 			if err != nil {
 				return errors.Wrap(err, "get sticker_set")
 			}
-			var stickerSet *tg.MessagesStickerSet
-			switch result := result.(type) {
-			case *tg.MessagesStickerSet:
-				stickerSet = result
-			default:
-				return errors.Errorf("unexpected type %T", result)
-			}
-
 			r.Sticker.SetTo(oas.Sticker{
 				FileID:       fileID,
 				FileUniqueID: fileUniqueID,
 				Width:        width,
 				Height:       height,
-				IsAnimated:   stickerSet.Set.Animated,
+				IsAnimated:   result.Set.Animated,
 				Thumb:        thumb,
 				Emoji:        oas.NewOptString(attr.Alt),
-				SetName:      oas.NewOptString(stickerSet.Set.ShortName),
+				SetName:      oas.NewOptString(result.Set.ShortName),
 				MaskPosition: maskPosition,
 				FileSize:     oas.NewOptInt(d.Size),
 			})
@@ -285,14 +272,7 @@ func (b *BotAPI) convertMessageMedia(ctx context.Context, media tg.MessageMediaC
 		if !ok {
 			break
 		}
-		resultLocation := oas.Location{
-			Longitude: p.Long,
-			Latitude:  p.Lat,
-		}
-		if v, ok := p.GetAccuracyRadius(); ok {
-			resultLocation.HorizontalAccuracy.SetTo(float64(v))
-		}
-		r.Location.SetTo(resultLocation)
+		r.Location.SetTo(convertToBotAPILocation(p))
 	case *tg.MessageMediaContact:
 		r.Contact.SetTo(oas.Contact{
 			PhoneNumber: media.PhoneNumber,
@@ -325,8 +305,9 @@ func (b *BotAPI) convertMessageMedia(ctx context.Context, media tg.MessageMediaC
 		if !ok {
 			break
 		}
+		location := convertToBotAPILocation(p)
 		resultVenue := oas.Venue{
-			Location:        convertToBotAPILocation(p),
+			Location:        location,
 			Title:           media.Title,
 			Address:         media.Address,
 			FoursquareID:    oas.OptString{},
@@ -342,6 +323,9 @@ func (b *BotAPI) convertMessageMedia(ctx context.Context, media tg.MessageMediaC
 			resultVenue.GooglePlaceID.SetTo(media.VenueID)
 			resultVenue.GooglePlaceType.SetTo(media.VenueType)
 		}
+		r.Venue.SetTo(resultVenue)
+		// Set for backward compatibility.
+		r.Location.SetTo(location)
 	case *tg.MessageMediaGame:
 		game := media.Game
 
@@ -360,7 +344,11 @@ func (b *BotAPI) convertMessageMedia(ctx context.Context, media tg.MessageMediaC
 		if !ok {
 			break
 		}
-		r.Location.SetTo(convertToBotAPILocation(p))
+		location := convertToBotAPILocation(p)
+		location.Heading = optInt(media.GetHeading)
+		location.LivePeriod.SetTo(media.Period)
+		location.ProximityAlertRadius = optInt(media.GetProximityNotificationRadius)
+		r.Location.SetTo(location)
 	case *tg.MessageMediaPoll:
 		var (
 			poll    = media.Poll
@@ -429,7 +417,7 @@ func (b *BotAPI) convertPlainMessage(ctx context.Context, m *tg.Message) (r oas.
 			if err != nil {
 				return errors.Wrap(err, "get user")
 			}
-			user.SetTo(convertToUser(u))
+			user.SetTo(convertToBotAPIUser(u))
 		case *tg.PeerChat, *tg.PeerChannel:
 			ch, err := b.getChatByPeer(ctx, fromID)
 			if err != nil {
@@ -458,7 +446,7 @@ func (b *BotAPI) convertPlainMessage(ctx context.Context, m *tg.Message) (r oas.
 	if m.Out {
 		self, err := b.peers.Self(ctx)
 		if err == nil {
-			r.From.SetTo(convertToUser(self.Raw()))
+			r.From.SetTo(convertToBotAPIUser(self.Raw()))
 		}
 	} else if fromID, ok := m.GetFromID(); ok {
 		// FIXME(tdakkota): set service IDs.
@@ -506,7 +494,7 @@ func (b *BotAPI) convertPlainMessage(ctx context.Context, m *tg.Message) (r oas.
 		if err != nil {
 			return oas.Message{}, errors.Wrap(err, "get via_bot")
 		}
-		r.ViaBot.SetTo(convertToUser(u))
+		r.ViaBot.SetTo(convertToBotAPIUser(u))
 	}
 
 	if text := m.Message; text != "" {

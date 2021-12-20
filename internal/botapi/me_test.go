@@ -41,3 +41,17 @@ func TestBotAPI_GetMe(t *testing.T) {
 		Ok: true,
 	}, result)
 }
+
+func TestBotAPI_LogOut(t *testing.T) {
+	a := require.New(t)
+	ctx := context.Background()
+	mock, api := testBotAPI(t)
+
+	mock.ExpectCall(&tg.AuthLogOutRequest{}).ThenRPCErr(testError())
+	_, err := api.LogOut(ctx)
+	a.Error(err)
+
+	mock.ExpectCall(&tg.AuthLogOutRequest{}).ThenResult(&tg.AuthLoggedOut{})
+	_, err = api.LogOut(ctx)
+	a.NoError(err)
+}

@@ -59,9 +59,17 @@ func chatNotFound() *BadRequestError {
 }
 
 // NewError maps error to status code.
-func (b *BotAPI) NewError(ctx context.Context, err error) oas.ErrorStatusCode {
+func (b *BotAPI) NewError(ctx context.Context, err error) (r oas.ErrorStatusCode) {
 	// TODO(tdakkota): pass request context info.
-	b.logger.Warn("Request error", zap.Error(err))
+	defer func() {
+		level := zap.DebugLevel
+		if r.StatusCode >= 500 {
+			level = zap.WarnLevel
+		}
+		if e := b.logger.Check(level, "Request error"); e != nil {
+			e.Write(zap.Error(err))
+		}
+	}()
 
 	var (
 		notImplemented *NotImplementedError

@@ -28,7 +28,7 @@ func (b *BotAPI) convertToTelegramInlineButton(
 	case button.SwitchInlineQuery.Set:
 		return markup.SwitchInline(button.Text, button.SwitchInlineQuery.Value, false), nil
 	case button.SwitchInlineQueryCurrentChat.Set:
-		return markup.SwitchInline(button.Text, button.SwitchInlineQuery.Value, true), nil
+		return markup.SwitchInline(button.Text, button.SwitchInlineQueryCurrentChat.Value, true), nil
 	case button.LoginURL.Set:
 		loginURL := button.LoginURL.Value
 
@@ -58,13 +58,43 @@ func (b *BotAPI) convertToTelegramInlineButton(
 	}
 }
 
-func (b *BotAPI) convertToTelegramButton(kb oas.KeyboardButton) tg.KeyboardButtonClass {
+func convertToBotAPIInlineButton(b tg.KeyboardButtonClass) oas.InlineKeyboardButton {
+	button := oas.InlineKeyboardButton{Text: b.GetText()}
+	switch b := b.(type) {
+	case *tg.KeyboardButtonURL:
+		button.URL.SetTo(b.URL)
+	case *tg.KeyboardButtonCallback:
+		button.CallbackData.SetTo(string(b.Data))
+	case *tg.KeyboardButtonGame:
+		button.CallbackGame = new(oas.CallbackGame)
+	case *tg.KeyboardButtonBuy:
+		button.Pay.SetTo(true)
+	case *tg.KeyboardButtonSwitchInline:
+		if b.SamePeer {
+			button.SwitchInlineQueryCurrentChat.SetTo(b.Query)
+		} else {
+			button.SwitchInlineQuery.SetTo(b.Query)
+		}
+	case *tg.KeyboardButtonURLAuth:
+		// Quote: login_url buttons are represented as ordinary url buttons.
+		//
+		// See Message definition
+		// See https://github.com/tdlib/telegram-bot-api/blob/90f52477814a2d8a08c9ffb1d780fd179815d715/telegram-bot-api/Client.cpp#L1526
+		button.URL.SetTo(b.URL)
+	}
+	return button
+}
+
+func convertToTelegramButton(kb oas.KeyboardButton) tg.KeyboardButtonClass {
 	if text, ok := kb.GetString(); ok {
 		return markup.Button(text)
 	}
 
 	button := kb.KeyboardButtonObject
-	if button.RequestLocation.Value || button.RequestContact.Value {
+	switch {
+	case button.RequestLocation.Set:
+		return markup.RequestGeoLocation(button.Text)
+	case button.RequestContact.Set:
 		return markup.RequestPhone(button.Text)
 	}
 
@@ -110,8 +140,8 @@ func (b *BotAPI) convertToTelegramReplyMarkup(
 		}
 		for _, row := range rows {
 			resultRow := make([]tg.KeyboardButtonClass, len(row))
-			for _, button := range row {
-				resultRow = append(resultRow, b.convertToTelegramButton(button))
+			for i, button := range row {
+				resultRow[i] = convertToTelegramButton(button)
 			}
 			result.Rows = append(result.Rows, tg.KeyboardButtonRow{Buttons: resultRow})
 		}
@@ -138,30 +168,7 @@ func convertToBotAPIInlineReplyMarkup(mkp *tg.ReplyInlineMarkup) oas.InlineKeybo
 	for i, row := range mkp.Rows {
 		resultRow := make([]oas.InlineKeyboardButton, len(row.Buttons))
 		for i, b := range row.Buttons {
-			button := oas.InlineKeyboardButton{Text: b.GetText()}
-			switch b := b.(type) {
-			case *tg.KeyboardButtonURL:
-				button.URL.SetTo(b.URL)
-			case *tg.KeyboardButtonCallback:
-				button.CallbackData.SetTo(string(b.Data))
-			case *tg.KeyboardButtonSwitchInline:
-				if b.SamePeer {
-					button.SwitchInlineQueryCurrentChat.SetTo(b.Query)
-				} else {
-					button.SwitchInlineQuery.SetTo(b.Query)
-				}
-			case *tg.KeyboardButtonGame:
-				button.CallbackGame = new(oas.CallbackGame)
-			case *tg.KeyboardButtonBuy:
-				button.Pay.SetTo(true)
-			case *tg.KeyboardButtonURLAuth:
-				// Quote: login_url buttons are represented as ordinary url buttons.
-				//
-				// See Message definition
-				// See https://github.com/tdlib/telegram-bot-api/blob/90f52477814a2d8a08c9ffb1d780fd179815d715/telegram-bot-api/Client.cpp#L1526
-				button.URL.SetTo(b.URL)
-			}
-			resultRow[i] = button
+			resultRow[i] = convertToBotAPIInlineButton(b)
 		}
 		resultRows[i] = resultRow
 	}
