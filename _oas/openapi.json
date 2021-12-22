@@ -2346,6 +2346,9 @@
           },
           "location": {
             "$ref": "#/components/schemas/ChatLocation"
+          },
+          "all_members_are_administrators": {
+            "type": "boolean"
           }
         },
         "required": [
@@ -5516,6 +5519,15 @@
           },
           "reply_markup": {
             "$ref": "#/components/schemas/InlineKeyboardMarkup"
+          },
+          "new_chat_member": {
+            "$ref": "#/components/schemas/User"
+          },
+          "new_chat_participant": {
+            "$ref": "#/components/schemas/User"
+          },
+          "left_chat_participant": {
+            "$ref": "#/components/schemas/User"
           }
         },
         "required": [

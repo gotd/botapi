@@ -1300,6 +1300,10 @@ func (s Chat) Encode(e *jx.Encoder) {
 		e.FieldStart("location")
 		s.Location.Encode(e)
 	}
+	if s.AllMembersAreAdministrators.Set {
+		e.FieldStart("all_members_are_administrators")
+		s.AllMembersAreAdministrators.Encode(e)
+	}
 	e.ObjEnd()
 }
 
@@ -1410,6 +1414,11 @@ func (s *Chat) Decode(d *jx.Decoder) error {
 		case "location":
 			s.Location.Reset()
 			if err := s.Location.Decode(d); err != nil {
+				return err
+			}
+		case "all_members_are_administrators":
+			s.AllMembersAreAdministrators.Reset()
+			if err := s.AllMembersAreAdministrators.Decode(d); err != nil {
 				return err
 			}
 		default:
@@ -9706,6 +9715,18 @@ func (s Message) Encode(e *jx.Encoder) {
 		e.FieldStart("reply_markup")
 		s.ReplyMarkup.Encode(e)
 	}
+	if s.NewChatMember.Set {
+		e.FieldStart("new_chat_member")
+		s.NewChatMember.Encode(e)
+	}
+	if s.NewChatParticipant.Set {
+		e.FieldStart("new_chat_participant")
+		s.NewChatParticipant.Encode(e)
+	}
+	if s.LeftChatParticipant.Set {
+		e.FieldStart("left_chat_participant")
+		s.LeftChatParticipant.Encode(e)
+	}
 	e.ObjEnd()
 }
 
@@ -10046,6 +10067,21 @@ func (s *Message) Decode(d *jx.Decoder) error {
 		case "reply_markup":
 			s.ReplyMarkup.Reset()
 			if err := s.ReplyMarkup.Decode(d); err != nil {
+				return err
+			}
+		case "new_chat_member":
+			s.NewChatMember.Reset()
+			if err := s.NewChatMember.Decode(d); err != nil {
+				return err
+			}
+		case "new_chat_participant":
+			s.NewChatParticipant.Reset()
+			if err := s.NewChatParticipant.Decode(d); err != nil {
+				return err
+			}
+		case "left_chat_participant":
+			s.LeftChatParticipant.Reset()
+			if err := s.LeftChatParticipant.Decode(d); err != nil {
 				return err
 			}
 		default:

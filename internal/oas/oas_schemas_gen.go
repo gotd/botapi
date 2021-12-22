@@ -427,26 +427,27 @@ type CallbackQuery struct {
 
 // Ref: #/components/schemas/Chat
 type Chat struct {
-	ID                    int64              `json:"id"`
-	Type                  ChatType           `json:"type"`
-	Title                 OptString          `json:"title"`
-	Username              OptString          `json:"username"`
-	FirstName             OptString          `json:"first_name"`
-	LastName              OptString          `json:"last_name"`
-	Photo                 OptChatPhoto       `json:"photo"`
-	Bio                   OptString          `json:"bio"`
-	HasPrivateForwards    OptBool            `json:"has_private_forwards"`
-	Description           OptString          `json:"description"`
-	InviteLink            OptString          `json:"invite_link"`
-	PinnedMessage         *Message           `json:"pinned_message"`
-	Permissions           OptChatPermissions `json:"permissions"`
-	SlowModeDelay         OptInt             `json:"slow_mode_delay"`
-	MessageAutoDeleteTime OptInt             `json:"message_auto_delete_time"`
-	HasProtectedContent   OptBool            `json:"has_protected_content"`
-	StickerSetName        OptString          `json:"sticker_set_name"`
-	CanSetStickerSet      OptBool            `json:"can_set_sticker_set"`
-	LinkedChatID          OptInt64           `json:"linked_chat_id"`
-	Location              OptChatLocation    `json:"location"`
+	ID                          int64              `json:"id"`
+	Type                        ChatType           `json:"type"`
+	Title                       OptString          `json:"title"`
+	Username                    OptString          `json:"username"`
+	FirstName                   OptString          `json:"first_name"`
+	LastName                    OptString          `json:"last_name"`
+	Photo                       OptChatPhoto       `json:"photo"`
+	Bio                         OptString          `json:"bio"`
+	HasPrivateForwards          OptBool            `json:"has_private_forwards"`
+	Description                 OptString          `json:"description"`
+	InviteLink                  OptString          `json:"invite_link"`
+	PinnedMessage               *Message           `json:"pinned_message"`
+	Permissions                 OptChatPermissions `json:"permissions"`
+	SlowModeDelay               OptInt             `json:"slow_mode_delay"`
+	MessageAutoDeleteTime       OptInt             `json:"message_auto_delete_time"`
+	HasProtectedContent         OptBool            `json:"has_protected_content"`
+	StickerSetName              OptString          `json:"sticker_set_name"`
+	CanSetStickerSet            OptBool            `json:"can_set_sticker_set"`
+	LinkedChatID                OptInt64           `json:"linked_chat_id"`
+	Location                    OptChatLocation    `json:"location"`
+	AllMembersAreAdministrators OptBool            `json:"all_members_are_administrators"`
 }
 
 // Ref: #/components/schemas/ChatInviteLink
@@ -2776,6 +2777,9 @@ type Message struct {
 	VoiceChatEnded                OptVoiceChatEnded                `json:"voice_chat_ended"`
 	VoiceChatParticipantsInvited  OptVoiceChatParticipantsInvited  `json:"voice_chat_participants_invited"`
 	ReplyMarkup                   OptInlineKeyboardMarkup          `json:"reply_markup"`
+	NewChatMember                 OptUser                          `json:"new_chat_member"`
+	NewChatParticipant            OptUser                          `json:"new_chat_participant"`
+	LeftChatParticipant           OptUser                          `json:"left_chat_participant"`
 }
 
 // Ref: #/components/schemas/MessageAutoDeleteTimerChanged
