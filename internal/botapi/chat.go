@@ -64,12 +64,105 @@ func (b *BotAPI) DeleteChatPhoto(ctx context.Context, req oas.DeleteChatPhoto) (
 
 // DeleteChatStickerSet implements oas.Handler.
 func (b *BotAPI) DeleteChatStickerSet(ctx context.Context, req oas.DeleteChatStickerSet) (oas.Result, error) {
-	return oas.Result{}, &NotImplementedError{}
+	p, err := b.resolveIDToChat(ctx, req.ChatID)
+	if err != nil {
+		return oas.Result{}, errors.Wrap(err, "resolve chatID")
+	}
+
+	ch, ok := p.(peers.Channel)
+	if !ok {
+		return oas.Result{}, &BadRequestError{Message: "Bad Request: method is available only for supergroups"}
+	}
+
+	s, ok := ch.ToSupergroup()
+	if !ok {
+		return oas.Result{}, &BadRequestError{Message: "Bad Request: method is available only for supergroups"}
+	}
+
+	if err := s.ResetStickerSet(ctx); err != nil {
+		return oas.Result{}, err
+	}
+	return resultOK(true), nil
 }
 
 // GetChat implements oas.Handler.
 func (b *BotAPI) GetChat(ctx context.Context, req oas.GetChat) (oas.ResultChat, error) {
-	return oas.ResultChat{}, &NotImplementedError{}
+	p, err := b.resolveID(ctx, req.ChatID)
+	if err != nil {
+		return oas.ResultChat{}, errors.Wrap(err, "resolve chatID")
+	}
+
+	var (
+		id   = p.TDLibPeerID()
+		chat oas.Chat
+	)
+	switch p := p.(type) {
+	case peers.User:
+		chat = fillBotAPIChatPrivate(p)
+		raw := p.Raw()
+		full, err := p.FullRaw(ctx)
+		if err != nil {
+			return oas.ResultChat{}, errors.Wrap(err, "get full")
+		}
+		chat.Photo = b.setUserPhoto(id, raw.AccessHash, raw.Photo)
+		chat.Bio = optString(full.GetAbout)
+		if full.PrivateForwardName != "" {
+			chat.HasPrivateForwards.SetTo(true)
+		}
+	case peers.Chat:
+		chat = fillBotAPIChatGroup(p)
+		full, err := p.FullRaw(ctx)
+		if err != nil {
+			return oas.ResultChat{}, errors.Wrap(err, "get full")
+		}
+		chat.Photo = b.setChatPhoto(id, 0, p.Raw().Photo)
+		chat.Description = oas.NewOptString(full.GetAbout())
+		if invite, ok := full.GetExportedInvite(); ok {
+			chat.InviteLink.SetTo(invite.Link)
+		}
+		// TODO(tdakkota): resolve pinned.
+		if v, ok := p.DefaultBannedRights(); ok {
+			chat.Permissions.SetTo(convertToBotAPIChatPermissions(v))
+		}
+		// TODO(tdakkota): set AllMembersAreAdministrators
+	case peers.Channel:
+		chat = fillBotAPIChatGroup(p)
+		raw := p.Raw()
+		full, err := p.FullRaw(ctx)
+		if err != nil {
+			return oas.ResultChat{}, errors.Wrap(err, "get full")
+		}
+		chat.Photo = b.setChatPhoto(id, raw.AccessHash, raw.Photo)
+		chat.Description = oas.NewOptString(full.GetAbout())
+		if invite, ok := full.GetExportedInvite(); ok {
+			chat.InviteLink.SetTo(invite.Link)
+		}
+		// TODO(tdakkota): resolve pinned.
+		if v, ok := p.DefaultBannedRights(); ok {
+			chat.Permissions.SetTo(convertToBotAPIChatPermissions(v))
+		}
+		if s, ok := full.GetSlowmodeSeconds(); ok {
+			chat.SlowModeDelay.SetTo(s)
+		}
+		if s, ok := full.GetStickerset(); ok {
+			chat.StickerSetName.SetTo(s.ShortName)
+		}
+		chat.LinkedChatID = optInt64(full.GetLinkedChatID)
+		if loc, ok := full.Location.(*tg.ChannelLocation); ok {
+			if p, ok := loc.GeoPoint.AsNotEmpty(); ok {
+				chat.Location.SetTo(oas.ChatLocation{
+					Location: convertToBotAPILocation(p),
+					Address:  loc.Address,
+				})
+			}
+		}
+		// TODO(tdakkota): set AllMembersAreAdministrators
+	}
+
+	return oas.ResultChat{
+		Result: oas.NewOptChat(chat),
+		Ok:     true,
+	}, nil
 }
 
 // SetChatAdministratorCustomTitle implements oas.Handler.
