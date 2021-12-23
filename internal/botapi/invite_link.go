@@ -16,6 +16,7 @@ func (b *BotAPI) convertInviteLink(ctx context.Context, link peers.InviteLink) (
 		return oas.ChatInviteLink{}, errors.Wrap(err, "get creator")
 	}
 
+	raw := link.Raw()
 	result := oas.ChatInviteLink{
 		InviteLink:              link.Link(),
 		Creator:                 convertToBotAPIUser(creator),
@@ -23,7 +24,7 @@ func (b *BotAPI) convertInviteLink(ctx context.Context, link peers.InviteLink) (
 		IsPrimary:               link.Permanent(),
 		IsRevoked:               link.Revoked(),
 		Name:                    optString(link.Title),
-		ExpireDate:              optInt(link.Raw().GetExpireDate),
+		ExpireDate:              optInt(raw.GetExpireDate),
 		MemberLimit:             optInt(link.UsageLimit),
 		PendingJoinRequestCount: optInt(link.Requested),
 	}
