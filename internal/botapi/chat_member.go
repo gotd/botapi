@@ -3,6 +3,8 @@ package botapi
 import (
 	"context"
 
+	"github.com/go-faster/errors"
+
 	"github.com/gotd/botapi/internal/oas"
 )
 
@@ -28,9 +30,9 @@ func (b *BotAPI) GetChatMember(ctx context.Context, req oas.GetChatMember) (oas.
 
 // GetChatMemberCount implements oas.Handler.
 func (b *BotAPI) GetChatMemberCount(ctx context.Context, req oas.GetChatMemberCount) (oas.ResultInt, error) {
-	ch, err := b.resolveChatID(ctx, req.ChatID)
+	ch, err := b.resolveIDToChat(ctx, req.ChatID)
 	if err != nil {
-		return oas.ResultInt{}, err
+		return oas.ResultInt{}, errors.Wrap(err, "resolve chatID")
 	}
 	return oas.ResultInt{
 		Result: oas.NewOptInt(ch.ParticipantsCount()),

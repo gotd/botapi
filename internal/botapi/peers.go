@@ -13,61 +13,79 @@ import (
 	"github.com/gotd/botapi/internal/oas"
 )
 
-func (b *BotAPI) getChatByPeer(ctx context.Context, p tg.PeerClass) (oas.Chat, error) {
-	peer, err := b.peers.ResolvePeer(ctx, p)
-	if err != nil {
-		return oas.Chat{}, errors.Wrapf(err, "find peer: %+v", p)
+func fillBotAPIChatPrivate(user peers.User) oas.Chat {
+	return oas.Chat{
+		ID:        int64(user.TDLibPeerID()),
+		Type:      oas.ChatTypePrivate,
+		Username:  optString(user.Username),
+		FirstName: optString(user.FirstName),
+		LastName:  optString(user.LastName),
 	}
+}
 
-	tdlibID := peer.TDLibPeerID()
-	if user, ok := peer.(peers.User); ok {
-		return oas.Chat{
-			ID:        int64(tdlibID),
-			Type:      oas.ChatTypePrivate,
-			Username:  optString(user.Username),
-			FirstName: optString(user.FirstName),
-			LastName:  optString(user.LastName),
-		}, nil
-	}
-
+func fillBotAPIChatGroup(chat Chat) oas.Chat {
 	r := oas.Chat{
-		ID:                  int64(tdlibID),
+		ID:                  int64(chat.TDLibPeerID()),
 		Type:                oas.ChatTypeGroup,
-		Title:               oas.NewOptString(peer.VisibleName()),
-		HasProtectedContent: oas.OptBool{},
+		Title:               oas.NewOptString(chat.VisibleName()),
+		Username:            optString(chat.Username),
+		HasProtectedContent: oas.NewOptBool(chat.NoForwards()),
 	}
-	switch ch := peer.(type) {
-	case peers.Chat:
-		r.HasProtectedContent.SetTo(ch.NoForwards())
+	switch ch := chat.(type) {
 	case peers.Channel:
 		if _, ok := ch.ToBroadcast(); ok {
 			r.Type = oas.ChatTypeChannel
 		} else {
 			r.Type = oas.ChatTypeSupergroup
 		}
-		r.Username = optString(ch.Username)
-		r.HasProtectedContent.SetTo(ch.NoForwards())
 	}
-
-	return r, nil
+	return r
 }
 
-func (b *BotAPI) resolveUserID(ctx context.Context, id int64) (*tg.User, error) {
+func (b *BotAPI) getChatByPeer(ctx context.Context, p tg.PeerClass) (oas.Chat, error) {
+	peer, err := b.peers.ResolvePeer(ctx, p)
+	if err != nil {
+		return oas.Chat{}, errors.Wrapf(err, "find peer: %+v", p)
+	}
+
+	if user, ok := peer.(peers.User); ok {
+		return fillBotAPIChatPrivate(user), nil
+	}
+
+	ch, ok := peer.(Chat)
+	if !ok {
+		return oas.Chat{}, errors.Errorf("unexpected type %T", peer)
+	}
+	return fillBotAPIChatGroup(ch), nil
+}
+
+func (b *BotAPI) resolveUserID(ctx context.Context, id int64) (peers.User, error) {
 	user, err := b.peers.GetUser(ctx, &tg.InputUser{UserID: id})
 	if err != nil {
-		return nil, errors.Wrapf(err, "find user: %d", id)
+		return peers.User{}, errors.Wrapf(err, "find user: %d", id)
 	}
-	return user.Raw(), nil
+	return user, nil
 }
 
 // Chat is generic interface for peers.Chat, peers.Channel and friends.
 type Chat interface {
 	peers.Peer
+	Creator() bool
 	Left() bool
+	NoForwards() bool
+	CallActive() bool
+	CallNotEmpty() bool
 	ParticipantsCount() int
+	AdminRights() (tg.ChatAdminRights, bool)
+	DefaultBannedRights() (tg.ChatBannedRights, bool)
+
 	Leave(ctx context.Context) error
 	SetTitle(ctx context.Context, title string) error
 	SetDescription(ctx context.Context, about string) error
+
+	InviteLinks() peers.InviteLinks
+	ToSupergroup() (peers.Supergroup, bool)
+	ToBroadcast() (peers.Broadcast, bool)
 }
 
 var _ = []Chat{
@@ -75,7 +93,7 @@ var _ = []Chat{
 	peers.Channel{},
 }
 
-func (b *BotAPI) resolveChatID(ctx context.Context, id oas.ID) (Chat, error) {
+func (b *BotAPI) resolveIDToChat(ctx context.Context, id oas.ID) (Chat, error) {
 	p, err := b.resolveID(ctx, id)
 	if err != nil {
 		return nil, err

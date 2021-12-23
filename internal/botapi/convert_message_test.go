@@ -74,7 +74,7 @@ func TestBotAPI_convertToBotAPIEntities(t *testing.T) {
 			"MentionName",
 			&tg.MessageEntityMentionName{Offset: 1, Length: 10, UserID: 10},
 			oas.MessageEntity{Type: oas.MessageEntityTypeTextMention, Offset: 1, Length: 10,
-				User: oas.NewOptUser(convertToBotAPIUser(testUser()))},
+				User: oas.NewOptUser(convertRawToBotAPIUser(testUser()))},
 		},
 		{
 			"Phone",

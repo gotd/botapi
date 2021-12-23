@@ -446,7 +446,7 @@ func (b *BotAPI) convertPlainMessage(ctx context.Context, m *tg.Message) (r oas.
 	if m.Out {
 		self, err := b.peers.Self(ctx)
 		if err == nil {
-			r.From.SetTo(convertToBotAPIUser(self.Raw()))
+			r.From.SetTo(convertToBotAPIUser(self))
 		}
 	} else if fromID, ok := m.GetFromID(); ok {
 		// FIXME(tdakkota): set service IDs.

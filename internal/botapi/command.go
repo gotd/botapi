@@ -54,7 +54,7 @@ func (b *BotAPI) convertToBotCommandScopeClass(
 		}
 		return &tg.BotCommandScopePeerUser{
 			Peer:   p.InputPeer(),
-			UserID: user.AsInput(),
+			UserID: user.InputUser(),
 		}, nil
 	default:
 		return nil, errors.Errorf("unknown peer type %q", scope.Type)
