@@ -167,12 +167,6 @@ func TestUnimplemented(t *testing.T) {
 	}
 
 	{
-		_, err := b.GetUserProfilePhotos(ctx, oas.GetUserProfilePhotos{})
-		var implErr *NotImplementedError
-		a.ErrorAs(err, &implErr)
-	}
-
-	{
 		_, err := b.GetWebhookInfo(ctx)
 		var implErr *NotImplementedError
 		a.ErrorAs(err, &implErr)
