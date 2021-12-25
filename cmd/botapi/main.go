@@ -123,7 +123,7 @@ func run(ctx context.Context) error {
 
 		log.Info("New request")
 		if err := p.Do(r.Context(), token, func(client *botapi.BotAPI) error {
-			r.URL.Path = method
+			r.URL.Path = botapi.CorrectMethod(method)
 			oas.NewServer(client).ServeHTTP(w, r)
 			return nil
 		}); err != nil {
