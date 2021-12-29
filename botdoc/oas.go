@@ -108,6 +108,8 @@ func (a API) typeOAS(f Field) *ogen.Schema {
 			p.Ref = "#/components/schemas/ID"
 		case "String or String":
 			p.Type = "string"
+		case "InlineKeyboardMarkup or ReplyKeyboardMarkup or ReplyKeyboardRemove or ForceReply":
+			p.Ref = "#/components/schemas/SendReplyMarkup"
 		default:
 			for _, s := range t.Sum {
 				p.OneOf = append(p.OneOf, a.typeOAS(Field{Type: s}))
@@ -237,6 +239,14 @@ Schemas:
 	c.Schemas["ResultInt"] = resultFor(&ogen.Schema{
 		Type: "integer",
 	})
+	c.Schemas["SendReplyMarkup"] = &ogen.Schema{
+		OneOf: []*ogen.Schema{
+			{Ref: "#/components/schemas/InlineKeyboardMarkup"},
+			{Ref: "#/components/schemas/ReplyKeyboardMarkup"},
+			{Ref: "#/components/schemas/ReplyKeyboardRemove"},
+			{Ref: "#/components/schemas/ForceReply"},
+		},
+	}
 	addResponse := func(name, ref, description string) {
 		c.Responses[name] = &ogen.Response{
 			Description: description,
