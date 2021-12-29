@@ -729,30 +729,6 @@ func (s CopyMessage) Validate() error {
 	}
 	return nil
 }
-func (s CopyMessageReplyMarkup) Validate() error {
-	switch s.Type {
-	case InlineKeyboardMarkupCopyMessageReplyMarkup:
-		if err := s.InlineKeyboardMarkup.Validate(); err != nil {
-			return err
-		}
-		return nil
-	case ReplyKeyboardMarkupCopyMessageReplyMarkup:
-		if err := s.ReplyKeyboardMarkup.Validate(); err != nil {
-			return err
-		}
-		return nil
-	case ReplyKeyboardRemoveCopyMessageReplyMarkup:
-		return nil // no validation needed
-	case ForceReplyCopyMessageReplyMarkup:
-		if err := s.ForceReply.Validate(); err != nil {
-			return err
-		}
-		return nil
-	default:
-		return errors.Errorf("invalid type %q", s.Type)
-	}
-}
-
 func (s CreateChatInviteLink) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
@@ -7135,30 +7111,6 @@ func (s SendAnimation) Validate() error {
 	}
 	return nil
 }
-func (s SendAnimationReplyMarkup) Validate() error {
-	switch s.Type {
-	case InlineKeyboardMarkupSendAnimationReplyMarkup:
-		if err := s.InlineKeyboardMarkup.Validate(); err != nil {
-			return err
-		}
-		return nil
-	case ReplyKeyboardMarkupSendAnimationReplyMarkup:
-		if err := s.ReplyKeyboardMarkup.Validate(); err != nil {
-			return err
-		}
-		return nil
-	case ReplyKeyboardRemoveSendAnimationReplyMarkup:
-		return nil // no validation needed
-	case ForceReplySendAnimationReplyMarkup:
-		if err := s.ForceReply.Validate(); err != nil {
-			return err
-		}
-		return nil
-	default:
-		return errors.Errorf("invalid type %q", s.Type)
-	}
-}
-
 func (s SendAudio) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
@@ -7263,30 +7215,6 @@ func (s SendAudio) Validate() error {
 	}
 	return nil
 }
-func (s SendAudioReplyMarkup) Validate() error {
-	switch s.Type {
-	case InlineKeyboardMarkupSendAudioReplyMarkup:
-		if err := s.InlineKeyboardMarkup.Validate(); err != nil {
-			return err
-		}
-		return nil
-	case ReplyKeyboardMarkupSendAudioReplyMarkup:
-		if err := s.ReplyKeyboardMarkup.Validate(); err != nil {
-			return err
-		}
-		return nil
-	case ReplyKeyboardRemoveSendAudioReplyMarkup:
-		return nil // no validation needed
-	case ForceReplySendAudioReplyMarkup:
-		if err := s.ForceReply.Validate(); err != nil {
-			return err
-		}
-		return nil
-	default:
-		return errors.Errorf("invalid type %q", s.Type)
-	}
-}
-
 func (s SendContact) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
@@ -7340,30 +7268,6 @@ func (s SendContact) Validate() error {
 	}
 	return nil
 }
-func (s SendContactReplyMarkup) Validate() error {
-	switch s.Type {
-	case InlineKeyboardMarkupSendContactReplyMarkup:
-		if err := s.InlineKeyboardMarkup.Validate(); err != nil {
-			return err
-		}
-		return nil
-	case ReplyKeyboardMarkupSendContactReplyMarkup:
-		if err := s.ReplyKeyboardMarkup.Validate(); err != nil {
-			return err
-		}
-		return nil
-	case ReplyKeyboardRemoveSendContactReplyMarkup:
-		return nil // no validation needed
-	case ForceReplySendContactReplyMarkup:
-		if err := s.ForceReply.Validate(); err != nil {
-			return err
-		}
-		return nil
-	default:
-		return errors.Errorf("invalid type %q", s.Type)
-	}
-}
-
 func (s SendDice) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
@@ -7390,30 +7294,6 @@ func (s SendDice) Validate() error {
 	}
 	return nil
 }
-func (s SendDiceReplyMarkup) Validate() error {
-	switch s.Type {
-	case InlineKeyboardMarkupSendDiceReplyMarkup:
-		if err := s.InlineKeyboardMarkup.Validate(); err != nil {
-			return err
-		}
-		return nil
-	case ReplyKeyboardMarkupSendDiceReplyMarkup:
-		if err := s.ReplyKeyboardMarkup.Validate(); err != nil {
-			return err
-		}
-		return nil
-	case ReplyKeyboardRemoveSendDiceReplyMarkup:
-		return nil // no validation needed
-	case ForceReplySendDiceReplyMarkup:
-		if err := s.ForceReply.Validate(); err != nil {
-			return err
-		}
-		return nil
-	default:
-		return errors.Errorf("invalid type %q", s.Type)
-	}
-}
-
 func (s SendDocument) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
@@ -7492,30 +7372,6 @@ func (s SendDocument) Validate() error {
 	}
 	return nil
 }
-func (s SendDocumentReplyMarkup) Validate() error {
-	switch s.Type {
-	case InlineKeyboardMarkupSendDocumentReplyMarkup:
-		if err := s.InlineKeyboardMarkup.Validate(); err != nil {
-			return err
-		}
-		return nil
-	case ReplyKeyboardMarkupSendDocumentReplyMarkup:
-		if err := s.ReplyKeyboardMarkup.Validate(); err != nil {
-			return err
-		}
-		return nil
-	case ReplyKeyboardRemoveSendDocumentReplyMarkup:
-		return nil // no validation needed
-	case ForceReplySendDocumentReplyMarkup:
-		if err := s.ForceReply.Validate(); err != nil {
-			return err
-		}
-		return nil
-	default:
-		return errors.Errorf("invalid type %q", s.Type)
-	}
-}
-
 func (s SendGame) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
@@ -7833,30 +7689,6 @@ func (s SendLocation) Validate() error {
 	}
 	return nil
 }
-func (s SendLocationReplyMarkup) Validate() error {
-	switch s.Type {
-	case InlineKeyboardMarkupSendLocationReplyMarkup:
-		if err := s.InlineKeyboardMarkup.Validate(); err != nil {
-			return err
-		}
-		return nil
-	case ReplyKeyboardMarkupSendLocationReplyMarkup:
-		if err := s.ReplyKeyboardMarkup.Validate(); err != nil {
-			return err
-		}
-		return nil
-	case ReplyKeyboardRemoveSendLocationReplyMarkup:
-		return nil // no validation needed
-	case ForceReplySendLocationReplyMarkup:
-		if err := s.ForceReply.Validate(); err != nil {
-			return err
-		}
-		return nil
-	default:
-		return errors.Errorf("invalid type %q", s.Type)
-	}
-}
-
 func (s SendMediaGroup) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
@@ -7989,30 +7821,6 @@ func (s SendMessage) Validate() error {
 	}
 	return nil
 }
-func (s SendMessageReplyMarkup) Validate() error {
-	switch s.Type {
-	case InlineKeyboardMarkupSendMessageReplyMarkup:
-		if err := s.InlineKeyboardMarkup.Validate(); err != nil {
-			return err
-		}
-		return nil
-	case ReplyKeyboardMarkupSendMessageReplyMarkup:
-		if err := s.ReplyKeyboardMarkup.Validate(); err != nil {
-			return err
-		}
-		return nil
-	case ReplyKeyboardRemoveSendMessageReplyMarkup:
-		return nil // no validation needed
-	case ForceReplySendMessageReplyMarkup:
-		if err := s.ForceReply.Validate(); err != nil {
-			return err
-		}
-		return nil
-	default:
-		return errors.Errorf("invalid type %q", s.Type)
-	}
-}
-
 func (s SendPhoto) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
@@ -8091,30 +7899,6 @@ func (s SendPhoto) Validate() error {
 	}
 	return nil
 }
-func (s SendPhotoReplyMarkup) Validate() error {
-	switch s.Type {
-	case InlineKeyboardMarkupSendPhotoReplyMarkup:
-		if err := s.InlineKeyboardMarkup.Validate(); err != nil {
-			return err
-		}
-		return nil
-	case ReplyKeyboardMarkupSendPhotoReplyMarkup:
-		if err := s.ReplyKeyboardMarkup.Validate(); err != nil {
-			return err
-		}
-		return nil
-	case ReplyKeyboardRemoveSendPhotoReplyMarkup:
-		return nil // no validation needed
-	case ForceReplySendPhotoReplyMarkup:
-		if err := s.ForceReply.Validate(); err != nil {
-			return err
-		}
-		return nil
-	default:
-		return errors.Errorf("invalid type %q", s.Type)
-	}
-}
-
 func (s SendPoll) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
@@ -8223,21 +8007,21 @@ func (s SendPoll) Validate() error {
 	}
 	return nil
 }
-func (s SendPollReplyMarkup) Validate() error {
+func (s SendReplyMarkup) Validate() error {
 	switch s.Type {
-	case InlineKeyboardMarkupSendPollReplyMarkup:
+	case InlineKeyboardMarkupSendReplyMarkup:
 		if err := s.InlineKeyboardMarkup.Validate(); err != nil {
 			return err
 		}
 		return nil
-	case ReplyKeyboardMarkupSendPollReplyMarkup:
+	case ReplyKeyboardMarkupSendReplyMarkup:
 		if err := s.ReplyKeyboardMarkup.Validate(); err != nil {
 			return err
 		}
 		return nil
-	case ReplyKeyboardRemoveSendPollReplyMarkup:
+	case ReplyKeyboardRemoveSendReplyMarkup:
 		return nil // no validation needed
-	case ForceReplySendPollReplyMarkup:
+	case ForceReplySendReplyMarkup:
 		if err := s.ForceReply.Validate(); err != nil {
 			return err
 		}
@@ -8273,30 +8057,6 @@ func (s SendSticker) Validate() error {
 	}
 	return nil
 }
-func (s SendStickerReplyMarkup) Validate() error {
-	switch s.Type {
-	case InlineKeyboardMarkupSendStickerReplyMarkup:
-		if err := s.InlineKeyboardMarkup.Validate(); err != nil {
-			return err
-		}
-		return nil
-	case ReplyKeyboardMarkupSendStickerReplyMarkup:
-		if err := s.ReplyKeyboardMarkup.Validate(); err != nil {
-			return err
-		}
-		return nil
-	case ReplyKeyboardRemoveSendStickerReplyMarkup:
-		return nil // no validation needed
-	case ForceReplySendStickerReplyMarkup:
-		if err := s.ForceReply.Validate(); err != nil {
-			return err
-		}
-		return nil
-	default:
-		return errors.Errorf("invalid type %q", s.Type)
-	}
-}
-
 func (s SendVenue) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
@@ -8345,30 +8105,6 @@ func (s SendVenue) Validate() error {
 	}
 	return nil
 }
-func (s SendVenueReplyMarkup) Validate() error {
-	switch s.Type {
-	case InlineKeyboardMarkupSendVenueReplyMarkup:
-		if err := s.InlineKeyboardMarkup.Validate(); err != nil {
-			return err
-		}
-		return nil
-	case ReplyKeyboardMarkupSendVenueReplyMarkup:
-		if err := s.ReplyKeyboardMarkup.Validate(); err != nil {
-			return err
-		}
-		return nil
-	case ReplyKeyboardRemoveSendVenueReplyMarkup:
-		return nil // no validation needed
-	case ForceReplySendVenueReplyMarkup:
-		if err := s.ForceReply.Validate(); err != nil {
-			return err
-		}
-		return nil
-	default:
-		return errors.Errorf("invalid type %q", s.Type)
-	}
-}
-
 func (s SendVideo) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
@@ -8577,54 +8313,6 @@ func (s SendVideoNote) Validate() error {
 	}
 	return nil
 }
-func (s SendVideoNoteReplyMarkup) Validate() error {
-	switch s.Type {
-	case InlineKeyboardMarkupSendVideoNoteReplyMarkup:
-		if err := s.InlineKeyboardMarkup.Validate(); err != nil {
-			return err
-		}
-		return nil
-	case ReplyKeyboardMarkupSendVideoNoteReplyMarkup:
-		if err := s.ReplyKeyboardMarkup.Validate(); err != nil {
-			return err
-		}
-		return nil
-	case ReplyKeyboardRemoveSendVideoNoteReplyMarkup:
-		return nil // no validation needed
-	case ForceReplySendVideoNoteReplyMarkup:
-		if err := s.ForceReply.Validate(); err != nil {
-			return err
-		}
-		return nil
-	default:
-		return errors.Errorf("invalid type %q", s.Type)
-	}
-}
-
-func (s SendVideoReplyMarkup) Validate() error {
-	switch s.Type {
-	case InlineKeyboardMarkupSendVideoReplyMarkup:
-		if err := s.InlineKeyboardMarkup.Validate(); err != nil {
-			return err
-		}
-		return nil
-	case ReplyKeyboardMarkupSendVideoReplyMarkup:
-		if err := s.ReplyKeyboardMarkup.Validate(); err != nil {
-			return err
-		}
-		return nil
-	case ReplyKeyboardRemoveSendVideoReplyMarkup:
-		return nil // no validation needed
-	case ForceReplySendVideoReplyMarkup:
-		if err := s.ForceReply.Validate(); err != nil {
-			return err
-		}
-		return nil
-	default:
-		return errors.Errorf("invalid type %q", s.Type)
-	}
-}
-
 func (s SendVoice) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
@@ -8729,30 +8417,6 @@ func (s SendVoice) Validate() error {
 	}
 	return nil
 }
-func (s SendVoiceReplyMarkup) Validate() error {
-	switch s.Type {
-	case InlineKeyboardMarkupSendVoiceReplyMarkup:
-		if err := s.InlineKeyboardMarkup.Validate(); err != nil {
-			return err
-		}
-		return nil
-	case ReplyKeyboardMarkupSendVoiceReplyMarkup:
-		if err := s.ReplyKeyboardMarkup.Validate(); err != nil {
-			return err
-		}
-		return nil
-	case ReplyKeyboardRemoveSendVoiceReplyMarkup:
-		return nil // no validation needed
-	case ForceReplySendVoiceReplyMarkup:
-		if err := s.ForceReply.Validate(); err != nil {
-			return err
-		}
-		return nil
-	default:
-		return errors.Errorf("invalid type %q", s.Type)
-	}
-}
-
 func (s SetChatAdministratorCustomTitle) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {

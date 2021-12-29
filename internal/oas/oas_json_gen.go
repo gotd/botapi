@@ -2643,7 +2643,7 @@ func (s *CopyMessage) Decode(d *jx.Decoder) error {
 			}
 		case "reply_markup":
 			s.ReplyMarkup = nil
-			var elem CopyMessageReplyMarkup
+			var elem SendReplyMarkup
 			if err := elem.Decode(d); err != nil {
 				return err
 			}
@@ -2653,92 +2653,6 @@ func (s *CopyMessage) Decode(d *jx.Decoder) error {
 		}
 		return nil
 	})
-}
-
-// Encode encodes CopyMessageReplyMarkup as json.
-func (s CopyMessageReplyMarkup) Encode(e *jx.Encoder) {
-	switch s.Type {
-	case InlineKeyboardMarkupCopyMessageReplyMarkup:
-		s.InlineKeyboardMarkup.Encode(e)
-	case ReplyKeyboardMarkupCopyMessageReplyMarkup:
-		s.ReplyKeyboardMarkup.Encode(e)
-	case ReplyKeyboardRemoveCopyMessageReplyMarkup:
-		s.ReplyKeyboardRemove.Encode(e)
-	case ForceReplyCopyMessageReplyMarkup:
-		s.ForceReply.Encode(e)
-	}
-}
-
-// Decode decodes CopyMessageReplyMarkup from json.
-func (s *CopyMessageReplyMarkup) Decode(d *jx.Decoder) error {
-	if s == nil {
-		return errors.New(`invalid: unable to decode CopyMessageReplyMarkup to nil`)
-	}
-	// Sum type fields.
-	if d.Next() != jx.Object {
-		return errors.Errorf("unexpected json type %q", d.Next())
-	}
-	var found bool
-	if err := d.Capture(func(d *jx.Decoder) error {
-		return d.ObjBytes(func(d *jx.Decoder, key []byte) error {
-			if found {
-				return d.Skip()
-			}
-			switch string(key) {
-			case "inline_keyboard":
-				found = true
-				s.Type = InlineKeyboardMarkupCopyMessageReplyMarkup
-			case "keyboard":
-				found = true
-				s.Type = ReplyKeyboardMarkupCopyMessageReplyMarkup
-			case "resize_keyboard":
-				found = true
-				s.Type = ReplyKeyboardMarkupCopyMessageReplyMarkup
-			case "one_time_keyboard":
-				found = true
-				s.Type = ReplyKeyboardMarkupCopyMessageReplyMarkup
-			case "remove_keyboard":
-				found = true
-				s.Type = ReplyKeyboardRemoveCopyMessageReplyMarkup
-			case "force_reply":
-				found = true
-				s.Type = ForceReplyCopyMessageReplyMarkup
-			case "input_field_placeholder":
-				found = true
-				s.Type = ForceReplyCopyMessageReplyMarkup
-			case "selective":
-				found = true
-				s.Type = ForceReplyCopyMessageReplyMarkup
-			}
-			return d.Skip()
-		})
-	}); err != nil {
-		return errors.Wrap(err, "capture")
-	}
-	if !found {
-		return errors.New("unable to detect sum type variant")
-	}
-	switch s.Type {
-	case InlineKeyboardMarkupCopyMessageReplyMarkup:
-		if err := s.InlineKeyboardMarkup.Decode(d); err != nil {
-			return err
-		}
-	case ReplyKeyboardMarkupCopyMessageReplyMarkup:
-		if err := s.ReplyKeyboardMarkup.Decode(d); err != nil {
-			return err
-		}
-	case ReplyKeyboardRemoveCopyMessageReplyMarkup:
-		if err := s.ReplyKeyboardRemove.Decode(d); err != nil {
-			return err
-		}
-	case ForceReplyCopyMessageReplyMarkup:
-		if err := s.ForceReply.Decode(d); err != nil {
-			return err
-		}
-	default:
-		return errors.Errorf("inferred invalid type: %s", s.Type)
-	}
-	return nil
 }
 
 // Encode implements json.Marshaler.
@@ -14327,7 +14241,7 @@ func (s *SendAnimation) Decode(d *jx.Decoder) error {
 			}
 		case "reply_markup":
 			s.ReplyMarkup = nil
-			var elem SendAnimationReplyMarkup
+			var elem SendReplyMarkup
 			if err := elem.Decode(d); err != nil {
 				return err
 			}
@@ -14337,92 +14251,6 @@ func (s *SendAnimation) Decode(d *jx.Decoder) error {
 		}
 		return nil
 	})
-}
-
-// Encode encodes SendAnimationReplyMarkup as json.
-func (s SendAnimationReplyMarkup) Encode(e *jx.Encoder) {
-	switch s.Type {
-	case InlineKeyboardMarkupSendAnimationReplyMarkup:
-		s.InlineKeyboardMarkup.Encode(e)
-	case ReplyKeyboardMarkupSendAnimationReplyMarkup:
-		s.ReplyKeyboardMarkup.Encode(e)
-	case ReplyKeyboardRemoveSendAnimationReplyMarkup:
-		s.ReplyKeyboardRemove.Encode(e)
-	case ForceReplySendAnimationReplyMarkup:
-		s.ForceReply.Encode(e)
-	}
-}
-
-// Decode decodes SendAnimationReplyMarkup from json.
-func (s *SendAnimationReplyMarkup) Decode(d *jx.Decoder) error {
-	if s == nil {
-		return errors.New(`invalid: unable to decode SendAnimationReplyMarkup to nil`)
-	}
-	// Sum type fields.
-	if d.Next() != jx.Object {
-		return errors.Errorf("unexpected json type %q", d.Next())
-	}
-	var found bool
-	if err := d.Capture(func(d *jx.Decoder) error {
-		return d.ObjBytes(func(d *jx.Decoder, key []byte) error {
-			if found {
-				return d.Skip()
-			}
-			switch string(key) {
-			case "inline_keyboard":
-				found = true
-				s.Type = InlineKeyboardMarkupSendAnimationReplyMarkup
-			case "keyboard":
-				found = true
-				s.Type = ReplyKeyboardMarkupSendAnimationReplyMarkup
-			case "resize_keyboard":
-				found = true
-				s.Type = ReplyKeyboardMarkupSendAnimationReplyMarkup
-			case "one_time_keyboard":
-				found = true
-				s.Type = ReplyKeyboardMarkupSendAnimationReplyMarkup
-			case "remove_keyboard":
-				found = true
-				s.Type = ReplyKeyboardRemoveSendAnimationReplyMarkup
-			case "force_reply":
-				found = true
-				s.Type = ForceReplySendAnimationReplyMarkup
-			case "input_field_placeholder":
-				found = true
-				s.Type = ForceReplySendAnimationReplyMarkup
-			case "selective":
-				found = true
-				s.Type = ForceReplySendAnimationReplyMarkup
-			}
-			return d.Skip()
-		})
-	}); err != nil {
-		return errors.Wrap(err, "capture")
-	}
-	if !found {
-		return errors.New("unable to detect sum type variant")
-	}
-	switch s.Type {
-	case InlineKeyboardMarkupSendAnimationReplyMarkup:
-		if err := s.InlineKeyboardMarkup.Decode(d); err != nil {
-			return err
-		}
-	case ReplyKeyboardMarkupSendAnimationReplyMarkup:
-		if err := s.ReplyKeyboardMarkup.Decode(d); err != nil {
-			return err
-		}
-	case ReplyKeyboardRemoveSendAnimationReplyMarkup:
-		if err := s.ReplyKeyboardRemove.Decode(d); err != nil {
-			return err
-		}
-	case ForceReplySendAnimationReplyMarkup:
-		if err := s.ForceReply.Decode(d); err != nil {
-			return err
-		}
-	default:
-		return errors.Errorf("inferred invalid type: %s", s.Type)
-	}
-	return nil
 }
 
 // Encode implements json.Marshaler.
@@ -14561,7 +14389,7 @@ func (s *SendAudio) Decode(d *jx.Decoder) error {
 			}
 		case "reply_markup":
 			s.ReplyMarkup = nil
-			var elem SendAudioReplyMarkup
+			var elem SendReplyMarkup
 			if err := elem.Decode(d); err != nil {
 				return err
 			}
@@ -14571,92 +14399,6 @@ func (s *SendAudio) Decode(d *jx.Decoder) error {
 		}
 		return nil
 	})
-}
-
-// Encode encodes SendAudioReplyMarkup as json.
-func (s SendAudioReplyMarkup) Encode(e *jx.Encoder) {
-	switch s.Type {
-	case InlineKeyboardMarkupSendAudioReplyMarkup:
-		s.InlineKeyboardMarkup.Encode(e)
-	case ReplyKeyboardMarkupSendAudioReplyMarkup:
-		s.ReplyKeyboardMarkup.Encode(e)
-	case ReplyKeyboardRemoveSendAudioReplyMarkup:
-		s.ReplyKeyboardRemove.Encode(e)
-	case ForceReplySendAudioReplyMarkup:
-		s.ForceReply.Encode(e)
-	}
-}
-
-// Decode decodes SendAudioReplyMarkup from json.
-func (s *SendAudioReplyMarkup) Decode(d *jx.Decoder) error {
-	if s == nil {
-		return errors.New(`invalid: unable to decode SendAudioReplyMarkup to nil`)
-	}
-	// Sum type fields.
-	if d.Next() != jx.Object {
-		return errors.Errorf("unexpected json type %q", d.Next())
-	}
-	var found bool
-	if err := d.Capture(func(d *jx.Decoder) error {
-		return d.ObjBytes(func(d *jx.Decoder, key []byte) error {
-			if found {
-				return d.Skip()
-			}
-			switch string(key) {
-			case "inline_keyboard":
-				found = true
-				s.Type = InlineKeyboardMarkupSendAudioReplyMarkup
-			case "keyboard":
-				found = true
-				s.Type = ReplyKeyboardMarkupSendAudioReplyMarkup
-			case "resize_keyboard":
-				found = true
-				s.Type = ReplyKeyboardMarkupSendAudioReplyMarkup
-			case "one_time_keyboard":
-				found = true
-				s.Type = ReplyKeyboardMarkupSendAudioReplyMarkup
-			case "remove_keyboard":
-				found = true
-				s.Type = ReplyKeyboardRemoveSendAudioReplyMarkup
-			case "force_reply":
-				found = true
-				s.Type = ForceReplySendAudioReplyMarkup
-			case "input_field_placeholder":
-				found = true
-				s.Type = ForceReplySendAudioReplyMarkup
-			case "selective":
-				found = true
-				s.Type = ForceReplySendAudioReplyMarkup
-			}
-			return d.Skip()
-		})
-	}); err != nil {
-		return errors.Wrap(err, "capture")
-	}
-	if !found {
-		return errors.New("unable to detect sum type variant")
-	}
-	switch s.Type {
-	case InlineKeyboardMarkupSendAudioReplyMarkup:
-		if err := s.InlineKeyboardMarkup.Decode(d); err != nil {
-			return err
-		}
-	case ReplyKeyboardMarkupSendAudioReplyMarkup:
-		if err := s.ReplyKeyboardMarkup.Decode(d); err != nil {
-			return err
-		}
-	case ReplyKeyboardRemoveSendAudioReplyMarkup:
-		if err := s.ReplyKeyboardRemove.Decode(d); err != nil {
-			return err
-		}
-	case ForceReplySendAudioReplyMarkup:
-		if err := s.ForceReply.Decode(d); err != nil {
-			return err
-		}
-	default:
-		return errors.Errorf("inferred invalid type: %s", s.Type)
-	}
-	return nil
 }
 
 // Encode implements json.Marshaler.
@@ -14784,7 +14526,7 @@ func (s *SendContact) Decode(d *jx.Decoder) error {
 			}
 		case "reply_markup":
 			s.ReplyMarkup = nil
-			var elem SendContactReplyMarkup
+			var elem SendReplyMarkup
 			if err := elem.Decode(d); err != nil {
 				return err
 			}
@@ -14794,92 +14536,6 @@ func (s *SendContact) Decode(d *jx.Decoder) error {
 		}
 		return nil
 	})
-}
-
-// Encode encodes SendContactReplyMarkup as json.
-func (s SendContactReplyMarkup) Encode(e *jx.Encoder) {
-	switch s.Type {
-	case InlineKeyboardMarkupSendContactReplyMarkup:
-		s.InlineKeyboardMarkup.Encode(e)
-	case ReplyKeyboardMarkupSendContactReplyMarkup:
-		s.ReplyKeyboardMarkup.Encode(e)
-	case ReplyKeyboardRemoveSendContactReplyMarkup:
-		s.ReplyKeyboardRemove.Encode(e)
-	case ForceReplySendContactReplyMarkup:
-		s.ForceReply.Encode(e)
-	}
-}
-
-// Decode decodes SendContactReplyMarkup from json.
-func (s *SendContactReplyMarkup) Decode(d *jx.Decoder) error {
-	if s == nil {
-		return errors.New(`invalid: unable to decode SendContactReplyMarkup to nil`)
-	}
-	// Sum type fields.
-	if d.Next() != jx.Object {
-		return errors.Errorf("unexpected json type %q", d.Next())
-	}
-	var found bool
-	if err := d.Capture(func(d *jx.Decoder) error {
-		return d.ObjBytes(func(d *jx.Decoder, key []byte) error {
-			if found {
-				return d.Skip()
-			}
-			switch string(key) {
-			case "inline_keyboard":
-				found = true
-				s.Type = InlineKeyboardMarkupSendContactReplyMarkup
-			case "keyboard":
-				found = true
-				s.Type = ReplyKeyboardMarkupSendContactReplyMarkup
-			case "resize_keyboard":
-				found = true
-				s.Type = ReplyKeyboardMarkupSendContactReplyMarkup
-			case "one_time_keyboard":
-				found = true
-				s.Type = ReplyKeyboardMarkupSendContactReplyMarkup
-			case "remove_keyboard":
-				found = true
-				s.Type = ReplyKeyboardRemoveSendContactReplyMarkup
-			case "force_reply":
-				found = true
-				s.Type = ForceReplySendContactReplyMarkup
-			case "input_field_placeholder":
-				found = true
-				s.Type = ForceReplySendContactReplyMarkup
-			case "selective":
-				found = true
-				s.Type = ForceReplySendContactReplyMarkup
-			}
-			return d.Skip()
-		})
-	}); err != nil {
-		return errors.Wrap(err, "capture")
-	}
-	if !found {
-		return errors.New("unable to detect sum type variant")
-	}
-	switch s.Type {
-	case InlineKeyboardMarkupSendContactReplyMarkup:
-		if err := s.InlineKeyboardMarkup.Decode(d); err != nil {
-			return err
-		}
-	case ReplyKeyboardMarkupSendContactReplyMarkup:
-		if err := s.ReplyKeyboardMarkup.Decode(d); err != nil {
-			return err
-		}
-	case ReplyKeyboardRemoveSendContactReplyMarkup:
-		if err := s.ReplyKeyboardRemove.Decode(d); err != nil {
-			return err
-		}
-	case ForceReplySendContactReplyMarkup:
-		if err := s.ForceReply.Decode(d); err != nil {
-			return err
-		}
-	default:
-		return errors.Errorf("inferred invalid type: %s", s.Type)
-	}
-	return nil
 }
 
 // Encode implements json.Marshaler.
@@ -14944,7 +14600,7 @@ func (s *SendDice) Decode(d *jx.Decoder) error {
 			}
 		case "reply_markup":
 			s.ReplyMarkup = nil
-			var elem SendDiceReplyMarkup
+			var elem SendReplyMarkup
 			if err := elem.Decode(d); err != nil {
 				return err
 			}
@@ -14954,92 +14610,6 @@ func (s *SendDice) Decode(d *jx.Decoder) error {
 		}
 		return nil
 	})
-}
-
-// Encode encodes SendDiceReplyMarkup as json.
-func (s SendDiceReplyMarkup) Encode(e *jx.Encoder) {
-	switch s.Type {
-	case InlineKeyboardMarkupSendDiceReplyMarkup:
-		s.InlineKeyboardMarkup.Encode(e)
-	case ReplyKeyboardMarkupSendDiceReplyMarkup:
-		s.ReplyKeyboardMarkup.Encode(e)
-	case ReplyKeyboardRemoveSendDiceReplyMarkup:
-		s.ReplyKeyboardRemove.Encode(e)
-	case ForceReplySendDiceReplyMarkup:
-		s.ForceReply.Encode(e)
-	}
-}
-
-// Decode decodes SendDiceReplyMarkup from json.
-func (s *SendDiceReplyMarkup) Decode(d *jx.Decoder) error {
-	if s == nil {
-		return errors.New(`invalid: unable to decode SendDiceReplyMarkup to nil`)
-	}
-	// Sum type fields.
-	if d.Next() != jx.Object {
-		return errors.Errorf("unexpected json type %q", d.Next())
-	}
-	var found bool
-	if err := d.Capture(func(d *jx.Decoder) error {
-		return d.ObjBytes(func(d *jx.Decoder, key []byte) error {
-			if found {
-				return d.Skip()
-			}
-			switch string(key) {
-			case "inline_keyboard":
-				found = true
-				s.Type = InlineKeyboardMarkupSendDiceReplyMarkup
-			case "keyboard":
-				found = true
-				s.Type = ReplyKeyboardMarkupSendDiceReplyMarkup
-			case "resize_keyboard":
-				found = true
-				s.Type = ReplyKeyboardMarkupSendDiceReplyMarkup
-			case "one_time_keyboard":
-				found = true
-				s.Type = ReplyKeyboardMarkupSendDiceReplyMarkup
-			case "remove_keyboard":
-				found = true
-				s.Type = ReplyKeyboardRemoveSendDiceReplyMarkup
-			case "force_reply":
-				found = true
-				s.Type = ForceReplySendDiceReplyMarkup
-			case "input_field_placeholder":
-				found = true
-				s.Type = ForceReplySendDiceReplyMarkup
-			case "selective":
-				found = true
-				s.Type = ForceReplySendDiceReplyMarkup
-			}
-			return d.Skip()
-		})
-	}); err != nil {
-		return errors.Wrap(err, "capture")
-	}
-	if !found {
-		return errors.New("unable to detect sum type variant")
-	}
-	switch s.Type {
-	case InlineKeyboardMarkupSendDiceReplyMarkup:
-		if err := s.InlineKeyboardMarkup.Decode(d); err != nil {
-			return err
-		}
-	case ReplyKeyboardMarkupSendDiceReplyMarkup:
-		if err := s.ReplyKeyboardMarkup.Decode(d); err != nil {
-			return err
-		}
-	case ReplyKeyboardRemoveSendDiceReplyMarkup:
-		if err := s.ReplyKeyboardRemove.Decode(d); err != nil {
-			return err
-		}
-	case ForceReplySendDiceReplyMarkup:
-		if err := s.ForceReply.Decode(d); err != nil {
-			return err
-		}
-	default:
-		return errors.Errorf("inferred invalid type: %s", s.Type)
-	}
-	return nil
 }
 
 // Encode implements json.Marshaler.
@@ -15160,7 +14730,7 @@ func (s *SendDocument) Decode(d *jx.Decoder) error {
 			}
 		case "reply_markup":
 			s.ReplyMarkup = nil
-			var elem SendDocumentReplyMarkup
+			var elem SendReplyMarkup
 			if err := elem.Decode(d); err != nil {
 				return err
 			}
@@ -15170,92 +14740,6 @@ func (s *SendDocument) Decode(d *jx.Decoder) error {
 		}
 		return nil
 	})
-}
-
-// Encode encodes SendDocumentReplyMarkup as json.
-func (s SendDocumentReplyMarkup) Encode(e *jx.Encoder) {
-	switch s.Type {
-	case InlineKeyboardMarkupSendDocumentReplyMarkup:
-		s.InlineKeyboardMarkup.Encode(e)
-	case ReplyKeyboardMarkupSendDocumentReplyMarkup:
-		s.ReplyKeyboardMarkup.Encode(e)
-	case ReplyKeyboardRemoveSendDocumentReplyMarkup:
-		s.ReplyKeyboardRemove.Encode(e)
-	case ForceReplySendDocumentReplyMarkup:
-		s.ForceReply.Encode(e)
-	}
-}
-
-// Decode decodes SendDocumentReplyMarkup from json.
-func (s *SendDocumentReplyMarkup) Decode(d *jx.Decoder) error {
-	if s == nil {
-		return errors.New(`invalid: unable to decode SendDocumentReplyMarkup to nil`)
-	}
-	// Sum type fields.
-	if d.Next() != jx.Object {
-		return errors.Errorf("unexpected json type %q", d.Next())
-	}
-	var found bool
-	if err := d.Capture(func(d *jx.Decoder) error {
-		return d.ObjBytes(func(d *jx.Decoder, key []byte) error {
-			if found {
-				return d.Skip()
-			}
-			switch string(key) {
-			case "inline_keyboard":
-				found = true
-				s.Type = InlineKeyboardMarkupSendDocumentReplyMarkup
-			case "keyboard":
-				found = true
-				s.Type = ReplyKeyboardMarkupSendDocumentReplyMarkup
-			case "resize_keyboard":
-				found = true
-				s.Type = ReplyKeyboardMarkupSendDocumentReplyMarkup
-			case "one_time_keyboard":
-				found = true
-				s.Type = ReplyKeyboardMarkupSendDocumentReplyMarkup
-			case "remove_keyboard":
-				found = true
-				s.Type = ReplyKeyboardRemoveSendDocumentReplyMarkup
-			case "force_reply":
-				found = true
-				s.Type = ForceReplySendDocumentReplyMarkup
-			case "input_field_placeholder":
-				found = true
-				s.Type = ForceReplySendDocumentReplyMarkup
-			case "selective":
-				found = true
-				s.Type = ForceReplySendDocumentReplyMarkup
-			}
-			return d.Skip()
-		})
-	}); err != nil {
-		return errors.Wrap(err, "capture")
-	}
-	if !found {
-		return errors.New("unable to detect sum type variant")
-	}
-	switch s.Type {
-	case InlineKeyboardMarkupSendDocumentReplyMarkup:
-		if err := s.InlineKeyboardMarkup.Decode(d); err != nil {
-			return err
-		}
-	case ReplyKeyboardMarkupSendDocumentReplyMarkup:
-		if err := s.ReplyKeyboardMarkup.Decode(d); err != nil {
-			return err
-		}
-	case ReplyKeyboardRemoveSendDocumentReplyMarkup:
-		if err := s.ReplyKeyboardRemove.Decode(d); err != nil {
-			return err
-		}
-	case ForceReplySendDocumentReplyMarkup:
-		if err := s.ForceReply.Decode(d); err != nil {
-			return err
-		}
-	default:
-		return errors.Errorf("inferred invalid type: %s", s.Type)
-	}
-	return nil
 }
 
 // Encode implements json.Marshaler.
@@ -15714,7 +15198,7 @@ func (s *SendLocation) Decode(d *jx.Decoder) error {
 			}
 		case "reply_markup":
 			s.ReplyMarkup = nil
-			var elem SendLocationReplyMarkup
+			var elem SendReplyMarkup
 			if err := elem.Decode(d); err != nil {
 				return err
 			}
@@ -15724,92 +15208,6 @@ func (s *SendLocation) Decode(d *jx.Decoder) error {
 		}
 		return nil
 	})
-}
-
-// Encode encodes SendLocationReplyMarkup as json.
-func (s SendLocationReplyMarkup) Encode(e *jx.Encoder) {
-	switch s.Type {
-	case InlineKeyboardMarkupSendLocationReplyMarkup:
-		s.InlineKeyboardMarkup.Encode(e)
-	case ReplyKeyboardMarkupSendLocationReplyMarkup:
-		s.ReplyKeyboardMarkup.Encode(e)
-	case ReplyKeyboardRemoveSendLocationReplyMarkup:
-		s.ReplyKeyboardRemove.Encode(e)
-	case ForceReplySendLocationReplyMarkup:
-		s.ForceReply.Encode(e)
-	}
-}
-
-// Decode decodes SendLocationReplyMarkup from json.
-func (s *SendLocationReplyMarkup) Decode(d *jx.Decoder) error {
-	if s == nil {
-		return errors.New(`invalid: unable to decode SendLocationReplyMarkup to nil`)
-	}
-	// Sum type fields.
-	if d.Next() != jx.Object {
-		return errors.Errorf("unexpected json type %q", d.Next())
-	}
-	var found bool
-	if err := d.Capture(func(d *jx.Decoder) error {
-		return d.ObjBytes(func(d *jx.Decoder, key []byte) error {
-			if found {
-				return d.Skip()
-			}
-			switch string(key) {
-			case "inline_keyboard":
-				found = true
-				s.Type = InlineKeyboardMarkupSendLocationReplyMarkup
-			case "keyboard":
-				found = true
-				s.Type = ReplyKeyboardMarkupSendLocationReplyMarkup
-			case "resize_keyboard":
-				found = true
-				s.Type = ReplyKeyboardMarkupSendLocationReplyMarkup
-			case "one_time_keyboard":
-				found = true
-				s.Type = ReplyKeyboardMarkupSendLocationReplyMarkup
-			case "remove_keyboard":
-				found = true
-				s.Type = ReplyKeyboardRemoveSendLocationReplyMarkup
-			case "force_reply":
-				found = true
-				s.Type = ForceReplySendLocationReplyMarkup
-			case "input_field_placeholder":
-				found = true
-				s.Type = ForceReplySendLocationReplyMarkup
-			case "selective":
-				found = true
-				s.Type = ForceReplySendLocationReplyMarkup
-			}
-			return d.Skip()
-		})
-	}); err != nil {
-		return errors.Wrap(err, "capture")
-	}
-	if !found {
-		return errors.New("unable to detect sum type variant")
-	}
-	switch s.Type {
-	case InlineKeyboardMarkupSendLocationReplyMarkup:
-		if err := s.InlineKeyboardMarkup.Decode(d); err != nil {
-			return err
-		}
-	case ReplyKeyboardMarkupSendLocationReplyMarkup:
-		if err := s.ReplyKeyboardMarkup.Decode(d); err != nil {
-			return err
-		}
-	case ReplyKeyboardRemoveSendLocationReplyMarkup:
-		if err := s.ReplyKeyboardRemove.Decode(d); err != nil {
-			return err
-		}
-	case ForceReplySendLocationReplyMarkup:
-		if err := s.ForceReply.Decode(d); err != nil {
-			return err
-		}
-	default:
-		return errors.Errorf("inferred invalid type: %s", s.Type)
-	}
-	return nil
 }
 
 // Encode implements json.Marshaler.
@@ -16069,7 +15467,7 @@ func (s *SendMessage) Decode(d *jx.Decoder) error {
 			}
 		case "reply_markup":
 			s.ReplyMarkup = nil
-			var elem SendMessageReplyMarkup
+			var elem SendReplyMarkup
 			if err := elem.Decode(d); err != nil {
 				return err
 			}
@@ -16079,92 +15477,6 @@ func (s *SendMessage) Decode(d *jx.Decoder) error {
 		}
 		return nil
 	})
-}
-
-// Encode encodes SendMessageReplyMarkup as json.
-func (s SendMessageReplyMarkup) Encode(e *jx.Encoder) {
-	switch s.Type {
-	case InlineKeyboardMarkupSendMessageReplyMarkup:
-		s.InlineKeyboardMarkup.Encode(e)
-	case ReplyKeyboardMarkupSendMessageReplyMarkup:
-		s.ReplyKeyboardMarkup.Encode(e)
-	case ReplyKeyboardRemoveSendMessageReplyMarkup:
-		s.ReplyKeyboardRemove.Encode(e)
-	case ForceReplySendMessageReplyMarkup:
-		s.ForceReply.Encode(e)
-	}
-}
-
-// Decode decodes SendMessageReplyMarkup from json.
-func (s *SendMessageReplyMarkup) Decode(d *jx.Decoder) error {
-	if s == nil {
-		return errors.New(`invalid: unable to decode SendMessageReplyMarkup to nil`)
-	}
-	// Sum type fields.
-	if d.Next() != jx.Object {
-		return errors.Errorf("unexpected json type %q", d.Next())
-	}
-	var found bool
-	if err := d.Capture(func(d *jx.Decoder) error {
-		return d.ObjBytes(func(d *jx.Decoder, key []byte) error {
-			if found {
-				return d.Skip()
-			}
-			switch string(key) {
-			case "inline_keyboard":
-				found = true
-				s.Type = InlineKeyboardMarkupSendMessageReplyMarkup
-			case "keyboard":
-				found = true
-				s.Type = ReplyKeyboardMarkupSendMessageReplyMarkup
-			case "resize_keyboard":
-				found = true
-				s.Type = ReplyKeyboardMarkupSendMessageReplyMarkup
-			case "one_time_keyboard":
-				found = true
-				s.Type = ReplyKeyboardMarkupSendMessageReplyMarkup
-			case "remove_keyboard":
-				found = true
-				s.Type = ReplyKeyboardRemoveSendMessageReplyMarkup
-			case "force_reply":
-				found = true
-				s.Type = ForceReplySendMessageReplyMarkup
-			case "input_field_placeholder":
-				found = true
-				s.Type = ForceReplySendMessageReplyMarkup
-			case "selective":
-				found = true
-				s.Type = ForceReplySendMessageReplyMarkup
-			}
-			return d.Skip()
-		})
-	}); err != nil {
-		return errors.Wrap(err, "capture")
-	}
-	if !found {
-		return errors.New("unable to detect sum type variant")
-	}
-	switch s.Type {
-	case InlineKeyboardMarkupSendMessageReplyMarkup:
-		if err := s.InlineKeyboardMarkup.Decode(d); err != nil {
-			return err
-		}
-	case ReplyKeyboardMarkupSendMessageReplyMarkup:
-		if err := s.ReplyKeyboardMarkup.Decode(d); err != nil {
-			return err
-		}
-	case ReplyKeyboardRemoveSendMessageReplyMarkup:
-		if err := s.ReplyKeyboardRemove.Decode(d); err != nil {
-			return err
-		}
-	case ForceReplySendMessageReplyMarkup:
-		if err := s.ForceReply.Decode(d); err != nil {
-			return err
-		}
-	default:
-		return errors.Errorf("inferred invalid type: %s", s.Type)
-	}
-	return nil
 }
 
 // Encode implements json.Marshaler.
@@ -16267,7 +15579,7 @@ func (s *SendPhoto) Decode(d *jx.Decoder) error {
 			}
 		case "reply_markup":
 			s.ReplyMarkup = nil
-			var elem SendPhotoReplyMarkup
+			var elem SendReplyMarkup
 			if err := elem.Decode(d); err != nil {
 				return err
 			}
@@ -16277,92 +15589,6 @@ func (s *SendPhoto) Decode(d *jx.Decoder) error {
 		}
 		return nil
 	})
-}
-
-// Encode encodes SendPhotoReplyMarkup as json.
-func (s SendPhotoReplyMarkup) Encode(e *jx.Encoder) {
-	switch s.Type {
-	case InlineKeyboardMarkupSendPhotoReplyMarkup:
-		s.InlineKeyboardMarkup.Encode(e)
-	case ReplyKeyboardMarkupSendPhotoReplyMarkup:
-		s.ReplyKeyboardMarkup.Encode(e)
-	case ReplyKeyboardRemoveSendPhotoReplyMarkup:
-		s.ReplyKeyboardRemove.Encode(e)
-	case ForceReplySendPhotoReplyMarkup:
-		s.ForceReply.Encode(e)
-	}
-}
-
-// Decode decodes SendPhotoReplyMarkup from json.
-func (s *SendPhotoReplyMarkup) Decode(d *jx.Decoder) error {
-	if s == nil {
-		return errors.New(`invalid: unable to decode SendPhotoReplyMarkup to nil`)
-	}
-	// Sum type fields.
-	if d.Next() != jx.Object {
-		return errors.Errorf("unexpected json type %q", d.Next())
-	}
-	var found bool
-	if err := d.Capture(func(d *jx.Decoder) error {
-		return d.ObjBytes(func(d *jx.Decoder, key []byte) error {
-			if found {
-				return d.Skip()
-			}
-			switch string(key) {
-			case "inline_keyboard":
-				found = true
-				s.Type = InlineKeyboardMarkupSendPhotoReplyMarkup
-			case "keyboard":
-				found = true
-				s.Type = ReplyKeyboardMarkupSendPhotoReplyMarkup
-			case "resize_keyboard":
-				found = true
-				s.Type = ReplyKeyboardMarkupSendPhotoReplyMarkup
-			case "one_time_keyboard":
-				found = true
-				s.Type = ReplyKeyboardMarkupSendPhotoReplyMarkup
-			case "remove_keyboard":
-				found = true
-				s.Type = ReplyKeyboardRemoveSendPhotoReplyMarkup
-			case "force_reply":
-				found = true
-				s.Type = ForceReplySendPhotoReplyMarkup
-			case "input_field_placeholder":
-				found = true
-				s.Type = ForceReplySendPhotoReplyMarkup
-			case "selective":
-				found = true
-				s.Type = ForceReplySendPhotoReplyMarkup
-			}
-			return d.Skip()
-		})
-	}); err != nil {
-		return errors.Wrap(err, "capture")
-	}
-	if !found {
-		return errors.New("unable to detect sum type variant")
-	}
-	switch s.Type {
-	case InlineKeyboardMarkupSendPhotoReplyMarkup:
-		if err := s.InlineKeyboardMarkup.Decode(d); err != nil {
-			return err
-		}
-	case ReplyKeyboardMarkupSendPhotoReplyMarkup:
-		if err := s.ReplyKeyboardMarkup.Decode(d); err != nil {
-			return err
-		}
-	case ReplyKeyboardRemoveSendPhotoReplyMarkup:
-		if err := s.ReplyKeyboardRemove.Decode(d); err != nil {
-			return err
-		}
-	case ForceReplySendPhotoReplyMarkup:
-		if err := s.ForceReply.Decode(d); err != nil {
-			return err
-		}
-	default:
-		return errors.Errorf("inferred invalid type: %s", s.Type)
-	}
-	return nil
 }
 
 // Encode implements json.Marshaler.
@@ -16549,7 +15775,7 @@ func (s *SendPoll) Decode(d *jx.Decoder) error {
 			}
 		case "reply_markup":
 			s.ReplyMarkup = nil
-			var elem SendPollReplyMarkup
+			var elem SendReplyMarkup
 			if err := elem.Decode(d); err != nil {
 				return err
 			}
@@ -16561,24 +15787,24 @@ func (s *SendPoll) Decode(d *jx.Decoder) error {
 	})
 }
 
-// Encode encodes SendPollReplyMarkup as json.
-func (s SendPollReplyMarkup) Encode(e *jx.Encoder) {
+// Encode encodes SendReplyMarkup as json.
+func (s SendReplyMarkup) Encode(e *jx.Encoder) {
 	switch s.Type {
-	case InlineKeyboardMarkupSendPollReplyMarkup:
+	case InlineKeyboardMarkupSendReplyMarkup:
 		s.InlineKeyboardMarkup.Encode(e)
-	case ReplyKeyboardMarkupSendPollReplyMarkup:
+	case ReplyKeyboardMarkupSendReplyMarkup:
 		s.ReplyKeyboardMarkup.Encode(e)
-	case ReplyKeyboardRemoveSendPollReplyMarkup:
+	case ReplyKeyboardRemoveSendReplyMarkup:
 		s.ReplyKeyboardRemove.Encode(e)
-	case ForceReplySendPollReplyMarkup:
+	case ForceReplySendReplyMarkup:
 		s.ForceReply.Encode(e)
 	}
 }
 
-// Decode decodes SendPollReplyMarkup from json.
-func (s *SendPollReplyMarkup) Decode(d *jx.Decoder) error {
+// Decode decodes SendReplyMarkup from json.
+func (s *SendReplyMarkup) Decode(d *jx.Decoder) error {
 	if s == nil {
-		return errors.New(`invalid: unable to decode SendPollReplyMarkup to nil`)
+		return errors.New(`invalid: unable to decode SendReplyMarkup to nil`)
 	}
 	// Sum type fields.
 	if d.Next() != jx.Object {
@@ -16593,28 +15819,28 @@ func (s *SendPollReplyMarkup) Decode(d *jx.Decoder) error {
 			switch string(key) {
 			case "inline_keyboard":
 				found = true
-				s.Type = InlineKeyboardMarkupSendPollReplyMarkup
+				s.Type = InlineKeyboardMarkupSendReplyMarkup
 			case "keyboard":
 				found = true
-				s.Type = ReplyKeyboardMarkupSendPollReplyMarkup
+				s.Type = ReplyKeyboardMarkupSendReplyMarkup
 			case "resize_keyboard":
 				found = true
-				s.Type = ReplyKeyboardMarkupSendPollReplyMarkup
+				s.Type = ReplyKeyboardMarkupSendReplyMarkup
 			case "one_time_keyboard":
 				found = true
-				s.Type = ReplyKeyboardMarkupSendPollReplyMarkup
+				s.Type = ReplyKeyboardMarkupSendReplyMarkup
 			case "remove_keyboard":
 				found = true
-				s.Type = ReplyKeyboardRemoveSendPollReplyMarkup
+				s.Type = ReplyKeyboardRemoveSendReplyMarkup
 			case "force_reply":
 				found = true
-				s.Type = ForceReplySendPollReplyMarkup
+				s.Type = ForceReplySendReplyMarkup
 			case "input_field_placeholder":
 				found = true
-				s.Type = ForceReplySendPollReplyMarkup
+				s.Type = ForceReplySendReplyMarkup
 			case "selective":
 				found = true
-				s.Type = ForceReplySendPollReplyMarkup
+				s.Type = ForceReplySendReplyMarkup
 			}
 			return d.Skip()
 		})
@@ -16625,19 +15851,19 @@ func (s *SendPollReplyMarkup) Decode(d *jx.Decoder) error {
 		return errors.New("unable to detect sum type variant")
 	}
 	switch s.Type {
-	case InlineKeyboardMarkupSendPollReplyMarkup:
+	case InlineKeyboardMarkupSendReplyMarkup:
 		if err := s.InlineKeyboardMarkup.Decode(d); err != nil {
 			return err
 		}
-	case ReplyKeyboardMarkupSendPollReplyMarkup:
+	case ReplyKeyboardMarkupSendReplyMarkup:
 		if err := s.ReplyKeyboardMarkup.Decode(d); err != nil {
 			return err
 		}
-	case ReplyKeyboardRemoveSendPollReplyMarkup:
+	case ReplyKeyboardRemoveSendReplyMarkup:
 		if err := s.ReplyKeyboardRemove.Decode(d); err != nil {
 			return err
 		}
-	case ForceReplySendPollReplyMarkup:
+	case ForceReplySendReplyMarkup:
 		if err := s.ForceReply.Decode(d); err != nil {
 			return err
 		}
@@ -16709,7 +15935,7 @@ func (s *SendSticker) Decode(d *jx.Decoder) error {
 			}
 		case "reply_markup":
 			s.ReplyMarkup = nil
-			var elem SendStickerReplyMarkup
+			var elem SendReplyMarkup
 			if err := elem.Decode(d); err != nil {
 				return err
 			}
@@ -16719,92 +15945,6 @@ func (s *SendSticker) Decode(d *jx.Decoder) error {
 		}
 		return nil
 	})
-}
-
-// Encode encodes SendStickerReplyMarkup as json.
-func (s SendStickerReplyMarkup) Encode(e *jx.Encoder) {
-	switch s.Type {
-	case InlineKeyboardMarkupSendStickerReplyMarkup:
-		s.InlineKeyboardMarkup.Encode(e)
-	case ReplyKeyboardMarkupSendStickerReplyMarkup:
-		s.ReplyKeyboardMarkup.Encode(e)
-	case ReplyKeyboardRemoveSendStickerReplyMarkup:
-		s.ReplyKeyboardRemove.Encode(e)
-	case ForceReplySendStickerReplyMarkup:
-		s.ForceReply.Encode(e)
-	}
-}
-
-// Decode decodes SendStickerReplyMarkup from json.
-func (s *SendStickerReplyMarkup) Decode(d *jx.Decoder) error {
-	if s == nil {
-		return errors.New(`invalid: unable to decode SendStickerReplyMarkup to nil`)
-	}
-	// Sum type fields.
-	if d.Next() != jx.Object {
-		return errors.Errorf("unexpected json type %q", d.Next())
-	}
-	var found bool
-	if err := d.Capture(func(d *jx.Decoder) error {
-		return d.ObjBytes(func(d *jx.Decoder, key []byte) error {
-			if found {
-				return d.Skip()
-			}
-			switch string(key) {
-			case "inline_keyboard":
-				found = true
-				s.Type = InlineKeyboardMarkupSendStickerReplyMarkup
-			case "keyboard":
-				found = true
-				s.Type = ReplyKeyboardMarkupSendStickerReplyMarkup
-			case "resize_keyboard":
-				found = true
-				s.Type = ReplyKeyboardMarkupSendStickerReplyMarkup
-			case "one_time_keyboard":
-				found = true
-				s.Type = ReplyKeyboardMarkupSendStickerReplyMarkup
-			case "remove_keyboard":
-				found = true
-				s.Type = ReplyKeyboardRemoveSendStickerReplyMarkup
-			case "force_reply":
-				found = true
-				s.Type = ForceReplySendStickerReplyMarkup
-			case "input_field_placeholder":
-				found = true
-				s.Type = ForceReplySendStickerReplyMarkup
-			case "selective":
-				found = true
-				s.Type = ForceReplySendStickerReplyMarkup
-			}
-			return d.Skip()
-		})
-	}); err != nil {
-		return errors.Wrap(err, "capture")
-	}
-	if !found {
-		return errors.New("unable to detect sum type variant")
-	}
-	switch s.Type {
-	case InlineKeyboardMarkupSendStickerReplyMarkup:
-		if err := s.InlineKeyboardMarkup.Decode(d); err != nil {
-			return err
-		}
-	case ReplyKeyboardMarkupSendStickerReplyMarkup:
-		if err := s.ReplyKeyboardMarkup.Decode(d); err != nil {
-			return err
-		}
-	case ReplyKeyboardRemoveSendStickerReplyMarkup:
-		if err := s.ReplyKeyboardRemove.Decode(d); err != nil {
-			return err
-		}
-	case ForceReplySendStickerReplyMarkup:
-		if err := s.ForceReply.Decode(d); err != nil {
-			return err
-		}
-	default:
-		return errors.Errorf("inferred invalid type: %s", s.Type)
-	}
-	return nil
 }
 
 // Encode implements json.Marshaler.
@@ -16932,7 +16072,7 @@ func (s *SendVenue) Decode(d *jx.Decoder) error {
 			}
 		case "reply_markup":
 			s.ReplyMarkup = nil
-			var elem SendVenueReplyMarkup
+			var elem SendReplyMarkup
 			if err := elem.Decode(d); err != nil {
 				return err
 			}
@@ -16942,92 +16082,6 @@ func (s *SendVenue) Decode(d *jx.Decoder) error {
 		}
 		return nil
 	})
-}
-
-// Encode encodes SendVenueReplyMarkup as json.
-func (s SendVenueReplyMarkup) Encode(e *jx.Encoder) {
-	switch s.Type {
-	case InlineKeyboardMarkupSendVenueReplyMarkup:
-		s.InlineKeyboardMarkup.Encode(e)
-	case ReplyKeyboardMarkupSendVenueReplyMarkup:
-		s.ReplyKeyboardMarkup.Encode(e)
-	case ReplyKeyboardRemoveSendVenueReplyMarkup:
-		s.ReplyKeyboardRemove.Encode(e)
-	case ForceReplySendVenueReplyMarkup:
-		s.ForceReply.Encode(e)
-	}
-}
-
-// Decode decodes SendVenueReplyMarkup from json.
-func (s *SendVenueReplyMarkup) Decode(d *jx.Decoder) error {
-	if s == nil {
-		return errors.New(`invalid: unable to decode SendVenueReplyMarkup to nil`)
-	}
-	// Sum type fields.
-	if d.Next() != jx.Object {
-		return errors.Errorf("unexpected json type %q", d.Next())
-	}
-	var found bool
-	if err := d.Capture(func(d *jx.Decoder) error {
-		return d.ObjBytes(func(d *jx.Decoder, key []byte) error {
-			if found {
-				return d.Skip()
-			}
-			switch string(key) {
-			case "inline_keyboard":
-				found = true
-				s.Type = InlineKeyboardMarkupSendVenueReplyMarkup
-			case "keyboard":
-				found = true
-				s.Type = ReplyKeyboardMarkupSendVenueReplyMarkup
-			case "resize_keyboard":
-				found = true
-				s.Type = ReplyKeyboardMarkupSendVenueReplyMarkup
-			case "one_time_keyboard":
-				found = true
-				s.Type = ReplyKeyboardMarkupSendVenueReplyMarkup
-			case "remove_keyboard":
-				found = true
-				s.Type = ReplyKeyboardRemoveSendVenueReplyMarkup
-			case "force_reply":
-				found = true
-				s.Type = ForceReplySendVenueReplyMarkup
-			case "input_field_placeholder":
-				found = true
-				s.Type = ForceReplySendVenueReplyMarkup
-			case "selective":
-				found = true
-				s.Type = ForceReplySendVenueReplyMarkup
-			}
-			return d.Skip()
-		})
-	}); err != nil {
-		return errors.Wrap(err, "capture")
-	}
-	if !found {
-		return errors.New("unable to detect sum type variant")
-	}
-	switch s.Type {
-	case InlineKeyboardMarkupSendVenueReplyMarkup:
-		if err := s.InlineKeyboardMarkup.Decode(d); err != nil {
-			return err
-		}
-	case ReplyKeyboardMarkupSendVenueReplyMarkup:
-		if err := s.ReplyKeyboardMarkup.Decode(d); err != nil {
-			return err
-		}
-	case ReplyKeyboardRemoveSendVenueReplyMarkup:
-		if err := s.ReplyKeyboardRemove.Decode(d); err != nil {
-			return err
-		}
-	case ForceReplySendVenueReplyMarkup:
-		if err := s.ForceReply.Decode(d); err != nil {
-			return err
-		}
-	default:
-		return errors.Errorf("inferred invalid type: %s", s.Type)
-	}
-	return nil
 }
 
 // Encode implements json.Marshaler.
@@ -17175,7 +16229,7 @@ func (s *SendVideo) Decode(d *jx.Decoder) error {
 			}
 		case "reply_markup":
 			s.ReplyMarkup = nil
-			var elem SendVideoReplyMarkup
+			var elem SendReplyMarkup
 			if err := elem.Decode(d); err != nil {
 				return err
 			}
@@ -17276,7 +16330,7 @@ func (s *SendVideoNote) Decode(d *jx.Decoder) error {
 			}
 		case "reply_markup":
 			s.ReplyMarkup = nil
-			var elem SendVideoNoteReplyMarkup
+			var elem SendReplyMarkup
 			if err := elem.Decode(d); err != nil {
 				return err
 			}
@@ -17286,178 +16340,6 @@ func (s *SendVideoNote) Decode(d *jx.Decoder) error {
 		}
 		return nil
 	})
-}
-
-// Encode encodes SendVideoNoteReplyMarkup as json.
-func (s SendVideoNoteReplyMarkup) Encode(e *jx.Encoder) {
-	switch s.Type {
-	case InlineKeyboardMarkupSendVideoNoteReplyMarkup:
-		s.InlineKeyboardMarkup.Encode(e)
-	case ReplyKeyboardMarkupSendVideoNoteReplyMarkup:
-		s.ReplyKeyboardMarkup.Encode(e)
-	case ReplyKeyboardRemoveSendVideoNoteReplyMarkup:
-		s.ReplyKeyboardRemove.Encode(e)
-	case ForceReplySendVideoNoteReplyMarkup:
-		s.ForceReply.Encode(e)
-	}
-}
-
-// Decode decodes SendVideoNoteReplyMarkup from json.
-func (s *SendVideoNoteReplyMarkup) Decode(d *jx.Decoder) error {
-	if s == nil {
-		return errors.New(`invalid: unable to decode SendVideoNoteReplyMarkup to nil`)
-	}
-	// Sum type fields.
-	if d.Next() != jx.Object {
-		return errors.Errorf("unexpected json type %q", d.Next())
-	}
-	var found bool
-	if err := d.Capture(func(d *jx.Decoder) error {
-		return d.ObjBytes(func(d *jx.Decoder, key []byte) error {
-			if found {
-				return d.Skip()
-			}
-			switch string(key) {
-			case "inline_keyboard":
-				found = true
-				s.Type = InlineKeyboardMarkupSendVideoNoteReplyMarkup
-			case "keyboard":
-				found = true
-				s.Type = ReplyKeyboardMarkupSendVideoNoteReplyMarkup
-			case "resize_keyboard":
-				found = true
-				s.Type = ReplyKeyboardMarkupSendVideoNoteReplyMarkup
-			case "one_time_keyboard":
-				found = true
-				s.Type = ReplyKeyboardMarkupSendVideoNoteReplyMarkup
-			case "remove_keyboard":
-				found = true
-				s.Type = ReplyKeyboardRemoveSendVideoNoteReplyMarkup
-			case "force_reply":
-				found = true
-				s.Type = ForceReplySendVideoNoteReplyMarkup
-			case "input_field_placeholder":
-				found = true
-				s.Type = ForceReplySendVideoNoteReplyMarkup
-			case "selective":
-				found = true
-				s.Type = ForceReplySendVideoNoteReplyMarkup
-			}
-			return d.Skip()
-		})
-	}); err != nil {
-		return errors.Wrap(err, "capture")
-	}
-	if !found {
-		return errors.New("unable to detect sum type variant")
-	}
-	switch s.Type {
-	case InlineKeyboardMarkupSendVideoNoteReplyMarkup:
-		if err := s.InlineKeyboardMarkup.Decode(d); err != nil {
-			return err
-		}
-	case ReplyKeyboardMarkupSendVideoNoteReplyMarkup:
-		if err := s.ReplyKeyboardMarkup.Decode(d); err != nil {
-			return err
-		}
-	case ReplyKeyboardRemoveSendVideoNoteReplyMarkup:
-		if err := s.ReplyKeyboardRemove.Decode(d); err != nil {
-			return err
-		}
-	case ForceReplySendVideoNoteReplyMarkup:
-		if err := s.ForceReply.Decode(d); err != nil {
-			return err
-		}
-	default:
-		return errors.Errorf("inferred invalid type: %s", s.Type)
-	}
-	return nil
-}
-
-// Encode encodes SendVideoReplyMarkup as json.
-func (s SendVideoReplyMarkup) Encode(e *jx.Encoder) {
-	switch s.Type {
-	case InlineKeyboardMarkupSendVideoReplyMarkup:
-		s.InlineKeyboardMarkup.Encode(e)
-	case ReplyKeyboardMarkupSendVideoReplyMarkup:
-		s.ReplyKeyboardMarkup.Encode(e)
-	case ReplyKeyboardRemoveSendVideoReplyMarkup:
-		s.ReplyKeyboardRemove.Encode(e)
-	case ForceReplySendVideoReplyMarkup:
-		s.ForceReply.Encode(e)
-	}
-}
-
-// Decode decodes SendVideoReplyMarkup from json.
-func (s *SendVideoReplyMarkup) Decode(d *jx.Decoder) error {
-	if s == nil {
-		return errors.New(`invalid: unable to decode SendVideoReplyMarkup to nil`)
-	}
-	// Sum type fields.
-	if d.Next() != jx.Object {
-		return errors.Errorf("unexpected json type %q", d.Next())
-	}
-	var found bool
-	if err := d.Capture(func(d *jx.Decoder) error {
-		return d.ObjBytes(func(d *jx.Decoder, key []byte) error {
-			if found {
-				return d.Skip()
-			}
-			switch string(key) {
-			case "inline_keyboard":
-				found = true
-				s.Type = InlineKeyboardMarkupSendVideoReplyMarkup
-			case "keyboard":
-				found = true
-				s.Type = ReplyKeyboardMarkupSendVideoReplyMarkup
-			case "resize_keyboard":
-				found = true
-				s.Type = ReplyKeyboardMarkupSendVideoReplyMarkup
-			case "one_time_keyboard":
-				found = true
-				s.Type = ReplyKeyboardMarkupSendVideoReplyMarkup
-			case "remove_keyboard":
-				found = true
-				s.Type = ReplyKeyboardRemoveSendVideoReplyMarkup
-			case "force_reply":
-				found = true
-				s.Type = ForceReplySendVideoReplyMarkup
-			case "input_field_placeholder":
-				found = true
-				s.Type = ForceReplySendVideoReplyMarkup
-			case "selective":
-				found = true
-				s.Type = ForceReplySendVideoReplyMarkup
-			}
-			return d.Skip()
-		})
-	}); err != nil {
-		return errors.Wrap(err, "capture")
-	}
-	if !found {
-		return errors.New("unable to detect sum type variant")
-	}
-	switch s.Type {
-	case InlineKeyboardMarkupSendVideoReplyMarkup:
-		if err := s.InlineKeyboardMarkup.Decode(d); err != nil {
-			return err
-		}
-	case ReplyKeyboardMarkupSendVideoReplyMarkup:
-		if err := s.ReplyKeyboardMarkup.Decode(d); err != nil {
-			return err
-		}
-	case ReplyKeyboardRemoveSendVideoReplyMarkup:
-		if err := s.ReplyKeyboardRemove.Decode(d); err != nil {
-			return err
-		}
-	case ForceReplySendVideoReplyMarkup:
-		if err := s.ForceReply.Decode(d); err != nil {
-			return err
-		}
-	default:
-		return errors.Errorf("inferred invalid type: %s", s.Type)
-	}
-	return nil
 }
 
 // Encode implements json.Marshaler.
@@ -17569,7 +16451,7 @@ func (s *SendVoice) Decode(d *jx.Decoder) error {
 			}
 		case "reply_markup":
 			s.ReplyMarkup = nil
-			var elem SendVoiceReplyMarkup
+			var elem SendReplyMarkup
 			if err := elem.Decode(d); err != nil {
 				return err
 			}
@@ -17579,92 +16461,6 @@ func (s *SendVoice) Decode(d *jx.Decoder) error {
 		}
 		return nil
 	})
-}
-
-// Encode encodes SendVoiceReplyMarkup as json.
-func (s SendVoiceReplyMarkup) Encode(e *jx.Encoder) {
-	switch s.Type {
-	case InlineKeyboardMarkupSendVoiceReplyMarkup:
-		s.InlineKeyboardMarkup.Encode(e)
-	case ReplyKeyboardMarkupSendVoiceReplyMarkup:
-		s.ReplyKeyboardMarkup.Encode(e)
-	case ReplyKeyboardRemoveSendVoiceReplyMarkup:
-		s.ReplyKeyboardRemove.Encode(e)
-	case ForceReplySendVoiceReplyMarkup:
-		s.ForceReply.Encode(e)
-	}
-}
-
-// Decode decodes SendVoiceReplyMarkup from json.
-func (s *SendVoiceReplyMarkup) Decode(d *jx.Decoder) error {
-	if s == nil {
-		return errors.New(`invalid: unable to decode SendVoiceReplyMarkup to nil`)
-	}
-	// Sum type fields.
-	if d.Next() != jx.Object {
-		return errors.Errorf("unexpected json type %q", d.Next())
-	}
-	var found bool
-	if err := d.Capture(func(d *jx.Decoder) error {
-		return d.ObjBytes(func(d *jx.Decoder, key []byte) error {
-			if found {
-				return d.Skip()
-			}
-			switch string(key) {
-			case "inline_keyboard":
-				found = true
-				s.Type = InlineKeyboardMarkupSendVoiceReplyMarkup
-			case "keyboard":
-				found = true
-				s.Type = ReplyKeyboardMarkupSendVoiceReplyMarkup
-			case "resize_keyboard":
-				found = true
-				s.Type = ReplyKeyboardMarkupSendVoiceReplyMarkup
-			case "one_time_keyboard":
-				found = true
-				s.Type = ReplyKeyboardMarkupSendVoiceReplyMarkup
-			case "remove_keyboard":
-				found = true
-				s.Type = ReplyKeyboardRemoveSendVoiceReplyMarkup
-			case "force_reply":
-				found = true
-				s.Type = ForceReplySendVoiceReplyMarkup
-			case "input_field_placeholder":
-				found = true
-				s.Type = ForceReplySendVoiceReplyMarkup
-			case "selective":
-				found = true
-				s.Type = ForceReplySendVoiceReplyMarkup
-			}
-			return d.Skip()
-		})
-	}); err != nil {
-		return errors.Wrap(err, "capture")
-	}
-	if !found {
-		return errors.New("unable to detect sum type variant")
-	}
-	switch s.Type {
-	case InlineKeyboardMarkupSendVoiceReplyMarkup:
-		if err := s.InlineKeyboardMarkup.Decode(d); err != nil {
-			return err
-		}
-	case ReplyKeyboardMarkupSendVoiceReplyMarkup:
-		if err := s.ReplyKeyboardMarkup.Decode(d); err != nil {
-			return err
-		}
-	case ReplyKeyboardRemoveSendVoiceReplyMarkup:
-		if err := s.ReplyKeyboardRemove.Decode(d); err != nil {
-			return err
-		}
-	case ForceReplySendVoiceReplyMarkup:
-		if err := s.ForceReply.Decode(d); err != nil {
-			return err
-		}
-	default:
-		return errors.Errorf("inferred invalid type: %s", s.Type)
-	}
-	return nil
 }
 
 // Encode implements json.Marshaler.
