@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/go-faster/errors"
+
 	"github.com/gotd/td/telegram/message"
 	"github.com/gotd/td/telegram/peers"
 
@@ -49,6 +50,45 @@ func (b *BotAPI) sentMessage(
 		Result: oas.NewOptMessage(resultMsg),
 		Ok:     true,
 	}, nil
+}
+
+type sendOpts struct {
+	To                       oas.ID
+	DisableWebPagePreview    oas.OptBool
+	DisableNotification      oas.OptBool
+	ReplyToMessageID         oas.OptInt
+	AllowSendingWithoutReply oas.OptBool
+	ReplyMarkup              *oas.SendReplyMarkup
+}
+
+func (b *BotAPI) prepareSend(
+	ctx context.Context,
+	req sendOpts,
+) (*message.Builder, peers.Peer, error) {
+	p, err := b.resolveID(ctx, req.To)
+	if err != nil {
+		return nil, nil, errors.Wrap(err, "resolve chatID")
+	}
+	s := &b.sender.To(p.InputPeer()).Builder
+
+	if v := req.DisableWebPagePreview.Or(false); v {
+		s = s.NoWebpage()
+	}
+	if v := req.DisableNotification.Or(false); v {
+		s = s.Silent()
+	}
+	// TODO(tdakkota): check allow_sending_without_reply
+	if v, ok := req.ReplyToMessageID.Get(); ok {
+		s = s.Reply(v)
+	}
+	if m := req.ReplyMarkup; m != nil {
+		mkp, err := b.convertToTelegramReplyMarkup(ctx, m)
+		if err != nil {
+			return nil, nil, errors.Wrap(err, "convert markup")
+		}
+		s = s.Markup(mkp)
+	}
+	return s, p, nil
 }
 
 // SendAnimation implements oas.Handler.
@@ -112,7 +152,20 @@ func (b *BotAPI) SendContact(ctx context.Context, req oas.SendContact) (oas.Resu
 
 // SendDice implements oas.Handler.
 func (b *BotAPI) SendDice(ctx context.Context, req oas.SendDice) (oas.ResultMessage, error) {
-	return oas.ResultMessage{}, &NotImplementedError{}
+	s, p, err := b.prepareSend(
+		ctx,
+		sendOpts{
+			To:                       req.ChatID,
+			DisableNotification:      req.DisableNotification,
+			ReplyToMessageID:         req.ReplyToMessageID,
+			AllowSendingWithoutReply: req.AllowSendingWithoutReply,
+		},
+	)
+	if err != nil {
+		return oas.ResultMessage{}, errors.Wrap(err, "prepare send")
+	}
+	resp, err := s.Media(ctx, message.MediaDice(req.Emoji.Or("🎲")))
+	return b.sentMessage(ctx, p, resp, err)
 }
 
 // SendDocument implements oas.Handler.
@@ -122,7 +175,33 @@ func (b *BotAPI) SendDocument(ctx context.Context, req oas.SendDocument) (oas.Re
 
 // SendGame implements oas.Handler.
 func (b *BotAPI) SendGame(ctx context.Context, req oas.SendGame) (oas.ResultMessage, error) {
-	return oas.ResultMessage{}, &NotImplementedError{}
+	var markup *oas.SendReplyMarkup
+	if m, ok := req.ReplyMarkup.Get(); ok {
+		markup = &oas.SendReplyMarkup{
+			Type:                 oas.InlineKeyboardMarkupSendReplyMarkup,
+			InlineKeyboardMarkup: m,
+		}
+	}
+
+	s, p, err := b.prepareSend(
+		ctx,
+		sendOpts{
+			To:                       oas.NewInt64ID(req.ChatID),
+			DisableNotification:      req.DisableNotification,
+			ReplyToMessageID:         req.ReplyToMessageID,
+			AllowSendingWithoutReply: req.AllowSendingWithoutReply,
+			ReplyMarkup:              markup,
+		},
+	)
+	if err != nil {
+		return oas.ResultMessage{}, errors.Wrap(err, "prepare send")
+	}
+
+	resp, err := s.Media(ctx, message.Game(&tg.InputGameShortName{
+		BotID:     &tg.InputUserSelf{},
+		ShortName: req.GameShortName,
+	}))
+	return b.sentMessage(ctx, p, resp, err)
 }
 
 // SendInvoice implements oas.Handler.
@@ -147,28 +226,19 @@ func (b *BotAPI) SendMessage(ctx context.Context, req oas.SendMessage) (oas.Resu
 		return oas.ResultMessage{}, &NotImplementedError{Message: "only HTML formatting is supported"}
 	}
 
-	p, err := b.resolveID(ctx, req.ChatID)
+	s, p, err := b.prepareSend(
+		ctx,
+		sendOpts{
+			To:                       req.ChatID,
+			DisableWebPagePreview:    req.DisableWebPagePreview,
+			DisableNotification:      req.DisableNotification,
+			ReplyToMessageID:         req.ReplyToMessageID,
+			AllowSendingWithoutReply: req.AllowSendingWithoutReply,
+			ReplyMarkup:              req.ReplyMarkup,
+		},
+	)
 	if err != nil {
-		return oas.ResultMessage{}, errors.Wrap(err, "resolve chatID")
-	}
-	s := &b.sender.To(p.InputPeer()).Builder
-
-	if v := req.DisableWebPagePreview.Or(false); v {
-		s = s.NoWebpage()
-	}
-	if v := req.DisableNotification.Or(false); v {
-		s = s.Silent()
-	}
-	// TODO(tdakkota): check allow_sending_without_reply
-	if v, ok := req.ReplyToMessageID.Get(); ok {
-		s = s.Reply(v)
-	}
-	if m := req.ReplyMarkup; m != nil {
-		mkp, err := b.convertToTelegramReplyMarkup(ctx, m)
-		if err != nil {
-			return oas.ResultMessage{}, errors.Wrap(err, "convert markup")
-		}
-		s = s.Markup(mkp)
+		return oas.ResultMessage{}, errors.Wrap(err, "prepare send")
 	}
 
 	var resp tg.UpdatesClass

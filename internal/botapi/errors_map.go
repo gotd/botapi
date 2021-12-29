@@ -6,9 +6,10 @@ import (
 
 	"github.com/go-faster/errors"
 	"github.com/go-faster/jx"
+	"go.uber.org/zap"
+
 	"github.com/gotd/td/telegram/peers"
 	"github.com/gotd/td/tgerr"
-	"go.uber.org/zap"
 
 	"github.com/gotd/botapi/internal/oas"
 )
@@ -86,8 +87,6 @@ func tryMapRPCError(err error) (r oas.ErrorStatusCode, _ bool) {
 	case "MESSAGE_DELETE_FORBIDDEN":
 		errorCode = 400
 		errorMessage = "message can't be deleted"
-	default:
-		return r, false
 	}
 
 	return errorStatusCode(errorCode, errorMessage), true

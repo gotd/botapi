@@ -209,19 +209,7 @@ func TestUnimplemented(t *testing.T) {
 	}
 
 	{
-		_, err := b.SendDice(ctx, oas.SendDice{})
-		var implErr *NotImplementedError
-		a.ErrorAs(err, &implErr)
-	}
-
-	{
 		_, err := b.SendDocument(ctx, oas.SendDocument{})
-		var implErr *NotImplementedError
-		a.ErrorAs(err, &implErr)
-	}
-
-	{
-		_, err := b.SendGame(ctx, oas.SendGame{})
 		var implErr *NotImplementedError
 		a.ErrorAs(err, &implErr)
 	}

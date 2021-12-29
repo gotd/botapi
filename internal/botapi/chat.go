@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/go-faster/errors"
+
 	"github.com/gotd/td/telegram/peers"
 	"github.com/gotd/td/tg"
 

@@ -287,14 +287,14 @@ func Test_convertToTelegramButton(t *testing.T) {
 func TestBotAPI_convertToTelegramReplyMarkup(t *testing.T) {
 	tests := []struct {
 		name    string
-		input   *oas.SendMessageReplyMarkup
+		input   *oas.SendReplyMarkup
 		want    tg.ReplyMarkupClass
 		wantErr bool
 	}{
 		{
 			"Inline",
-			&oas.SendMessageReplyMarkup{
-				Type: oas.InlineKeyboardMarkupSendMessageReplyMarkup,
+			&oas.SendReplyMarkup{
+				Type: oas.InlineKeyboardMarkupSendReplyMarkup,
 				InlineKeyboardMarkup: oas.InlineKeyboardMarkup{
 					InlineKeyboard: [][]oas.InlineKeyboardButton{
 						{
@@ -319,8 +319,8 @@ func TestBotAPI_convertToTelegramReplyMarkup(t *testing.T) {
 		},
 		{
 			"Reply",
-			&oas.SendMessageReplyMarkup{
-				Type: oas.ReplyKeyboardMarkupSendMessageReplyMarkup,
+			&oas.SendReplyMarkup{
+				Type: oas.ReplyKeyboardMarkupSendReplyMarkup,
 				ReplyKeyboardMarkup: oas.ReplyKeyboardMarkup{
 					Keyboard: [][]oas.KeyboardButton{
 						{
@@ -350,8 +350,8 @@ func TestBotAPI_convertToTelegramReplyMarkup(t *testing.T) {
 		},
 		{
 			"Hide",
-			&oas.SendMessageReplyMarkup{
-				Type: oas.ReplyKeyboardRemoveSendMessageReplyMarkup,
+			&oas.SendReplyMarkup{
+				Type: oas.ReplyKeyboardRemoveSendReplyMarkup,
 				ReplyKeyboardRemove: oas.ReplyKeyboardRemove{
 					RemoveKeyboard: true,
 				},
@@ -363,8 +363,8 @@ func TestBotAPI_convertToTelegramReplyMarkup(t *testing.T) {
 		},
 		{
 			"SelectiveHide",
-			&oas.SendMessageReplyMarkup{
-				Type: oas.ReplyKeyboardRemoveSendMessageReplyMarkup,
+			&oas.SendReplyMarkup{
+				Type: oas.ReplyKeyboardRemoveSendReplyMarkup,
 				ReplyKeyboardRemove: oas.ReplyKeyboardRemove{
 					RemoveKeyboard: true,
 					Selective:      oas.NewOptBool(true),
@@ -377,8 +377,8 @@ func TestBotAPI_convertToTelegramReplyMarkup(t *testing.T) {
 		},
 		{
 			"ForceReply",
-			&oas.SendMessageReplyMarkup{
-				Type: oas.ForceReplySendMessageReplyMarkup,
+			&oas.SendReplyMarkup{
+				Type: oas.ForceReplySendReplyMarkup,
 				ForceReply: oas.ForceReply{
 					ForceReply:            true,
 					InputFieldPlaceholder: oas.NewOptString("placeholder"),
@@ -393,7 +393,7 @@ func TestBotAPI_convertToTelegramReplyMarkup(t *testing.T) {
 		},
 		{
 			"UnknownType",
-			&oas.SendMessageReplyMarkup{
+			&oas.SendReplyMarkup{
 				Type: "aboba",
 			},
 			nil,
