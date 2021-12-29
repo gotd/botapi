@@ -114,10 +114,10 @@ func (b *BotAPI) SendMessage(ctx context.Context, req oas.SendMessage) (oas.Resu
 	}
 	s := &b.sender.To(p.InputPeer()).Builder
 
-	if v, ok := req.DisableWebPagePreview.Get(); ok && v {
+	if v := req.DisableWebPagePreview.Or(false); v {
 		s = s.NoWebpage()
 	}
-	if v, ok := req.DisableNotification.Get(); ok && v {
+	if v := req.DisableNotification.Or(false); v {
 		s = s.Silent()
 	}
 	if v, ok := req.ReplyToMessageID.Get(); ok {

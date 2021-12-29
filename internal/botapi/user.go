@@ -16,15 +16,10 @@ func (b *BotAPI) GetUserProfilePhotos(ctx context.Context, req oas.GetUserProfil
 		return oas.ResultUserProfilePhotos{}, errors.Wrap(err, "resolve userID")
 	}
 
-	limit, ok := req.Limit.Get()
-	if !ok {
-		limit = 100
-	}
-
 	response, err := b.raw.PhotosGetUserPhotos(ctx, &tg.PhotosGetUserPhotosRequest{
 		UserID: userID.InputUser(),
 		Offset: req.Offset.Value,
-		Limit:  limit,
+		Limit:  req.Limit.Or(100),
 	})
 	if err != nil {
 		return oas.ResultUserProfilePhotos{}, errors.Wrap(err, "get photos")

@@ -33,7 +33,7 @@ func (b *BotAPI) convertToTelegramInlineButton(
 		loginURL := button.LoginURL.Value
 
 		var user tg.InputUserClass = &tg.InputUserSelf{}
-		if v, ok := loginURL.BotUsername.Get(); ok && v != "" {
+		if v := loginURL.BotUsername.Or(""); v != "" {
 			p, err := b.peers.ResolveDomain(ctx, loginURL.BotUsername.Value)
 			if err != nil {
 				return nil, errors.Wrap(err, "resolve bot")
@@ -147,7 +147,7 @@ func (b *BotAPI) convertToTelegramReplyMarkup(
 		}
 		return result, nil
 	case oas.ReplyKeyboardRemoveSendMessageReplyMarkup:
-		if v, ok := m.ReplyKeyboardRemove.Selective.Get(); ok && v {
+		if v := m.ReplyKeyboardRemove.Selective.Or(false); v {
 			return markup.SelectiveHide(), nil
 		}
 		return markup.Hide(), nil
