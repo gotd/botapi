@@ -4,6 +4,8 @@ import (
 	"context"
 
 	"github.com/go-faster/errors"
+	"github.com/gotd/td/telegram/message"
+	"github.com/gotd/td/telegram/peers"
 
 	"github.com/gotd/td/telegram/message/html"
 	"github.com/gotd/td/telegram/message/unpack"
@@ -11,6 +13,43 @@ import (
 
 	"github.com/gotd/botapi/internal/oas"
 )
+
+func (b *BotAPI) sentMessage(
+	ctx context.Context,
+	p peers.Peer,
+	resp tg.UpdatesClass, err error,
+) (oas.ResultMessage, error) {
+	m, err := unpack.MessageClass(resp, err)
+	if err != nil {
+		return oas.ResultMessage{}, errors.Wrap(err, "send")
+	}
+
+	msg, ok := m.(*tg.Message)
+	if !ok {
+		return oas.ResultMessage{
+			Ok: true,
+		}, nil
+	}
+	if msg.PeerID == nil {
+		switch p := p.InputPeer().(type) {
+		case *tg.InputPeerChat:
+			msg.PeerID = &tg.PeerChat{ChatID: p.ChatID}
+		case *tg.InputPeerUser:
+			msg.PeerID = &tg.PeerUser{UserID: p.UserID}
+		case *tg.InputPeerChannel:
+			msg.PeerID = &tg.PeerChannel{ChannelID: p.ChannelID}
+		}
+	}
+
+	resultMsg, err := b.convertPlainMessage(ctx, msg)
+	if err != nil {
+		return oas.ResultMessage{}, errors.Wrap(err, "get message")
+	}
+	return oas.ResultMessage{
+		Result: oas.NewOptMessage(resultMsg),
+		Ok:     true,
+	}, nil
+}
 
 // SendAnimation implements oas.Handler.
 func (b *BotAPI) SendAnimation(ctx context.Context, req oas.SendAnimation) (oas.ResultMessage, error) {
@@ -120,6 +159,7 @@ func (b *BotAPI) SendMessage(ctx context.Context, req oas.SendMessage) (oas.Resu
 	if v := req.DisableNotification.Or(false); v {
 		s = s.Silent()
 	}
+	// TODO(tdakkota): check allow_sending_without_reply
 	if v, ok := req.ReplyToMessageID.Get(); ok {
 		s = s.Reply(v)
 	}
@@ -140,36 +180,7 @@ func (b *BotAPI) SendMessage(ctx context.Context, req oas.SendMessage) (oas.Resu
 		resp, err = s.Text(ctx, req.Text)
 	}
 
-	m, err := unpack.MessageClass(resp, err)
-	if err != nil {
-		return oas.ResultMessage{}, errors.Wrap(err, "send")
-	}
-
-	msg, ok := m.(*tg.Message)
-	if !ok {
-		return oas.ResultMessage{
-			Ok: true,
-		}, nil
-	}
-	if msg.PeerID == nil {
-		switch p := p.InputPeer().(type) {
-		case *tg.InputPeerChat:
-			msg.PeerID = &tg.PeerChat{ChatID: p.ChatID}
-		case *tg.InputPeerUser:
-			msg.PeerID = &tg.PeerUser{UserID: p.UserID}
-		case *tg.InputPeerChannel:
-			msg.PeerID = &tg.PeerChannel{ChannelID: p.ChannelID}
-		}
-	}
-
-	resultMsg, err := b.convertPlainMessage(ctx, msg)
-	if err != nil {
-		return oas.ResultMessage{}, errors.Wrap(err, "get message")
-	}
-	return oas.ResultMessage{
-		Result: oas.NewOptMessage(resultMsg),
-		Ok:     true,
-	}, nil
+	return b.sentMessage(ctx, p, resp, err)
 }
 
 // SendPhoto implements oas.Handler.
