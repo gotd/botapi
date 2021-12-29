@@ -2,6 +2,7 @@ package botapi
 
 import (
 	"testing"
+	"time"
 
 	"go.uber.org/zap/zaptest"
 
@@ -67,9 +68,36 @@ func testChat() *tg.Chat {
 		ID:                10,
 		Title:             "I hate mondays",
 		ParticipantsCount: 10,
-		Date:              int(10),
+		Date:              int(time.Now().Unix()),
 		Version:           1,
 		Photo:             &tg.ChatPhotoEmpty{},
+	}
+	u.SetFlags()
+	return u
+}
+
+func testChannelID() int64 {
+	var id constant.TDLibPeerID
+	id.Channel(testChannel().ID)
+	return int64(id)
+}
+
+func testChannel() *tg.Channel {
+	u := &tg.Channel{
+		Megagroup:           true,
+		Broadcast:           false,
+		Noforwards:          true,
+		ID:                  11,
+		AccessHash:          0,
+		Title:               "I hate mondays",
+		Username:            "",
+		Photo:               &tg.ChatPhotoEmpty{},
+		Date:                int(time.Now().Unix()),
+		RestrictionReason:   nil,
+		AdminRights:         tg.ChatAdminRights{},
+		BannedRights:        tg.ChatBannedRights{},
+		DefaultBannedRights: tg.ChatBannedRights{},
+		ParticipantsCount:   1,
 	}
 	u.SetFlags()
 	return u

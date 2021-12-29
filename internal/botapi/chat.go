@@ -24,38 +24,34 @@ func convertToBotAPIChatPermissions(p tg.ChatBannedRights) oas.ChatPermissions {
 	}
 }
 
-// ApproveChatJoinRequest implements oas.Handler.
-func (b *BotAPI) ApproveChatJoinRequest(ctx context.Context, req oas.ApproveChatJoinRequest) (oas.Result, error) {
-	p, err := b.resolveIDToChat(ctx, req.ChatID)
+func (b *BotAPI) checkJoinRequest(
+	ctx context.Context,
+	chatID oas.ID, userID int64,
+	cb func(p peers.InviteLinks, ctx context.Context, user tg.InputUserClass) error,
+) (oas.Result, error) {
+	p, err := b.resolveIDToChat(ctx, chatID)
 	if err != nil {
 		return oas.Result{}, errors.Wrap(err, "resolve chatID")
 	}
-	user, err := b.resolveUserID(ctx, req.UserID)
+	user, err := b.resolveUserID(ctx, userID)
 	if err != nil {
 		return oas.Result{}, errors.Wrap(err, "resolve userID")
 	}
 
-	if err := p.InviteLinks().ApproveJoin(ctx, user.InputUser()); err != nil {
+	if err := cb(p.InviteLinks(), ctx, user.InputUser()); err != nil {
 		return oas.Result{}, err
 	}
 	return resultOK(true), nil
 }
 
+// ApproveChatJoinRequest implements oas.Handler.
+func (b *BotAPI) ApproveChatJoinRequest(ctx context.Context, req oas.ApproveChatJoinRequest) (oas.Result, error) {
+	return b.checkJoinRequest(ctx, req.ChatID, req.UserID, peers.InviteLinks.ApproveJoin)
+}
+
 // DeclineChatJoinRequest implements oas.Handler.
 func (b *BotAPI) DeclineChatJoinRequest(ctx context.Context, req oas.DeclineChatJoinRequest) (oas.Result, error) {
-	p, err := b.resolveIDToChat(ctx, req.ChatID)
-	if err != nil {
-		return oas.Result{}, errors.Wrap(err, "resolve chatID")
-	}
-	user, err := b.resolveUserID(ctx, req.UserID)
-	if err != nil {
-		return oas.Result{}, errors.Wrap(err, "resolve userID")
-	}
-
-	if err := p.InviteLinks().DeclineJoin(ctx, user.InputUser()); err != nil {
-		return oas.Result{}, err
-	}
-	return resultOK(true), nil
+	return b.checkJoinRequest(ctx, req.ChatID, req.UserID, peers.InviteLinks.DeclineJoin)
 }
 
 // DeleteChatPhoto implements oas.Handler.
