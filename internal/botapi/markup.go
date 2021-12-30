@@ -33,7 +33,7 @@ func (b *BotAPI) convertToTelegramInlineButton(
 		loginURL := button.LoginURL.Value
 
 		var user tg.InputUserClass = &tg.InputUserSelf{}
-		if v, ok := loginURL.BotUsername.Get(); ok && v != "" {
+		if v := loginURL.BotUsername.Or(""); v != "" {
 			p, err := b.peers.ResolveDomain(ctx, loginURL.BotUsername.Value)
 			if err != nil {
 				return nil, errors.Wrap(err, "resolve bot")
@@ -107,10 +107,10 @@ func convertToTelegramButton(kb oas.KeyboardButton) tg.KeyboardButtonClass {
 
 func (b *BotAPI) convertToTelegramReplyMarkup(
 	ctx context.Context,
-	m *oas.SendMessageReplyMarkup,
+	m *oas.SendReplyMarkup,
 ) (tg.ReplyMarkupClass, error) {
 	switch m.Type {
-	case oas.InlineKeyboardMarkupSendMessageReplyMarkup:
+	case oas.InlineKeyboardMarkupSendReplyMarkup:
 		rows := m.InlineKeyboardMarkup.InlineKeyboard
 		result := &tg.ReplyInlineMarkup{Rows: make([]tg.KeyboardButtonRow, 0, len(rows))}
 		for _, row := range rows {
@@ -125,7 +125,7 @@ func (b *BotAPI) convertToTelegramReplyMarkup(
 			result.Rows = append(result.Rows, tg.KeyboardButtonRow{Buttons: resultRow})
 		}
 		return result, nil
-	case oas.ReplyKeyboardMarkupSendMessageReplyMarkup:
+	case oas.ReplyKeyboardMarkupSendReplyMarkup:
 		mark := m.ReplyKeyboardMarkup
 		rows := mark.Keyboard
 
@@ -146,12 +146,12 @@ func (b *BotAPI) convertToTelegramReplyMarkup(
 			result.Rows = append(result.Rows, tg.KeyboardButtonRow{Buttons: resultRow})
 		}
 		return result, nil
-	case oas.ReplyKeyboardRemoveSendMessageReplyMarkup:
-		if v, ok := m.ReplyKeyboardRemove.Selective.Get(); ok && v {
+	case oas.ReplyKeyboardRemoveSendReplyMarkup:
+		if v := m.ReplyKeyboardRemove.Selective.Or(false); v {
 			return markup.SelectiveHide(), nil
 		}
 		return markup.Hide(), nil
-	case oas.ForceReplySendMessageReplyMarkup:
+	case oas.ForceReplySendReplyMarkup:
 		mark := m.ForceReply
 		result := &tg.ReplyKeyboardForceReply{
 			Selective:   mark.Selective.Value,

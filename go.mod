@@ -8,8 +8,8 @@ require (
 	github.com/go-faster/errors v0.5.0
 	github.com/go-faster/jx v0.25.0
 	github.com/google/uuid v1.3.0
-	github.com/gotd/td v0.54.0-alpha.3
-	github.com/ogen-go/ogen v0.0.0-20211211145630-e16dcf3319e7
+	github.com/gotd/td v0.54.0-alpha.3.0.20211223161344-410f74c24790
+	github.com/ogen-go/ogen v0.5.0
 	github.com/stretchr/testify v1.7.0
 	go.etcd.io/bbolt v1.3.6
 	go.opentelemetry.io/otel v1.3.0

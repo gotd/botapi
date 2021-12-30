@@ -288,8 +288,9 @@ func Extract(doc *goquery.Document) (a API) {
 			})
 			const (
 				retPrefix       = `on success, the`
-				retPrefix2      = `returns a`
-				retPrefix3      = `returns the`
+				retPrefix2      = `on success, a`
+				retPrefix3      = `returns a`
+				retPrefix4      = `returns the`
 				retArrayPrefix  = `an array of`
 				retArrayPrefix2 = `returns array of`
 				retSuffix       = ` is returned`
@@ -308,6 +309,7 @@ func Extract(doc *goquery.Document) (a API) {
 				retPrefix,
 				retPrefix2,
 				retPrefix3,
+				retPrefix4,
 			)
 			if prefix == retArrayPrefix || prefix == retArrayPrefix2 {
 				// Do not cut prefix, if we do ParseType will be unable to detect an array clause.

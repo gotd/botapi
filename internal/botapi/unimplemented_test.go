@@ -4,14 +4,16 @@ import (
 	"context"
 	"testing"
 
-	"github.com/stretchr/testify/require"
+	"github.com/stretchr/testify/assert"
 
 	"github.com/gotd/botapi/internal/oas"
 )
 
+var _ oas.Handler = (*BotAPI)(nil)
+
 func TestUnimplemented(t *testing.T) {
 	ctx := context.Background()
-	a := require.New(t)
+	a := assert.New(t)
 	b := BotAPI{}
 
 	{
@@ -45,12 +47,6 @@ func TestUnimplemented(t *testing.T) {
 	}
 
 	{
-		_, err := b.ApproveChatJoinRequest(ctx, oas.ApproveChatJoinRequest{})
-		var implErr *NotImplementedError
-		a.ErrorAs(err, &implErr)
-	}
-
-	{
 		_, err := b.BanChatMember(ctx, oas.BanChatMember{})
 		var implErr *NotImplementedError
 		a.ErrorAs(err, &implErr)
@@ -69,31 +65,13 @@ func TestUnimplemented(t *testing.T) {
 	}
 
 	{
-		_, err := b.CreateChatInviteLink(ctx, oas.CreateChatInviteLink{})
-		var implErr *NotImplementedError
-		a.ErrorAs(err, &implErr)
-	}
-
-	{
 		_, err := b.CreateNewStickerSet(ctx, oas.CreateNewStickerSet{})
 		var implErr *NotImplementedError
 		a.ErrorAs(err, &implErr)
 	}
 
 	{
-		_, err := b.DeclineChatJoinRequest(ctx, oas.DeclineChatJoinRequest{})
-		var implErr *NotImplementedError
-		a.ErrorAs(err, &implErr)
-	}
-
-	{
 		_, err := b.DeleteChatPhoto(ctx, oas.DeleteChatPhoto{})
-		var implErr *NotImplementedError
-		a.ErrorAs(err, &implErr)
-	}
-
-	{
-		_, err := b.DeleteChatStickerSet(ctx, oas.DeleteChatStickerSet{})
 		var implErr *NotImplementedError
 		a.ErrorAs(err, &implErr)
 	}
@@ -112,12 +90,6 @@ func TestUnimplemented(t *testing.T) {
 
 	{
 		_, err := b.DeleteWebhook(ctx, oas.OptDeleteWebhook{})
-		var implErr *NotImplementedError
-		a.ErrorAs(err, &implErr)
-	}
-
-	{
-		_, err := b.EditChatInviteLink(ctx, oas.EditChatInviteLink{})
 		var implErr *NotImplementedError
 		a.ErrorAs(err, &implErr)
 	}
@@ -153,19 +125,7 @@ func TestUnimplemented(t *testing.T) {
 	}
 
 	{
-		_, err := b.ExportChatInviteLink(ctx, oas.ExportChatInviteLink{})
-		var implErr *NotImplementedError
-		a.ErrorAs(err, &implErr)
-	}
-
-	{
 		_, err := b.ForwardMessage(ctx, oas.ForwardMessage{})
-		var implErr *NotImplementedError
-		a.ErrorAs(err, &implErr)
-	}
-
-	{
-		_, err := b.GetChat(ctx, oas.GetChat{})
 		var implErr *NotImplementedError
 		a.ErrorAs(err, &implErr)
 	}
@@ -207,12 +167,6 @@ func TestUnimplemented(t *testing.T) {
 	}
 
 	{
-		_, err := b.GetUserProfilePhotos(ctx, oas.GetUserProfilePhotos{})
-		var implErr *NotImplementedError
-		a.ErrorAs(err, &implErr)
-	}
-
-	{
 		_, err := b.GetWebhookInfo(ctx)
 		var implErr *NotImplementedError
 		a.ErrorAs(err, &implErr)
@@ -237,12 +191,6 @@ func TestUnimplemented(t *testing.T) {
 	}
 
 	{
-		_, err := b.RevokeChatInviteLink(ctx, oas.RevokeChatInviteLink{})
-		var implErr *NotImplementedError
-		a.ErrorAs(err, &implErr)
-	}
-
-	{
 		_, err := b.SendAnimation(ctx, oas.SendAnimation{})
 		var implErr *NotImplementedError
 		a.ErrorAs(err, &implErr)
@@ -255,31 +203,13 @@ func TestUnimplemented(t *testing.T) {
 	}
 
 	{
-		_, err := b.SendChatAction(ctx, oas.SendChatAction{})
-		var implErr *NotImplementedError
-		a.ErrorAs(err, &implErr)
-	}
-
-	{
 		_, err := b.SendContact(ctx, oas.SendContact{})
 		var implErr *NotImplementedError
 		a.ErrorAs(err, &implErr)
 	}
 
 	{
-		_, err := b.SendDice(ctx, oas.SendDice{})
-		var implErr *NotImplementedError
-		a.ErrorAs(err, &implErr)
-	}
-
-	{
 		_, err := b.SendDocument(ctx, oas.SendDocument{})
-		var implErr *NotImplementedError
-		a.ErrorAs(err, &implErr)
-	}
-
-	{
-		_, err := b.SendGame(ctx, oas.SendGame{})
 		var implErr *NotImplementedError
 		a.ErrorAs(err, &implErr)
 	}

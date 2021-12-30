@@ -761,7 +761,7 @@
         },
         "responses": {
           "200": {
-            "$ref": "#/components/responses/Result"
+            "$ref": "#/components/responses/ResultFile"
           },
           "default": {
             "$ref": "#/components/responses/Error"
@@ -846,7 +846,7 @@
         },
         "responses": {
           "200": {
-            "$ref": "#/components/responses/Result"
+            "$ref": "#/components/responses/ResultStickerSet"
           },
           "default": {
             "$ref": "#/components/responses/Error"
@@ -2346,6 +2346,9 @@
           },
           "location": {
             "$ref": "#/components/schemas/ChatLocation"
+          },
+          "all_members_are_administrators": {
+            "type": "boolean"
           }
         },
         "required": [
@@ -5516,6 +5519,15 @@
           },
           "reply_markup": {
             "$ref": "#/components/schemas/InlineKeyboardMarkup"
+          },
+          "new_chat_member": {
+            "$ref": "#/components/schemas/User"
+          },
+          "new_chat_participant": {
+            "$ref": "#/components/schemas/User"
+          },
+          "left_chat_participant": {
+            "$ref": "#/components/schemas/User"
           }
         },
         "required": [
@@ -6610,6 +6622,21 @@
           "ok"
         ]
       },
+      "ResultStickerSet": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "$ref": "#/components/schemas/StickerSet"
+          },
+          "ok": {
+            "type": "boolean",
+            "default": true
+          }
+        },
+        "required": [
+          "ok"
+        ]
+      },
       "ResultString": {
         "type": "object",
         "properties": {
@@ -6683,6 +6710,22 @@
         },
         "required": [
           "ok"
+        ]
+      },
+      "SendReplyMarkup": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/InlineKeyboardMarkup"
+          },
+          {
+            "$ref": "#/components/schemas/ReplyKeyboardMarkup"
+          },
+          {
+            "$ref": "#/components/schemas/ReplyKeyboardRemove"
+          },
+          {
+            "$ref": "#/components/schemas/ForceReply"
+          }
         ]
       },
       "ShippingAddress": {
@@ -7553,21 +7596,7 @@
             "type": "boolean"
           },
           "reply_markup": {
-            "description": "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user",
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/InlineKeyboardMarkup"
-              },
-              {
-                "$ref": "#/components/schemas/ReplyKeyboardMarkup"
-              },
-              {
-                "$ref": "#/components/schemas/ReplyKeyboardRemove"
-              },
-              {
-                "$ref": "#/components/schemas/ForceReply"
-              }
-            ]
+            "$ref": "#/components/schemas/SendReplyMarkup"
           }
         },
         "required": [
@@ -8370,21 +8399,7 @@
             "type": "boolean"
           },
           "reply_markup": {
-            "description": "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user",
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/InlineKeyboardMarkup"
-              },
-              {
-                "$ref": "#/components/schemas/ReplyKeyboardMarkup"
-              },
-              {
-                "$ref": "#/components/schemas/ReplyKeyboardRemove"
-              },
-              {
-                "$ref": "#/components/schemas/ForceReply"
-              }
-            ]
+            "$ref": "#/components/schemas/SendReplyMarkup"
           }
         },
         "required": [
@@ -8450,21 +8465,7 @@
             "type": "boolean"
           },
           "reply_markup": {
-            "description": "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user",
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/InlineKeyboardMarkup"
-              },
-              {
-                "$ref": "#/components/schemas/ReplyKeyboardMarkup"
-              },
-              {
-                "$ref": "#/components/schemas/ReplyKeyboardRemove"
-              },
-              {
-                "$ref": "#/components/schemas/ForceReply"
-              }
-            ]
+            "$ref": "#/components/schemas/SendReplyMarkup"
           }
         },
         "required": [
@@ -8526,21 +8527,7 @@
             "type": "boolean"
           },
           "reply_markup": {
-            "description": "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove keyboard or to force a reply from the user",
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/InlineKeyboardMarkup"
-              },
-              {
-                "$ref": "#/components/schemas/ReplyKeyboardMarkup"
-              },
-              {
-                "$ref": "#/components/schemas/ReplyKeyboardRemove"
-              },
-              {
-                "$ref": "#/components/schemas/ForceReply"
-              }
-            ]
+            "$ref": "#/components/schemas/SendReplyMarkup"
           }
         },
         "required": [
@@ -8573,21 +8560,7 @@
             "type": "boolean"
           },
           "reply_markup": {
-            "description": "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user",
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/InlineKeyboardMarkup"
-              },
-              {
-                "$ref": "#/components/schemas/ReplyKeyboardMarkup"
-              },
-              {
-                "$ref": "#/components/schemas/ReplyKeyboardRemove"
-              },
-              {
-                "$ref": "#/components/schemas/ForceReply"
-              }
-            ]
+            "$ref": "#/components/schemas/SendReplyMarkup"
           }
         },
         "required": [
@@ -8642,21 +8615,7 @@
             "type": "boolean"
           },
           "reply_markup": {
-            "description": "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user",
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/InlineKeyboardMarkup"
-              },
-              {
-                "$ref": "#/components/schemas/ReplyKeyboardMarkup"
-              },
-              {
-                "$ref": "#/components/schemas/ReplyKeyboardRemove"
-              },
-              {
-                "$ref": "#/components/schemas/ForceReply"
-              }
-            ]
+            "$ref": "#/components/schemas/SendReplyMarkup"
           }
         },
         "required": [
@@ -8881,21 +8840,7 @@
             "type": "boolean"
           },
           "reply_markup": {
-            "description": "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user",
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/InlineKeyboardMarkup"
-              },
-              {
-                "$ref": "#/components/schemas/ReplyKeyboardMarkup"
-              },
-              {
-                "$ref": "#/components/schemas/ReplyKeyboardRemove"
-              },
-              {
-                "$ref": "#/components/schemas/ForceReply"
-              }
-            ]
+            "$ref": "#/components/schemas/SendReplyMarkup"
           }
         },
         "required": [
@@ -8999,21 +8944,7 @@
             "type": "boolean"
           },
           "reply_markup": {
-            "description": "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user",
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/InlineKeyboardMarkup"
-              },
-              {
-                "$ref": "#/components/schemas/ReplyKeyboardMarkup"
-              },
-              {
-                "$ref": "#/components/schemas/ReplyKeyboardRemove"
-              },
-              {
-                "$ref": "#/components/schemas/ForceReply"
-              }
-            ]
+            "$ref": "#/components/schemas/SendReplyMarkup"
           }
         },
         "required": [
@@ -9061,21 +8992,7 @@
             "type": "boolean"
           },
           "reply_markup": {
-            "description": "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user",
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/InlineKeyboardMarkup"
-              },
-              {
-                "$ref": "#/components/schemas/ReplyKeyboardMarkup"
-              },
-              {
-                "$ref": "#/components/schemas/ReplyKeyboardRemove"
-              },
-              {
-                "$ref": "#/components/schemas/ForceReply"
-              }
-            ]
+            "$ref": "#/components/schemas/SendReplyMarkup"
           }
         },
         "required": [
@@ -9160,21 +9077,7 @@
             "type": "boolean"
           },
           "reply_markup": {
-            "description": "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user",
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/InlineKeyboardMarkup"
-              },
-              {
-                "$ref": "#/components/schemas/ReplyKeyboardMarkup"
-              },
-              {
-                "$ref": "#/components/schemas/ReplyKeyboardRemove"
-              },
-              {
-                "$ref": "#/components/schemas/ForceReply"
-              }
-            ]
+            "$ref": "#/components/schemas/SendReplyMarkup"
           }
         },
         "required": [
@@ -9207,21 +9110,7 @@
             "type": "boolean"
           },
           "reply_markup": {
-            "description": "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user",
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/InlineKeyboardMarkup"
-              },
-              {
-                "$ref": "#/components/schemas/ReplyKeyboardMarkup"
-              },
-              {
-                "$ref": "#/components/schemas/ReplyKeyboardRemove"
-              },
-              {
-                "$ref": "#/components/schemas/ForceReply"
-              }
-            ]
+            "$ref": "#/components/schemas/SendReplyMarkup"
           }
         },
         "required": [
@@ -9281,21 +9170,7 @@
             "type": "boolean"
           },
           "reply_markup": {
-            "description": "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user",
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/InlineKeyboardMarkup"
-              },
-              {
-                "$ref": "#/components/schemas/ReplyKeyboardMarkup"
-              },
-              {
-                "$ref": "#/components/schemas/ReplyKeyboardRemove"
-              },
-              {
-                "$ref": "#/components/schemas/ForceReply"
-              }
-            ]
+            "$ref": "#/components/schemas/SendReplyMarkup"
           }
         },
         "required": [
@@ -9372,21 +9247,7 @@
             "type": "boolean"
           },
           "reply_markup": {
-            "description": "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user",
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/InlineKeyboardMarkup"
-              },
-              {
-                "$ref": "#/components/schemas/ReplyKeyboardMarkup"
-              },
-              {
-                "$ref": "#/components/schemas/ReplyKeyboardRemove"
-              },
-              {
-                "$ref": "#/components/schemas/ForceReply"
-              }
-            ]
+            "$ref": "#/components/schemas/SendReplyMarkup"
           }
         },
         "required": [
@@ -9432,21 +9293,7 @@
             "type": "boolean"
           },
           "reply_markup": {
-            "description": "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user",
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/InlineKeyboardMarkup"
-              },
-              {
-                "$ref": "#/components/schemas/ReplyKeyboardMarkup"
-              },
-              {
-                "$ref": "#/components/schemas/ReplyKeyboardRemove"
-              },
-              {
-                "$ref": "#/components/schemas/ForceReply"
-              }
-            ]
+            "$ref": "#/components/schemas/SendReplyMarkup"
           }
         },
         "required": [
@@ -9500,21 +9347,7 @@
             "type": "boolean"
           },
           "reply_markup": {
-            "description": "Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user",
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/InlineKeyboardMarkup"
-              },
-              {
-                "$ref": "#/components/schemas/ReplyKeyboardMarkup"
-              },
-              {
-                "$ref": "#/components/schemas/ReplyKeyboardRemove"
-              },
-              {
-                "$ref": "#/components/schemas/ForceReply"
-              }
-            ]
+            "$ref": "#/components/schemas/SendReplyMarkup"
           }
         },
         "required": [
@@ -10090,6 +9923,16 @@
           "application/json": {
             "schema": {
               "$ref": "#/components/schemas/ResultPoll"
+            }
+          }
+        }
+      },
+      "ResultStickerSet": {
+        "description": "Result of method invocation",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ResultStickerSet"
             }
           }
         }

@@ -3,12 +3,13 @@ package botapi
 import (
 	"context"
 
+	"github.com/gotd/td/telegram/peers"
 	"github.com/gotd/td/tg"
 
 	"github.com/gotd/botapi/internal/oas"
 )
 
-func convertToBotAPIUser(user *tg.User) oas.User {
+func convertRawToBotAPIUser(user *tg.User) oas.User {
 	return oas.User{
 		ID:                      user.ID,
 		IsBot:                   user.Bot,
@@ -22,6 +23,10 @@ func convertToBotAPIUser(user *tg.User) oas.User {
 	}
 }
 
+func convertToBotAPIUser(u peers.User) oas.User {
+	return convertRawToBotAPIUser(u.Raw())
+}
+
 // GetMe implements oas.Handler.
 func (b *BotAPI) GetMe(ctx context.Context) (oas.ResultUser, error) {
 	me, err := b.peers.Self(ctx)
@@ -30,7 +35,7 @@ func (b *BotAPI) GetMe(ctx context.Context) (oas.ResultUser, error) {
 	}
 
 	return oas.ResultUser{
-		Result: oas.NewOptUser(convertToBotAPIUser(me.Raw())),
+		Result: oas.NewOptUser(convertToBotAPIUser(me)),
 		Ok:     true,
 	}, nil
 }

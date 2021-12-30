@@ -191,7 +191,7 @@ type Handler interface {
 	// GetFile implements getFile operation.
 	//
 	// POST /getFile
-	GetFile(ctx context.Context, req GetFile) (Result, error)
+	GetFile(ctx context.Context, req GetFile) (ResultFile, error)
 	// GetGameHighScores implements getGameHighScores operation.
 	//
 	// POST /getGameHighScores
@@ -207,7 +207,7 @@ type Handler interface {
 	// GetStickerSet implements getStickerSet operation.
 	//
 	// POST /getStickerSet
-	GetStickerSet(ctx context.Context, req GetStickerSet) (Result, error)
+	GetStickerSet(ctx context.Context, req GetStickerSet) (ResultStickerSet, error)
 	// GetUpdates implements getUpdates operation.
 	//
 	// POST /getUpdates

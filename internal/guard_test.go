@@ -16,6 +16,7 @@ var _ interface {
 	GetChatMember(context.Context, oas.GetChatMember) (oas.ResultChatMember, error)
 	GetChatMemberCount(context.Context, oas.GetChatMemberCount) (oas.ResultInt, error)
 	GetGameHighScores(context.Context, oas.GetGameHighScores) (oas.ResultArrayOfGameHighScore, error)
+	GetStickerSet(ctx context.Context, req oas.GetStickerSet) (oas.ResultStickerSet, error)
 	GetMe(context.Context) (oas.ResultUser, error)
 	GetMyCommands(context.Context, oas.OptGetMyCommands) (oas.ResultArrayOfBotCommand, error)
 	GetUpdates(context.Context, oas.OptGetUpdates) (oas.ResultArrayOfUpdate, error)

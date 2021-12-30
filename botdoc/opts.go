@@ -14,6 +14,7 @@ var (
 		"BotCommand",
 		"GameHighScore",
 		"WebhookInfo",
+		"StickerSet",
 		"UserProfilePhotos",
 		"ChatMember",
 		"ChatInviteLink",

@@ -108,6 +108,8 @@ func (a API) typeOAS(f Field) *ogen.Schema {
 			p.Ref = "#/components/schemas/ID"
 		case "String or String":
 			p.Type = "string"
+		case "InlineKeyboardMarkup or ReplyKeyboardMarkup or ReplyKeyboardRemove or ForceReply":
+			p.Ref = "#/components/schemas/SendReplyMarkup"
 		default:
 			for _, s := range t.Sum {
 				p.OneOf = append(p.OneOf, a.typeOAS(Field{Type: s}))
@@ -237,6 +239,14 @@ Schemas:
 	c.Schemas["ResultInt"] = resultFor(&ogen.Schema{
 		Type: "integer",
 	})
+	c.Schemas["SendReplyMarkup"] = &ogen.Schema{
+		OneOf: []*ogen.Schema{
+			{Ref: "#/components/schemas/InlineKeyboardMarkup"},
+			{Ref: "#/components/schemas/ReplyKeyboardMarkup"},
+			{Ref: "#/components/schemas/ReplyKeyboardRemove"},
+			{Ref: "#/components/schemas/ForceReply"},
+		},
+	}
 	addResponse := func(name, ref, description string) {
 		c.Responses[name] = &ogen.Response{
 			Description: description,
@@ -459,6 +469,7 @@ Schemas:
 		}
 		p["/"+m.Name] = item
 	}
+	addMissedProperties(c.Schemas)
 	return &ogen.Spec{
 		OpenAPI: "3.0.3",
 		Info: ogen.Info{
@@ -476,4 +487,34 @@ Schemas:
 		Paths:      p,
 		Components: c,
 	}, nil
+}
+
+func addMissedProperties(schemas map[string]*ogen.Schema) {
+	add := func(name string, props ...ogen.Property) {
+		schemas[name].Properties = append(schemas[name].Properties, props...)
+	}
+
+	add("Chat", ogen.Property{
+		Name: "all_members_are_administrators",
+		Schema: &ogen.Schema{
+			Type: "boolean",
+		},
+	})
+	// Seems like legacy fields.
+	add("Message", ogen.Property{
+		Name: "new_chat_member",
+		Schema: &ogen.Schema{
+			Ref: "#/components/schemas/User",
+		},
+	}, ogen.Property{
+		Name: "new_chat_participant",
+		Schema: &ogen.Schema{
+			Ref: "#/components/schemas/User",
+		},
+	}, ogen.Property{
+		Name: "left_chat_participant",
+		Schema: &ogen.Schema{
+			Ref: "#/components/schemas/User",
+		},
+	})
 }

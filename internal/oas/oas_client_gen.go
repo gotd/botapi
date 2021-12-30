@@ -1860,7 +1860,7 @@ func (c *Client) GetChatMemberCount(ctx context.Context, request GetChatMemberCo
 // GetFile invokes getFile operation.
 //
 // POST /getFile
-func (c *Client) GetFile(ctx context.Context, request GetFile) (res Result, err error) {
+func (c *Client) GetFile(ctx context.Context, request GetFile) (res ResultFile, err error) {
 	startTime := time.Now()
 	ctx, span := c.cfg.Tracer.Start(ctx, `GetFile`,
 		trace.WithAttributes(otelogen.OperationID(`getFile`)),
@@ -2062,7 +2062,7 @@ func (c *Client) GetMyCommands(ctx context.Context, request OptGetMyCommands) (r
 // GetStickerSet invokes getStickerSet operation.
 //
 // POST /getStickerSet
-func (c *Client) GetStickerSet(ctx context.Context, request GetStickerSet) (res Result, err error) {
+func (c *Client) GetStickerSet(ctx context.Context, request GetStickerSet) (res ResultStickerSet, err error) {
 	startTime := time.Now()
 	ctx, span := c.cfg.Tracer.Start(ctx, `GetStickerSet`,
 		trace.WithAttributes(otelogen.OperationID(`getStickerSet`)),

@@ -427,26 +427,27 @@ type CallbackQuery struct {
 
 // Ref: #/components/schemas/Chat
 type Chat struct {
-	ID                    int64              `json:"id"`
-	Type                  ChatType           `json:"type"`
-	Title                 OptString          `json:"title"`
-	Username              OptString          `json:"username"`
-	FirstName             OptString          `json:"first_name"`
-	LastName              OptString          `json:"last_name"`
-	Photo                 OptChatPhoto       `json:"photo"`
-	Bio                   OptString          `json:"bio"`
-	HasPrivateForwards    OptBool            `json:"has_private_forwards"`
-	Description           OptString          `json:"description"`
-	InviteLink            OptString          `json:"invite_link"`
-	PinnedMessage         *Message           `json:"pinned_message"`
-	Permissions           OptChatPermissions `json:"permissions"`
-	SlowModeDelay         OptInt             `json:"slow_mode_delay"`
-	MessageAutoDeleteTime OptInt             `json:"message_auto_delete_time"`
-	HasProtectedContent   OptBool            `json:"has_protected_content"`
-	StickerSetName        OptString          `json:"sticker_set_name"`
-	CanSetStickerSet      OptBool            `json:"can_set_sticker_set"`
-	LinkedChatID          OptInt64           `json:"linked_chat_id"`
-	Location              OptChatLocation    `json:"location"`
+	ID                          int64              `json:"id"`
+	Type                        ChatType           `json:"type"`
+	Title                       OptString          `json:"title"`
+	Username                    OptString          `json:"username"`
+	FirstName                   OptString          `json:"first_name"`
+	LastName                    OptString          `json:"last_name"`
+	Photo                       OptChatPhoto       `json:"photo"`
+	Bio                         OptString          `json:"bio"`
+	HasPrivateForwards          OptBool            `json:"has_private_forwards"`
+	Description                 OptString          `json:"description"`
+	InviteLink                  OptString          `json:"invite_link"`
+	PinnedMessage               *Message           `json:"pinned_message"`
+	Permissions                 OptChatPermissions `json:"permissions"`
+	SlowModeDelay               OptInt             `json:"slow_mode_delay"`
+	MessageAutoDeleteTime       OptInt             `json:"message_auto_delete_time"`
+	HasProtectedContent         OptBool            `json:"has_protected_content"`
+	StickerSetName              OptString          `json:"sticker_set_name"`
+	CanSetStickerSet            OptBool            `json:"can_set_sticker_set"`
+	LinkedChatID                OptInt64           `json:"linked_chat_id"`
+	Location                    OptChatLocation    `json:"location"`
+	AllMembersAreAdministrators OptBool            `json:"all_members_are_administrators"`
 }
 
 // Ref: #/components/schemas/ChatInviteLink
@@ -769,140 +770,16 @@ type Contact struct {
 
 // Ref: #/components/schemas/copyMessage
 type CopyMessage struct {
-	ChatID                   ID                      `json:"chat_id"`
-	FromChatID               ID                      `json:"from_chat_id"`
-	MessageID                int                     `json:"message_id"`
-	Caption                  OptString               `json:"caption"`
-	ParseMode                OptString               `json:"parse_mode"`
-	CaptionEntities          []MessageEntity         `json:"caption_entities"`
-	DisableNotification      OptBool                 `json:"disable_notification"`
-	ReplyToMessageID         OptInt                  `json:"reply_to_message_id"`
-	AllowSendingWithoutReply OptBool                 `json:"allow_sending_without_reply"`
-	ReplyMarkup              *CopyMessageReplyMarkup `json:"reply_markup"`
-}
-
-// CopyMessageReplyMarkup represents sum type.
-type CopyMessageReplyMarkup struct {
-	Type                 CopyMessageReplyMarkupType // switch on this field
-	InlineKeyboardMarkup InlineKeyboardMarkup
-	ReplyKeyboardMarkup  ReplyKeyboardMarkup
-	ReplyKeyboardRemove  ReplyKeyboardRemove
-	ForceReply           ForceReply
-}
-
-// CopyMessageReplyMarkupType is oneOf type of CopyMessageReplyMarkup.
-type CopyMessageReplyMarkupType string
-
-// Possible values for CopyMessageReplyMarkupType.
-const (
-	InlineKeyboardMarkupCopyMessageReplyMarkup CopyMessageReplyMarkupType = "InlineKeyboardMarkup"
-	ReplyKeyboardMarkupCopyMessageReplyMarkup  CopyMessageReplyMarkupType = "ReplyKeyboardMarkup"
-	ReplyKeyboardRemoveCopyMessageReplyMarkup  CopyMessageReplyMarkupType = "ReplyKeyboardRemove"
-	ForceReplyCopyMessageReplyMarkup           CopyMessageReplyMarkupType = "ForceReply"
-)
-
-// IsInlineKeyboardMarkup reports whether CopyMessageReplyMarkup is InlineKeyboardMarkup.
-func (s CopyMessageReplyMarkup) IsInlineKeyboardMarkup() bool {
-	return s.Type == InlineKeyboardMarkupCopyMessageReplyMarkup
-}
-
-// IsReplyKeyboardMarkup reports whether CopyMessageReplyMarkup is ReplyKeyboardMarkup.
-func (s CopyMessageReplyMarkup) IsReplyKeyboardMarkup() bool {
-	return s.Type == ReplyKeyboardMarkupCopyMessageReplyMarkup
-}
-
-// IsReplyKeyboardRemove reports whether CopyMessageReplyMarkup is ReplyKeyboardRemove.
-func (s CopyMessageReplyMarkup) IsReplyKeyboardRemove() bool {
-	return s.Type == ReplyKeyboardRemoveCopyMessageReplyMarkup
-}
-
-// IsForceReply reports whether CopyMessageReplyMarkup is ForceReply.
-func (s CopyMessageReplyMarkup) IsForceReply() bool {
-	return s.Type == ForceReplyCopyMessageReplyMarkup
-}
-
-// SetInlineKeyboardMarkup sets CopyMessageReplyMarkup to InlineKeyboardMarkup.
-func (s *CopyMessageReplyMarkup) SetInlineKeyboardMarkup(v InlineKeyboardMarkup) {
-	s.Type = InlineKeyboardMarkupCopyMessageReplyMarkup
-	s.InlineKeyboardMarkup = v
-}
-
-// GetInlineKeyboardMarkup returns InlineKeyboardMarkup and true boolean if CopyMessageReplyMarkup is InlineKeyboardMarkup.
-func (s CopyMessageReplyMarkup) GetInlineKeyboardMarkup() (v InlineKeyboardMarkup, ok bool) {
-	if !s.IsInlineKeyboardMarkup() {
-		return v, false
-	}
-	return s.InlineKeyboardMarkup, true
-}
-
-// NewInlineKeyboardMarkupCopyMessageReplyMarkup returns new CopyMessageReplyMarkup from InlineKeyboardMarkup.
-func NewInlineKeyboardMarkupCopyMessageReplyMarkup(v InlineKeyboardMarkup) CopyMessageReplyMarkup {
-	var s CopyMessageReplyMarkup
-	s.SetInlineKeyboardMarkup(v)
-	return s
-}
-
-// SetReplyKeyboardMarkup sets CopyMessageReplyMarkup to ReplyKeyboardMarkup.
-func (s *CopyMessageReplyMarkup) SetReplyKeyboardMarkup(v ReplyKeyboardMarkup) {
-	s.Type = ReplyKeyboardMarkupCopyMessageReplyMarkup
-	s.ReplyKeyboardMarkup = v
-}
-
-// GetReplyKeyboardMarkup returns ReplyKeyboardMarkup and true boolean if CopyMessageReplyMarkup is ReplyKeyboardMarkup.
-func (s CopyMessageReplyMarkup) GetReplyKeyboardMarkup() (v ReplyKeyboardMarkup, ok bool) {
-	if !s.IsReplyKeyboardMarkup() {
-		return v, false
-	}
-	return s.ReplyKeyboardMarkup, true
-}
-
-// NewReplyKeyboardMarkupCopyMessageReplyMarkup returns new CopyMessageReplyMarkup from ReplyKeyboardMarkup.
-func NewReplyKeyboardMarkupCopyMessageReplyMarkup(v ReplyKeyboardMarkup) CopyMessageReplyMarkup {
-	var s CopyMessageReplyMarkup
-	s.SetReplyKeyboardMarkup(v)
-	return s
-}
-
-// SetReplyKeyboardRemove sets CopyMessageReplyMarkup to ReplyKeyboardRemove.
-func (s *CopyMessageReplyMarkup) SetReplyKeyboardRemove(v ReplyKeyboardRemove) {
-	s.Type = ReplyKeyboardRemoveCopyMessageReplyMarkup
-	s.ReplyKeyboardRemove = v
-}
-
-// GetReplyKeyboardRemove returns ReplyKeyboardRemove and true boolean if CopyMessageReplyMarkup is ReplyKeyboardRemove.
-func (s CopyMessageReplyMarkup) GetReplyKeyboardRemove() (v ReplyKeyboardRemove, ok bool) {
-	if !s.IsReplyKeyboardRemove() {
-		return v, false
-	}
-	return s.ReplyKeyboardRemove, true
-}
-
-// NewReplyKeyboardRemoveCopyMessageReplyMarkup returns new CopyMessageReplyMarkup from ReplyKeyboardRemove.
-func NewReplyKeyboardRemoveCopyMessageReplyMarkup(v ReplyKeyboardRemove) CopyMessageReplyMarkup {
-	var s CopyMessageReplyMarkup
-	s.SetReplyKeyboardRemove(v)
-	return s
-}
-
-// SetForceReply sets CopyMessageReplyMarkup to ForceReply.
-func (s *CopyMessageReplyMarkup) SetForceReply(v ForceReply) {
-	s.Type = ForceReplyCopyMessageReplyMarkup
-	s.ForceReply = v
-}
-
-// GetForceReply returns ForceReply and true boolean if CopyMessageReplyMarkup is ForceReply.
-func (s CopyMessageReplyMarkup) GetForceReply() (v ForceReply, ok bool) {
-	if !s.IsForceReply() {
-		return v, false
-	}
-	return s.ForceReply, true
-}
-
-// NewForceReplyCopyMessageReplyMarkup returns new CopyMessageReplyMarkup from ForceReply.
-func NewForceReplyCopyMessageReplyMarkup(v ForceReply) CopyMessageReplyMarkup {
-	var s CopyMessageReplyMarkup
-	s.SetForceReply(v)
-	return s
+	ChatID                   ID               `json:"chat_id"`
+	FromChatID               ID               `json:"from_chat_id"`
+	MessageID                int              `json:"message_id"`
+	Caption                  OptString        `json:"caption"`
+	ParseMode                OptString        `json:"parse_mode"`
+	CaptionEntities          []MessageEntity  `json:"caption_entities"`
+	DisableNotification      OptBool          `json:"disable_notification"`
+	ReplyToMessageID         OptInt           `json:"reply_to_message_id"`
+	AllowSendingWithoutReply OptBool          `json:"allow_sending_without_reply"`
+	ReplyMarkup              *SendReplyMarkup `json:"reply_markup"`
 }
 
 // Ref: #/components/schemas/createChatInviteLink
@@ -2776,6 +2653,9 @@ type Message struct {
 	VoiceChatEnded                OptVoiceChatEnded                `json:"voice_chat_ended"`
 	VoiceChatParticipantsInvited  OptVoiceChatParticipantsInvited  `json:"voice_chat_participants_invited"`
 	ReplyMarkup                   OptInlineKeyboardMarkup          `json:"reply_markup"`
+	NewChatMember                 OptUser                          `json:"new_chat_member"`
+	NewChatParticipant            OptUser                          `json:"new_chat_participant"`
+	LeftChatParticipant           OptUser                          `json:"left_chat_participant"`
 }
 
 // Ref: #/components/schemas/MessageAutoDeleteTimerChanged
@@ -2856,6 +2736,14 @@ func (o OptAnimation) Get() (v Animation, ok bool) {
 	return o.Value, true
 }
 
+// Or returns value if set, or given parameter if does not.
+func (o OptAnimation) Or(d Animation) Animation {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
 // NewOptAudio returns new OptAudio with value set to v.
 func NewOptAudio(v Audio) OptAudio {
 	return OptAudio{
@@ -2892,6 +2780,14 @@ func (o OptAudio) Get() (v Audio, ok bool) {
 		return v, false
 	}
 	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptAudio) Or(d Audio) Audio {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
 }
 
 // NewOptBool returns new OptBool with value set to v.
@@ -2932,6 +2828,14 @@ func (o OptBool) Get() (v bool, ok bool) {
 	return o.Value, true
 }
 
+// Or returns value if set, or given parameter if does not.
+func (o OptBool) Or(d bool) bool {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
 // NewOptCallbackQuery returns new OptCallbackQuery with value set to v.
 func NewOptCallbackQuery(v CallbackQuery) OptCallbackQuery {
 	return OptCallbackQuery{
@@ -2968,6 +2872,14 @@ func (o OptCallbackQuery) Get() (v CallbackQuery, ok bool) {
 		return v, false
 	}
 	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptCallbackQuery) Or(d CallbackQuery) CallbackQuery {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
 }
 
 // NewOptChat returns new OptChat with value set to v.
@@ -3008,6 +2920,14 @@ func (o OptChat) Get() (v Chat, ok bool) {
 	return o.Value, true
 }
 
+// Or returns value if set, or given parameter if does not.
+func (o OptChat) Or(d Chat) Chat {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
 // NewOptChatInviteLink returns new OptChatInviteLink with value set to v.
 func NewOptChatInviteLink(v ChatInviteLink) OptChatInviteLink {
 	return OptChatInviteLink{
@@ -3044,6 +2964,14 @@ func (o OptChatInviteLink) Get() (v ChatInviteLink, ok bool) {
 		return v, false
 	}
 	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptChatInviteLink) Or(d ChatInviteLink) ChatInviteLink {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
 }
 
 // NewOptChatJoinRequest returns new OptChatJoinRequest with value set to v.
@@ -3084,6 +3012,14 @@ func (o OptChatJoinRequest) Get() (v ChatJoinRequest, ok bool) {
 	return o.Value, true
 }
 
+// Or returns value if set, or given parameter if does not.
+func (o OptChatJoinRequest) Or(d ChatJoinRequest) ChatJoinRequest {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
 // NewOptChatLocation returns new OptChatLocation with value set to v.
 func NewOptChatLocation(v ChatLocation) OptChatLocation {
 	return OptChatLocation{
@@ -3120,6 +3056,14 @@ func (o OptChatLocation) Get() (v ChatLocation, ok bool) {
 		return v, false
 	}
 	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptChatLocation) Or(d ChatLocation) ChatLocation {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
 }
 
 // NewOptChatMemberUpdated returns new OptChatMemberUpdated with value set to v.
@@ -3160,6 +3104,14 @@ func (o OptChatMemberUpdated) Get() (v ChatMemberUpdated, ok bool) {
 	return o.Value, true
 }
 
+// Or returns value if set, or given parameter if does not.
+func (o OptChatMemberUpdated) Or(d ChatMemberUpdated) ChatMemberUpdated {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
 // NewOptChatPermissions returns new OptChatPermissions with value set to v.
 func NewOptChatPermissions(v ChatPermissions) OptChatPermissions {
 	return OptChatPermissions{
@@ -3196,6 +3148,14 @@ func (o OptChatPermissions) Get() (v ChatPermissions, ok bool) {
 		return v, false
 	}
 	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptChatPermissions) Or(d ChatPermissions) ChatPermissions {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
 }
 
 // NewOptChatPhoto returns new OptChatPhoto with value set to v.
@@ -3236,6 +3196,14 @@ func (o OptChatPhoto) Get() (v ChatPhoto, ok bool) {
 	return o.Value, true
 }
 
+// Or returns value if set, or given parameter if does not.
+func (o OptChatPhoto) Or(d ChatPhoto) ChatPhoto {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
 // NewOptChosenInlineResult returns new OptChosenInlineResult with value set to v.
 func NewOptChosenInlineResult(v ChosenInlineResult) OptChosenInlineResult {
 	return OptChosenInlineResult{
@@ -3272,6 +3240,14 @@ func (o OptChosenInlineResult) Get() (v ChosenInlineResult, ok bool) {
 		return v, false
 	}
 	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptChosenInlineResult) Or(d ChosenInlineResult) ChosenInlineResult {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
 }
 
 // NewOptContact returns new OptContact with value set to v.
@@ -3312,6 +3288,14 @@ func (o OptContact) Get() (v Contact, ok bool) {
 	return o.Value, true
 }
 
+// Or returns value if set, or given parameter if does not.
+func (o OptContact) Or(d Contact) Contact {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
 // NewOptDeleteMyCommands returns new OptDeleteMyCommands with value set to v.
 func NewOptDeleteMyCommands(v DeleteMyCommands) OptDeleteMyCommands {
 	return OptDeleteMyCommands{
@@ -3348,6 +3332,14 @@ func (o OptDeleteMyCommands) Get() (v DeleteMyCommands, ok bool) {
 		return v, false
 	}
 	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptDeleteMyCommands) Or(d DeleteMyCommands) DeleteMyCommands {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
 }
 
 // NewOptDeleteWebhook returns new OptDeleteWebhook with value set to v.
@@ -3388,6 +3380,14 @@ func (o OptDeleteWebhook) Get() (v DeleteWebhook, ok bool) {
 	return o.Value, true
 }
 
+// Or returns value if set, or given parameter if does not.
+func (o OptDeleteWebhook) Or(d DeleteWebhook) DeleteWebhook {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
 // NewOptDice returns new OptDice with value set to v.
 func NewOptDice(v Dice) OptDice {
 	return OptDice{
@@ -3424,6 +3424,14 @@ func (o OptDice) Get() (v Dice, ok bool) {
 		return v, false
 	}
 	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptDice) Or(d Dice) Dice {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
 }
 
 // NewOptDocument returns new OptDocument with value set to v.
@@ -3464,6 +3472,14 @@ func (o OptDocument) Get() (v Document, ok bool) {
 	return o.Value, true
 }
 
+// Or returns value if set, or given parameter if does not.
+func (o OptDocument) Or(d Document) Document {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
 // NewOptFile returns new OptFile with value set to v.
 func NewOptFile(v File) OptFile {
 	return OptFile{
@@ -3500,6 +3516,14 @@ func (o OptFile) Get() (v File, ok bool) {
 		return v, false
 	}
 	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptFile) Or(d File) File {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
 }
 
 // NewOptFloat64 returns new OptFloat64 with value set to v.
@@ -3540,6 +3564,14 @@ func (o OptFloat64) Get() (v float64, ok bool) {
 	return o.Value, true
 }
 
+// Or returns value if set, or given parameter if does not.
+func (o OptFloat64) Or(d float64) float64 {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
 // NewOptGame returns new OptGame with value set to v.
 func NewOptGame(v Game) OptGame {
 	return OptGame{
@@ -3576,6 +3608,14 @@ func (o OptGame) Get() (v Game, ok bool) {
 		return v, false
 	}
 	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptGame) Or(d Game) Game {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
 }
 
 // NewOptGetMyCommands returns new OptGetMyCommands with value set to v.
@@ -3616,6 +3656,14 @@ func (o OptGetMyCommands) Get() (v GetMyCommands, ok bool) {
 	return o.Value, true
 }
 
+// Or returns value if set, or given parameter if does not.
+func (o OptGetMyCommands) Or(d GetMyCommands) GetMyCommands {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
 // NewOptGetUpdates returns new OptGetUpdates with value set to v.
 func NewOptGetUpdates(v GetUpdates) OptGetUpdates {
 	return OptGetUpdates{
@@ -3652,6 +3700,14 @@ func (o OptGetUpdates) Get() (v GetUpdates, ok bool) {
 		return v, false
 	}
 	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptGetUpdates) Or(d GetUpdates) GetUpdates {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
 }
 
 // NewOptInlineKeyboardMarkup returns new OptInlineKeyboardMarkup with value set to v.
@@ -3692,6 +3748,14 @@ func (o OptInlineKeyboardMarkup) Get() (v InlineKeyboardMarkup, ok bool) {
 	return o.Value, true
 }
 
+// Or returns value if set, or given parameter if does not.
+func (o OptInlineKeyboardMarkup) Or(d InlineKeyboardMarkup) InlineKeyboardMarkup {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
 // NewOptInlineQuery returns new OptInlineQuery with value set to v.
 func NewOptInlineQuery(v InlineQuery) OptInlineQuery {
 	return OptInlineQuery{
@@ -3728,6 +3792,14 @@ func (o OptInlineQuery) Get() (v InlineQuery, ok bool) {
 		return v, false
 	}
 	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptInlineQuery) Or(d InlineQuery) InlineQuery {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
 }
 
 // NewOptInlineQueryChatType returns new OptInlineQueryChatType with value set to v.
@@ -3768,6 +3840,14 @@ func (o OptInlineQueryChatType) Get() (v InlineQueryChatType, ok bool) {
 	return o.Value, true
 }
 
+// Or returns value if set, or given parameter if does not.
+func (o OptInlineQueryChatType) Or(d InlineQueryChatType) InlineQueryChatType {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
 // NewOptInt returns new OptInt with value set to v.
 func NewOptInt(v int) OptInt {
 	return OptInt{
@@ -3804,6 +3884,14 @@ func (o OptInt) Get() (v int, ok bool) {
 		return v, false
 	}
 	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptInt) Or(d int) int {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
 }
 
 // NewOptInt64 returns new OptInt64 with value set to v.
@@ -3844,6 +3932,14 @@ func (o OptInt64) Get() (v int64, ok bool) {
 	return o.Value, true
 }
 
+// Or returns value if set, or given parameter if does not.
+func (o OptInt64) Or(d int64) int64 {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
 // NewOptInvoice returns new OptInvoice with value set to v.
 func NewOptInvoice(v Invoice) OptInvoice {
 	return OptInvoice{
@@ -3880,6 +3976,14 @@ func (o OptInvoice) Get() (v Invoice, ok bool) {
 		return v, false
 	}
 	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptInvoice) Or(d Invoice) Invoice {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
 }
 
 // NewOptKeyboardButtonPollType returns new OptKeyboardButtonPollType with value set to v.
@@ -3920,6 +4024,14 @@ func (o OptKeyboardButtonPollType) Get() (v KeyboardButtonPollType, ok bool) {
 	return o.Value, true
 }
 
+// Or returns value if set, or given parameter if does not.
+func (o OptKeyboardButtonPollType) Or(d KeyboardButtonPollType) KeyboardButtonPollType {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
 // NewOptLocation returns new OptLocation with value set to v.
 func NewOptLocation(v Location) OptLocation {
 	return OptLocation{
@@ -3956,6 +4068,14 @@ func (o OptLocation) Get() (v Location, ok bool) {
 		return v, false
 	}
 	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptLocation) Or(d Location) Location {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
 }
 
 // NewOptLoginUrl returns new OptLoginUrl with value set to v.
@@ -3996,6 +4116,14 @@ func (o OptLoginUrl) Get() (v LoginUrl, ok bool) {
 	return o.Value, true
 }
 
+// Or returns value if set, or given parameter if does not.
+func (o OptLoginUrl) Or(d LoginUrl) LoginUrl {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
 // NewOptMaskPosition returns new OptMaskPosition with value set to v.
 func NewOptMaskPosition(v MaskPosition) OptMaskPosition {
 	return OptMaskPosition{
@@ -4032,6 +4160,14 @@ func (o OptMaskPosition) Get() (v MaskPosition, ok bool) {
 		return v, false
 	}
 	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptMaskPosition) Or(d MaskPosition) MaskPosition {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
 }
 
 // NewOptMessage returns new OptMessage with value set to v.
@@ -4072,6 +4208,14 @@ func (o OptMessage) Get() (v Message, ok bool) {
 	return o.Value, true
 }
 
+// Or returns value if set, or given parameter if does not.
+func (o OptMessage) Or(d Message) Message {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
 // NewOptMessageAutoDeleteTimerChanged returns new OptMessageAutoDeleteTimerChanged with value set to v.
 func NewOptMessageAutoDeleteTimerChanged(v MessageAutoDeleteTimerChanged) OptMessageAutoDeleteTimerChanged {
 	return OptMessageAutoDeleteTimerChanged{
@@ -4108,6 +4252,14 @@ func (o OptMessageAutoDeleteTimerChanged) Get() (v MessageAutoDeleteTimerChanged
 		return v, false
 	}
 	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptMessageAutoDeleteTimerChanged) Or(d MessageAutoDeleteTimerChanged) MessageAutoDeleteTimerChanged {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
 }
 
 // NewOptMessageId returns new OptMessageId with value set to v.
@@ -4148,6 +4300,14 @@ func (o OptMessageId) Get() (v MessageId, ok bool) {
 	return o.Value, true
 }
 
+// Or returns value if set, or given parameter if does not.
+func (o OptMessageId) Or(d MessageId) MessageId {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
 // NewOptOrderInfo returns new OptOrderInfo with value set to v.
 func NewOptOrderInfo(v OrderInfo) OptOrderInfo {
 	return OptOrderInfo{
@@ -4184,6 +4344,14 @@ func (o OptOrderInfo) Get() (v OrderInfo, ok bool) {
 		return v, false
 	}
 	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptOrderInfo) Or(d OrderInfo) OrderInfo {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
 }
 
 // NewOptPassportData returns new OptPassportData with value set to v.
@@ -4224,6 +4392,14 @@ func (o OptPassportData) Get() (v PassportData, ok bool) {
 	return o.Value, true
 }
 
+// Or returns value if set, or given parameter if does not.
+func (o OptPassportData) Or(d PassportData) PassportData {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
 // NewOptPassportFile returns new OptPassportFile with value set to v.
 func NewOptPassportFile(v PassportFile) OptPassportFile {
 	return OptPassportFile{
@@ -4260,6 +4436,14 @@ func (o OptPassportFile) Get() (v PassportFile, ok bool) {
 		return v, false
 	}
 	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptPassportFile) Or(d PassportFile) PassportFile {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
 }
 
 // NewOptPhotoSize returns new OptPhotoSize with value set to v.
@@ -4300,6 +4484,14 @@ func (o OptPhotoSize) Get() (v PhotoSize, ok bool) {
 	return o.Value, true
 }
 
+// Or returns value if set, or given parameter if does not.
+func (o OptPhotoSize) Or(d PhotoSize) PhotoSize {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
 // NewOptPoll returns new OptPoll with value set to v.
 func NewOptPoll(v Poll) OptPoll {
 	return OptPoll{
@@ -4336,6 +4528,14 @@ func (o OptPoll) Get() (v Poll, ok bool) {
 		return v, false
 	}
 	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptPoll) Or(d Poll) Poll {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
 }
 
 // NewOptPollAnswer returns new OptPollAnswer with value set to v.
@@ -4376,6 +4576,14 @@ func (o OptPollAnswer) Get() (v PollAnswer, ok bool) {
 	return o.Value, true
 }
 
+// Or returns value if set, or given parameter if does not.
+func (o OptPollAnswer) Or(d PollAnswer) PollAnswer {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
 // NewOptPreCheckoutQuery returns new OptPreCheckoutQuery with value set to v.
 func NewOptPreCheckoutQuery(v PreCheckoutQuery) OptPreCheckoutQuery {
 	return OptPreCheckoutQuery{
@@ -4412,6 +4620,14 @@ func (o OptPreCheckoutQuery) Get() (v PreCheckoutQuery, ok bool) {
 		return v, false
 	}
 	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptPreCheckoutQuery) Or(d PreCheckoutQuery) PreCheckoutQuery {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
 }
 
 // NewOptProximityAlertTriggered returns new OptProximityAlertTriggered with value set to v.
@@ -4452,6 +4668,14 @@ func (o OptProximityAlertTriggered) Get() (v ProximityAlertTriggered, ok bool) {
 	return o.Value, true
 }
 
+// Or returns value if set, or given parameter if does not.
+func (o OptProximityAlertTriggered) Or(d ProximityAlertTriggered) ProximityAlertTriggered {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
 // NewOptResponse returns new OptResponse with value set to v.
 func NewOptResponse(v Response) OptResponse {
 	return OptResponse{
@@ -4488,6 +4712,14 @@ func (o OptResponse) Get() (v Response, ok bool) {
 		return v, false
 	}
 	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptResponse) Or(d Response) Response {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
 }
 
 // NewOptShippingAddress returns new OptShippingAddress with value set to v.
@@ -4528,6 +4760,14 @@ func (o OptShippingAddress) Get() (v ShippingAddress, ok bool) {
 	return o.Value, true
 }
 
+// Or returns value if set, or given parameter if does not.
+func (o OptShippingAddress) Or(d ShippingAddress) ShippingAddress {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
 // NewOptShippingQuery returns new OptShippingQuery with value set to v.
 func NewOptShippingQuery(v ShippingQuery) OptShippingQuery {
 	return OptShippingQuery{
@@ -4564,6 +4804,14 @@ func (o OptShippingQuery) Get() (v ShippingQuery, ok bool) {
 		return v, false
 	}
 	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptShippingQuery) Or(d ShippingQuery) ShippingQuery {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
 }
 
 // NewOptSticker returns new OptSticker with value set to v.
@@ -4604,6 +4852,60 @@ func (o OptSticker) Get() (v Sticker, ok bool) {
 	return o.Value, true
 }
 
+// Or returns value if set, or given parameter if does not.
+func (o OptSticker) Or(d Sticker) Sticker {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
+// NewOptStickerSet returns new OptStickerSet with value set to v.
+func NewOptStickerSet(v StickerSet) OptStickerSet {
+	return OptStickerSet{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptStickerSet is optional StickerSet.
+type OptStickerSet struct {
+	Value StickerSet
+	Set   bool
+}
+
+// IsSet returns true if OptStickerSet was set.
+func (o OptStickerSet) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptStickerSet) Reset() {
+	var v StickerSet
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptStickerSet) SetTo(v StickerSet) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptStickerSet) Get() (v StickerSet, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptStickerSet) Or(d StickerSet) StickerSet {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
 // NewOptString returns new OptString with value set to v.
 func NewOptString(v string) OptString {
 	return OptString{
@@ -4640,6 +4942,14 @@ func (o OptString) Get() (v string, ok bool) {
 		return v, false
 	}
 	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptString) Or(d string) string {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
 }
 
 // NewOptSuccessfulPayment returns new OptSuccessfulPayment with value set to v.
@@ -4680,6 +4990,14 @@ func (o OptSuccessfulPayment) Get() (v SuccessfulPayment, ok bool) {
 	return o.Value, true
 }
 
+// Or returns value if set, or given parameter if does not.
+func (o OptSuccessfulPayment) Or(d SuccessfulPayment) SuccessfulPayment {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
 // NewOptUser returns new OptUser with value set to v.
 func NewOptUser(v User) OptUser {
 	return OptUser{
@@ -4716,6 +5034,14 @@ func (o OptUser) Get() (v User, ok bool) {
 		return v, false
 	}
 	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptUser) Or(d User) User {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
 }
 
 // NewOptUserProfilePhotos returns new OptUserProfilePhotos with value set to v.
@@ -4756,6 +5082,14 @@ func (o OptUserProfilePhotos) Get() (v UserProfilePhotos, ok bool) {
 	return o.Value, true
 }
 
+// Or returns value if set, or given parameter if does not.
+func (o OptUserProfilePhotos) Or(d UserProfilePhotos) UserProfilePhotos {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
 // NewOptVenue returns new OptVenue with value set to v.
 func NewOptVenue(v Venue) OptVenue {
 	return OptVenue{
@@ -4792,6 +5126,14 @@ func (o OptVenue) Get() (v Venue, ok bool) {
 		return v, false
 	}
 	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptVenue) Or(d Venue) Venue {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
 }
 
 // NewOptVideo returns new OptVideo with value set to v.
@@ -4832,6 +5174,14 @@ func (o OptVideo) Get() (v Video, ok bool) {
 	return o.Value, true
 }
 
+// Or returns value if set, or given parameter if does not.
+func (o OptVideo) Or(d Video) Video {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
 // NewOptVideoNote returns new OptVideoNote with value set to v.
 func NewOptVideoNote(v VideoNote) OptVideoNote {
 	return OptVideoNote{
@@ -4868,6 +5218,14 @@ func (o OptVideoNote) Get() (v VideoNote, ok bool) {
 		return v, false
 	}
 	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptVideoNote) Or(d VideoNote) VideoNote {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
 }
 
 // NewOptVoice returns new OptVoice with value set to v.
@@ -4908,6 +5266,14 @@ func (o OptVoice) Get() (v Voice, ok bool) {
 	return o.Value, true
 }
 
+// Or returns value if set, or given parameter if does not.
+func (o OptVoice) Or(d Voice) Voice {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
 // NewOptVoiceChatEnded returns new OptVoiceChatEnded with value set to v.
 func NewOptVoiceChatEnded(v VoiceChatEnded) OptVoiceChatEnded {
 	return OptVoiceChatEnded{
@@ -4944,6 +5310,14 @@ func (o OptVoiceChatEnded) Get() (v VoiceChatEnded, ok bool) {
 		return v, false
 	}
 	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptVoiceChatEnded) Or(d VoiceChatEnded) VoiceChatEnded {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
 }
 
 // NewOptVoiceChatParticipantsInvited returns new OptVoiceChatParticipantsInvited with value set to v.
@@ -4984,6 +5358,14 @@ func (o OptVoiceChatParticipantsInvited) Get() (v VoiceChatParticipantsInvited, 
 	return o.Value, true
 }
 
+// Or returns value if set, or given parameter if does not.
+func (o OptVoiceChatParticipantsInvited) Or(d VoiceChatParticipantsInvited) VoiceChatParticipantsInvited {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
 // NewOptVoiceChatScheduled returns new OptVoiceChatScheduled with value set to v.
 func NewOptVoiceChatScheduled(v VoiceChatScheduled) OptVoiceChatScheduled {
 	return OptVoiceChatScheduled{
@@ -5022,6 +5404,14 @@ func (o OptVoiceChatScheduled) Get() (v VoiceChatScheduled, ok bool) {
 	return o.Value, true
 }
 
+// Or returns value if set, or given parameter if does not.
+func (o OptVoiceChatScheduled) Or(d VoiceChatScheduled) VoiceChatScheduled {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
 // NewOptWebhookInfo returns new OptWebhookInfo with value set to v.
 func NewOptWebhookInfo(v WebhookInfo) OptWebhookInfo {
 	return OptWebhookInfo{
@@ -5058,6 +5448,14 @@ func (o OptWebhookInfo) Get() (v WebhookInfo, ok bool) {
 		return v, false
 	}
 	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptWebhookInfo) Or(d WebhookInfo) WebhookInfo {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
 }
 
 // Ref: #/components/schemas/OrderInfo
@@ -5705,6 +6103,12 @@ type ResultPoll struct {
 	Ok     bool    `json:"ok"`
 }
 
+// Ref: #/components/schemas/ResultStickerSet
+type ResultStickerSet struct {
+	Result OptStickerSet `json:"result"`
+	Ok     bool          `json:"ok"`
+}
+
 // Ref: #/components/schemas/ResultString
 type ResultString struct {
 	Result OptString `json:"result"`
@@ -5737,282 +6141,36 @@ type RevokeChatInviteLink struct {
 
 // Ref: #/components/schemas/sendAnimation
 type SendAnimation struct {
-	ChatID                   ID                        `json:"chat_id"`
-	Animation                string                    `json:"animation"`
-	Duration                 OptInt                    `json:"duration"`
-	Width                    OptInt                    `json:"width"`
-	Height                   OptInt                    `json:"height"`
-	Thumb                    OptString                 `json:"thumb"`
-	Caption                  OptString                 `json:"caption"`
-	ParseMode                OptString                 `json:"parse_mode"`
-	CaptionEntities          []MessageEntity           `json:"caption_entities"`
-	DisableNotification      OptBool                   `json:"disable_notification"`
-	ReplyToMessageID         OptInt                    `json:"reply_to_message_id"`
-	AllowSendingWithoutReply OptBool                   `json:"allow_sending_without_reply"`
-	ReplyMarkup              *SendAnimationReplyMarkup `json:"reply_markup"`
-}
-
-// SendAnimationReplyMarkup represents sum type.
-type SendAnimationReplyMarkup struct {
-	Type                 SendAnimationReplyMarkupType // switch on this field
-	InlineKeyboardMarkup InlineKeyboardMarkup
-	ReplyKeyboardMarkup  ReplyKeyboardMarkup
-	ReplyKeyboardRemove  ReplyKeyboardRemove
-	ForceReply           ForceReply
-}
-
-// SendAnimationReplyMarkupType is oneOf type of SendAnimationReplyMarkup.
-type SendAnimationReplyMarkupType string
-
-// Possible values for SendAnimationReplyMarkupType.
-const (
-	InlineKeyboardMarkupSendAnimationReplyMarkup SendAnimationReplyMarkupType = "InlineKeyboardMarkup"
-	ReplyKeyboardMarkupSendAnimationReplyMarkup  SendAnimationReplyMarkupType = "ReplyKeyboardMarkup"
-	ReplyKeyboardRemoveSendAnimationReplyMarkup  SendAnimationReplyMarkupType = "ReplyKeyboardRemove"
-	ForceReplySendAnimationReplyMarkup           SendAnimationReplyMarkupType = "ForceReply"
-)
-
-// IsInlineKeyboardMarkup reports whether SendAnimationReplyMarkup is InlineKeyboardMarkup.
-func (s SendAnimationReplyMarkup) IsInlineKeyboardMarkup() bool {
-	return s.Type == InlineKeyboardMarkupSendAnimationReplyMarkup
-}
-
-// IsReplyKeyboardMarkup reports whether SendAnimationReplyMarkup is ReplyKeyboardMarkup.
-func (s SendAnimationReplyMarkup) IsReplyKeyboardMarkup() bool {
-	return s.Type == ReplyKeyboardMarkupSendAnimationReplyMarkup
-}
-
-// IsReplyKeyboardRemove reports whether SendAnimationReplyMarkup is ReplyKeyboardRemove.
-func (s SendAnimationReplyMarkup) IsReplyKeyboardRemove() bool {
-	return s.Type == ReplyKeyboardRemoveSendAnimationReplyMarkup
-}
-
-// IsForceReply reports whether SendAnimationReplyMarkup is ForceReply.
-func (s SendAnimationReplyMarkup) IsForceReply() bool {
-	return s.Type == ForceReplySendAnimationReplyMarkup
-}
-
-// SetInlineKeyboardMarkup sets SendAnimationReplyMarkup to InlineKeyboardMarkup.
-func (s *SendAnimationReplyMarkup) SetInlineKeyboardMarkup(v InlineKeyboardMarkup) {
-	s.Type = InlineKeyboardMarkupSendAnimationReplyMarkup
-	s.InlineKeyboardMarkup = v
-}
-
-// GetInlineKeyboardMarkup returns InlineKeyboardMarkup and true boolean if SendAnimationReplyMarkup is InlineKeyboardMarkup.
-func (s SendAnimationReplyMarkup) GetInlineKeyboardMarkup() (v InlineKeyboardMarkup, ok bool) {
-	if !s.IsInlineKeyboardMarkup() {
-		return v, false
-	}
-	return s.InlineKeyboardMarkup, true
-}
-
-// NewInlineKeyboardMarkupSendAnimationReplyMarkup returns new SendAnimationReplyMarkup from InlineKeyboardMarkup.
-func NewInlineKeyboardMarkupSendAnimationReplyMarkup(v InlineKeyboardMarkup) SendAnimationReplyMarkup {
-	var s SendAnimationReplyMarkup
-	s.SetInlineKeyboardMarkup(v)
-	return s
-}
-
-// SetReplyKeyboardMarkup sets SendAnimationReplyMarkup to ReplyKeyboardMarkup.
-func (s *SendAnimationReplyMarkup) SetReplyKeyboardMarkup(v ReplyKeyboardMarkup) {
-	s.Type = ReplyKeyboardMarkupSendAnimationReplyMarkup
-	s.ReplyKeyboardMarkup = v
-}
-
-// GetReplyKeyboardMarkup returns ReplyKeyboardMarkup and true boolean if SendAnimationReplyMarkup is ReplyKeyboardMarkup.
-func (s SendAnimationReplyMarkup) GetReplyKeyboardMarkup() (v ReplyKeyboardMarkup, ok bool) {
-	if !s.IsReplyKeyboardMarkup() {
-		return v, false
-	}
-	return s.ReplyKeyboardMarkup, true
-}
-
-// NewReplyKeyboardMarkupSendAnimationReplyMarkup returns new SendAnimationReplyMarkup from ReplyKeyboardMarkup.
-func NewReplyKeyboardMarkupSendAnimationReplyMarkup(v ReplyKeyboardMarkup) SendAnimationReplyMarkup {
-	var s SendAnimationReplyMarkup
-	s.SetReplyKeyboardMarkup(v)
-	return s
-}
-
-// SetReplyKeyboardRemove sets SendAnimationReplyMarkup to ReplyKeyboardRemove.
-func (s *SendAnimationReplyMarkup) SetReplyKeyboardRemove(v ReplyKeyboardRemove) {
-	s.Type = ReplyKeyboardRemoveSendAnimationReplyMarkup
-	s.ReplyKeyboardRemove = v
-}
-
-// GetReplyKeyboardRemove returns ReplyKeyboardRemove and true boolean if SendAnimationReplyMarkup is ReplyKeyboardRemove.
-func (s SendAnimationReplyMarkup) GetReplyKeyboardRemove() (v ReplyKeyboardRemove, ok bool) {
-	if !s.IsReplyKeyboardRemove() {
-		return v, false
-	}
-	return s.ReplyKeyboardRemove, true
-}
-
-// NewReplyKeyboardRemoveSendAnimationReplyMarkup returns new SendAnimationReplyMarkup from ReplyKeyboardRemove.
-func NewReplyKeyboardRemoveSendAnimationReplyMarkup(v ReplyKeyboardRemove) SendAnimationReplyMarkup {
-	var s SendAnimationReplyMarkup
-	s.SetReplyKeyboardRemove(v)
-	return s
-}
-
-// SetForceReply sets SendAnimationReplyMarkup to ForceReply.
-func (s *SendAnimationReplyMarkup) SetForceReply(v ForceReply) {
-	s.Type = ForceReplySendAnimationReplyMarkup
-	s.ForceReply = v
-}
-
-// GetForceReply returns ForceReply and true boolean if SendAnimationReplyMarkup is ForceReply.
-func (s SendAnimationReplyMarkup) GetForceReply() (v ForceReply, ok bool) {
-	if !s.IsForceReply() {
-		return v, false
-	}
-	return s.ForceReply, true
-}
-
-// NewForceReplySendAnimationReplyMarkup returns new SendAnimationReplyMarkup from ForceReply.
-func NewForceReplySendAnimationReplyMarkup(v ForceReply) SendAnimationReplyMarkup {
-	var s SendAnimationReplyMarkup
-	s.SetForceReply(v)
-	return s
+	ChatID                   ID               `json:"chat_id"`
+	Animation                string           `json:"animation"`
+	Duration                 OptInt           `json:"duration"`
+	Width                    OptInt           `json:"width"`
+	Height                   OptInt           `json:"height"`
+	Thumb                    OptString        `json:"thumb"`
+	Caption                  OptString        `json:"caption"`
+	ParseMode                OptString        `json:"parse_mode"`
+	CaptionEntities          []MessageEntity  `json:"caption_entities"`
+	DisableNotification      OptBool          `json:"disable_notification"`
+	ReplyToMessageID         OptInt           `json:"reply_to_message_id"`
+	AllowSendingWithoutReply OptBool          `json:"allow_sending_without_reply"`
+	ReplyMarkup              *SendReplyMarkup `json:"reply_markup"`
 }
 
 // Ref: #/components/schemas/sendAudio
 type SendAudio struct {
-	ChatID                   ID                    `json:"chat_id"`
-	Audio                    string                `json:"audio"`
-	Caption                  OptString             `json:"caption"`
-	ParseMode                OptString             `json:"parse_mode"`
-	CaptionEntities          []MessageEntity       `json:"caption_entities"`
-	Duration                 OptInt                `json:"duration"`
-	Performer                OptString             `json:"performer"`
-	Title                    OptString             `json:"title"`
-	Thumb                    OptString             `json:"thumb"`
-	DisableNotification      OptBool               `json:"disable_notification"`
-	ReplyToMessageID         OptInt                `json:"reply_to_message_id"`
-	AllowSendingWithoutReply OptBool               `json:"allow_sending_without_reply"`
-	ReplyMarkup              *SendAudioReplyMarkup `json:"reply_markup"`
-}
-
-// SendAudioReplyMarkup represents sum type.
-type SendAudioReplyMarkup struct {
-	Type                 SendAudioReplyMarkupType // switch on this field
-	InlineKeyboardMarkup InlineKeyboardMarkup
-	ReplyKeyboardMarkup  ReplyKeyboardMarkup
-	ReplyKeyboardRemove  ReplyKeyboardRemove
-	ForceReply           ForceReply
-}
-
-// SendAudioReplyMarkupType is oneOf type of SendAudioReplyMarkup.
-type SendAudioReplyMarkupType string
-
-// Possible values for SendAudioReplyMarkupType.
-const (
-	InlineKeyboardMarkupSendAudioReplyMarkup SendAudioReplyMarkupType = "InlineKeyboardMarkup"
-	ReplyKeyboardMarkupSendAudioReplyMarkup  SendAudioReplyMarkupType = "ReplyKeyboardMarkup"
-	ReplyKeyboardRemoveSendAudioReplyMarkup  SendAudioReplyMarkupType = "ReplyKeyboardRemove"
-	ForceReplySendAudioReplyMarkup           SendAudioReplyMarkupType = "ForceReply"
-)
-
-// IsInlineKeyboardMarkup reports whether SendAudioReplyMarkup is InlineKeyboardMarkup.
-func (s SendAudioReplyMarkup) IsInlineKeyboardMarkup() bool {
-	return s.Type == InlineKeyboardMarkupSendAudioReplyMarkup
-}
-
-// IsReplyKeyboardMarkup reports whether SendAudioReplyMarkup is ReplyKeyboardMarkup.
-func (s SendAudioReplyMarkup) IsReplyKeyboardMarkup() bool {
-	return s.Type == ReplyKeyboardMarkupSendAudioReplyMarkup
-}
-
-// IsReplyKeyboardRemove reports whether SendAudioReplyMarkup is ReplyKeyboardRemove.
-func (s SendAudioReplyMarkup) IsReplyKeyboardRemove() bool {
-	return s.Type == ReplyKeyboardRemoveSendAudioReplyMarkup
-}
-
-// IsForceReply reports whether SendAudioReplyMarkup is ForceReply.
-func (s SendAudioReplyMarkup) IsForceReply() bool { return s.Type == ForceReplySendAudioReplyMarkup }
-
-// SetInlineKeyboardMarkup sets SendAudioReplyMarkup to InlineKeyboardMarkup.
-func (s *SendAudioReplyMarkup) SetInlineKeyboardMarkup(v InlineKeyboardMarkup) {
-	s.Type = InlineKeyboardMarkupSendAudioReplyMarkup
-	s.InlineKeyboardMarkup = v
-}
-
-// GetInlineKeyboardMarkup returns InlineKeyboardMarkup and true boolean if SendAudioReplyMarkup is InlineKeyboardMarkup.
-func (s SendAudioReplyMarkup) GetInlineKeyboardMarkup() (v InlineKeyboardMarkup, ok bool) {
-	if !s.IsInlineKeyboardMarkup() {
-		return v, false
-	}
-	return s.InlineKeyboardMarkup, true
-}
-
-// NewInlineKeyboardMarkupSendAudioReplyMarkup returns new SendAudioReplyMarkup from InlineKeyboardMarkup.
-func NewInlineKeyboardMarkupSendAudioReplyMarkup(v InlineKeyboardMarkup) SendAudioReplyMarkup {
-	var s SendAudioReplyMarkup
-	s.SetInlineKeyboardMarkup(v)
-	return s
-}
-
-// SetReplyKeyboardMarkup sets SendAudioReplyMarkup to ReplyKeyboardMarkup.
-func (s *SendAudioReplyMarkup) SetReplyKeyboardMarkup(v ReplyKeyboardMarkup) {
-	s.Type = ReplyKeyboardMarkupSendAudioReplyMarkup
-	s.ReplyKeyboardMarkup = v
-}
-
-// GetReplyKeyboardMarkup returns ReplyKeyboardMarkup and true boolean if SendAudioReplyMarkup is ReplyKeyboardMarkup.
-func (s SendAudioReplyMarkup) GetReplyKeyboardMarkup() (v ReplyKeyboardMarkup, ok bool) {
-	if !s.IsReplyKeyboardMarkup() {
-		return v, false
-	}
-	return s.ReplyKeyboardMarkup, true
-}
-
-// NewReplyKeyboardMarkupSendAudioReplyMarkup returns new SendAudioReplyMarkup from ReplyKeyboardMarkup.
-func NewReplyKeyboardMarkupSendAudioReplyMarkup(v ReplyKeyboardMarkup) SendAudioReplyMarkup {
-	var s SendAudioReplyMarkup
-	s.SetReplyKeyboardMarkup(v)
-	return s
-}
-
-// SetReplyKeyboardRemove sets SendAudioReplyMarkup to ReplyKeyboardRemove.
-func (s *SendAudioReplyMarkup) SetReplyKeyboardRemove(v ReplyKeyboardRemove) {
-	s.Type = ReplyKeyboardRemoveSendAudioReplyMarkup
-	s.ReplyKeyboardRemove = v
-}
-
-// GetReplyKeyboardRemove returns ReplyKeyboardRemove and true boolean if SendAudioReplyMarkup is ReplyKeyboardRemove.
-func (s SendAudioReplyMarkup) GetReplyKeyboardRemove() (v ReplyKeyboardRemove, ok bool) {
-	if !s.IsReplyKeyboardRemove() {
-		return v, false
-	}
-	return s.ReplyKeyboardRemove, true
-}
-
-// NewReplyKeyboardRemoveSendAudioReplyMarkup returns new SendAudioReplyMarkup from ReplyKeyboardRemove.
-func NewReplyKeyboardRemoveSendAudioReplyMarkup(v ReplyKeyboardRemove) SendAudioReplyMarkup {
-	var s SendAudioReplyMarkup
-	s.SetReplyKeyboardRemove(v)
-	return s
-}
-
-// SetForceReply sets SendAudioReplyMarkup to ForceReply.
-func (s *SendAudioReplyMarkup) SetForceReply(v ForceReply) {
-	s.Type = ForceReplySendAudioReplyMarkup
-	s.ForceReply = v
-}
-
-// GetForceReply returns ForceReply and true boolean if SendAudioReplyMarkup is ForceReply.
-func (s SendAudioReplyMarkup) GetForceReply() (v ForceReply, ok bool) {
-	if !s.IsForceReply() {
-		return v, false
-	}
-	return s.ForceReply, true
-}
-
-// NewForceReplySendAudioReplyMarkup returns new SendAudioReplyMarkup from ForceReply.
-func NewForceReplySendAudioReplyMarkup(v ForceReply) SendAudioReplyMarkup {
-	var s SendAudioReplyMarkup
-	s.SetForceReply(v)
-	return s
+	ChatID                   ID               `json:"chat_id"`
+	Audio                    string           `json:"audio"`
+	Caption                  OptString        `json:"caption"`
+	ParseMode                OptString        `json:"parse_mode"`
+	CaptionEntities          []MessageEntity  `json:"caption_entities"`
+	Duration                 OptInt           `json:"duration"`
+	Performer                OptString        `json:"performer"`
+	Title                    OptString        `json:"title"`
+	Thumb                    OptString        `json:"thumb"`
+	DisableNotification      OptBool          `json:"disable_notification"`
+	ReplyToMessageID         OptInt           `json:"reply_to_message_id"`
+	AllowSendingWithoutReply OptBool          `json:"allow_sending_without_reply"`
+	ReplyMarkup              *SendReplyMarkup `json:"reply_markup"`
 }
 
 // Ref: #/components/schemas/sendChatAction
@@ -6023,410 +6181,40 @@ type SendChatAction struct {
 
 // Ref: #/components/schemas/sendContact
 type SendContact struct {
-	ChatID                   ID                      `json:"chat_id"`
-	PhoneNumber              string                  `json:"phone_number"`
-	FirstName                string                  `json:"first_name"`
-	LastName                 OptString               `json:"last_name"`
-	Vcard                    OptString               `json:"vcard"`
-	DisableNotification      OptBool                 `json:"disable_notification"`
-	ReplyToMessageID         OptInt                  `json:"reply_to_message_id"`
-	AllowSendingWithoutReply OptBool                 `json:"allow_sending_without_reply"`
-	ReplyMarkup              *SendContactReplyMarkup `json:"reply_markup"`
-}
-
-// SendContactReplyMarkup represents sum type.
-type SendContactReplyMarkup struct {
-	Type                 SendContactReplyMarkupType // switch on this field
-	InlineKeyboardMarkup InlineKeyboardMarkup
-	ReplyKeyboardMarkup  ReplyKeyboardMarkup
-	ReplyKeyboardRemove  ReplyKeyboardRemove
-	ForceReply           ForceReply
-}
-
-// SendContactReplyMarkupType is oneOf type of SendContactReplyMarkup.
-type SendContactReplyMarkupType string
-
-// Possible values for SendContactReplyMarkupType.
-const (
-	InlineKeyboardMarkupSendContactReplyMarkup SendContactReplyMarkupType = "InlineKeyboardMarkup"
-	ReplyKeyboardMarkupSendContactReplyMarkup  SendContactReplyMarkupType = "ReplyKeyboardMarkup"
-	ReplyKeyboardRemoveSendContactReplyMarkup  SendContactReplyMarkupType = "ReplyKeyboardRemove"
-	ForceReplySendContactReplyMarkup           SendContactReplyMarkupType = "ForceReply"
-)
-
-// IsInlineKeyboardMarkup reports whether SendContactReplyMarkup is InlineKeyboardMarkup.
-func (s SendContactReplyMarkup) IsInlineKeyboardMarkup() bool {
-	return s.Type == InlineKeyboardMarkupSendContactReplyMarkup
-}
-
-// IsReplyKeyboardMarkup reports whether SendContactReplyMarkup is ReplyKeyboardMarkup.
-func (s SendContactReplyMarkup) IsReplyKeyboardMarkup() bool {
-	return s.Type == ReplyKeyboardMarkupSendContactReplyMarkup
-}
-
-// IsReplyKeyboardRemove reports whether SendContactReplyMarkup is ReplyKeyboardRemove.
-func (s SendContactReplyMarkup) IsReplyKeyboardRemove() bool {
-	return s.Type == ReplyKeyboardRemoveSendContactReplyMarkup
-}
-
-// IsForceReply reports whether SendContactReplyMarkup is ForceReply.
-func (s SendContactReplyMarkup) IsForceReply() bool {
-	return s.Type == ForceReplySendContactReplyMarkup
-}
-
-// SetInlineKeyboardMarkup sets SendContactReplyMarkup to InlineKeyboardMarkup.
-func (s *SendContactReplyMarkup) SetInlineKeyboardMarkup(v InlineKeyboardMarkup) {
-	s.Type = InlineKeyboardMarkupSendContactReplyMarkup
-	s.InlineKeyboardMarkup = v
-}
-
-// GetInlineKeyboardMarkup returns InlineKeyboardMarkup and true boolean if SendContactReplyMarkup is InlineKeyboardMarkup.
-func (s SendContactReplyMarkup) GetInlineKeyboardMarkup() (v InlineKeyboardMarkup, ok bool) {
-	if !s.IsInlineKeyboardMarkup() {
-		return v, false
-	}
-	return s.InlineKeyboardMarkup, true
-}
-
-// NewInlineKeyboardMarkupSendContactReplyMarkup returns new SendContactReplyMarkup from InlineKeyboardMarkup.
-func NewInlineKeyboardMarkupSendContactReplyMarkup(v InlineKeyboardMarkup) SendContactReplyMarkup {
-	var s SendContactReplyMarkup
-	s.SetInlineKeyboardMarkup(v)
-	return s
-}
-
-// SetReplyKeyboardMarkup sets SendContactReplyMarkup to ReplyKeyboardMarkup.
-func (s *SendContactReplyMarkup) SetReplyKeyboardMarkup(v ReplyKeyboardMarkup) {
-	s.Type = ReplyKeyboardMarkupSendContactReplyMarkup
-	s.ReplyKeyboardMarkup = v
-}
-
-// GetReplyKeyboardMarkup returns ReplyKeyboardMarkup and true boolean if SendContactReplyMarkup is ReplyKeyboardMarkup.
-func (s SendContactReplyMarkup) GetReplyKeyboardMarkup() (v ReplyKeyboardMarkup, ok bool) {
-	if !s.IsReplyKeyboardMarkup() {
-		return v, false
-	}
-	return s.ReplyKeyboardMarkup, true
-}
-
-// NewReplyKeyboardMarkupSendContactReplyMarkup returns new SendContactReplyMarkup from ReplyKeyboardMarkup.
-func NewReplyKeyboardMarkupSendContactReplyMarkup(v ReplyKeyboardMarkup) SendContactReplyMarkup {
-	var s SendContactReplyMarkup
-	s.SetReplyKeyboardMarkup(v)
-	return s
-}
-
-// SetReplyKeyboardRemove sets SendContactReplyMarkup to ReplyKeyboardRemove.
-func (s *SendContactReplyMarkup) SetReplyKeyboardRemove(v ReplyKeyboardRemove) {
-	s.Type = ReplyKeyboardRemoveSendContactReplyMarkup
-	s.ReplyKeyboardRemove = v
-}
-
-// GetReplyKeyboardRemove returns ReplyKeyboardRemove and true boolean if SendContactReplyMarkup is ReplyKeyboardRemove.
-func (s SendContactReplyMarkup) GetReplyKeyboardRemove() (v ReplyKeyboardRemove, ok bool) {
-	if !s.IsReplyKeyboardRemove() {
-		return v, false
-	}
-	return s.ReplyKeyboardRemove, true
-}
-
-// NewReplyKeyboardRemoveSendContactReplyMarkup returns new SendContactReplyMarkup from ReplyKeyboardRemove.
-func NewReplyKeyboardRemoveSendContactReplyMarkup(v ReplyKeyboardRemove) SendContactReplyMarkup {
-	var s SendContactReplyMarkup
-	s.SetReplyKeyboardRemove(v)
-	return s
-}
-
-// SetForceReply sets SendContactReplyMarkup to ForceReply.
-func (s *SendContactReplyMarkup) SetForceReply(v ForceReply) {
-	s.Type = ForceReplySendContactReplyMarkup
-	s.ForceReply = v
-}
-
-// GetForceReply returns ForceReply and true boolean if SendContactReplyMarkup is ForceReply.
-func (s SendContactReplyMarkup) GetForceReply() (v ForceReply, ok bool) {
-	if !s.IsForceReply() {
-		return v, false
-	}
-	return s.ForceReply, true
-}
-
-// NewForceReplySendContactReplyMarkup returns new SendContactReplyMarkup from ForceReply.
-func NewForceReplySendContactReplyMarkup(v ForceReply) SendContactReplyMarkup {
-	var s SendContactReplyMarkup
-	s.SetForceReply(v)
-	return s
+	ChatID                   ID               `json:"chat_id"`
+	PhoneNumber              string           `json:"phone_number"`
+	FirstName                string           `json:"first_name"`
+	LastName                 OptString        `json:"last_name"`
+	Vcard                    OptString        `json:"vcard"`
+	DisableNotification      OptBool          `json:"disable_notification"`
+	ReplyToMessageID         OptInt           `json:"reply_to_message_id"`
+	AllowSendingWithoutReply OptBool          `json:"allow_sending_without_reply"`
+	ReplyMarkup              *SendReplyMarkup `json:"reply_markup"`
 }
 
 // Ref: #/components/schemas/sendDice
 type SendDice struct {
-	ChatID                   ID                   `json:"chat_id"`
-	Emoji                    OptString            `json:"emoji"`
-	DisableNotification      OptBool              `json:"disable_notification"`
-	ReplyToMessageID         OptInt               `json:"reply_to_message_id"`
-	AllowSendingWithoutReply OptBool              `json:"allow_sending_without_reply"`
-	ReplyMarkup              *SendDiceReplyMarkup `json:"reply_markup"`
-}
-
-// SendDiceReplyMarkup represents sum type.
-type SendDiceReplyMarkup struct {
-	Type                 SendDiceReplyMarkupType // switch on this field
-	InlineKeyboardMarkup InlineKeyboardMarkup
-	ReplyKeyboardMarkup  ReplyKeyboardMarkup
-	ReplyKeyboardRemove  ReplyKeyboardRemove
-	ForceReply           ForceReply
-}
-
-// SendDiceReplyMarkupType is oneOf type of SendDiceReplyMarkup.
-type SendDiceReplyMarkupType string
-
-// Possible values for SendDiceReplyMarkupType.
-const (
-	InlineKeyboardMarkupSendDiceReplyMarkup SendDiceReplyMarkupType = "InlineKeyboardMarkup"
-	ReplyKeyboardMarkupSendDiceReplyMarkup  SendDiceReplyMarkupType = "ReplyKeyboardMarkup"
-	ReplyKeyboardRemoveSendDiceReplyMarkup  SendDiceReplyMarkupType = "ReplyKeyboardRemove"
-	ForceReplySendDiceReplyMarkup           SendDiceReplyMarkupType = "ForceReply"
-)
-
-// IsInlineKeyboardMarkup reports whether SendDiceReplyMarkup is InlineKeyboardMarkup.
-func (s SendDiceReplyMarkup) IsInlineKeyboardMarkup() bool {
-	return s.Type == InlineKeyboardMarkupSendDiceReplyMarkup
-}
-
-// IsReplyKeyboardMarkup reports whether SendDiceReplyMarkup is ReplyKeyboardMarkup.
-func (s SendDiceReplyMarkup) IsReplyKeyboardMarkup() bool {
-	return s.Type == ReplyKeyboardMarkupSendDiceReplyMarkup
-}
-
-// IsReplyKeyboardRemove reports whether SendDiceReplyMarkup is ReplyKeyboardRemove.
-func (s SendDiceReplyMarkup) IsReplyKeyboardRemove() bool {
-	return s.Type == ReplyKeyboardRemoveSendDiceReplyMarkup
-}
-
-// IsForceReply reports whether SendDiceReplyMarkup is ForceReply.
-func (s SendDiceReplyMarkup) IsForceReply() bool { return s.Type == ForceReplySendDiceReplyMarkup }
-
-// SetInlineKeyboardMarkup sets SendDiceReplyMarkup to InlineKeyboardMarkup.
-func (s *SendDiceReplyMarkup) SetInlineKeyboardMarkup(v InlineKeyboardMarkup) {
-	s.Type = InlineKeyboardMarkupSendDiceReplyMarkup
-	s.InlineKeyboardMarkup = v
-}
-
-// GetInlineKeyboardMarkup returns InlineKeyboardMarkup and true boolean if SendDiceReplyMarkup is InlineKeyboardMarkup.
-func (s SendDiceReplyMarkup) GetInlineKeyboardMarkup() (v InlineKeyboardMarkup, ok bool) {
-	if !s.IsInlineKeyboardMarkup() {
-		return v, false
-	}
-	return s.InlineKeyboardMarkup, true
-}
-
-// NewInlineKeyboardMarkupSendDiceReplyMarkup returns new SendDiceReplyMarkup from InlineKeyboardMarkup.
-func NewInlineKeyboardMarkupSendDiceReplyMarkup(v InlineKeyboardMarkup) SendDiceReplyMarkup {
-	var s SendDiceReplyMarkup
-	s.SetInlineKeyboardMarkup(v)
-	return s
-}
-
-// SetReplyKeyboardMarkup sets SendDiceReplyMarkup to ReplyKeyboardMarkup.
-func (s *SendDiceReplyMarkup) SetReplyKeyboardMarkup(v ReplyKeyboardMarkup) {
-	s.Type = ReplyKeyboardMarkupSendDiceReplyMarkup
-	s.ReplyKeyboardMarkup = v
-}
-
-// GetReplyKeyboardMarkup returns ReplyKeyboardMarkup and true boolean if SendDiceReplyMarkup is ReplyKeyboardMarkup.
-func (s SendDiceReplyMarkup) GetReplyKeyboardMarkup() (v ReplyKeyboardMarkup, ok bool) {
-	if !s.IsReplyKeyboardMarkup() {
-		return v, false
-	}
-	return s.ReplyKeyboardMarkup, true
-}
-
-// NewReplyKeyboardMarkupSendDiceReplyMarkup returns new SendDiceReplyMarkup from ReplyKeyboardMarkup.
-func NewReplyKeyboardMarkupSendDiceReplyMarkup(v ReplyKeyboardMarkup) SendDiceReplyMarkup {
-	var s SendDiceReplyMarkup
-	s.SetReplyKeyboardMarkup(v)
-	return s
-}
-
-// SetReplyKeyboardRemove sets SendDiceReplyMarkup to ReplyKeyboardRemove.
-func (s *SendDiceReplyMarkup) SetReplyKeyboardRemove(v ReplyKeyboardRemove) {
-	s.Type = ReplyKeyboardRemoveSendDiceReplyMarkup
-	s.ReplyKeyboardRemove = v
-}
-
-// GetReplyKeyboardRemove returns ReplyKeyboardRemove and true boolean if SendDiceReplyMarkup is ReplyKeyboardRemove.
-func (s SendDiceReplyMarkup) GetReplyKeyboardRemove() (v ReplyKeyboardRemove, ok bool) {
-	if !s.IsReplyKeyboardRemove() {
-		return v, false
-	}
-	return s.ReplyKeyboardRemove, true
-}
-
-// NewReplyKeyboardRemoveSendDiceReplyMarkup returns new SendDiceReplyMarkup from ReplyKeyboardRemove.
-func NewReplyKeyboardRemoveSendDiceReplyMarkup(v ReplyKeyboardRemove) SendDiceReplyMarkup {
-	var s SendDiceReplyMarkup
-	s.SetReplyKeyboardRemove(v)
-	return s
-}
-
-// SetForceReply sets SendDiceReplyMarkup to ForceReply.
-func (s *SendDiceReplyMarkup) SetForceReply(v ForceReply) {
-	s.Type = ForceReplySendDiceReplyMarkup
-	s.ForceReply = v
-}
-
-// GetForceReply returns ForceReply and true boolean if SendDiceReplyMarkup is ForceReply.
-func (s SendDiceReplyMarkup) GetForceReply() (v ForceReply, ok bool) {
-	if !s.IsForceReply() {
-		return v, false
-	}
-	return s.ForceReply, true
-}
-
-// NewForceReplySendDiceReplyMarkup returns new SendDiceReplyMarkup from ForceReply.
-func NewForceReplySendDiceReplyMarkup(v ForceReply) SendDiceReplyMarkup {
-	var s SendDiceReplyMarkup
-	s.SetForceReply(v)
-	return s
+	ChatID                   ID               `json:"chat_id"`
+	Emoji                    OptString        `json:"emoji"`
+	DisableNotification      OptBool          `json:"disable_notification"`
+	ReplyToMessageID         OptInt           `json:"reply_to_message_id"`
+	AllowSendingWithoutReply OptBool          `json:"allow_sending_without_reply"`
+	ReplyMarkup              *SendReplyMarkup `json:"reply_markup"`
 }
 
 // Ref: #/components/schemas/sendDocument
 type SendDocument struct {
-	ChatID                      ID                       `json:"chat_id"`
-	Document                    string                   `json:"document"`
-	Thumb                       OptString                `json:"thumb"`
-	Caption                     OptString                `json:"caption"`
-	ParseMode                   OptString                `json:"parse_mode"`
-	CaptionEntities             []MessageEntity          `json:"caption_entities"`
-	DisableContentTypeDetection OptBool                  `json:"disable_content_type_detection"`
-	DisableNotification         OptBool                  `json:"disable_notification"`
-	ReplyToMessageID            OptInt                   `json:"reply_to_message_id"`
-	AllowSendingWithoutReply    OptBool                  `json:"allow_sending_without_reply"`
-	ReplyMarkup                 *SendDocumentReplyMarkup `json:"reply_markup"`
-}
-
-// SendDocumentReplyMarkup represents sum type.
-type SendDocumentReplyMarkup struct {
-	Type                 SendDocumentReplyMarkupType // switch on this field
-	InlineKeyboardMarkup InlineKeyboardMarkup
-	ReplyKeyboardMarkup  ReplyKeyboardMarkup
-	ReplyKeyboardRemove  ReplyKeyboardRemove
-	ForceReply           ForceReply
-}
-
-// SendDocumentReplyMarkupType is oneOf type of SendDocumentReplyMarkup.
-type SendDocumentReplyMarkupType string
-
-// Possible values for SendDocumentReplyMarkupType.
-const (
-	InlineKeyboardMarkupSendDocumentReplyMarkup SendDocumentReplyMarkupType = "InlineKeyboardMarkup"
-	ReplyKeyboardMarkupSendDocumentReplyMarkup  SendDocumentReplyMarkupType = "ReplyKeyboardMarkup"
-	ReplyKeyboardRemoveSendDocumentReplyMarkup  SendDocumentReplyMarkupType = "ReplyKeyboardRemove"
-	ForceReplySendDocumentReplyMarkup           SendDocumentReplyMarkupType = "ForceReply"
-)
-
-// IsInlineKeyboardMarkup reports whether SendDocumentReplyMarkup is InlineKeyboardMarkup.
-func (s SendDocumentReplyMarkup) IsInlineKeyboardMarkup() bool {
-	return s.Type == InlineKeyboardMarkupSendDocumentReplyMarkup
-}
-
-// IsReplyKeyboardMarkup reports whether SendDocumentReplyMarkup is ReplyKeyboardMarkup.
-func (s SendDocumentReplyMarkup) IsReplyKeyboardMarkup() bool {
-	return s.Type == ReplyKeyboardMarkupSendDocumentReplyMarkup
-}
-
-// IsReplyKeyboardRemove reports whether SendDocumentReplyMarkup is ReplyKeyboardRemove.
-func (s SendDocumentReplyMarkup) IsReplyKeyboardRemove() bool {
-	return s.Type == ReplyKeyboardRemoveSendDocumentReplyMarkup
-}
-
-// IsForceReply reports whether SendDocumentReplyMarkup is ForceReply.
-func (s SendDocumentReplyMarkup) IsForceReply() bool {
-	return s.Type == ForceReplySendDocumentReplyMarkup
-}
-
-// SetInlineKeyboardMarkup sets SendDocumentReplyMarkup to InlineKeyboardMarkup.
-func (s *SendDocumentReplyMarkup) SetInlineKeyboardMarkup(v InlineKeyboardMarkup) {
-	s.Type = InlineKeyboardMarkupSendDocumentReplyMarkup
-	s.InlineKeyboardMarkup = v
-}
-
-// GetInlineKeyboardMarkup returns InlineKeyboardMarkup and true boolean if SendDocumentReplyMarkup is InlineKeyboardMarkup.
-func (s SendDocumentReplyMarkup) GetInlineKeyboardMarkup() (v InlineKeyboardMarkup, ok bool) {
-	if !s.IsInlineKeyboardMarkup() {
-		return v, false
-	}
-	return s.InlineKeyboardMarkup, true
-}
-
-// NewInlineKeyboardMarkupSendDocumentReplyMarkup returns new SendDocumentReplyMarkup from InlineKeyboardMarkup.
-func NewInlineKeyboardMarkupSendDocumentReplyMarkup(v InlineKeyboardMarkup) SendDocumentReplyMarkup {
-	var s SendDocumentReplyMarkup
-	s.SetInlineKeyboardMarkup(v)
-	return s
-}
-
-// SetReplyKeyboardMarkup sets SendDocumentReplyMarkup to ReplyKeyboardMarkup.
-func (s *SendDocumentReplyMarkup) SetReplyKeyboardMarkup(v ReplyKeyboardMarkup) {
-	s.Type = ReplyKeyboardMarkupSendDocumentReplyMarkup
-	s.ReplyKeyboardMarkup = v
-}
-
-// GetReplyKeyboardMarkup returns ReplyKeyboardMarkup and true boolean if SendDocumentReplyMarkup is ReplyKeyboardMarkup.
-func (s SendDocumentReplyMarkup) GetReplyKeyboardMarkup() (v ReplyKeyboardMarkup, ok bool) {
-	if !s.IsReplyKeyboardMarkup() {
-		return v, false
-	}
-	return s.ReplyKeyboardMarkup, true
-}
-
-// NewReplyKeyboardMarkupSendDocumentReplyMarkup returns new SendDocumentReplyMarkup from ReplyKeyboardMarkup.
-func NewReplyKeyboardMarkupSendDocumentReplyMarkup(v ReplyKeyboardMarkup) SendDocumentReplyMarkup {
-	var s SendDocumentReplyMarkup
-	s.SetReplyKeyboardMarkup(v)
-	return s
-}
-
-// SetReplyKeyboardRemove sets SendDocumentReplyMarkup to ReplyKeyboardRemove.
-func (s *SendDocumentReplyMarkup) SetReplyKeyboardRemove(v ReplyKeyboardRemove) {
-	s.Type = ReplyKeyboardRemoveSendDocumentReplyMarkup
-	s.ReplyKeyboardRemove = v
-}
-
-// GetReplyKeyboardRemove returns ReplyKeyboardRemove and true boolean if SendDocumentReplyMarkup is ReplyKeyboardRemove.
-func (s SendDocumentReplyMarkup) GetReplyKeyboardRemove() (v ReplyKeyboardRemove, ok bool) {
-	if !s.IsReplyKeyboardRemove() {
-		return v, false
-	}
-	return s.ReplyKeyboardRemove, true
-}
-
-// NewReplyKeyboardRemoveSendDocumentReplyMarkup returns new SendDocumentReplyMarkup from ReplyKeyboardRemove.
-func NewReplyKeyboardRemoveSendDocumentReplyMarkup(v ReplyKeyboardRemove) SendDocumentReplyMarkup {
-	var s SendDocumentReplyMarkup
-	s.SetReplyKeyboardRemove(v)
-	return s
-}
-
-// SetForceReply sets SendDocumentReplyMarkup to ForceReply.
-func (s *SendDocumentReplyMarkup) SetForceReply(v ForceReply) {
-	s.Type = ForceReplySendDocumentReplyMarkup
-	s.ForceReply = v
-}
-
-// GetForceReply returns ForceReply and true boolean if SendDocumentReplyMarkup is ForceReply.
-func (s SendDocumentReplyMarkup) GetForceReply() (v ForceReply, ok bool) {
-	if !s.IsForceReply() {
-		return v, false
-	}
-	return s.ForceReply, true
-}
-
-// NewForceReplySendDocumentReplyMarkup returns new SendDocumentReplyMarkup from ForceReply.
-func NewForceReplySendDocumentReplyMarkup(v ForceReply) SendDocumentReplyMarkup {
-	var s SendDocumentReplyMarkup
-	s.SetForceReply(v)
-	return s
+	ChatID                      ID               `json:"chat_id"`
+	Document                    string           `json:"document"`
+	Thumb                       OptString        `json:"thumb"`
+	Caption                     OptString        `json:"caption"`
+	ParseMode                   OptString        `json:"parse_mode"`
+	CaptionEntities             []MessageEntity  `json:"caption_entities"`
+	DisableContentTypeDetection OptBool          `json:"disable_content_type_detection"`
+	DisableNotification         OptBool          `json:"disable_notification"`
+	ReplyToMessageID            OptInt           `json:"reply_to_message_id"`
+	AllowSendingWithoutReply    OptBool          `json:"allow_sending_without_reply"`
+	ReplyMarkup                 *SendReplyMarkup `json:"reply_markup"`
 }
 
 // Ref: #/components/schemas/sendGame
@@ -6471,141 +6259,17 @@ type SendInvoice struct {
 
 // Ref: #/components/schemas/sendLocation
 type SendLocation struct {
-	ChatID                   ID                       `json:"chat_id"`
-	Latitude                 float64                  `json:"latitude"`
-	Longitude                float64                  `json:"longitude"`
-	HorizontalAccuracy       OptFloat64               `json:"horizontal_accuracy"`
-	LivePeriod               OptInt                   `json:"live_period"`
-	Heading                  OptInt                   `json:"heading"`
-	ProximityAlertRadius     OptInt                   `json:"proximity_alert_radius"`
-	DisableNotification      OptBool                  `json:"disable_notification"`
-	ReplyToMessageID         OptInt                   `json:"reply_to_message_id"`
-	AllowSendingWithoutReply OptBool                  `json:"allow_sending_without_reply"`
-	ReplyMarkup              *SendLocationReplyMarkup `json:"reply_markup"`
-}
-
-// SendLocationReplyMarkup represents sum type.
-type SendLocationReplyMarkup struct {
-	Type                 SendLocationReplyMarkupType // switch on this field
-	InlineKeyboardMarkup InlineKeyboardMarkup
-	ReplyKeyboardMarkup  ReplyKeyboardMarkup
-	ReplyKeyboardRemove  ReplyKeyboardRemove
-	ForceReply           ForceReply
-}
-
-// SendLocationReplyMarkupType is oneOf type of SendLocationReplyMarkup.
-type SendLocationReplyMarkupType string
-
-// Possible values for SendLocationReplyMarkupType.
-const (
-	InlineKeyboardMarkupSendLocationReplyMarkup SendLocationReplyMarkupType = "InlineKeyboardMarkup"
-	ReplyKeyboardMarkupSendLocationReplyMarkup  SendLocationReplyMarkupType = "ReplyKeyboardMarkup"
-	ReplyKeyboardRemoveSendLocationReplyMarkup  SendLocationReplyMarkupType = "ReplyKeyboardRemove"
-	ForceReplySendLocationReplyMarkup           SendLocationReplyMarkupType = "ForceReply"
-)
-
-// IsInlineKeyboardMarkup reports whether SendLocationReplyMarkup is InlineKeyboardMarkup.
-func (s SendLocationReplyMarkup) IsInlineKeyboardMarkup() bool {
-	return s.Type == InlineKeyboardMarkupSendLocationReplyMarkup
-}
-
-// IsReplyKeyboardMarkup reports whether SendLocationReplyMarkup is ReplyKeyboardMarkup.
-func (s SendLocationReplyMarkup) IsReplyKeyboardMarkup() bool {
-	return s.Type == ReplyKeyboardMarkupSendLocationReplyMarkup
-}
-
-// IsReplyKeyboardRemove reports whether SendLocationReplyMarkup is ReplyKeyboardRemove.
-func (s SendLocationReplyMarkup) IsReplyKeyboardRemove() bool {
-	return s.Type == ReplyKeyboardRemoveSendLocationReplyMarkup
-}
-
-// IsForceReply reports whether SendLocationReplyMarkup is ForceReply.
-func (s SendLocationReplyMarkup) IsForceReply() bool {
-	return s.Type == ForceReplySendLocationReplyMarkup
-}
-
-// SetInlineKeyboardMarkup sets SendLocationReplyMarkup to InlineKeyboardMarkup.
-func (s *SendLocationReplyMarkup) SetInlineKeyboardMarkup(v InlineKeyboardMarkup) {
-	s.Type = InlineKeyboardMarkupSendLocationReplyMarkup
-	s.InlineKeyboardMarkup = v
-}
-
-// GetInlineKeyboardMarkup returns InlineKeyboardMarkup and true boolean if SendLocationReplyMarkup is InlineKeyboardMarkup.
-func (s SendLocationReplyMarkup) GetInlineKeyboardMarkup() (v InlineKeyboardMarkup, ok bool) {
-	if !s.IsInlineKeyboardMarkup() {
-		return v, false
-	}
-	return s.InlineKeyboardMarkup, true
-}
-
-// NewInlineKeyboardMarkupSendLocationReplyMarkup returns new SendLocationReplyMarkup from InlineKeyboardMarkup.
-func NewInlineKeyboardMarkupSendLocationReplyMarkup(v InlineKeyboardMarkup) SendLocationReplyMarkup {
-	var s SendLocationReplyMarkup
-	s.SetInlineKeyboardMarkup(v)
-	return s
-}
-
-// SetReplyKeyboardMarkup sets SendLocationReplyMarkup to ReplyKeyboardMarkup.
-func (s *SendLocationReplyMarkup) SetReplyKeyboardMarkup(v ReplyKeyboardMarkup) {
-	s.Type = ReplyKeyboardMarkupSendLocationReplyMarkup
-	s.ReplyKeyboardMarkup = v
-}
-
-// GetReplyKeyboardMarkup returns ReplyKeyboardMarkup and true boolean if SendLocationReplyMarkup is ReplyKeyboardMarkup.
-func (s SendLocationReplyMarkup) GetReplyKeyboardMarkup() (v ReplyKeyboardMarkup, ok bool) {
-	if !s.IsReplyKeyboardMarkup() {
-		return v, false
-	}
-	return s.ReplyKeyboardMarkup, true
-}
-
-// NewReplyKeyboardMarkupSendLocationReplyMarkup returns new SendLocationReplyMarkup from ReplyKeyboardMarkup.
-func NewReplyKeyboardMarkupSendLocationReplyMarkup(v ReplyKeyboardMarkup) SendLocationReplyMarkup {
-	var s SendLocationReplyMarkup
-	s.SetReplyKeyboardMarkup(v)
-	return s
-}
-
-// SetReplyKeyboardRemove sets SendLocationReplyMarkup to ReplyKeyboardRemove.
-func (s *SendLocationReplyMarkup) SetReplyKeyboardRemove(v ReplyKeyboardRemove) {
-	s.Type = ReplyKeyboardRemoveSendLocationReplyMarkup
-	s.ReplyKeyboardRemove = v
-}
-
-// GetReplyKeyboardRemove returns ReplyKeyboardRemove and true boolean if SendLocationReplyMarkup is ReplyKeyboardRemove.
-func (s SendLocationReplyMarkup) GetReplyKeyboardRemove() (v ReplyKeyboardRemove, ok bool) {
-	if !s.IsReplyKeyboardRemove() {
-		return v, false
-	}
-	return s.ReplyKeyboardRemove, true
-}
-
-// NewReplyKeyboardRemoveSendLocationReplyMarkup returns new SendLocationReplyMarkup from ReplyKeyboardRemove.
-func NewReplyKeyboardRemoveSendLocationReplyMarkup(v ReplyKeyboardRemove) SendLocationReplyMarkup {
-	var s SendLocationReplyMarkup
-	s.SetReplyKeyboardRemove(v)
-	return s
-}
-
-// SetForceReply sets SendLocationReplyMarkup to ForceReply.
-func (s *SendLocationReplyMarkup) SetForceReply(v ForceReply) {
-	s.Type = ForceReplySendLocationReplyMarkup
-	s.ForceReply = v
-}
-
-// GetForceReply returns ForceReply and true boolean if SendLocationReplyMarkup is ForceReply.
-func (s SendLocationReplyMarkup) GetForceReply() (v ForceReply, ok bool) {
-	if !s.IsForceReply() {
-		return v, false
-	}
-	return s.ForceReply, true
-}
-
-// NewForceReplySendLocationReplyMarkup returns new SendLocationReplyMarkup from ForceReply.
-func NewForceReplySendLocationReplyMarkup(v ForceReply) SendLocationReplyMarkup {
-	var s SendLocationReplyMarkup
-	s.SetForceReply(v)
-	return s
+	ChatID                   ID               `json:"chat_id"`
+	Latitude                 float64          `json:"latitude"`
+	Longitude                float64          `json:"longitude"`
+	HorizontalAccuracy       OptFloat64       `json:"horizontal_accuracy"`
+	LivePeriod               OptInt           `json:"live_period"`
+	Heading                  OptInt           `json:"heading"`
+	ProximityAlertRadius     OptInt           `json:"proximity_alert_radius"`
+	DisableNotification      OptBool          `json:"disable_notification"`
+	ReplyToMessageID         OptInt           `json:"reply_to_message_id"`
+	AllowSendingWithoutReply OptBool          `json:"allow_sending_without_reply"`
+	ReplyMarkup              *SendReplyMarkup `json:"reply_markup"`
 }
 
 // Ref: #/components/schemas/sendMediaGroup
@@ -6743,1103 +6407,244 @@ func NewInputMediaVideoSendMediaGroupMediaItem(v InputMediaVideo) SendMediaGroup
 
 // Ref: #/components/schemas/sendMessage
 type SendMessage struct {
-	ChatID                   ID                      `json:"chat_id"`
-	Text                     string                  `json:"text"`
-	ParseMode                OptString               `json:"parse_mode"`
-	Entities                 []MessageEntity         `json:"entities"`
-	DisableWebPagePreview    OptBool                 `json:"disable_web_page_preview"`
-	DisableNotification      OptBool                 `json:"disable_notification"`
-	ReplyToMessageID         OptInt                  `json:"reply_to_message_id"`
-	AllowSendingWithoutReply OptBool                 `json:"allow_sending_without_reply"`
-	ReplyMarkup              *SendMessageReplyMarkup `json:"reply_markup"`
-}
-
-// SendMessageReplyMarkup represents sum type.
-type SendMessageReplyMarkup struct {
-	Type                 SendMessageReplyMarkupType // switch on this field
-	InlineKeyboardMarkup InlineKeyboardMarkup
-	ReplyKeyboardMarkup  ReplyKeyboardMarkup
-	ReplyKeyboardRemove  ReplyKeyboardRemove
-	ForceReply           ForceReply
-}
-
-// SendMessageReplyMarkupType is oneOf type of SendMessageReplyMarkup.
-type SendMessageReplyMarkupType string
-
-// Possible values for SendMessageReplyMarkupType.
-const (
-	InlineKeyboardMarkupSendMessageReplyMarkup SendMessageReplyMarkupType = "InlineKeyboardMarkup"
-	ReplyKeyboardMarkupSendMessageReplyMarkup  SendMessageReplyMarkupType = "ReplyKeyboardMarkup"
-	ReplyKeyboardRemoveSendMessageReplyMarkup  SendMessageReplyMarkupType = "ReplyKeyboardRemove"
-	ForceReplySendMessageReplyMarkup           SendMessageReplyMarkupType = "ForceReply"
-)
-
-// IsInlineKeyboardMarkup reports whether SendMessageReplyMarkup is InlineKeyboardMarkup.
-func (s SendMessageReplyMarkup) IsInlineKeyboardMarkup() bool {
-	return s.Type == InlineKeyboardMarkupSendMessageReplyMarkup
-}
-
-// IsReplyKeyboardMarkup reports whether SendMessageReplyMarkup is ReplyKeyboardMarkup.
-func (s SendMessageReplyMarkup) IsReplyKeyboardMarkup() bool {
-	return s.Type == ReplyKeyboardMarkupSendMessageReplyMarkup
-}
-
-// IsReplyKeyboardRemove reports whether SendMessageReplyMarkup is ReplyKeyboardRemove.
-func (s SendMessageReplyMarkup) IsReplyKeyboardRemove() bool {
-	return s.Type == ReplyKeyboardRemoveSendMessageReplyMarkup
-}
-
-// IsForceReply reports whether SendMessageReplyMarkup is ForceReply.
-func (s SendMessageReplyMarkup) IsForceReply() bool {
-	return s.Type == ForceReplySendMessageReplyMarkup
-}
-
-// SetInlineKeyboardMarkup sets SendMessageReplyMarkup to InlineKeyboardMarkup.
-func (s *SendMessageReplyMarkup) SetInlineKeyboardMarkup(v InlineKeyboardMarkup) {
-	s.Type = InlineKeyboardMarkupSendMessageReplyMarkup
-	s.InlineKeyboardMarkup = v
-}
-
-// GetInlineKeyboardMarkup returns InlineKeyboardMarkup and true boolean if SendMessageReplyMarkup is InlineKeyboardMarkup.
-func (s SendMessageReplyMarkup) GetInlineKeyboardMarkup() (v InlineKeyboardMarkup, ok bool) {
-	if !s.IsInlineKeyboardMarkup() {
-		return v, false
-	}
-	return s.InlineKeyboardMarkup, true
-}
-
-// NewInlineKeyboardMarkupSendMessageReplyMarkup returns new SendMessageReplyMarkup from InlineKeyboardMarkup.
-func NewInlineKeyboardMarkupSendMessageReplyMarkup(v InlineKeyboardMarkup) SendMessageReplyMarkup {
-	var s SendMessageReplyMarkup
-	s.SetInlineKeyboardMarkup(v)
-	return s
-}
-
-// SetReplyKeyboardMarkup sets SendMessageReplyMarkup to ReplyKeyboardMarkup.
-func (s *SendMessageReplyMarkup) SetReplyKeyboardMarkup(v ReplyKeyboardMarkup) {
-	s.Type = ReplyKeyboardMarkupSendMessageReplyMarkup
-	s.ReplyKeyboardMarkup = v
-}
-
-// GetReplyKeyboardMarkup returns ReplyKeyboardMarkup and true boolean if SendMessageReplyMarkup is ReplyKeyboardMarkup.
-func (s SendMessageReplyMarkup) GetReplyKeyboardMarkup() (v ReplyKeyboardMarkup, ok bool) {
-	if !s.IsReplyKeyboardMarkup() {
-		return v, false
-	}
-	return s.ReplyKeyboardMarkup, true
-}
-
-// NewReplyKeyboardMarkupSendMessageReplyMarkup returns new SendMessageReplyMarkup from ReplyKeyboardMarkup.
-func NewReplyKeyboardMarkupSendMessageReplyMarkup(v ReplyKeyboardMarkup) SendMessageReplyMarkup {
-	var s SendMessageReplyMarkup
-	s.SetReplyKeyboardMarkup(v)
-	return s
-}
-
-// SetReplyKeyboardRemove sets SendMessageReplyMarkup to ReplyKeyboardRemove.
-func (s *SendMessageReplyMarkup) SetReplyKeyboardRemove(v ReplyKeyboardRemove) {
-	s.Type = ReplyKeyboardRemoveSendMessageReplyMarkup
-	s.ReplyKeyboardRemove = v
-}
-
-// GetReplyKeyboardRemove returns ReplyKeyboardRemove and true boolean if SendMessageReplyMarkup is ReplyKeyboardRemove.
-func (s SendMessageReplyMarkup) GetReplyKeyboardRemove() (v ReplyKeyboardRemove, ok bool) {
-	if !s.IsReplyKeyboardRemove() {
-		return v, false
-	}
-	return s.ReplyKeyboardRemove, true
-}
-
-// NewReplyKeyboardRemoveSendMessageReplyMarkup returns new SendMessageReplyMarkup from ReplyKeyboardRemove.
-func NewReplyKeyboardRemoveSendMessageReplyMarkup(v ReplyKeyboardRemove) SendMessageReplyMarkup {
-	var s SendMessageReplyMarkup
-	s.SetReplyKeyboardRemove(v)
-	return s
-}
-
-// SetForceReply sets SendMessageReplyMarkup to ForceReply.
-func (s *SendMessageReplyMarkup) SetForceReply(v ForceReply) {
-	s.Type = ForceReplySendMessageReplyMarkup
-	s.ForceReply = v
-}
-
-// GetForceReply returns ForceReply and true boolean if SendMessageReplyMarkup is ForceReply.
-func (s SendMessageReplyMarkup) GetForceReply() (v ForceReply, ok bool) {
-	if !s.IsForceReply() {
-		return v, false
-	}
-	return s.ForceReply, true
-}
-
-// NewForceReplySendMessageReplyMarkup returns new SendMessageReplyMarkup from ForceReply.
-func NewForceReplySendMessageReplyMarkup(v ForceReply) SendMessageReplyMarkup {
-	var s SendMessageReplyMarkup
-	s.SetForceReply(v)
-	return s
+	ChatID                   ID               `json:"chat_id"`
+	Text                     string           `json:"text"`
+	ParseMode                OptString        `json:"parse_mode"`
+	Entities                 []MessageEntity  `json:"entities"`
+	DisableWebPagePreview    OptBool          `json:"disable_web_page_preview"`
+	DisableNotification      OptBool          `json:"disable_notification"`
+	ReplyToMessageID         OptInt           `json:"reply_to_message_id"`
+	AllowSendingWithoutReply OptBool          `json:"allow_sending_without_reply"`
+	ReplyMarkup              *SendReplyMarkup `json:"reply_markup"`
 }
 
 // Ref: #/components/schemas/sendPhoto
 type SendPhoto struct {
-	ChatID                   ID                    `json:"chat_id"`
-	Photo                    string                `json:"photo"`
-	Caption                  OptString             `json:"caption"`
-	ParseMode                OptString             `json:"parse_mode"`
-	CaptionEntities          []MessageEntity       `json:"caption_entities"`
-	DisableNotification      OptBool               `json:"disable_notification"`
-	ReplyToMessageID         OptInt                `json:"reply_to_message_id"`
-	AllowSendingWithoutReply OptBool               `json:"allow_sending_without_reply"`
-	ReplyMarkup              *SendPhotoReplyMarkup `json:"reply_markup"`
-}
-
-// SendPhotoReplyMarkup represents sum type.
-type SendPhotoReplyMarkup struct {
-	Type                 SendPhotoReplyMarkupType // switch on this field
-	InlineKeyboardMarkup InlineKeyboardMarkup
-	ReplyKeyboardMarkup  ReplyKeyboardMarkup
-	ReplyKeyboardRemove  ReplyKeyboardRemove
-	ForceReply           ForceReply
-}
-
-// SendPhotoReplyMarkupType is oneOf type of SendPhotoReplyMarkup.
-type SendPhotoReplyMarkupType string
-
-// Possible values for SendPhotoReplyMarkupType.
-const (
-	InlineKeyboardMarkupSendPhotoReplyMarkup SendPhotoReplyMarkupType = "InlineKeyboardMarkup"
-	ReplyKeyboardMarkupSendPhotoReplyMarkup  SendPhotoReplyMarkupType = "ReplyKeyboardMarkup"
-	ReplyKeyboardRemoveSendPhotoReplyMarkup  SendPhotoReplyMarkupType = "ReplyKeyboardRemove"
-	ForceReplySendPhotoReplyMarkup           SendPhotoReplyMarkupType = "ForceReply"
-)
-
-// IsInlineKeyboardMarkup reports whether SendPhotoReplyMarkup is InlineKeyboardMarkup.
-func (s SendPhotoReplyMarkup) IsInlineKeyboardMarkup() bool {
-	return s.Type == InlineKeyboardMarkupSendPhotoReplyMarkup
-}
-
-// IsReplyKeyboardMarkup reports whether SendPhotoReplyMarkup is ReplyKeyboardMarkup.
-func (s SendPhotoReplyMarkup) IsReplyKeyboardMarkup() bool {
-	return s.Type == ReplyKeyboardMarkupSendPhotoReplyMarkup
-}
-
-// IsReplyKeyboardRemove reports whether SendPhotoReplyMarkup is ReplyKeyboardRemove.
-func (s SendPhotoReplyMarkup) IsReplyKeyboardRemove() bool {
-	return s.Type == ReplyKeyboardRemoveSendPhotoReplyMarkup
-}
-
-// IsForceReply reports whether SendPhotoReplyMarkup is ForceReply.
-func (s SendPhotoReplyMarkup) IsForceReply() bool { return s.Type == ForceReplySendPhotoReplyMarkup }
-
-// SetInlineKeyboardMarkup sets SendPhotoReplyMarkup to InlineKeyboardMarkup.
-func (s *SendPhotoReplyMarkup) SetInlineKeyboardMarkup(v InlineKeyboardMarkup) {
-	s.Type = InlineKeyboardMarkupSendPhotoReplyMarkup
-	s.InlineKeyboardMarkup = v
-}
-
-// GetInlineKeyboardMarkup returns InlineKeyboardMarkup and true boolean if SendPhotoReplyMarkup is InlineKeyboardMarkup.
-func (s SendPhotoReplyMarkup) GetInlineKeyboardMarkup() (v InlineKeyboardMarkup, ok bool) {
-	if !s.IsInlineKeyboardMarkup() {
-		return v, false
-	}
-	return s.InlineKeyboardMarkup, true
-}
-
-// NewInlineKeyboardMarkupSendPhotoReplyMarkup returns new SendPhotoReplyMarkup from InlineKeyboardMarkup.
-func NewInlineKeyboardMarkupSendPhotoReplyMarkup(v InlineKeyboardMarkup) SendPhotoReplyMarkup {
-	var s SendPhotoReplyMarkup
-	s.SetInlineKeyboardMarkup(v)
-	return s
-}
-
-// SetReplyKeyboardMarkup sets SendPhotoReplyMarkup to ReplyKeyboardMarkup.
-func (s *SendPhotoReplyMarkup) SetReplyKeyboardMarkup(v ReplyKeyboardMarkup) {
-	s.Type = ReplyKeyboardMarkupSendPhotoReplyMarkup
-	s.ReplyKeyboardMarkup = v
-}
-
-// GetReplyKeyboardMarkup returns ReplyKeyboardMarkup and true boolean if SendPhotoReplyMarkup is ReplyKeyboardMarkup.
-func (s SendPhotoReplyMarkup) GetReplyKeyboardMarkup() (v ReplyKeyboardMarkup, ok bool) {
-	if !s.IsReplyKeyboardMarkup() {
-		return v, false
-	}
-	return s.ReplyKeyboardMarkup, true
-}
-
-// NewReplyKeyboardMarkupSendPhotoReplyMarkup returns new SendPhotoReplyMarkup from ReplyKeyboardMarkup.
-func NewReplyKeyboardMarkupSendPhotoReplyMarkup(v ReplyKeyboardMarkup) SendPhotoReplyMarkup {
-	var s SendPhotoReplyMarkup
-	s.SetReplyKeyboardMarkup(v)
-	return s
-}
-
-// SetReplyKeyboardRemove sets SendPhotoReplyMarkup to ReplyKeyboardRemove.
-func (s *SendPhotoReplyMarkup) SetReplyKeyboardRemove(v ReplyKeyboardRemove) {
-	s.Type = ReplyKeyboardRemoveSendPhotoReplyMarkup
-	s.ReplyKeyboardRemove = v
-}
-
-// GetReplyKeyboardRemove returns ReplyKeyboardRemove and true boolean if SendPhotoReplyMarkup is ReplyKeyboardRemove.
-func (s SendPhotoReplyMarkup) GetReplyKeyboardRemove() (v ReplyKeyboardRemove, ok bool) {
-	if !s.IsReplyKeyboardRemove() {
-		return v, false
-	}
-	return s.ReplyKeyboardRemove, true
-}
-
-// NewReplyKeyboardRemoveSendPhotoReplyMarkup returns new SendPhotoReplyMarkup from ReplyKeyboardRemove.
-func NewReplyKeyboardRemoveSendPhotoReplyMarkup(v ReplyKeyboardRemove) SendPhotoReplyMarkup {
-	var s SendPhotoReplyMarkup
-	s.SetReplyKeyboardRemove(v)
-	return s
-}
-
-// SetForceReply sets SendPhotoReplyMarkup to ForceReply.
-func (s *SendPhotoReplyMarkup) SetForceReply(v ForceReply) {
-	s.Type = ForceReplySendPhotoReplyMarkup
-	s.ForceReply = v
-}
-
-// GetForceReply returns ForceReply and true boolean if SendPhotoReplyMarkup is ForceReply.
-func (s SendPhotoReplyMarkup) GetForceReply() (v ForceReply, ok bool) {
-	if !s.IsForceReply() {
-		return v, false
-	}
-	return s.ForceReply, true
-}
-
-// NewForceReplySendPhotoReplyMarkup returns new SendPhotoReplyMarkup from ForceReply.
-func NewForceReplySendPhotoReplyMarkup(v ForceReply) SendPhotoReplyMarkup {
-	var s SendPhotoReplyMarkup
-	s.SetForceReply(v)
-	return s
+	ChatID                   ID               `json:"chat_id"`
+	Photo                    string           `json:"photo"`
+	Caption                  OptString        `json:"caption"`
+	ParseMode                OptString        `json:"parse_mode"`
+	CaptionEntities          []MessageEntity  `json:"caption_entities"`
+	DisableNotification      OptBool          `json:"disable_notification"`
+	ReplyToMessageID         OptInt           `json:"reply_to_message_id"`
+	AllowSendingWithoutReply OptBool          `json:"allow_sending_without_reply"`
+	ReplyMarkup              *SendReplyMarkup `json:"reply_markup"`
 }
 
 // Ref: #/components/schemas/sendPoll
 type SendPoll struct {
-	ChatID                   ID                   `json:"chat_id"`
-	Question                 string               `json:"question"`
-	Options                  []string             `json:"options"`
-	IsAnonymous              OptBool              `json:"is_anonymous"`
-	Type                     OptString            `json:"type"`
-	AllowsMultipleAnswers    OptBool              `json:"allows_multiple_answers"`
-	CorrectOptionID          OptInt               `json:"correct_option_id"`
-	Explanation              OptString            `json:"explanation"`
-	ExplanationParseMode     OptString            `json:"explanation_parse_mode"`
-	ExplanationEntities      []MessageEntity      `json:"explanation_entities"`
-	OpenPeriod               OptInt               `json:"open_period"`
-	CloseDate                OptInt               `json:"close_date"`
-	IsClosed                 OptBool              `json:"is_closed"`
-	DisableNotification      OptBool              `json:"disable_notification"`
-	ReplyToMessageID         OptInt               `json:"reply_to_message_id"`
-	AllowSendingWithoutReply OptBool              `json:"allow_sending_without_reply"`
-	ReplyMarkup              *SendPollReplyMarkup `json:"reply_markup"`
+	ChatID                   ID               `json:"chat_id"`
+	Question                 string           `json:"question"`
+	Options                  []string         `json:"options"`
+	IsAnonymous              OptBool          `json:"is_anonymous"`
+	Type                     OptString        `json:"type"`
+	AllowsMultipleAnswers    OptBool          `json:"allows_multiple_answers"`
+	CorrectOptionID          OptInt           `json:"correct_option_id"`
+	Explanation              OptString        `json:"explanation"`
+	ExplanationParseMode     OptString        `json:"explanation_parse_mode"`
+	ExplanationEntities      []MessageEntity  `json:"explanation_entities"`
+	OpenPeriod               OptInt           `json:"open_period"`
+	CloseDate                OptInt           `json:"close_date"`
+	IsClosed                 OptBool          `json:"is_closed"`
+	DisableNotification      OptBool          `json:"disable_notification"`
+	ReplyToMessageID         OptInt           `json:"reply_to_message_id"`
+	AllowSendingWithoutReply OptBool          `json:"allow_sending_without_reply"`
+	ReplyMarkup              *SendReplyMarkup `json:"reply_markup"`
 }
 
-// SendPollReplyMarkup represents sum type.
-type SendPollReplyMarkup struct {
-	Type                 SendPollReplyMarkupType // switch on this field
+// Ref: #/components/schemas/SendReplyMarkup
+// SendReplyMarkup represents sum type.
+type SendReplyMarkup struct {
+	Type                 SendReplyMarkupType // switch on this field
 	InlineKeyboardMarkup InlineKeyboardMarkup
 	ReplyKeyboardMarkup  ReplyKeyboardMarkup
 	ReplyKeyboardRemove  ReplyKeyboardRemove
 	ForceReply           ForceReply
 }
 
-// SendPollReplyMarkupType is oneOf type of SendPollReplyMarkup.
-type SendPollReplyMarkupType string
+// SendReplyMarkupType is oneOf type of SendReplyMarkup.
+type SendReplyMarkupType string
 
-// Possible values for SendPollReplyMarkupType.
+// Possible values for SendReplyMarkupType.
 const (
-	InlineKeyboardMarkupSendPollReplyMarkup SendPollReplyMarkupType = "InlineKeyboardMarkup"
-	ReplyKeyboardMarkupSendPollReplyMarkup  SendPollReplyMarkupType = "ReplyKeyboardMarkup"
-	ReplyKeyboardRemoveSendPollReplyMarkup  SendPollReplyMarkupType = "ReplyKeyboardRemove"
-	ForceReplySendPollReplyMarkup           SendPollReplyMarkupType = "ForceReply"
+	InlineKeyboardMarkupSendReplyMarkup SendReplyMarkupType = "InlineKeyboardMarkup"
+	ReplyKeyboardMarkupSendReplyMarkup  SendReplyMarkupType = "ReplyKeyboardMarkup"
+	ReplyKeyboardRemoveSendReplyMarkup  SendReplyMarkupType = "ReplyKeyboardRemove"
+	ForceReplySendReplyMarkup           SendReplyMarkupType = "ForceReply"
 )
 
-// IsInlineKeyboardMarkup reports whether SendPollReplyMarkup is InlineKeyboardMarkup.
-func (s SendPollReplyMarkup) IsInlineKeyboardMarkup() bool {
-	return s.Type == InlineKeyboardMarkupSendPollReplyMarkup
+// IsInlineKeyboardMarkup reports whether SendReplyMarkup is InlineKeyboardMarkup.
+func (s SendReplyMarkup) IsInlineKeyboardMarkup() bool {
+	return s.Type == InlineKeyboardMarkupSendReplyMarkup
 }
 
-// IsReplyKeyboardMarkup reports whether SendPollReplyMarkup is ReplyKeyboardMarkup.
-func (s SendPollReplyMarkup) IsReplyKeyboardMarkup() bool {
-	return s.Type == ReplyKeyboardMarkupSendPollReplyMarkup
+// IsReplyKeyboardMarkup reports whether SendReplyMarkup is ReplyKeyboardMarkup.
+func (s SendReplyMarkup) IsReplyKeyboardMarkup() bool {
+	return s.Type == ReplyKeyboardMarkupSendReplyMarkup
 }
 
-// IsReplyKeyboardRemove reports whether SendPollReplyMarkup is ReplyKeyboardRemove.
-func (s SendPollReplyMarkup) IsReplyKeyboardRemove() bool {
-	return s.Type == ReplyKeyboardRemoveSendPollReplyMarkup
+// IsReplyKeyboardRemove reports whether SendReplyMarkup is ReplyKeyboardRemove.
+func (s SendReplyMarkup) IsReplyKeyboardRemove() bool {
+	return s.Type == ReplyKeyboardRemoveSendReplyMarkup
 }
 
-// IsForceReply reports whether SendPollReplyMarkup is ForceReply.
-func (s SendPollReplyMarkup) IsForceReply() bool { return s.Type == ForceReplySendPollReplyMarkup }
+// IsForceReply reports whether SendReplyMarkup is ForceReply.
+func (s SendReplyMarkup) IsForceReply() bool { return s.Type == ForceReplySendReplyMarkup }
 
-// SetInlineKeyboardMarkup sets SendPollReplyMarkup to InlineKeyboardMarkup.
-func (s *SendPollReplyMarkup) SetInlineKeyboardMarkup(v InlineKeyboardMarkup) {
-	s.Type = InlineKeyboardMarkupSendPollReplyMarkup
+// SetInlineKeyboardMarkup sets SendReplyMarkup to InlineKeyboardMarkup.
+func (s *SendReplyMarkup) SetInlineKeyboardMarkup(v InlineKeyboardMarkup) {
+	s.Type = InlineKeyboardMarkupSendReplyMarkup
 	s.InlineKeyboardMarkup = v
 }
 
-// GetInlineKeyboardMarkup returns InlineKeyboardMarkup and true boolean if SendPollReplyMarkup is InlineKeyboardMarkup.
-func (s SendPollReplyMarkup) GetInlineKeyboardMarkup() (v InlineKeyboardMarkup, ok bool) {
+// GetInlineKeyboardMarkup returns InlineKeyboardMarkup and true boolean if SendReplyMarkup is InlineKeyboardMarkup.
+func (s SendReplyMarkup) GetInlineKeyboardMarkup() (v InlineKeyboardMarkup, ok bool) {
 	if !s.IsInlineKeyboardMarkup() {
 		return v, false
 	}
 	return s.InlineKeyboardMarkup, true
 }
 
-// NewInlineKeyboardMarkupSendPollReplyMarkup returns new SendPollReplyMarkup from InlineKeyboardMarkup.
-func NewInlineKeyboardMarkupSendPollReplyMarkup(v InlineKeyboardMarkup) SendPollReplyMarkup {
-	var s SendPollReplyMarkup
+// NewInlineKeyboardMarkupSendReplyMarkup returns new SendReplyMarkup from InlineKeyboardMarkup.
+func NewInlineKeyboardMarkupSendReplyMarkup(v InlineKeyboardMarkup) SendReplyMarkup {
+	var s SendReplyMarkup
 	s.SetInlineKeyboardMarkup(v)
 	return s
 }
 
-// SetReplyKeyboardMarkup sets SendPollReplyMarkup to ReplyKeyboardMarkup.
-func (s *SendPollReplyMarkup) SetReplyKeyboardMarkup(v ReplyKeyboardMarkup) {
-	s.Type = ReplyKeyboardMarkupSendPollReplyMarkup
+// SetReplyKeyboardMarkup sets SendReplyMarkup to ReplyKeyboardMarkup.
+func (s *SendReplyMarkup) SetReplyKeyboardMarkup(v ReplyKeyboardMarkup) {
+	s.Type = ReplyKeyboardMarkupSendReplyMarkup
 	s.ReplyKeyboardMarkup = v
 }
 
-// GetReplyKeyboardMarkup returns ReplyKeyboardMarkup and true boolean if SendPollReplyMarkup is ReplyKeyboardMarkup.
-func (s SendPollReplyMarkup) GetReplyKeyboardMarkup() (v ReplyKeyboardMarkup, ok bool) {
+// GetReplyKeyboardMarkup returns ReplyKeyboardMarkup and true boolean if SendReplyMarkup is ReplyKeyboardMarkup.
+func (s SendReplyMarkup) GetReplyKeyboardMarkup() (v ReplyKeyboardMarkup, ok bool) {
 	if !s.IsReplyKeyboardMarkup() {
 		return v, false
 	}
 	return s.ReplyKeyboardMarkup, true
 }
 
-// NewReplyKeyboardMarkupSendPollReplyMarkup returns new SendPollReplyMarkup from ReplyKeyboardMarkup.
-func NewReplyKeyboardMarkupSendPollReplyMarkup(v ReplyKeyboardMarkup) SendPollReplyMarkup {
-	var s SendPollReplyMarkup
+// NewReplyKeyboardMarkupSendReplyMarkup returns new SendReplyMarkup from ReplyKeyboardMarkup.
+func NewReplyKeyboardMarkupSendReplyMarkup(v ReplyKeyboardMarkup) SendReplyMarkup {
+	var s SendReplyMarkup
 	s.SetReplyKeyboardMarkup(v)
 	return s
 }
 
-// SetReplyKeyboardRemove sets SendPollReplyMarkup to ReplyKeyboardRemove.
-func (s *SendPollReplyMarkup) SetReplyKeyboardRemove(v ReplyKeyboardRemove) {
-	s.Type = ReplyKeyboardRemoveSendPollReplyMarkup
+// SetReplyKeyboardRemove sets SendReplyMarkup to ReplyKeyboardRemove.
+func (s *SendReplyMarkup) SetReplyKeyboardRemove(v ReplyKeyboardRemove) {
+	s.Type = ReplyKeyboardRemoveSendReplyMarkup
 	s.ReplyKeyboardRemove = v
 }
 
-// GetReplyKeyboardRemove returns ReplyKeyboardRemove and true boolean if SendPollReplyMarkup is ReplyKeyboardRemove.
-func (s SendPollReplyMarkup) GetReplyKeyboardRemove() (v ReplyKeyboardRemove, ok bool) {
+// GetReplyKeyboardRemove returns ReplyKeyboardRemove and true boolean if SendReplyMarkup is ReplyKeyboardRemove.
+func (s SendReplyMarkup) GetReplyKeyboardRemove() (v ReplyKeyboardRemove, ok bool) {
 	if !s.IsReplyKeyboardRemove() {
 		return v, false
 	}
 	return s.ReplyKeyboardRemove, true
 }
 
-// NewReplyKeyboardRemoveSendPollReplyMarkup returns new SendPollReplyMarkup from ReplyKeyboardRemove.
-func NewReplyKeyboardRemoveSendPollReplyMarkup(v ReplyKeyboardRemove) SendPollReplyMarkup {
-	var s SendPollReplyMarkup
+// NewReplyKeyboardRemoveSendReplyMarkup returns new SendReplyMarkup from ReplyKeyboardRemove.
+func NewReplyKeyboardRemoveSendReplyMarkup(v ReplyKeyboardRemove) SendReplyMarkup {
+	var s SendReplyMarkup
 	s.SetReplyKeyboardRemove(v)
 	return s
 }
 
-// SetForceReply sets SendPollReplyMarkup to ForceReply.
-func (s *SendPollReplyMarkup) SetForceReply(v ForceReply) {
-	s.Type = ForceReplySendPollReplyMarkup
+// SetForceReply sets SendReplyMarkup to ForceReply.
+func (s *SendReplyMarkup) SetForceReply(v ForceReply) {
+	s.Type = ForceReplySendReplyMarkup
 	s.ForceReply = v
 }
 
-// GetForceReply returns ForceReply and true boolean if SendPollReplyMarkup is ForceReply.
-func (s SendPollReplyMarkup) GetForceReply() (v ForceReply, ok bool) {
+// GetForceReply returns ForceReply and true boolean if SendReplyMarkup is ForceReply.
+func (s SendReplyMarkup) GetForceReply() (v ForceReply, ok bool) {
 	if !s.IsForceReply() {
 		return v, false
 	}
 	return s.ForceReply, true
 }
 
-// NewForceReplySendPollReplyMarkup returns new SendPollReplyMarkup from ForceReply.
-func NewForceReplySendPollReplyMarkup(v ForceReply) SendPollReplyMarkup {
-	var s SendPollReplyMarkup
+// NewForceReplySendReplyMarkup returns new SendReplyMarkup from ForceReply.
+func NewForceReplySendReplyMarkup(v ForceReply) SendReplyMarkup {
+	var s SendReplyMarkup
 	s.SetForceReply(v)
 	return s
 }
 
 // Ref: #/components/schemas/sendSticker
 type SendSticker struct {
-	ChatID                   ID                      `json:"chat_id"`
-	Sticker                  string                  `json:"sticker"`
-	DisableNotification      OptBool                 `json:"disable_notification"`
-	ReplyToMessageID         OptInt                  `json:"reply_to_message_id"`
-	AllowSendingWithoutReply OptBool                 `json:"allow_sending_without_reply"`
-	ReplyMarkup              *SendStickerReplyMarkup `json:"reply_markup"`
-}
-
-// SendStickerReplyMarkup represents sum type.
-type SendStickerReplyMarkup struct {
-	Type                 SendStickerReplyMarkupType // switch on this field
-	InlineKeyboardMarkup InlineKeyboardMarkup
-	ReplyKeyboardMarkup  ReplyKeyboardMarkup
-	ReplyKeyboardRemove  ReplyKeyboardRemove
-	ForceReply           ForceReply
-}
-
-// SendStickerReplyMarkupType is oneOf type of SendStickerReplyMarkup.
-type SendStickerReplyMarkupType string
-
-// Possible values for SendStickerReplyMarkupType.
-const (
-	InlineKeyboardMarkupSendStickerReplyMarkup SendStickerReplyMarkupType = "InlineKeyboardMarkup"
-	ReplyKeyboardMarkupSendStickerReplyMarkup  SendStickerReplyMarkupType = "ReplyKeyboardMarkup"
-	ReplyKeyboardRemoveSendStickerReplyMarkup  SendStickerReplyMarkupType = "ReplyKeyboardRemove"
-	ForceReplySendStickerReplyMarkup           SendStickerReplyMarkupType = "ForceReply"
-)
-
-// IsInlineKeyboardMarkup reports whether SendStickerReplyMarkup is InlineKeyboardMarkup.
-func (s SendStickerReplyMarkup) IsInlineKeyboardMarkup() bool {
-	return s.Type == InlineKeyboardMarkupSendStickerReplyMarkup
-}
-
-// IsReplyKeyboardMarkup reports whether SendStickerReplyMarkup is ReplyKeyboardMarkup.
-func (s SendStickerReplyMarkup) IsReplyKeyboardMarkup() bool {
-	return s.Type == ReplyKeyboardMarkupSendStickerReplyMarkup
-}
-
-// IsReplyKeyboardRemove reports whether SendStickerReplyMarkup is ReplyKeyboardRemove.
-func (s SendStickerReplyMarkup) IsReplyKeyboardRemove() bool {
-	return s.Type == ReplyKeyboardRemoveSendStickerReplyMarkup
-}
-
-// IsForceReply reports whether SendStickerReplyMarkup is ForceReply.
-func (s SendStickerReplyMarkup) IsForceReply() bool {
-	return s.Type == ForceReplySendStickerReplyMarkup
-}
-
-// SetInlineKeyboardMarkup sets SendStickerReplyMarkup to InlineKeyboardMarkup.
-func (s *SendStickerReplyMarkup) SetInlineKeyboardMarkup(v InlineKeyboardMarkup) {
-	s.Type = InlineKeyboardMarkupSendStickerReplyMarkup
-	s.InlineKeyboardMarkup = v
-}
-
-// GetInlineKeyboardMarkup returns InlineKeyboardMarkup and true boolean if SendStickerReplyMarkup is InlineKeyboardMarkup.
-func (s SendStickerReplyMarkup) GetInlineKeyboardMarkup() (v InlineKeyboardMarkup, ok bool) {
-	if !s.IsInlineKeyboardMarkup() {
-		return v, false
-	}
-	return s.InlineKeyboardMarkup, true
-}
-
-// NewInlineKeyboardMarkupSendStickerReplyMarkup returns new SendStickerReplyMarkup from InlineKeyboardMarkup.
-func NewInlineKeyboardMarkupSendStickerReplyMarkup(v InlineKeyboardMarkup) SendStickerReplyMarkup {
-	var s SendStickerReplyMarkup
-	s.SetInlineKeyboardMarkup(v)
-	return s
-}
-
-// SetReplyKeyboardMarkup sets SendStickerReplyMarkup to ReplyKeyboardMarkup.
-func (s *SendStickerReplyMarkup) SetReplyKeyboardMarkup(v ReplyKeyboardMarkup) {
-	s.Type = ReplyKeyboardMarkupSendStickerReplyMarkup
-	s.ReplyKeyboardMarkup = v
-}
-
-// GetReplyKeyboardMarkup returns ReplyKeyboardMarkup and true boolean if SendStickerReplyMarkup is ReplyKeyboardMarkup.
-func (s SendStickerReplyMarkup) GetReplyKeyboardMarkup() (v ReplyKeyboardMarkup, ok bool) {
-	if !s.IsReplyKeyboardMarkup() {
-		return v, false
-	}
-	return s.ReplyKeyboardMarkup, true
-}
-
-// NewReplyKeyboardMarkupSendStickerReplyMarkup returns new SendStickerReplyMarkup from ReplyKeyboardMarkup.
-func NewReplyKeyboardMarkupSendStickerReplyMarkup(v ReplyKeyboardMarkup) SendStickerReplyMarkup {
-	var s SendStickerReplyMarkup
-	s.SetReplyKeyboardMarkup(v)
-	return s
-}
-
-// SetReplyKeyboardRemove sets SendStickerReplyMarkup to ReplyKeyboardRemove.
-func (s *SendStickerReplyMarkup) SetReplyKeyboardRemove(v ReplyKeyboardRemove) {
-	s.Type = ReplyKeyboardRemoveSendStickerReplyMarkup
-	s.ReplyKeyboardRemove = v
-}
-
-// GetReplyKeyboardRemove returns ReplyKeyboardRemove and true boolean if SendStickerReplyMarkup is ReplyKeyboardRemove.
-func (s SendStickerReplyMarkup) GetReplyKeyboardRemove() (v ReplyKeyboardRemove, ok bool) {
-	if !s.IsReplyKeyboardRemove() {
-		return v, false
-	}
-	return s.ReplyKeyboardRemove, true
-}
-
-// NewReplyKeyboardRemoveSendStickerReplyMarkup returns new SendStickerReplyMarkup from ReplyKeyboardRemove.
-func NewReplyKeyboardRemoveSendStickerReplyMarkup(v ReplyKeyboardRemove) SendStickerReplyMarkup {
-	var s SendStickerReplyMarkup
-	s.SetReplyKeyboardRemove(v)
-	return s
-}
-
-// SetForceReply sets SendStickerReplyMarkup to ForceReply.
-func (s *SendStickerReplyMarkup) SetForceReply(v ForceReply) {
-	s.Type = ForceReplySendStickerReplyMarkup
-	s.ForceReply = v
-}
-
-// GetForceReply returns ForceReply and true boolean if SendStickerReplyMarkup is ForceReply.
-func (s SendStickerReplyMarkup) GetForceReply() (v ForceReply, ok bool) {
-	if !s.IsForceReply() {
-		return v, false
-	}
-	return s.ForceReply, true
-}
-
-// NewForceReplySendStickerReplyMarkup returns new SendStickerReplyMarkup from ForceReply.
-func NewForceReplySendStickerReplyMarkup(v ForceReply) SendStickerReplyMarkup {
-	var s SendStickerReplyMarkup
-	s.SetForceReply(v)
-	return s
+	ChatID                   ID               `json:"chat_id"`
+	Sticker                  string           `json:"sticker"`
+	DisableNotification      OptBool          `json:"disable_notification"`
+	ReplyToMessageID         OptInt           `json:"reply_to_message_id"`
+	AllowSendingWithoutReply OptBool          `json:"allow_sending_without_reply"`
+	ReplyMarkup              *SendReplyMarkup `json:"reply_markup"`
 }
 
 // Ref: #/components/schemas/sendVenue
 type SendVenue struct {
-	ChatID                   ID                    `json:"chat_id"`
-	Latitude                 float64               `json:"latitude"`
-	Longitude                float64               `json:"longitude"`
-	Title                    string                `json:"title"`
-	Address                  string                `json:"address"`
-	FoursquareID             OptString             `json:"foursquare_id"`
-	FoursquareType           OptString             `json:"foursquare_type"`
-	GooglePlaceID            OptString             `json:"google_place_id"`
-	GooglePlaceType          OptString             `json:"google_place_type"`
-	DisableNotification      OptBool               `json:"disable_notification"`
-	ReplyToMessageID         OptInt                `json:"reply_to_message_id"`
-	AllowSendingWithoutReply OptBool               `json:"allow_sending_without_reply"`
-	ReplyMarkup              *SendVenueReplyMarkup `json:"reply_markup"`
-}
-
-// SendVenueReplyMarkup represents sum type.
-type SendVenueReplyMarkup struct {
-	Type                 SendVenueReplyMarkupType // switch on this field
-	InlineKeyboardMarkup InlineKeyboardMarkup
-	ReplyKeyboardMarkup  ReplyKeyboardMarkup
-	ReplyKeyboardRemove  ReplyKeyboardRemove
-	ForceReply           ForceReply
-}
-
-// SendVenueReplyMarkupType is oneOf type of SendVenueReplyMarkup.
-type SendVenueReplyMarkupType string
-
-// Possible values for SendVenueReplyMarkupType.
-const (
-	InlineKeyboardMarkupSendVenueReplyMarkup SendVenueReplyMarkupType = "InlineKeyboardMarkup"
-	ReplyKeyboardMarkupSendVenueReplyMarkup  SendVenueReplyMarkupType = "ReplyKeyboardMarkup"
-	ReplyKeyboardRemoveSendVenueReplyMarkup  SendVenueReplyMarkupType = "ReplyKeyboardRemove"
-	ForceReplySendVenueReplyMarkup           SendVenueReplyMarkupType = "ForceReply"
-)
-
-// IsInlineKeyboardMarkup reports whether SendVenueReplyMarkup is InlineKeyboardMarkup.
-func (s SendVenueReplyMarkup) IsInlineKeyboardMarkup() bool {
-	return s.Type == InlineKeyboardMarkupSendVenueReplyMarkup
-}
-
-// IsReplyKeyboardMarkup reports whether SendVenueReplyMarkup is ReplyKeyboardMarkup.
-func (s SendVenueReplyMarkup) IsReplyKeyboardMarkup() bool {
-	return s.Type == ReplyKeyboardMarkupSendVenueReplyMarkup
-}
-
-// IsReplyKeyboardRemove reports whether SendVenueReplyMarkup is ReplyKeyboardRemove.
-func (s SendVenueReplyMarkup) IsReplyKeyboardRemove() bool {
-	return s.Type == ReplyKeyboardRemoveSendVenueReplyMarkup
-}
-
-// IsForceReply reports whether SendVenueReplyMarkup is ForceReply.
-func (s SendVenueReplyMarkup) IsForceReply() bool { return s.Type == ForceReplySendVenueReplyMarkup }
-
-// SetInlineKeyboardMarkup sets SendVenueReplyMarkup to InlineKeyboardMarkup.
-func (s *SendVenueReplyMarkup) SetInlineKeyboardMarkup(v InlineKeyboardMarkup) {
-	s.Type = InlineKeyboardMarkupSendVenueReplyMarkup
-	s.InlineKeyboardMarkup = v
-}
-
-// GetInlineKeyboardMarkup returns InlineKeyboardMarkup and true boolean if SendVenueReplyMarkup is InlineKeyboardMarkup.
-func (s SendVenueReplyMarkup) GetInlineKeyboardMarkup() (v InlineKeyboardMarkup, ok bool) {
-	if !s.IsInlineKeyboardMarkup() {
-		return v, false
-	}
-	return s.InlineKeyboardMarkup, true
-}
-
-// NewInlineKeyboardMarkupSendVenueReplyMarkup returns new SendVenueReplyMarkup from InlineKeyboardMarkup.
-func NewInlineKeyboardMarkupSendVenueReplyMarkup(v InlineKeyboardMarkup) SendVenueReplyMarkup {
-	var s SendVenueReplyMarkup
-	s.SetInlineKeyboardMarkup(v)
-	return s
-}
-
-// SetReplyKeyboardMarkup sets SendVenueReplyMarkup to ReplyKeyboardMarkup.
-func (s *SendVenueReplyMarkup) SetReplyKeyboardMarkup(v ReplyKeyboardMarkup) {
-	s.Type = ReplyKeyboardMarkupSendVenueReplyMarkup
-	s.ReplyKeyboardMarkup = v
-}
-
-// GetReplyKeyboardMarkup returns ReplyKeyboardMarkup and true boolean if SendVenueReplyMarkup is ReplyKeyboardMarkup.
-func (s SendVenueReplyMarkup) GetReplyKeyboardMarkup() (v ReplyKeyboardMarkup, ok bool) {
-	if !s.IsReplyKeyboardMarkup() {
-		return v, false
-	}
-	return s.ReplyKeyboardMarkup, true
-}
-
-// NewReplyKeyboardMarkupSendVenueReplyMarkup returns new SendVenueReplyMarkup from ReplyKeyboardMarkup.
-func NewReplyKeyboardMarkupSendVenueReplyMarkup(v ReplyKeyboardMarkup) SendVenueReplyMarkup {
-	var s SendVenueReplyMarkup
-	s.SetReplyKeyboardMarkup(v)
-	return s
-}
-
-// SetReplyKeyboardRemove sets SendVenueReplyMarkup to ReplyKeyboardRemove.
-func (s *SendVenueReplyMarkup) SetReplyKeyboardRemove(v ReplyKeyboardRemove) {
-	s.Type = ReplyKeyboardRemoveSendVenueReplyMarkup
-	s.ReplyKeyboardRemove = v
-}
-
-// GetReplyKeyboardRemove returns ReplyKeyboardRemove and true boolean if SendVenueReplyMarkup is ReplyKeyboardRemove.
-func (s SendVenueReplyMarkup) GetReplyKeyboardRemove() (v ReplyKeyboardRemove, ok bool) {
-	if !s.IsReplyKeyboardRemove() {
-		return v, false
-	}
-	return s.ReplyKeyboardRemove, true
-}
-
-// NewReplyKeyboardRemoveSendVenueReplyMarkup returns new SendVenueReplyMarkup from ReplyKeyboardRemove.
-func NewReplyKeyboardRemoveSendVenueReplyMarkup(v ReplyKeyboardRemove) SendVenueReplyMarkup {
-	var s SendVenueReplyMarkup
-	s.SetReplyKeyboardRemove(v)
-	return s
-}
-
-// SetForceReply sets SendVenueReplyMarkup to ForceReply.
-func (s *SendVenueReplyMarkup) SetForceReply(v ForceReply) {
-	s.Type = ForceReplySendVenueReplyMarkup
-	s.ForceReply = v
-}
-
-// GetForceReply returns ForceReply and true boolean if SendVenueReplyMarkup is ForceReply.
-func (s SendVenueReplyMarkup) GetForceReply() (v ForceReply, ok bool) {
-	if !s.IsForceReply() {
-		return v, false
-	}
-	return s.ForceReply, true
-}
-
-// NewForceReplySendVenueReplyMarkup returns new SendVenueReplyMarkup from ForceReply.
-func NewForceReplySendVenueReplyMarkup(v ForceReply) SendVenueReplyMarkup {
-	var s SendVenueReplyMarkup
-	s.SetForceReply(v)
-	return s
+	ChatID                   ID               `json:"chat_id"`
+	Latitude                 float64          `json:"latitude"`
+	Longitude                float64          `json:"longitude"`
+	Title                    string           `json:"title"`
+	Address                  string           `json:"address"`
+	FoursquareID             OptString        `json:"foursquare_id"`
+	FoursquareType           OptString        `json:"foursquare_type"`
+	GooglePlaceID            OptString        `json:"google_place_id"`
+	GooglePlaceType          OptString        `json:"google_place_type"`
+	DisableNotification      OptBool          `json:"disable_notification"`
+	ReplyToMessageID         OptInt           `json:"reply_to_message_id"`
+	AllowSendingWithoutReply OptBool          `json:"allow_sending_without_reply"`
+	ReplyMarkup              *SendReplyMarkup `json:"reply_markup"`
 }
 
 // Ref: #/components/schemas/sendVideo
 type SendVideo struct {
-	ChatID                   ID                    `json:"chat_id"`
-	Video                    string                `json:"video"`
-	Duration                 OptInt                `json:"duration"`
-	Width                    OptInt                `json:"width"`
-	Height                   OptInt                `json:"height"`
-	Thumb                    OptString             `json:"thumb"`
-	Caption                  OptString             `json:"caption"`
-	ParseMode                OptString             `json:"parse_mode"`
-	CaptionEntities          []MessageEntity       `json:"caption_entities"`
-	SupportsStreaming        OptBool               `json:"supports_streaming"`
-	DisableNotification      OptBool               `json:"disable_notification"`
-	ReplyToMessageID         OptInt                `json:"reply_to_message_id"`
-	AllowSendingWithoutReply OptBool               `json:"allow_sending_without_reply"`
-	ReplyMarkup              *SendVideoReplyMarkup `json:"reply_markup"`
+	ChatID                   ID               `json:"chat_id"`
+	Video                    string           `json:"video"`
+	Duration                 OptInt           `json:"duration"`
+	Width                    OptInt           `json:"width"`
+	Height                   OptInt           `json:"height"`
+	Thumb                    OptString        `json:"thumb"`
+	Caption                  OptString        `json:"caption"`
+	ParseMode                OptString        `json:"parse_mode"`
+	CaptionEntities          []MessageEntity  `json:"caption_entities"`
+	SupportsStreaming        OptBool          `json:"supports_streaming"`
+	DisableNotification      OptBool          `json:"disable_notification"`
+	ReplyToMessageID         OptInt           `json:"reply_to_message_id"`
+	AllowSendingWithoutReply OptBool          `json:"allow_sending_without_reply"`
+	ReplyMarkup              *SendReplyMarkup `json:"reply_markup"`
 }
 
 // Ref: #/components/schemas/sendVideoNote
 type SendVideoNote struct {
-	ChatID                   ID                        `json:"chat_id"`
-	VideoNote                string                    `json:"video_note"`
-	Duration                 OptInt                    `json:"duration"`
-	Length                   OptInt                    `json:"length"`
-	Thumb                    OptString                 `json:"thumb"`
-	DisableNotification      OptBool                   `json:"disable_notification"`
-	ReplyToMessageID         OptInt                    `json:"reply_to_message_id"`
-	AllowSendingWithoutReply OptBool                   `json:"allow_sending_without_reply"`
-	ReplyMarkup              *SendVideoNoteReplyMarkup `json:"reply_markup"`
-}
-
-// SendVideoNoteReplyMarkup represents sum type.
-type SendVideoNoteReplyMarkup struct {
-	Type                 SendVideoNoteReplyMarkupType // switch on this field
-	InlineKeyboardMarkup InlineKeyboardMarkup
-	ReplyKeyboardMarkup  ReplyKeyboardMarkup
-	ReplyKeyboardRemove  ReplyKeyboardRemove
-	ForceReply           ForceReply
-}
-
-// SendVideoNoteReplyMarkupType is oneOf type of SendVideoNoteReplyMarkup.
-type SendVideoNoteReplyMarkupType string
-
-// Possible values for SendVideoNoteReplyMarkupType.
-const (
-	InlineKeyboardMarkupSendVideoNoteReplyMarkup SendVideoNoteReplyMarkupType = "InlineKeyboardMarkup"
-	ReplyKeyboardMarkupSendVideoNoteReplyMarkup  SendVideoNoteReplyMarkupType = "ReplyKeyboardMarkup"
-	ReplyKeyboardRemoveSendVideoNoteReplyMarkup  SendVideoNoteReplyMarkupType = "ReplyKeyboardRemove"
-	ForceReplySendVideoNoteReplyMarkup           SendVideoNoteReplyMarkupType = "ForceReply"
-)
-
-// IsInlineKeyboardMarkup reports whether SendVideoNoteReplyMarkup is InlineKeyboardMarkup.
-func (s SendVideoNoteReplyMarkup) IsInlineKeyboardMarkup() bool {
-	return s.Type == InlineKeyboardMarkupSendVideoNoteReplyMarkup
-}
-
-// IsReplyKeyboardMarkup reports whether SendVideoNoteReplyMarkup is ReplyKeyboardMarkup.
-func (s SendVideoNoteReplyMarkup) IsReplyKeyboardMarkup() bool {
-	return s.Type == ReplyKeyboardMarkupSendVideoNoteReplyMarkup
-}
-
-// IsReplyKeyboardRemove reports whether SendVideoNoteReplyMarkup is ReplyKeyboardRemove.
-func (s SendVideoNoteReplyMarkup) IsReplyKeyboardRemove() bool {
-	return s.Type == ReplyKeyboardRemoveSendVideoNoteReplyMarkup
-}
-
-// IsForceReply reports whether SendVideoNoteReplyMarkup is ForceReply.
-func (s SendVideoNoteReplyMarkup) IsForceReply() bool {
-	return s.Type == ForceReplySendVideoNoteReplyMarkup
-}
-
-// SetInlineKeyboardMarkup sets SendVideoNoteReplyMarkup to InlineKeyboardMarkup.
-func (s *SendVideoNoteReplyMarkup) SetInlineKeyboardMarkup(v InlineKeyboardMarkup) {
-	s.Type = InlineKeyboardMarkupSendVideoNoteReplyMarkup
-	s.InlineKeyboardMarkup = v
-}
-
-// GetInlineKeyboardMarkup returns InlineKeyboardMarkup and true boolean if SendVideoNoteReplyMarkup is InlineKeyboardMarkup.
-func (s SendVideoNoteReplyMarkup) GetInlineKeyboardMarkup() (v InlineKeyboardMarkup, ok bool) {
-	if !s.IsInlineKeyboardMarkup() {
-		return v, false
-	}
-	return s.InlineKeyboardMarkup, true
-}
-
-// NewInlineKeyboardMarkupSendVideoNoteReplyMarkup returns new SendVideoNoteReplyMarkup from InlineKeyboardMarkup.
-func NewInlineKeyboardMarkupSendVideoNoteReplyMarkup(v InlineKeyboardMarkup) SendVideoNoteReplyMarkup {
-	var s SendVideoNoteReplyMarkup
-	s.SetInlineKeyboardMarkup(v)
-	return s
-}
-
-// SetReplyKeyboardMarkup sets SendVideoNoteReplyMarkup to ReplyKeyboardMarkup.
-func (s *SendVideoNoteReplyMarkup) SetReplyKeyboardMarkup(v ReplyKeyboardMarkup) {
-	s.Type = ReplyKeyboardMarkupSendVideoNoteReplyMarkup
-	s.ReplyKeyboardMarkup = v
-}
-
-// GetReplyKeyboardMarkup returns ReplyKeyboardMarkup and true boolean if SendVideoNoteReplyMarkup is ReplyKeyboardMarkup.
-func (s SendVideoNoteReplyMarkup) GetReplyKeyboardMarkup() (v ReplyKeyboardMarkup, ok bool) {
-	if !s.IsReplyKeyboardMarkup() {
-		return v, false
-	}
-	return s.ReplyKeyboardMarkup, true
-}
-
-// NewReplyKeyboardMarkupSendVideoNoteReplyMarkup returns new SendVideoNoteReplyMarkup from ReplyKeyboardMarkup.
-func NewReplyKeyboardMarkupSendVideoNoteReplyMarkup(v ReplyKeyboardMarkup) SendVideoNoteReplyMarkup {
-	var s SendVideoNoteReplyMarkup
-	s.SetReplyKeyboardMarkup(v)
-	return s
-}
-
-// SetReplyKeyboardRemove sets SendVideoNoteReplyMarkup to ReplyKeyboardRemove.
-func (s *SendVideoNoteReplyMarkup) SetReplyKeyboardRemove(v ReplyKeyboardRemove) {
-	s.Type = ReplyKeyboardRemoveSendVideoNoteReplyMarkup
-	s.ReplyKeyboardRemove = v
-}
-
-// GetReplyKeyboardRemove returns ReplyKeyboardRemove and true boolean if SendVideoNoteReplyMarkup is ReplyKeyboardRemove.
-func (s SendVideoNoteReplyMarkup) GetReplyKeyboardRemove() (v ReplyKeyboardRemove, ok bool) {
-	if !s.IsReplyKeyboardRemove() {
-		return v, false
-	}
-	return s.ReplyKeyboardRemove, true
-}
-
-// NewReplyKeyboardRemoveSendVideoNoteReplyMarkup returns new SendVideoNoteReplyMarkup from ReplyKeyboardRemove.
-func NewReplyKeyboardRemoveSendVideoNoteReplyMarkup(v ReplyKeyboardRemove) SendVideoNoteReplyMarkup {
-	var s SendVideoNoteReplyMarkup
-	s.SetReplyKeyboardRemove(v)
-	return s
-}
-
-// SetForceReply sets SendVideoNoteReplyMarkup to ForceReply.
-func (s *SendVideoNoteReplyMarkup) SetForceReply(v ForceReply) {
-	s.Type = ForceReplySendVideoNoteReplyMarkup
-	s.ForceReply = v
-}
-
-// GetForceReply returns ForceReply and true boolean if SendVideoNoteReplyMarkup is ForceReply.
-func (s SendVideoNoteReplyMarkup) GetForceReply() (v ForceReply, ok bool) {
-	if !s.IsForceReply() {
-		return v, false
-	}
-	return s.ForceReply, true
-}
-
-// NewForceReplySendVideoNoteReplyMarkup returns new SendVideoNoteReplyMarkup from ForceReply.
-func NewForceReplySendVideoNoteReplyMarkup(v ForceReply) SendVideoNoteReplyMarkup {
-	var s SendVideoNoteReplyMarkup
-	s.SetForceReply(v)
-	return s
-}
-
-// SendVideoReplyMarkup represents sum type.
-type SendVideoReplyMarkup struct {
-	Type                 SendVideoReplyMarkupType // switch on this field
-	InlineKeyboardMarkup InlineKeyboardMarkup
-	ReplyKeyboardMarkup  ReplyKeyboardMarkup
-	ReplyKeyboardRemove  ReplyKeyboardRemove
-	ForceReply           ForceReply
-}
-
-// SendVideoReplyMarkupType is oneOf type of SendVideoReplyMarkup.
-type SendVideoReplyMarkupType string
-
-// Possible values for SendVideoReplyMarkupType.
-const (
-	InlineKeyboardMarkupSendVideoReplyMarkup SendVideoReplyMarkupType = "InlineKeyboardMarkup"
-	ReplyKeyboardMarkupSendVideoReplyMarkup  SendVideoReplyMarkupType = "ReplyKeyboardMarkup"
-	ReplyKeyboardRemoveSendVideoReplyMarkup  SendVideoReplyMarkupType = "ReplyKeyboardRemove"
-	ForceReplySendVideoReplyMarkup           SendVideoReplyMarkupType = "ForceReply"
-)
-
-// IsInlineKeyboardMarkup reports whether SendVideoReplyMarkup is InlineKeyboardMarkup.
-func (s SendVideoReplyMarkup) IsInlineKeyboardMarkup() bool {
-	return s.Type == InlineKeyboardMarkupSendVideoReplyMarkup
-}
-
-// IsReplyKeyboardMarkup reports whether SendVideoReplyMarkup is ReplyKeyboardMarkup.
-func (s SendVideoReplyMarkup) IsReplyKeyboardMarkup() bool {
-	return s.Type == ReplyKeyboardMarkupSendVideoReplyMarkup
-}
-
-// IsReplyKeyboardRemove reports whether SendVideoReplyMarkup is ReplyKeyboardRemove.
-func (s SendVideoReplyMarkup) IsReplyKeyboardRemove() bool {
-	return s.Type == ReplyKeyboardRemoveSendVideoReplyMarkup
-}
-
-// IsForceReply reports whether SendVideoReplyMarkup is ForceReply.
-func (s SendVideoReplyMarkup) IsForceReply() bool { return s.Type == ForceReplySendVideoReplyMarkup }
-
-// SetInlineKeyboardMarkup sets SendVideoReplyMarkup to InlineKeyboardMarkup.
-func (s *SendVideoReplyMarkup) SetInlineKeyboardMarkup(v InlineKeyboardMarkup) {
-	s.Type = InlineKeyboardMarkupSendVideoReplyMarkup
-	s.InlineKeyboardMarkup = v
-}
-
-// GetInlineKeyboardMarkup returns InlineKeyboardMarkup and true boolean if SendVideoReplyMarkup is InlineKeyboardMarkup.
-func (s SendVideoReplyMarkup) GetInlineKeyboardMarkup() (v InlineKeyboardMarkup, ok bool) {
-	if !s.IsInlineKeyboardMarkup() {
-		return v, false
-	}
-	return s.InlineKeyboardMarkup, true
-}
-
-// NewInlineKeyboardMarkupSendVideoReplyMarkup returns new SendVideoReplyMarkup from InlineKeyboardMarkup.
-func NewInlineKeyboardMarkupSendVideoReplyMarkup(v InlineKeyboardMarkup) SendVideoReplyMarkup {
-	var s SendVideoReplyMarkup
-	s.SetInlineKeyboardMarkup(v)
-	return s
-}
-
-// SetReplyKeyboardMarkup sets SendVideoReplyMarkup to ReplyKeyboardMarkup.
-func (s *SendVideoReplyMarkup) SetReplyKeyboardMarkup(v ReplyKeyboardMarkup) {
-	s.Type = ReplyKeyboardMarkupSendVideoReplyMarkup
-	s.ReplyKeyboardMarkup = v
-}
-
-// GetReplyKeyboardMarkup returns ReplyKeyboardMarkup and true boolean if SendVideoReplyMarkup is ReplyKeyboardMarkup.
-func (s SendVideoReplyMarkup) GetReplyKeyboardMarkup() (v ReplyKeyboardMarkup, ok bool) {
-	if !s.IsReplyKeyboardMarkup() {
-		return v, false
-	}
-	return s.ReplyKeyboardMarkup, true
-}
-
-// NewReplyKeyboardMarkupSendVideoReplyMarkup returns new SendVideoReplyMarkup from ReplyKeyboardMarkup.
-func NewReplyKeyboardMarkupSendVideoReplyMarkup(v ReplyKeyboardMarkup) SendVideoReplyMarkup {
-	var s SendVideoReplyMarkup
-	s.SetReplyKeyboardMarkup(v)
-	return s
-}
-
-// SetReplyKeyboardRemove sets SendVideoReplyMarkup to ReplyKeyboardRemove.
-func (s *SendVideoReplyMarkup) SetReplyKeyboardRemove(v ReplyKeyboardRemove) {
-	s.Type = ReplyKeyboardRemoveSendVideoReplyMarkup
-	s.ReplyKeyboardRemove = v
-}
-
-// GetReplyKeyboardRemove returns ReplyKeyboardRemove and true boolean if SendVideoReplyMarkup is ReplyKeyboardRemove.
-func (s SendVideoReplyMarkup) GetReplyKeyboardRemove() (v ReplyKeyboardRemove, ok bool) {
-	if !s.IsReplyKeyboardRemove() {
-		return v, false
-	}
-	return s.ReplyKeyboardRemove, true
-}
-
-// NewReplyKeyboardRemoveSendVideoReplyMarkup returns new SendVideoReplyMarkup from ReplyKeyboardRemove.
-func NewReplyKeyboardRemoveSendVideoReplyMarkup(v ReplyKeyboardRemove) SendVideoReplyMarkup {
-	var s SendVideoReplyMarkup
-	s.SetReplyKeyboardRemove(v)
-	return s
-}
-
-// SetForceReply sets SendVideoReplyMarkup to ForceReply.
-func (s *SendVideoReplyMarkup) SetForceReply(v ForceReply) {
-	s.Type = ForceReplySendVideoReplyMarkup
-	s.ForceReply = v
-}
-
-// GetForceReply returns ForceReply and true boolean if SendVideoReplyMarkup is ForceReply.
-func (s SendVideoReplyMarkup) GetForceReply() (v ForceReply, ok bool) {
-	if !s.IsForceReply() {
-		return v, false
-	}
-	return s.ForceReply, true
-}
-
-// NewForceReplySendVideoReplyMarkup returns new SendVideoReplyMarkup from ForceReply.
-func NewForceReplySendVideoReplyMarkup(v ForceReply) SendVideoReplyMarkup {
-	var s SendVideoReplyMarkup
-	s.SetForceReply(v)
-	return s
+	ChatID                   ID               `json:"chat_id"`
+	VideoNote                string           `json:"video_note"`
+	Duration                 OptInt           `json:"duration"`
+	Length                   OptInt           `json:"length"`
+	Thumb                    OptString        `json:"thumb"`
+	DisableNotification      OptBool          `json:"disable_notification"`
+	ReplyToMessageID         OptInt           `json:"reply_to_message_id"`
+	AllowSendingWithoutReply OptBool          `json:"allow_sending_without_reply"`
+	ReplyMarkup              *SendReplyMarkup `json:"reply_markup"`
 }
 
 // Ref: #/components/schemas/sendVoice
 type SendVoice struct {
-	ChatID                   ID                    `json:"chat_id"`
-	Voice                    string                `json:"voice"`
-	Caption                  OptString             `json:"caption"`
-	ParseMode                OptString             `json:"parse_mode"`
-	CaptionEntities          []MessageEntity       `json:"caption_entities"`
-	Duration                 OptInt                `json:"duration"`
-	DisableNotification      OptBool               `json:"disable_notification"`
-	ReplyToMessageID         OptInt                `json:"reply_to_message_id"`
-	AllowSendingWithoutReply OptBool               `json:"allow_sending_without_reply"`
-	ReplyMarkup              *SendVoiceReplyMarkup `json:"reply_markup"`
-}
-
-// SendVoiceReplyMarkup represents sum type.
-type SendVoiceReplyMarkup struct {
-	Type                 SendVoiceReplyMarkupType // switch on this field
-	InlineKeyboardMarkup InlineKeyboardMarkup
-	ReplyKeyboardMarkup  ReplyKeyboardMarkup
-	ReplyKeyboardRemove  ReplyKeyboardRemove
-	ForceReply           ForceReply
-}
-
-// SendVoiceReplyMarkupType is oneOf type of SendVoiceReplyMarkup.
-type SendVoiceReplyMarkupType string
-
-// Possible values for SendVoiceReplyMarkupType.
-const (
-	InlineKeyboardMarkupSendVoiceReplyMarkup SendVoiceReplyMarkupType = "InlineKeyboardMarkup"
-	ReplyKeyboardMarkupSendVoiceReplyMarkup  SendVoiceReplyMarkupType = "ReplyKeyboardMarkup"
-	ReplyKeyboardRemoveSendVoiceReplyMarkup  SendVoiceReplyMarkupType = "ReplyKeyboardRemove"
-	ForceReplySendVoiceReplyMarkup           SendVoiceReplyMarkupType = "ForceReply"
-)
-
-// IsInlineKeyboardMarkup reports whether SendVoiceReplyMarkup is InlineKeyboardMarkup.
-func (s SendVoiceReplyMarkup) IsInlineKeyboardMarkup() bool {
-	return s.Type == InlineKeyboardMarkupSendVoiceReplyMarkup
-}
-
-// IsReplyKeyboardMarkup reports whether SendVoiceReplyMarkup is ReplyKeyboardMarkup.
-func (s SendVoiceReplyMarkup) IsReplyKeyboardMarkup() bool {
-	return s.Type == ReplyKeyboardMarkupSendVoiceReplyMarkup
-}
-
-// IsReplyKeyboardRemove reports whether SendVoiceReplyMarkup is ReplyKeyboardRemove.
-func (s SendVoiceReplyMarkup) IsReplyKeyboardRemove() bool {
-	return s.Type == ReplyKeyboardRemoveSendVoiceReplyMarkup
-}
-
-// IsForceReply reports whether SendVoiceReplyMarkup is ForceReply.
-func (s SendVoiceReplyMarkup) IsForceReply() bool { return s.Type == ForceReplySendVoiceReplyMarkup }
-
-// SetInlineKeyboardMarkup sets SendVoiceReplyMarkup to InlineKeyboardMarkup.
-func (s *SendVoiceReplyMarkup) SetInlineKeyboardMarkup(v InlineKeyboardMarkup) {
-	s.Type = InlineKeyboardMarkupSendVoiceReplyMarkup
-	s.InlineKeyboardMarkup = v
-}
-
-// GetInlineKeyboardMarkup returns InlineKeyboardMarkup and true boolean if SendVoiceReplyMarkup is InlineKeyboardMarkup.
-func (s SendVoiceReplyMarkup) GetInlineKeyboardMarkup() (v InlineKeyboardMarkup, ok bool) {
-	if !s.IsInlineKeyboardMarkup() {
-		return v, false
-	}
-	return s.InlineKeyboardMarkup, true
-}
-
-// NewInlineKeyboardMarkupSendVoiceReplyMarkup returns new SendVoiceReplyMarkup from InlineKeyboardMarkup.
-func NewInlineKeyboardMarkupSendVoiceReplyMarkup(v InlineKeyboardMarkup) SendVoiceReplyMarkup {
-	var s SendVoiceReplyMarkup
-	s.SetInlineKeyboardMarkup(v)
-	return s
-}
-
-// SetReplyKeyboardMarkup sets SendVoiceReplyMarkup to ReplyKeyboardMarkup.
-func (s *SendVoiceReplyMarkup) SetReplyKeyboardMarkup(v ReplyKeyboardMarkup) {
-	s.Type = ReplyKeyboardMarkupSendVoiceReplyMarkup
-	s.ReplyKeyboardMarkup = v
-}
-
-// GetReplyKeyboardMarkup returns ReplyKeyboardMarkup and true boolean if SendVoiceReplyMarkup is ReplyKeyboardMarkup.
-func (s SendVoiceReplyMarkup) GetReplyKeyboardMarkup() (v ReplyKeyboardMarkup, ok bool) {
-	if !s.IsReplyKeyboardMarkup() {
-		return v, false
-	}
-	return s.ReplyKeyboardMarkup, true
-}
-
-// NewReplyKeyboardMarkupSendVoiceReplyMarkup returns new SendVoiceReplyMarkup from ReplyKeyboardMarkup.
-func NewReplyKeyboardMarkupSendVoiceReplyMarkup(v ReplyKeyboardMarkup) SendVoiceReplyMarkup {
-	var s SendVoiceReplyMarkup
-	s.SetReplyKeyboardMarkup(v)
-	return s
-}
-
-// SetReplyKeyboardRemove sets SendVoiceReplyMarkup to ReplyKeyboardRemove.
-func (s *SendVoiceReplyMarkup) SetReplyKeyboardRemove(v ReplyKeyboardRemove) {
-	s.Type = ReplyKeyboardRemoveSendVoiceReplyMarkup
-	s.ReplyKeyboardRemove = v
-}
-
-// GetReplyKeyboardRemove returns ReplyKeyboardRemove and true boolean if SendVoiceReplyMarkup is ReplyKeyboardRemove.
-func (s SendVoiceReplyMarkup) GetReplyKeyboardRemove() (v ReplyKeyboardRemove, ok bool) {
-	if !s.IsReplyKeyboardRemove() {
-		return v, false
-	}
-	return s.ReplyKeyboardRemove, true
-}
-
-// NewReplyKeyboardRemoveSendVoiceReplyMarkup returns new SendVoiceReplyMarkup from ReplyKeyboardRemove.
-func NewReplyKeyboardRemoveSendVoiceReplyMarkup(v ReplyKeyboardRemove) SendVoiceReplyMarkup {
-	var s SendVoiceReplyMarkup
-	s.SetReplyKeyboardRemove(v)
-	return s
-}
-
-// SetForceReply sets SendVoiceReplyMarkup to ForceReply.
-func (s *SendVoiceReplyMarkup) SetForceReply(v ForceReply) {
-	s.Type = ForceReplySendVoiceReplyMarkup
-	s.ForceReply = v
-}
-
-// GetForceReply returns ForceReply and true boolean if SendVoiceReplyMarkup is ForceReply.
-func (s SendVoiceReplyMarkup) GetForceReply() (v ForceReply, ok bool) {
-	if !s.IsForceReply() {
-		return v, false
-	}
-	return s.ForceReply, true
-}
-
-// NewForceReplySendVoiceReplyMarkup returns new SendVoiceReplyMarkup from ForceReply.
-func NewForceReplySendVoiceReplyMarkup(v ForceReply) SendVoiceReplyMarkup {
-	var s SendVoiceReplyMarkup
-	s.SetForceReply(v)
-	return s
+	ChatID                   ID               `json:"chat_id"`
+	Voice                    string           `json:"voice"`
+	Caption                  OptString        `json:"caption"`
+	ParseMode                OptString        `json:"parse_mode"`
+	CaptionEntities          []MessageEntity  `json:"caption_entities"`
+	Duration                 OptInt           `json:"duration"`
+	DisableNotification      OptBool          `json:"disable_notification"`
+	ReplyToMessageID         OptInt           `json:"reply_to_message_id"`
+	AllowSendingWithoutReply OptBool          `json:"allow_sending_without_reply"`
+	ReplyMarkup              *SendReplyMarkup `json:"reply_markup"`
 }
 
 // Ref: #/components/schemas/setChatAdministratorCustomTitle
@@ -7963,6 +6768,16 @@ type Sticker struct {
 	SetName      OptString       `json:"set_name"`
 	MaskPosition OptMaskPosition `json:"mask_position"`
 	FileSize     OptInt          `json:"file_size"`
+}
+
+// Ref: #/components/schemas/StickerSet
+type StickerSet struct {
+	Name          string       `json:"name"`
+	Title         string       `json:"title"`
+	IsAnimated    bool         `json:"is_animated"`
+	ContainsMasks bool         `json:"contains_masks"`
+	Stickers      []Sticker    `json:"stickers"`
+	Thumb         OptPhotoSize `json:"thumb"`
 }
 
 // Ref: #/components/schemas/stopMessageLiveLocation

@@ -92,14 +92,22 @@ func (b *BotAPI) convertToBotAPIPhotoSizes(p tg.PhotoClass) (r []oas.PhotoSize) 
 			continue
 		}
 
+		// TODO(tdakkota): compute size if downloaded
+		var fileSize oas.OptInt
+		switch size := size.(type) {
+		case *tg.PhotoSize:
+			fileSize.SetTo(size.Size)
+		case *tg.PhotoCachedSize:
+			fileSize.SetTo(len(size.Bytes))
+		}
+
 		fileID, fileUniqueID := b.encodeFileID(fileid.FromPhoto(photo, rune(t[0])))
 		r = append(r, oas.PhotoSize{
 			FileID:       fileID,
 			FileUniqueID: fileUniqueID,
 			Width:        size.GetW(),
 			Height:       size.GetH(),
-			// TODO(tdakkota): get size from variant/compute if downloaded/etc
-			FileSize: oas.OptInt{},
+			FileSize:     fileSize,
 		})
 	}
 
@@ -446,7 +454,7 @@ func (b *BotAPI) convertPlainMessage(ctx context.Context, m *tg.Message) (r oas.
 	if m.Out {
 		self, err := b.peers.Self(ctx)
 		if err == nil {
-			r.From.SetTo(convertToBotAPIUser(self.Raw()))
+			r.From.SetTo(convertToBotAPIUser(self))
 		}
 	} else if fromID, ok := m.GetFromID(); ok {
 		// FIXME(tdakkota): set service IDs.

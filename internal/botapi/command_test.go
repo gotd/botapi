@@ -95,7 +95,7 @@ func TestBotAPI_convertToBotCommandScopeClass(t *testing.T) {
 			},
 			&tg.BotCommandScopePeerUser{
 				Peer:   testChat().AsInputPeer(),
-				UserID: testUser().AsInput(),
+				UserID: &tg.InputUserSelf{},
 			},
 			false,
 		},

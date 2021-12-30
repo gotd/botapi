@@ -2170,7 +2170,7 @@ func decodeGetChatMemberCountResponse(resp *http.Response, span trace.Span) (res
 	}
 }
 
-func decodeGetFileResponse(resp *http.Response, span trace.Span) (res Result, err error) {
+func decodeGetFileResponse(resp *http.Response, span trace.Span) (res ResultFile, err error) {
 	switch resp.StatusCode {
 	case 200:
 		switch resp.Header.Get("Content-Type") {
@@ -2185,7 +2185,7 @@ func decodeGetFileResponse(resp *http.Response, span trace.Span) (res Result, er
 			defer jx.PutDecoder(d)
 			d.ResetBytes(buf.Bytes())
 
-			var response Result
+			var response ResultFile
 			if err := func() error {
 				if err := response.Decode(d); err != nil {
 					return err
@@ -2442,7 +2442,7 @@ func decodeGetMyCommandsResponse(resp *http.Response, span trace.Span) (res Resu
 	}
 }
 
-func decodeGetStickerSetResponse(resp *http.Response, span trace.Span) (res Result, err error) {
+func decodeGetStickerSetResponse(resp *http.Response, span trace.Span) (res ResultStickerSet, err error) {
 	switch resp.StatusCode {
 	case 200:
 		switch resp.Header.Get("Content-Type") {
@@ -2457,7 +2457,7 @@ func decodeGetStickerSetResponse(resp *http.Response, span trace.Span) (res Resu
 			defer jx.PutDecoder(d)
 			d.ResetBytes(buf.Bytes())
 
-			var response Result
+			var response ResultStickerSet
 			if err := func() error {
 				if err := response.Decode(d); err != nil {
 					return err
