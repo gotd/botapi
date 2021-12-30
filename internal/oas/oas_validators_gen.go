@@ -6028,6 +6028,8 @@ func (s MessageEntityType) Validate() error {
 		return nil
 	case "strikethrough":
 		return nil
+	case "spoiler":
+		return nil
 	case "code":
 		return nil
 	case "pre":

@@ -777,6 +777,7 @@ type CopyMessage struct {
 	ParseMode                OptString        `json:"parse_mode"`
 	CaptionEntities          []MessageEntity  `json:"caption_entities"`
 	DisableNotification      OptBool          `json:"disable_notification"`
+	ProtectContent           OptBool          `json:"protect_content"`
 	ReplyToMessageID         OptInt           `json:"reply_to_message_id"`
 	AllowSendingWithoutReply OptBool          `json:"allow_sending_without_reply"`
 	ReplyMarkup              *SendReplyMarkup `json:"reply_markup"`
@@ -998,6 +999,7 @@ type ForwardMessage struct {
 	ChatID              ID      `json:"chat_id"`
 	FromChatID          ID      `json:"from_chat_id"`
 	DisableNotification OptBool `json:"disable_notification"`
+	ProtectContent      OptBool `json:"protect_content"`
 	MessageID           int     `json:"message_id"`
 }
 
@@ -2687,6 +2689,7 @@ const (
 	MessageEntityTypeItalic        MessageEntityType = "italic"
 	MessageEntityTypeUnderline     MessageEntityType = "underline"
 	MessageEntityTypeStrikethrough MessageEntityType = "strikethrough"
+	MessageEntityTypeSpoiler       MessageEntityType = "spoiler"
 	MessageEntityTypeCode          MessageEntityType = "code"
 	MessageEntityTypePre           MessageEntityType = "pre"
 	MessageEntityTypeTextLink      MessageEntityType = "text_link"
@@ -6151,6 +6154,7 @@ type SendAnimation struct {
 	ParseMode                OptString        `json:"parse_mode"`
 	CaptionEntities          []MessageEntity  `json:"caption_entities"`
 	DisableNotification      OptBool          `json:"disable_notification"`
+	ProtectContent           OptBool          `json:"protect_content"`
 	ReplyToMessageID         OptInt           `json:"reply_to_message_id"`
 	AllowSendingWithoutReply OptBool          `json:"allow_sending_without_reply"`
 	ReplyMarkup              *SendReplyMarkup `json:"reply_markup"`
@@ -6168,6 +6172,7 @@ type SendAudio struct {
 	Title                    OptString        `json:"title"`
 	Thumb                    OptString        `json:"thumb"`
 	DisableNotification      OptBool          `json:"disable_notification"`
+	ProtectContent           OptBool          `json:"protect_content"`
 	ReplyToMessageID         OptInt           `json:"reply_to_message_id"`
 	AllowSendingWithoutReply OptBool          `json:"allow_sending_without_reply"`
 	ReplyMarkup              *SendReplyMarkup `json:"reply_markup"`
@@ -6187,6 +6192,7 @@ type SendContact struct {
 	LastName                 OptString        `json:"last_name"`
 	Vcard                    OptString        `json:"vcard"`
 	DisableNotification      OptBool          `json:"disable_notification"`
+	ProtectContent           OptBool          `json:"protect_content"`
 	ReplyToMessageID         OptInt           `json:"reply_to_message_id"`
 	AllowSendingWithoutReply OptBool          `json:"allow_sending_without_reply"`
 	ReplyMarkup              *SendReplyMarkup `json:"reply_markup"`
@@ -6197,6 +6203,7 @@ type SendDice struct {
 	ChatID                   ID               `json:"chat_id"`
 	Emoji                    OptString        `json:"emoji"`
 	DisableNotification      OptBool          `json:"disable_notification"`
+	ProtectContent           OptBool          `json:"protect_content"`
 	ReplyToMessageID         OptInt           `json:"reply_to_message_id"`
 	AllowSendingWithoutReply OptBool          `json:"allow_sending_without_reply"`
 	ReplyMarkup              *SendReplyMarkup `json:"reply_markup"`
@@ -6212,6 +6219,7 @@ type SendDocument struct {
 	CaptionEntities             []MessageEntity  `json:"caption_entities"`
 	DisableContentTypeDetection OptBool          `json:"disable_content_type_detection"`
 	DisableNotification         OptBool          `json:"disable_notification"`
+	ProtectContent              OptBool          `json:"protect_content"`
 	ReplyToMessageID            OptInt           `json:"reply_to_message_id"`
 	AllowSendingWithoutReply    OptBool          `json:"allow_sending_without_reply"`
 	ReplyMarkup                 *SendReplyMarkup `json:"reply_markup"`
@@ -6222,6 +6230,7 @@ type SendGame struct {
 	ChatID                   int64                   `json:"chat_id"`
 	GameShortName            string                  `json:"game_short_name"`
 	DisableNotification      OptBool                 `json:"disable_notification"`
+	ProtectContent           OptBool                 `json:"protect_content"`
 	ReplyToMessageID         OptInt                  `json:"reply_to_message_id"`
 	AllowSendingWithoutReply OptBool                 `json:"allow_sending_without_reply"`
 	ReplyMarkup              OptInlineKeyboardMarkup `json:"reply_markup"`
@@ -6252,6 +6261,7 @@ type SendInvoice struct {
 	SendEmailToProvider       OptBool                 `json:"send_email_to_provider"`
 	IsFlexible                OptBool                 `json:"is_flexible"`
 	DisableNotification       OptBool                 `json:"disable_notification"`
+	ProtectContent            OptBool                 `json:"protect_content"`
 	ReplyToMessageID          OptInt                  `json:"reply_to_message_id"`
 	AllowSendingWithoutReply  OptBool                 `json:"allow_sending_without_reply"`
 	ReplyMarkup               OptInlineKeyboardMarkup `json:"reply_markup"`
@@ -6267,6 +6277,7 @@ type SendLocation struct {
 	Heading                  OptInt           `json:"heading"`
 	ProximityAlertRadius     OptInt           `json:"proximity_alert_radius"`
 	DisableNotification      OptBool          `json:"disable_notification"`
+	ProtectContent           OptBool          `json:"protect_content"`
 	ReplyToMessageID         OptInt           `json:"reply_to_message_id"`
 	AllowSendingWithoutReply OptBool          `json:"allow_sending_without_reply"`
 	ReplyMarkup              *SendReplyMarkup `json:"reply_markup"`
@@ -6277,6 +6288,7 @@ type SendMediaGroup struct {
 	ChatID                   ID                        `json:"chat_id"`
 	Media                    []SendMediaGroupMediaItem `json:"media"`
 	DisableNotification      OptBool                   `json:"disable_notification"`
+	ProtectContent           OptBool                   `json:"protect_content"`
 	ReplyToMessageID         OptInt                    `json:"reply_to_message_id"`
 	AllowSendingWithoutReply OptBool                   `json:"allow_sending_without_reply"`
 }
@@ -6413,6 +6425,7 @@ type SendMessage struct {
 	Entities                 []MessageEntity  `json:"entities"`
 	DisableWebPagePreview    OptBool          `json:"disable_web_page_preview"`
 	DisableNotification      OptBool          `json:"disable_notification"`
+	ProtectContent           OptBool          `json:"protect_content"`
 	ReplyToMessageID         OptInt           `json:"reply_to_message_id"`
 	AllowSendingWithoutReply OptBool          `json:"allow_sending_without_reply"`
 	ReplyMarkup              *SendReplyMarkup `json:"reply_markup"`
@@ -6426,6 +6439,7 @@ type SendPhoto struct {
 	ParseMode                OptString        `json:"parse_mode"`
 	CaptionEntities          []MessageEntity  `json:"caption_entities"`
 	DisableNotification      OptBool          `json:"disable_notification"`
+	ProtectContent           OptBool          `json:"protect_content"`
 	ReplyToMessageID         OptInt           `json:"reply_to_message_id"`
 	AllowSendingWithoutReply OptBool          `json:"allow_sending_without_reply"`
 	ReplyMarkup              *SendReplyMarkup `json:"reply_markup"`
@@ -6447,6 +6461,7 @@ type SendPoll struct {
 	CloseDate                OptInt           `json:"close_date"`
 	IsClosed                 OptBool          `json:"is_closed"`
 	DisableNotification      OptBool          `json:"disable_notification"`
+	ProtectContent           OptBool          `json:"protect_content"`
 	ReplyToMessageID         OptInt           `json:"reply_to_message_id"`
 	AllowSendingWithoutReply OptBool          `json:"allow_sending_without_reply"`
 	ReplyMarkup              *SendReplyMarkup `json:"reply_markup"`
@@ -6580,6 +6595,7 @@ type SendSticker struct {
 	ChatID                   ID               `json:"chat_id"`
 	Sticker                  string           `json:"sticker"`
 	DisableNotification      OptBool          `json:"disable_notification"`
+	ProtectContent           OptBool          `json:"protect_content"`
 	ReplyToMessageID         OptInt           `json:"reply_to_message_id"`
 	AllowSendingWithoutReply OptBool          `json:"allow_sending_without_reply"`
 	ReplyMarkup              *SendReplyMarkup `json:"reply_markup"`
@@ -6597,6 +6613,7 @@ type SendVenue struct {
 	GooglePlaceID            OptString        `json:"google_place_id"`
 	GooglePlaceType          OptString        `json:"google_place_type"`
 	DisableNotification      OptBool          `json:"disable_notification"`
+	ProtectContent           OptBool          `json:"protect_content"`
 	ReplyToMessageID         OptInt           `json:"reply_to_message_id"`
 	AllowSendingWithoutReply OptBool          `json:"allow_sending_without_reply"`
 	ReplyMarkup              *SendReplyMarkup `json:"reply_markup"`
@@ -6615,6 +6632,7 @@ type SendVideo struct {
 	CaptionEntities          []MessageEntity  `json:"caption_entities"`
 	SupportsStreaming        OptBool          `json:"supports_streaming"`
 	DisableNotification      OptBool          `json:"disable_notification"`
+	ProtectContent           OptBool          `json:"protect_content"`
 	ReplyToMessageID         OptInt           `json:"reply_to_message_id"`
 	AllowSendingWithoutReply OptBool          `json:"allow_sending_without_reply"`
 	ReplyMarkup              *SendReplyMarkup `json:"reply_markup"`
@@ -6628,6 +6646,7 @@ type SendVideoNote struct {
 	Length                   OptInt           `json:"length"`
 	Thumb                    OptString        `json:"thumb"`
 	DisableNotification      OptBool          `json:"disable_notification"`
+	ProtectContent           OptBool          `json:"protect_content"`
 	ReplyToMessageID         OptInt           `json:"reply_to_message_id"`
 	AllowSendingWithoutReply OptBool          `json:"allow_sending_without_reply"`
 	ReplyMarkup              *SendReplyMarkup `json:"reply_markup"`
@@ -6642,6 +6661,7 @@ type SendVoice struct {
 	CaptionEntities          []MessageEntity  `json:"caption_entities"`
 	Duration                 OptInt           `json:"duration"`
 	DisableNotification      OptBool          `json:"disable_notification"`
+	ProtectContent           OptBool          `json:"protect_content"`
 	ReplyToMessageID         OptInt           `json:"reply_to_message_id"`
 	AllowSendingWithoutReply OptBool          `json:"allow_sending_without_reply"`
 	ReplyMarkup              *SendReplyMarkup `json:"reply_markup"`

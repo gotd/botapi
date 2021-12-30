@@ -2568,6 +2568,10 @@ func (s CopyMessage) Encode(e *jx.Encoder) {
 		e.FieldStart("disable_notification")
 		s.DisableNotification.Encode(e)
 	}
+	if s.ProtectContent.Set {
+		e.FieldStart("protect_content")
+		s.ProtectContent.Encode(e)
+	}
 	if s.ReplyToMessageID.Set {
 		e.FieldStart("reply_to_message_id")
 		s.ReplyToMessageID.Encode(e)
@@ -2629,6 +2633,11 @@ func (s *CopyMessage) Decode(d *jx.Decoder) error {
 		case "disable_notification":
 			s.DisableNotification.Reset()
 			if err := s.DisableNotification.Decode(d); err != nil {
+				return err
+			}
+		case "protect_content":
+			s.ProtectContent.Reset()
+			if err := s.ProtectContent.Decode(d); err != nil {
 				return err
 			}
 		case "reply_to_message_id":
@@ -4059,6 +4068,10 @@ func (s ForwardMessage) Encode(e *jx.Encoder) {
 		e.FieldStart("disable_notification")
 		s.DisableNotification.Encode(e)
 	}
+	if s.ProtectContent.Set {
+		e.FieldStart("protect_content")
+		s.ProtectContent.Encode(e)
+	}
 
 	e.FieldStart("message_id")
 	e.Int(s.MessageID)
@@ -4083,6 +4096,11 @@ func (s *ForwardMessage) Decode(d *jx.Decoder) error {
 		case "disable_notification":
 			s.DisableNotification.Reset()
 			if err := s.DisableNotification.Decode(d); err != nil {
+				return err
+			}
+		case "protect_content":
+			s.ProtectContent.Reset()
+			if err := s.ProtectContent.Decode(d); err != nil {
 				return err
 			}
 		case "message_id":
@@ -14150,6 +14168,10 @@ func (s SendAnimation) Encode(e *jx.Encoder) {
 		e.FieldStart("disable_notification")
 		s.DisableNotification.Encode(e)
 	}
+	if s.ProtectContent.Set {
+		e.FieldStart("protect_content")
+		s.ProtectContent.Encode(e)
+	}
 	if s.ReplyToMessageID.Set {
 		e.FieldStart("reply_to_message_id")
 		s.ReplyToMessageID.Encode(e)
@@ -14229,6 +14251,11 @@ func (s *SendAnimation) Decode(d *jx.Decoder) error {
 			if err := s.DisableNotification.Decode(d); err != nil {
 				return err
 			}
+		case "protect_content":
+			s.ProtectContent.Reset()
+			if err := s.ProtectContent.Decode(d); err != nil {
+				return err
+			}
 		case "reply_to_message_id":
 			s.ReplyToMessageID.Reset()
 			if err := s.ReplyToMessageID.Decode(d); err != nil {
@@ -14297,6 +14324,10 @@ func (s SendAudio) Encode(e *jx.Encoder) {
 	if s.DisableNotification.Set {
 		e.FieldStart("disable_notification")
 		s.DisableNotification.Encode(e)
+	}
+	if s.ProtectContent.Set {
+		e.FieldStart("protect_content")
+		s.ProtectContent.Encode(e)
 	}
 	if s.ReplyToMessageID.Set {
 		e.FieldStart("reply_to_message_id")
@@ -14375,6 +14406,11 @@ func (s *SendAudio) Decode(d *jx.Decoder) error {
 		case "disable_notification":
 			s.DisableNotification.Reset()
 			if err := s.DisableNotification.Decode(d); err != nil {
+				return err
+			}
+		case "protect_content":
+			s.ProtectContent.Reset()
+			if err := s.ProtectContent.Decode(d); err != nil {
 				return err
 			}
 		case "reply_to_message_id":
@@ -14461,6 +14497,10 @@ func (s SendContact) Encode(e *jx.Encoder) {
 		e.FieldStart("disable_notification")
 		s.DisableNotification.Encode(e)
 	}
+	if s.ProtectContent.Set {
+		e.FieldStart("protect_content")
+		s.ProtectContent.Encode(e)
+	}
 	if s.ReplyToMessageID.Set {
 		e.FieldStart("reply_to_message_id")
 		s.ReplyToMessageID.Encode(e)
@@ -14514,6 +14554,11 @@ func (s *SendContact) Decode(d *jx.Decoder) error {
 			if err := s.DisableNotification.Decode(d); err != nil {
 				return err
 			}
+		case "protect_content":
+			s.ProtectContent.Reset()
+			if err := s.ProtectContent.Decode(d); err != nil {
+				return err
+			}
 		case "reply_to_message_id":
 			s.ReplyToMessageID.Reset()
 			if err := s.ReplyToMessageID.Decode(d); err != nil {
@@ -14552,6 +14597,10 @@ func (s SendDice) Encode(e *jx.Encoder) {
 		e.FieldStart("disable_notification")
 		s.DisableNotification.Encode(e)
 	}
+	if s.ProtectContent.Set {
+		e.FieldStart("protect_content")
+		s.ProtectContent.Encode(e)
+	}
 	if s.ReplyToMessageID.Set {
 		e.FieldStart("reply_to_message_id")
 		s.ReplyToMessageID.Encode(e)
@@ -14586,6 +14635,11 @@ func (s *SendDice) Decode(d *jx.Decoder) error {
 		case "disable_notification":
 			s.DisableNotification.Reset()
 			if err := s.DisableNotification.Decode(d); err != nil {
+				return err
+			}
+		case "protect_content":
+			s.ProtectContent.Reset()
+			if err := s.ProtectContent.Decode(d); err != nil {
 				return err
 			}
 		case "reply_to_message_id":
@@ -14648,6 +14702,10 @@ func (s SendDocument) Encode(e *jx.Encoder) {
 	if s.DisableNotification.Set {
 		e.FieldStart("disable_notification")
 		s.DisableNotification.Encode(e)
+	}
+	if s.ProtectContent.Set {
+		e.FieldStart("protect_content")
+		s.ProtectContent.Encode(e)
 	}
 	if s.ReplyToMessageID.Set {
 		e.FieldStart("reply_to_message_id")
@@ -14718,6 +14776,11 @@ func (s *SendDocument) Decode(d *jx.Decoder) error {
 			if err := s.DisableNotification.Decode(d); err != nil {
 				return err
 			}
+		case "protect_content":
+			s.ProtectContent.Reset()
+			if err := s.ProtectContent.Decode(d); err != nil {
+				return err
+			}
 		case "reply_to_message_id":
 			s.ReplyToMessageID.Reset()
 			if err := s.ReplyToMessageID.Decode(d); err != nil {
@@ -14754,6 +14817,10 @@ func (s SendGame) Encode(e *jx.Encoder) {
 	if s.DisableNotification.Set {
 		e.FieldStart("disable_notification")
 		s.DisableNotification.Encode(e)
+	}
+	if s.ProtectContent.Set {
+		e.FieldStart("protect_content")
+		s.ProtectContent.Encode(e)
 	}
 	if s.ReplyToMessageID.Set {
 		e.FieldStart("reply_to_message_id")
@@ -14792,6 +14859,11 @@ func (s *SendGame) Decode(d *jx.Decoder) error {
 		case "disable_notification":
 			s.DisableNotification.Reset()
 			if err := s.DisableNotification.Decode(d); err != nil {
+				return err
+			}
+		case "protect_content":
+			s.ProtectContent.Reset()
+			if err := s.ProtectContent.Decode(d); err != nil {
 				return err
 			}
 		case "reply_to_message_id":
@@ -14911,6 +14983,10 @@ func (s SendInvoice) Encode(e *jx.Encoder) {
 	if s.DisableNotification.Set {
 		e.FieldStart("disable_notification")
 		s.DisableNotification.Encode(e)
+	}
+	if s.ProtectContent.Set {
+		e.FieldStart("protect_content")
+		s.ProtectContent.Encode(e)
 	}
 	if s.ReplyToMessageID.Set {
 		e.FieldStart("reply_to_message_id")
@@ -15069,6 +15145,11 @@ func (s *SendInvoice) Decode(d *jx.Decoder) error {
 			if err := s.DisableNotification.Decode(d); err != nil {
 				return err
 			}
+		case "protect_content":
+			s.ProtectContent.Reset()
+			if err := s.ProtectContent.Decode(d); err != nil {
+				return err
+			}
 		case "reply_to_message_id":
 			s.ReplyToMessageID.Reset()
 			if err := s.ReplyToMessageID.Decode(d); err != nil {
@@ -15122,6 +15203,10 @@ func (s SendLocation) Encode(e *jx.Encoder) {
 	if s.DisableNotification.Set {
 		e.FieldStart("disable_notification")
 		s.DisableNotification.Encode(e)
+	}
+	if s.ProtectContent.Set {
+		e.FieldStart("protect_content")
+		s.ProtectContent.Encode(e)
 	}
 	if s.ReplyToMessageID.Set {
 		e.FieldStart("reply_to_message_id")
@@ -15186,6 +15271,11 @@ func (s *SendLocation) Decode(d *jx.Decoder) error {
 			if err := s.DisableNotification.Decode(d); err != nil {
 				return err
 			}
+		case "protect_content":
+			s.ProtectContent.Reset()
+			if err := s.ProtectContent.Decode(d); err != nil {
+				return err
+			}
 		case "reply_to_message_id":
 			s.ReplyToMessageID.Reset()
 			if err := s.ReplyToMessageID.Decode(d); err != nil {
@@ -15227,6 +15317,10 @@ func (s SendMediaGroup) Encode(e *jx.Encoder) {
 		e.FieldStart("disable_notification")
 		s.DisableNotification.Encode(e)
 	}
+	if s.ProtectContent.Set {
+		e.FieldStart("protect_content")
+		s.ProtectContent.Encode(e)
+	}
 	if s.ReplyToMessageID.Set {
 		e.FieldStart("reply_to_message_id")
 		s.ReplyToMessageID.Encode(e)
@@ -15264,6 +15358,11 @@ func (s *SendMediaGroup) Decode(d *jx.Decoder) error {
 		case "disable_notification":
 			s.DisableNotification.Reset()
 			if err := s.DisableNotification.Decode(d); err != nil {
+				return err
+			}
+		case "protect_content":
+			s.ProtectContent.Reset()
+			if err := s.ProtectContent.Decode(d); err != nil {
 				return err
 			}
 		case "reply_to_message_id":
@@ -15396,6 +15495,10 @@ func (s SendMessage) Encode(e *jx.Encoder) {
 		e.FieldStart("disable_notification")
 		s.DisableNotification.Encode(e)
 	}
+	if s.ProtectContent.Set {
+		e.FieldStart("protect_content")
+		s.ProtectContent.Encode(e)
+	}
 	if s.ReplyToMessageID.Set {
 		e.FieldStart("reply_to_message_id")
 		s.ReplyToMessageID.Encode(e)
@@ -15455,6 +15558,11 @@ func (s *SendMessage) Decode(d *jx.Decoder) error {
 			if err := s.DisableNotification.Decode(d); err != nil {
 				return err
 			}
+		case "protect_content":
+			s.ProtectContent.Reset()
+			if err := s.ProtectContent.Decode(d); err != nil {
+				return err
+			}
 		case "reply_to_message_id":
 			s.ReplyToMessageID.Reset()
 			if err := s.ReplyToMessageID.Decode(d); err != nil {
@@ -15507,6 +15615,10 @@ func (s SendPhoto) Encode(e *jx.Encoder) {
 	if s.DisableNotification.Set {
 		e.FieldStart("disable_notification")
 		s.DisableNotification.Encode(e)
+	}
+	if s.ProtectContent.Set {
+		e.FieldStart("protect_content")
+		s.ProtectContent.Encode(e)
 	}
 	if s.ReplyToMessageID.Set {
 		e.FieldStart("reply_to_message_id")
@@ -15565,6 +15677,11 @@ func (s *SendPhoto) Decode(d *jx.Decoder) error {
 		case "disable_notification":
 			s.DisableNotification.Reset()
 			if err := s.DisableNotification.Decode(d); err != nil {
+				return err
+			}
+		case "protect_content":
+			s.ProtectContent.Reset()
+			if err := s.ProtectContent.Decode(d); err != nil {
 				return err
 			}
 		case "reply_to_message_id":
@@ -15654,6 +15771,10 @@ func (s SendPoll) Encode(e *jx.Encoder) {
 	if s.DisableNotification.Set {
 		e.FieldStart("disable_notification")
 		s.DisableNotification.Encode(e)
+	}
+	if s.ProtectContent.Set {
+		e.FieldStart("protect_content")
+		s.ProtectContent.Encode(e)
 	}
 	if s.ReplyToMessageID.Set {
 		e.FieldStart("reply_to_message_id")
@@ -15761,6 +15882,11 @@ func (s *SendPoll) Decode(d *jx.Decoder) error {
 		case "disable_notification":
 			s.DisableNotification.Reset()
 			if err := s.DisableNotification.Decode(d); err != nil {
+				return err
+			}
+		case "protect_content":
+			s.ProtectContent.Reset()
+			if err := s.ProtectContent.Decode(d); err != nil {
 				return err
 			}
 		case "reply_to_message_id":
@@ -15886,6 +16012,10 @@ func (s SendSticker) Encode(e *jx.Encoder) {
 		e.FieldStart("disable_notification")
 		s.DisableNotification.Encode(e)
 	}
+	if s.ProtectContent.Set {
+		e.FieldStart("protect_content")
+		s.ProtectContent.Encode(e)
+	}
 	if s.ReplyToMessageID.Set {
 		e.FieldStart("reply_to_message_id")
 		s.ReplyToMessageID.Encode(e)
@@ -15921,6 +16051,11 @@ func (s *SendSticker) Decode(d *jx.Decoder) error {
 		case "disable_notification":
 			s.DisableNotification.Reset()
 			if err := s.DisableNotification.Decode(d); err != nil {
+				return err
+			}
+		case "protect_content":
+			s.ProtectContent.Reset()
+			if err := s.ProtectContent.Decode(d); err != nil {
 				return err
 			}
 		case "reply_to_message_id":
@@ -15984,6 +16119,10 @@ func (s SendVenue) Encode(e *jx.Encoder) {
 	if s.DisableNotification.Set {
 		e.FieldStart("disable_notification")
 		s.DisableNotification.Encode(e)
+	}
+	if s.ProtectContent.Set {
+		e.FieldStart("protect_content")
+		s.ProtectContent.Encode(e)
 	}
 	if s.ReplyToMessageID.Set {
 		e.FieldStart("reply_to_message_id")
@@ -16060,6 +16199,11 @@ func (s *SendVenue) Decode(d *jx.Decoder) error {
 			if err := s.DisableNotification.Decode(d); err != nil {
 				return err
 			}
+		case "protect_content":
+			s.ProtectContent.Reset()
+			if err := s.ProtectContent.Decode(d); err != nil {
+				return err
+			}
 		case "reply_to_message_id":
 			s.ReplyToMessageID.Reset()
 			if err := s.ReplyToMessageID.Decode(d); err != nil {
@@ -16132,6 +16276,10 @@ func (s SendVideo) Encode(e *jx.Encoder) {
 	if s.DisableNotification.Set {
 		e.FieldStart("disable_notification")
 		s.DisableNotification.Encode(e)
+	}
+	if s.ProtectContent.Set {
+		e.FieldStart("protect_content")
+		s.ProtectContent.Encode(e)
 	}
 	if s.ReplyToMessageID.Set {
 		e.FieldStart("reply_to_message_id")
@@ -16217,6 +16365,11 @@ func (s *SendVideo) Decode(d *jx.Decoder) error {
 			if err := s.DisableNotification.Decode(d); err != nil {
 				return err
 			}
+		case "protect_content":
+			s.ProtectContent.Reset()
+			if err := s.ProtectContent.Decode(d); err != nil {
+				return err
+			}
 		case "reply_to_message_id":
 			s.ReplyToMessageID.Reset()
 			if err := s.ReplyToMessageID.Decode(d); err != nil {
@@ -16265,6 +16418,10 @@ func (s SendVideoNote) Encode(e *jx.Encoder) {
 	if s.DisableNotification.Set {
 		e.FieldStart("disable_notification")
 		s.DisableNotification.Encode(e)
+	}
+	if s.ProtectContent.Set {
+		e.FieldStart("protect_content")
+		s.ProtectContent.Encode(e)
 	}
 	if s.ReplyToMessageID.Set {
 		e.FieldStart("reply_to_message_id")
@@ -16316,6 +16473,11 @@ func (s *SendVideoNote) Decode(d *jx.Decoder) error {
 		case "disable_notification":
 			s.DisableNotification.Reset()
 			if err := s.DisableNotification.Decode(d); err != nil {
+				return err
+			}
+		case "protect_content":
+			s.ProtectContent.Reset()
+			if err := s.ProtectContent.Decode(d); err != nil {
 				return err
 			}
 		case "reply_to_message_id":
@@ -16374,6 +16536,10 @@ func (s SendVoice) Encode(e *jx.Encoder) {
 	if s.DisableNotification.Set {
 		e.FieldStart("disable_notification")
 		s.DisableNotification.Encode(e)
+	}
+	if s.ProtectContent.Set {
+		e.FieldStart("protect_content")
+		s.ProtectContent.Encode(e)
 	}
 	if s.ReplyToMessageID.Set {
 		e.FieldStart("reply_to_message_id")
@@ -16437,6 +16603,11 @@ func (s *SendVoice) Decode(d *jx.Decoder) error {
 		case "disable_notification":
 			s.DisableNotification.Reset()
 			if err := s.DisableNotification.Decode(d); err != nil {
+				return err
+			}
+		case "protect_content":
+			s.ProtectContent.Reset()
+			if err := s.ProtectContent.Decode(d); err != nil {
 				return err
 			}
 		case "reply_to_message_id":
