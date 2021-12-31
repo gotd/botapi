@@ -287,13 +287,13 @@ func Test_convertToTelegramButton(t *testing.T) {
 func TestBotAPI_convertToTelegramReplyMarkup(t *testing.T) {
 	tests := []struct {
 		name    string
-		input   *oas.SendReplyMarkup
+		input   oas.SendReplyMarkup
 		want    tg.ReplyMarkupClass
 		wantErr bool
 	}{
 		{
 			"Inline",
-			&oas.SendReplyMarkup{
+			oas.SendReplyMarkup{
 				Type: oas.InlineKeyboardMarkupSendReplyMarkup,
 				InlineKeyboardMarkup: oas.InlineKeyboardMarkup{
 					InlineKeyboard: [][]oas.InlineKeyboardButton{
@@ -319,7 +319,7 @@ func TestBotAPI_convertToTelegramReplyMarkup(t *testing.T) {
 		},
 		{
 			"Reply",
-			&oas.SendReplyMarkup{
+			oas.SendReplyMarkup{
 				Type: oas.ReplyKeyboardMarkupSendReplyMarkup,
 				ReplyKeyboardMarkup: oas.ReplyKeyboardMarkup{
 					Keyboard: [][]oas.KeyboardButton{
@@ -350,7 +350,7 @@ func TestBotAPI_convertToTelegramReplyMarkup(t *testing.T) {
 		},
 		{
 			"Hide",
-			&oas.SendReplyMarkup{
+			oas.SendReplyMarkup{
 				Type: oas.ReplyKeyboardRemoveSendReplyMarkup,
 				ReplyKeyboardRemove: oas.ReplyKeyboardRemove{
 					RemoveKeyboard: true,
@@ -363,7 +363,7 @@ func TestBotAPI_convertToTelegramReplyMarkup(t *testing.T) {
 		},
 		{
 			"SelectiveHide",
-			&oas.SendReplyMarkup{
+			oas.SendReplyMarkup{
 				Type: oas.ReplyKeyboardRemoveSendReplyMarkup,
 				ReplyKeyboardRemove: oas.ReplyKeyboardRemove{
 					RemoveKeyboard: true,
@@ -377,7 +377,7 @@ func TestBotAPI_convertToTelegramReplyMarkup(t *testing.T) {
 		},
 		{
 			"ForceReply",
-			&oas.SendReplyMarkup{
+			oas.SendReplyMarkup{
 				Type: oas.ForceReplySendReplyMarkup,
 				ForceReply: oas.ForceReply{
 					ForceReply:            true,
@@ -393,7 +393,7 @@ func TestBotAPI_convertToTelegramReplyMarkup(t *testing.T) {
 		},
 		{
 			"UnknownType",
-			&oas.SendReplyMarkup{
+			oas.SendReplyMarkup{
 				Type: "aboba",
 			},
 			nil,

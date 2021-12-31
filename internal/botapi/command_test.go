@@ -13,8 +13,8 @@ import (
 )
 
 func TestBotAPI_convertToBotCommandScopeClass(t *testing.T) {
-	newOASscope := func(typ oas.BotCommandScopeType) *oas.BotCommandScope {
-		return &oas.BotCommandScope{
+	newOASscope := func(typ oas.BotCommandScopeType) (r oas.OptBotCommandScope) {
+		r.SetTo(oas.BotCommandScope{
 			Type:                                 typ,
 			BotCommandScopeDefault:               oas.BotCommandScopeDefault{},
 			BotCommandScopeAllPrivateChats:       oas.BotCommandScopeAllPrivateChats{},
@@ -23,18 +23,19 @@ func TestBotAPI_convertToBotCommandScopeClass(t *testing.T) {
 			BotCommandScopeChat:                  oas.BotCommandScopeChat{},
 			BotCommandScopeChatAdministrators:    oas.BotCommandScopeChatAdministrators{},
 			BotCommandScopeChatMember:            oas.BotCommandScopeChatMember{},
-		}
+		})
+		return r
 	}
 
 	tests := []struct {
 		name    string
-		input   *oas.BotCommandScope
+		input   oas.OptBotCommandScope
 		want    tg.BotCommandScopeClass
 		wantErr bool
 	}{
 		{
 			"Nil",
-			nil,
+			oas.OptBotCommandScope{},
 			&tg.BotCommandScopeDefault{},
 			false,
 		},
@@ -64,35 +65,35 @@ func TestBotAPI_convertToBotCommandScopeClass(t *testing.T) {
 		},
 		{
 			"",
-			&oas.BotCommandScope{
+			oas.NewOptBotCommandScope(oas.BotCommandScope{
 				Type: oas.BotCommandScopeChatBotCommandScope,
 				BotCommandScopeChat: oas.BotCommandScopeChat{
 					ChatID: oas.NewInt64ID(testChatID()),
 				},
-			},
+			}),
 			&tg.BotCommandScopePeer{Peer: testChat().AsInputPeer()},
 			false,
 		},
 		{
 			"",
-			&oas.BotCommandScope{
+			oas.NewOptBotCommandScope(oas.BotCommandScope{
 				Type: oas.BotCommandScopeChatAdministratorsBotCommandScope,
 				BotCommandScopeChatAdministrators: oas.BotCommandScopeChatAdministrators{
 					ChatID: oas.NewInt64ID(testChatID()),
 				},
-			},
+			}),
 			&tg.BotCommandScopePeerAdmins{Peer: testChat().AsInputPeer()},
 			false,
 		},
 		{
 			"",
-			&oas.BotCommandScope{
+			oas.NewOptBotCommandScope(oas.BotCommandScope{
 				Type: oas.BotCommandScopeChatMemberBotCommandScope,
 				BotCommandScopeChatMember: oas.BotCommandScopeChatMember{
 					ChatID: oas.NewInt64ID(testChatID()),
 					UserID: testUser().ID,
 				},
-			},
+			}),
 			&tg.BotCommandScopePeerUser{
 				Peer:   testChat().AsInputPeer(),
 				UserID: &tg.InputUserSelf{},
@@ -111,7 +112,7 @@ func TestBotAPI_convertToBotCommandScopeClass(t *testing.T) {
 			if tt.wantErr {
 				tt.name = "Error"
 			} else {
-				tt.name = string(tt.input.Type)
+				tt.name = string(tt.input.Value.Type)
 			}
 		}
 		t.Run(tt.name, func(t *testing.T) {
@@ -137,7 +138,7 @@ func TestBotAPI_GetMyCommands(t *testing.T) {
 			LangCode: "ru",
 		}).ThenResult(&tg.BotCommandVector{Elems: testCommands()})
 		commands, err := api.GetMyCommands(ctx, oas.NewOptGetMyCommands(oas.GetMyCommands{
-			Scope:        nil,
+			Scope:        oas.OptBotCommandScope{},
 			LanguageCode: oas.NewOptString("ru"),
 		}))
 		a.NoError(err)
@@ -148,9 +149,9 @@ func TestBotAPI_GetMyCommands(t *testing.T) {
 			LangCode: "ru",
 		}).ThenResult(&tg.BotCommandVector{Elems: testCommands()})
 		commands, err = api.GetMyCommands(ctx, oas.NewOptGetMyCommands(oas.GetMyCommands{
-			Scope: &oas.BotCommandScope{
+			Scope: oas.NewOptBotCommandScope(oas.BotCommandScope{
 				Type: oas.BotCommandScopeAllPrivateChatsBotCommandScope,
-			},
+			}),
 			LanguageCode: oas.NewOptString("ru"),
 		}))
 		a.NoError(err)
@@ -167,7 +168,7 @@ func TestBotAPI_SetMyCommands(t *testing.T) {
 			Commands: testCommands(),
 		}).ThenTrue()
 		_, err := api.SetMyCommands(ctx, oas.SetMyCommands{
-			Scope:        nil,
+			Scope:        oas.OptBotCommandScope{},
 			LanguageCode: oas.NewOptString("ru"),
 			Commands:     testCommandsBotAPI(),
 		})
@@ -179,9 +180,9 @@ func TestBotAPI_SetMyCommands(t *testing.T) {
 			Commands: testCommands(),
 		}).ThenTrue()
 		_, err = api.SetMyCommands(ctx, oas.SetMyCommands{
-			Scope: &oas.BotCommandScope{
+			Scope: oas.NewOptBotCommandScope(oas.BotCommandScope{
 				Type: oas.BotCommandScopeAllPrivateChatsBotCommandScope,
-			},
+			}),
 			LanguageCode: oas.NewOptString("ru"),
 			Commands:     testCommandsBotAPI(),
 		})
@@ -197,7 +198,7 @@ func TestBotAPI_DeleteMyCommands(t *testing.T) {
 			LangCode: "ru",
 		}).ThenTrue()
 		_, err := api.DeleteMyCommands(ctx, oas.NewOptDeleteMyCommands(oas.DeleteMyCommands{
-			Scope:        nil,
+			Scope:        oas.OptBotCommandScope{},
 			LanguageCode: oas.NewOptString("ru"),
 		}))
 		a.NoError(err)
@@ -207,9 +208,9 @@ func TestBotAPI_DeleteMyCommands(t *testing.T) {
 			LangCode: "ru",
 		}).ThenTrue()
 		_, err = api.DeleteMyCommands(ctx, oas.NewOptDeleteMyCommands(oas.DeleteMyCommands{
-			Scope: &oas.BotCommandScope{
+			Scope: oas.NewOptBotCommandScope(oas.BotCommandScope{
 				Type: oas.BotCommandScopeAllPrivateChatsBotCommandScope,
-			},
+			}),
 			LanguageCode: oas.NewOptString("ru"),
 		}))
 		a.NoError(err)

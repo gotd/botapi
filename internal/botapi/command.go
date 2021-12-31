@@ -12,9 +12,10 @@ import (
 
 func (b *BotAPI) convertToBotCommandScopeClass(
 	ctx context.Context,
-	scope *oas.BotCommandScope,
+	input oas.OptBotCommandScope,
 ) (tg.BotCommandScopeClass, error) {
-	if scope == nil {
+	scope, ok := input.Get()
+	if !ok {
 		return &tg.BotCommandScopeDefault{}, nil
 	}
 	switch scope.Type {

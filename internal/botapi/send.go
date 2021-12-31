@@ -58,7 +58,7 @@ type sendOpts struct {
 	DisableNotification      oas.OptBool
 	ReplyToMessageID         oas.OptInt
 	AllowSendingWithoutReply oas.OptBool
-	ReplyMarkup              *oas.SendReplyMarkup
+	ReplyMarkup              oas.OptSendReplyMarkup
 }
 
 func (b *BotAPI) prepareSend(
@@ -81,7 +81,7 @@ func (b *BotAPI) prepareSend(
 	if v, ok := req.ReplyToMessageID.Get(); ok {
 		s = s.Reply(v)
 	}
-	if m := req.ReplyMarkup; m != nil {
+	if m, ok := req.ReplyMarkup.Get(); ok {
 		mkp, err := b.convertToTelegramReplyMarkup(ctx, m)
 		if err != nil {
 			return nil, nil, errors.Wrap(err, "convert markup")
@@ -175,12 +175,12 @@ func (b *BotAPI) SendDocument(ctx context.Context, req oas.SendDocument) (oas.Re
 
 // SendGame implements oas.Handler.
 func (b *BotAPI) SendGame(ctx context.Context, req oas.SendGame) (oas.ResultMessage, error) {
-	var markup *oas.SendReplyMarkup
+	var markup oas.OptSendReplyMarkup
 	if m, ok := req.ReplyMarkup.Get(); ok {
-		markup = &oas.SendReplyMarkup{
+		markup.SetTo(oas.SendReplyMarkup{
 			Type:                 oas.InlineKeyboardMarkupSendReplyMarkup,
 			InlineKeyboardMarkup: m,
-		}
+		})
 	}
 
 	s, p, err := b.prepareSend(

@@ -107,7 +107,7 @@ func convertToTelegramButton(kb oas.KeyboardButton) tg.KeyboardButtonClass {
 
 func (b *BotAPI) convertToTelegramReplyMarkup(
 	ctx context.Context,
-	m *oas.SendReplyMarkup,
+	m oas.SendReplyMarkup,
 ) (tg.ReplyMarkupClass, error) {
 	switch m.Type {
 	case oas.InlineKeyboardMarkupSendReplyMarkup:
