@@ -96,6 +96,11 @@ func TestBotAPI_convertToBotAPIEntities(t *testing.T) {
 			&tg.MessageEntityStrike{Offset: 1, Length: 10},
 			oas.MessageEntity{Type: oas.MessageEntityTypeStrikethrough, Offset: 1, Length: 10},
 		},
+		{
+			"Spoiler",
+			&tg.MessageEntitySpoiler{Offset: 1, Length: 10},
+			oas.MessageEntity{Type: oas.MessageEntityTypeSpoiler, Offset: 1, Length: 10},
+		},
 	}
 	ctx := context.Background()
 	for _, tt := range tests {
