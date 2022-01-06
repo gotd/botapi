@@ -56,6 +56,7 @@ type sendOpts struct {
 	To                       oas.ID
 	DisableWebPagePreview    oas.OptBool
 	DisableNotification      oas.OptBool
+	ProtectContent           oas.OptBool
 	ReplyToMessageID         oas.OptInt
 	AllowSendingWithoutReply oas.OptBool
 	ReplyMarkup              oas.OptSendReplyMarkup
@@ -76,6 +77,9 @@ func (b *BotAPI) prepareSend(
 	}
 	if v := req.DisableNotification.Or(false); v {
 		s = s.Silent()
+	}
+	if v := req.ProtectContent.Or(false); v {
+		s = s.NoForwards()
 	}
 	// TODO(tdakkota): check allow_sending_without_reply
 	if v, ok := req.ReplyToMessageID.Get(); ok {
@@ -157,8 +161,10 @@ func (b *BotAPI) SendDice(ctx context.Context, req oas.SendDice) (oas.ResultMess
 		sendOpts{
 			To:                       req.ChatID,
 			DisableNotification:      req.DisableNotification,
+			ProtectContent:           req.ProtectContent,
 			ReplyToMessageID:         req.ReplyToMessageID,
 			AllowSendingWithoutReply: req.AllowSendingWithoutReply,
+			ReplyMarkup:              req.ReplyMarkup,
 		},
 	)
 	if err != nil {
@@ -188,6 +194,7 @@ func (b *BotAPI) SendGame(ctx context.Context, req oas.SendGame) (oas.ResultMess
 		sendOpts{
 			To:                       oas.NewInt64ID(req.ChatID),
 			DisableNotification:      req.DisableNotification,
+			ProtectContent:           req.ProtectContent,
 			ReplyToMessageID:         req.ReplyToMessageID,
 			AllowSendingWithoutReply: req.AllowSendingWithoutReply,
 			ReplyMarkup:              markup,
@@ -232,6 +239,7 @@ func (b *BotAPI) SendMessage(ctx context.Context, req oas.SendMessage) (oas.Resu
 			To:                       req.ChatID,
 			DisableWebPagePreview:    req.DisableWebPagePreview,
 			DisableNotification:      req.DisableNotification,
+			ProtectContent:           req.ProtectContent,
 			ReplyToMessageID:         req.ReplyToMessageID,
 			AllowSendingWithoutReply: req.AllowSendingWithoutReply,
 			ReplyMarkup:              req.ReplyMarkup,

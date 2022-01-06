@@ -63,6 +63,8 @@ func (b *BotAPI) convertToBotAPIEntities(
 			e.Type = oas.MessageEntityTypeUnderline
 		case *tg.MessageEntityStrike:
 			e.Type = oas.MessageEntityTypeStrikethrough
+		case *tg.MessageEntitySpoiler:
+			e.Type = oas.MessageEntityTypeSpoiler
 		}
 		r = append(r, e)
 	}
@@ -446,7 +448,7 @@ func (b *BotAPI) convertPlainMessage(ctx context.Context, m *tg.Message) (r oas.
 		Date:                m.Date,
 		Chat:                ch,
 		EditDate:            optInt(m.GetEditDate),
-		HasProtectedContent: ch.HasProtectedContent,
+		HasProtectedContent: oas.NewOptBool(m.Noforwards),
 		// TODO(tdakkota): generate media album ids
 		MediaGroupID:    oas.OptString{},
 		AuthorSignature: optString(m.GetPostAuthor),
