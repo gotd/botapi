@@ -497,7 +497,7 @@
         },
         "responses": {
           "200": {
-            "$ref": "#/components/responses/Result"
+            "$ref": "#/components/responses/ResultMessageOrBoolean"
           },
           "default": {
             "$ref": "#/components/responses/Error"
@@ -521,7 +521,7 @@
         },
         "responses": {
           "200": {
-            "$ref": "#/components/responses/Result"
+            "$ref": "#/components/responses/ResultMessageOrBoolean"
           },
           "default": {
             "$ref": "#/components/responses/Error"
@@ -545,7 +545,7 @@
         },
         "responses": {
           "200": {
-            "$ref": "#/components/responses/Result"
+            "$ref": "#/components/responses/ResultMessageOrBoolean"
           },
           "default": {
             "$ref": "#/components/responses/Error"
@@ -569,7 +569,7 @@
         },
         "responses": {
           "200": {
-            "$ref": "#/components/responses/Result"
+            "$ref": "#/components/responses/ResultMessageOrBoolean"
           },
           "default": {
             "$ref": "#/components/responses/Error"
@@ -593,7 +593,7 @@
         },
         "responses": {
           "200": {
-            "$ref": "#/components/responses/Result"
+            "$ref": "#/components/responses/ResultMessageOrBoolean"
           },
           "default": {
             "$ref": "#/components/responses/Error"
@@ -1785,7 +1785,7 @@
         },
         "responses": {
           "200": {
-            "$ref": "#/components/responses/Result"
+            "$ref": "#/components/responses/ResultMessageOrBoolean"
           },
           "default": {
             "$ref": "#/components/responses/Error"
@@ -6608,6 +6608,28 @@
           "ok"
         ]
       },
+      "ResultMessageOrBoolean": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Message"
+              },
+              {
+                "type": "boolean"
+              }
+            ]
+          },
+          "ok": {
+            "type": "boolean",
+            "default": true
+          }
+        },
+        "required": [
+          "ok"
+        ]
+      },
       "ResultPoll": {
         "type": "object",
         "properties": {
@@ -9990,6 +10012,16 @@
           "application/json": {
             "schema": {
               "$ref": "#/components/schemas/ResultMessageId"
+            }
+          }
+        }
+      },
+      "ResultMessageOrBoolean": {
+        "description": "Result of method invocation",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ResultMessageOrBoolean"
             }
           }
         }

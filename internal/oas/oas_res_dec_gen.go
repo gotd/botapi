@@ -1422,7 +1422,7 @@ func decodeEditChatInviteLinkResponse(resp *http.Response, span trace.Span) (res
 	}
 }
 
-func decodeEditMessageCaptionResponse(resp *http.Response, span trace.Span) (res Result, err error) {
+func decodeEditMessageCaptionResponse(resp *http.Response, span trace.Span) (res ResultMessageOrBoolean, err error) {
 	switch resp.StatusCode {
 	case 200:
 		switch resp.Header.Get("Content-Type") {
@@ -1437,7 +1437,7 @@ func decodeEditMessageCaptionResponse(resp *http.Response, span trace.Span) (res
 			defer jx.PutDecoder(d)
 			d.ResetBytes(buf.Bytes())
 
-			var response Result
+			var response ResultMessageOrBoolean
 			if err := func() error {
 				if err := response.Decode(d); err != nil {
 					return err
@@ -1490,7 +1490,7 @@ func decodeEditMessageCaptionResponse(resp *http.Response, span trace.Span) (res
 	}
 }
 
-func decodeEditMessageLiveLocationResponse(resp *http.Response, span trace.Span) (res Result, err error) {
+func decodeEditMessageLiveLocationResponse(resp *http.Response, span trace.Span) (res ResultMessageOrBoolean, err error) {
 	switch resp.StatusCode {
 	case 200:
 		switch resp.Header.Get("Content-Type") {
@@ -1505,7 +1505,7 @@ func decodeEditMessageLiveLocationResponse(resp *http.Response, span trace.Span)
 			defer jx.PutDecoder(d)
 			d.ResetBytes(buf.Bytes())
 
-			var response Result
+			var response ResultMessageOrBoolean
 			if err := func() error {
 				if err := response.Decode(d); err != nil {
 					return err
@@ -1558,7 +1558,7 @@ func decodeEditMessageLiveLocationResponse(resp *http.Response, span trace.Span)
 	}
 }
 
-func decodeEditMessageMediaResponse(resp *http.Response, span trace.Span) (res Result, err error) {
+func decodeEditMessageMediaResponse(resp *http.Response, span trace.Span) (res ResultMessageOrBoolean, err error) {
 	switch resp.StatusCode {
 	case 200:
 		switch resp.Header.Get("Content-Type") {
@@ -1573,7 +1573,7 @@ func decodeEditMessageMediaResponse(resp *http.Response, span trace.Span) (res R
 			defer jx.PutDecoder(d)
 			d.ResetBytes(buf.Bytes())
 
-			var response Result
+			var response ResultMessageOrBoolean
 			if err := func() error {
 				if err := response.Decode(d); err != nil {
 					return err
@@ -1626,7 +1626,7 @@ func decodeEditMessageMediaResponse(resp *http.Response, span trace.Span) (res R
 	}
 }
 
-func decodeEditMessageReplyMarkupResponse(resp *http.Response, span trace.Span) (res Result, err error) {
+func decodeEditMessageReplyMarkupResponse(resp *http.Response, span trace.Span) (res ResultMessageOrBoolean, err error) {
 	switch resp.StatusCode {
 	case 200:
 		switch resp.Header.Get("Content-Type") {
@@ -1641,7 +1641,7 @@ func decodeEditMessageReplyMarkupResponse(resp *http.Response, span trace.Span) 
 			defer jx.PutDecoder(d)
 			d.ResetBytes(buf.Bytes())
 
-			var response Result
+			var response ResultMessageOrBoolean
 			if err := func() error {
 				if err := response.Decode(d); err != nil {
 					return err
@@ -1694,7 +1694,7 @@ func decodeEditMessageReplyMarkupResponse(resp *http.Response, span trace.Span) 
 	}
 }
 
-func decodeEditMessageTextResponse(resp *http.Response, span trace.Span) (res Result, err error) {
+func decodeEditMessageTextResponse(resp *http.Response, span trace.Span) (res ResultMessageOrBoolean, err error) {
 	switch resp.StatusCode {
 	case 200:
 		switch resp.Header.Get("Content-Type") {
@@ -1709,7 +1709,7 @@ func decodeEditMessageTextResponse(resp *http.Response, span trace.Span) (res Re
 			defer jx.PutDecoder(d)
 			d.ResetBytes(buf.Bytes())
 
-			var response Result
+			var response ResultMessageOrBoolean
 			if err := func() error {
 				if err := response.Decode(d); err != nil {
 					return err
@@ -5162,7 +5162,7 @@ func decodeSetWebhookResponse(resp *http.Response, span trace.Span) (res Result,
 	}
 }
 
-func decodeStopMessageLiveLocationResponse(resp *http.Response, span trace.Span) (res Result, err error) {
+func decodeStopMessageLiveLocationResponse(resp *http.Response, span trace.Span) (res ResultMessageOrBoolean, err error) {
 	switch resp.StatusCode {
 	case 200:
 		switch resp.Header.Get("Content-Type") {
@@ -5177,7 +5177,7 @@ func decodeStopMessageLiveLocationResponse(resp *http.Response, span trace.Span)
 			defer jx.PutDecoder(d)
 			d.ResetBytes(buf.Bytes())
 
-			var response Result
+			var response ResultMessageOrBoolean
 			if err := func() error {
 				if err := response.Decode(d); err != nil {
 					return err

@@ -4909,6 +4909,52 @@ func (o OptResponse) Or(d Response) Response {
 	return d
 }
 
+// NewOptResultMessageOrBooleanResult returns new OptResultMessageOrBooleanResult with value set to v.
+func NewOptResultMessageOrBooleanResult(v ResultMessageOrBooleanResult) OptResultMessageOrBooleanResult {
+	return OptResultMessageOrBooleanResult{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptResultMessageOrBooleanResult is optional ResultMessageOrBooleanResult.
+type OptResultMessageOrBooleanResult struct {
+	Value ResultMessageOrBooleanResult
+	Set   bool
+}
+
+// IsSet returns true if OptResultMessageOrBooleanResult was set.
+func (o OptResultMessageOrBooleanResult) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptResultMessageOrBooleanResult) Reset() {
+	var v ResultMessageOrBooleanResult
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptResultMessageOrBooleanResult) SetTo(v ResultMessageOrBooleanResult) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptResultMessageOrBooleanResult) Get() (v ResultMessageOrBooleanResult, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptResultMessageOrBooleanResult) Or(d ResultMessageOrBooleanResult) ResultMessageOrBooleanResult {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
 // NewOptSendReplyMarkup returns new OptSendReplyMarkup with value set to v.
 func NewOptSendReplyMarkup(v SendReplyMarkup) OptSendReplyMarkup {
 	return OptSendReplyMarkup{
@@ -6328,6 +6374,80 @@ type ResultMessage struct {
 type ResultMessageId struct {
 	Result OptMessageId `json:"result"`
 	Ok     bool         `json:"ok"`
+}
+
+// Ref: #/components/schemas/ResultMessageOrBoolean
+type ResultMessageOrBoolean struct {
+	Result OptResultMessageOrBooleanResult `json:"result"`
+	Ok     bool                            `json:"ok"`
+}
+
+// ResultMessageOrBooleanResult represents sum type.
+type ResultMessageOrBooleanResult struct {
+	Type    ResultMessageOrBooleanResultType // switch on this field
+	Message Message
+	Bool    bool
+}
+
+// ResultMessageOrBooleanResultType is oneOf type of ResultMessageOrBooleanResult.
+type ResultMessageOrBooleanResultType string
+
+// Possible values for ResultMessageOrBooleanResultType.
+const (
+	MessageResultMessageOrBooleanResult ResultMessageOrBooleanResultType = "Message"
+	BoolResultMessageOrBooleanResult    ResultMessageOrBooleanResultType = "bool"
+)
+
+// IsMessage reports whether ResultMessageOrBooleanResult is Message.
+func (s ResultMessageOrBooleanResult) IsMessage() bool {
+	return s.Type == MessageResultMessageOrBooleanResult
+}
+
+// IsBool reports whether ResultMessageOrBooleanResult is bool.
+func (s ResultMessageOrBooleanResult) IsBool() bool {
+	return s.Type == BoolResultMessageOrBooleanResult
+}
+
+// SetMessage sets ResultMessageOrBooleanResult to Message.
+func (s *ResultMessageOrBooleanResult) SetMessage(v Message) {
+	s.Type = MessageResultMessageOrBooleanResult
+	s.Message = v
+}
+
+// GetMessage returns Message and true boolean if ResultMessageOrBooleanResult is Message.
+func (s ResultMessageOrBooleanResult) GetMessage() (v Message, ok bool) {
+	if !s.IsMessage() {
+		return v, false
+	}
+	return s.Message, true
+}
+
+// NewMessageResultMessageOrBooleanResult returns new ResultMessageOrBooleanResult from Message.
+func NewMessageResultMessageOrBooleanResult(v Message) ResultMessageOrBooleanResult {
+	var s ResultMessageOrBooleanResult
+	s.SetMessage(v)
+	return s
+}
+
+// SetBool sets ResultMessageOrBooleanResult to bool.
+func (s *ResultMessageOrBooleanResult) SetBool(v bool) {
+	s.Type = BoolResultMessageOrBooleanResult
+	s.Bool = v
+}
+
+// GetBool returns bool and true boolean if ResultMessageOrBooleanResult is bool.
+func (s ResultMessageOrBooleanResult) GetBool() (v bool, ok bool) {
+	if !s.IsBool() {
+		return v, false
+	}
+	return s.Bool, true
+}
+
+// NewBoolResultMessageOrBooleanResult returns new ResultMessageOrBooleanResult from bool.
+func NewBoolResultMessageOrBooleanResult(v bool) ResultMessageOrBooleanResult {
+	var s ResultMessageOrBooleanResult
+	s.SetBool(v)
+	return s
 }
 
 // Ref: #/components/schemas/ResultPoll

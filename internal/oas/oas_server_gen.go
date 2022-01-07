@@ -147,23 +147,23 @@ type Handler interface {
 	// EditMessageCaption implements editMessageCaption operation.
 	//
 	// POST /editMessageCaption
-	EditMessageCaption(ctx context.Context, req EditMessageCaption) (Result, error)
+	EditMessageCaption(ctx context.Context, req EditMessageCaption) (ResultMessageOrBoolean, error)
 	// EditMessageLiveLocation implements editMessageLiveLocation operation.
 	//
 	// POST /editMessageLiveLocation
-	EditMessageLiveLocation(ctx context.Context, req EditMessageLiveLocation) (Result, error)
+	EditMessageLiveLocation(ctx context.Context, req EditMessageLiveLocation) (ResultMessageOrBoolean, error)
 	// EditMessageMedia implements editMessageMedia operation.
 	//
 	// POST /editMessageMedia
-	EditMessageMedia(ctx context.Context, req EditMessageMedia) (Result, error)
+	EditMessageMedia(ctx context.Context, req EditMessageMedia) (ResultMessageOrBoolean, error)
 	// EditMessageReplyMarkup implements editMessageReplyMarkup operation.
 	//
 	// POST /editMessageReplyMarkup
-	EditMessageReplyMarkup(ctx context.Context, req EditMessageReplyMarkup) (Result, error)
+	EditMessageReplyMarkup(ctx context.Context, req EditMessageReplyMarkup) (ResultMessageOrBoolean, error)
 	// EditMessageText implements editMessageText operation.
 	//
 	// POST /editMessageText
-	EditMessageText(ctx context.Context, req EditMessageText) (Result, error)
+	EditMessageText(ctx context.Context, req EditMessageText) (ResultMessageOrBoolean, error)
 	// ExportChatInviteLink implements exportChatInviteLink operation.
 	//
 	// POST /exportChatInviteLink
@@ -367,7 +367,7 @@ type Handler interface {
 	// StopMessageLiveLocation implements stopMessageLiveLocation operation.
 	//
 	// POST /stopMessageLiveLocation
-	StopMessageLiveLocation(ctx context.Context, req StopMessageLiveLocation) (Result, error)
+	StopMessageLiveLocation(ctx context.Context, req StopMessageLiveLocation) (ResultMessageOrBoolean, error)
 	// StopPoll implements stopPoll operation.
 	//
 	// POST /stopPoll

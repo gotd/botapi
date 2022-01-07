@@ -6879,6 +6879,46 @@ func (s ResultMessage) Validate() error {
 	}
 	return nil
 }
+func (s ResultMessageOrBoolean) Validate() error {
+	var failures []validate.FieldError
+	if err := func() error {
+		if s.Result.Set {
+			if err := func() error {
+				if err := s.Result.Value.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return err
+			}
+		}
+		return nil
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "result",
+			Error: err,
+		})
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+	return nil
+}
+func (s ResultMessageOrBooleanResult) Validate() error {
+	switch s.Type {
+	case MessageResultMessageOrBooleanResult:
+		if err := s.Message.Validate(); err != nil {
+			return err
+		}
+		return nil
+	case BoolResultMessageOrBooleanResult:
+		return nil // no validation needed
+	default:
+		return errors.Errorf("invalid type %q", s.Type)
+	}
+}
+
 func (s ResultPoll) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
