@@ -103,7 +103,7 @@ func (a API) typeOAS(f Field) *ogen.Schema {
 		p.Type = "array"
 		p.Items = a.typeOAS(Field{Type: *t.Item})
 	default:
-		switch f.Type.String() {
+		switch t.String() {
 		case "Integer or String":
 			p.Ref = "#/components/schemas/ID"
 		case "String or String":
@@ -436,6 +436,29 @@ Schemas:
 						Ref: itemName,
 					},
 				})
+				addResponse(resultName, "#/components/schemas/"+resultName, "Result of method invocation")
+				response.Ref = "#/components/responses/" + resultName
+			case KindSum:
+				var name strings.Builder
+				for i, v := range t.Sum {
+					variantName := v.Name
+					if variantName == "" {
+						variantName = v.Primitive.String()
+					}
+					if variantName == "" {
+						return nil, errors.Errorf("unsupported type %v", v.Kind)
+					}
+					name.WriteString(variantName)
+					if i != len(t.Sum)-1 {
+						name.WriteString("Or")
+					}
+				}
+				n := name.String()
+				resultName := "Result" + n
+				c.Schemas[resultName] = resultFor(a.typeOAS(Field{
+					Type: *t,
+					Name: n,
+				}))
 				addResponse(resultName, "#/components/schemas/"+resultName, "Result of method invocation")
 				response.Ref = "#/components/responses/" + resultName
 			}
