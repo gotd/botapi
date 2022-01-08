@@ -514,22 +514,22 @@ Schemas:
 func patchSchema(spec *ogen.Spec) *ogen.Spec {
 	c := spec.Components
 	addMissedProperties(c.Schemas)
-	setItemsFormat := func(typeName, propName, format string) {
-		sendInvoice := c.Schemas[typeName]
-		props := sendInvoice.Properties
+	updateProperty := func(typeName, propName string, cb func(p *ogen.Property)) {
+		schema := c.Schemas[typeName]
+		props := schema.Properties
 
-		var handled bool
 		for i := range props {
-			p := props[i]
-			if p.Name == propName {
-				props[i].Schema.Items.Format = format
-				handled = true
-				break
+			if props[i].Name == propName {
+				cb(&props[i])
+				return
 			}
 		}
-		if !handled {
-			panic(fmt.Sprintf("property %q of %q not found", propName, typeName))
-		}
+		panic(fmt.Sprintf("property %q of %q not found", propName, typeName))
+	}
+	setItemsFormat := func(typeName, propName, format string) {
+		updateProperty(typeName, propName, func(p *ogen.Property) {
+			p.Schema.Items.Format = format
+		})
 	}
 	// MTProto uses int64, use it in BotAPI too to reduce copying.
 	setItemsFormat("sendInvoice", "suggested_tip_amounts", "int64")
