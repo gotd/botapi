@@ -2068,7 +2068,7 @@ type InputInvoiceMessageContent struct {
 	Currency                  string         `json:"currency"`
 	Prices                    []LabeledPrice `json:"prices"`
 	MaxTipAmount              OptInt         `json:"max_tip_amount"`
-	SuggestedTipAmounts       []int          `json:"suggested_tip_amounts"`
+	SuggestedTipAmounts       []int64        `json:"suggested_tip_amounts"`
 	ProviderData              OptString      `json:"provider_data"`
 	PhotoURL                  OptString      `json:"photo_url"`
 	PhotoSize                 OptInt         `json:"photo_size"`
@@ -6596,7 +6596,7 @@ type SendInvoice struct {
 	Currency                  string                  `json:"currency"`
 	Prices                    []LabeledPrice          `json:"prices"`
 	MaxTipAmount              OptInt                  `json:"max_tip_amount"`
-	SuggestedTipAmounts       []int                   `json:"suggested_tip_amounts"`
+	SuggestedTipAmounts       []int64                 `json:"suggested_tip_amounts"`
 	StartParameter            OptString               `json:"start_parameter"`
 	ProviderData              OptString               `json:"provider_data"`
 	PhotoURL                  OptString               `json:"photo_url"`
