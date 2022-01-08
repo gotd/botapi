@@ -492,8 +492,7 @@ Schemas:
 		}
 		p["/"+m.Name] = item
 	}
-	addMissedProperties(c.Schemas)
-	return &ogen.Spec{
+	return patchSchema(&ogen.Spec{
 		OpenAPI: "3.0.3",
 		Info: ogen.Info{
 			Title:          "Telegram Bot API",
@@ -509,7 +508,33 @@ Schemas:
 		},
 		Paths:      p,
 		Components: c,
-	}, nil
+	}), nil
+}
+
+func patchSchema(spec *ogen.Spec) *ogen.Spec {
+	c := spec.Components
+	addMissedProperties(c.Schemas)
+	setItemsFormat := func(typeName, propName, format string) {
+		sendInvoice := c.Schemas[typeName]
+		props := sendInvoice.Properties
+
+		var handled bool
+		for i := range props {
+			p := props[i]
+			if p.Name == propName {
+				props[i].Schema.Items.Format = format
+				handled = true
+				break
+			}
+		}
+		if !handled {
+			panic(fmt.Sprintf("property %q of %q not found", propName, typeName))
+		}
+	}
+	// MTProto uses int64, use it in BotAPI too to reduce copying.
+	setItemsFormat("sendInvoice", "suggested_tip_amounts", "int64")
+	setItemsFormat("InputInvoiceMessageContent", "suggested_tip_amounts", "int64")
+	return spec
 }
 
 func addMissedProperties(schemas map[string]*ogen.Schema) {
