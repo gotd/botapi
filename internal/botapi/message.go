@@ -40,8 +40,3 @@ func (b *BotAPI) EditMessageText(ctx context.Context, req oas.EditMessageText) (
 func (b *BotAPI) ForwardMessage(ctx context.Context, req oas.ForwardMessage) (oas.ResultMessage, error) {
 	return oas.ResultMessage{}, &NotImplementedError{}
 }
-
-// StopPoll implements oas.Handler.
-func (b *BotAPI) StopPoll(ctx context.Context, req oas.StopPoll) (oas.ResultPoll, error) {
-	return oas.ResultPoll{}, &NotImplementedError{}
-}

@@ -2,7 +2,6 @@ package botapi
 
 import (
 	"context"
-	"strconv"
 
 	"github.com/go-faster/errors"
 	"go.uber.org/zap"
@@ -360,54 +359,10 @@ func (b *BotAPI) convertMessageMedia(ctx context.Context, media tg.MessageMediaC
 		location.ProximityAlertRadius = optInt(media.GetProximityNotificationRadius)
 		r.Location.SetTo(location)
 	case *tg.MessageMediaPoll:
-		var (
-			poll    = media.Poll
-			results = media.Results
-
-			typ = oas.PollTypeRegular
-		)
-		if a, r := len(poll.Answers), len(results.Results); a != r {
-			b.logger.Warn("Got poll where len(answers) != len(results)",
-				zap.Int("answers", a),
-				zap.Int("results", r),
-			)
+		resultPoll, ok := b.convertToBotAPIPoll(ctx, media)
+		if !ok {
 			break
 		}
-
-		if poll.Quiz {
-			typ = oas.PollTypeQuiz
-		}
-		resultPoll := oas.Poll{
-			ID:                    strconv.FormatInt(poll.ID, 10),
-			Question:              poll.Question,
-			Options:               nil,
-			TotalVoterCount:       results.TotalVoters,
-			IsClosed:              poll.Closed,
-			IsAnonymous:           !poll.PublicVoters,
-			Type:                  typ,
-			AllowsMultipleAnswers: poll.MultipleChoice,
-			CorrectOptionID:       oas.OptInt{},
-			Explanation:           optString(results.GetSolution),
-			ExplanationEntities:   nil,
-			OpenPeriod:            optInt(poll.GetClosePeriod),
-			CloseDate:             optInt(poll.GetCloseDate),
-		}
-
-		if e := results.SolutionEntities; len(e) > 0 {
-			resultPoll.ExplanationEntities = b.convertToBotAPIEntities(ctx, e)
-		}
-
-		// SAFETY: length equality checked above.
-		for i, result := range results.Results {
-			if result.Correct {
-				resultPoll.CorrectOptionID.SetTo(i)
-			}
-			resultPoll.Options = append(resultPoll.Options, oas.PollOption{
-				Text:       poll.Answers[i].Text,
-				VoterCount: result.Voters,
-			})
-		}
-
 		r.Poll.SetTo(resultPoll)
 	case *tg.MessageMediaDice:
 		r.Dice.SetTo(oas.Dice{
