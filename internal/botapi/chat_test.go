@@ -204,7 +204,7 @@ func TestBotAPI_DeleteChatPhoto(t *testing.T) {
 				AccessHash: testChannel().AccessHash,
 			},
 			Photo: &tg.InputChatPhotoEmpty{},
-		}).ThenTrue()
+		}).ThenResult(&tg.Updates{})
 		_, err := api.DeleteChatPhoto(ctx, oas.DeleteChatPhoto{
 			ChatID: oas.NewInt64ID(testChannelID()),
 		})
