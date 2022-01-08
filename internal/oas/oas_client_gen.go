@@ -1226,7 +1226,7 @@ func (c *Client) EditChatInviteLink(ctx context.Context, request EditChatInviteL
 // EditMessageCaption invokes editMessageCaption operation.
 //
 // POST /editMessageCaption
-func (c *Client) EditMessageCaption(ctx context.Context, request EditMessageCaption) (res Result, err error) {
+func (c *Client) EditMessageCaption(ctx context.Context, request EditMessageCaption) (res ResultMessageOrBoolean, err error) {
 	if err := func() error {
 		if err := request.Validate(); err != nil {
 			return err
@@ -1288,7 +1288,7 @@ func (c *Client) EditMessageCaption(ctx context.Context, request EditMessageCapt
 // EditMessageLiveLocation invokes editMessageLiveLocation operation.
 //
 // POST /editMessageLiveLocation
-func (c *Client) EditMessageLiveLocation(ctx context.Context, request EditMessageLiveLocation) (res Result, err error) {
+func (c *Client) EditMessageLiveLocation(ctx context.Context, request EditMessageLiveLocation) (res ResultMessageOrBoolean, err error) {
 	if err := func() error {
 		if err := request.Validate(); err != nil {
 			return err
@@ -1350,7 +1350,7 @@ func (c *Client) EditMessageLiveLocation(ctx context.Context, request EditMessag
 // EditMessageMedia invokes editMessageMedia operation.
 //
 // POST /editMessageMedia
-func (c *Client) EditMessageMedia(ctx context.Context, request EditMessageMedia) (res Result, err error) {
+func (c *Client) EditMessageMedia(ctx context.Context, request EditMessageMedia) (res ResultMessageOrBoolean, err error) {
 	if err := func() error {
 		if err := request.Validate(); err != nil {
 			return err
@@ -1412,7 +1412,7 @@ func (c *Client) EditMessageMedia(ctx context.Context, request EditMessageMedia)
 // EditMessageReplyMarkup invokes editMessageReplyMarkup operation.
 //
 // POST /editMessageReplyMarkup
-func (c *Client) EditMessageReplyMarkup(ctx context.Context, request EditMessageReplyMarkup) (res Result, err error) {
+func (c *Client) EditMessageReplyMarkup(ctx context.Context, request EditMessageReplyMarkup) (res ResultMessageOrBoolean, err error) {
 	if err := func() error {
 		if err := request.Validate(); err != nil {
 			return err
@@ -1474,7 +1474,7 @@ func (c *Client) EditMessageReplyMarkup(ctx context.Context, request EditMessage
 // EditMessageText invokes editMessageText operation.
 //
 // POST /editMessageText
-func (c *Client) EditMessageText(ctx context.Context, request EditMessageText) (res Result, err error) {
+func (c *Client) EditMessageText(ctx context.Context, request EditMessageText) (res ResultMessageOrBoolean, err error) {
 	if err := func() error {
 		if err := request.Validate(); err != nil {
 			return err
@@ -4394,7 +4394,7 @@ func (c *Client) SetWebhook(ctx context.Context, request SetWebhook) (res Result
 // StopMessageLiveLocation invokes stopMessageLiveLocation operation.
 //
 // POST /stopMessageLiveLocation
-func (c *Client) StopMessageLiveLocation(ctx context.Context, request StopMessageLiveLocation) (res Result, err error) {
+func (c *Client) StopMessageLiveLocation(ctx context.Context, request StopMessageLiveLocation) (res ResultMessageOrBoolean, err error) {
 	if err := func() error {
 		if err := request.Validate(); err != nil {
 			return err

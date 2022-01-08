@@ -17,23 +17,23 @@ func (b *BotAPI) DeleteMessage(ctx context.Context, req oas.DeleteMessage) (oas.
 }
 
 // EditMessageCaption implements oas.Handler.
-func (b *BotAPI) EditMessageCaption(ctx context.Context, req oas.EditMessageCaption) (oas.Result, error) {
-	return oas.Result{}, &NotImplementedError{}
+func (b *BotAPI) EditMessageCaption(ctx context.Context, req oas.EditMessageCaption) (oas.ResultMessageOrBoolean, error) {
+	return oas.ResultMessageOrBoolean{}, &NotImplementedError{}
 }
 
 // EditMessageMedia implements oas.Handler.
-func (b *BotAPI) EditMessageMedia(ctx context.Context, req oas.EditMessageMedia) (oas.Result, error) {
-	return oas.Result{}, &NotImplementedError{}
+func (b *BotAPI) EditMessageMedia(ctx context.Context, req oas.EditMessageMedia) (oas.ResultMessageOrBoolean, error) {
+	return oas.ResultMessageOrBoolean{}, &NotImplementedError{}
 }
 
 // EditMessageReplyMarkup implements oas.Handler.
-func (b *BotAPI) EditMessageReplyMarkup(ctx context.Context, req oas.EditMessageReplyMarkup) (oas.Result, error) {
-	return oas.Result{}, &NotImplementedError{}
+func (b *BotAPI) EditMessageReplyMarkup(ctx context.Context, req oas.EditMessageReplyMarkup) (oas.ResultMessageOrBoolean, error) {
+	return oas.ResultMessageOrBoolean{}, &NotImplementedError{}
 }
 
 // EditMessageText implements oas.Handler.
-func (b *BotAPI) EditMessageText(ctx context.Context, req oas.EditMessageText) (oas.Result, error) {
-	return oas.Result{}, &NotImplementedError{}
+func (b *BotAPI) EditMessageText(ctx context.Context, req oas.EditMessageText) (oas.ResultMessageOrBoolean, error) {
+	return oas.ResultMessageOrBoolean{}, &NotImplementedError{}
 }
 
 // ForwardMessage implements oas.Handler.

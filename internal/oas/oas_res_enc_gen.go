@@ -342,7 +342,7 @@ func encodeEditChatInviteLinkResponse(response ResultChatInviteLink, w http.Resp
 	return nil
 }
 
-func encodeEditMessageCaptionResponse(response Result, w http.ResponseWriter, span trace.Span) error {
+func encodeEditMessageCaptionResponse(response ResultMessageOrBoolean, w http.ResponseWriter, span trace.Span) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 	e := jx.GetEncoder()
@@ -356,7 +356,7 @@ func encodeEditMessageCaptionResponse(response Result, w http.ResponseWriter, sp
 	return nil
 }
 
-func encodeEditMessageLiveLocationResponse(response Result, w http.ResponseWriter, span trace.Span) error {
+func encodeEditMessageLiveLocationResponse(response ResultMessageOrBoolean, w http.ResponseWriter, span trace.Span) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 	e := jx.GetEncoder()
@@ -370,7 +370,7 @@ func encodeEditMessageLiveLocationResponse(response Result, w http.ResponseWrite
 	return nil
 }
 
-func encodeEditMessageMediaResponse(response Result, w http.ResponseWriter, span trace.Span) error {
+func encodeEditMessageMediaResponse(response ResultMessageOrBoolean, w http.ResponseWriter, span trace.Span) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 	e := jx.GetEncoder()
@@ -384,7 +384,7 @@ func encodeEditMessageMediaResponse(response Result, w http.ResponseWriter, span
 	return nil
 }
 
-func encodeEditMessageReplyMarkupResponse(response Result, w http.ResponseWriter, span trace.Span) error {
+func encodeEditMessageReplyMarkupResponse(response ResultMessageOrBoolean, w http.ResponseWriter, span trace.Span) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 	e := jx.GetEncoder()
@@ -398,7 +398,7 @@ func encodeEditMessageReplyMarkupResponse(response Result, w http.ResponseWriter
 	return nil
 }
 
-func encodeEditMessageTextResponse(response Result, w http.ResponseWriter, span trace.Span) error {
+func encodeEditMessageTextResponse(response ResultMessageOrBoolean, w http.ResponseWriter, span trace.Span) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 	e := jx.GetEncoder()
@@ -1112,7 +1112,7 @@ func encodeSetWebhookResponse(response Result, w http.ResponseWriter, span trace
 	return nil
 }
 
-func encodeStopMessageLiveLocationResponse(response Result, w http.ResponseWriter, span trace.Span) error {
+func encodeStopMessageLiveLocationResponse(response ResultMessageOrBoolean, w http.ResponseWriter, span trace.Span) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 	e := jx.GetEncoder()

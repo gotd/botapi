@@ -345,6 +345,11 @@ func Extract(doc *goquery.Document) (a API) {
 				}
 				t := ParseType(ret)
 				d.Ret = &t
+			} else if strings.Contains(loweredDesc,
+				`the edited message is returned, otherwise true is returned`) {
+				// HACK: sum type result for editing methods.
+				t := ParseType("Message or True")
+				d.Ret = &t
 			}
 		}
 

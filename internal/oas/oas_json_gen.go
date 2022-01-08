@@ -11169,6 +11169,24 @@ func (o *OptResponse) Decode(d *jx.Decoder) error {
 	}
 }
 
+// Encode encodes ResultMessageOrBooleanResult as json.
+func (o OptResultMessageOrBooleanResult) Encode(e *jx.Encoder) {
+}
+
+// Decode decodes ResultMessageOrBooleanResult from json.
+func (o *OptResultMessageOrBooleanResult) Decode(d *jx.Decoder) error {
+	if o == nil {
+		return errors.New(`invalid: unable to decode OptResultMessageOrBooleanResult to nil`)
+	}
+	switch d.Next() {
+	case jx.String:
+		o.Set = true
+		return nil
+	default:
+		return errors.Errorf(`unexpected type %q while reading OptResultMessageOrBooleanResult`, d.Next())
+	}
+}
+
 // Encode encodes SendReplyMarkup as json.
 func (o OptSendReplyMarkup) Encode(e *jx.Encoder) {
 }
@@ -13893,6 +13911,79 @@ func (s *ResultMessageId) Decode(d *jx.Decoder) error {
 		}
 		return nil
 	})
+}
+
+// Encode implements json.Marshaler.
+func (s ResultMessageOrBoolean) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	if s.Result.Set {
+		e.FieldStart("result")
+		s.Result.Encode(e)
+	}
+
+	e.FieldStart("ok")
+	e.Bool(s.Ok)
+	e.ObjEnd()
+}
+
+// Decode decodes ResultMessageOrBoolean from json.
+func (s *ResultMessageOrBoolean) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New(`invalid: unable to decode ResultMessageOrBoolean to nil`)
+	}
+	return d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "result":
+			s.Result.Reset()
+			if err := s.Result.Decode(d); err != nil {
+				return err
+			}
+		case "ok":
+			v, err := d.Bool()
+			s.Ok = bool(v)
+			if err != nil {
+				return err
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	})
+}
+
+// Encode encodes ResultMessageOrBooleanResult as json.
+func (s ResultMessageOrBooleanResult) Encode(e *jx.Encoder) {
+	switch s.Type {
+	case MessageResultMessageOrBooleanResult:
+		s.Message.Encode(e)
+	case BoolResultMessageOrBooleanResult:
+		e.Bool(s.Bool)
+	}
+}
+
+// Decode decodes ResultMessageOrBooleanResult from json.
+func (s *ResultMessageOrBooleanResult) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New(`invalid: unable to decode ResultMessageOrBooleanResult to nil`)
+	}
+	// Sum type type_discriminator.
+	switch t := d.Next(); t {
+	case jx.Object:
+		if err := s.Message.Decode(d); err != nil {
+			return err
+		}
+		s.Type = MessageResultMessageOrBooleanResult
+	case jx.Bool:
+		v, err := d.Bool()
+		s.Bool = bool(v)
+		if err != nil {
+			return err
+		}
+		s.Type = BoolResultMessageOrBooleanResult
+	default:
+		return errors.Errorf("unexpected json type %q", t)
+	}
+	return nil
 }
 
 // Encode implements json.Marshaler.
