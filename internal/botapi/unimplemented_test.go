@@ -71,12 +71,6 @@ func TestUnimplemented(t *testing.T) {
 	}
 
 	{
-		_, err := b.DeleteChatPhoto(ctx, oas.DeleteChatPhoto{})
-		var implErr *NotImplementedError
-		a.ErrorAs(err, &implErr)
-	}
-
-	{
 		_, err := b.DeleteMessage(ctx, oas.DeleteMessage{})
 		var implErr *NotImplementedError
 		a.ErrorAs(err, &implErr)

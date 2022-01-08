@@ -4,10 +4,9 @@ import (
 	"context"
 	"testing"
 
-	"github.com/stretchr/testify/require"
-
 	"github.com/gotd/td/tg"
 	"github.com/gotd/td/tgmock"
+	"github.com/stretchr/testify/require"
 
 	"github.com/gotd/botapi/internal/oas"
 )
@@ -191,6 +190,23 @@ func TestBotAPI_LeaveChat(t *testing.T) {
 		}).ThenResult(&tg.Updates{})
 		_, err := api.LeaveChat(ctx, oas.LeaveChat{
 			ChatID: oas.NewInt64ID(testChatID()),
+		})
+		a.NoError(err)
+	})
+}
+
+func TestBotAPI_DeleteChatPhoto(t *testing.T) {
+	ctx := context.Background()
+	testWithCache(t, func(a *require.Assertions, mock *tgmock.Mock, api *BotAPI) {
+		mock.ExpectCall(&tg.ChannelsEditPhotoRequest{
+			Channel: &tg.InputChannel{
+				ChannelID:  testChannel().ID,
+				AccessHash: testChannel().AccessHash,
+			},
+			Photo: &tg.InputChatPhotoEmpty{},
+		}).ThenTrue()
+		_, err := api.DeleteChatPhoto(ctx, oas.DeleteChatPhoto{
+			ChatID: oas.NewInt64ID(testChannelID()),
 		})
 		a.NoError(err)
 	})
