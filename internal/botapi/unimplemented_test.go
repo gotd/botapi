@@ -215,12 +215,6 @@ func TestUnimplemented(t *testing.T) {
 	}
 
 	{
-		_, err := b.SendPoll(ctx, oas.SendPoll{})
-		var implErr *NotImplementedError
-		a.ErrorAs(err, &implErr)
-	}
-
-	{
 		_, err := b.SendSticker(ctx, oas.SendSticker{})
 		var implErr *NotImplementedError
 		a.ErrorAs(err, &implErr)

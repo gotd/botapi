@@ -267,8 +267,3 @@ func (b *BotAPI) SendVenue(ctx context.Context, req oas.SendVenue) (oas.ResultMe
 	resp, err := s.Media(ctx, message.Media(media))
 	return b.sentMessage(ctx, p, resp, err)
 }
-
-// SendPoll implements oas.Handler.
-func (b *BotAPI) SendPoll(ctx context.Context, req oas.SendPoll) (oas.ResultMessage, error) {
-	return oas.ResultMessage{}, &NotImplementedError{}
-}
