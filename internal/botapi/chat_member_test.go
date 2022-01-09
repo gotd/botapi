@@ -14,6 +14,11 @@ import (
 func TestBotAPI_GetChatMemberCount(t *testing.T) {
 	ctx := context.Background()
 	testWithCache(t, func(a *require.Assertions, mock *tgmock.Mock, api *BotAPI) {
+		_, err := api.GetChatMemberCount(ctx, oas.GetChatMemberCount{
+			ChatID: oas.NewStringID(`aboba`),
+		})
+		a.Error(err)
+
 		r, err := api.GetChatMemberCount(ctx, oas.GetChatMemberCount{
 			ChatID: oas.NewInt64ID(testChatID()),
 		})

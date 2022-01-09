@@ -6,11 +6,12 @@ import (
 	"strings"
 
 	"github.com/go-faster/errors"
+	"go.uber.org/zap"
+
 	"github.com/gotd/td/telegram/message"
 	"github.com/gotd/td/telegram/message/entity"
 	"github.com/gotd/td/telegram/message/html"
 	"github.com/gotd/td/tg"
-	"go.uber.org/zap"
 
 	"github.com/gotd/botapi/internal/oas"
 )
@@ -109,11 +110,20 @@ func (b *BotAPI) SendPoll(ctx context.Context, req oas.SendPoll) (oas.ResultMess
 		Quiz:           req.Type.Value == "quiz",
 		Question:       req.Question,
 		Answers:        answers,
+		ClosePeriod:    0,
 		CloseDate:      0,
 	}
-	if v, ok := req.CloseDate.Get(); ok {
+	poll.SetFlags()
+
+	if v, ok := req.OpenPeriod.Get(); ok {
+		// Prefer open_period.
+		//
+		// See https://github.com/tdlib/td/blob/fa8feefed70d64271945e9d5fd010b957d93c8cd/td/telegram/MessageContent.cpp#L1914-L1916.
+		poll.SetClosePeriod(v)
+	} else if v, ok := req.CloseDate.Get(); ok {
 		poll.SetCloseDate(v)
 	}
+
 	media := &tg.InputMediaPoll{
 		Poll:             poll,
 		CorrectAnswers:   nil,
@@ -121,29 +131,33 @@ func (b *BotAPI) SendPoll(ctx context.Context, req oas.SendPoll) (oas.ResultMess
 		SolutionEntities: nil,
 	}
 	if v, ok := req.CorrectOptionID.Get(); ok {
-		if v < len(answers) {
+		if v < 0 || v >= len(answers) {
 			// See https://github.com/tdlib/td/blob/fa8feefed70d64271945e9d5fd010b957d93c8cd/td/telegram/MessageContent.cpp#L1898.
 			return oas.ResultMessage{}, &BadRequestError{Message: "Wrong correct option ID specified"}
 		}
 		media.CorrectAnswers = [][]byte{answers[v].Option}
 	}
-	if v, ok := req.Explanation.Get(); ok {
+	if explanation, ok := req.Explanation.Get(); ok {
 		// FIXME(tdakkota): get entities from request.
 		parseMode, isParseModeSet := req.ExplanationParseMode.Get()
 		if isParseModeSet && parseMode != "HTML" {
 			return oas.ResultMessage{}, &NotImplementedError{Message: "only HTML formatting is supported"}
 		}
 
-		var builder entity.Builder
-		if err := html.HTML(strings.NewReader(v), &builder, html.Options{
-			UserResolver:          b.peers.UserResolveHook(ctx),
-			DisableTelegramEscape: false,
-		}); err != nil {
-			return oas.ResultMessage{}, errors.Wrap(err, "parse explanation")
+		if isParseModeSet {
+			var builder entity.Builder
+			if err := html.HTML(strings.NewReader(explanation), &builder, html.Options{
+				UserResolver:          b.peers.UserResolveHook(ctx),
+				DisableTelegramEscape: false,
+			}); err != nil {
+				return oas.ResultMessage{}, errors.Wrap(err, "parse explanation")
+			}
+			text, entities := builder.Complete()
+			media.SetSolution(text)
+			media.SetSolutionEntities(entities)
+		} else {
+			media.SetSolution(explanation)
 		}
-		text, entities := builder.Complete()
-		media.SetSolution(text)
-		media.SetSolutionEntities(entities)
 	}
 
 	resp, err := s.Media(ctx, message.Media(media))
