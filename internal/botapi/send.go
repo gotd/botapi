@@ -6,9 +6,9 @@ import (
 	"github.com/go-faster/errors"
 
 	"github.com/gotd/td/telegram/message"
+	"github.com/gotd/td/telegram/message/html"
 	"github.com/gotd/td/telegram/peers"
 
-	"github.com/gotd/td/telegram/message/html"
 	"github.com/gotd/td/telegram/message/unpack"
 	"github.com/gotd/td/tg"
 
@@ -95,137 +95,6 @@ func (b *BotAPI) prepareSend(
 	return s, p, nil
 }
 
-// SendAnimation implements oas.Handler.
-func (b *BotAPI) SendAnimation(ctx context.Context, req oas.SendAnimation) (oas.ResultMessage, error) {
-	return oas.ResultMessage{}, &NotImplementedError{}
-}
-
-// SendAudio implements oas.Handler.
-func (b *BotAPI) SendAudio(ctx context.Context, req oas.SendAudio) (oas.ResultMessage, error) {
-	return oas.ResultMessage{}, &NotImplementedError{}
-}
-
-// SendChatAction implements oas.Handler.
-func (b *BotAPI) SendChatAction(ctx context.Context, req oas.SendChatAction) (oas.Result, error) {
-	p, err := b.resolveID(ctx, req.ChatID)
-	if err != nil {
-		return oas.Result{}, errors.Wrap(err, "resolve chatID")
-	}
-
-	s := b.sender.To(p.InputPeer()).TypingAction()
-	progress := 0
-	switch req.Action {
-	case "cancel":
-		err = s.Cancel(ctx)
-	case "typing":
-		err = s.Typing(ctx)
-	case "record_video":
-		err = s.RecordVideo(ctx)
-	case "upload_video":
-		err = s.UploadVideo(ctx, progress)
-	case "record_audio", "record_voice":
-		err = s.RecordAudio(ctx)
-	case "upload_audio", "upload_voice":
-		err = s.UploadVideo(ctx, progress)
-	case "upload_photo":
-		err = s.UploadPhoto(ctx, progress)
-	case "upload_document":
-		err = s.UploadDocument(ctx, progress)
-	case "choose_sticker":
-		err = s.ChooseSticker(ctx)
-	case "pick_up_location", "find_location":
-		err = s.GeoLocation(ctx)
-	case "record_video_note":
-		err = s.RecordRound(ctx)
-	case "upload_video_note":
-		err = s.UploadRound(ctx, progress)
-	default:
-		return oas.Result{}, &BadRequestError{"Wrong parameter action in request"}
-	}
-	if err != nil {
-		return oas.Result{}, errors.Wrap(err, "send action")
-	}
-
-	return resultOK(true), nil
-}
-
-// SendContact implements oas.Handler.
-func (b *BotAPI) SendContact(ctx context.Context, req oas.SendContact) (oas.ResultMessage, error) {
-	return oas.ResultMessage{}, &NotImplementedError{}
-}
-
-// SendDice implements oas.Handler.
-func (b *BotAPI) SendDice(ctx context.Context, req oas.SendDice) (oas.ResultMessage, error) {
-	s, p, err := b.prepareSend(
-		ctx,
-		sendOpts{
-			To:                       req.ChatID,
-			DisableNotification:      req.DisableNotification,
-			ProtectContent:           req.ProtectContent,
-			ReplyToMessageID:         req.ReplyToMessageID,
-			AllowSendingWithoutReply: req.AllowSendingWithoutReply,
-			ReplyMarkup:              req.ReplyMarkup,
-		},
-	)
-	if err != nil {
-		return oas.ResultMessage{}, errors.Wrap(err, "prepare send")
-	}
-	resp, err := s.Media(ctx, message.MediaDice(req.Emoji.Or("🎲")))
-	return b.sentMessage(ctx, p, resp, err)
-}
-
-// SendDocument implements oas.Handler.
-func (b *BotAPI) SendDocument(ctx context.Context, req oas.SendDocument) (oas.ResultMessage, error) {
-	return oas.ResultMessage{}, &NotImplementedError{}
-}
-
-// SendGame implements oas.Handler.
-func (b *BotAPI) SendGame(ctx context.Context, req oas.SendGame) (oas.ResultMessage, error) {
-	var markup oas.OptSendReplyMarkup
-	if m, ok := req.ReplyMarkup.Get(); ok {
-		markup.SetTo(oas.SendReplyMarkup{
-			Type:                 oas.InlineKeyboardMarkupSendReplyMarkup,
-			InlineKeyboardMarkup: m,
-		})
-	}
-
-	s, p, err := b.prepareSend(
-		ctx,
-		sendOpts{
-			To:                       oas.NewInt64ID(req.ChatID),
-			DisableNotification:      req.DisableNotification,
-			ProtectContent:           req.ProtectContent,
-			ReplyToMessageID:         req.ReplyToMessageID,
-			AllowSendingWithoutReply: req.AllowSendingWithoutReply,
-			ReplyMarkup:              markup,
-		},
-	)
-	if err != nil {
-		return oas.ResultMessage{}, errors.Wrap(err, "prepare send")
-	}
-
-	resp, err := s.Media(ctx, message.Game(&tg.InputGameShortName{
-		BotID:     &tg.InputUserSelf{},
-		ShortName: req.GameShortName,
-	}))
-	return b.sentMessage(ctx, p, resp, err)
-}
-
-// SendInvoice implements oas.Handler.
-func (b *BotAPI) SendInvoice(ctx context.Context, req oas.SendInvoice) (oas.ResultMessage, error) {
-	return oas.ResultMessage{}, &NotImplementedError{}
-}
-
-// SendLocation implements oas.Handler.
-func (b *BotAPI) SendLocation(ctx context.Context, req oas.SendLocation) (oas.ResultMessage, error) {
-	return oas.ResultMessage{}, &NotImplementedError{}
-}
-
-// SendMediaGroup implements oas.Handler.
-func (b *BotAPI) SendMediaGroup(ctx context.Context, req oas.SendMediaGroup) (oas.ResultArrayOfMessage, error) {
-	return oas.ResultArrayOfMessage{}, &NotImplementedError{}
-}
-
 // SendMessage implements oas.Handler.
 func (b *BotAPI) SendMessage(ctx context.Context, req oas.SendMessage) (oas.ResultMessage, error) {
 	parseMode, isParseModeSet := req.ParseMode.Get()
@@ -259,39 +128,4 @@ func (b *BotAPI) SendMessage(ctx context.Context, req oas.SendMessage) (oas.Resu
 	}
 
 	return b.sentMessage(ctx, p, resp, err)
-}
-
-// SendPhoto implements oas.Handler.
-func (b *BotAPI) SendPhoto(ctx context.Context, req oas.SendPhoto) (oas.ResultMessage, error) {
-	return oas.ResultMessage{}, &NotImplementedError{}
-}
-
-// SendPoll implements oas.Handler.
-func (b *BotAPI) SendPoll(ctx context.Context, req oas.SendPoll) (oas.ResultMessage, error) {
-	return oas.ResultMessage{}, &NotImplementedError{}
-}
-
-// SendSticker implements oas.Handler.
-func (b *BotAPI) SendSticker(ctx context.Context, req oas.SendSticker) (oas.ResultMessage, error) {
-	return oas.ResultMessage{}, &NotImplementedError{}
-}
-
-// SendVenue implements oas.Handler.
-func (b *BotAPI) SendVenue(ctx context.Context, req oas.SendVenue) (oas.ResultMessage, error) {
-	return oas.ResultMessage{}, &NotImplementedError{}
-}
-
-// SendVideo implements oas.Handler.
-func (b *BotAPI) SendVideo(ctx context.Context, req oas.SendVideo) (oas.ResultMessage, error) {
-	return oas.ResultMessage{}, &NotImplementedError{}
-}
-
-// SendVideoNote implements oas.Handler.
-func (b *BotAPI) SendVideoNote(ctx context.Context, req oas.SendVideoNote) (oas.ResultMessage, error) {
-	return oas.ResultMessage{}, &NotImplementedError{}
-}
-
-// SendVoice implements oas.Handler.
-func (b *BotAPI) SendVoice(ctx context.Context, req oas.SendVoice) (oas.ResultMessage, error) {
-	return oas.ResultMessage{}, &NotImplementedError{}
 }

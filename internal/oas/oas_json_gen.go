@@ -7691,7 +7691,7 @@ func (s InputInvoiceMessageContent) Encode(e *jx.Encoder) {
 		e.FieldStart("suggested_tip_amounts")
 		e.ArrStart()
 		for _, elem := range s.SuggestedTipAmounts {
-			e.Int(elem)
+			e.Int64(elem)
 		}
 		e.ArrEnd()
 	}
@@ -7803,9 +7803,9 @@ func (s *InputInvoiceMessageContent) Decode(d *jx.Decoder) error {
 		case "suggested_tip_amounts":
 			s.SuggestedTipAmounts = nil
 			if err := d.Arr(func(d *jx.Decoder) error {
-				var elem int
-				v, err := d.Int()
-				elem = int(v)
+				var elem int64
+				v, err := d.Int64()
+				elem = int64(v)
 				if err != nil {
 					return err
 				}
@@ -15041,7 +15041,7 @@ func (s SendInvoice) Encode(e *jx.Encoder) {
 		e.FieldStart("suggested_tip_amounts")
 		e.ArrStart()
 		for _, elem := range s.SuggestedTipAmounts {
-			e.Int(elem)
+			e.Int64(elem)
 		}
 		e.ArrEnd()
 	}
@@ -15181,9 +15181,9 @@ func (s *SendInvoice) Decode(d *jx.Decoder) error {
 		case "suggested_tip_amounts":
 			s.SuggestedTipAmounts = nil
 			if err := d.Arr(func(d *jx.Decoder) error {
-				var elem int
-				v, err := d.Int()
-				elem = int(v)
+				var elem int64
+				v, err := d.Int64()
+				elem = int64(v)
 				if err != nil {
 					return err
 				}

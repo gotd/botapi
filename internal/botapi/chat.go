@@ -56,7 +56,30 @@ func (b *BotAPI) DeclineChatJoinRequest(ctx context.Context, req oas.DeclineChat
 
 // DeleteChatPhoto implements oas.Handler.
 func (b *BotAPI) DeleteChatPhoto(ctx context.Context, req oas.DeleteChatPhoto) (oas.Result, error) {
-	return oas.Result{}, &NotImplementedError{}
+	p, err := b.resolveIDToChat(ctx, req.ChatID)
+	if err != nil {
+		return oas.Result{}, errors.Wrap(err, "resolve chatID")
+	}
+
+	switch p := p.(type) {
+	case peers.Channel:
+		_, err = b.raw.ChannelsEditPhoto(ctx, &tg.ChannelsEditPhotoRequest{
+			Channel: p.InputChannel(),
+			Photo:   &tg.InputChatPhotoEmpty{},
+		})
+	case peers.Chat:
+		_, err = b.raw.MessagesEditChatPhoto(ctx, &tg.MessagesEditChatPhotoRequest{
+			ChatID: p.ID(),
+			Photo:  &tg.InputChatPhotoEmpty{},
+		})
+	default:
+		return oas.Result{}, errors.Errorf("unexpected type %T", p)
+	}
+	if err != nil {
+		return oas.Result{}, errors.Wrap(err, "delete photo")
+	}
+
+	return resultOK(true), nil
 }
 
 // DeleteChatStickerSet implements oas.Handler.

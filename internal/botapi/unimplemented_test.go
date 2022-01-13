@@ -71,12 +71,6 @@ func TestUnimplemented(t *testing.T) {
 	}
 
 	{
-		_, err := b.DeleteChatPhoto(ctx, oas.DeleteChatPhoto{})
-		var implErr *NotImplementedError
-		a.ErrorAs(err, &implErr)
-	}
-
-	{
 		_, err := b.DeleteMessage(ctx, oas.DeleteMessage{})
 		var implErr *NotImplementedError
 		a.ErrorAs(err, &implErr)
@@ -203,25 +197,7 @@ func TestUnimplemented(t *testing.T) {
 	}
 
 	{
-		_, err := b.SendContact(ctx, oas.SendContact{})
-		var implErr *NotImplementedError
-		a.ErrorAs(err, &implErr)
-	}
-
-	{
 		_, err := b.SendDocument(ctx, oas.SendDocument{})
-		var implErr *NotImplementedError
-		a.ErrorAs(err, &implErr)
-	}
-
-	{
-		_, err := b.SendInvoice(ctx, oas.SendInvoice{})
-		var implErr *NotImplementedError
-		a.ErrorAs(err, &implErr)
-	}
-
-	{
-		_, err := b.SendLocation(ctx, oas.SendLocation{})
 		var implErr *NotImplementedError
 		a.ErrorAs(err, &implErr)
 	}
@@ -239,19 +215,7 @@ func TestUnimplemented(t *testing.T) {
 	}
 
 	{
-		_, err := b.SendPoll(ctx, oas.SendPoll{})
-		var implErr *NotImplementedError
-		a.ErrorAs(err, &implErr)
-	}
-
-	{
 		_, err := b.SendSticker(ctx, oas.SendSticker{})
-		var implErr *NotImplementedError
-		a.ErrorAs(err, &implErr)
-	}
-
-	{
-		_, err := b.SendVenue(ctx, oas.SendVenue{})
 		var implErr *NotImplementedError
 		a.ErrorAs(err, &implErr)
 	}
