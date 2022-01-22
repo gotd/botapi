@@ -8,7 +8,7 @@ require (
 	github.com/go-faster/errors v0.5.0
 	github.com/go-faster/jx v0.32.0
 	github.com/google/uuid v1.3.0
-	github.com/gotd/td v0.54.2-0.20220117071519-974834f8267c
+	github.com/gotd/td v0.55.1
 	github.com/ogen-go/ogen v0.7.0
 	github.com/stretchr/testify v1.7.0
 	go.etcd.io/bbolt v1.3.6
