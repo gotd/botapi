@@ -140,12 +140,12 @@ func (b *BotAPI) NewError(ctx context.Context, err error) (r oas.ErrorStatusCode
 	return resp
 }
 
-var encodedNotFoundError = func() []byte {
-	e := jx.GetEncoder()
-	defer jx.PutEncoder(e)
+var encodedNotFoundError = func() (r []byte) {
+	e := jx.GetWriter()
+	defer jx.PutWriter(e)
 
 	errorOf(http.StatusNotFound).Encode(e)
-	return e.Bytes()
+	return append(r, e.Buf...)
 }()
 
 // NotFound is default not found handler.
