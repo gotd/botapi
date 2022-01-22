@@ -9,7 +9,7 @@ require (
 	github.com/go-faster/jx v0.32.0
 	github.com/google/uuid v1.3.0
 	github.com/gotd/td v0.54.2-0.20220117071519-974834f8267c
-	github.com/ogen-go/ogen v0.6.0
+	github.com/ogen-go/ogen v0.7.0
 	github.com/stretchr/testify v1.7.0
 	go.etcd.io/bbolt v1.3.6
 	go.opentelemetry.io/otel v1.3.0
@@ -29,7 +29,7 @@ require (
 	github.com/go-faster/xor v0.3.0 // indirect
 	github.com/go-logr/logr v1.2.1 // indirect
 	github.com/go-logr/stdr v1.2.0 // indirect
-	github.com/goccy/go-yaml v1.9.4 // indirect
+	github.com/goccy/go-yaml v1.9.5 // indirect
 	github.com/gotd/ige v0.2.2 // indirect
 	github.com/gotd/neo v0.1.5 // indirect
 	github.com/klauspost/compress v1.14.1 // indirect
