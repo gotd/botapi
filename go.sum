@@ -26,7 +26,6 @@ github.com/go-chi/chi/v5 v5.0.7/go.mod h1:DslCQbL2OYiznFReuXYUmQ2hGd1aDpCnlMNITL
 github.com/go-faster/errors v0.5.0 h1:hS/zHFJ2Vb14jcupq5J9tk05XW+PFTmySOkDRByHBo4=
 github.com/go-faster/errors v0.5.0/go.mod h1:/9SNBcg2ESJTYztBFEiM5Np6ns85BtPNMJd8lFTiFwk=
 github.com/go-faster/jx v0.31.0/go.mod h1:T561ezgn74siJgc+QzZzoGHokGBKxV6WZugVyfw+68c=
-github.com/go-faster/jx v0.32.0/go.mod h1:T561ezgn74siJgc+QzZzoGHokGBKxV6WZugVyfw+68c=
 github.com/go-faster/jx v0.32.1 h1:iKI3zD1HxzcV3shhhWuVvzGcLaQe/vhO6v/QtELSRbE=
 github.com/go-faster/jx v0.32.1/go.mod h1:T561ezgn74siJgc+QzZzoGHokGBKxV6WZugVyfw+68c=
 github.com/go-faster/xor v0.3.0 h1:tc0bdVe31Wj999e5rEj7K3DhHyQNp2VydYyLFj3YSN8=
@@ -103,8 +102,8 @@ github.com/modern-go/concurrent v0.0.0-20180228061459-e0a39a4cb421 h1:ZqeYNhU3OH
 github.com/modern-go/concurrent v0.0.0-20180228061459-e0a39a4cb421/go.mod h1:6dJC0mAP4ikYIbvyc7fijjWJddQyLn8Ig3JB5CqoB9Q=
 github.com/modern-go/reflect2 v0.0.0-20180701023420-4b7aa43c6742 h1:Esafd1046DLDQ0W1YjYsBW+p8U2u7vzgW2SQVmlNazg=
 github.com/modern-go/reflect2 v0.0.0-20180701023420-4b7aa43c6742/go.mod h1:bx2lNnkwVCuqBIxFjflWJWanXIb3RllmbCylyMrvgv0=
-github.com/ogen-go/ogen v0.7.0 h1:gmISkCYS3NP9yxx1uhV/2Zs6nmtGigqL7Q2cGXwCDEo=
-github.com/ogen-go/ogen v0.7.0/go.mod h1:T9xsXTR2Zdqf5InFWxXOzQ+mPNf5yygMywmuPZ8vhuc=
+github.com/ogen-go/ogen v0.8.0 h1:hCzVHAwrYLGhhrSD2DdiDOgGp5dP5DZ/xyQ7YDpgGRg=
+github.com/ogen-go/ogen v0.8.0/go.mod h1:wiB424COsHVS0hE+x9dU1yvko41FGSlO9Mabyk80W/4=
 github.com/pkg/diff v0.0.0-20210226163009-20ebb0f2a09e/go.mod h1:pJLUxLENpZxwdsKMEsNbx1VGcRFpLqf3715MtcvvzbA=
 github.com/pkg/errors v0.8.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
 github.com/pkg/errors v0.9.1 h1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=
