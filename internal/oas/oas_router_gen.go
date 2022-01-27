@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"io"
 	"math"
+	"math/bits"
 	"net"
 	"net/http"
 	"net/url"
@@ -50,6 +51,7 @@ var (
 	_ = uri.PathEncoder{}
 	_ = url.URL{}
 	_ = math.Mod
+	_ = bits.LeadingZeros64
 	_ = validate.Int{}
 	_ = ht.NewRequest
 	_ = net.IP{}
@@ -74,8 +76,6 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		s.notFound(w, r)
 		return
 	}
-
-	args := map[string]string{}
 	// Static code generated router with unwrapped path search.
 	switch r.Method {
 	case "POST":
@@ -91,7 +91,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			}
 
 			if len(elem) == 0 {
-				s.handleBanChatMemberRequest(args, w, r)
+				s.handleBanChatMemberRequest([0]string{}, w, r)
+
 				return
 			}
 			switch elem[0] {
@@ -103,7 +104,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				}
 
 				if len(elem) == 0 {
-					s.handleAnswerCallbackQueryRequest(args, w, r)
+					s.handleAnswerCallbackQueryRequest([0]string{}, w, r)
+
 					return
 				}
 				switch elem[0] {
@@ -116,7 +118,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 					if len(elem) == 0 {
 						// Leaf: AddStickerToSet
-						s.handleAddStickerToSetRequest(args, w, r)
+						s.handleAddStickerToSetRequest([0]string{}, w, r)
+
 						return
 					}
 				case 'n': // Prefix: "nswer"
@@ -127,7 +130,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 					}
 
 					if len(elem) == 0 {
-						s.handleAnswerInlineQueryRequest(args, w, r)
+						s.handleAnswerInlineQueryRequest([0]string{}, w, r)
+
 						return
 					}
 					switch elem[0] {
@@ -140,7 +144,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 						if len(elem) == 0 {
 							// Leaf: AnswerCallbackQuery
-							s.handleAnswerCallbackQueryRequest(args, w, r)
+							s.handleAnswerCallbackQueryRequest([0]string{}, w, r)
+
 							return
 						}
 					case 'I': // Prefix: "InlineQuery"
@@ -152,7 +157,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 						if len(elem) == 0 {
 							// Leaf: AnswerInlineQuery
-							s.handleAnswerInlineQueryRequest(args, w, r)
+							s.handleAnswerInlineQueryRequest([0]string{}, w, r)
+
 							return
 						}
 					case 'P': // Prefix: "PreCheckoutQuery"
@@ -164,7 +170,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 						if len(elem) == 0 {
 							// Leaf: AnswerPreCheckoutQuery
-							s.handleAnswerPreCheckoutQueryRequest(args, w, r)
+							s.handleAnswerPreCheckoutQueryRequest([0]string{}, w, r)
+
 							return
 						}
 					case 'S': // Prefix: "ShippingQuery"
@@ -176,7 +183,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 						if len(elem) == 0 {
 							// Leaf: AnswerShippingQuery
-							s.handleAnswerShippingQueryRequest(args, w, r)
+							s.handleAnswerShippingQueryRequest([0]string{}, w, r)
+
 							return
 						}
 					}
@@ -189,7 +197,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 					if len(elem) == 0 {
 						// Leaf: ApproveChatJoinRequest
-						s.handleApproveChatJoinRequestRequest(args, w, r)
+						s.handleApproveChatJoinRequestRequest([0]string{}, w, r)
+
 						return
 					}
 				}
@@ -201,7 +210,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				}
 
 				if len(elem) == 0 {
-					s.handleBanChatSenderChatRequest(args, w, r)
+					s.handleBanChatSenderChatRequest([0]string{}, w, r)
+
 					return
 				}
 				switch elem[0] {
@@ -214,7 +224,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 					if len(elem) == 0 {
 						// Leaf: BanChatMember
-						s.handleBanChatMemberRequest(args, w, r)
+						s.handleBanChatMemberRequest([0]string{}, w, r)
+
 						return
 					}
 				case 'S': // Prefix: "SenderChat"
@@ -226,7 +237,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 					if len(elem) == 0 {
 						// Leaf: BanChatSenderChat
-						s.handleBanChatSenderChatRequest(args, w, r)
+						s.handleBanChatSenderChatRequest([0]string{}, w, r)
+
 						return
 					}
 				}
@@ -238,7 +250,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				}
 
 				if len(elem) == 0 {
-					s.handleCopyMessageRequest(args, w, r)
+					s.handleCopyMessageRequest([0]string{}, w, r)
+
 					return
 				}
 				switch elem[0] {
@@ -251,7 +264,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 					if len(elem) == 0 {
 						// Leaf: Close
-						s.handleCloseRequest(args, w, r)
+						s.handleCloseRequest([0]string{}, w, r)
+
 						return
 					}
 				case 'o': // Prefix: "opyMessage"
@@ -263,7 +277,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 					if len(elem) == 0 {
 						// Leaf: CopyMessage
-						s.handleCopyMessageRequest(args, w, r)
+						s.handleCopyMessageRequest([0]string{}, w, r)
+
 						return
 					}
 				case 'r': // Prefix: "reate"
@@ -274,7 +289,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 					}
 
 					if len(elem) == 0 {
-						s.handleCreateNewStickerSetRequest(args, w, r)
+						s.handleCreateNewStickerSetRequest([0]string{}, w, r)
+
 						return
 					}
 					switch elem[0] {
@@ -287,7 +303,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 						if len(elem) == 0 {
 							// Leaf: CreateChatInviteLink
-							s.handleCreateChatInviteLinkRequest(args, w, r)
+							s.handleCreateChatInviteLinkRequest([0]string{}, w, r)
+
 							return
 						}
 					case 'N': // Prefix: "NewStickerSet"
@@ -299,7 +316,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 						if len(elem) == 0 {
 							// Leaf: CreateNewStickerSet
-							s.handleCreateNewStickerSetRequest(args, w, r)
+							s.handleCreateNewStickerSetRequest([0]string{}, w, r)
+
 							return
 						}
 					}
@@ -312,7 +330,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				}
 
 				if len(elem) == 0 {
-					s.handleDeleteChatPhotoRequest(args, w, r)
+					s.handleDeleteChatPhotoRequest([0]string{}, w, r)
+
 					return
 				}
 				switch elem[0] {
@@ -325,7 +344,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 					if len(elem) == 0 {
 						// Leaf: DeclineChatJoinRequest
-						s.handleDeclineChatJoinRequestRequest(args, w, r)
+						s.handleDeclineChatJoinRequestRequest([0]string{}, w, r)
+
 						return
 					}
 				case 'l': // Prefix: "lete"
@@ -336,7 +356,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 					}
 
 					if len(elem) == 0 {
-						s.handleDeleteMessageRequest(args, w, r)
+						s.handleDeleteMessageRequest([0]string{}, w, r)
+
 						return
 					}
 					switch elem[0] {
@@ -348,7 +369,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 						}
 
 						if len(elem) == 0 {
-							s.handleDeleteChatStickerSetRequest(args, w, r)
+							s.handleDeleteChatStickerSetRequest([0]string{}, w, r)
+
 							return
 						}
 						switch elem[0] {
@@ -361,7 +383,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 							if len(elem) == 0 {
 								// Leaf: DeleteChatPhoto
-								s.handleDeleteChatPhotoRequest(args, w, r)
+								s.handleDeleteChatPhotoRequest([0]string{}, w, r)
+
 								return
 							}
 						case 'S': // Prefix: "StickerSet"
@@ -373,7 +396,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 							if len(elem) == 0 {
 								// Leaf: DeleteChatStickerSet
-								s.handleDeleteChatStickerSetRequest(args, w, r)
+								s.handleDeleteChatStickerSetRequest([0]string{}, w, r)
+
 								return
 							}
 						}
@@ -385,7 +409,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 						}
 
 						if len(elem) == 0 {
-							s.handleDeleteMyCommandsRequest(args, w, r)
+							s.handleDeleteMyCommandsRequest([0]string{}, w, r)
+
 							return
 						}
 						switch elem[0] {
@@ -398,7 +423,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 							if len(elem) == 0 {
 								// Leaf: DeleteMessage
-								s.handleDeleteMessageRequest(args, w, r)
+								s.handleDeleteMessageRequest([0]string{}, w, r)
+
 								return
 							}
 						case 'y': // Prefix: "yCommands"
@@ -410,7 +436,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 							if len(elem) == 0 {
 								// Leaf: DeleteMyCommands
-								s.handleDeleteMyCommandsRequest(args, w, r)
+								s.handleDeleteMyCommandsRequest([0]string{}, w, r)
+
 								return
 							}
 						}
@@ -423,7 +450,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 						if len(elem) == 0 {
 							// Leaf: DeleteStickerFromSet
-							s.handleDeleteStickerFromSetRequest(args, w, r)
+							s.handleDeleteStickerFromSetRequest([0]string{}, w, r)
+
 							return
 						}
 					case 'W': // Prefix: "Webhook"
@@ -435,7 +463,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 						if len(elem) == 0 {
 							// Leaf: DeleteWebhook
-							s.handleDeleteWebhookRequest(args, w, r)
+							s.handleDeleteWebhookRequest([0]string{}, w, r)
+
 							return
 						}
 					}
@@ -448,7 +477,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				}
 
 				if len(elem) == 0 {
-					s.handleExportChatInviteLinkRequest(args, w, r)
+					s.handleExportChatInviteLinkRequest([0]string{}, w, r)
+
 					return
 				}
 				switch elem[0] {
@@ -460,7 +490,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 					}
 
 					if len(elem) == 0 {
-						s.handleEditMessageCaptionRequest(args, w, r)
+						s.handleEditMessageCaptionRequest([0]string{}, w, r)
+
 						return
 					}
 					switch elem[0] {
@@ -473,7 +504,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 						if len(elem) == 0 {
 							// Leaf: EditChatInviteLink
-							s.handleEditChatInviteLinkRequest(args, w, r)
+							s.handleEditChatInviteLinkRequest([0]string{}, w, r)
+
 							return
 						}
 					case 'M': // Prefix: "Message"
@@ -484,7 +516,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 						}
 
 						if len(elem) == 0 {
-							s.handleEditMessageLiveLocationRequest(args, w, r)
+							s.handleEditMessageLiveLocationRequest([0]string{}, w, r)
+
 							return
 						}
 						switch elem[0] {
@@ -497,7 +530,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 							if len(elem) == 0 {
 								// Leaf: EditMessageCaption
-								s.handleEditMessageCaptionRequest(args, w, r)
+								s.handleEditMessageCaptionRequest([0]string{}, w, r)
+
 								return
 							}
 						case 'L': // Prefix: "LiveLocation"
@@ -509,7 +543,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 							if len(elem) == 0 {
 								// Leaf: EditMessageLiveLocation
-								s.handleEditMessageLiveLocationRequest(args, w, r)
+								s.handleEditMessageLiveLocationRequest([0]string{}, w, r)
+
 								return
 							}
 						case 'M': // Prefix: "Media"
@@ -521,7 +556,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 							if len(elem) == 0 {
 								// Leaf: EditMessageMedia
-								s.handleEditMessageMediaRequest(args, w, r)
+								s.handleEditMessageMediaRequest([0]string{}, w, r)
+
 								return
 							}
 						case 'R': // Prefix: "ReplyMarkup"
@@ -533,7 +569,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 							if len(elem) == 0 {
 								// Leaf: EditMessageReplyMarkup
-								s.handleEditMessageReplyMarkupRequest(args, w, r)
+								s.handleEditMessageReplyMarkupRequest([0]string{}, w, r)
+
 								return
 							}
 						case 'T': // Prefix: "Text"
@@ -545,7 +582,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 							if len(elem) == 0 {
 								// Leaf: EditMessageText
-								s.handleEditMessageTextRequest(args, w, r)
+								s.handleEditMessageTextRequest([0]string{}, w, r)
+
 								return
 							}
 						}
@@ -559,7 +597,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 					if len(elem) == 0 {
 						// Leaf: ExportChatInviteLink
-						s.handleExportChatInviteLinkRequest(args, w, r)
+						s.handleExportChatInviteLinkRequest([0]string{}, w, r)
+
 						return
 					}
 				}
@@ -572,7 +611,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 				if len(elem) == 0 {
 					// Leaf: ForwardMessage
-					s.handleForwardMessageRequest(args, w, r)
+					s.handleForwardMessageRequest([0]string{}, w, r)
+
 					return
 				}
 			case 'g': // Prefix: "get"
@@ -583,7 +623,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				}
 
 				if len(elem) == 0 {
-					s.handleGetFileRequest(args, w, r)
+					s.handleGetFileRequest([0]string{}, w, r)
+
 					return
 				}
 				switch elem[0] {
@@ -595,7 +636,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 					}
 
 					if len(elem) == 0 {
-						s.handleGetChatRequest(args, w, r)
+						s.handleGetChatRequest([0]string{}, w, r)
+
 						return
 					}
 					switch elem[0] {
@@ -608,7 +650,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 						if len(elem) == 0 {
 							// Leaf: GetChatAdministrators
-							s.handleGetChatAdministratorsRequest(args, w, r)
+							s.handleGetChatAdministratorsRequest([0]string{}, w, r)
+
 							return
 						}
 					case 'M': // Prefix: "Member"
@@ -619,7 +662,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 						}
 
 						if len(elem) == 0 {
-							s.handleGetChatMemberRequest(args, w, r)
+							s.handleGetChatMemberRequest([0]string{}, w, r)
+
 							return
 						}
 						switch elem[0] {
@@ -632,7 +676,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 							if len(elem) == 0 {
 								// Leaf: GetChatMemberCount
-								s.handleGetChatMemberCountRequest(args, w, r)
+								s.handleGetChatMemberCountRequest([0]string{}, w, r)
+
 								return
 							}
 						}
@@ -646,7 +691,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 					if len(elem) == 0 {
 						// Leaf: GetFile
-						s.handleGetFileRequest(args, w, r)
+						s.handleGetFileRequest([0]string{}, w, r)
+
 						return
 					}
 				case 'G': // Prefix: "GameHighScores"
@@ -658,7 +704,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 					if len(elem) == 0 {
 						// Leaf: GetGameHighScores
-						s.handleGetGameHighScoresRequest(args, w, r)
+						s.handleGetGameHighScoresRequest([0]string{}, w, r)
+
 						return
 					}
 				case 'M': // Prefix: "M"
@@ -669,7 +716,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 					}
 
 					if len(elem) == 0 {
-						s.handleGetMyCommandsRequest(args, w, r)
+						s.handleGetMyCommandsRequest([0]string{}, w, r)
+
 						return
 					}
 					switch elem[0] {
@@ -682,7 +730,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 						if len(elem) == 0 {
 							// Leaf: GetMe
-							s.handleGetMeRequest(args, w, r)
+							s.handleGetMeRequest([0]string{}, w, r)
+
 							return
 						}
 					case 'y': // Prefix: "yCommands"
@@ -694,7 +743,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 						if len(elem) == 0 {
 							// Leaf: GetMyCommands
-							s.handleGetMyCommandsRequest(args, w, r)
+							s.handleGetMyCommandsRequest([0]string{}, w, r)
+
 							return
 						}
 					}
@@ -707,7 +757,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 					if len(elem) == 0 {
 						// Leaf: GetStickerSet
-						s.handleGetStickerSetRequest(args, w, r)
+						s.handleGetStickerSetRequest([0]string{}, w, r)
+
 						return
 					}
 				case 'U': // Prefix: "U"
@@ -718,7 +769,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 					}
 
 					if len(elem) == 0 {
-						s.handleGetUserProfilePhotosRequest(args, w, r)
+						s.handleGetUserProfilePhotosRequest([0]string{}, w, r)
+
 						return
 					}
 					switch elem[0] {
@@ -731,7 +783,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 						if len(elem) == 0 {
 							// Leaf: GetUpdates
-							s.handleGetUpdatesRequest(args, w, r)
+							s.handleGetUpdatesRequest([0]string{}, w, r)
+
 							return
 						}
 					case 's': // Prefix: "serProfilePhotos"
@@ -743,7 +796,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 						if len(elem) == 0 {
 							// Leaf: GetUserProfilePhotos
-							s.handleGetUserProfilePhotosRequest(args, w, r)
+							s.handleGetUserProfilePhotosRequest([0]string{}, w, r)
+
 							return
 						}
 					}
@@ -756,7 +810,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 					if len(elem) == 0 {
 						// Leaf: GetWebhookInfo
-						s.handleGetWebhookInfoRequest(args, w, r)
+						s.handleGetWebhookInfoRequest([0]string{}, w, r)
+
 						return
 					}
 				}
@@ -768,7 +823,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				}
 
 				if len(elem) == 0 {
-					s.handleLogOutRequest(args, w, r)
+					s.handleLogOutRequest([0]string{}, w, r)
+
 					return
 				}
 				switch elem[0] {
@@ -781,7 +837,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 					if len(elem) == 0 {
 						// Leaf: LeaveChat
-						s.handleLeaveChatRequest(args, w, r)
+						s.handleLeaveChatRequest([0]string{}, w, r)
+
 						return
 					}
 				case 'o': // Prefix: "ogOut"
@@ -793,7 +850,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 					if len(elem) == 0 {
 						// Leaf: LogOut
-						s.handleLogOutRequest(args, w, r)
+						s.handleLogOutRequest([0]string{}, w, r)
+
 						return
 					}
 				}
@@ -805,7 +863,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				}
 
 				if len(elem) == 0 {
-					s.handlePromoteChatMemberRequest(args, w, r)
+					s.handlePromoteChatMemberRequest([0]string{}, w, r)
+
 					return
 				}
 				switch elem[0] {
@@ -818,7 +877,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 					if len(elem) == 0 {
 						// Leaf: PinChatMessage
-						s.handlePinChatMessageRequest(args, w, r)
+						s.handlePinChatMessageRequest([0]string{}, w, r)
+
 						return
 					}
 				case 'r': // Prefix: "romoteChatMember"
@@ -830,7 +890,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 					if len(elem) == 0 {
 						// Leaf: PromoteChatMember
-						s.handlePromoteChatMemberRequest(args, w, r)
+						s.handlePromoteChatMemberRequest([0]string{}, w, r)
+
 						return
 					}
 				}
@@ -842,7 +903,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				}
 
 				if len(elem) == 0 {
-					s.handleRevokeChatInviteLinkRequest(args, w, r)
+					s.handleRevokeChatInviteLinkRequest([0]string{}, w, r)
+
 					return
 				}
 				switch elem[0] {
@@ -855,7 +917,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 					if len(elem) == 0 {
 						// Leaf: RestrictChatMember
-						s.handleRestrictChatMemberRequest(args, w, r)
+						s.handleRestrictChatMemberRequest([0]string{}, w, r)
+
 						return
 					}
 				case 'v': // Prefix: "vokeChatInviteLink"
@@ -867,7 +930,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 					if len(elem) == 0 {
 						// Leaf: RevokeChatInviteLink
-						s.handleRevokeChatInviteLinkRequest(args, w, r)
+						s.handleRevokeChatInviteLinkRequest([0]string{}, w, r)
+
 						return
 					}
 				}
@@ -879,7 +943,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				}
 
 				if len(elem) == 0 {
-					s.handleStopMessageLiveLocationRequest(args, w, r)
+					s.handleStopMessageLiveLocationRequest([0]string{}, w, r)
+
 					return
 				}
 				switch elem[0] {
@@ -891,7 +956,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 					}
 
 					if len(elem) == 0 {
-						s.handleSetChatAdministratorCustomTitleRequest(args, w, r)
+						s.handleSetChatAdministratorCustomTitleRequest([0]string{}, w, r)
+
 						return
 					}
 					switch elem[0] {
@@ -903,7 +969,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 						}
 
 						if len(elem) == 0 {
-							s.handleSendChatActionRequest(args, w, r)
+							s.handleSendChatActionRequest([0]string{}, w, r)
+
 							return
 						}
 						switch elem[0] {
@@ -915,7 +982,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 							}
 
 							if len(elem) == 0 {
-								s.handleSendAudioRequest(args, w, r)
+								s.handleSendAudioRequest([0]string{}, w, r)
+
 								return
 							}
 							switch elem[0] {
@@ -928,7 +996,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 								if len(elem) == 0 {
 									// Leaf: SendAnimation
-									s.handleSendAnimationRequest(args, w, r)
+									s.handleSendAnimationRequest([0]string{}, w, r)
+
 									return
 								}
 							case 'u': // Prefix: "udio"
@@ -940,7 +1009,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 								if len(elem) == 0 {
 									// Leaf: SendAudio
-									s.handleSendAudioRequest(args, w, r)
+									s.handleSendAudioRequest([0]string{}, w, r)
+
 									return
 								}
 							}
@@ -952,7 +1022,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 							}
 
 							if len(elem) == 0 {
-								s.handleSendContactRequest(args, w, r)
+								s.handleSendContactRequest([0]string{}, w, r)
+
 								return
 							}
 							switch elem[0] {
@@ -965,7 +1036,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 								if len(elem) == 0 {
 									// Leaf: SendChatAction
-									s.handleSendChatActionRequest(args, w, r)
+									s.handleSendChatActionRequest([0]string{}, w, r)
+
 									return
 								}
 							case 'o': // Prefix: "ontact"
@@ -977,7 +1049,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 								if len(elem) == 0 {
 									// Leaf: SendContact
-									s.handleSendContactRequest(args, w, r)
+									s.handleSendContactRequest([0]string{}, w, r)
+
 									return
 								}
 							}
@@ -989,7 +1062,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 							}
 
 							if len(elem) == 0 {
-								s.handleSendDocumentRequest(args, w, r)
+								s.handleSendDocumentRequest([0]string{}, w, r)
+
 								return
 							}
 							switch elem[0] {
@@ -1002,7 +1076,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 								if len(elem) == 0 {
 									// Leaf: SendDice
-									s.handleSendDiceRequest(args, w, r)
+									s.handleSendDiceRequest([0]string{}, w, r)
+
 									return
 								}
 							case 'o': // Prefix: "ocument"
@@ -1014,7 +1089,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 								if len(elem) == 0 {
 									// Leaf: SendDocument
-									s.handleSendDocumentRequest(args, w, r)
+									s.handleSendDocumentRequest([0]string{}, w, r)
+
 									return
 								}
 							}
@@ -1027,7 +1103,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 							if len(elem) == 0 {
 								// Leaf: SendGame
-								s.handleSendGameRequest(args, w, r)
+								s.handleSendGameRequest([0]string{}, w, r)
+
 								return
 							}
 						case 'I': // Prefix: "Invoice"
@@ -1039,7 +1116,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 							if len(elem) == 0 {
 								// Leaf: SendInvoice
-								s.handleSendInvoiceRequest(args, w, r)
+								s.handleSendInvoiceRequest([0]string{}, w, r)
+
 								return
 							}
 						case 'L': // Prefix: "Location"
@@ -1051,7 +1129,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 							if len(elem) == 0 {
 								// Leaf: SendLocation
-								s.handleSendLocationRequest(args, w, r)
+								s.handleSendLocationRequest([0]string{}, w, r)
+
 								return
 							}
 						case 'M': // Prefix: "Me"
@@ -1062,7 +1141,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 							}
 
 							if len(elem) == 0 {
-								s.handleSendMessageRequest(args, w, r)
+								s.handleSendMessageRequest([0]string{}, w, r)
+
 								return
 							}
 							switch elem[0] {
@@ -1075,7 +1155,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 								if len(elem) == 0 {
 									// Leaf: SendMediaGroup
-									s.handleSendMediaGroupRequest(args, w, r)
+									s.handleSendMediaGroupRequest([0]string{}, w, r)
+
 									return
 								}
 							case 's': // Prefix: "ssage"
@@ -1087,7 +1168,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 								if len(elem) == 0 {
 									// Leaf: SendMessage
-									s.handleSendMessageRequest(args, w, r)
+									s.handleSendMessageRequest([0]string{}, w, r)
+
 									return
 								}
 							}
@@ -1099,7 +1181,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 							}
 
 							if len(elem) == 0 {
-								s.handleSendPollRequest(args, w, r)
+								s.handleSendPollRequest([0]string{}, w, r)
+
 								return
 							}
 							switch elem[0] {
@@ -1112,7 +1195,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 								if len(elem) == 0 {
 									// Leaf: SendPhoto
-									s.handleSendPhotoRequest(args, w, r)
+									s.handleSendPhotoRequest([0]string{}, w, r)
+
 									return
 								}
 							case 'o': // Prefix: "oll"
@@ -1124,7 +1208,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 								if len(elem) == 0 {
 									// Leaf: SendPoll
-									s.handleSendPollRequest(args, w, r)
+									s.handleSendPollRequest([0]string{}, w, r)
+
 									return
 								}
 							}
@@ -1137,7 +1222,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 							if len(elem) == 0 {
 								// Leaf: SendSticker
-								s.handleSendStickerRequest(args, w, r)
+								s.handleSendStickerRequest([0]string{}, w, r)
+
 								return
 							}
 						case 'V': // Prefix: "V"
@@ -1148,7 +1234,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 							}
 
 							if len(elem) == 0 {
-								s.handleSendVideoRequest(args, w, r)
+								s.handleSendVideoRequest([0]string{}, w, r)
+
 								return
 							}
 							switch elem[0] {
@@ -1161,7 +1248,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 								if len(elem) == 0 {
 									// Leaf: SendVenue
-									s.handleSendVenueRequest(args, w, r)
+									s.handleSendVenueRequest([0]string{}, w, r)
+
 									return
 								}
 							case 'i': // Prefix: "ideo"
@@ -1172,7 +1260,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 								}
 
 								if len(elem) == 0 {
-									s.handleSendVideoRequest(args, w, r)
+									s.handleSendVideoRequest([0]string{}, w, r)
+
 									return
 								}
 								switch elem[0] {
@@ -1185,7 +1274,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 									if len(elem) == 0 {
 										// Leaf: SendVideoNote
-										s.handleSendVideoNoteRequest(args, w, r)
+										s.handleSendVideoNoteRequest([0]string{}, w, r)
+
 										return
 									}
 								}
@@ -1198,7 +1288,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 								if len(elem) == 0 {
 									// Leaf: SendVoice
-									s.handleSendVoiceRequest(args, w, r)
+									s.handleSendVoiceRequest([0]string{}, w, r)
+
 									return
 								}
 							}
@@ -1211,7 +1302,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 						}
 
 						if len(elem) == 0 {
-							s.handleSetGameScoreRequest(args, w, r)
+							s.handleSetGameScoreRequest([0]string{}, w, r)
+
 							return
 						}
 						switch elem[0] {
@@ -1223,7 +1315,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 							}
 
 							if len(elem) == 0 {
-								s.handleSetChatDescriptionRequest(args, w, r)
+								s.handleSetChatDescriptionRequest([0]string{}, w, r)
+
 								return
 							}
 							switch elem[0] {
@@ -1236,7 +1329,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 								if len(elem) == 0 {
 									// Leaf: SetChatAdministratorCustomTitle
-									s.handleSetChatAdministratorCustomTitleRequest(args, w, r)
+									s.handleSetChatAdministratorCustomTitleRequest([0]string{}, w, r)
+
 									return
 								}
 							case 'D': // Prefix: "Description"
@@ -1248,7 +1342,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 								if len(elem) == 0 {
 									// Leaf: SetChatDescription
-									s.handleSetChatDescriptionRequest(args, w, r)
+									s.handleSetChatDescriptionRequest([0]string{}, w, r)
+
 									return
 								}
 							case 'P': // Prefix: "P"
@@ -1259,7 +1354,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 								}
 
 								if len(elem) == 0 {
-									s.handleSetChatPhotoRequest(args, w, r)
+									s.handleSetChatPhotoRequest([0]string{}, w, r)
+
 									return
 								}
 								switch elem[0] {
@@ -1272,7 +1368,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 									if len(elem) == 0 {
 										// Leaf: SetChatPermissions
-										s.handleSetChatPermissionsRequest(args, w, r)
+										s.handleSetChatPermissionsRequest([0]string{}, w, r)
+
 										return
 									}
 								case 'h': // Prefix: "hoto"
@@ -1284,7 +1381,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 									if len(elem) == 0 {
 										// Leaf: SetChatPhoto
-										s.handleSetChatPhotoRequest(args, w, r)
+										s.handleSetChatPhotoRequest([0]string{}, w, r)
+
 										return
 									}
 								}
@@ -1297,7 +1395,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 								if len(elem) == 0 {
 									// Leaf: SetChatStickerSet
-									s.handleSetChatStickerSetRequest(args, w, r)
+									s.handleSetChatStickerSetRequest([0]string{}, w, r)
+
 									return
 								}
 							case 'T': // Prefix: "Title"
@@ -1309,7 +1408,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 								if len(elem) == 0 {
 									// Leaf: SetChatTitle
-									s.handleSetChatTitleRequest(args, w, r)
+									s.handleSetChatTitleRequest([0]string{}, w, r)
+
 									return
 								}
 							}
@@ -1322,7 +1422,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 							if len(elem) == 0 {
 								// Leaf: SetGameScore
-								s.handleSetGameScoreRequest(args, w, r)
+								s.handleSetGameScoreRequest([0]string{}, w, r)
+
 								return
 							}
 						case 'M': // Prefix: "MyCommands"
@@ -1334,7 +1435,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 							if len(elem) == 0 {
 								// Leaf: SetMyCommands
-								s.handleSetMyCommandsRequest(args, w, r)
+								s.handleSetMyCommandsRequest([0]string{}, w, r)
+
 								return
 							}
 						case 'P': // Prefix: "PassportDataErrors"
@@ -1346,7 +1448,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 							if len(elem) == 0 {
 								// Leaf: SetPassportDataErrors
-								s.handleSetPassportDataErrorsRequest(args, w, r)
+								s.handleSetPassportDataErrorsRequest([0]string{}, w, r)
+
 								return
 							}
 						case 'S': // Prefix: "Sticker"
@@ -1357,7 +1460,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 							}
 
 							if len(elem) == 0 {
-								s.handleSetStickerSetThumbRequest(args, w, r)
+								s.handleSetStickerSetThumbRequest([0]string{}, w, r)
+
 								return
 							}
 							switch elem[0] {
@@ -1370,7 +1474,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 								if len(elem) == 0 {
 									// Leaf: SetStickerPositionInSet
-									s.handleSetStickerPositionInSetRequest(args, w, r)
+									s.handleSetStickerPositionInSetRequest([0]string{}, w, r)
+
 									return
 								}
 							case 'S': // Prefix: "SetThumb"
@@ -1382,7 +1487,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 								if len(elem) == 0 {
 									// Leaf: SetStickerSetThumb
-									s.handleSetStickerSetThumbRequest(args, w, r)
+									s.handleSetStickerSetThumbRequest([0]string{}, w, r)
+
 									return
 								}
 							}
@@ -1395,7 +1501,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 							if len(elem) == 0 {
 								// Leaf: SetWebhook
-								s.handleSetWebhookRequest(args, w, r)
+								s.handleSetWebhookRequest([0]string{}, w, r)
+
 								return
 							}
 						}
@@ -1408,7 +1515,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 					}
 
 					if len(elem) == 0 {
-						s.handleStopPollRequest(args, w, r)
+						s.handleStopPollRequest([0]string{}, w, r)
+
 						return
 					}
 					switch elem[0] {
@@ -1421,7 +1529,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 						if len(elem) == 0 {
 							// Leaf: StopMessageLiveLocation
-							s.handleStopMessageLiveLocationRequest(args, w, r)
+							s.handleStopMessageLiveLocationRequest([0]string{}, w, r)
+
 							return
 						}
 					case 'P': // Prefix: "Poll"
@@ -1433,7 +1542,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 						if len(elem) == 0 {
 							// Leaf: StopPoll
-							s.handleStopPollRequest(args, w, r)
+							s.handleStopPollRequest([0]string{}, w, r)
+
 							return
 						}
 					}
@@ -1446,7 +1556,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				}
 
 				if len(elem) == 0 {
-					s.handleUploadStickerFileRequest(args, w, r)
+					s.handleUploadStickerFileRequest([0]string{}, w, r)
+
 					return
 				}
 				switch elem[0] {
@@ -1458,7 +1569,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 					}
 
 					if len(elem) == 0 {
-						s.handleUnpinAllChatMessagesRequest(args, w, r)
+						s.handleUnpinAllChatMessagesRequest([0]string{}, w, r)
+
 						return
 					}
 					switch elem[0] {
@@ -1470,7 +1582,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 						}
 
 						if len(elem) == 0 {
-							s.handleUnbanChatSenderChatRequest(args, w, r)
+							s.handleUnbanChatSenderChatRequest([0]string{}, w, r)
+
 							return
 						}
 						switch elem[0] {
@@ -1483,7 +1596,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 							if len(elem) == 0 {
 								// Leaf: UnbanChatMember
-								s.handleUnbanChatMemberRequest(args, w, r)
+								s.handleUnbanChatMemberRequest([0]string{}, w, r)
+
 								return
 							}
 						case 'S': // Prefix: "SenderChat"
@@ -1495,7 +1609,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 							if len(elem) == 0 {
 								// Leaf: UnbanChatSenderChat
-								s.handleUnbanChatSenderChatRequest(args, w, r)
+								s.handleUnbanChatSenderChatRequest([0]string{}, w, r)
+
 								return
 							}
 						}
@@ -1507,7 +1622,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 						}
 
 						if len(elem) == 0 {
-							s.handleUnpinChatMessageRequest(args, w, r)
+							s.handleUnpinChatMessageRequest([0]string{}, w, r)
+
 							return
 						}
 						switch elem[0] {
@@ -1520,7 +1636,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 							if len(elem) == 0 {
 								// Leaf: UnpinAllChatMessages
-								s.handleUnpinAllChatMessagesRequest(args, w, r)
+								s.handleUnpinAllChatMessagesRequest([0]string{}, w, r)
+
 								return
 							}
 						case 'C': // Prefix: "ChatMessage"
@@ -1532,7 +1649,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 							if len(elem) == 0 {
 								// Leaf: UnpinChatMessage
-								s.handleUnpinChatMessageRequest(args, w, r)
+								s.handleUnpinChatMessageRequest([0]string{}, w, r)
+
 								return
 							}
 						}
@@ -1546,7 +1664,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 					if len(elem) == 0 {
 						// Leaf: UploadStickerFile
-						s.handleUploadStickerFileRequest(args, w, r)
+						s.handleUploadStickerFileRequest([0]string{}, w, r)
+
 						return
 					}
 				}
@@ -1554,4 +1673,1747 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	s.notFound(w, r)
+}
+
+// Route is route object.
+type Route struct {
+	name  string
+	count int
+	args  [0]string
+}
+
+// OperationID returns OpenAPI operationId.
+func (r Route) OperationID() string {
+	return r.name
+}
+
+// Args returns parsed arguments.
+func (r Route) Args() []string {
+	return r.args[:r.count]
+}
+
+// FindRoute finds Route for given method and path.
+func (s *Server) FindRoute(method, path string) (r Route, _ bool) {
+	var (
+		args = [0]string{}
+		elem = path
+	)
+	r.args = args
+
+	// Static code generated router with unwrapped path search.
+	switch method {
+	case "POST":
+		if len(elem) == 0 {
+			break
+		}
+		switch elem[0] {
+		case '/': // Prefix: "/"
+			if l := len("/"); len(elem) >= l && elem[0:l] == "/" {
+				elem = elem[l:]
+			} else {
+				break
+			}
+
+			if len(elem) == 0 {
+				r.name = "BanChatMember"
+				r.args = args
+				r.count = 0
+				return r, true
+			}
+			switch elem[0] {
+			case 'a': // Prefix: "a"
+				if l := len("a"); len(elem) >= l && elem[0:l] == "a" {
+					elem = elem[l:]
+				} else {
+					break
+				}
+
+				if len(elem) == 0 {
+					r.name = "AnswerCallbackQuery"
+					r.args = args
+					r.count = 0
+					return r, true
+				}
+				switch elem[0] {
+				case 'd': // Prefix: "ddStickerToSet"
+					if l := len("ddStickerToSet"); len(elem) >= l && elem[0:l] == "ddStickerToSet" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					if len(elem) == 0 {
+						// Leaf: AddStickerToSet
+						r.name = "AddStickerToSet"
+						r.args = args
+						r.count = 0
+						return r, true
+					}
+				case 'n': // Prefix: "nswer"
+					if l := len("nswer"); len(elem) >= l && elem[0:l] == "nswer" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					if len(elem) == 0 {
+						r.name = "AnswerInlineQuery"
+						r.args = args
+						r.count = 0
+						return r, true
+					}
+					switch elem[0] {
+					case 'C': // Prefix: "CallbackQuery"
+						if l := len("CallbackQuery"); len(elem) >= l && elem[0:l] == "CallbackQuery" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							// Leaf: AnswerCallbackQuery
+							r.name = "AnswerCallbackQuery"
+							r.args = args
+							r.count = 0
+							return r, true
+						}
+					case 'I': // Prefix: "InlineQuery"
+						if l := len("InlineQuery"); len(elem) >= l && elem[0:l] == "InlineQuery" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							// Leaf: AnswerInlineQuery
+							r.name = "AnswerInlineQuery"
+							r.args = args
+							r.count = 0
+							return r, true
+						}
+					case 'P': // Prefix: "PreCheckoutQuery"
+						if l := len("PreCheckoutQuery"); len(elem) >= l && elem[0:l] == "PreCheckoutQuery" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							// Leaf: AnswerPreCheckoutQuery
+							r.name = "AnswerPreCheckoutQuery"
+							r.args = args
+							r.count = 0
+							return r, true
+						}
+					case 'S': // Prefix: "ShippingQuery"
+						if l := len("ShippingQuery"); len(elem) >= l && elem[0:l] == "ShippingQuery" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							// Leaf: AnswerShippingQuery
+							r.name = "AnswerShippingQuery"
+							r.args = args
+							r.count = 0
+							return r, true
+						}
+					}
+				case 'p': // Prefix: "pproveChatJoinRequest"
+					if l := len("pproveChatJoinRequest"); len(elem) >= l && elem[0:l] == "pproveChatJoinRequest" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					if len(elem) == 0 {
+						// Leaf: ApproveChatJoinRequest
+						r.name = "ApproveChatJoinRequest"
+						r.args = args
+						r.count = 0
+						return r, true
+					}
+				}
+			case 'b': // Prefix: "banChat"
+				if l := len("banChat"); len(elem) >= l && elem[0:l] == "banChat" {
+					elem = elem[l:]
+				} else {
+					break
+				}
+
+				if len(elem) == 0 {
+					r.name = "BanChatSenderChat"
+					r.args = args
+					r.count = 0
+					return r, true
+				}
+				switch elem[0] {
+				case 'M': // Prefix: "Member"
+					if l := len("Member"); len(elem) >= l && elem[0:l] == "Member" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					if len(elem) == 0 {
+						// Leaf: BanChatMember
+						r.name = "BanChatMember"
+						r.args = args
+						r.count = 0
+						return r, true
+					}
+				case 'S': // Prefix: "SenderChat"
+					if l := len("SenderChat"); len(elem) >= l && elem[0:l] == "SenderChat" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					if len(elem) == 0 {
+						// Leaf: BanChatSenderChat
+						r.name = "BanChatSenderChat"
+						r.args = args
+						r.count = 0
+						return r, true
+					}
+				}
+			case 'c': // Prefix: "c"
+				if l := len("c"); len(elem) >= l && elem[0:l] == "c" {
+					elem = elem[l:]
+				} else {
+					break
+				}
+
+				if len(elem) == 0 {
+					r.name = "CopyMessage"
+					r.args = args
+					r.count = 0
+					return r, true
+				}
+				switch elem[0] {
+				case 'l': // Prefix: "lose"
+					if l := len("lose"); len(elem) >= l && elem[0:l] == "lose" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					if len(elem) == 0 {
+						// Leaf: Close
+						r.name = "Close"
+						r.args = args
+						r.count = 0
+						return r, true
+					}
+				case 'o': // Prefix: "opyMessage"
+					if l := len("opyMessage"); len(elem) >= l && elem[0:l] == "opyMessage" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					if len(elem) == 0 {
+						// Leaf: CopyMessage
+						r.name = "CopyMessage"
+						r.args = args
+						r.count = 0
+						return r, true
+					}
+				case 'r': // Prefix: "reate"
+					if l := len("reate"); len(elem) >= l && elem[0:l] == "reate" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					if len(elem) == 0 {
+						r.name = "CreateNewStickerSet"
+						r.args = args
+						r.count = 0
+						return r, true
+					}
+					switch elem[0] {
+					case 'C': // Prefix: "ChatInviteLink"
+						if l := len("ChatInviteLink"); len(elem) >= l && elem[0:l] == "ChatInviteLink" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							// Leaf: CreateChatInviteLink
+							r.name = "CreateChatInviteLink"
+							r.args = args
+							r.count = 0
+							return r, true
+						}
+					case 'N': // Prefix: "NewStickerSet"
+						if l := len("NewStickerSet"); len(elem) >= l && elem[0:l] == "NewStickerSet" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							// Leaf: CreateNewStickerSet
+							r.name = "CreateNewStickerSet"
+							r.args = args
+							r.count = 0
+							return r, true
+						}
+					}
+				}
+			case 'd': // Prefix: "de"
+				if l := len("de"); len(elem) >= l && elem[0:l] == "de" {
+					elem = elem[l:]
+				} else {
+					break
+				}
+
+				if len(elem) == 0 {
+					r.name = "DeleteChatPhoto"
+					r.args = args
+					r.count = 0
+					return r, true
+				}
+				switch elem[0] {
+				case 'c': // Prefix: "clineChatJoinRequest"
+					if l := len("clineChatJoinRequest"); len(elem) >= l && elem[0:l] == "clineChatJoinRequest" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					if len(elem) == 0 {
+						// Leaf: DeclineChatJoinRequest
+						r.name = "DeclineChatJoinRequest"
+						r.args = args
+						r.count = 0
+						return r, true
+					}
+				case 'l': // Prefix: "lete"
+					if l := len("lete"); len(elem) >= l && elem[0:l] == "lete" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					if len(elem) == 0 {
+						r.name = "DeleteMessage"
+						r.args = args
+						r.count = 0
+						return r, true
+					}
+					switch elem[0] {
+					case 'C': // Prefix: "Chat"
+						if l := len("Chat"); len(elem) >= l && elem[0:l] == "Chat" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							r.name = "DeleteChatStickerSet"
+							r.args = args
+							r.count = 0
+							return r, true
+						}
+						switch elem[0] {
+						case 'P': // Prefix: "Photo"
+							if l := len("Photo"); len(elem) >= l && elem[0:l] == "Photo" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							if len(elem) == 0 {
+								// Leaf: DeleteChatPhoto
+								r.name = "DeleteChatPhoto"
+								r.args = args
+								r.count = 0
+								return r, true
+							}
+						case 'S': // Prefix: "StickerSet"
+							if l := len("StickerSet"); len(elem) >= l && elem[0:l] == "StickerSet" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							if len(elem) == 0 {
+								// Leaf: DeleteChatStickerSet
+								r.name = "DeleteChatStickerSet"
+								r.args = args
+								r.count = 0
+								return r, true
+							}
+						}
+					case 'M': // Prefix: "M"
+						if l := len("M"); len(elem) >= l && elem[0:l] == "M" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							r.name = "DeleteMyCommands"
+							r.args = args
+							r.count = 0
+							return r, true
+						}
+						switch elem[0] {
+						case 'e': // Prefix: "essage"
+							if l := len("essage"); len(elem) >= l && elem[0:l] == "essage" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							if len(elem) == 0 {
+								// Leaf: DeleteMessage
+								r.name = "DeleteMessage"
+								r.args = args
+								r.count = 0
+								return r, true
+							}
+						case 'y': // Prefix: "yCommands"
+							if l := len("yCommands"); len(elem) >= l && elem[0:l] == "yCommands" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							if len(elem) == 0 {
+								// Leaf: DeleteMyCommands
+								r.name = "DeleteMyCommands"
+								r.args = args
+								r.count = 0
+								return r, true
+							}
+						}
+					case 'S': // Prefix: "StickerFromSet"
+						if l := len("StickerFromSet"); len(elem) >= l && elem[0:l] == "StickerFromSet" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							// Leaf: DeleteStickerFromSet
+							r.name = "DeleteStickerFromSet"
+							r.args = args
+							r.count = 0
+							return r, true
+						}
+					case 'W': // Prefix: "Webhook"
+						if l := len("Webhook"); len(elem) >= l && elem[0:l] == "Webhook" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							// Leaf: DeleteWebhook
+							r.name = "DeleteWebhook"
+							r.args = args
+							r.count = 0
+							return r, true
+						}
+					}
+				}
+			case 'e': // Prefix: "e"
+				if l := len("e"); len(elem) >= l && elem[0:l] == "e" {
+					elem = elem[l:]
+				} else {
+					break
+				}
+
+				if len(elem) == 0 {
+					r.name = "ExportChatInviteLink"
+					r.args = args
+					r.count = 0
+					return r, true
+				}
+				switch elem[0] {
+				case 'd': // Prefix: "dit"
+					if l := len("dit"); len(elem) >= l && elem[0:l] == "dit" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					if len(elem) == 0 {
+						r.name = "EditMessageCaption"
+						r.args = args
+						r.count = 0
+						return r, true
+					}
+					switch elem[0] {
+					case 'C': // Prefix: "ChatInviteLink"
+						if l := len("ChatInviteLink"); len(elem) >= l && elem[0:l] == "ChatInviteLink" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							// Leaf: EditChatInviteLink
+							r.name = "EditChatInviteLink"
+							r.args = args
+							r.count = 0
+							return r, true
+						}
+					case 'M': // Prefix: "Message"
+						if l := len("Message"); len(elem) >= l && elem[0:l] == "Message" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							r.name = "EditMessageLiveLocation"
+							r.args = args
+							r.count = 0
+							return r, true
+						}
+						switch elem[0] {
+						case 'C': // Prefix: "Caption"
+							if l := len("Caption"); len(elem) >= l && elem[0:l] == "Caption" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							if len(elem) == 0 {
+								// Leaf: EditMessageCaption
+								r.name = "EditMessageCaption"
+								r.args = args
+								r.count = 0
+								return r, true
+							}
+						case 'L': // Prefix: "LiveLocation"
+							if l := len("LiveLocation"); len(elem) >= l && elem[0:l] == "LiveLocation" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							if len(elem) == 0 {
+								// Leaf: EditMessageLiveLocation
+								r.name = "EditMessageLiveLocation"
+								r.args = args
+								r.count = 0
+								return r, true
+							}
+						case 'M': // Prefix: "Media"
+							if l := len("Media"); len(elem) >= l && elem[0:l] == "Media" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							if len(elem) == 0 {
+								// Leaf: EditMessageMedia
+								r.name = "EditMessageMedia"
+								r.args = args
+								r.count = 0
+								return r, true
+							}
+						case 'R': // Prefix: "ReplyMarkup"
+							if l := len("ReplyMarkup"); len(elem) >= l && elem[0:l] == "ReplyMarkup" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							if len(elem) == 0 {
+								// Leaf: EditMessageReplyMarkup
+								r.name = "EditMessageReplyMarkup"
+								r.args = args
+								r.count = 0
+								return r, true
+							}
+						case 'T': // Prefix: "Text"
+							if l := len("Text"); len(elem) >= l && elem[0:l] == "Text" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							if len(elem) == 0 {
+								// Leaf: EditMessageText
+								r.name = "EditMessageText"
+								r.args = args
+								r.count = 0
+								return r, true
+							}
+						}
+					}
+				case 'x': // Prefix: "xportChatInviteLink"
+					if l := len("xportChatInviteLink"); len(elem) >= l && elem[0:l] == "xportChatInviteLink" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					if len(elem) == 0 {
+						// Leaf: ExportChatInviteLink
+						r.name = "ExportChatInviteLink"
+						r.args = args
+						r.count = 0
+						return r, true
+					}
+				}
+			case 'f': // Prefix: "forwardMessage"
+				if l := len("forwardMessage"); len(elem) >= l && elem[0:l] == "forwardMessage" {
+					elem = elem[l:]
+				} else {
+					break
+				}
+
+				if len(elem) == 0 {
+					// Leaf: ForwardMessage
+					r.name = "ForwardMessage"
+					r.args = args
+					r.count = 0
+					return r, true
+				}
+			case 'g': // Prefix: "get"
+				if l := len("get"); len(elem) >= l && elem[0:l] == "get" {
+					elem = elem[l:]
+				} else {
+					break
+				}
+
+				if len(elem) == 0 {
+					r.name = "GetFile"
+					r.args = args
+					r.count = 0
+					return r, true
+				}
+				switch elem[0] {
+				case 'C': // Prefix: "Chat"
+					if l := len("Chat"); len(elem) >= l && elem[0:l] == "Chat" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					if len(elem) == 0 {
+						r.name = "GetChat"
+						r.args = args
+						r.count = 0
+						return r, true
+					}
+					switch elem[0] {
+					case 'A': // Prefix: "Administrators"
+						if l := len("Administrators"); len(elem) >= l && elem[0:l] == "Administrators" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							// Leaf: GetChatAdministrators
+							r.name = "GetChatAdministrators"
+							r.args = args
+							r.count = 0
+							return r, true
+						}
+					case 'M': // Prefix: "Member"
+						if l := len("Member"); len(elem) >= l && elem[0:l] == "Member" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							r.name = "GetChatMember"
+							r.args = args
+							r.count = 0
+							return r, true
+						}
+						switch elem[0] {
+						case 'C': // Prefix: "Count"
+							if l := len("Count"); len(elem) >= l && elem[0:l] == "Count" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							if len(elem) == 0 {
+								// Leaf: GetChatMemberCount
+								r.name = "GetChatMemberCount"
+								r.args = args
+								r.count = 0
+								return r, true
+							}
+						}
+					}
+				case 'F': // Prefix: "File"
+					if l := len("File"); len(elem) >= l && elem[0:l] == "File" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					if len(elem) == 0 {
+						// Leaf: GetFile
+						r.name = "GetFile"
+						r.args = args
+						r.count = 0
+						return r, true
+					}
+				case 'G': // Prefix: "GameHighScores"
+					if l := len("GameHighScores"); len(elem) >= l && elem[0:l] == "GameHighScores" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					if len(elem) == 0 {
+						// Leaf: GetGameHighScores
+						r.name = "GetGameHighScores"
+						r.args = args
+						r.count = 0
+						return r, true
+					}
+				case 'M': // Prefix: "M"
+					if l := len("M"); len(elem) >= l && elem[0:l] == "M" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					if len(elem) == 0 {
+						r.name = "GetMyCommands"
+						r.args = args
+						r.count = 0
+						return r, true
+					}
+					switch elem[0] {
+					case 'e': // Prefix: "e"
+						if l := len("e"); len(elem) >= l && elem[0:l] == "e" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							// Leaf: GetMe
+							r.name = "GetMe"
+							r.args = args
+							r.count = 0
+							return r, true
+						}
+					case 'y': // Prefix: "yCommands"
+						if l := len("yCommands"); len(elem) >= l && elem[0:l] == "yCommands" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							// Leaf: GetMyCommands
+							r.name = "GetMyCommands"
+							r.args = args
+							r.count = 0
+							return r, true
+						}
+					}
+				case 'S': // Prefix: "StickerSet"
+					if l := len("StickerSet"); len(elem) >= l && elem[0:l] == "StickerSet" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					if len(elem) == 0 {
+						// Leaf: GetStickerSet
+						r.name = "GetStickerSet"
+						r.args = args
+						r.count = 0
+						return r, true
+					}
+				case 'U': // Prefix: "U"
+					if l := len("U"); len(elem) >= l && elem[0:l] == "U" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					if len(elem) == 0 {
+						r.name = "GetUserProfilePhotos"
+						r.args = args
+						r.count = 0
+						return r, true
+					}
+					switch elem[0] {
+					case 'p': // Prefix: "pdates"
+						if l := len("pdates"); len(elem) >= l && elem[0:l] == "pdates" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							// Leaf: GetUpdates
+							r.name = "GetUpdates"
+							r.args = args
+							r.count = 0
+							return r, true
+						}
+					case 's': // Prefix: "serProfilePhotos"
+						if l := len("serProfilePhotos"); len(elem) >= l && elem[0:l] == "serProfilePhotos" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							// Leaf: GetUserProfilePhotos
+							r.name = "GetUserProfilePhotos"
+							r.args = args
+							r.count = 0
+							return r, true
+						}
+					}
+				case 'W': // Prefix: "WebhookInfo"
+					if l := len("WebhookInfo"); len(elem) >= l && elem[0:l] == "WebhookInfo" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					if len(elem) == 0 {
+						// Leaf: GetWebhookInfo
+						r.name = "GetWebhookInfo"
+						r.args = args
+						r.count = 0
+						return r, true
+					}
+				}
+			case 'l': // Prefix: "l"
+				if l := len("l"); len(elem) >= l && elem[0:l] == "l" {
+					elem = elem[l:]
+				} else {
+					break
+				}
+
+				if len(elem) == 0 {
+					r.name = "LogOut"
+					r.args = args
+					r.count = 0
+					return r, true
+				}
+				switch elem[0] {
+				case 'e': // Prefix: "eaveChat"
+					if l := len("eaveChat"); len(elem) >= l && elem[0:l] == "eaveChat" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					if len(elem) == 0 {
+						// Leaf: LeaveChat
+						r.name = "LeaveChat"
+						r.args = args
+						r.count = 0
+						return r, true
+					}
+				case 'o': // Prefix: "ogOut"
+					if l := len("ogOut"); len(elem) >= l && elem[0:l] == "ogOut" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					if len(elem) == 0 {
+						// Leaf: LogOut
+						r.name = "LogOut"
+						r.args = args
+						r.count = 0
+						return r, true
+					}
+				}
+			case 'p': // Prefix: "p"
+				if l := len("p"); len(elem) >= l && elem[0:l] == "p" {
+					elem = elem[l:]
+				} else {
+					break
+				}
+
+				if len(elem) == 0 {
+					r.name = "PromoteChatMember"
+					r.args = args
+					r.count = 0
+					return r, true
+				}
+				switch elem[0] {
+				case 'i': // Prefix: "inChatMessage"
+					if l := len("inChatMessage"); len(elem) >= l && elem[0:l] == "inChatMessage" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					if len(elem) == 0 {
+						// Leaf: PinChatMessage
+						r.name = "PinChatMessage"
+						r.args = args
+						r.count = 0
+						return r, true
+					}
+				case 'r': // Prefix: "romoteChatMember"
+					if l := len("romoteChatMember"); len(elem) >= l && elem[0:l] == "romoteChatMember" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					if len(elem) == 0 {
+						// Leaf: PromoteChatMember
+						r.name = "PromoteChatMember"
+						r.args = args
+						r.count = 0
+						return r, true
+					}
+				}
+			case 'r': // Prefix: "re"
+				if l := len("re"); len(elem) >= l && elem[0:l] == "re" {
+					elem = elem[l:]
+				} else {
+					break
+				}
+
+				if len(elem) == 0 {
+					r.name = "RevokeChatInviteLink"
+					r.args = args
+					r.count = 0
+					return r, true
+				}
+				switch elem[0] {
+				case 's': // Prefix: "strictChatMember"
+					if l := len("strictChatMember"); len(elem) >= l && elem[0:l] == "strictChatMember" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					if len(elem) == 0 {
+						// Leaf: RestrictChatMember
+						r.name = "RestrictChatMember"
+						r.args = args
+						r.count = 0
+						return r, true
+					}
+				case 'v': // Prefix: "vokeChatInviteLink"
+					if l := len("vokeChatInviteLink"); len(elem) >= l && elem[0:l] == "vokeChatInviteLink" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					if len(elem) == 0 {
+						// Leaf: RevokeChatInviteLink
+						r.name = "RevokeChatInviteLink"
+						r.args = args
+						r.count = 0
+						return r, true
+					}
+				}
+			case 's': // Prefix: "s"
+				if l := len("s"); len(elem) >= l && elem[0:l] == "s" {
+					elem = elem[l:]
+				} else {
+					break
+				}
+
+				if len(elem) == 0 {
+					r.name = "StopMessageLiveLocation"
+					r.args = args
+					r.count = 0
+					return r, true
+				}
+				switch elem[0] {
+				case 'e': // Prefix: "e"
+					if l := len("e"); len(elem) >= l && elem[0:l] == "e" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					if len(elem) == 0 {
+						r.name = "SetChatAdministratorCustomTitle"
+						r.args = args
+						r.count = 0
+						return r, true
+					}
+					switch elem[0] {
+					case 'n': // Prefix: "nd"
+						if l := len("nd"); len(elem) >= l && elem[0:l] == "nd" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							r.name = "SendChatAction"
+							r.args = args
+							r.count = 0
+							return r, true
+						}
+						switch elem[0] {
+						case 'A': // Prefix: "A"
+							if l := len("A"); len(elem) >= l && elem[0:l] == "A" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							if len(elem) == 0 {
+								r.name = "SendAudio"
+								r.args = args
+								r.count = 0
+								return r, true
+							}
+							switch elem[0] {
+							case 'n': // Prefix: "nimation"
+								if l := len("nimation"); len(elem) >= l && elem[0:l] == "nimation" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									// Leaf: SendAnimation
+									r.name = "SendAnimation"
+									r.args = args
+									r.count = 0
+									return r, true
+								}
+							case 'u': // Prefix: "udio"
+								if l := len("udio"); len(elem) >= l && elem[0:l] == "udio" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									// Leaf: SendAudio
+									r.name = "SendAudio"
+									r.args = args
+									r.count = 0
+									return r, true
+								}
+							}
+						case 'C': // Prefix: "C"
+							if l := len("C"); len(elem) >= l && elem[0:l] == "C" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							if len(elem) == 0 {
+								r.name = "SendContact"
+								r.args = args
+								r.count = 0
+								return r, true
+							}
+							switch elem[0] {
+							case 'h': // Prefix: "hatAction"
+								if l := len("hatAction"); len(elem) >= l && elem[0:l] == "hatAction" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									// Leaf: SendChatAction
+									r.name = "SendChatAction"
+									r.args = args
+									r.count = 0
+									return r, true
+								}
+							case 'o': // Prefix: "ontact"
+								if l := len("ontact"); len(elem) >= l && elem[0:l] == "ontact" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									// Leaf: SendContact
+									r.name = "SendContact"
+									r.args = args
+									r.count = 0
+									return r, true
+								}
+							}
+						case 'D': // Prefix: "D"
+							if l := len("D"); len(elem) >= l && elem[0:l] == "D" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							if len(elem) == 0 {
+								r.name = "SendDocument"
+								r.args = args
+								r.count = 0
+								return r, true
+							}
+							switch elem[0] {
+							case 'i': // Prefix: "ice"
+								if l := len("ice"); len(elem) >= l && elem[0:l] == "ice" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									// Leaf: SendDice
+									r.name = "SendDice"
+									r.args = args
+									r.count = 0
+									return r, true
+								}
+							case 'o': // Prefix: "ocument"
+								if l := len("ocument"); len(elem) >= l && elem[0:l] == "ocument" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									// Leaf: SendDocument
+									r.name = "SendDocument"
+									r.args = args
+									r.count = 0
+									return r, true
+								}
+							}
+						case 'G': // Prefix: "Game"
+							if l := len("Game"); len(elem) >= l && elem[0:l] == "Game" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							if len(elem) == 0 {
+								// Leaf: SendGame
+								r.name = "SendGame"
+								r.args = args
+								r.count = 0
+								return r, true
+							}
+						case 'I': // Prefix: "Invoice"
+							if l := len("Invoice"); len(elem) >= l && elem[0:l] == "Invoice" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							if len(elem) == 0 {
+								// Leaf: SendInvoice
+								r.name = "SendInvoice"
+								r.args = args
+								r.count = 0
+								return r, true
+							}
+						case 'L': // Prefix: "Location"
+							if l := len("Location"); len(elem) >= l && elem[0:l] == "Location" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							if len(elem) == 0 {
+								// Leaf: SendLocation
+								r.name = "SendLocation"
+								r.args = args
+								r.count = 0
+								return r, true
+							}
+						case 'M': // Prefix: "Me"
+							if l := len("Me"); len(elem) >= l && elem[0:l] == "Me" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							if len(elem) == 0 {
+								r.name = "SendMessage"
+								r.args = args
+								r.count = 0
+								return r, true
+							}
+							switch elem[0] {
+							case 'd': // Prefix: "diaGroup"
+								if l := len("diaGroup"); len(elem) >= l && elem[0:l] == "diaGroup" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									// Leaf: SendMediaGroup
+									r.name = "SendMediaGroup"
+									r.args = args
+									r.count = 0
+									return r, true
+								}
+							case 's': // Prefix: "ssage"
+								if l := len("ssage"); len(elem) >= l && elem[0:l] == "ssage" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									// Leaf: SendMessage
+									r.name = "SendMessage"
+									r.args = args
+									r.count = 0
+									return r, true
+								}
+							}
+						case 'P': // Prefix: "P"
+							if l := len("P"); len(elem) >= l && elem[0:l] == "P" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							if len(elem) == 0 {
+								r.name = "SendPoll"
+								r.args = args
+								r.count = 0
+								return r, true
+							}
+							switch elem[0] {
+							case 'h': // Prefix: "hoto"
+								if l := len("hoto"); len(elem) >= l && elem[0:l] == "hoto" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									// Leaf: SendPhoto
+									r.name = "SendPhoto"
+									r.args = args
+									r.count = 0
+									return r, true
+								}
+							case 'o': // Prefix: "oll"
+								if l := len("oll"); len(elem) >= l && elem[0:l] == "oll" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									// Leaf: SendPoll
+									r.name = "SendPoll"
+									r.args = args
+									r.count = 0
+									return r, true
+								}
+							}
+						case 'S': // Prefix: "Sticker"
+							if l := len("Sticker"); len(elem) >= l && elem[0:l] == "Sticker" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							if len(elem) == 0 {
+								// Leaf: SendSticker
+								r.name = "SendSticker"
+								r.args = args
+								r.count = 0
+								return r, true
+							}
+						case 'V': // Prefix: "V"
+							if l := len("V"); len(elem) >= l && elem[0:l] == "V" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							if len(elem) == 0 {
+								r.name = "SendVideo"
+								r.args = args
+								r.count = 0
+								return r, true
+							}
+							switch elem[0] {
+							case 'e': // Prefix: "enue"
+								if l := len("enue"); len(elem) >= l && elem[0:l] == "enue" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									// Leaf: SendVenue
+									r.name = "SendVenue"
+									r.args = args
+									r.count = 0
+									return r, true
+								}
+							case 'i': // Prefix: "ideo"
+								if l := len("ideo"); len(elem) >= l && elem[0:l] == "ideo" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									r.name = "SendVideo"
+									r.args = args
+									r.count = 0
+									return r, true
+								}
+								switch elem[0] {
+								case 'N': // Prefix: "Note"
+									if l := len("Note"); len(elem) >= l && elem[0:l] == "Note" {
+										elem = elem[l:]
+									} else {
+										break
+									}
+
+									if len(elem) == 0 {
+										// Leaf: SendVideoNote
+										r.name = "SendVideoNote"
+										r.args = args
+										r.count = 0
+										return r, true
+									}
+								}
+							case 'o': // Prefix: "oice"
+								if l := len("oice"); len(elem) >= l && elem[0:l] == "oice" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									// Leaf: SendVoice
+									r.name = "SendVoice"
+									r.args = args
+									r.count = 0
+									return r, true
+								}
+							}
+						}
+					case 't': // Prefix: "t"
+						if l := len("t"); len(elem) >= l && elem[0:l] == "t" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							r.name = "SetGameScore"
+							r.args = args
+							r.count = 0
+							return r, true
+						}
+						switch elem[0] {
+						case 'C': // Prefix: "Chat"
+							if l := len("Chat"); len(elem) >= l && elem[0:l] == "Chat" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							if len(elem) == 0 {
+								r.name = "SetChatDescription"
+								r.args = args
+								r.count = 0
+								return r, true
+							}
+							switch elem[0] {
+							case 'A': // Prefix: "AdministratorCustomTitle"
+								if l := len("AdministratorCustomTitle"); len(elem) >= l && elem[0:l] == "AdministratorCustomTitle" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									// Leaf: SetChatAdministratorCustomTitle
+									r.name = "SetChatAdministratorCustomTitle"
+									r.args = args
+									r.count = 0
+									return r, true
+								}
+							case 'D': // Prefix: "Description"
+								if l := len("Description"); len(elem) >= l && elem[0:l] == "Description" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									// Leaf: SetChatDescription
+									r.name = "SetChatDescription"
+									r.args = args
+									r.count = 0
+									return r, true
+								}
+							case 'P': // Prefix: "P"
+								if l := len("P"); len(elem) >= l && elem[0:l] == "P" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									r.name = "SetChatPhoto"
+									r.args = args
+									r.count = 0
+									return r, true
+								}
+								switch elem[0] {
+								case 'e': // Prefix: "ermissions"
+									if l := len("ermissions"); len(elem) >= l && elem[0:l] == "ermissions" {
+										elem = elem[l:]
+									} else {
+										break
+									}
+
+									if len(elem) == 0 {
+										// Leaf: SetChatPermissions
+										r.name = "SetChatPermissions"
+										r.args = args
+										r.count = 0
+										return r, true
+									}
+								case 'h': // Prefix: "hoto"
+									if l := len("hoto"); len(elem) >= l && elem[0:l] == "hoto" {
+										elem = elem[l:]
+									} else {
+										break
+									}
+
+									if len(elem) == 0 {
+										// Leaf: SetChatPhoto
+										r.name = "SetChatPhoto"
+										r.args = args
+										r.count = 0
+										return r, true
+									}
+								}
+							case 'S': // Prefix: "StickerSet"
+								if l := len("StickerSet"); len(elem) >= l && elem[0:l] == "StickerSet" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									// Leaf: SetChatStickerSet
+									r.name = "SetChatStickerSet"
+									r.args = args
+									r.count = 0
+									return r, true
+								}
+							case 'T': // Prefix: "Title"
+								if l := len("Title"); len(elem) >= l && elem[0:l] == "Title" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									// Leaf: SetChatTitle
+									r.name = "SetChatTitle"
+									r.args = args
+									r.count = 0
+									return r, true
+								}
+							}
+						case 'G': // Prefix: "GameScore"
+							if l := len("GameScore"); len(elem) >= l && elem[0:l] == "GameScore" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							if len(elem) == 0 {
+								// Leaf: SetGameScore
+								r.name = "SetGameScore"
+								r.args = args
+								r.count = 0
+								return r, true
+							}
+						case 'M': // Prefix: "MyCommands"
+							if l := len("MyCommands"); len(elem) >= l && elem[0:l] == "MyCommands" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							if len(elem) == 0 {
+								// Leaf: SetMyCommands
+								r.name = "SetMyCommands"
+								r.args = args
+								r.count = 0
+								return r, true
+							}
+						case 'P': // Prefix: "PassportDataErrors"
+							if l := len("PassportDataErrors"); len(elem) >= l && elem[0:l] == "PassportDataErrors" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							if len(elem) == 0 {
+								// Leaf: SetPassportDataErrors
+								r.name = "SetPassportDataErrors"
+								r.args = args
+								r.count = 0
+								return r, true
+							}
+						case 'S': // Prefix: "Sticker"
+							if l := len("Sticker"); len(elem) >= l && elem[0:l] == "Sticker" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							if len(elem) == 0 {
+								r.name = "SetStickerSetThumb"
+								r.args = args
+								r.count = 0
+								return r, true
+							}
+							switch elem[0] {
+							case 'P': // Prefix: "PositionInSet"
+								if l := len("PositionInSet"); len(elem) >= l && elem[0:l] == "PositionInSet" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									// Leaf: SetStickerPositionInSet
+									r.name = "SetStickerPositionInSet"
+									r.args = args
+									r.count = 0
+									return r, true
+								}
+							case 'S': // Prefix: "SetThumb"
+								if l := len("SetThumb"); len(elem) >= l && elem[0:l] == "SetThumb" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									// Leaf: SetStickerSetThumb
+									r.name = "SetStickerSetThumb"
+									r.args = args
+									r.count = 0
+									return r, true
+								}
+							}
+						case 'W': // Prefix: "Webhook"
+							if l := len("Webhook"); len(elem) >= l && elem[0:l] == "Webhook" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							if len(elem) == 0 {
+								// Leaf: SetWebhook
+								r.name = "SetWebhook"
+								r.args = args
+								r.count = 0
+								return r, true
+							}
+						}
+					}
+				case 't': // Prefix: "top"
+					if l := len("top"); len(elem) >= l && elem[0:l] == "top" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					if len(elem) == 0 {
+						r.name = "StopPoll"
+						r.args = args
+						r.count = 0
+						return r, true
+					}
+					switch elem[0] {
+					case 'M': // Prefix: "MessageLiveLocation"
+						if l := len("MessageLiveLocation"); len(elem) >= l && elem[0:l] == "MessageLiveLocation" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							// Leaf: StopMessageLiveLocation
+							r.name = "StopMessageLiveLocation"
+							r.args = args
+							r.count = 0
+							return r, true
+						}
+					case 'P': // Prefix: "Poll"
+						if l := len("Poll"); len(elem) >= l && elem[0:l] == "Poll" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							// Leaf: StopPoll
+							r.name = "StopPoll"
+							r.args = args
+							r.count = 0
+							return r, true
+						}
+					}
+				}
+			case 'u': // Prefix: "u"
+				if l := len("u"); len(elem) >= l && elem[0:l] == "u" {
+					elem = elem[l:]
+				} else {
+					break
+				}
+
+				if len(elem) == 0 {
+					r.name = "UploadStickerFile"
+					r.args = args
+					r.count = 0
+					return r, true
+				}
+				switch elem[0] {
+				case 'n': // Prefix: "n"
+					if l := len("n"); len(elem) >= l && elem[0:l] == "n" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					if len(elem) == 0 {
+						r.name = "UnpinAllChatMessages"
+						r.args = args
+						r.count = 0
+						return r, true
+					}
+					switch elem[0] {
+					case 'b': // Prefix: "banChat"
+						if l := len("banChat"); len(elem) >= l && elem[0:l] == "banChat" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							r.name = "UnbanChatSenderChat"
+							r.args = args
+							r.count = 0
+							return r, true
+						}
+						switch elem[0] {
+						case 'M': // Prefix: "Member"
+							if l := len("Member"); len(elem) >= l && elem[0:l] == "Member" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							if len(elem) == 0 {
+								// Leaf: UnbanChatMember
+								r.name = "UnbanChatMember"
+								r.args = args
+								r.count = 0
+								return r, true
+							}
+						case 'S': // Prefix: "SenderChat"
+							if l := len("SenderChat"); len(elem) >= l && elem[0:l] == "SenderChat" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							if len(elem) == 0 {
+								// Leaf: UnbanChatSenderChat
+								r.name = "UnbanChatSenderChat"
+								r.args = args
+								r.count = 0
+								return r, true
+							}
+						}
+					case 'p': // Prefix: "pin"
+						if l := len("pin"); len(elem) >= l && elem[0:l] == "pin" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							r.name = "UnpinChatMessage"
+							r.args = args
+							r.count = 0
+							return r, true
+						}
+						switch elem[0] {
+						case 'A': // Prefix: "AllChatMessages"
+							if l := len("AllChatMessages"); len(elem) >= l && elem[0:l] == "AllChatMessages" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							if len(elem) == 0 {
+								// Leaf: UnpinAllChatMessages
+								r.name = "UnpinAllChatMessages"
+								r.args = args
+								r.count = 0
+								return r, true
+							}
+						case 'C': // Prefix: "ChatMessage"
+							if l := len("ChatMessage"); len(elem) >= l && elem[0:l] == "ChatMessage" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							if len(elem) == 0 {
+								// Leaf: UnpinChatMessage
+								r.name = "UnpinChatMessage"
+								r.args = args
+								r.count = 0
+								return r, true
+							}
+						}
+					}
+				case 'p': // Prefix: "ploadStickerFile"
+					if l := len("ploadStickerFile"); len(elem) >= l && elem[0:l] == "ploadStickerFile" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					if len(elem) == 0 {
+						// Leaf: UploadStickerFile
+						r.name = "UploadStickerFile"
+						r.args = args
+						r.count = 0
+						return r, true
+					}
+				}
+			}
+		}
+	}
+	return r, false
 }
