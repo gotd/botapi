@@ -5,7 +5,6 @@ import (
 	"net/http"
 
 	"github.com/go-faster/errors"
-	"github.com/go-faster/jx"
 	"go.uber.org/zap"
 
 	"github.com/gotd/td/telegram/peers"
@@ -140,13 +139,7 @@ func (b *BotAPI) NewError(ctx context.Context, err error) (r oas.ErrorStatusCode
 	return resp
 }
 
-var encodedNotFoundError = func() (r []byte) {
-	e := jx.GetWriter()
-	defer jx.PutWriter(e)
-
-	errorOf(http.StatusNotFound).Encode(e)
-	return append(r, e.Buf...)
-}()
+var encodedNotFoundError = []byte(`{"ok":false,"error_code":404,"description":"Not Found"}`)
 
 // NotFound is default not found handler.
 func NotFound(w http.ResponseWriter, _ *http.Request) {
