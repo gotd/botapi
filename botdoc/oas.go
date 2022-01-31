@@ -252,7 +252,7 @@ Schemas:
 			Description: description,
 			Content: map[string]ogen.Media{
 				contentJSON: {
-					Schema: ogen.Schema{
+					Schema: &ogen.Schema{
 						Ref: ref,
 					},
 				},
@@ -336,7 +336,7 @@ Schemas:
 		Description: "Method invocation error",
 		Content: map[string]ogen.Media{
 			contentJSON: {
-				Schema: ogen.Schema{
+				Schema: &ogen.Schema{
 					Ref: "#/components/schemas/Error",
 				},
 			},
@@ -473,7 +473,7 @@ Schemas:
 		if len(m.Fields) > 0 {
 			reqBody = &ogen.RequestBody{
 				Content: map[string]ogen.Media{
-					contentJSON: {Schema: requestSchema},
+					contentJSON: {Schema: &requestSchema},
 				},
 				Required: len(s.Required) > 0 || hasConditionalRequired,
 			}
