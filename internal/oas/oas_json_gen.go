@@ -1632,6 +1632,7 @@ func (s *BotCommandScope) Decode(d *jx.Decoder) error {
 	if d.Next() != jx.Object {
 		return errors.Errorf("unexpected json type %q", d.Next())
 	}
+
 	var found bool
 	if err := d.Capture(func(d *jx.Decoder) error {
 		return d.ObjBytes(func(d *jx.Decoder, key []byte) error {
@@ -3362,6 +3363,7 @@ func (s *ChatMember) Decode(d *jx.Decoder) error {
 	if d.Next() != jx.Object {
 		return errors.Errorf("unexpected json type %q", d.Next())
 	}
+
 	var found bool
 	if err := d.Capture(func(d *jx.Decoder) error {
 		return d.ObjBytes(func(d *jx.Decoder, key []byte) error {
@@ -8018,37 +8020,6 @@ func (s *Error) Decode(d *jx.Decoder) error {
 }
 
 // Encode implements json.Marshaler.
-func (s ErrorStatusCode) Encode(e *jx.Writer) {
-	e.ObjStart()
-	var (
-		first = true
-		_     = first
-	)
-	e.ObjEnd()
-}
-
-var jsonFieldsNameOfErrorStatusCode = [0]string{}
-
-// Decode decodes ErrorStatusCode from json.
-func (s *ErrorStatusCode) Decode(d *jx.Decoder) error {
-	if s == nil {
-		return errors.New(`invalid: unable to decode ErrorStatusCode to nil`)
-	}
-
-	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
-		switch string(k) {
-		default:
-			return d.Skip()
-		}
-		return nil
-	}); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-// Encode implements json.Marshaler.
 func (s ExportChatInviteLink) Encode(e *jx.Writer) {
 	e.ObjStart()
 	var (
@@ -10313,6 +10284,7 @@ func (s *InlineQueryResult) Decode(d *jx.Decoder) error {
 	if d.Next() != jx.Object {
 		return errors.Errorf("unexpected json type %q", d.Next())
 	}
+
 	var found bool
 	if err := d.Capture(func(d *jx.Decoder) error {
 		return d.ObjBytes(func(d *jx.Decoder, key []byte) error {
@@ -15953,6 +15925,7 @@ func (s *InputMedia) Decode(d *jx.Decoder) error {
 	if d.Next() != jx.Object {
 		return errors.Errorf("unexpected json type %q", d.Next())
 	}
+
 	var found bool
 	if err := d.Capture(func(d *jx.Decoder) error {
 		return d.ObjBytes(func(d *jx.Decoder, key []byte) error {
@@ -17069,6 +17042,7 @@ func (s *InputMessageContent) Decode(d *jx.Decoder) error {
 	if d.Next() != jx.Object {
 		return errors.Errorf("unexpected json type %q", d.Next())
 	}
+
 	var found bool
 	if err := d.Capture(func(d *jx.Decoder) error {
 		return d.ObjBytes(func(d *jx.Decoder, key []byte) error {
@@ -17100,12 +17074,6 @@ func (s *InputMessageContent) Decode(d *jx.Decoder) error {
 			case "proximity_alert_radius":
 				found = true
 				s.Type = InputLocationMessageContentInputMessageContent
-			case "latitude":
-				found = true
-				s.Type = InputVenueMessageContentInputMessageContent
-			case "longitude":
-				found = true
-				s.Type = InputVenueMessageContentInputMessageContent
 			case "address":
 				found = true
 				s.Type = InputVenueMessageContentInputMessageContent
@@ -17133,9 +17101,6 @@ func (s *InputMessageContent) Decode(d *jx.Decoder) error {
 			case "vcard":
 				found = true
 				s.Type = InputContactMessageContentInputMessageContent
-			case "title":
-				found = true
-				s.Type = InputInvoiceMessageContentInputMessageContent
 			case "description":
 				found = true
 				s.Type = InputInvoiceMessageContentInputMessageContent
@@ -21827,6 +21792,7 @@ func (s *PassportElementError) Decode(d *jx.Decoder) error {
 	if d.Next() != jx.Object {
 		return errors.Errorf("unexpected json type %q", d.Next())
 	}
+
 	var found bool
 	if err := d.Capture(func(d *jx.Decoder) error {
 		return d.ObjBytes(func(d *jx.Decoder, key []byte) error {
@@ -29891,6 +29857,7 @@ func (s *SendMediaGroupMediaItem) Decode(d *jx.Decoder) error {
 	if d.Next() != jx.Object {
 		return errors.Errorf("unexpected json type %q", d.Next())
 	}
+
 	var found bool
 	if err := d.Capture(func(d *jx.Decoder) error {
 		return d.ObjBytes(func(d *jx.Decoder, key []byte) error {
@@ -30814,6 +30781,7 @@ func (s *SendReplyMarkup) Decode(d *jx.Decoder) error {
 	if d.Next() != jx.Object {
 		return errors.Errorf("unexpected json type %q", d.Next())
 	}
+
 	var found bool
 	if err := d.Capture(func(d *jx.Decoder) error {
 		return d.ObjBytes(func(d *jx.Decoder, key []byte) error {
@@ -30837,12 +30805,6 @@ func (s *SendReplyMarkup) Decode(d *jx.Decoder) error {
 				found = true
 				s.Type = ReplyKeyboardRemoveSendReplyMarkup
 			case "force_reply":
-				found = true
-				s.Type = ForceReplySendReplyMarkup
-			case "input_field_placeholder":
-				found = true
-				s.Type = ForceReplySendReplyMarkup
-			case "selective":
 				found = true
 				s.Type = ForceReplySendReplyMarkup
 			}
