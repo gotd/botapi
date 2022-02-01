@@ -81,8 +81,11 @@ type AddStickerToSet struct {
 	// from the Internet, or upload a new one using multipart/form-data. More info on Sending Files ».
 	PNGSticker OptString `json:"png_sticker"`
 	// TGS animation with the sticker, uploaded using multipart/form-data. See https://core.telegram.
-	// org/animated_stickers#technical-requirements for technical requirements.
+	// org/stickers#animated-sticker-requirements for technical requirements.
 	TgsSticker OptString `json:"tgs_sticker"`
+	// WEBM video with the sticker, uploaded using multipart/form-data. See https://core.telegram.
+	// org/stickers#video-sticker-requirements for technical requirements.
+	WebmSticker OptString `json:"webm_sticker"`
 	// One or more emoji corresponding to the sticker.
 	Emojis       string          `json:"emojis"`
 	MaskPosition OptMaskPosition `json:"mask_position"`
@@ -1083,8 +1086,11 @@ type CreateNewStickerSet struct {
 	// from the Internet, or upload a new one using multipart/form-data. More info on Sending Files ».
 	PNGSticker OptString `json:"png_sticker"`
 	// TGS animation with the sticker, uploaded using multipart/form-data. See https://core.telegram.
-	// org/animated_stickers#technical-requirements for technical requirements.
+	// org/stickers#animated-sticker-requirements for technical requirements.
 	TgsSticker OptString `json:"tgs_sticker"`
+	// WEBM video with the sticker, uploaded using multipart/form-data. See https://core.telegram.
+	// org/stickers#video-sticker-requirements for technical requirements.
+	WebmSticker OptString `json:"webm_sticker"`
 	// One or more emoji corresponding to the sticker.
 	Emojis string `json:"emojis"`
 	// Pass True, if a set of mask stickers should be created.
@@ -8607,11 +8613,12 @@ type SetStickerSetThumb struct {
 	UserID int64 `json:"user_id"`
 	// A PNG image with the thumbnail, must be up to 128 kilobytes in size and have width and height
 	// exactly 100px, or a TGS animation with the thumbnail up to 32 kilobytes in size; see https://core.
-	// telegram.org/animated_stickers#technical-requirements for animated sticker technical requirements.
-	// Pass a file_id as a String to send a file that already exists on the Telegram servers, pass an
-	// HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using
-	// multipart/form-data. More info on Sending Files ». Animated sticker set thumbnail can't be
-	// uploaded via HTTP URL.
+	// telegram.org/stickers#animated-sticker-requirements for animated sticker technical requirements,
+	// or a WEBM video with the thumbnail up to 32 kilobytes in size; see https://core.telegram.
+	// org/stickers#video-sticker-requirements for video sticker technical requirements. Pass a file_id
+	// as a String to send a file that already exists on the Telegram servers, pass an HTTP URL as a
+	// String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data.
+	//  More info on Sending Files ». Animated sticker set thumbnails can't be uploaded via HTTP URL.
 	Thumb OptString `json:"thumb"`
 }
 
@@ -8693,8 +8700,10 @@ type Sticker struct {
 	// Sticker height.
 	Height int `json:"height"`
 	// True, if the sticker is animated.
-	IsAnimated bool         `json:"is_animated"`
-	Thumb      OptPhotoSize `json:"thumb"`
+	IsAnimated bool `json:"is_animated"`
+	// True, if the sticker is a video sticker.
+	IsVideo bool         `json:"is_video"`
+	Thumb   OptPhotoSize `json:"thumb"`
 	// Emoji associated with the sticker.
 	Emoji OptString `json:"emoji"`
 	// Name of the sticker set to which the sticker belongs.
@@ -8713,6 +8722,8 @@ type StickerSet struct {
 	Title string `json:"title"`
 	// True, if the sticker set contains animated stickers.
 	IsAnimated bool `json:"is_animated"`
+	// True, if the sticker set contains video stickers.
+	IsVideo bool `json:"is_video"`
 	// True, if the sticker set contains masks.
 	ContainsMasks bool `json:"contains_masks"`
 	// List of all set stickers.

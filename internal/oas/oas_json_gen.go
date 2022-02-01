@@ -105,6 +105,15 @@ func (s AddStickerToSet) Encode(e *jx.Writer) {
 		}
 	}
 	{
+		if s.WebmSticker.Set {
+			e.Comma()
+		}
+		if s.WebmSticker.Set {
+			e.RawStr("\"webm_sticker\"" + ":")
+			s.WebmSticker.Encode(e)
+		}
+	}
+	{
 		e.Comma()
 
 		e.RawStr("\"emojis\"" + ":")
@@ -122,13 +131,14 @@ func (s AddStickerToSet) Encode(e *jx.Writer) {
 	e.ObjEnd()
 }
 
-var jsonFieldsNameOfAddStickerToSet = [6]string{
+var jsonFieldsNameOfAddStickerToSet = [7]string{
 	0: "user_id",
 	1: "name",
 	2: "png_sticker",
 	3: "tgs_sticker",
-	4: "emojis",
-	5: "mask_position",
+	4: "webm_sticker",
+	5: "emojis",
+	6: "mask_position",
 }
 
 // Decode decodes AddStickerToSet from json.
@@ -164,8 +174,13 @@ func (s *AddStickerToSet) Decode(d *jx.Decoder) error {
 			if err := s.TgsSticker.Decode(d); err != nil {
 				return err
 			}
+		case "webm_sticker":
+			s.WebmSticker.Reset()
+			if err := s.WebmSticker.Decode(d); err != nil {
+				return err
+			}
 		case "emojis":
-			requiredBitSet[0] |= 1 << 4
+			requiredBitSet[0] |= 1 << 5
 			v, err := d.Str()
 			s.Emojis = string(v)
 			if err != nil {
@@ -185,7 +200,7 @@ func (s *AddStickerToSet) Decode(d *jx.Decoder) error {
 	}
 	var failures []validate.FieldError
 	for i, mask := range [1]uint8{
-		0b00010011,
+		0b00100011,
 	} {
 		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
 			// Mask only required fields and check equality to mask using XOR.
@@ -5550,6 +5565,15 @@ func (s CreateNewStickerSet) Encode(e *jx.Writer) {
 		}
 	}
 	{
+		if s.WebmSticker.Set {
+			e.Comma()
+		}
+		if s.WebmSticker.Set {
+			e.RawStr("\"webm_sticker\"" + ":")
+			s.WebmSticker.Encode(e)
+		}
+	}
+	{
 		e.Comma()
 
 		e.RawStr("\"emojis\"" + ":")
@@ -5576,15 +5600,16 @@ func (s CreateNewStickerSet) Encode(e *jx.Writer) {
 	e.ObjEnd()
 }
 
-var jsonFieldsNameOfCreateNewStickerSet = [8]string{
+var jsonFieldsNameOfCreateNewStickerSet = [9]string{
 	0: "user_id",
 	1: "name",
 	2: "title",
 	3: "png_sticker",
 	4: "tgs_sticker",
-	5: "emojis",
-	6: "contains_masks",
-	7: "mask_position",
+	5: "webm_sticker",
+	6: "emojis",
+	7: "contains_masks",
+	8: "mask_position",
 }
 
 // Decode decodes CreateNewStickerSet from json.
@@ -5592,7 +5617,7 @@ func (s *CreateNewStickerSet) Decode(d *jx.Decoder) error {
 	if s == nil {
 		return errors.New(`invalid: unable to decode CreateNewStickerSet to nil`)
 	}
-	var requiredBitSet [1]uint8
+	var requiredBitSet [2]uint8
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
@@ -5627,8 +5652,13 @@ func (s *CreateNewStickerSet) Decode(d *jx.Decoder) error {
 			if err := s.TgsSticker.Decode(d); err != nil {
 				return err
 			}
+		case "webm_sticker":
+			s.WebmSticker.Reset()
+			if err := s.WebmSticker.Decode(d); err != nil {
+				return err
+			}
 		case "emojis":
-			requiredBitSet[0] |= 1 << 5
+			requiredBitSet[0] |= 1 << 6
 			v, err := d.Str()
 			s.Emojis = string(v)
 			if err != nil {
@@ -5652,8 +5682,9 @@ func (s *CreateNewStickerSet) Decode(d *jx.Decoder) error {
 		return err
 	}
 	var failures []validate.FieldError
-	for i, mask := range [1]uint8{
-		0b00100111,
+	for i, mask := range [2]uint8{
+		0b01000111,
+		0b00000000,
 	} {
 		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
 			// Mask only required fields and check equality to mask using XOR.
@@ -33851,6 +33882,12 @@ func (s Sticker) Encode(e *jx.Writer) {
 		e.Bool(s.IsAnimated)
 	}
 	{
+		e.Comma()
+
+		e.RawStr("\"is_video\"" + ":")
+		e.Bool(s.IsVideo)
+	}
+	{
 		if s.Thumb.Set {
 			e.Comma()
 		}
@@ -33898,17 +33935,18 @@ func (s Sticker) Encode(e *jx.Writer) {
 	e.ObjEnd()
 }
 
-var jsonFieldsNameOfSticker = [10]string{
-	0: "file_id",
-	1: "file_unique_id",
-	2: "width",
-	3: "height",
-	4: "is_animated",
-	5: "thumb",
-	6: "emoji",
-	7: "set_name",
-	8: "mask_position",
-	9: "file_size",
+var jsonFieldsNameOfSticker = [11]string{
+	0:  "file_id",
+	1:  "file_unique_id",
+	2:  "width",
+	3:  "height",
+	4:  "is_animated",
+	5:  "is_video",
+	6:  "thumb",
+	7:  "emoji",
+	8:  "set_name",
+	9:  "mask_position",
+	10: "file_size",
 }
 
 // Decode decodes Sticker from json.
@@ -33955,6 +33993,13 @@ func (s *Sticker) Decode(d *jx.Decoder) error {
 			if err != nil {
 				return err
 			}
+		case "is_video":
+			requiredBitSet[0] |= 1 << 5
+			v, err := d.Bool()
+			s.IsVideo = bool(v)
+			if err != nil {
+				return err
+			}
 		case "thumb":
 			s.Thumb.Reset()
 			if err := s.Thumb.Decode(d); err != nil {
@@ -33989,7 +34034,7 @@ func (s *Sticker) Decode(d *jx.Decoder) error {
 	}
 	var failures []validate.FieldError
 	for i, mask := range [2]uint8{
-		0b00011111,
+		0b00111111,
 		0b00000000,
 	} {
 		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
@@ -34054,6 +34099,12 @@ func (s StickerSet) Encode(e *jx.Writer) {
 	{
 		e.Comma()
 
+		e.RawStr("\"is_video\"" + ":")
+		e.Bool(s.IsVideo)
+	}
+	{
+		e.Comma()
+
 		e.RawStr("\"contains_masks\"" + ":")
 		e.Bool(s.ContainsMasks)
 	}
@@ -34087,13 +34138,14 @@ func (s StickerSet) Encode(e *jx.Writer) {
 	e.ObjEnd()
 }
 
-var jsonFieldsNameOfStickerSet = [6]string{
+var jsonFieldsNameOfStickerSet = [7]string{
 	0: "name",
 	1: "title",
 	2: "is_animated",
-	3: "contains_masks",
-	4: "stickers",
-	5: "thumb",
+	3: "is_video",
+	4: "contains_masks",
+	5: "stickers",
+	6: "thumb",
 }
 
 // Decode decodes StickerSet from json.
@@ -34126,15 +34178,22 @@ func (s *StickerSet) Decode(d *jx.Decoder) error {
 			if err != nil {
 				return err
 			}
-		case "contains_masks":
+		case "is_video":
 			requiredBitSet[0] |= 1 << 3
+			v, err := d.Bool()
+			s.IsVideo = bool(v)
+			if err != nil {
+				return err
+			}
+		case "contains_masks":
+			requiredBitSet[0] |= 1 << 4
 			v, err := d.Bool()
 			s.ContainsMasks = bool(v)
 			if err != nil {
 				return err
 			}
 		case "stickers":
-			requiredBitSet[0] |= 1 << 4
+			requiredBitSet[0] |= 1 << 5
 			s.Stickers = nil
 			if err := d.Arr(func(d *jx.Decoder) error {
 				var elem Sticker
@@ -34160,7 +34219,7 @@ func (s *StickerSet) Decode(d *jx.Decoder) error {
 	}
 	var failures []validate.FieldError
 	for i, mask := range [1]uint8{
-		0b00011111,
+		0b00111111,
 	} {
 		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
 			// Mask only required fields and check equality to mask using XOR.
