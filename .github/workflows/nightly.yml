@@ -9,6 +9,12 @@ jobs:
   update-schema:
     runs-on: ubuntu-latest
     steps:
+      - uses: tibdex/github-app-token@v1
+        id: generate-token
+        with:
+          app_id: ${{ secrets.APP_ID }}
+          private_key: ${{ secrets.APP_PRIVATE_KEY }}
+
       - name: Checkout latest code
         uses: actions/checkout@v2.4.0
 
@@ -44,6 +50,7 @@ jobs:
           commit-message: 'feat(oas): update BotAPI schema'
           branch: feat/update-schema
           delete-branch: true
+          token: ${{ steps.generate-token.outputs.token }}
           title: Update Bot API schema to the latest version
           body: |
             Update Bot API schema to the latest version.

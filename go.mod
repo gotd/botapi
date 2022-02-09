@@ -9,14 +9,14 @@ require (
 	github.com/go-faster/jx v0.32.1
 	github.com/google/uuid v1.3.0
 	github.com/gotd/td v0.55.2
-	github.com/ogen-go/ogen v0.14.1
+	github.com/ogen-go/ogen v0.14.0
 	github.com/stretchr/testify v1.7.0
 	go.etcd.io/bbolt v1.3.6
 	go.opentelemetry.io/otel v1.3.0
 	go.opentelemetry.io/otel/metric v0.26.0
 	go.opentelemetry.io/otel/trace v1.3.0
 	go.uber.org/multierr v1.7.0
-	go.uber.org/zap v1.21.0
+	go.uber.org/zap v1.20.0
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
 )
 
