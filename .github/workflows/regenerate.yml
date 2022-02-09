@@ -49,7 +49,6 @@ jobs:
         run: make generate
 
       - name: Create PR
-        id: cpr
         if: ${{ contains(steps.metadata.outputs.dependency-names, 'ogen') }}
         uses: peter-evans/create-pull-request@v3.12.1
         with:
@@ -64,7 +63,6 @@ jobs:
             Re-generate bot API schema.
 
       - name: Create PR
-        id: cpr
         if: ${{ github.event_name == 'workflow_dispatch' }}
         uses: peter-evans/create-pull-request@v3.12.1
         with:
