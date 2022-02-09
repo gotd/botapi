@@ -16,6 +16,12 @@ jobs:
           app_id: ${{ secrets.APP_ID }}
           private_key: ${{ secrets.APP_PRIVATE_KEY }}
 
+      - name: Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v1.1.1
+        with:
+          github-token: ${{ steps.generate-token.outputs.token }}
+
       - name: Checkout latest code
         uses: actions/checkout@v2.4.0
 
@@ -44,6 +50,7 @@ jobs:
 
       - name: Create PR
         id: cpr
+        if: ${{ contains(steps.metadata.outputs.dependency-names, 'ogen') }}
         uses: peter-evans/create-pull-request@v3.12.1
         with:
           author: GitHub <actions@github.com>
@@ -52,6 +59,21 @@ jobs:
           branch: feat/regenerate-schema
           delete-branch: true
           token: ${{ steps.generate-token.outputs.token }}
-          title: Re-generate bot API schema
+          title: "Re-generate bot API schema (${{ steps.metadata.outputs.dependency-names }} update)"
+          body: |
+            Re-generate bot API schema.
+
+      - name: Create PR
+        id: cpr
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        uses: peter-evans/create-pull-request@v3.12.1
+        with:
+          author: GitHub <actions@github.com>
+          committer: GitHub <actions@github.com>
+          commit-message: 'feat(oas): regenerate BotAPI schema'
+          branch: feat/regenerate-schema
+          delete-branch: true
+          token: ${{ steps.generate-token.outputs.token }}
+          title: "Re-generate bot API schema"
           body: |
             Re-generate bot API schema.
