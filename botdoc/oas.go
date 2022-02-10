@@ -49,12 +49,16 @@ func (a API) typeOAS(f Field) *ogen.Schema {
 		switch t.Primitive {
 		case String:
 			p.Type = "string"
-
 			const defaultMarker = `, must be `
 			if idx := strings.LastIndex(p.Description, defaultMarker); idx > 0 {
 				// Handle possible default value.
 				v := p.Description[idx+len(defaultMarker):]
-				if !strings.Contains(p.Description, `one of `) {
+				if spaceIdx := strings.IndexAny(v, " \n\r."); spaceIdx > 0 {
+					v = v[:spaceIdx]
+				}
+				if v != "" &&
+					!strings.Contains(p.Description, `one of `) &&
+					!strings.Contains(p.Description, `PNG image`) {
 					data, err := json.Marshal(v)
 					if err != nil {
 						panic(err)
