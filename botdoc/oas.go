@@ -39,7 +39,7 @@ func resultFor(s *ogen.Schema) *ogen.Schema {
 func (a API) typeOAS(f Field) *ogen.Schema {
 	t := f.Type
 	p := &ogen.Schema{
-		Description: fixTypos(f.Description),
+		Description: cleanDescription(f.Description),
 	}
 	for _, value := range f.Enum {
 		p.Enum = append(p.Enum, strconv.AppendQuoteToASCII(nil, value))
@@ -49,12 +49,16 @@ func (a API) typeOAS(f Field) *ogen.Schema {
 		switch t.Primitive {
 		case String:
 			p.Type = "string"
-
 			const defaultMarker = `, must be `
 			if idx := strings.LastIndex(p.Description, defaultMarker); idx > 0 {
 				// Handle possible default value.
 				v := p.Description[idx+len(defaultMarker):]
-				if !strings.Contains(p.Description, `one of `) {
+				if spaceIdx := strings.IndexAny(v, " \n\r."); spaceIdx > 0 {
+					v = v[:spaceIdx]
+				}
+				if v != "" &&
+					!strings.Contains(p.Description, `one of `) &&
+					!strings.Contains(p.Description, `PNG image`) {
 					data, err := json.Marshal(v)
 					if err != nil {
 						panic(err)
@@ -150,7 +154,7 @@ func (a API) OAS() (*ogen.Spec, error) {
 
 	for _, d := range a.Types {
 		s := &ogen.Schema{
-			Description: fixTypos(d.Description),
+			Description: cleanDescription(d.Description),
 			Type:        "object",
 		}
 		if d.Ret != nil && d.Ret.Kind == KindSum {
