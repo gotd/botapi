@@ -155,10 +155,17 @@ const (
 var typosReplacer = strings.NewReplacer(
 	`unpriviledged`, `unprivileged`,
 	`Url`, `URL`,
+	"More info on Sending Files »", "",
+	"“", `"`,
+	"”", `"`,
 )
 
 func fixTypos(s string) string {
 	return typosReplacer.Replace(s)
+}
+
+func cleanDescription(s string) string {
+	return strings.TrimSpace(fixTypos(s))
 }
 
 // Extract API definition from goquery document.
@@ -226,7 +233,7 @@ func Extract(doc *goquery.Document) (a API) {
 			return
 		}
 		if s.Is("p") && d.Name != "" {
-			d.Description = fixTypos(strings.TrimSpace(s.Text()))
+			d.Description = cleanDescription(s.Text())
 			if strings.Contains(strings.ToLower(d.Description), `currently holds no information`) {
 				appendDefinition()
 			}

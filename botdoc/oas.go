@@ -39,7 +39,7 @@ func resultFor(s *ogen.Schema) *ogen.Schema {
 func (a API) typeOAS(f Field) *ogen.Schema {
 	t := f.Type
 	p := &ogen.Schema{
-		Description: fixTypos(f.Description),
+		Description: cleanDescription(f.Description),
 	}
 	for _, value := range f.Enum {
 		p.Enum = append(p.Enum, strconv.AppendQuoteToASCII(nil, value))
@@ -154,7 +154,7 @@ func (a API) OAS() (*ogen.Spec, error) {
 
 	for _, d := range a.Types {
 		s := &ogen.Schema{
-			Description: fixTypos(d.Description),
+			Description: cleanDescription(d.Description),
 			Type:        "object",
 		}
 		if d.Ret != nil && d.Ret.Kind == KindSum {
