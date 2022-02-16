@@ -154,7 +154,6 @@ func (s *AddStickerToSet) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "user_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Int64()
 				s.UserID = int64(v)
@@ -167,7 +166,6 @@ func (s *AddStickerToSet) Decode(d *jx.Decoder) error {
 			}
 		case "name":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Name = string(v)
@@ -179,7 +177,6 @@ func (s *AddStickerToSet) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"name\"")
 			}
 		case "png_sticker":
-
 			if err := func() error {
 				s.PNGSticker.Reset()
 				if err := s.PNGSticker.Decode(d); err != nil {
@@ -190,7 +187,6 @@ func (s *AddStickerToSet) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"png_sticker\"")
 			}
 		case "tgs_sticker":
-
 			if err := func() error {
 				s.TgsSticker.Reset()
 				if err := s.TgsSticker.Decode(d); err != nil {
@@ -201,7 +197,6 @@ func (s *AddStickerToSet) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"tgs_sticker\"")
 			}
 		case "webm_sticker":
-
 			if err := func() error {
 				s.WebmSticker.Reset()
 				if err := s.WebmSticker.Decode(d); err != nil {
@@ -213,7 +208,6 @@ func (s *AddStickerToSet) Decode(d *jx.Decoder) error {
 			}
 		case "emojis":
 			requiredBitSet[0] |= 1 << 5
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Emojis = string(v)
@@ -225,7 +219,6 @@ func (s *AddStickerToSet) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"emojis\"")
 			}
 		case "mask_position":
-
 			if err := func() error {
 				s.MaskPosition.Reset()
 				if err := s.MaskPosition.Decode(d); err != nil {
@@ -380,7 +373,6 @@ func (s *Animation) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "file_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.FileID = string(v)
@@ -393,7 +385,6 @@ func (s *Animation) Decode(d *jx.Decoder) error {
 			}
 		case "file_unique_id":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.FileUniqueID = string(v)
@@ -406,7 +397,6 @@ func (s *Animation) Decode(d *jx.Decoder) error {
 			}
 		case "width":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Int()
 				s.Width = int(v)
@@ -419,7 +409,6 @@ func (s *Animation) Decode(d *jx.Decoder) error {
 			}
 		case "height":
 			requiredBitSet[0] |= 1 << 3
-
 			if err := func() error {
 				v, err := d.Int()
 				s.Height = int(v)
@@ -432,7 +421,6 @@ func (s *Animation) Decode(d *jx.Decoder) error {
 			}
 		case "duration":
 			requiredBitSet[0] |= 1 << 4
-
 			if err := func() error {
 				v, err := d.Int()
 				s.Duration = int(v)
@@ -444,7 +432,6 @@ func (s *Animation) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"duration\"")
 			}
 		case "thumb":
-
 			if err := func() error {
 				s.Thumb.Reset()
 				if err := s.Thumb.Decode(d); err != nil {
@@ -455,7 +442,6 @@ func (s *Animation) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"thumb\"")
 			}
 		case "file_name":
-
 			if err := func() error {
 				s.FileName.Reset()
 				if err := s.FileName.Decode(d); err != nil {
@@ -466,7 +452,6 @@ func (s *Animation) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"file_name\"")
 			}
 		case "mime_type":
-
 			if err := func() error {
 				s.MimeType.Reset()
 				if err := s.MimeType.Decode(d); err != nil {
@@ -477,7 +462,6 @@ func (s *Animation) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"mime_type\"")
 			}
 		case "file_size":
-
 			if err := func() error {
 				s.FileSize.Reset()
 				if err := s.FileSize.Decode(d); err != nil {
@@ -605,7 +589,6 @@ func (s *AnswerCallbackQuery) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "callback_query_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.CallbackQueryID = string(v)
@@ -617,7 +600,6 @@ func (s *AnswerCallbackQuery) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"callback_query_id\"")
 			}
 		case "text":
-
 			if err := func() error {
 				s.Text.Reset()
 				if err := s.Text.Decode(d); err != nil {
@@ -628,7 +610,6 @@ func (s *AnswerCallbackQuery) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"text\"")
 			}
 		case "show_alert":
-
 			if err := func() error {
 				s.ShowAlert.Reset()
 				if err := s.ShowAlert.Decode(d); err != nil {
@@ -639,7 +620,6 @@ func (s *AnswerCallbackQuery) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"show_alert\"")
 			}
 		case "url":
-
 			if err := func() error {
 				s.URL.Reset()
 				if err := s.URL.Decode(d); err != nil {
@@ -650,7 +630,6 @@ func (s *AnswerCallbackQuery) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"url\"")
 			}
 		case "cache_time":
-
 			if err := func() error {
 				s.CacheTime.Reset()
 				if err := s.CacheTime.Decode(d); err != nil {
@@ -806,7 +785,6 @@ func (s *AnswerInlineQuery) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "inline_query_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.InlineQueryID = string(v)
@@ -819,9 +797,8 @@ func (s *AnswerInlineQuery) Decode(d *jx.Decoder) error {
 			}
 		case "results":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
-				s.Results = nil
+				s.Results = make([]InlineQueryResult, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem InlineQueryResult
 					if err := elem.Decode(d); err != nil {
@@ -837,7 +814,6 @@ func (s *AnswerInlineQuery) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"results\"")
 			}
 		case "cache_time":
-
 			if err := func() error {
 				s.CacheTime.Reset()
 				if err := s.CacheTime.Decode(d); err != nil {
@@ -848,7 +824,6 @@ func (s *AnswerInlineQuery) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"cache_time\"")
 			}
 		case "is_personal":
-
 			if err := func() error {
 				s.IsPersonal.Reset()
 				if err := s.IsPersonal.Decode(d); err != nil {
@@ -859,7 +834,6 @@ func (s *AnswerInlineQuery) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"is_personal\"")
 			}
 		case "next_offset":
-
 			if err := func() error {
 				s.NextOffset.Reset()
 				if err := s.NextOffset.Decode(d); err != nil {
@@ -870,7 +844,6 @@ func (s *AnswerInlineQuery) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"next_offset\"")
 			}
 		case "switch_pm_text":
-
 			if err := func() error {
 				s.SwitchPmText.Reset()
 				if err := s.SwitchPmText.Decode(d); err != nil {
@@ -881,7 +854,6 @@ func (s *AnswerInlineQuery) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"switch_pm_text\"")
 			}
 		case "switch_pm_parameter":
-
 			if err := func() error {
 				s.SwitchPmParameter.Reset()
 				if err := s.SwitchPmParameter.Decode(d); err != nil {
@@ -985,7 +957,6 @@ func (s *AnswerPreCheckoutQuery) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "pre_checkout_query_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.PreCheckoutQueryID = string(v)
@@ -998,7 +969,6 @@ func (s *AnswerPreCheckoutQuery) Decode(d *jx.Decoder) error {
 			}
 		case "ok":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Bool()
 				s.Ok = bool(v)
@@ -1010,7 +980,6 @@ func (s *AnswerPreCheckoutQuery) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"ok\"")
 			}
 		case "error_message":
-
 			if err := func() error {
 				s.ErrorMessage.Reset()
 				if err := s.ErrorMessage.Decode(d); err != nil {
@@ -1136,7 +1105,6 @@ func (s *AnswerShippingQuery) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "shipping_query_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.ShippingQueryID = string(v)
@@ -1149,7 +1117,6 @@ func (s *AnswerShippingQuery) Decode(d *jx.Decoder) error {
 			}
 		case "ok":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Bool()
 				s.Ok = bool(v)
@@ -1161,9 +1128,8 @@ func (s *AnswerShippingQuery) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"ok\"")
 			}
 		case "shipping_options":
-
 			if err := func() error {
-				s.ShippingOptions = nil
+				s.ShippingOptions = make([]ShippingOption, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem ShippingOption
 					if err := elem.Decode(d); err != nil {
@@ -1179,7 +1145,6 @@ func (s *AnswerShippingQuery) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"shipping_options\"")
 			}
 		case "error_message":
-
 			if err := func() error {
 				s.ErrorMessage.Reset()
 				if err := s.ErrorMessage.Decode(d); err != nil {
@@ -1273,7 +1238,6 @@ func (s *ApproveChatJoinRequest) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "chat_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				if err := s.ChatID.Decode(d); err != nil {
 					return err
@@ -1284,7 +1248,6 @@ func (s *ApproveChatJoinRequest) Decode(d *jx.Decoder) error {
 			}
 		case "user_id":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Int64()
 				s.UserID = int64(v)
@@ -1446,7 +1409,6 @@ func (s *Audio) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "file_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.FileID = string(v)
@@ -1459,7 +1421,6 @@ func (s *Audio) Decode(d *jx.Decoder) error {
 			}
 		case "file_unique_id":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.FileUniqueID = string(v)
@@ -1472,7 +1433,6 @@ func (s *Audio) Decode(d *jx.Decoder) error {
 			}
 		case "duration":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Int()
 				s.Duration = int(v)
@@ -1484,7 +1444,6 @@ func (s *Audio) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"duration\"")
 			}
 		case "performer":
-
 			if err := func() error {
 				s.Performer.Reset()
 				if err := s.Performer.Decode(d); err != nil {
@@ -1495,7 +1454,6 @@ func (s *Audio) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"performer\"")
 			}
 		case "title":
-
 			if err := func() error {
 				s.Title.Reset()
 				if err := s.Title.Decode(d); err != nil {
@@ -1506,7 +1464,6 @@ func (s *Audio) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"title\"")
 			}
 		case "file_name":
-
 			if err := func() error {
 				s.FileName.Reset()
 				if err := s.FileName.Decode(d); err != nil {
@@ -1517,7 +1474,6 @@ func (s *Audio) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"file_name\"")
 			}
 		case "mime_type":
-
 			if err := func() error {
 				s.MimeType.Reset()
 				if err := s.MimeType.Decode(d); err != nil {
@@ -1528,7 +1484,6 @@ func (s *Audio) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"mime_type\"")
 			}
 		case "file_size":
-
 			if err := func() error {
 				s.FileSize.Reset()
 				if err := s.FileSize.Decode(d); err != nil {
@@ -1539,7 +1494,6 @@ func (s *Audio) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"file_size\"")
 			}
 		case "thumb":
-
 			if err := func() error {
 				s.Thumb.Reset()
 				if err := s.Thumb.Decode(d); err != nil {
@@ -1654,7 +1608,6 @@ func (s *BanChatMember) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "chat_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				if err := s.ChatID.Decode(d); err != nil {
 					return err
@@ -1665,7 +1618,6 @@ func (s *BanChatMember) Decode(d *jx.Decoder) error {
 			}
 		case "user_id":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Int64()
 				s.UserID = int64(v)
@@ -1677,7 +1629,6 @@ func (s *BanChatMember) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"user_id\"")
 			}
 		case "until_date":
-
 			if err := func() error {
 				s.UntilDate.Reset()
 				if err := s.UntilDate.Decode(d); err != nil {
@@ -1688,7 +1639,6 @@ func (s *BanChatMember) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"until_date\"")
 			}
 		case "revoke_messages":
-
 			if err := func() error {
 				s.RevokeMessages.Reset()
 				if err := s.RevokeMessages.Decode(d); err != nil {
@@ -1782,7 +1732,6 @@ func (s *BanChatSenderChat) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "chat_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				if err := s.ChatID.Decode(d); err != nil {
 					return err
@@ -1793,7 +1742,6 @@ func (s *BanChatSenderChat) Decode(d *jx.Decoder) error {
 			}
 		case "sender_chat_id":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Int64()
 				s.SenderChatID = int64(v)
@@ -1888,7 +1836,6 @@ func (s *BotCommand) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "command":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Command = string(v)
@@ -1901,7 +1848,6 @@ func (s *BotCommand) Decode(d *jx.Decoder) error {
 			}
 		case "description":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Description = string(v)
@@ -2096,12 +2042,12 @@ func (s *BotCommandScopeAllChatAdministrators) Decode(d *jx.Decoder) error {
 		return errors.New("invalid: unable to decode BotCommandScopeAllChatAdministrators to nil")
 	}
 	var requiredBitSet [1]uint8
+	s.setDefaults()
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "type":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Type = string(v)
@@ -2184,12 +2130,12 @@ func (s *BotCommandScopeAllGroupChats) Decode(d *jx.Decoder) error {
 		return errors.New("invalid: unable to decode BotCommandScopeAllGroupChats to nil")
 	}
 	var requiredBitSet [1]uint8
+	s.setDefaults()
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "type":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Type = string(v)
@@ -2272,12 +2218,12 @@ func (s *BotCommandScopeAllPrivateChats) Decode(d *jx.Decoder) error {
 		return errors.New("invalid: unable to decode BotCommandScopeAllPrivateChats to nil")
 	}
 	var requiredBitSet [1]uint8
+	s.setDefaults()
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "type":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Type = string(v)
@@ -2367,12 +2313,12 @@ func (s *BotCommandScopeChat) Decode(d *jx.Decoder) error {
 		return errors.New("invalid: unable to decode BotCommandScopeChat to nil")
 	}
 	var requiredBitSet [1]uint8
+	s.setDefaults()
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "type":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Type = string(v)
@@ -2385,7 +2331,6 @@ func (s *BotCommandScopeChat) Decode(d *jx.Decoder) error {
 			}
 		case "chat_id":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				if err := s.ChatID.Decode(d); err != nil {
 					return err
@@ -2473,12 +2418,12 @@ func (s *BotCommandScopeChatAdministrators) Decode(d *jx.Decoder) error {
 		return errors.New("invalid: unable to decode BotCommandScopeChatAdministrators to nil")
 	}
 	var requiredBitSet [1]uint8
+	s.setDefaults()
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "type":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Type = string(v)
@@ -2491,7 +2436,6 @@ func (s *BotCommandScopeChatAdministrators) Decode(d *jx.Decoder) error {
 			}
 		case "chat_id":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				if err := s.ChatID.Decode(d); err != nil {
 					return err
@@ -2586,12 +2530,12 @@ func (s *BotCommandScopeChatMember) Decode(d *jx.Decoder) error {
 		return errors.New("invalid: unable to decode BotCommandScopeChatMember to nil")
 	}
 	var requiredBitSet [1]uint8
+	s.setDefaults()
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "type":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Type = string(v)
@@ -2604,7 +2548,6 @@ func (s *BotCommandScopeChatMember) Decode(d *jx.Decoder) error {
 			}
 		case "chat_id":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				if err := s.ChatID.Decode(d); err != nil {
 					return err
@@ -2615,7 +2558,6 @@ func (s *BotCommandScopeChatMember) Decode(d *jx.Decoder) error {
 			}
 		case "user_id":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Int64()
 				s.UserID = int64(v)
@@ -2698,12 +2640,12 @@ func (s *BotCommandScopeDefault) Decode(d *jx.Decoder) error {
 		return errors.New("invalid: unable to decode BotCommandScopeDefault to nil")
 	}
 	var requiredBitSet [1]uint8
+	s.setDefaults()
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "type":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Type = string(v)
@@ -2876,7 +2818,6 @@ func (s *CallbackQuery) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.ID = string(v)
@@ -2889,7 +2830,6 @@ func (s *CallbackQuery) Decode(d *jx.Decoder) error {
 			}
 		case "from":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				if err := s.From.Decode(d); err != nil {
 					return err
@@ -2899,7 +2839,6 @@ func (s *CallbackQuery) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"from\"")
 			}
 		case "message":
-
 			if err := func() error {
 				s.Message.Reset()
 				if err := s.Message.Decode(d); err != nil {
@@ -2910,7 +2849,6 @@ func (s *CallbackQuery) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"message\"")
 			}
 		case "inline_message_id":
-
 			if err := func() error {
 				s.InlineMessageID.Reset()
 				if err := s.InlineMessageID.Decode(d); err != nil {
@@ -2922,7 +2860,6 @@ func (s *CallbackQuery) Decode(d *jx.Decoder) error {
 			}
 		case "chat_instance":
 			requiredBitSet[0] |= 1 << 4
-
 			if err := func() error {
 				v, err := d.Str()
 				s.ChatInstance = string(v)
@@ -2934,7 +2871,6 @@ func (s *CallbackQuery) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"chat_instance\"")
 			}
 		case "data":
-
 			if err := func() error {
 				s.Data.Reset()
 				if err := s.Data.Decode(d); err != nil {
@@ -2945,7 +2881,6 @@ func (s *CallbackQuery) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"data\"")
 			}
 		case "game_short_name":
-
 			if err := func() error {
 				s.GameShortName.Reset()
 				if err := s.GameShortName.Decode(d); err != nil {
@@ -3229,7 +3164,6 @@ func (s *Chat) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Int64()
 				s.ID = int64(v)
@@ -3242,7 +3176,6 @@ func (s *Chat) Decode(d *jx.Decoder) error {
 			}
 		case "type":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				if err := s.Type.Decode(d); err != nil {
 					return err
@@ -3252,7 +3185,6 @@ func (s *Chat) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"type\"")
 			}
 		case "title":
-
 			if err := func() error {
 				s.Title.Reset()
 				if err := s.Title.Decode(d); err != nil {
@@ -3263,7 +3195,6 @@ func (s *Chat) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"title\"")
 			}
 		case "username":
-
 			if err := func() error {
 				s.Username.Reset()
 				if err := s.Username.Decode(d); err != nil {
@@ -3274,7 +3205,6 @@ func (s *Chat) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"username\"")
 			}
 		case "first_name":
-
 			if err := func() error {
 				s.FirstName.Reset()
 				if err := s.FirstName.Decode(d); err != nil {
@@ -3285,7 +3215,6 @@ func (s *Chat) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"first_name\"")
 			}
 		case "last_name":
-
 			if err := func() error {
 				s.LastName.Reset()
 				if err := s.LastName.Decode(d); err != nil {
@@ -3296,7 +3225,6 @@ func (s *Chat) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"last_name\"")
 			}
 		case "photo":
-
 			if err := func() error {
 				s.Photo.Reset()
 				if err := s.Photo.Decode(d); err != nil {
@@ -3307,7 +3235,6 @@ func (s *Chat) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"photo\"")
 			}
 		case "bio":
-
 			if err := func() error {
 				s.Bio.Reset()
 				if err := s.Bio.Decode(d); err != nil {
@@ -3318,7 +3245,6 @@ func (s *Chat) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"bio\"")
 			}
 		case "has_private_forwards":
-
 			if err := func() error {
 				s.HasPrivateForwards.Reset()
 				if err := s.HasPrivateForwards.Decode(d); err != nil {
@@ -3329,7 +3255,6 @@ func (s *Chat) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"has_private_forwards\"")
 			}
 		case "description":
-
 			if err := func() error {
 				s.Description.Reset()
 				if err := s.Description.Decode(d); err != nil {
@@ -3340,7 +3265,6 @@ func (s *Chat) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"description\"")
 			}
 		case "invite_link":
-
 			if err := func() error {
 				s.InviteLink.Reset()
 				if err := s.InviteLink.Decode(d); err != nil {
@@ -3351,7 +3275,6 @@ func (s *Chat) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"invite_link\"")
 			}
 		case "pinned_message":
-
 			if err := func() error {
 				s.PinnedMessage = nil
 				var elem Message
@@ -3364,7 +3287,6 @@ func (s *Chat) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"pinned_message\"")
 			}
 		case "permissions":
-
 			if err := func() error {
 				s.Permissions.Reset()
 				if err := s.Permissions.Decode(d); err != nil {
@@ -3375,7 +3297,6 @@ func (s *Chat) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"permissions\"")
 			}
 		case "slow_mode_delay":
-
 			if err := func() error {
 				s.SlowModeDelay.Reset()
 				if err := s.SlowModeDelay.Decode(d); err != nil {
@@ -3386,7 +3307,6 @@ func (s *Chat) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"slow_mode_delay\"")
 			}
 		case "message_auto_delete_time":
-
 			if err := func() error {
 				s.MessageAutoDeleteTime.Reset()
 				if err := s.MessageAutoDeleteTime.Decode(d); err != nil {
@@ -3397,7 +3317,6 @@ func (s *Chat) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"message_auto_delete_time\"")
 			}
 		case "has_protected_content":
-
 			if err := func() error {
 				s.HasProtectedContent.Reset()
 				if err := s.HasProtectedContent.Decode(d); err != nil {
@@ -3408,7 +3327,6 @@ func (s *Chat) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"has_protected_content\"")
 			}
 		case "sticker_set_name":
-
 			if err := func() error {
 				s.StickerSetName.Reset()
 				if err := s.StickerSetName.Decode(d); err != nil {
@@ -3419,7 +3337,6 @@ func (s *Chat) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"sticker_set_name\"")
 			}
 		case "can_set_sticker_set":
-
 			if err := func() error {
 				s.CanSetStickerSet.Reset()
 				if err := s.CanSetStickerSet.Decode(d); err != nil {
@@ -3430,7 +3347,6 @@ func (s *Chat) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"can_set_sticker_set\"")
 			}
 		case "linked_chat_id":
-
 			if err := func() error {
 				s.LinkedChatID.Reset()
 				if err := s.LinkedChatID.Decode(d); err != nil {
@@ -3441,7 +3357,6 @@ func (s *Chat) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"linked_chat_id\"")
 			}
 		case "location":
-
 			if err := func() error {
 				s.Location.Reset()
 				if err := s.Location.Decode(d); err != nil {
@@ -3452,7 +3367,6 @@ func (s *Chat) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"location\"")
 			}
 		case "all_members_are_administrators":
-
 			if err := func() error {
 				s.AllMembersAreAdministrators.Reset()
 				if err := s.AllMembersAreAdministrators.Decode(d); err != nil {
@@ -3609,7 +3523,6 @@ func (s *ChatInviteLink) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "invite_link":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.InviteLink = string(v)
@@ -3622,7 +3535,6 @@ func (s *ChatInviteLink) Decode(d *jx.Decoder) error {
 			}
 		case "creator":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				if err := s.Creator.Decode(d); err != nil {
 					return err
@@ -3633,7 +3545,6 @@ func (s *ChatInviteLink) Decode(d *jx.Decoder) error {
 			}
 		case "creates_join_request":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Bool()
 				s.CreatesJoinRequest = bool(v)
@@ -3646,7 +3557,6 @@ func (s *ChatInviteLink) Decode(d *jx.Decoder) error {
 			}
 		case "is_primary":
 			requiredBitSet[0] |= 1 << 3
-
 			if err := func() error {
 				v, err := d.Bool()
 				s.IsPrimary = bool(v)
@@ -3659,7 +3569,6 @@ func (s *ChatInviteLink) Decode(d *jx.Decoder) error {
 			}
 		case "is_revoked":
 			requiredBitSet[0] |= 1 << 4
-
 			if err := func() error {
 				v, err := d.Bool()
 				s.IsRevoked = bool(v)
@@ -3671,7 +3580,6 @@ func (s *ChatInviteLink) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"is_revoked\"")
 			}
 		case "name":
-
 			if err := func() error {
 				s.Name.Reset()
 				if err := s.Name.Decode(d); err != nil {
@@ -3682,7 +3590,6 @@ func (s *ChatInviteLink) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"name\"")
 			}
 		case "expire_date":
-
 			if err := func() error {
 				s.ExpireDate.Reset()
 				if err := s.ExpireDate.Decode(d); err != nil {
@@ -3693,7 +3600,6 @@ func (s *ChatInviteLink) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"expire_date\"")
 			}
 		case "member_limit":
-
 			if err := func() error {
 				s.MemberLimit.Reset()
 				if err := s.MemberLimit.Decode(d); err != nil {
@@ -3704,7 +3610,6 @@ func (s *ChatInviteLink) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"member_limit\"")
 			}
 		case "pending_join_request_count":
-
 			if err := func() error {
 				s.PendingJoinRequestCount.Reset()
 				if err := s.PendingJoinRequestCount.Decode(d); err != nil {
@@ -3826,7 +3731,6 @@ func (s *ChatJoinRequest) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "chat":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				if err := s.Chat.Decode(d); err != nil {
 					return err
@@ -3837,7 +3741,6 @@ func (s *ChatJoinRequest) Decode(d *jx.Decoder) error {
 			}
 		case "from":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				if err := s.From.Decode(d); err != nil {
 					return err
@@ -3848,7 +3751,6 @@ func (s *ChatJoinRequest) Decode(d *jx.Decoder) error {
 			}
 		case "date":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Int()
 				s.Date = int(v)
@@ -3860,7 +3762,6 @@ func (s *ChatJoinRequest) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"date\"")
 			}
 		case "bio":
-
 			if err := func() error {
 				s.Bio.Reset()
 				if err := s.Bio.Decode(d); err != nil {
@@ -3871,7 +3772,6 @@ func (s *ChatJoinRequest) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"bio\"")
 			}
 		case "invite_link":
-
 			if err := func() error {
 				s.InviteLink.Reset()
 				if err := s.InviteLink.Decode(d); err != nil {
@@ -3965,7 +3865,6 @@ func (s *ChatLocation) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "location":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				if err := s.Location.Decode(d); err != nil {
 					return err
@@ -3976,7 +3875,6 @@ func (s *ChatLocation) Decode(d *jx.Decoder) error {
 			}
 		case "address":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Address = string(v)
@@ -4277,7 +4175,6 @@ func (s *ChatMemberAdministrator) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "status":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Status = string(v)
@@ -4290,7 +4187,6 @@ func (s *ChatMemberAdministrator) Decode(d *jx.Decoder) error {
 			}
 		case "user":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				if err := s.User.Decode(d); err != nil {
 					return err
@@ -4301,7 +4197,6 @@ func (s *ChatMemberAdministrator) Decode(d *jx.Decoder) error {
 			}
 		case "can_be_edited":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Bool()
 				s.CanBeEdited = bool(v)
@@ -4314,7 +4209,6 @@ func (s *ChatMemberAdministrator) Decode(d *jx.Decoder) error {
 			}
 		case "is_anonymous":
 			requiredBitSet[0] |= 1 << 3
-
 			if err := func() error {
 				v, err := d.Bool()
 				s.IsAnonymous = bool(v)
@@ -4327,7 +4221,6 @@ func (s *ChatMemberAdministrator) Decode(d *jx.Decoder) error {
 			}
 		case "can_manage_chat":
 			requiredBitSet[0] |= 1 << 4
-
 			if err := func() error {
 				v, err := d.Bool()
 				s.CanManageChat = bool(v)
@@ -4340,7 +4233,6 @@ func (s *ChatMemberAdministrator) Decode(d *jx.Decoder) error {
 			}
 		case "can_delete_messages":
 			requiredBitSet[0] |= 1 << 5
-
 			if err := func() error {
 				v, err := d.Bool()
 				s.CanDeleteMessages = bool(v)
@@ -4353,7 +4245,6 @@ func (s *ChatMemberAdministrator) Decode(d *jx.Decoder) error {
 			}
 		case "can_manage_voice_chats":
 			requiredBitSet[0] |= 1 << 6
-
 			if err := func() error {
 				v, err := d.Bool()
 				s.CanManageVoiceChats = bool(v)
@@ -4366,7 +4257,6 @@ func (s *ChatMemberAdministrator) Decode(d *jx.Decoder) error {
 			}
 		case "can_restrict_members":
 			requiredBitSet[0] |= 1 << 7
-
 			if err := func() error {
 				v, err := d.Bool()
 				s.CanRestrictMembers = bool(v)
@@ -4379,7 +4269,6 @@ func (s *ChatMemberAdministrator) Decode(d *jx.Decoder) error {
 			}
 		case "can_promote_members":
 			requiredBitSet[1] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Bool()
 				s.CanPromoteMembers = bool(v)
@@ -4392,7 +4281,6 @@ func (s *ChatMemberAdministrator) Decode(d *jx.Decoder) error {
 			}
 		case "can_change_info":
 			requiredBitSet[1] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Bool()
 				s.CanChangeInfo = bool(v)
@@ -4405,7 +4293,6 @@ func (s *ChatMemberAdministrator) Decode(d *jx.Decoder) error {
 			}
 		case "can_invite_users":
 			requiredBitSet[1] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Bool()
 				s.CanInviteUsers = bool(v)
@@ -4417,7 +4304,6 @@ func (s *ChatMemberAdministrator) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"can_invite_users\"")
 			}
 		case "can_post_messages":
-
 			if err := func() error {
 				s.CanPostMessages.Reset()
 				if err := s.CanPostMessages.Decode(d); err != nil {
@@ -4428,7 +4314,6 @@ func (s *ChatMemberAdministrator) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"can_post_messages\"")
 			}
 		case "can_edit_messages":
-
 			if err := func() error {
 				s.CanEditMessages.Reset()
 				if err := s.CanEditMessages.Decode(d); err != nil {
@@ -4439,7 +4324,6 @@ func (s *ChatMemberAdministrator) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"can_edit_messages\"")
 			}
 		case "can_pin_messages":
-
 			if err := func() error {
 				s.CanPinMessages.Reset()
 				if err := s.CanPinMessages.Decode(d); err != nil {
@@ -4450,7 +4334,6 @@ func (s *ChatMemberAdministrator) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"can_pin_messages\"")
 			}
 		case "custom_title":
-
 			if err := func() error {
 				s.CustomTitle.Reset()
 				if err := s.CustomTitle.Decode(d); err != nil {
@@ -4552,7 +4435,6 @@ func (s *ChatMemberBanned) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "status":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Status = string(v)
@@ -4565,7 +4447,6 @@ func (s *ChatMemberBanned) Decode(d *jx.Decoder) error {
 			}
 		case "user":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				if err := s.User.Decode(d); err != nil {
 					return err
@@ -4576,7 +4457,6 @@ func (s *ChatMemberBanned) Decode(d *jx.Decoder) error {
 			}
 		case "until_date":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Int()
 				s.UntilDate = int(v)
@@ -4671,7 +4551,6 @@ func (s *ChatMemberLeft) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "status":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Status = string(v)
@@ -4684,7 +4563,6 @@ func (s *ChatMemberLeft) Decode(d *jx.Decoder) error {
 			}
 		case "user":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				if err := s.User.Decode(d); err != nil {
 					return err
@@ -4777,7 +4655,6 @@ func (s *ChatMemberMember) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "status":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Status = string(v)
@@ -4790,7 +4667,6 @@ func (s *ChatMemberMember) Decode(d *jx.Decoder) error {
 			}
 		case "user":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				if err := s.User.Decode(d); err != nil {
 					return err
@@ -4900,7 +4776,6 @@ func (s *ChatMemberOwner) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "status":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Status = string(v)
@@ -4913,7 +4788,6 @@ func (s *ChatMemberOwner) Decode(d *jx.Decoder) error {
 			}
 		case "user":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				if err := s.User.Decode(d); err != nil {
 					return err
@@ -4924,7 +4798,6 @@ func (s *ChatMemberOwner) Decode(d *jx.Decoder) error {
 			}
 		case "is_anonymous":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Bool()
 				s.IsAnonymous = bool(v)
@@ -4936,7 +4809,6 @@ func (s *ChatMemberOwner) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"is_anonymous\"")
 			}
 		case "custom_title":
-
 			if err := func() error {
 				s.CustomTitle.Reset()
 				if err := s.CustomTitle.Decode(d); err != nil {
@@ -5100,7 +4972,6 @@ func (s *ChatMemberRestricted) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "status":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Status = string(v)
@@ -5113,7 +4984,6 @@ func (s *ChatMemberRestricted) Decode(d *jx.Decoder) error {
 			}
 		case "user":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				if err := s.User.Decode(d); err != nil {
 					return err
@@ -5124,7 +4994,6 @@ func (s *ChatMemberRestricted) Decode(d *jx.Decoder) error {
 			}
 		case "is_member":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Bool()
 				s.IsMember = bool(v)
@@ -5137,7 +5006,6 @@ func (s *ChatMemberRestricted) Decode(d *jx.Decoder) error {
 			}
 		case "can_change_info":
 			requiredBitSet[0] |= 1 << 3
-
 			if err := func() error {
 				v, err := d.Bool()
 				s.CanChangeInfo = bool(v)
@@ -5150,7 +5018,6 @@ func (s *ChatMemberRestricted) Decode(d *jx.Decoder) error {
 			}
 		case "can_invite_users":
 			requiredBitSet[0] |= 1 << 4
-
 			if err := func() error {
 				v, err := d.Bool()
 				s.CanInviteUsers = bool(v)
@@ -5163,7 +5030,6 @@ func (s *ChatMemberRestricted) Decode(d *jx.Decoder) error {
 			}
 		case "can_pin_messages":
 			requiredBitSet[0] |= 1 << 5
-
 			if err := func() error {
 				v, err := d.Bool()
 				s.CanPinMessages = bool(v)
@@ -5176,7 +5042,6 @@ func (s *ChatMemberRestricted) Decode(d *jx.Decoder) error {
 			}
 		case "can_send_messages":
 			requiredBitSet[0] |= 1 << 6
-
 			if err := func() error {
 				v, err := d.Bool()
 				s.CanSendMessages = bool(v)
@@ -5189,7 +5054,6 @@ func (s *ChatMemberRestricted) Decode(d *jx.Decoder) error {
 			}
 		case "can_send_media_messages":
 			requiredBitSet[0] |= 1 << 7
-
 			if err := func() error {
 				v, err := d.Bool()
 				s.CanSendMediaMessages = bool(v)
@@ -5202,7 +5066,6 @@ func (s *ChatMemberRestricted) Decode(d *jx.Decoder) error {
 			}
 		case "can_send_polls":
 			requiredBitSet[1] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Bool()
 				s.CanSendPolls = bool(v)
@@ -5215,7 +5078,6 @@ func (s *ChatMemberRestricted) Decode(d *jx.Decoder) error {
 			}
 		case "can_send_other_messages":
 			requiredBitSet[1] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Bool()
 				s.CanSendOtherMessages = bool(v)
@@ -5228,7 +5090,6 @@ func (s *ChatMemberRestricted) Decode(d *jx.Decoder) error {
 			}
 		case "can_add_web_page_previews":
 			requiredBitSet[1] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Bool()
 				s.CanAddWebPagePreviews = bool(v)
@@ -5241,7 +5102,6 @@ func (s *ChatMemberRestricted) Decode(d *jx.Decoder) error {
 			}
 		case "until_date":
 			requiredBitSet[1] |= 1 << 3
-
 			if err := func() error {
 				v, err := d.Int()
 				s.UntilDate = int(v)
@@ -5368,7 +5228,6 @@ func (s *ChatMemberUpdated) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "chat":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				if err := s.Chat.Decode(d); err != nil {
 					return err
@@ -5379,7 +5238,6 @@ func (s *ChatMemberUpdated) Decode(d *jx.Decoder) error {
 			}
 		case "from":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				if err := s.From.Decode(d); err != nil {
 					return err
@@ -5390,7 +5248,6 @@ func (s *ChatMemberUpdated) Decode(d *jx.Decoder) error {
 			}
 		case "date":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Int()
 				s.Date = int(v)
@@ -5403,7 +5260,6 @@ func (s *ChatMemberUpdated) Decode(d *jx.Decoder) error {
 			}
 		case "old_chat_member":
 			requiredBitSet[0] |= 1 << 3
-
 			if err := func() error {
 				if err := s.OldChatMember.Decode(d); err != nil {
 					return err
@@ -5414,7 +5270,6 @@ func (s *ChatMemberUpdated) Decode(d *jx.Decoder) error {
 			}
 		case "new_chat_member":
 			requiredBitSet[0] |= 1 << 4
-
 			if err := func() error {
 				if err := s.NewChatMember.Decode(d); err != nil {
 					return err
@@ -5424,7 +5279,6 @@ func (s *ChatMemberUpdated) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"new_chat_member\"")
 			}
 		case "invite_link":
-
 			if err := func() error {
 				s.InviteLink.Reset()
 				if err := s.InviteLink.Decode(d); err != nil {
@@ -5603,7 +5457,6 @@ func (s *ChatPermissions) Decode(d *jx.Decoder) error {
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "can_send_messages":
-
 			if err := func() error {
 				s.CanSendMessages.Reset()
 				if err := s.CanSendMessages.Decode(d); err != nil {
@@ -5614,7 +5467,6 @@ func (s *ChatPermissions) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"can_send_messages\"")
 			}
 		case "can_send_media_messages":
-
 			if err := func() error {
 				s.CanSendMediaMessages.Reset()
 				if err := s.CanSendMediaMessages.Decode(d); err != nil {
@@ -5625,7 +5477,6 @@ func (s *ChatPermissions) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"can_send_media_messages\"")
 			}
 		case "can_send_polls":
-
 			if err := func() error {
 				s.CanSendPolls.Reset()
 				if err := s.CanSendPolls.Decode(d); err != nil {
@@ -5636,7 +5487,6 @@ func (s *ChatPermissions) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"can_send_polls\"")
 			}
 		case "can_send_other_messages":
-
 			if err := func() error {
 				s.CanSendOtherMessages.Reset()
 				if err := s.CanSendOtherMessages.Decode(d); err != nil {
@@ -5647,7 +5497,6 @@ func (s *ChatPermissions) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"can_send_other_messages\"")
 			}
 		case "can_add_web_page_previews":
-
 			if err := func() error {
 				s.CanAddWebPagePreviews.Reset()
 				if err := s.CanAddWebPagePreviews.Decode(d); err != nil {
@@ -5658,7 +5507,6 @@ func (s *ChatPermissions) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"can_add_web_page_previews\"")
 			}
 		case "can_change_info":
-
 			if err := func() error {
 				s.CanChangeInfo.Reset()
 				if err := s.CanChangeInfo.Decode(d); err != nil {
@@ -5669,7 +5517,6 @@ func (s *ChatPermissions) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"can_change_info\"")
 			}
 		case "can_invite_users":
-
 			if err := func() error {
 				s.CanInviteUsers.Reset()
 				if err := s.CanInviteUsers.Decode(d); err != nil {
@@ -5680,7 +5527,6 @@ func (s *ChatPermissions) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"can_invite_users\"")
 			}
 		case "can_pin_messages":
-
 			if err := func() error {
 				s.CanPinMessages.Reset()
 				if err := s.CanPinMessages.Decode(d); err != nil {
@@ -5756,7 +5602,6 @@ func (s *ChatPhoto) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "small_file_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.SmallFileID = string(v)
@@ -5769,7 +5614,6 @@ func (s *ChatPhoto) Decode(d *jx.Decoder) error {
 			}
 		case "small_file_unique_id":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.SmallFileUniqueID = string(v)
@@ -5782,7 +5626,6 @@ func (s *ChatPhoto) Decode(d *jx.Decoder) error {
 			}
 		case "big_file_id":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Str()
 				s.BigFileID = string(v)
@@ -5795,7 +5638,6 @@ func (s *ChatPhoto) Decode(d *jx.Decoder) error {
 			}
 		case "big_file_unique_id":
 			requiredBitSet[0] |= 1 << 3
-
 			if err := func() error {
 				v, err := d.Str()
 				s.BigFileUniqueID = string(v)
@@ -5948,7 +5790,6 @@ func (s *ChosenInlineResult) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "result_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.ResultID = string(v)
@@ -5961,7 +5802,6 @@ func (s *ChosenInlineResult) Decode(d *jx.Decoder) error {
 			}
 		case "from":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				if err := s.From.Decode(d); err != nil {
 					return err
@@ -5971,7 +5811,6 @@ func (s *ChosenInlineResult) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"from\"")
 			}
 		case "location":
-
 			if err := func() error {
 				s.Location.Reset()
 				if err := s.Location.Decode(d); err != nil {
@@ -5982,7 +5821,6 @@ func (s *ChosenInlineResult) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"location\"")
 			}
 		case "inline_message_id":
-
 			if err := func() error {
 				s.InlineMessageID.Reset()
 				if err := s.InlineMessageID.Decode(d); err != nil {
@@ -5994,7 +5832,6 @@ func (s *ChosenInlineResult) Decode(d *jx.Decoder) error {
 			}
 		case "query":
 			requiredBitSet[0] |= 1 << 4
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Query = string(v)
@@ -6119,7 +5956,6 @@ func (s *Contact) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "phone_number":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.PhoneNumber = string(v)
@@ -6132,7 +5968,6 @@ func (s *Contact) Decode(d *jx.Decoder) error {
 			}
 		case "first_name":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.FirstName = string(v)
@@ -6144,7 +5979,6 @@ func (s *Contact) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"first_name\"")
 			}
 		case "last_name":
-
 			if err := func() error {
 				s.LastName.Reset()
 				if err := s.LastName.Decode(d); err != nil {
@@ -6155,7 +5989,6 @@ func (s *Contact) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"last_name\"")
 			}
 		case "user_id":
-
 			if err := func() error {
 				s.UserID.Reset()
 				if err := s.UserID.Decode(d); err != nil {
@@ -6166,7 +5999,6 @@ func (s *Contact) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"user_id\"")
 			}
 		case "vcard":
-
 			if err := func() error {
 				s.Vcard.Reset()
 				if err := s.Vcard.Decode(d); err != nil {
@@ -6359,7 +6191,6 @@ func (s *CopyMessage) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "chat_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				if err := s.ChatID.Decode(d); err != nil {
 					return err
@@ -6370,7 +6201,6 @@ func (s *CopyMessage) Decode(d *jx.Decoder) error {
 			}
 		case "from_chat_id":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				if err := s.FromChatID.Decode(d); err != nil {
 					return err
@@ -6381,7 +6211,6 @@ func (s *CopyMessage) Decode(d *jx.Decoder) error {
 			}
 		case "message_id":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Int()
 				s.MessageID = int(v)
@@ -6393,7 +6222,6 @@ func (s *CopyMessage) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"message_id\"")
 			}
 		case "caption":
-
 			if err := func() error {
 				s.Caption.Reset()
 				if err := s.Caption.Decode(d); err != nil {
@@ -6404,7 +6232,6 @@ func (s *CopyMessage) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"caption\"")
 			}
 		case "parse_mode":
-
 			if err := func() error {
 				s.ParseMode.Reset()
 				if err := s.ParseMode.Decode(d); err != nil {
@@ -6415,9 +6242,8 @@ func (s *CopyMessage) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"parse_mode\"")
 			}
 		case "caption_entities":
-
 			if err := func() error {
-				s.CaptionEntities = nil
+				s.CaptionEntities = make([]MessageEntity, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem MessageEntity
 					if err := elem.Decode(d); err != nil {
@@ -6433,7 +6259,6 @@ func (s *CopyMessage) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"caption_entities\"")
 			}
 		case "disable_notification":
-
 			if err := func() error {
 				s.DisableNotification.Reset()
 				if err := s.DisableNotification.Decode(d); err != nil {
@@ -6444,7 +6269,6 @@ func (s *CopyMessage) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"disable_notification\"")
 			}
 		case "protect_content":
-
 			if err := func() error {
 				s.ProtectContent.Reset()
 				if err := s.ProtectContent.Decode(d); err != nil {
@@ -6455,7 +6279,6 @@ func (s *CopyMessage) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"protect_content\"")
 			}
 		case "reply_to_message_id":
-
 			if err := func() error {
 				s.ReplyToMessageID.Reset()
 				if err := s.ReplyToMessageID.Decode(d); err != nil {
@@ -6466,7 +6289,6 @@ func (s *CopyMessage) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"reply_to_message_id\"")
 			}
 		case "allow_sending_without_reply":
-
 			if err := func() error {
 				s.AllowSendingWithoutReply.Reset()
 				if err := s.AllowSendingWithoutReply.Decode(d); err != nil {
@@ -6477,7 +6299,6 @@ func (s *CopyMessage) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"allow_sending_without_reply\"")
 			}
 		case "reply_markup":
-
 			if err := func() error {
 				s.ReplyMarkup.Reset()
 				if err := s.ReplyMarkup.Decode(d); err != nil {
@@ -6605,7 +6426,6 @@ func (s *CreateChatInviteLink) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "chat_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				if err := s.ChatID.Decode(d); err != nil {
 					return err
@@ -6615,7 +6435,6 @@ func (s *CreateChatInviteLink) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"chat_id\"")
 			}
 		case "name":
-
 			if err := func() error {
 				s.Name.Reset()
 				if err := s.Name.Decode(d); err != nil {
@@ -6626,7 +6445,6 @@ func (s *CreateChatInviteLink) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"name\"")
 			}
 		case "expire_date":
-
 			if err := func() error {
 				s.ExpireDate.Reset()
 				if err := s.ExpireDate.Decode(d); err != nil {
@@ -6637,7 +6455,6 @@ func (s *CreateChatInviteLink) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"expire_date\"")
 			}
 		case "member_limit":
-
 			if err := func() error {
 				s.MemberLimit.Reset()
 				if err := s.MemberLimit.Decode(d); err != nil {
@@ -6648,7 +6465,6 @@ func (s *CreateChatInviteLink) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"member_limit\"")
 			}
 		case "creates_join_request":
-
 			if err := func() error {
 				s.CreatesJoinRequest.Reset()
 				if err := s.CreatesJoinRequest.Decode(d); err != nil {
@@ -6806,7 +6622,6 @@ func (s *CreateNewStickerSet) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "user_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Int64()
 				s.UserID = int64(v)
@@ -6819,7 +6634,6 @@ func (s *CreateNewStickerSet) Decode(d *jx.Decoder) error {
 			}
 		case "name":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Name = string(v)
@@ -6832,7 +6646,6 @@ func (s *CreateNewStickerSet) Decode(d *jx.Decoder) error {
 			}
 		case "title":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Title = string(v)
@@ -6844,7 +6657,6 @@ func (s *CreateNewStickerSet) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"title\"")
 			}
 		case "png_sticker":
-
 			if err := func() error {
 				s.PNGSticker.Reset()
 				if err := s.PNGSticker.Decode(d); err != nil {
@@ -6855,7 +6667,6 @@ func (s *CreateNewStickerSet) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"png_sticker\"")
 			}
 		case "tgs_sticker":
-
 			if err := func() error {
 				s.TgsSticker.Reset()
 				if err := s.TgsSticker.Decode(d); err != nil {
@@ -6866,7 +6677,6 @@ func (s *CreateNewStickerSet) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"tgs_sticker\"")
 			}
 		case "webm_sticker":
-
 			if err := func() error {
 				s.WebmSticker.Reset()
 				if err := s.WebmSticker.Decode(d); err != nil {
@@ -6878,7 +6688,6 @@ func (s *CreateNewStickerSet) Decode(d *jx.Decoder) error {
 			}
 		case "emojis":
 			requiredBitSet[0] |= 1 << 6
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Emojis = string(v)
@@ -6890,7 +6699,6 @@ func (s *CreateNewStickerSet) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"emojis\"")
 			}
 		case "contains_masks":
-
 			if err := func() error {
 				s.ContainsMasks.Reset()
 				if err := s.ContainsMasks.Decode(d); err != nil {
@@ -6901,7 +6709,6 @@ func (s *CreateNewStickerSet) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"contains_masks\"")
 			}
 		case "mask_position":
-
 			if err := func() error {
 				s.MaskPosition.Reset()
 				if err := s.MaskPosition.Decode(d); err != nil {
@@ -6996,7 +6803,6 @@ func (s *DeclineChatJoinRequest) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "chat_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				if err := s.ChatID.Decode(d); err != nil {
 					return err
@@ -7007,7 +6813,6 @@ func (s *DeclineChatJoinRequest) Decode(d *jx.Decoder) error {
 			}
 		case "user_id":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Int64()
 				s.UserID = int64(v)
@@ -7095,7 +6900,6 @@ func (s *DeleteChatPhoto) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "chat_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				if err := s.ChatID.Decode(d); err != nil {
 					return err
@@ -7181,7 +6985,6 @@ func (s *DeleteChatStickerSet) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "chat_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				if err := s.ChatID.Decode(d); err != nil {
 					return err
@@ -7274,7 +7077,6 @@ func (s *DeleteMessage) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "chat_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				if err := s.ChatID.Decode(d); err != nil {
 					return err
@@ -7285,7 +7087,6 @@ func (s *DeleteMessage) Decode(d *jx.Decoder) error {
 			}
 		case "message_id":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Int()
 				s.MessageID = int(v)
@@ -7387,7 +7188,6 @@ func (s *DeleteMyCommands) Decode(d *jx.Decoder) error {
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "scope":
-
 			if err := func() error {
 				s.Scope.Reset()
 				if err := s.Scope.Decode(d); err != nil {
@@ -7398,7 +7198,6 @@ func (s *DeleteMyCommands) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"scope\"")
 			}
 		case "language_code":
-
 			if err := func() error {
 				s.LanguageCode.Reset()
 				if err := s.LanguageCode.Decode(d); err != nil {
@@ -7453,7 +7252,6 @@ func (s *DeleteStickerFromSet) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "sticker":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Sticker = string(v)
@@ -7542,7 +7340,6 @@ func (s *DeleteWebhook) Decode(d *jx.Decoder) error {
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "drop_pending_updates":
-
 			if err := func() error {
 				s.DropPendingUpdates.Reset()
 				if err := s.DropPendingUpdates.Decode(d); err != nil {
@@ -7604,7 +7401,6 @@ func (s *Dice) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "emoji":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Emoji = string(v)
@@ -7617,7 +7413,6 @@ func (s *Dice) Decode(d *jx.Decoder) error {
 			}
 		case "value":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Int()
 				s.Value = int(v)
@@ -7752,7 +7547,6 @@ func (s *Document) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "file_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.FileID = string(v)
@@ -7765,7 +7559,6 @@ func (s *Document) Decode(d *jx.Decoder) error {
 			}
 		case "file_unique_id":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.FileUniqueID = string(v)
@@ -7777,7 +7570,6 @@ func (s *Document) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"file_unique_id\"")
 			}
 		case "thumb":
-
 			if err := func() error {
 				s.Thumb.Reset()
 				if err := s.Thumb.Decode(d); err != nil {
@@ -7788,7 +7580,6 @@ func (s *Document) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"thumb\"")
 			}
 		case "file_name":
-
 			if err := func() error {
 				s.FileName.Reset()
 				if err := s.FileName.Decode(d); err != nil {
@@ -7799,7 +7590,6 @@ func (s *Document) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"file_name\"")
 			}
 		case "mime_type":
-
 			if err := func() error {
 				s.MimeType.Reset()
 				if err := s.MimeType.Decode(d); err != nil {
@@ -7810,7 +7600,6 @@ func (s *Document) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"mime_type\"")
 			}
 		case "file_size":
-
 			if err := func() error {
 				s.FileSize.Reset()
 				if err := s.FileSize.Decode(d); err != nil {
@@ -7944,7 +7733,6 @@ func (s *EditChatInviteLink) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "chat_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				if err := s.ChatID.Decode(d); err != nil {
 					return err
@@ -7955,7 +7743,6 @@ func (s *EditChatInviteLink) Decode(d *jx.Decoder) error {
 			}
 		case "invite_link":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.InviteLink = string(v)
@@ -7967,7 +7754,6 @@ func (s *EditChatInviteLink) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"invite_link\"")
 			}
 		case "name":
-
 			if err := func() error {
 				s.Name.Reset()
 				if err := s.Name.Decode(d); err != nil {
@@ -7978,7 +7764,6 @@ func (s *EditChatInviteLink) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"name\"")
 			}
 		case "expire_date":
-
 			if err := func() error {
 				s.ExpireDate.Reset()
 				if err := s.ExpireDate.Decode(d); err != nil {
@@ -7989,7 +7774,6 @@ func (s *EditChatInviteLink) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"expire_date\"")
 			}
 		case "member_limit":
-
 			if err := func() error {
 				s.MemberLimit.Reset()
 				if err := s.MemberLimit.Decode(d); err != nil {
@@ -8000,7 +7784,6 @@ func (s *EditChatInviteLink) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"member_limit\"")
 			}
 		case "creates_join_request":
-
 			if err := func() error {
 				s.CreatesJoinRequest.Reset()
 				if err := s.CreatesJoinRequest.Decode(d); err != nil {
@@ -8178,7 +7961,6 @@ func (s *EditMessageCaption) Decode(d *jx.Decoder) error {
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "chat_id":
-
 			if err := func() error {
 				s.ChatID.Reset()
 				if err := s.ChatID.Decode(d); err != nil {
@@ -8189,7 +7971,6 @@ func (s *EditMessageCaption) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"chat_id\"")
 			}
 		case "message_id":
-
 			if err := func() error {
 				s.MessageID.Reset()
 				if err := s.MessageID.Decode(d); err != nil {
@@ -8200,7 +7981,6 @@ func (s *EditMessageCaption) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"message_id\"")
 			}
 		case "inline_message_id":
-
 			if err := func() error {
 				s.InlineMessageID.Reset()
 				if err := s.InlineMessageID.Decode(d); err != nil {
@@ -8211,7 +7991,6 @@ func (s *EditMessageCaption) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"inline_message_id\"")
 			}
 		case "caption":
-
 			if err := func() error {
 				s.Caption.Reset()
 				if err := s.Caption.Decode(d); err != nil {
@@ -8222,7 +8001,6 @@ func (s *EditMessageCaption) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"caption\"")
 			}
 		case "parse_mode":
-
 			if err := func() error {
 				s.ParseMode.Reset()
 				if err := s.ParseMode.Decode(d); err != nil {
@@ -8233,9 +8011,8 @@ func (s *EditMessageCaption) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"parse_mode\"")
 			}
 		case "caption_entities":
-
 			if err := func() error {
-				s.CaptionEntities = nil
+				s.CaptionEntities = make([]MessageEntity, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem MessageEntity
 					if err := elem.Decode(d); err != nil {
@@ -8251,7 +8028,6 @@ func (s *EditMessageCaption) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"caption_entities\"")
 			}
 		case "reply_markup":
-
 			if err := func() error {
 				s.ReplyMarkup.Reset()
 				if err := s.ReplyMarkup.Decode(d); err != nil {
@@ -8391,7 +8167,6 @@ func (s *EditMessageLiveLocation) Decode(d *jx.Decoder) error {
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "chat_id":
-
 			if err := func() error {
 				s.ChatID.Reset()
 				if err := s.ChatID.Decode(d); err != nil {
@@ -8402,7 +8177,6 @@ func (s *EditMessageLiveLocation) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"chat_id\"")
 			}
 		case "message_id":
-
 			if err := func() error {
 				s.MessageID.Reset()
 				if err := s.MessageID.Decode(d); err != nil {
@@ -8413,7 +8187,6 @@ func (s *EditMessageLiveLocation) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"message_id\"")
 			}
 		case "inline_message_id":
-
 			if err := func() error {
 				s.InlineMessageID.Reset()
 				if err := s.InlineMessageID.Decode(d); err != nil {
@@ -8425,7 +8198,6 @@ func (s *EditMessageLiveLocation) Decode(d *jx.Decoder) error {
 			}
 		case "latitude":
 			requiredBitSet[0] |= 1 << 3
-
 			if err := func() error {
 				v, err := d.Float64()
 				s.Latitude = float64(v)
@@ -8438,7 +8210,6 @@ func (s *EditMessageLiveLocation) Decode(d *jx.Decoder) error {
 			}
 		case "longitude":
 			requiredBitSet[0] |= 1 << 4
-
 			if err := func() error {
 				v, err := d.Float64()
 				s.Longitude = float64(v)
@@ -8450,7 +8221,6 @@ func (s *EditMessageLiveLocation) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"longitude\"")
 			}
 		case "horizontal_accuracy":
-
 			if err := func() error {
 				s.HorizontalAccuracy.Reset()
 				if err := s.HorizontalAccuracy.Decode(d); err != nil {
@@ -8461,7 +8231,6 @@ func (s *EditMessageLiveLocation) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"horizontal_accuracy\"")
 			}
 		case "heading":
-
 			if err := func() error {
 				s.Heading.Reset()
 				if err := s.Heading.Decode(d); err != nil {
@@ -8472,7 +8241,6 @@ func (s *EditMessageLiveLocation) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"heading\"")
 			}
 		case "proximity_alert_radius":
-
 			if err := func() error {
 				s.ProximityAlertRadius.Reset()
 				if err := s.ProximityAlertRadius.Decode(d); err != nil {
@@ -8483,7 +8251,6 @@ func (s *EditMessageLiveLocation) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"proximity_alert_radius\"")
 			}
 		case "reply_markup":
-
 			if err := func() error {
 				s.ReplyMarkup.Reset()
 				if err := s.ReplyMarkup.Decode(d); err != nil {
@@ -8619,7 +8386,6 @@ func (s *EditMessageMedia) Decode(d *jx.Decoder) error {
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "chat_id":
-
 			if err := func() error {
 				s.ChatID.Reset()
 				if err := s.ChatID.Decode(d); err != nil {
@@ -8630,7 +8396,6 @@ func (s *EditMessageMedia) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"chat_id\"")
 			}
 		case "message_id":
-
 			if err := func() error {
 				s.MessageID.Reset()
 				if err := s.MessageID.Decode(d); err != nil {
@@ -8641,7 +8406,6 @@ func (s *EditMessageMedia) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"message_id\"")
 			}
 		case "inline_message_id":
-
 			if err := func() error {
 				s.InlineMessageID.Reset()
 				if err := s.InlineMessageID.Decode(d); err != nil {
@@ -8653,7 +8417,6 @@ func (s *EditMessageMedia) Decode(d *jx.Decoder) error {
 			}
 		case "media":
 			requiredBitSet[0] |= 1 << 3
-
 			if err := func() error {
 				if err := s.Media.Decode(d); err != nil {
 					return err
@@ -8663,7 +8426,6 @@ func (s *EditMessageMedia) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"media\"")
 			}
 		case "reply_markup":
-
 			if err := func() error {
 				s.ReplyMarkup.Reset()
 				if err := s.ReplyMarkup.Decode(d); err != nil {
@@ -8790,7 +8552,6 @@ func (s *EditMessageReplyMarkup) Decode(d *jx.Decoder) error {
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "chat_id":
-
 			if err := func() error {
 				s.ChatID.Reset()
 				if err := s.ChatID.Decode(d); err != nil {
@@ -8801,7 +8562,6 @@ func (s *EditMessageReplyMarkup) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"chat_id\"")
 			}
 		case "message_id":
-
 			if err := func() error {
 				s.MessageID.Reset()
 				if err := s.MessageID.Decode(d); err != nil {
@@ -8812,7 +8572,6 @@ func (s *EditMessageReplyMarkup) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"message_id\"")
 			}
 		case "inline_message_id":
-
 			if err := func() error {
 				s.InlineMessageID.Reset()
 				if err := s.InlineMessageID.Decode(d); err != nil {
@@ -8823,7 +8582,6 @@ func (s *EditMessageReplyMarkup) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"inline_message_id\"")
 			}
 		case "reply_markup":
-
 			if err := func() error {
 				s.ReplyMarkup.Reset()
 				if err := s.ReplyMarkup.Decode(d); err != nil {
@@ -8968,7 +8726,6 @@ func (s *EditMessageText) Decode(d *jx.Decoder) error {
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "chat_id":
-
 			if err := func() error {
 				s.ChatID.Reset()
 				if err := s.ChatID.Decode(d); err != nil {
@@ -8979,7 +8736,6 @@ func (s *EditMessageText) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"chat_id\"")
 			}
 		case "message_id":
-
 			if err := func() error {
 				s.MessageID.Reset()
 				if err := s.MessageID.Decode(d); err != nil {
@@ -8990,7 +8746,6 @@ func (s *EditMessageText) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"message_id\"")
 			}
 		case "inline_message_id":
-
 			if err := func() error {
 				s.InlineMessageID.Reset()
 				if err := s.InlineMessageID.Decode(d); err != nil {
@@ -9002,7 +8757,6 @@ func (s *EditMessageText) Decode(d *jx.Decoder) error {
 			}
 		case "text":
 			requiredBitSet[0] |= 1 << 3
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Text = string(v)
@@ -9014,7 +8768,6 @@ func (s *EditMessageText) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"text\"")
 			}
 		case "parse_mode":
-
 			if err := func() error {
 				s.ParseMode.Reset()
 				if err := s.ParseMode.Decode(d); err != nil {
@@ -9025,9 +8778,8 @@ func (s *EditMessageText) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"parse_mode\"")
 			}
 		case "entities":
-
 			if err := func() error {
-				s.Entities = nil
+				s.Entities = make([]MessageEntity, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem MessageEntity
 					if err := elem.Decode(d); err != nil {
@@ -9043,7 +8795,6 @@ func (s *EditMessageText) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"entities\"")
 			}
 		case "disable_web_page_preview":
-
 			if err := func() error {
 				s.DisableWebPagePreview.Reset()
 				if err := s.DisableWebPagePreview.Decode(d); err != nil {
@@ -9054,7 +8805,6 @@ func (s *EditMessageText) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"disable_web_page_preview\"")
 			}
 		case "reply_markup":
-
 			if err := func() error {
 				s.ReplyMarkup.Reset()
 				if err := s.ReplyMarkup.Decode(d); err != nil {
@@ -9155,7 +8905,6 @@ func (s *EncryptedCredentials) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "data":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Data = string(v)
@@ -9168,7 +8917,6 @@ func (s *EncryptedCredentials) Decode(d *jx.Decoder) error {
 			}
 		case "hash":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Hash = string(v)
@@ -9181,7 +8929,6 @@ func (s *EncryptedCredentials) Decode(d *jx.Decoder) error {
 			}
 		case "secret":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Secret = string(v)
@@ -9380,7 +9127,6 @@ func (s *EncryptedPassportElement) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "type":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				if err := s.Type.Decode(d); err != nil {
 					return err
@@ -9390,7 +9136,6 @@ func (s *EncryptedPassportElement) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"type\"")
 			}
 		case "data":
-
 			if err := func() error {
 				s.Data.Reset()
 				if err := s.Data.Decode(d); err != nil {
@@ -9401,7 +9146,6 @@ func (s *EncryptedPassportElement) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"data\"")
 			}
 		case "phone_number":
-
 			if err := func() error {
 				s.PhoneNumber.Reset()
 				if err := s.PhoneNumber.Decode(d); err != nil {
@@ -9412,7 +9156,6 @@ func (s *EncryptedPassportElement) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"phone_number\"")
 			}
 		case "email":
-
 			if err := func() error {
 				s.Email.Reset()
 				if err := s.Email.Decode(d); err != nil {
@@ -9423,9 +9166,8 @@ func (s *EncryptedPassportElement) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"email\"")
 			}
 		case "files":
-
 			if err := func() error {
-				s.Files = nil
+				s.Files = make([]PassportFile, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem PassportFile
 					if err := elem.Decode(d); err != nil {
@@ -9441,7 +9183,6 @@ func (s *EncryptedPassportElement) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"files\"")
 			}
 		case "front_side":
-
 			if err := func() error {
 				s.FrontSide.Reset()
 				if err := s.FrontSide.Decode(d); err != nil {
@@ -9452,7 +9193,6 @@ func (s *EncryptedPassportElement) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"front_side\"")
 			}
 		case "reverse_side":
-
 			if err := func() error {
 				s.ReverseSide.Reset()
 				if err := s.ReverseSide.Decode(d); err != nil {
@@ -9463,7 +9203,6 @@ func (s *EncryptedPassportElement) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"reverse_side\"")
 			}
 		case "selfie":
-
 			if err := func() error {
 				s.Selfie.Reset()
 				if err := s.Selfie.Decode(d); err != nil {
@@ -9474,9 +9213,8 @@ func (s *EncryptedPassportElement) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"selfie\"")
 			}
 		case "translation":
-
 			if err := func() error {
-				s.Translation = nil
+				s.Translation = make([]PassportFile, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem PassportFile
 					if err := elem.Decode(d); err != nil {
@@ -9493,7 +9231,6 @@ func (s *EncryptedPassportElement) Decode(d *jx.Decoder) error {
 			}
 		case "hash":
 			requiredBitSet[1] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Hash = string(v)
@@ -9655,7 +9392,6 @@ func (s *Error) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "ok":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Bool()
 				s.Ok = bool(v)
@@ -9668,7 +9404,6 @@ func (s *Error) Decode(d *jx.Decoder) error {
 			}
 		case "error_code":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Int()
 				s.ErrorCode = int(v)
@@ -9681,7 +9416,6 @@ func (s *Error) Decode(d *jx.Decoder) error {
 			}
 		case "description":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Description = string(v)
@@ -9693,7 +9427,6 @@ func (s *Error) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"description\"")
 			}
 		case "parameters":
-
 			if err := func() error {
 				s.Parameters.Reset()
 				if err := s.Parameters.Decode(d); err != nil {
@@ -9780,7 +9513,6 @@ func (s *ExportChatInviteLink) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "chat_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				if err := s.ChatID.Decode(d); err != nil {
 					return err
@@ -9893,7 +9625,6 @@ func (s *File) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "file_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.FileID = string(v)
@@ -9906,7 +9637,6 @@ func (s *File) Decode(d *jx.Decoder) error {
 			}
 		case "file_unique_id":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.FileUniqueID = string(v)
@@ -9918,7 +9648,6 @@ func (s *File) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"file_unique_id\"")
 			}
 		case "file_size":
-
 			if err := func() error {
 				s.FileSize.Reset()
 				if err := s.FileSize.Decode(d); err != nil {
@@ -9929,7 +9658,6 @@ func (s *File) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"file_size\"")
 			}
 		case "file_path":
-
 			if err := func() error {
 				s.FilePath.Reset()
 				if err := s.FilePath.Decode(d); err != nil {
@@ -10036,7 +9764,6 @@ func (s *ForceReply) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "force_reply":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Bool()
 				s.ForceReply = bool(v)
@@ -10048,7 +9775,6 @@ func (s *ForceReply) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"force_reply\"")
 			}
 		case "input_field_placeholder":
-
 			if err := func() error {
 				s.InputFieldPlaceholder.Reset()
 				if err := s.InputFieldPlaceholder.Decode(d); err != nil {
@@ -10059,7 +9785,6 @@ func (s *ForceReply) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"input_field_placeholder\"")
 			}
 		case "selective":
-
 			if err := func() error {
 				s.Selective.Reset()
 				if err := s.Selective.Decode(d); err != nil {
@@ -10180,7 +9905,6 @@ func (s *ForwardMessage) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "chat_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				if err := s.ChatID.Decode(d); err != nil {
 					return err
@@ -10191,7 +9915,6 @@ func (s *ForwardMessage) Decode(d *jx.Decoder) error {
 			}
 		case "from_chat_id":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				if err := s.FromChatID.Decode(d); err != nil {
 					return err
@@ -10201,7 +9924,6 @@ func (s *ForwardMessage) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"from_chat_id\"")
 			}
 		case "disable_notification":
-
 			if err := func() error {
 				s.DisableNotification.Reset()
 				if err := s.DisableNotification.Decode(d); err != nil {
@@ -10212,7 +9934,6 @@ func (s *ForwardMessage) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"disable_notification\"")
 			}
 		case "protect_content":
-
 			if err := func() error {
 				s.ProtectContent.Reset()
 				if err := s.ProtectContent.Decode(d); err != nil {
@@ -10224,7 +9945,6 @@ func (s *ForwardMessage) Decode(d *jx.Decoder) error {
 			}
 		case "message_id":
 			requiredBitSet[0] |= 1 << 4
-
 			if err := func() error {
 				v, err := d.Int()
 				s.MessageID = int(v)
@@ -10380,7 +10100,6 @@ func (s *Game) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "title":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Title = string(v)
@@ -10393,7 +10112,6 @@ func (s *Game) Decode(d *jx.Decoder) error {
 			}
 		case "description":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Description = string(v)
@@ -10406,9 +10124,8 @@ func (s *Game) Decode(d *jx.Decoder) error {
 			}
 		case "photo":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
-				s.Photo = nil
+				s.Photo = make([]PhotoSize, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem PhotoSize
 					if err := elem.Decode(d); err != nil {
@@ -10424,7 +10141,6 @@ func (s *Game) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"photo\"")
 			}
 		case "text":
-
 			if err := func() error {
 				s.Text.Reset()
 				if err := s.Text.Decode(d); err != nil {
@@ -10435,9 +10151,8 @@ func (s *Game) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"text\"")
 			}
 		case "text_entities":
-
 			if err := func() error {
-				s.TextEntities = nil
+				s.TextEntities = make([]MessageEntity, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem MessageEntity
 					if err := elem.Decode(d); err != nil {
@@ -10453,7 +10168,6 @@ func (s *Game) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"text_entities\"")
 			}
 		case "animation":
-
 			if err := func() error {
 				s.Animation.Reset()
 				if err := s.Animation.Decode(d); err != nil {
@@ -10554,7 +10268,6 @@ func (s *GameHighScore) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "position":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Int()
 				s.Position = int(v)
@@ -10567,7 +10280,6 @@ func (s *GameHighScore) Decode(d *jx.Decoder) error {
 			}
 		case "user":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				if err := s.User.Decode(d); err != nil {
 					return err
@@ -10578,7 +10290,6 @@ func (s *GameHighScore) Decode(d *jx.Decoder) error {
 			}
 		case "score":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Int()
 				s.Score = int(v)
@@ -10666,7 +10377,6 @@ func (s *GetChat) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "chat_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				if err := s.ChatID.Decode(d); err != nil {
 					return err
@@ -10752,7 +10462,6 @@ func (s *GetChatAdministrators) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "chat_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				if err := s.ChatID.Decode(d); err != nil {
 					return err
@@ -10845,7 +10554,6 @@ func (s *GetChatMember) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "chat_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				if err := s.ChatID.Decode(d); err != nil {
 					return err
@@ -10856,7 +10564,6 @@ func (s *GetChatMember) Decode(d *jx.Decoder) error {
 			}
 		case "user_id":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Int64()
 				s.UserID = int64(v)
@@ -10944,7 +10651,6 @@ func (s *GetChatMemberCount) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "chat_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				if err := s.ChatID.Decode(d); err != nil {
 					return err
@@ -11030,7 +10736,6 @@ func (s *GetFile) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "file_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.FileID = string(v)
@@ -11148,7 +10853,6 @@ func (s *GetGameHighScores) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "user_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Int64()
 				s.UserID = int64(v)
@@ -11160,7 +10864,6 @@ func (s *GetGameHighScores) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"user_id\"")
 			}
 		case "chat_id":
-
 			if err := func() error {
 				s.ChatID.Reset()
 				if err := s.ChatID.Decode(d); err != nil {
@@ -11171,7 +10874,6 @@ func (s *GetGameHighScores) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"chat_id\"")
 			}
 		case "message_id":
-
 			if err := func() error {
 				s.MessageID.Reset()
 				if err := s.MessageID.Decode(d); err != nil {
@@ -11182,7 +10884,6 @@ func (s *GetGameHighScores) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"message_id\"")
 			}
 		case "inline_message_id":
-
 			if err := func() error {
 				s.InlineMessageID.Reset()
 				if err := s.InlineMessageID.Decode(d); err != nil {
@@ -11283,7 +10984,6 @@ func (s *GetMyCommands) Decode(d *jx.Decoder) error {
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "scope":
-
 			if err := func() error {
 				s.Scope.Reset()
 				if err := s.Scope.Decode(d); err != nil {
@@ -11294,7 +10994,6 @@ func (s *GetMyCommands) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"scope\"")
 			}
 		case "language_code":
-
 			if err := func() error {
 				s.LanguageCode.Reset()
 				if err := s.LanguageCode.Decode(d); err != nil {
@@ -11349,7 +11048,6 @@ func (s *GetStickerSet) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "name":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Name = string(v)
@@ -11489,7 +11187,6 @@ func (s *GetUpdates) Decode(d *jx.Decoder) error {
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "offset":
-
 			if err := func() error {
 				s.Offset.Reset()
 				if err := s.Offset.Decode(d); err != nil {
@@ -11500,7 +11197,6 @@ func (s *GetUpdates) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"offset\"")
 			}
 		case "limit":
-
 			if err := func() error {
 				s.Limit.Reset()
 				if err := s.Limit.Decode(d); err != nil {
@@ -11511,7 +11207,6 @@ func (s *GetUpdates) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"limit\"")
 			}
 		case "timeout":
-
 			if err := func() error {
 				s.Timeout.Reset()
 				if err := s.Timeout.Decode(d); err != nil {
@@ -11522,9 +11217,8 @@ func (s *GetUpdates) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"timeout\"")
 			}
 		case "allowed_updates":
-
 			if err := func() error {
-				s.AllowedUpdates = nil
+				s.AllowedUpdates = make([]string, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem string
 					v, err := d.Str()
@@ -11606,7 +11300,6 @@ func (s *GetUserProfilePhotos) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "user_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Int64()
 				s.UserID = int64(v)
@@ -11618,7 +11311,6 @@ func (s *GetUserProfilePhotos) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"user_id\"")
 			}
 		case "offset":
-
 			if err := func() error {
 				s.Offset.Reset()
 				if err := s.Offset.Decode(d); err != nil {
@@ -11629,7 +11321,6 @@ func (s *GetUserProfilePhotos) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"offset\"")
 			}
 		case "limit":
-
 			if err := func() error {
 				s.Limit.Reset()
 				if err := s.Limit.Decode(d); err != nil {
@@ -11823,7 +11514,6 @@ func (s *InlineKeyboardButton) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "text":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Text = string(v)
@@ -11835,7 +11525,6 @@ func (s *InlineKeyboardButton) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"text\"")
 			}
 		case "url":
-
 			if err := func() error {
 				s.URL.Reset()
 				if err := s.URL.Decode(d); err != nil {
@@ -11846,7 +11535,6 @@ func (s *InlineKeyboardButton) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"url\"")
 			}
 		case "login_url":
-
 			if err := func() error {
 				s.LoginURL.Reset()
 				if err := s.LoginURL.Decode(d); err != nil {
@@ -11857,7 +11545,6 @@ func (s *InlineKeyboardButton) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"login_url\"")
 			}
 		case "callback_data":
-
 			if err := func() error {
 				s.CallbackData.Reset()
 				if err := s.CallbackData.Decode(d); err != nil {
@@ -11868,7 +11555,6 @@ func (s *InlineKeyboardButton) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"callback_data\"")
 			}
 		case "switch_inline_query":
-
 			if err := func() error {
 				s.SwitchInlineQuery.Reset()
 				if err := s.SwitchInlineQuery.Decode(d); err != nil {
@@ -11879,7 +11565,6 @@ func (s *InlineKeyboardButton) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"switch_inline_query\"")
 			}
 		case "switch_inline_query_current_chat":
-
 			if err := func() error {
 				s.SwitchInlineQueryCurrentChat.Reset()
 				if err := s.SwitchInlineQueryCurrentChat.Decode(d); err != nil {
@@ -11890,7 +11575,6 @@ func (s *InlineKeyboardButton) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"switch_inline_query_current_chat\"")
 			}
 		case "callback_game":
-
 			if err := func() error {
 				s.CallbackGame = nil
 				var elem CallbackGame
@@ -11903,7 +11587,6 @@ func (s *InlineKeyboardButton) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"callback_game\"")
 			}
 		case "pay":
-
 			if err := func() error {
 				s.Pay.Reset()
 				if err := s.Pay.Decode(d); err != nil {
@@ -12026,12 +11709,11 @@ func (s *InlineKeyboardMarkup) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "inline_keyboard":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
-				s.InlineKeyboard = nil
+				s.InlineKeyboard = make([][]InlineKeyboardButton, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem []InlineKeyboardButton
-					elem = nil
+					elem = make([]InlineKeyboardButton, 0)
 					if err := d.Arr(func(d *jx.Decoder) error {
 						var elemElem InlineKeyboardButton
 						if err := elemElem.Decode(d); err != nil {
@@ -12169,7 +11851,6 @@ func (s *InlineQuery) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.ID = string(v)
@@ -12182,7 +11863,6 @@ func (s *InlineQuery) Decode(d *jx.Decoder) error {
 			}
 		case "from":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				if err := s.From.Decode(d); err != nil {
 					return err
@@ -12193,7 +11873,6 @@ func (s *InlineQuery) Decode(d *jx.Decoder) error {
 			}
 		case "query":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Query = string(v)
@@ -12206,7 +11885,6 @@ func (s *InlineQuery) Decode(d *jx.Decoder) error {
 			}
 		case "offset":
 			requiredBitSet[0] |= 1 << 3
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Offset = string(v)
@@ -12218,7 +11896,6 @@ func (s *InlineQuery) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"offset\"")
 			}
 		case "chat_type":
-
 			if err := func() error {
 				s.ChatType.Reset()
 				if err := s.ChatType.Decode(d); err != nil {
@@ -12229,7 +11906,6 @@ func (s *InlineQuery) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"chat_type\"")
 			}
 		case "location":
-
 			if err := func() error {
 				s.Location.Reset()
 				if err := s.Location.Decode(d); err != nil {
@@ -12643,12 +12319,12 @@ func (s *InlineQueryResultArticle) Decode(d *jx.Decoder) error {
 		return errors.New("invalid: unable to decode InlineQueryResultArticle to nil")
 	}
 	var requiredBitSet [2]uint8
+	s.setDefaults()
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "type":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Type = string(v)
@@ -12661,7 +12337,6 @@ func (s *InlineQueryResultArticle) Decode(d *jx.Decoder) error {
 			}
 		case "id":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.ID = string(v)
@@ -12674,7 +12349,6 @@ func (s *InlineQueryResultArticle) Decode(d *jx.Decoder) error {
 			}
 		case "title":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Title = string(v)
@@ -12687,7 +12361,6 @@ func (s *InlineQueryResultArticle) Decode(d *jx.Decoder) error {
 			}
 		case "input_message_content":
 			requiredBitSet[0] |= 1 << 3
-
 			if err := func() error {
 				if err := s.InputMessageContent.Decode(d); err != nil {
 					return err
@@ -12697,7 +12370,6 @@ func (s *InlineQueryResultArticle) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"input_message_content\"")
 			}
 		case "reply_markup":
-
 			if err := func() error {
 				s.ReplyMarkup.Reset()
 				if err := s.ReplyMarkup.Decode(d); err != nil {
@@ -12708,7 +12380,6 @@ func (s *InlineQueryResultArticle) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"reply_markup\"")
 			}
 		case "url":
-
 			if err := func() error {
 				s.URL.Reset()
 				if err := s.URL.Decode(d); err != nil {
@@ -12719,7 +12390,6 @@ func (s *InlineQueryResultArticle) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"url\"")
 			}
 		case "hide_url":
-
 			if err := func() error {
 				s.HideURL.Reset()
 				if err := s.HideURL.Decode(d); err != nil {
@@ -12730,7 +12400,6 @@ func (s *InlineQueryResultArticle) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"hide_url\"")
 			}
 		case "description":
-
 			if err := func() error {
 				s.Description.Reset()
 				if err := s.Description.Decode(d); err != nil {
@@ -12741,7 +12410,6 @@ func (s *InlineQueryResultArticle) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"description\"")
 			}
 		case "thumb_url":
-
 			if err := func() error {
 				s.ThumbURL.Reset()
 				if err := s.ThumbURL.Decode(d); err != nil {
@@ -12752,7 +12420,6 @@ func (s *InlineQueryResultArticle) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"thumb_url\"")
 			}
 		case "thumb_width":
-
 			if err := func() error {
 				s.ThumbWidth.Reset()
 				if err := s.ThumbWidth.Decode(d); err != nil {
@@ -12763,7 +12430,6 @@ func (s *InlineQueryResultArticle) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"thumb_width\"")
 			}
 		case "thumb_height":
-
 			if err := func() error {
 				s.ThumbHeight.Reset()
 				if err := s.ThumbHeight.Decode(d); err != nil {
@@ -12949,12 +12615,12 @@ func (s *InlineQueryResultAudio) Decode(d *jx.Decoder) error {
 		return errors.New("invalid: unable to decode InlineQueryResultAudio to nil")
 	}
 	var requiredBitSet [2]uint8
+	s.setDefaults()
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "type":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Type = string(v)
@@ -12967,7 +12633,6 @@ func (s *InlineQueryResultAudio) Decode(d *jx.Decoder) error {
 			}
 		case "id":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.ID = string(v)
@@ -12980,7 +12645,6 @@ func (s *InlineQueryResultAudio) Decode(d *jx.Decoder) error {
 			}
 		case "audio_url":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Str()
 				s.AudioURL = string(v)
@@ -12993,7 +12657,6 @@ func (s *InlineQueryResultAudio) Decode(d *jx.Decoder) error {
 			}
 		case "title":
 			requiredBitSet[0] |= 1 << 3
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Title = string(v)
@@ -13005,7 +12668,6 @@ func (s *InlineQueryResultAudio) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"title\"")
 			}
 		case "caption":
-
 			if err := func() error {
 				s.Caption.Reset()
 				if err := s.Caption.Decode(d); err != nil {
@@ -13016,7 +12678,6 @@ func (s *InlineQueryResultAudio) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"caption\"")
 			}
 		case "parse_mode":
-
 			if err := func() error {
 				s.ParseMode.Reset()
 				if err := s.ParseMode.Decode(d); err != nil {
@@ -13027,9 +12688,8 @@ func (s *InlineQueryResultAudio) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"parse_mode\"")
 			}
 		case "caption_entities":
-
 			if err := func() error {
-				s.CaptionEntities = nil
+				s.CaptionEntities = make([]MessageEntity, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem MessageEntity
 					if err := elem.Decode(d); err != nil {
@@ -13045,7 +12705,6 @@ func (s *InlineQueryResultAudio) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"caption_entities\"")
 			}
 		case "performer":
-
 			if err := func() error {
 				s.Performer.Reset()
 				if err := s.Performer.Decode(d); err != nil {
@@ -13056,7 +12715,6 @@ func (s *InlineQueryResultAudio) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"performer\"")
 			}
 		case "audio_duration":
-
 			if err := func() error {
 				s.AudioDuration.Reset()
 				if err := s.AudioDuration.Decode(d); err != nil {
@@ -13067,7 +12725,6 @@ func (s *InlineQueryResultAudio) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"audio_duration\"")
 			}
 		case "reply_markup":
-
 			if err := func() error {
 				s.ReplyMarkup.Reset()
 				if err := s.ReplyMarkup.Decode(d); err != nil {
@@ -13078,7 +12735,6 @@ func (s *InlineQueryResultAudio) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"reply_markup\"")
 			}
 		case "input_message_content":
-
 			if err := func() error {
 				s.InputMessageContent.Reset()
 				if err := s.InputMessageContent.Decode(d); err != nil {
@@ -13237,12 +12893,12 @@ func (s *InlineQueryResultCachedAudio) Decode(d *jx.Decoder) error {
 		return errors.New("invalid: unable to decode InlineQueryResultCachedAudio to nil")
 	}
 	var requiredBitSet [1]uint8
+	s.setDefaults()
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "type":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Type = string(v)
@@ -13255,7 +12911,6 @@ func (s *InlineQueryResultCachedAudio) Decode(d *jx.Decoder) error {
 			}
 		case "id":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.ID = string(v)
@@ -13268,7 +12923,6 @@ func (s *InlineQueryResultCachedAudio) Decode(d *jx.Decoder) error {
 			}
 		case "audio_file_id":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Str()
 				s.AudioFileID = string(v)
@@ -13280,7 +12934,6 @@ func (s *InlineQueryResultCachedAudio) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"audio_file_id\"")
 			}
 		case "caption":
-
 			if err := func() error {
 				s.Caption.Reset()
 				if err := s.Caption.Decode(d); err != nil {
@@ -13291,7 +12944,6 @@ func (s *InlineQueryResultCachedAudio) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"caption\"")
 			}
 		case "parse_mode":
-
 			if err := func() error {
 				s.ParseMode.Reset()
 				if err := s.ParseMode.Decode(d); err != nil {
@@ -13302,9 +12954,8 @@ func (s *InlineQueryResultCachedAudio) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"parse_mode\"")
 			}
 		case "caption_entities":
-
 			if err := func() error {
-				s.CaptionEntities = nil
+				s.CaptionEntities = make([]MessageEntity, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem MessageEntity
 					if err := elem.Decode(d); err != nil {
@@ -13320,7 +12971,6 @@ func (s *InlineQueryResultCachedAudio) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"caption_entities\"")
 			}
 		case "reply_markup":
-
 			if err := func() error {
 				s.ReplyMarkup.Reset()
 				if err := s.ReplyMarkup.Decode(d); err != nil {
@@ -13331,7 +12981,6 @@ func (s *InlineQueryResultCachedAudio) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"reply_markup\"")
 			}
 		case "input_message_content":
-
 			if err := func() error {
 				s.InputMessageContent.Reset()
 				if err := s.InputMessageContent.Decode(d); err != nil {
@@ -13506,12 +13155,12 @@ func (s *InlineQueryResultCachedDocument) Decode(d *jx.Decoder) error {
 		return errors.New("invalid: unable to decode InlineQueryResultCachedDocument to nil")
 	}
 	var requiredBitSet [2]uint8
+	s.setDefaults()
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "type":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Type = string(v)
@@ -13524,7 +13173,6 @@ func (s *InlineQueryResultCachedDocument) Decode(d *jx.Decoder) error {
 			}
 		case "id":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.ID = string(v)
@@ -13537,7 +13185,6 @@ func (s *InlineQueryResultCachedDocument) Decode(d *jx.Decoder) error {
 			}
 		case "title":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Title = string(v)
@@ -13550,7 +13197,6 @@ func (s *InlineQueryResultCachedDocument) Decode(d *jx.Decoder) error {
 			}
 		case "document_file_id":
 			requiredBitSet[0] |= 1 << 3
-
 			if err := func() error {
 				v, err := d.Str()
 				s.DocumentFileID = string(v)
@@ -13562,7 +13208,6 @@ func (s *InlineQueryResultCachedDocument) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"document_file_id\"")
 			}
 		case "description":
-
 			if err := func() error {
 				s.Description.Reset()
 				if err := s.Description.Decode(d); err != nil {
@@ -13573,7 +13218,6 @@ func (s *InlineQueryResultCachedDocument) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"description\"")
 			}
 		case "caption":
-
 			if err := func() error {
 				s.Caption.Reset()
 				if err := s.Caption.Decode(d); err != nil {
@@ -13584,7 +13228,6 @@ func (s *InlineQueryResultCachedDocument) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"caption\"")
 			}
 		case "parse_mode":
-
 			if err := func() error {
 				s.ParseMode.Reset()
 				if err := s.ParseMode.Decode(d); err != nil {
@@ -13595,9 +13238,8 @@ func (s *InlineQueryResultCachedDocument) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"parse_mode\"")
 			}
 		case "caption_entities":
-
 			if err := func() error {
-				s.CaptionEntities = nil
+				s.CaptionEntities = make([]MessageEntity, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem MessageEntity
 					if err := elem.Decode(d); err != nil {
@@ -13613,7 +13255,6 @@ func (s *InlineQueryResultCachedDocument) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"caption_entities\"")
 			}
 		case "reply_markup":
-
 			if err := func() error {
 				s.ReplyMarkup.Reset()
 				if err := s.ReplyMarkup.Decode(d); err != nil {
@@ -13624,7 +13265,6 @@ func (s *InlineQueryResultCachedDocument) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"reply_markup\"")
 			}
 		case "input_message_content":
-
 			if err := func() error {
 				s.InputMessageContent.Reset()
 				if err := s.InputMessageContent.Decode(d); err != nil {
@@ -13793,12 +13433,12 @@ func (s *InlineQueryResultCachedGif) Decode(d *jx.Decoder) error {
 		return errors.New("invalid: unable to decode InlineQueryResultCachedGif to nil")
 	}
 	var requiredBitSet [2]uint8
+	s.setDefaults()
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "type":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Type = string(v)
@@ -13811,7 +13451,6 @@ func (s *InlineQueryResultCachedGif) Decode(d *jx.Decoder) error {
 			}
 		case "id":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.ID = string(v)
@@ -13824,7 +13463,6 @@ func (s *InlineQueryResultCachedGif) Decode(d *jx.Decoder) error {
 			}
 		case "gif_file_id":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Str()
 				s.GIFFileID = string(v)
@@ -13836,7 +13474,6 @@ func (s *InlineQueryResultCachedGif) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"gif_file_id\"")
 			}
 		case "title":
-
 			if err := func() error {
 				s.Title.Reset()
 				if err := s.Title.Decode(d); err != nil {
@@ -13847,7 +13484,6 @@ func (s *InlineQueryResultCachedGif) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"title\"")
 			}
 		case "caption":
-
 			if err := func() error {
 				s.Caption.Reset()
 				if err := s.Caption.Decode(d); err != nil {
@@ -13858,7 +13494,6 @@ func (s *InlineQueryResultCachedGif) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"caption\"")
 			}
 		case "parse_mode":
-
 			if err := func() error {
 				s.ParseMode.Reset()
 				if err := s.ParseMode.Decode(d); err != nil {
@@ -13869,9 +13504,8 @@ func (s *InlineQueryResultCachedGif) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"parse_mode\"")
 			}
 		case "caption_entities":
-
 			if err := func() error {
-				s.CaptionEntities = nil
+				s.CaptionEntities = make([]MessageEntity, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem MessageEntity
 					if err := elem.Decode(d); err != nil {
@@ -13887,7 +13521,6 @@ func (s *InlineQueryResultCachedGif) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"caption_entities\"")
 			}
 		case "reply_markup":
-
 			if err := func() error {
 				s.ReplyMarkup.Reset()
 				if err := s.ReplyMarkup.Decode(d); err != nil {
@@ -13898,7 +13531,6 @@ func (s *InlineQueryResultCachedGif) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"reply_markup\"")
 			}
 		case "input_message_content":
-
 			if err := func() error {
 				s.InputMessageContent.Reset()
 				if err := s.InputMessageContent.Decode(d); err != nil {
@@ -14067,12 +13699,12 @@ func (s *InlineQueryResultCachedMpeg4Gif) Decode(d *jx.Decoder) error {
 		return errors.New("invalid: unable to decode InlineQueryResultCachedMpeg4Gif to nil")
 	}
 	var requiredBitSet [2]uint8
+	s.setDefaults()
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "type":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Type = string(v)
@@ -14085,7 +13717,6 @@ func (s *InlineQueryResultCachedMpeg4Gif) Decode(d *jx.Decoder) error {
 			}
 		case "id":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.ID = string(v)
@@ -14098,7 +13729,6 @@ func (s *InlineQueryResultCachedMpeg4Gif) Decode(d *jx.Decoder) error {
 			}
 		case "mpeg4_file_id":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Mpeg4FileID = string(v)
@@ -14110,7 +13740,6 @@ func (s *InlineQueryResultCachedMpeg4Gif) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"mpeg4_file_id\"")
 			}
 		case "title":
-
 			if err := func() error {
 				s.Title.Reset()
 				if err := s.Title.Decode(d); err != nil {
@@ -14121,7 +13750,6 @@ func (s *InlineQueryResultCachedMpeg4Gif) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"title\"")
 			}
 		case "caption":
-
 			if err := func() error {
 				s.Caption.Reset()
 				if err := s.Caption.Decode(d); err != nil {
@@ -14132,7 +13760,6 @@ func (s *InlineQueryResultCachedMpeg4Gif) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"caption\"")
 			}
 		case "parse_mode":
-
 			if err := func() error {
 				s.ParseMode.Reset()
 				if err := s.ParseMode.Decode(d); err != nil {
@@ -14143,9 +13770,8 @@ func (s *InlineQueryResultCachedMpeg4Gif) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"parse_mode\"")
 			}
 		case "caption_entities":
-
 			if err := func() error {
-				s.CaptionEntities = nil
+				s.CaptionEntities = make([]MessageEntity, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem MessageEntity
 					if err := elem.Decode(d); err != nil {
@@ -14161,7 +13787,6 @@ func (s *InlineQueryResultCachedMpeg4Gif) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"caption_entities\"")
 			}
 		case "reply_markup":
-
 			if err := func() error {
 				s.ReplyMarkup.Reset()
 				if err := s.ReplyMarkup.Decode(d); err != nil {
@@ -14172,7 +13797,6 @@ func (s *InlineQueryResultCachedMpeg4Gif) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"reply_markup\"")
 			}
 		case "input_message_content":
-
 			if err := func() error {
 				s.InputMessageContent.Reset()
 				if err := s.InputMessageContent.Decode(d); err != nil {
@@ -14351,12 +13975,12 @@ func (s *InlineQueryResultCachedPhoto) Decode(d *jx.Decoder) error {
 		return errors.New("invalid: unable to decode InlineQueryResultCachedPhoto to nil")
 	}
 	var requiredBitSet [2]uint8
+	s.setDefaults()
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "type":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Type = string(v)
@@ -14369,7 +13993,6 @@ func (s *InlineQueryResultCachedPhoto) Decode(d *jx.Decoder) error {
 			}
 		case "id":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.ID = string(v)
@@ -14382,7 +14005,6 @@ func (s *InlineQueryResultCachedPhoto) Decode(d *jx.Decoder) error {
 			}
 		case "photo_file_id":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Str()
 				s.PhotoFileID = string(v)
@@ -14394,7 +14016,6 @@ func (s *InlineQueryResultCachedPhoto) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"photo_file_id\"")
 			}
 		case "title":
-
 			if err := func() error {
 				s.Title.Reset()
 				if err := s.Title.Decode(d); err != nil {
@@ -14405,7 +14026,6 @@ func (s *InlineQueryResultCachedPhoto) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"title\"")
 			}
 		case "description":
-
 			if err := func() error {
 				s.Description.Reset()
 				if err := s.Description.Decode(d); err != nil {
@@ -14416,7 +14036,6 @@ func (s *InlineQueryResultCachedPhoto) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"description\"")
 			}
 		case "caption":
-
 			if err := func() error {
 				s.Caption.Reset()
 				if err := s.Caption.Decode(d); err != nil {
@@ -14427,7 +14046,6 @@ func (s *InlineQueryResultCachedPhoto) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"caption\"")
 			}
 		case "parse_mode":
-
 			if err := func() error {
 				s.ParseMode.Reset()
 				if err := s.ParseMode.Decode(d); err != nil {
@@ -14438,9 +14056,8 @@ func (s *InlineQueryResultCachedPhoto) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"parse_mode\"")
 			}
 		case "caption_entities":
-
 			if err := func() error {
-				s.CaptionEntities = nil
+				s.CaptionEntities = make([]MessageEntity, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem MessageEntity
 					if err := elem.Decode(d); err != nil {
@@ -14456,7 +14073,6 @@ func (s *InlineQueryResultCachedPhoto) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"caption_entities\"")
 			}
 		case "reply_markup":
-
 			if err := func() error {
 				s.ReplyMarkup.Reset()
 				if err := s.ReplyMarkup.Decode(d); err != nil {
@@ -14467,7 +14083,6 @@ func (s *InlineQueryResultCachedPhoto) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"reply_markup\"")
 			}
 		case "input_message_content":
-
 			if err := func() error {
 				s.InputMessageContent.Reset()
 				if err := s.InputMessageContent.Decode(d); err != nil {
@@ -14584,12 +14199,12 @@ func (s *InlineQueryResultCachedSticker) Decode(d *jx.Decoder) error {
 		return errors.New("invalid: unable to decode InlineQueryResultCachedSticker to nil")
 	}
 	var requiredBitSet [1]uint8
+	s.setDefaults()
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "type":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Type = string(v)
@@ -14602,7 +14217,6 @@ func (s *InlineQueryResultCachedSticker) Decode(d *jx.Decoder) error {
 			}
 		case "id":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.ID = string(v)
@@ -14615,7 +14229,6 @@ func (s *InlineQueryResultCachedSticker) Decode(d *jx.Decoder) error {
 			}
 		case "sticker_file_id":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Str()
 				s.StickerFileID = string(v)
@@ -14627,7 +14240,6 @@ func (s *InlineQueryResultCachedSticker) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"sticker_file_id\"")
 			}
 		case "reply_markup":
-
 			if err := func() error {
 				s.ReplyMarkup.Reset()
 				if err := s.ReplyMarkup.Decode(d); err != nil {
@@ -14638,7 +14250,6 @@ func (s *InlineQueryResultCachedSticker) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"reply_markup\"")
 			}
 		case "input_message_content":
-
 			if err := func() error {
 				s.InputMessageContent.Reset()
 				if err := s.InputMessageContent.Decode(d); err != nil {
@@ -14813,12 +14424,12 @@ func (s *InlineQueryResultCachedVideo) Decode(d *jx.Decoder) error {
 		return errors.New("invalid: unable to decode InlineQueryResultCachedVideo to nil")
 	}
 	var requiredBitSet [2]uint8
+	s.setDefaults()
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "type":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Type = string(v)
@@ -14831,7 +14442,6 @@ func (s *InlineQueryResultCachedVideo) Decode(d *jx.Decoder) error {
 			}
 		case "id":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.ID = string(v)
@@ -14844,7 +14454,6 @@ func (s *InlineQueryResultCachedVideo) Decode(d *jx.Decoder) error {
 			}
 		case "video_file_id":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Str()
 				s.VideoFileID = string(v)
@@ -14857,7 +14466,6 @@ func (s *InlineQueryResultCachedVideo) Decode(d *jx.Decoder) error {
 			}
 		case "title":
 			requiredBitSet[0] |= 1 << 3
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Title = string(v)
@@ -14869,7 +14477,6 @@ func (s *InlineQueryResultCachedVideo) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"title\"")
 			}
 		case "description":
-
 			if err := func() error {
 				s.Description.Reset()
 				if err := s.Description.Decode(d); err != nil {
@@ -14880,7 +14487,6 @@ func (s *InlineQueryResultCachedVideo) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"description\"")
 			}
 		case "caption":
-
 			if err := func() error {
 				s.Caption.Reset()
 				if err := s.Caption.Decode(d); err != nil {
@@ -14891,7 +14497,6 @@ func (s *InlineQueryResultCachedVideo) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"caption\"")
 			}
 		case "parse_mode":
-
 			if err := func() error {
 				s.ParseMode.Reset()
 				if err := s.ParseMode.Decode(d); err != nil {
@@ -14902,9 +14507,8 @@ func (s *InlineQueryResultCachedVideo) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"parse_mode\"")
 			}
 		case "caption_entities":
-
 			if err := func() error {
-				s.CaptionEntities = nil
+				s.CaptionEntities = make([]MessageEntity, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem MessageEntity
 					if err := elem.Decode(d); err != nil {
@@ -14920,7 +14524,6 @@ func (s *InlineQueryResultCachedVideo) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"caption_entities\"")
 			}
 		case "reply_markup":
-
 			if err := func() error {
 				s.ReplyMarkup.Reset()
 				if err := s.ReplyMarkup.Decode(d); err != nil {
@@ -14931,7 +14534,6 @@ func (s *InlineQueryResultCachedVideo) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"reply_markup\"")
 			}
 		case "input_message_content":
-
 			if err := func() error {
 				s.InputMessageContent.Reset()
 				if err := s.InputMessageContent.Decode(d); err != nil {
@@ -15097,12 +14699,12 @@ func (s *InlineQueryResultCachedVoice) Decode(d *jx.Decoder) error {
 		return errors.New("invalid: unable to decode InlineQueryResultCachedVoice to nil")
 	}
 	var requiredBitSet [2]uint8
+	s.setDefaults()
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "type":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Type = string(v)
@@ -15115,7 +14717,6 @@ func (s *InlineQueryResultCachedVoice) Decode(d *jx.Decoder) error {
 			}
 		case "id":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.ID = string(v)
@@ -15128,7 +14729,6 @@ func (s *InlineQueryResultCachedVoice) Decode(d *jx.Decoder) error {
 			}
 		case "voice_file_id":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Str()
 				s.VoiceFileID = string(v)
@@ -15141,7 +14741,6 @@ func (s *InlineQueryResultCachedVoice) Decode(d *jx.Decoder) error {
 			}
 		case "title":
 			requiredBitSet[0] |= 1 << 3
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Title = string(v)
@@ -15153,7 +14752,6 @@ func (s *InlineQueryResultCachedVoice) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"title\"")
 			}
 		case "caption":
-
 			if err := func() error {
 				s.Caption.Reset()
 				if err := s.Caption.Decode(d); err != nil {
@@ -15164,7 +14762,6 @@ func (s *InlineQueryResultCachedVoice) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"caption\"")
 			}
 		case "parse_mode":
-
 			if err := func() error {
 				s.ParseMode.Reset()
 				if err := s.ParseMode.Decode(d); err != nil {
@@ -15175,9 +14772,8 @@ func (s *InlineQueryResultCachedVoice) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"parse_mode\"")
 			}
 		case "caption_entities":
-
 			if err := func() error {
-				s.CaptionEntities = nil
+				s.CaptionEntities = make([]MessageEntity, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem MessageEntity
 					if err := elem.Decode(d); err != nil {
@@ -15193,7 +14789,6 @@ func (s *InlineQueryResultCachedVoice) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"caption_entities\"")
 			}
 		case "reply_markup":
-
 			if err := func() error {
 				s.ReplyMarkup.Reset()
 				if err := s.ReplyMarkup.Decode(d); err != nil {
@@ -15204,7 +14799,6 @@ func (s *InlineQueryResultCachedVoice) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"reply_markup\"")
 			}
 		case "input_message_content":
-
 			if err := func() error {
 				s.InputMessageContent.Reset()
 				if err := s.InputMessageContent.Decode(d); err != nil {
@@ -15378,12 +14972,12 @@ func (s *InlineQueryResultContact) Decode(d *jx.Decoder) error {
 		return errors.New("invalid: unable to decode InlineQueryResultContact to nil")
 	}
 	var requiredBitSet [2]uint8
+	s.setDefaults()
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "type":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Type = string(v)
@@ -15396,7 +14990,6 @@ func (s *InlineQueryResultContact) Decode(d *jx.Decoder) error {
 			}
 		case "id":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.ID = string(v)
@@ -15409,7 +15002,6 @@ func (s *InlineQueryResultContact) Decode(d *jx.Decoder) error {
 			}
 		case "phone_number":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Str()
 				s.PhoneNumber = string(v)
@@ -15422,7 +15014,6 @@ func (s *InlineQueryResultContact) Decode(d *jx.Decoder) error {
 			}
 		case "first_name":
 			requiredBitSet[0] |= 1 << 3
-
 			if err := func() error {
 				v, err := d.Str()
 				s.FirstName = string(v)
@@ -15434,7 +15025,6 @@ func (s *InlineQueryResultContact) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"first_name\"")
 			}
 		case "last_name":
-
 			if err := func() error {
 				s.LastName.Reset()
 				if err := s.LastName.Decode(d); err != nil {
@@ -15445,7 +15035,6 @@ func (s *InlineQueryResultContact) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"last_name\"")
 			}
 		case "vcard":
-
 			if err := func() error {
 				s.Vcard.Reset()
 				if err := s.Vcard.Decode(d); err != nil {
@@ -15456,7 +15045,6 @@ func (s *InlineQueryResultContact) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"vcard\"")
 			}
 		case "reply_markup":
-
 			if err := func() error {
 				s.ReplyMarkup.Reset()
 				if err := s.ReplyMarkup.Decode(d); err != nil {
@@ -15467,7 +15055,6 @@ func (s *InlineQueryResultContact) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"reply_markup\"")
 			}
 		case "input_message_content":
-
 			if err := func() error {
 				s.InputMessageContent.Reset()
 				if err := s.InputMessageContent.Decode(d); err != nil {
@@ -15478,7 +15065,6 @@ func (s *InlineQueryResultContact) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"input_message_content\"")
 			}
 		case "thumb_url":
-
 			if err := func() error {
 				s.ThumbURL.Reset()
 				if err := s.ThumbURL.Decode(d); err != nil {
@@ -15489,7 +15075,6 @@ func (s *InlineQueryResultContact) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"thumb_url\"")
 			}
 		case "thumb_width":
-
 			if err := func() error {
 				s.ThumbWidth.Reset()
 				if err := s.ThumbWidth.Decode(d); err != nil {
@@ -15500,7 +15085,6 @@ func (s *InlineQueryResultContact) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"thumb_width\"")
 			}
 		case "thumb_height":
-
 			if err := func() error {
 				s.ThumbHeight.Reset()
 				if err := s.ThumbHeight.Decode(d); err != nil {
@@ -15713,12 +15297,12 @@ func (s *InlineQueryResultDocument) Decode(d *jx.Decoder) error {
 		return errors.New("invalid: unable to decode InlineQueryResultDocument to nil")
 	}
 	var requiredBitSet [2]uint8
+	s.setDefaults()
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "type":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Type = string(v)
@@ -15731,7 +15315,6 @@ func (s *InlineQueryResultDocument) Decode(d *jx.Decoder) error {
 			}
 		case "id":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.ID = string(v)
@@ -15744,7 +15327,6 @@ func (s *InlineQueryResultDocument) Decode(d *jx.Decoder) error {
 			}
 		case "title":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Title = string(v)
@@ -15756,7 +15338,6 @@ func (s *InlineQueryResultDocument) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"title\"")
 			}
 		case "caption":
-
 			if err := func() error {
 				s.Caption.Reset()
 				if err := s.Caption.Decode(d); err != nil {
@@ -15767,7 +15348,6 @@ func (s *InlineQueryResultDocument) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"caption\"")
 			}
 		case "parse_mode":
-
 			if err := func() error {
 				s.ParseMode.Reset()
 				if err := s.ParseMode.Decode(d); err != nil {
@@ -15778,9 +15358,8 @@ func (s *InlineQueryResultDocument) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"parse_mode\"")
 			}
 		case "caption_entities":
-
 			if err := func() error {
-				s.CaptionEntities = nil
+				s.CaptionEntities = make([]MessageEntity, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem MessageEntity
 					if err := elem.Decode(d); err != nil {
@@ -15797,7 +15376,6 @@ func (s *InlineQueryResultDocument) Decode(d *jx.Decoder) error {
 			}
 		case "document_url":
 			requiredBitSet[0] |= 1 << 6
-
 			if err := func() error {
 				v, err := d.Str()
 				s.DocumentURL = string(v)
@@ -15810,7 +15388,6 @@ func (s *InlineQueryResultDocument) Decode(d *jx.Decoder) error {
 			}
 		case "mime_type":
 			requiredBitSet[0] |= 1 << 7
-
 			if err := func() error {
 				v, err := d.Str()
 				s.MimeType = string(v)
@@ -15822,7 +15399,6 @@ func (s *InlineQueryResultDocument) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"mime_type\"")
 			}
 		case "description":
-
 			if err := func() error {
 				s.Description.Reset()
 				if err := s.Description.Decode(d); err != nil {
@@ -15833,7 +15409,6 @@ func (s *InlineQueryResultDocument) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"description\"")
 			}
 		case "reply_markup":
-
 			if err := func() error {
 				s.ReplyMarkup.Reset()
 				if err := s.ReplyMarkup.Decode(d); err != nil {
@@ -15844,7 +15419,6 @@ func (s *InlineQueryResultDocument) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"reply_markup\"")
 			}
 		case "input_message_content":
-
 			if err := func() error {
 				s.InputMessageContent.Reset()
 				if err := s.InputMessageContent.Decode(d); err != nil {
@@ -15855,7 +15429,6 @@ func (s *InlineQueryResultDocument) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"input_message_content\"")
 			}
 		case "thumb_url":
-
 			if err := func() error {
 				s.ThumbURL.Reset()
 				if err := s.ThumbURL.Decode(d); err != nil {
@@ -15866,7 +15439,6 @@ func (s *InlineQueryResultDocument) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"thumb_url\"")
 			}
 		case "thumb_width":
-
 			if err := func() error {
 				s.ThumbWidth.Reset()
 				if err := s.ThumbWidth.Decode(d); err != nil {
@@ -15877,7 +15449,6 @@ func (s *InlineQueryResultDocument) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"thumb_width\"")
 			}
 		case "thumb_height":
-
 			if err := func() error {
 				s.ThumbHeight.Reset()
 				if err := s.ThumbHeight.Decode(d); err != nil {
@@ -15984,12 +15555,12 @@ func (s *InlineQueryResultGame) Decode(d *jx.Decoder) error {
 		return errors.New("invalid: unable to decode InlineQueryResultGame to nil")
 	}
 	var requiredBitSet [1]uint8
+	s.setDefaults()
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "type":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Type = string(v)
@@ -16002,7 +15573,6 @@ func (s *InlineQueryResultGame) Decode(d *jx.Decoder) error {
 			}
 		case "id":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.ID = string(v)
@@ -16015,7 +15585,6 @@ func (s *InlineQueryResultGame) Decode(d *jx.Decoder) error {
 			}
 		case "game_short_name":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Str()
 				s.GameShortName = string(v)
@@ -16027,7 +15596,6 @@ func (s *InlineQueryResultGame) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"game_short_name\"")
 			}
 		case "reply_markup":
-
 			if err := func() error {
 				s.ReplyMarkup.Reset()
 				if err := s.ReplyMarkup.Decode(d); err != nil {
@@ -16242,12 +15810,12 @@ func (s *InlineQueryResultGif) Decode(d *jx.Decoder) error {
 		return errors.New("invalid: unable to decode InlineQueryResultGif to nil")
 	}
 	var requiredBitSet [2]uint8
+	s.setDefaults()
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "type":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Type = string(v)
@@ -16260,7 +15828,6 @@ func (s *InlineQueryResultGif) Decode(d *jx.Decoder) error {
 			}
 		case "id":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.ID = string(v)
@@ -16273,7 +15840,6 @@ func (s *InlineQueryResultGif) Decode(d *jx.Decoder) error {
 			}
 		case "gif_url":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Str()
 				s.GIFURL = string(v)
@@ -16285,7 +15851,6 @@ func (s *InlineQueryResultGif) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"gif_url\"")
 			}
 		case "gif_width":
-
 			if err := func() error {
 				s.GIFWidth.Reset()
 				if err := s.GIFWidth.Decode(d); err != nil {
@@ -16296,7 +15861,6 @@ func (s *InlineQueryResultGif) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"gif_width\"")
 			}
 		case "gif_height":
-
 			if err := func() error {
 				s.GIFHeight.Reset()
 				if err := s.GIFHeight.Decode(d); err != nil {
@@ -16307,7 +15871,6 @@ func (s *InlineQueryResultGif) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"gif_height\"")
 			}
 		case "gif_duration":
-
 			if err := func() error {
 				s.GIFDuration.Reset()
 				if err := s.GIFDuration.Decode(d); err != nil {
@@ -16319,7 +15882,6 @@ func (s *InlineQueryResultGif) Decode(d *jx.Decoder) error {
 			}
 		case "thumb_url":
 			requiredBitSet[0] |= 1 << 6
-
 			if err := func() error {
 				v, err := d.Str()
 				s.ThumbURL = string(v)
@@ -16331,7 +15893,6 @@ func (s *InlineQueryResultGif) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"thumb_url\"")
 			}
 		case "thumb_mime_type":
-
 			if err := func() error {
 				s.ThumbMimeType.Reset()
 				if err := s.ThumbMimeType.Decode(d); err != nil {
@@ -16342,7 +15903,6 @@ func (s *InlineQueryResultGif) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"thumb_mime_type\"")
 			}
 		case "title":
-
 			if err := func() error {
 				s.Title.Reset()
 				if err := s.Title.Decode(d); err != nil {
@@ -16353,7 +15913,6 @@ func (s *InlineQueryResultGif) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"title\"")
 			}
 		case "caption":
-
 			if err := func() error {
 				s.Caption.Reset()
 				if err := s.Caption.Decode(d); err != nil {
@@ -16364,7 +15923,6 @@ func (s *InlineQueryResultGif) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"caption\"")
 			}
 		case "parse_mode":
-
 			if err := func() error {
 				s.ParseMode.Reset()
 				if err := s.ParseMode.Decode(d); err != nil {
@@ -16375,9 +15933,8 @@ func (s *InlineQueryResultGif) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"parse_mode\"")
 			}
 		case "caption_entities":
-
 			if err := func() error {
-				s.CaptionEntities = nil
+				s.CaptionEntities = make([]MessageEntity, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem MessageEntity
 					if err := elem.Decode(d); err != nil {
@@ -16393,7 +15950,6 @@ func (s *InlineQueryResultGif) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"caption_entities\"")
 			}
 		case "reply_markup":
-
 			if err := func() error {
 				s.ReplyMarkup.Reset()
 				if err := s.ReplyMarkup.Decode(d); err != nil {
@@ -16404,7 +15960,6 @@ func (s *InlineQueryResultGif) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"reply_markup\"")
 			}
 		case "input_message_content":
-
 			if err := func() error {
 				s.InputMessageContent.Reset()
 				if err := s.InputMessageContent.Decode(d); err != nil {
@@ -16605,12 +16160,12 @@ func (s *InlineQueryResultLocation) Decode(d *jx.Decoder) error {
 		return errors.New("invalid: unable to decode InlineQueryResultLocation to nil")
 	}
 	var requiredBitSet [2]uint8
+	s.setDefaults()
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "type":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Type = string(v)
@@ -16623,7 +16178,6 @@ func (s *InlineQueryResultLocation) Decode(d *jx.Decoder) error {
 			}
 		case "id":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.ID = string(v)
@@ -16636,7 +16190,6 @@ func (s *InlineQueryResultLocation) Decode(d *jx.Decoder) error {
 			}
 		case "latitude":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Float64()
 				s.Latitude = float64(v)
@@ -16649,7 +16202,6 @@ func (s *InlineQueryResultLocation) Decode(d *jx.Decoder) error {
 			}
 		case "longitude":
 			requiredBitSet[0] |= 1 << 3
-
 			if err := func() error {
 				v, err := d.Float64()
 				s.Longitude = float64(v)
@@ -16662,7 +16214,6 @@ func (s *InlineQueryResultLocation) Decode(d *jx.Decoder) error {
 			}
 		case "title":
 			requiredBitSet[0] |= 1 << 4
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Title = string(v)
@@ -16674,7 +16225,6 @@ func (s *InlineQueryResultLocation) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"title\"")
 			}
 		case "horizontal_accuracy":
-
 			if err := func() error {
 				s.HorizontalAccuracy.Reset()
 				if err := s.HorizontalAccuracy.Decode(d); err != nil {
@@ -16685,7 +16235,6 @@ func (s *InlineQueryResultLocation) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"horizontal_accuracy\"")
 			}
 		case "live_period":
-
 			if err := func() error {
 				s.LivePeriod.Reset()
 				if err := s.LivePeriod.Decode(d); err != nil {
@@ -16696,7 +16245,6 @@ func (s *InlineQueryResultLocation) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"live_period\"")
 			}
 		case "heading":
-
 			if err := func() error {
 				s.Heading.Reset()
 				if err := s.Heading.Decode(d); err != nil {
@@ -16707,7 +16255,6 @@ func (s *InlineQueryResultLocation) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"heading\"")
 			}
 		case "proximity_alert_radius":
-
 			if err := func() error {
 				s.ProximityAlertRadius.Reset()
 				if err := s.ProximityAlertRadius.Decode(d); err != nil {
@@ -16718,7 +16265,6 @@ func (s *InlineQueryResultLocation) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"proximity_alert_radius\"")
 			}
 		case "reply_markup":
-
 			if err := func() error {
 				s.ReplyMarkup.Reset()
 				if err := s.ReplyMarkup.Decode(d); err != nil {
@@ -16729,7 +16275,6 @@ func (s *InlineQueryResultLocation) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"reply_markup\"")
 			}
 		case "input_message_content":
-
 			if err := func() error {
 				s.InputMessageContent.Reset()
 				if err := s.InputMessageContent.Decode(d); err != nil {
@@ -16740,7 +16285,6 @@ func (s *InlineQueryResultLocation) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"input_message_content\"")
 			}
 		case "thumb_url":
-
 			if err := func() error {
 				s.ThumbURL.Reset()
 				if err := s.ThumbURL.Decode(d); err != nil {
@@ -16751,7 +16295,6 @@ func (s *InlineQueryResultLocation) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"thumb_url\"")
 			}
 		case "thumb_width":
-
 			if err := func() error {
 				s.ThumbWidth.Reset()
 				if err := s.ThumbWidth.Decode(d); err != nil {
@@ -16762,7 +16305,6 @@ func (s *InlineQueryResultLocation) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"thumb_width\"")
 			}
 		case "thumb_height":
-
 			if err := func() error {
 				s.ThumbHeight.Reset()
 				if err := s.ThumbHeight.Decode(d); err != nil {
@@ -16978,12 +16520,12 @@ func (s *InlineQueryResultMpeg4Gif) Decode(d *jx.Decoder) error {
 		return errors.New("invalid: unable to decode InlineQueryResultMpeg4Gif to nil")
 	}
 	var requiredBitSet [2]uint8
+	s.setDefaults()
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "type":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Type = string(v)
@@ -16996,7 +16538,6 @@ func (s *InlineQueryResultMpeg4Gif) Decode(d *jx.Decoder) error {
 			}
 		case "id":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.ID = string(v)
@@ -17009,7 +16550,6 @@ func (s *InlineQueryResultMpeg4Gif) Decode(d *jx.Decoder) error {
 			}
 		case "mpeg4_url":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Mpeg4URL = string(v)
@@ -17021,7 +16561,6 @@ func (s *InlineQueryResultMpeg4Gif) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"mpeg4_url\"")
 			}
 		case "mpeg4_width":
-
 			if err := func() error {
 				s.Mpeg4Width.Reset()
 				if err := s.Mpeg4Width.Decode(d); err != nil {
@@ -17032,7 +16571,6 @@ func (s *InlineQueryResultMpeg4Gif) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"mpeg4_width\"")
 			}
 		case "mpeg4_height":
-
 			if err := func() error {
 				s.Mpeg4Height.Reset()
 				if err := s.Mpeg4Height.Decode(d); err != nil {
@@ -17043,7 +16581,6 @@ func (s *InlineQueryResultMpeg4Gif) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"mpeg4_height\"")
 			}
 		case "mpeg4_duration":
-
 			if err := func() error {
 				s.Mpeg4Duration.Reset()
 				if err := s.Mpeg4Duration.Decode(d); err != nil {
@@ -17055,7 +16592,6 @@ func (s *InlineQueryResultMpeg4Gif) Decode(d *jx.Decoder) error {
 			}
 		case "thumb_url":
 			requiredBitSet[0] |= 1 << 6
-
 			if err := func() error {
 				v, err := d.Str()
 				s.ThumbURL = string(v)
@@ -17067,7 +16603,6 @@ func (s *InlineQueryResultMpeg4Gif) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"thumb_url\"")
 			}
 		case "thumb_mime_type":
-
 			if err := func() error {
 				s.ThumbMimeType.Reset()
 				if err := s.ThumbMimeType.Decode(d); err != nil {
@@ -17078,7 +16613,6 @@ func (s *InlineQueryResultMpeg4Gif) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"thumb_mime_type\"")
 			}
 		case "title":
-
 			if err := func() error {
 				s.Title.Reset()
 				if err := s.Title.Decode(d); err != nil {
@@ -17089,7 +16623,6 @@ func (s *InlineQueryResultMpeg4Gif) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"title\"")
 			}
 		case "caption":
-
 			if err := func() error {
 				s.Caption.Reset()
 				if err := s.Caption.Decode(d); err != nil {
@@ -17100,7 +16633,6 @@ func (s *InlineQueryResultMpeg4Gif) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"caption\"")
 			}
 		case "parse_mode":
-
 			if err := func() error {
 				s.ParseMode.Reset()
 				if err := s.ParseMode.Decode(d); err != nil {
@@ -17111,9 +16643,8 @@ func (s *InlineQueryResultMpeg4Gif) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"parse_mode\"")
 			}
 		case "caption_entities":
-
 			if err := func() error {
-				s.CaptionEntities = nil
+				s.CaptionEntities = make([]MessageEntity, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem MessageEntity
 					if err := elem.Decode(d); err != nil {
@@ -17129,7 +16660,6 @@ func (s *InlineQueryResultMpeg4Gif) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"caption_entities\"")
 			}
 		case "reply_markup":
-
 			if err := func() error {
 				s.ReplyMarkup.Reset()
 				if err := s.ReplyMarkup.Decode(d); err != nil {
@@ -17140,7 +16670,6 @@ func (s *InlineQueryResultMpeg4Gif) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"reply_markup\"")
 			}
 		case "input_message_content":
-
 			if err := func() error {
 				s.InputMessageContent.Reset()
 				if err := s.InputMessageContent.Decode(d); err != nil {
@@ -17346,12 +16875,12 @@ func (s *InlineQueryResultPhoto) Decode(d *jx.Decoder) error {
 		return errors.New("invalid: unable to decode InlineQueryResultPhoto to nil")
 	}
 	var requiredBitSet [2]uint8
+	s.setDefaults()
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "type":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Type = string(v)
@@ -17364,7 +16893,6 @@ func (s *InlineQueryResultPhoto) Decode(d *jx.Decoder) error {
 			}
 		case "id":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.ID = string(v)
@@ -17377,7 +16905,6 @@ func (s *InlineQueryResultPhoto) Decode(d *jx.Decoder) error {
 			}
 		case "photo_url":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Str()
 				s.PhotoURL = string(v)
@@ -17390,7 +16917,6 @@ func (s *InlineQueryResultPhoto) Decode(d *jx.Decoder) error {
 			}
 		case "thumb_url":
 			requiredBitSet[0] |= 1 << 3
-
 			if err := func() error {
 				v, err := d.Str()
 				s.ThumbURL = string(v)
@@ -17402,7 +16928,6 @@ func (s *InlineQueryResultPhoto) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"thumb_url\"")
 			}
 		case "photo_width":
-
 			if err := func() error {
 				s.PhotoWidth.Reset()
 				if err := s.PhotoWidth.Decode(d); err != nil {
@@ -17413,7 +16938,6 @@ func (s *InlineQueryResultPhoto) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"photo_width\"")
 			}
 		case "photo_height":
-
 			if err := func() error {
 				s.PhotoHeight.Reset()
 				if err := s.PhotoHeight.Decode(d); err != nil {
@@ -17424,7 +16948,6 @@ func (s *InlineQueryResultPhoto) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"photo_height\"")
 			}
 		case "title":
-
 			if err := func() error {
 				s.Title.Reset()
 				if err := s.Title.Decode(d); err != nil {
@@ -17435,7 +16958,6 @@ func (s *InlineQueryResultPhoto) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"title\"")
 			}
 		case "description":
-
 			if err := func() error {
 				s.Description.Reset()
 				if err := s.Description.Decode(d); err != nil {
@@ -17446,7 +16968,6 @@ func (s *InlineQueryResultPhoto) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"description\"")
 			}
 		case "caption":
-
 			if err := func() error {
 				s.Caption.Reset()
 				if err := s.Caption.Decode(d); err != nil {
@@ -17457,7 +16978,6 @@ func (s *InlineQueryResultPhoto) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"caption\"")
 			}
 		case "parse_mode":
-
 			if err := func() error {
 				s.ParseMode.Reset()
 				if err := s.ParseMode.Decode(d); err != nil {
@@ -17468,9 +16988,8 @@ func (s *InlineQueryResultPhoto) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"parse_mode\"")
 			}
 		case "caption_entities":
-
 			if err := func() error {
-				s.CaptionEntities = nil
+				s.CaptionEntities = make([]MessageEntity, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem MessageEntity
 					if err := elem.Decode(d); err != nil {
@@ -17486,7 +17005,6 @@ func (s *InlineQueryResultPhoto) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"caption_entities\"")
 			}
 		case "reply_markup":
-
 			if err := func() error {
 				s.ReplyMarkup.Reset()
 				if err := s.ReplyMarkup.Decode(d); err != nil {
@@ -17497,7 +17015,6 @@ func (s *InlineQueryResultPhoto) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"reply_markup\"")
 			}
 		case "input_message_content":
-
 			if err := func() error {
 				s.InputMessageContent.Reset()
 				if err := s.InputMessageContent.Decode(d); err != nil {
@@ -17705,12 +17222,12 @@ func (s *InlineQueryResultVenue) Decode(d *jx.Decoder) error {
 		return errors.New("invalid: unable to decode InlineQueryResultVenue to nil")
 	}
 	var requiredBitSet [2]uint8
+	s.setDefaults()
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "type":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Type = string(v)
@@ -17723,7 +17240,6 @@ func (s *InlineQueryResultVenue) Decode(d *jx.Decoder) error {
 			}
 		case "id":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.ID = string(v)
@@ -17736,7 +17252,6 @@ func (s *InlineQueryResultVenue) Decode(d *jx.Decoder) error {
 			}
 		case "latitude":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Float64()
 				s.Latitude = float64(v)
@@ -17749,7 +17264,6 @@ func (s *InlineQueryResultVenue) Decode(d *jx.Decoder) error {
 			}
 		case "longitude":
 			requiredBitSet[0] |= 1 << 3
-
 			if err := func() error {
 				v, err := d.Float64()
 				s.Longitude = float64(v)
@@ -17762,7 +17276,6 @@ func (s *InlineQueryResultVenue) Decode(d *jx.Decoder) error {
 			}
 		case "title":
 			requiredBitSet[0] |= 1 << 4
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Title = string(v)
@@ -17775,7 +17288,6 @@ func (s *InlineQueryResultVenue) Decode(d *jx.Decoder) error {
 			}
 		case "address":
 			requiredBitSet[0] |= 1 << 5
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Address = string(v)
@@ -17787,7 +17299,6 @@ func (s *InlineQueryResultVenue) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"address\"")
 			}
 		case "foursquare_id":
-
 			if err := func() error {
 				s.FoursquareID.Reset()
 				if err := s.FoursquareID.Decode(d); err != nil {
@@ -17798,7 +17309,6 @@ func (s *InlineQueryResultVenue) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"foursquare_id\"")
 			}
 		case "foursquare_type":
-
 			if err := func() error {
 				s.FoursquareType.Reset()
 				if err := s.FoursquareType.Decode(d); err != nil {
@@ -17809,7 +17319,6 @@ func (s *InlineQueryResultVenue) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"foursquare_type\"")
 			}
 		case "google_place_id":
-
 			if err := func() error {
 				s.GooglePlaceID.Reset()
 				if err := s.GooglePlaceID.Decode(d); err != nil {
@@ -17820,7 +17329,6 @@ func (s *InlineQueryResultVenue) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"google_place_id\"")
 			}
 		case "google_place_type":
-
 			if err := func() error {
 				s.GooglePlaceType.Reset()
 				if err := s.GooglePlaceType.Decode(d); err != nil {
@@ -17831,7 +17339,6 @@ func (s *InlineQueryResultVenue) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"google_place_type\"")
 			}
 		case "reply_markup":
-
 			if err := func() error {
 				s.ReplyMarkup.Reset()
 				if err := s.ReplyMarkup.Decode(d); err != nil {
@@ -17842,7 +17349,6 @@ func (s *InlineQueryResultVenue) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"reply_markup\"")
 			}
 		case "input_message_content":
-
 			if err := func() error {
 				s.InputMessageContent.Reset()
 				if err := s.InputMessageContent.Decode(d); err != nil {
@@ -17853,7 +17359,6 @@ func (s *InlineQueryResultVenue) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"input_message_content\"")
 			}
 		case "thumb_url":
-
 			if err := func() error {
 				s.ThumbURL.Reset()
 				if err := s.ThumbURL.Decode(d); err != nil {
@@ -17864,7 +17369,6 @@ func (s *InlineQueryResultVenue) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"thumb_url\"")
 			}
 		case "thumb_width":
-
 			if err := func() error {
 				s.ThumbWidth.Reset()
 				if err := s.ThumbWidth.Decode(d); err != nil {
@@ -17875,7 +17379,6 @@ func (s *InlineQueryResultVenue) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"thumb_width\"")
 			}
 		case "thumb_height":
-
 			if err := func() error {
 				s.ThumbHeight.Reset()
 				if err := s.ThumbHeight.Decode(d); err != nil {
@@ -18095,12 +17598,12 @@ func (s *InlineQueryResultVideo) Decode(d *jx.Decoder) error {
 		return errors.New("invalid: unable to decode InlineQueryResultVideo to nil")
 	}
 	var requiredBitSet [2]uint8
+	s.setDefaults()
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "type":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Type = string(v)
@@ -18113,7 +17616,6 @@ func (s *InlineQueryResultVideo) Decode(d *jx.Decoder) error {
 			}
 		case "id":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.ID = string(v)
@@ -18126,7 +17628,6 @@ func (s *InlineQueryResultVideo) Decode(d *jx.Decoder) error {
 			}
 		case "video_url":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Str()
 				s.VideoURL = string(v)
@@ -18139,7 +17640,6 @@ func (s *InlineQueryResultVideo) Decode(d *jx.Decoder) error {
 			}
 		case "mime_type":
 			requiredBitSet[0] |= 1 << 3
-
 			if err := func() error {
 				v, err := d.Str()
 				s.MimeType = string(v)
@@ -18152,7 +17652,6 @@ func (s *InlineQueryResultVideo) Decode(d *jx.Decoder) error {
 			}
 		case "thumb_url":
 			requiredBitSet[0] |= 1 << 4
-
 			if err := func() error {
 				v, err := d.Str()
 				s.ThumbURL = string(v)
@@ -18165,7 +17664,6 @@ func (s *InlineQueryResultVideo) Decode(d *jx.Decoder) error {
 			}
 		case "title":
 			requiredBitSet[0] |= 1 << 5
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Title = string(v)
@@ -18177,7 +17675,6 @@ func (s *InlineQueryResultVideo) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"title\"")
 			}
 		case "caption":
-
 			if err := func() error {
 				s.Caption.Reset()
 				if err := s.Caption.Decode(d); err != nil {
@@ -18188,7 +17685,6 @@ func (s *InlineQueryResultVideo) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"caption\"")
 			}
 		case "parse_mode":
-
 			if err := func() error {
 				s.ParseMode.Reset()
 				if err := s.ParseMode.Decode(d); err != nil {
@@ -18199,9 +17695,8 @@ func (s *InlineQueryResultVideo) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"parse_mode\"")
 			}
 		case "caption_entities":
-
 			if err := func() error {
-				s.CaptionEntities = nil
+				s.CaptionEntities = make([]MessageEntity, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem MessageEntity
 					if err := elem.Decode(d); err != nil {
@@ -18217,7 +17712,6 @@ func (s *InlineQueryResultVideo) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"caption_entities\"")
 			}
 		case "video_width":
-
 			if err := func() error {
 				s.VideoWidth.Reset()
 				if err := s.VideoWidth.Decode(d); err != nil {
@@ -18228,7 +17722,6 @@ func (s *InlineQueryResultVideo) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"video_width\"")
 			}
 		case "video_height":
-
 			if err := func() error {
 				s.VideoHeight.Reset()
 				if err := s.VideoHeight.Decode(d); err != nil {
@@ -18239,7 +17732,6 @@ func (s *InlineQueryResultVideo) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"video_height\"")
 			}
 		case "video_duration":
-
 			if err := func() error {
 				s.VideoDuration.Reset()
 				if err := s.VideoDuration.Decode(d); err != nil {
@@ -18250,7 +17742,6 @@ func (s *InlineQueryResultVideo) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"video_duration\"")
 			}
 		case "description":
-
 			if err := func() error {
 				s.Description.Reset()
 				if err := s.Description.Decode(d); err != nil {
@@ -18261,7 +17752,6 @@ func (s *InlineQueryResultVideo) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"description\"")
 			}
 		case "reply_markup":
-
 			if err := func() error {
 				s.ReplyMarkup.Reset()
 				if err := s.ReplyMarkup.Decode(d); err != nil {
@@ -18272,7 +17762,6 @@ func (s *InlineQueryResultVideo) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"reply_markup\"")
 			}
 		case "input_message_content":
-
 			if err := func() error {
 				s.InputMessageContent.Reset()
 				if err := s.InputMessageContent.Decode(d); err != nil {
@@ -18448,12 +17937,12 @@ func (s *InlineQueryResultVoice) Decode(d *jx.Decoder) error {
 		return errors.New("invalid: unable to decode InlineQueryResultVoice to nil")
 	}
 	var requiredBitSet [2]uint8
+	s.setDefaults()
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "type":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Type = string(v)
@@ -18466,7 +17955,6 @@ func (s *InlineQueryResultVoice) Decode(d *jx.Decoder) error {
 			}
 		case "id":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.ID = string(v)
@@ -18479,7 +17967,6 @@ func (s *InlineQueryResultVoice) Decode(d *jx.Decoder) error {
 			}
 		case "voice_url":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Str()
 				s.VoiceURL = string(v)
@@ -18492,7 +17979,6 @@ func (s *InlineQueryResultVoice) Decode(d *jx.Decoder) error {
 			}
 		case "title":
 			requiredBitSet[0] |= 1 << 3
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Title = string(v)
@@ -18504,7 +17990,6 @@ func (s *InlineQueryResultVoice) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"title\"")
 			}
 		case "caption":
-
 			if err := func() error {
 				s.Caption.Reset()
 				if err := s.Caption.Decode(d); err != nil {
@@ -18515,7 +18000,6 @@ func (s *InlineQueryResultVoice) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"caption\"")
 			}
 		case "parse_mode":
-
 			if err := func() error {
 				s.ParseMode.Reset()
 				if err := s.ParseMode.Decode(d); err != nil {
@@ -18526,9 +18010,8 @@ func (s *InlineQueryResultVoice) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"parse_mode\"")
 			}
 		case "caption_entities":
-
 			if err := func() error {
-				s.CaptionEntities = nil
+				s.CaptionEntities = make([]MessageEntity, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem MessageEntity
 					if err := elem.Decode(d); err != nil {
@@ -18544,7 +18027,6 @@ func (s *InlineQueryResultVoice) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"caption_entities\"")
 			}
 		case "voice_duration":
-
 			if err := func() error {
 				s.VoiceDuration.Reset()
 				if err := s.VoiceDuration.Decode(d); err != nil {
@@ -18555,7 +18037,6 @@ func (s *InlineQueryResultVoice) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"voice_duration\"")
 			}
 		case "reply_markup":
-
 			if err := func() error {
 				s.ReplyMarkup.Reset()
 				if err := s.ReplyMarkup.Decode(d); err != nil {
@@ -18566,7 +18047,6 @@ func (s *InlineQueryResultVoice) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"reply_markup\"")
 			}
 		case "input_message_content":
-
 			if err := func() error {
 				s.InputMessageContent.Reset()
 				if err := s.InputMessageContent.Decode(d); err != nil {
@@ -18681,7 +18161,6 @@ func (s *InputContactMessageContent) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "phone_number":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.PhoneNumber = string(v)
@@ -18694,7 +18173,6 @@ func (s *InputContactMessageContent) Decode(d *jx.Decoder) error {
 			}
 		case "first_name":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.FirstName = string(v)
@@ -18706,7 +18184,6 @@ func (s *InputContactMessageContent) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"first_name\"")
 			}
 		case "last_name":
-
 			if err := func() error {
 				s.LastName.Reset()
 				if err := s.LastName.Decode(d); err != nil {
@@ -18717,7 +18194,6 @@ func (s *InputContactMessageContent) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"last_name\"")
 			}
 		case "vcard":
-
 			if err := func() error {
 				s.Vcard.Reset()
 				if err := s.Vcard.Decode(d); err != nil {
@@ -19003,7 +18479,6 @@ func (s *InputInvoiceMessageContent) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "title":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Title = string(v)
@@ -19016,7 +18491,6 @@ func (s *InputInvoiceMessageContent) Decode(d *jx.Decoder) error {
 			}
 		case "description":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Description = string(v)
@@ -19029,7 +18503,6 @@ func (s *InputInvoiceMessageContent) Decode(d *jx.Decoder) error {
 			}
 		case "payload":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Payload = string(v)
@@ -19042,7 +18515,6 @@ func (s *InputInvoiceMessageContent) Decode(d *jx.Decoder) error {
 			}
 		case "provider_token":
 			requiredBitSet[0] |= 1 << 3
-
 			if err := func() error {
 				v, err := d.Str()
 				s.ProviderToken = string(v)
@@ -19055,7 +18527,6 @@ func (s *InputInvoiceMessageContent) Decode(d *jx.Decoder) error {
 			}
 		case "currency":
 			requiredBitSet[0] |= 1 << 4
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Currency = string(v)
@@ -19068,9 +18539,8 @@ func (s *InputInvoiceMessageContent) Decode(d *jx.Decoder) error {
 			}
 		case "prices":
 			requiredBitSet[0] |= 1 << 5
-
 			if err := func() error {
-				s.Prices = nil
+				s.Prices = make([]LabeledPrice, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem LabeledPrice
 					if err := elem.Decode(d); err != nil {
@@ -19086,7 +18556,6 @@ func (s *InputInvoiceMessageContent) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"prices\"")
 			}
 		case "max_tip_amount":
-
 			if err := func() error {
 				s.MaxTipAmount.Reset()
 				if err := s.MaxTipAmount.Decode(d); err != nil {
@@ -19097,9 +18566,8 @@ func (s *InputInvoiceMessageContent) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"max_tip_amount\"")
 			}
 		case "suggested_tip_amounts":
-
 			if err := func() error {
-				s.SuggestedTipAmounts = nil
+				s.SuggestedTipAmounts = make([]int64, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem int64
 					v, err := d.Int64()
@@ -19117,7 +18585,6 @@ func (s *InputInvoiceMessageContent) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"suggested_tip_amounts\"")
 			}
 		case "provider_data":
-
 			if err := func() error {
 				s.ProviderData.Reset()
 				if err := s.ProviderData.Decode(d); err != nil {
@@ -19128,7 +18595,6 @@ func (s *InputInvoiceMessageContent) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"provider_data\"")
 			}
 		case "photo_url":
-
 			if err := func() error {
 				s.PhotoURL.Reset()
 				if err := s.PhotoURL.Decode(d); err != nil {
@@ -19139,7 +18605,6 @@ func (s *InputInvoiceMessageContent) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"photo_url\"")
 			}
 		case "photo_size":
-
 			if err := func() error {
 				s.PhotoSize.Reset()
 				if err := s.PhotoSize.Decode(d); err != nil {
@@ -19150,7 +18615,6 @@ func (s *InputInvoiceMessageContent) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"photo_size\"")
 			}
 		case "photo_width":
-
 			if err := func() error {
 				s.PhotoWidth.Reset()
 				if err := s.PhotoWidth.Decode(d); err != nil {
@@ -19161,7 +18625,6 @@ func (s *InputInvoiceMessageContent) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"photo_width\"")
 			}
 		case "photo_height":
-
 			if err := func() error {
 				s.PhotoHeight.Reset()
 				if err := s.PhotoHeight.Decode(d); err != nil {
@@ -19172,7 +18635,6 @@ func (s *InputInvoiceMessageContent) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"photo_height\"")
 			}
 		case "need_name":
-
 			if err := func() error {
 				s.NeedName.Reset()
 				if err := s.NeedName.Decode(d); err != nil {
@@ -19183,7 +18645,6 @@ func (s *InputInvoiceMessageContent) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"need_name\"")
 			}
 		case "need_phone_number":
-
 			if err := func() error {
 				s.NeedPhoneNumber.Reset()
 				if err := s.NeedPhoneNumber.Decode(d); err != nil {
@@ -19194,7 +18655,6 @@ func (s *InputInvoiceMessageContent) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"need_phone_number\"")
 			}
 		case "need_email":
-
 			if err := func() error {
 				s.NeedEmail.Reset()
 				if err := s.NeedEmail.Decode(d); err != nil {
@@ -19205,7 +18665,6 @@ func (s *InputInvoiceMessageContent) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"need_email\"")
 			}
 		case "need_shipping_address":
-
 			if err := func() error {
 				s.NeedShippingAddress.Reset()
 				if err := s.NeedShippingAddress.Decode(d); err != nil {
@@ -19216,7 +18675,6 @@ func (s *InputInvoiceMessageContent) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"need_shipping_address\"")
 			}
 		case "send_phone_number_to_provider":
-
 			if err := func() error {
 				s.SendPhoneNumberToProvider.Reset()
 				if err := s.SendPhoneNumberToProvider.Decode(d); err != nil {
@@ -19227,7 +18685,6 @@ func (s *InputInvoiceMessageContent) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"send_phone_number_to_provider\"")
 			}
 		case "send_email_to_provider":
-
 			if err := func() error {
 				s.SendEmailToProvider.Reset()
 				if err := s.SendEmailToProvider.Decode(d); err != nil {
@@ -19238,7 +18695,6 @@ func (s *InputInvoiceMessageContent) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"send_email_to_provider\"")
 			}
 		case "is_flexible":
-
 			if err := func() error {
 				s.IsFlexible.Reset()
 				if err := s.IsFlexible.Decode(d); err != nil {
@@ -19374,7 +18830,6 @@ func (s *InputLocationMessageContent) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "latitude":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Float64()
 				s.Latitude = float64(v)
@@ -19387,7 +18842,6 @@ func (s *InputLocationMessageContent) Decode(d *jx.Decoder) error {
 			}
 		case "longitude":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Float64()
 				s.Longitude = float64(v)
@@ -19399,7 +18853,6 @@ func (s *InputLocationMessageContent) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"longitude\"")
 			}
 		case "horizontal_accuracy":
-
 			if err := func() error {
 				s.HorizontalAccuracy.Reset()
 				if err := s.HorizontalAccuracy.Decode(d); err != nil {
@@ -19410,7 +18863,6 @@ func (s *InputLocationMessageContent) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"horizontal_accuracy\"")
 			}
 		case "live_period":
-
 			if err := func() error {
 				s.LivePeriod.Reset()
 				if err := s.LivePeriod.Decode(d); err != nil {
@@ -19421,7 +18873,6 @@ func (s *InputLocationMessageContent) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"live_period\"")
 			}
 		case "heading":
-
 			if err := func() error {
 				s.Heading.Reset()
 				if err := s.Heading.Decode(d); err != nil {
@@ -19432,7 +18883,6 @@ func (s *InputLocationMessageContent) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"heading\"")
 			}
 		case "proximity_alert_radius":
-
 			if err := func() error {
 				s.ProximityAlertRadius.Reset()
 				if err := s.ProximityAlertRadius.Decode(d); err != nil {
@@ -19697,12 +19147,12 @@ func (s *InputMediaAnimation) Decode(d *jx.Decoder) error {
 		return errors.New("invalid: unable to decode InputMediaAnimation to nil")
 	}
 	var requiredBitSet [2]uint8
+	s.setDefaults()
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "type":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Type = string(v)
@@ -19715,7 +19165,6 @@ func (s *InputMediaAnimation) Decode(d *jx.Decoder) error {
 			}
 		case "media":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Media = string(v)
@@ -19727,7 +19176,6 @@ func (s *InputMediaAnimation) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"media\"")
 			}
 		case "thumb":
-
 			if err := func() error {
 				s.Thumb.Reset()
 				if err := s.Thumb.Decode(d); err != nil {
@@ -19738,7 +19186,6 @@ func (s *InputMediaAnimation) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"thumb\"")
 			}
 		case "caption":
-
 			if err := func() error {
 				s.Caption.Reset()
 				if err := s.Caption.Decode(d); err != nil {
@@ -19749,7 +19196,6 @@ func (s *InputMediaAnimation) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"caption\"")
 			}
 		case "parse_mode":
-
 			if err := func() error {
 				s.ParseMode.Reset()
 				if err := s.ParseMode.Decode(d); err != nil {
@@ -19760,9 +19206,8 @@ func (s *InputMediaAnimation) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"parse_mode\"")
 			}
 		case "caption_entities":
-
 			if err := func() error {
-				s.CaptionEntities = nil
+				s.CaptionEntities = make([]MessageEntity, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem MessageEntity
 					if err := elem.Decode(d); err != nil {
@@ -19778,7 +19223,6 @@ func (s *InputMediaAnimation) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"caption_entities\"")
 			}
 		case "width":
-
 			if err := func() error {
 				s.Width.Reset()
 				if err := s.Width.Decode(d); err != nil {
@@ -19789,7 +19233,6 @@ func (s *InputMediaAnimation) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"width\"")
 			}
 		case "height":
-
 			if err := func() error {
 				s.Height.Reset()
 				if err := s.Height.Decode(d); err != nil {
@@ -19800,7 +19243,6 @@ func (s *InputMediaAnimation) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"height\"")
 			}
 		case "duration":
-
 			if err := func() error {
 				s.Duration.Reset()
 				if err := s.Duration.Decode(d); err != nil {
@@ -19972,12 +19414,12 @@ func (s *InputMediaAudio) Decode(d *jx.Decoder) error {
 		return errors.New("invalid: unable to decode InputMediaAudio to nil")
 	}
 	var requiredBitSet [2]uint8
+	s.setDefaults()
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "type":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Type = string(v)
@@ -19990,7 +19432,6 @@ func (s *InputMediaAudio) Decode(d *jx.Decoder) error {
 			}
 		case "media":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Media = string(v)
@@ -20002,7 +19443,6 @@ func (s *InputMediaAudio) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"media\"")
 			}
 		case "thumb":
-
 			if err := func() error {
 				s.Thumb.Reset()
 				if err := s.Thumb.Decode(d); err != nil {
@@ -20013,7 +19453,6 @@ func (s *InputMediaAudio) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"thumb\"")
 			}
 		case "caption":
-
 			if err := func() error {
 				s.Caption.Reset()
 				if err := s.Caption.Decode(d); err != nil {
@@ -20024,7 +19463,6 @@ func (s *InputMediaAudio) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"caption\"")
 			}
 		case "parse_mode":
-
 			if err := func() error {
 				s.ParseMode.Reset()
 				if err := s.ParseMode.Decode(d); err != nil {
@@ -20035,9 +19473,8 @@ func (s *InputMediaAudio) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"parse_mode\"")
 			}
 		case "caption_entities":
-
 			if err := func() error {
-				s.CaptionEntities = nil
+				s.CaptionEntities = make([]MessageEntity, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem MessageEntity
 					if err := elem.Decode(d); err != nil {
@@ -20053,7 +19490,6 @@ func (s *InputMediaAudio) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"caption_entities\"")
 			}
 		case "duration":
-
 			if err := func() error {
 				s.Duration.Reset()
 				if err := s.Duration.Decode(d); err != nil {
@@ -20064,7 +19500,6 @@ func (s *InputMediaAudio) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"duration\"")
 			}
 		case "performer":
-
 			if err := func() error {
 				s.Performer.Reset()
 				if err := s.Performer.Decode(d); err != nil {
@@ -20075,7 +19510,6 @@ func (s *InputMediaAudio) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"performer\"")
 			}
 		case "title":
-
 			if err := func() error {
 				s.Title.Reset()
 				if err := s.Title.Decode(d); err != nil {
@@ -20227,12 +19661,12 @@ func (s *InputMediaDocument) Decode(d *jx.Decoder) error {
 		return errors.New("invalid: unable to decode InputMediaDocument to nil")
 	}
 	var requiredBitSet [1]uint8
+	s.setDefaults()
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "type":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Type = string(v)
@@ -20245,7 +19679,6 @@ func (s *InputMediaDocument) Decode(d *jx.Decoder) error {
 			}
 		case "media":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Media = string(v)
@@ -20257,7 +19690,6 @@ func (s *InputMediaDocument) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"media\"")
 			}
 		case "thumb":
-
 			if err := func() error {
 				s.Thumb.Reset()
 				if err := s.Thumb.Decode(d); err != nil {
@@ -20268,7 +19700,6 @@ func (s *InputMediaDocument) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"thumb\"")
 			}
 		case "caption":
-
 			if err := func() error {
 				s.Caption.Reset()
 				if err := s.Caption.Decode(d); err != nil {
@@ -20279,7 +19710,6 @@ func (s *InputMediaDocument) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"caption\"")
 			}
 		case "parse_mode":
-
 			if err := func() error {
 				s.ParseMode.Reset()
 				if err := s.ParseMode.Decode(d); err != nil {
@@ -20290,9 +19720,8 @@ func (s *InputMediaDocument) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"parse_mode\"")
 			}
 		case "caption_entities":
-
 			if err := func() error {
-				s.CaptionEntities = nil
+				s.CaptionEntities = make([]MessageEntity, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem MessageEntity
 					if err := elem.Decode(d); err != nil {
@@ -20308,7 +19737,6 @@ func (s *InputMediaDocument) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"caption_entities\"")
 			}
 		case "disable_content_type_detection":
-
 			if err := func() error {
 				s.DisableContentTypeDetection.Reset()
 				if err := s.DisableContentTypeDetection.Decode(d); err != nil {
@@ -20439,12 +19867,12 @@ func (s *InputMediaPhoto) Decode(d *jx.Decoder) error {
 		return errors.New("invalid: unable to decode InputMediaPhoto to nil")
 	}
 	var requiredBitSet [1]uint8
+	s.setDefaults()
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "type":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Type = string(v)
@@ -20457,7 +19885,6 @@ func (s *InputMediaPhoto) Decode(d *jx.Decoder) error {
 			}
 		case "media":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Media = string(v)
@@ -20469,7 +19896,6 @@ func (s *InputMediaPhoto) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"media\"")
 			}
 		case "caption":
-
 			if err := func() error {
 				s.Caption.Reset()
 				if err := s.Caption.Decode(d); err != nil {
@@ -20480,7 +19906,6 @@ func (s *InputMediaPhoto) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"caption\"")
 			}
 		case "parse_mode":
-
 			if err := func() error {
 				s.ParseMode.Reset()
 				if err := s.ParseMode.Decode(d); err != nil {
@@ -20491,9 +19916,8 @@ func (s *InputMediaPhoto) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"parse_mode\"")
 			}
 		case "caption_entities":
-
 			if err := func() error {
-				s.CaptionEntities = nil
+				s.CaptionEntities = make([]MessageEntity, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem MessageEntity
 					if err := elem.Decode(d); err != nil {
@@ -20679,12 +20103,12 @@ func (s *InputMediaVideo) Decode(d *jx.Decoder) error {
 		return errors.New("invalid: unable to decode InputMediaVideo to nil")
 	}
 	var requiredBitSet [2]uint8
+	s.setDefaults()
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "type":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Type = string(v)
@@ -20697,7 +20121,6 @@ func (s *InputMediaVideo) Decode(d *jx.Decoder) error {
 			}
 		case "media":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Media = string(v)
@@ -20709,7 +20132,6 @@ func (s *InputMediaVideo) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"media\"")
 			}
 		case "thumb":
-
 			if err := func() error {
 				s.Thumb.Reset()
 				if err := s.Thumb.Decode(d); err != nil {
@@ -20720,7 +20142,6 @@ func (s *InputMediaVideo) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"thumb\"")
 			}
 		case "caption":
-
 			if err := func() error {
 				s.Caption.Reset()
 				if err := s.Caption.Decode(d); err != nil {
@@ -20731,7 +20152,6 @@ func (s *InputMediaVideo) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"caption\"")
 			}
 		case "parse_mode":
-
 			if err := func() error {
 				s.ParseMode.Reset()
 				if err := s.ParseMode.Decode(d); err != nil {
@@ -20742,9 +20162,8 @@ func (s *InputMediaVideo) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"parse_mode\"")
 			}
 		case "caption_entities":
-
 			if err := func() error {
-				s.CaptionEntities = nil
+				s.CaptionEntities = make([]MessageEntity, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem MessageEntity
 					if err := elem.Decode(d); err != nil {
@@ -20760,7 +20179,6 @@ func (s *InputMediaVideo) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"caption_entities\"")
 			}
 		case "width":
-
 			if err := func() error {
 				s.Width.Reset()
 				if err := s.Width.Decode(d); err != nil {
@@ -20771,7 +20189,6 @@ func (s *InputMediaVideo) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"width\"")
 			}
 		case "height":
-
 			if err := func() error {
 				s.Height.Reset()
 				if err := s.Height.Decode(d); err != nil {
@@ -20782,7 +20199,6 @@ func (s *InputMediaVideo) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"height\"")
 			}
 		case "duration":
-
 			if err := func() error {
 				s.Duration.Reset()
 				if err := s.Duration.Decode(d); err != nil {
@@ -20793,7 +20209,6 @@ func (s *InputMediaVideo) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"duration\"")
 			}
 		case "supports_streaming":
-
 			if err := func() error {
 				s.SupportsStreaming.Reset()
 				if err := s.SupportsStreaming.Decode(d); err != nil {
@@ -21100,7 +20515,6 @@ func (s *InputTextMessageContent) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "message_text":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.MessageText = string(v)
@@ -21112,7 +20526,6 @@ func (s *InputTextMessageContent) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"message_text\"")
 			}
 		case "parse_mode":
-
 			if err := func() error {
 				s.ParseMode.Reset()
 				if err := s.ParseMode.Decode(d); err != nil {
@@ -21123,9 +20536,8 @@ func (s *InputTextMessageContent) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"parse_mode\"")
 			}
 		case "entities":
-
 			if err := func() error {
-				s.Entities = nil
+				s.Entities = make([]MessageEntity, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem MessageEntity
 					if err := elem.Decode(d); err != nil {
@@ -21141,7 +20553,6 @@ func (s *InputTextMessageContent) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"entities\"")
 			}
 		case "disable_web_page_preview":
-
 			if err := func() error {
 				s.DisableWebPagePreview.Reset()
 				if err := s.DisableWebPagePreview.Decode(d); err != nil {
@@ -21289,7 +20700,6 @@ func (s *InputVenueMessageContent) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "latitude":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Float64()
 				s.Latitude = float64(v)
@@ -21302,7 +20712,6 @@ func (s *InputVenueMessageContent) Decode(d *jx.Decoder) error {
 			}
 		case "longitude":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Float64()
 				s.Longitude = float64(v)
@@ -21315,7 +20724,6 @@ func (s *InputVenueMessageContent) Decode(d *jx.Decoder) error {
 			}
 		case "title":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Title = string(v)
@@ -21328,7 +20736,6 @@ func (s *InputVenueMessageContent) Decode(d *jx.Decoder) error {
 			}
 		case "address":
 			requiredBitSet[0] |= 1 << 3
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Address = string(v)
@@ -21340,7 +20747,6 @@ func (s *InputVenueMessageContent) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"address\"")
 			}
 		case "foursquare_id":
-
 			if err := func() error {
 				s.FoursquareID.Reset()
 				if err := s.FoursquareID.Decode(d); err != nil {
@@ -21351,7 +20757,6 @@ func (s *InputVenueMessageContent) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"foursquare_id\"")
 			}
 		case "foursquare_type":
-
 			if err := func() error {
 				s.FoursquareType.Reset()
 				if err := s.FoursquareType.Decode(d); err != nil {
@@ -21362,7 +20767,6 @@ func (s *InputVenueMessageContent) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"foursquare_type\"")
 			}
 		case "google_place_id":
-
 			if err := func() error {
 				s.GooglePlaceID.Reset()
 				if err := s.GooglePlaceID.Decode(d); err != nil {
@@ -21373,7 +20777,6 @@ func (s *InputVenueMessageContent) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"google_place_id\"")
 			}
 		case "google_place_type":
-
 			if err := func() error {
 				s.GooglePlaceType.Reset()
 				if err := s.GooglePlaceType.Decode(d); err != nil {
@@ -21488,7 +20891,6 @@ func (s *Invoice) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "title":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Title = string(v)
@@ -21501,7 +20903,6 @@ func (s *Invoice) Decode(d *jx.Decoder) error {
 			}
 		case "description":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Description = string(v)
@@ -21514,7 +20915,6 @@ func (s *Invoice) Decode(d *jx.Decoder) error {
 			}
 		case "start_parameter":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Str()
 				s.StartParameter = string(v)
@@ -21527,7 +20927,6 @@ func (s *Invoice) Decode(d *jx.Decoder) error {
 			}
 		case "currency":
 			requiredBitSet[0] |= 1 << 3
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Currency = string(v)
@@ -21540,7 +20939,6 @@ func (s *Invoice) Decode(d *jx.Decoder) error {
 			}
 		case "total_amount":
 			requiredBitSet[0] |= 1 << 4
-
 			if err := func() error {
 				v, err := d.Int()
 				s.TotalAmount = int(v)
@@ -21693,7 +21091,6 @@ func (s *KeyboardButtonObject) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "text":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Text = string(v)
@@ -21705,7 +21102,6 @@ func (s *KeyboardButtonObject) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"text\"")
 			}
 		case "request_contact":
-
 			if err := func() error {
 				s.RequestContact.Reset()
 				if err := s.RequestContact.Decode(d); err != nil {
@@ -21716,7 +21112,6 @@ func (s *KeyboardButtonObject) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"request_contact\"")
 			}
 		case "request_location":
-
 			if err := func() error {
 				s.RequestLocation.Reset()
 				if err := s.RequestLocation.Decode(d); err != nil {
@@ -21727,7 +21122,6 @@ func (s *KeyboardButtonObject) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"request_location\"")
 			}
 		case "request_poll":
-
 			if err := func() error {
 				s.RequestPoll.Reset()
 				if err := s.RequestPoll.Decode(d); err != nil {
@@ -21815,7 +21209,6 @@ func (s *KeyboardButtonPollType) Decode(d *jx.Decoder) error {
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "type":
-
 			if err := func() error {
 				s.Type.Reset()
 				if err := s.Type.Decode(d); err != nil {
@@ -21877,7 +21270,6 @@ func (s *LabeledPrice) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "label":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Label = string(v)
@@ -21890,7 +21282,6 @@ func (s *LabeledPrice) Decode(d *jx.Decoder) error {
 			}
 		case "amount":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Int()
 				s.Amount = int(v)
@@ -21978,7 +21369,6 @@ func (s *LeaveChat) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "chat_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				if err := s.ChatID.Decode(d); err != nil {
 					return err
@@ -22111,7 +21501,6 @@ func (s *Location) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "longitude":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Float64()
 				s.Longitude = float64(v)
@@ -22124,7 +21513,6 @@ func (s *Location) Decode(d *jx.Decoder) error {
 			}
 		case "latitude":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Float64()
 				s.Latitude = float64(v)
@@ -22136,7 +21524,6 @@ func (s *Location) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"latitude\"")
 			}
 		case "horizontal_accuracy":
-
 			if err := func() error {
 				s.HorizontalAccuracy.Reset()
 				if err := s.HorizontalAccuracy.Decode(d); err != nil {
@@ -22147,7 +21534,6 @@ func (s *Location) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"horizontal_accuracy\"")
 			}
 		case "live_period":
-
 			if err := func() error {
 				s.LivePeriod.Reset()
 				if err := s.LivePeriod.Decode(d); err != nil {
@@ -22158,7 +21544,6 @@ func (s *Location) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"live_period\"")
 			}
 		case "heading":
-
 			if err := func() error {
 				s.Heading.Reset()
 				if err := s.Heading.Decode(d); err != nil {
@@ -22169,7 +21554,6 @@ func (s *Location) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"heading\"")
 			}
 		case "proximity_alert_radius":
-
 			if err := func() error {
 				s.ProximityAlertRadius.Reset()
 				if err := s.ProximityAlertRadius.Decode(d); err != nil {
@@ -22286,7 +21670,6 @@ func (s *LoginUrl) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "url":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.URL = string(v)
@@ -22298,7 +21681,6 @@ func (s *LoginUrl) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"url\"")
 			}
 		case "forward_text":
-
 			if err := func() error {
 				s.ForwardText.Reset()
 				if err := s.ForwardText.Decode(d); err != nil {
@@ -22309,7 +21691,6 @@ func (s *LoginUrl) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"forward_text\"")
 			}
 		case "bot_username":
-
 			if err := func() error {
 				s.BotUsername.Reset()
 				if err := s.BotUsername.Decode(d); err != nil {
@@ -22320,7 +21701,6 @@ func (s *LoginUrl) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"bot_username\"")
 			}
 		case "request_write_access":
-
 			if err := func() error {
 				s.RequestWriteAccess.Reset()
 				if err := s.RequestWriteAccess.Decode(d); err != nil {
@@ -22428,7 +21808,6 @@ func (s *MaskPosition) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "point":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Point = string(v)
@@ -22441,7 +21820,6 @@ func (s *MaskPosition) Decode(d *jx.Decoder) error {
 			}
 		case "x_shift":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Float64()
 				s.XShift = float64(v)
@@ -22454,7 +21832,6 @@ func (s *MaskPosition) Decode(d *jx.Decoder) error {
 			}
 		case "y_shift":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Float64()
 				s.YShift = float64(v)
@@ -22467,7 +21844,6 @@ func (s *MaskPosition) Decode(d *jx.Decoder) error {
 			}
 		case "scale":
 			requiredBitSet[0] |= 1 << 3
-
 			if err := func() error {
 				v, err := d.Float64()
 				s.Scale = float64(v)
@@ -23209,7 +22585,6 @@ func (s *Message) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "message_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Int()
 				s.MessageID = int(v)
@@ -23221,7 +22596,6 @@ func (s *Message) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"message_id\"")
 			}
 		case "from":
-
 			if err := func() error {
 				s.From.Reset()
 				if err := s.From.Decode(d); err != nil {
@@ -23232,7 +22606,6 @@ func (s *Message) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"from\"")
 			}
 		case "sender_chat":
-
 			if err := func() error {
 				s.SenderChat.Reset()
 				if err := s.SenderChat.Decode(d); err != nil {
@@ -23244,7 +22617,6 @@ func (s *Message) Decode(d *jx.Decoder) error {
 			}
 		case "date":
 			requiredBitSet[0] |= 1 << 3
-
 			if err := func() error {
 				v, err := d.Int()
 				s.Date = int(v)
@@ -23257,7 +22629,6 @@ func (s *Message) Decode(d *jx.Decoder) error {
 			}
 		case "chat":
 			requiredBitSet[0] |= 1 << 4
-
 			if err := func() error {
 				if err := s.Chat.Decode(d); err != nil {
 					return err
@@ -23267,7 +22638,6 @@ func (s *Message) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"chat\"")
 			}
 		case "forward_from":
-
 			if err := func() error {
 				s.ForwardFrom.Reset()
 				if err := s.ForwardFrom.Decode(d); err != nil {
@@ -23278,7 +22648,6 @@ func (s *Message) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"forward_from\"")
 			}
 		case "forward_from_chat":
-
 			if err := func() error {
 				s.ForwardFromChat.Reset()
 				if err := s.ForwardFromChat.Decode(d); err != nil {
@@ -23289,7 +22658,6 @@ func (s *Message) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"forward_from_chat\"")
 			}
 		case "forward_from_message_id":
-
 			if err := func() error {
 				s.ForwardFromMessageID.Reset()
 				if err := s.ForwardFromMessageID.Decode(d); err != nil {
@@ -23300,7 +22668,6 @@ func (s *Message) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"forward_from_message_id\"")
 			}
 		case "forward_signature":
-
 			if err := func() error {
 				s.ForwardSignature.Reset()
 				if err := s.ForwardSignature.Decode(d); err != nil {
@@ -23311,7 +22678,6 @@ func (s *Message) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"forward_signature\"")
 			}
 		case "forward_sender_name":
-
 			if err := func() error {
 				s.ForwardSenderName.Reset()
 				if err := s.ForwardSenderName.Decode(d); err != nil {
@@ -23322,7 +22688,6 @@ func (s *Message) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"forward_sender_name\"")
 			}
 		case "forward_date":
-
 			if err := func() error {
 				s.ForwardDate.Reset()
 				if err := s.ForwardDate.Decode(d); err != nil {
@@ -23333,7 +22698,6 @@ func (s *Message) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"forward_date\"")
 			}
 		case "is_automatic_forward":
-
 			if err := func() error {
 				s.IsAutomaticForward.Reset()
 				if err := s.IsAutomaticForward.Decode(d); err != nil {
@@ -23344,7 +22708,6 @@ func (s *Message) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"is_automatic_forward\"")
 			}
 		case "reply_to_message":
-
 			if err := func() error {
 				s.ReplyToMessage = nil
 				var elem Message
@@ -23357,7 +22720,6 @@ func (s *Message) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"reply_to_message\"")
 			}
 		case "via_bot":
-
 			if err := func() error {
 				s.ViaBot.Reset()
 				if err := s.ViaBot.Decode(d); err != nil {
@@ -23368,7 +22730,6 @@ func (s *Message) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"via_bot\"")
 			}
 		case "edit_date":
-
 			if err := func() error {
 				s.EditDate.Reset()
 				if err := s.EditDate.Decode(d); err != nil {
@@ -23379,7 +22740,6 @@ func (s *Message) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"edit_date\"")
 			}
 		case "has_protected_content":
-
 			if err := func() error {
 				s.HasProtectedContent.Reset()
 				if err := s.HasProtectedContent.Decode(d); err != nil {
@@ -23390,7 +22750,6 @@ func (s *Message) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"has_protected_content\"")
 			}
 		case "media_group_id":
-
 			if err := func() error {
 				s.MediaGroupID.Reset()
 				if err := s.MediaGroupID.Decode(d); err != nil {
@@ -23401,7 +22760,6 @@ func (s *Message) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"media_group_id\"")
 			}
 		case "author_signature":
-
 			if err := func() error {
 				s.AuthorSignature.Reset()
 				if err := s.AuthorSignature.Decode(d); err != nil {
@@ -23412,7 +22770,6 @@ func (s *Message) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"author_signature\"")
 			}
 		case "text":
-
 			if err := func() error {
 				s.Text.Reset()
 				if err := s.Text.Decode(d); err != nil {
@@ -23423,9 +22780,8 @@ func (s *Message) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"text\"")
 			}
 		case "entities":
-
 			if err := func() error {
-				s.Entities = nil
+				s.Entities = make([]MessageEntity, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem MessageEntity
 					if err := elem.Decode(d); err != nil {
@@ -23441,7 +22797,6 @@ func (s *Message) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"entities\"")
 			}
 		case "animation":
-
 			if err := func() error {
 				s.Animation.Reset()
 				if err := s.Animation.Decode(d); err != nil {
@@ -23452,7 +22807,6 @@ func (s *Message) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"animation\"")
 			}
 		case "audio":
-
 			if err := func() error {
 				s.Audio.Reset()
 				if err := s.Audio.Decode(d); err != nil {
@@ -23463,7 +22817,6 @@ func (s *Message) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"audio\"")
 			}
 		case "document":
-
 			if err := func() error {
 				s.Document.Reset()
 				if err := s.Document.Decode(d); err != nil {
@@ -23474,9 +22827,8 @@ func (s *Message) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"document\"")
 			}
 		case "photo":
-
 			if err := func() error {
-				s.Photo = nil
+				s.Photo = make([]PhotoSize, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem PhotoSize
 					if err := elem.Decode(d); err != nil {
@@ -23492,7 +22844,6 @@ func (s *Message) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"photo\"")
 			}
 		case "sticker":
-
 			if err := func() error {
 				s.Sticker.Reset()
 				if err := s.Sticker.Decode(d); err != nil {
@@ -23503,7 +22854,6 @@ func (s *Message) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"sticker\"")
 			}
 		case "video":
-
 			if err := func() error {
 				s.Video.Reset()
 				if err := s.Video.Decode(d); err != nil {
@@ -23514,7 +22864,6 @@ func (s *Message) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"video\"")
 			}
 		case "video_note":
-
 			if err := func() error {
 				s.VideoNote.Reset()
 				if err := s.VideoNote.Decode(d); err != nil {
@@ -23525,7 +22874,6 @@ func (s *Message) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"video_note\"")
 			}
 		case "voice":
-
 			if err := func() error {
 				s.Voice.Reset()
 				if err := s.Voice.Decode(d); err != nil {
@@ -23536,7 +22884,6 @@ func (s *Message) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"voice\"")
 			}
 		case "caption":
-
 			if err := func() error {
 				s.Caption.Reset()
 				if err := s.Caption.Decode(d); err != nil {
@@ -23547,9 +22894,8 @@ func (s *Message) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"caption\"")
 			}
 		case "caption_entities":
-
 			if err := func() error {
-				s.CaptionEntities = nil
+				s.CaptionEntities = make([]MessageEntity, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem MessageEntity
 					if err := elem.Decode(d); err != nil {
@@ -23565,7 +22911,6 @@ func (s *Message) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"caption_entities\"")
 			}
 		case "contact":
-
 			if err := func() error {
 				s.Contact.Reset()
 				if err := s.Contact.Decode(d); err != nil {
@@ -23576,7 +22921,6 @@ func (s *Message) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"contact\"")
 			}
 		case "dice":
-
 			if err := func() error {
 				s.Dice.Reset()
 				if err := s.Dice.Decode(d); err != nil {
@@ -23587,7 +22931,6 @@ func (s *Message) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"dice\"")
 			}
 		case "game":
-
 			if err := func() error {
 				s.Game.Reset()
 				if err := s.Game.Decode(d); err != nil {
@@ -23598,7 +22941,6 @@ func (s *Message) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"game\"")
 			}
 		case "poll":
-
 			if err := func() error {
 				s.Poll.Reset()
 				if err := s.Poll.Decode(d); err != nil {
@@ -23609,7 +22951,6 @@ func (s *Message) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"poll\"")
 			}
 		case "venue":
-
 			if err := func() error {
 				s.Venue.Reset()
 				if err := s.Venue.Decode(d); err != nil {
@@ -23620,7 +22961,6 @@ func (s *Message) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"venue\"")
 			}
 		case "location":
-
 			if err := func() error {
 				s.Location.Reset()
 				if err := s.Location.Decode(d); err != nil {
@@ -23631,9 +22971,8 @@ func (s *Message) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"location\"")
 			}
 		case "new_chat_members":
-
 			if err := func() error {
-				s.NewChatMembers = nil
+				s.NewChatMembers = make([]User, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem User
 					if err := elem.Decode(d); err != nil {
@@ -23649,7 +22988,6 @@ func (s *Message) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"new_chat_members\"")
 			}
 		case "left_chat_member":
-
 			if err := func() error {
 				s.LeftChatMember.Reset()
 				if err := s.LeftChatMember.Decode(d); err != nil {
@@ -23660,7 +22998,6 @@ func (s *Message) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"left_chat_member\"")
 			}
 		case "new_chat_title":
-
 			if err := func() error {
 				s.NewChatTitle.Reset()
 				if err := s.NewChatTitle.Decode(d); err != nil {
@@ -23671,9 +23008,8 @@ func (s *Message) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"new_chat_title\"")
 			}
 		case "new_chat_photo":
-
 			if err := func() error {
-				s.NewChatPhoto = nil
+				s.NewChatPhoto = make([]PhotoSize, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem PhotoSize
 					if err := elem.Decode(d); err != nil {
@@ -23689,7 +23025,6 @@ func (s *Message) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"new_chat_photo\"")
 			}
 		case "delete_chat_photo":
-
 			if err := func() error {
 				s.DeleteChatPhoto.Reset()
 				if err := s.DeleteChatPhoto.Decode(d); err != nil {
@@ -23700,7 +23035,6 @@ func (s *Message) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"delete_chat_photo\"")
 			}
 		case "group_chat_created":
-
 			if err := func() error {
 				s.GroupChatCreated.Reset()
 				if err := s.GroupChatCreated.Decode(d); err != nil {
@@ -23711,7 +23045,6 @@ func (s *Message) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"group_chat_created\"")
 			}
 		case "supergroup_chat_created":
-
 			if err := func() error {
 				s.SupergroupChatCreated.Reset()
 				if err := s.SupergroupChatCreated.Decode(d); err != nil {
@@ -23722,7 +23055,6 @@ func (s *Message) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"supergroup_chat_created\"")
 			}
 		case "channel_chat_created":
-
 			if err := func() error {
 				s.ChannelChatCreated.Reset()
 				if err := s.ChannelChatCreated.Decode(d); err != nil {
@@ -23733,7 +23065,6 @@ func (s *Message) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"channel_chat_created\"")
 			}
 		case "message_auto_delete_timer_changed":
-
 			if err := func() error {
 				s.MessageAutoDeleteTimerChanged.Reset()
 				if err := s.MessageAutoDeleteTimerChanged.Decode(d); err != nil {
@@ -23744,7 +23075,6 @@ func (s *Message) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"message_auto_delete_timer_changed\"")
 			}
 		case "migrate_to_chat_id":
-
 			if err := func() error {
 				s.MigrateToChatID.Reset()
 				if err := s.MigrateToChatID.Decode(d); err != nil {
@@ -23755,7 +23085,6 @@ func (s *Message) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"migrate_to_chat_id\"")
 			}
 		case "migrate_from_chat_id":
-
 			if err := func() error {
 				s.MigrateFromChatID.Reset()
 				if err := s.MigrateFromChatID.Decode(d); err != nil {
@@ -23766,7 +23095,6 @@ func (s *Message) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"migrate_from_chat_id\"")
 			}
 		case "pinned_message":
-
 			if err := func() error {
 				s.PinnedMessage = nil
 				var elem Message
@@ -23779,7 +23107,6 @@ func (s *Message) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"pinned_message\"")
 			}
 		case "invoice":
-
 			if err := func() error {
 				s.Invoice.Reset()
 				if err := s.Invoice.Decode(d); err != nil {
@@ -23790,7 +23117,6 @@ func (s *Message) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"invoice\"")
 			}
 		case "successful_payment":
-
 			if err := func() error {
 				s.SuccessfulPayment.Reset()
 				if err := s.SuccessfulPayment.Decode(d); err != nil {
@@ -23801,7 +23127,6 @@ func (s *Message) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"successful_payment\"")
 			}
 		case "connected_website":
-
 			if err := func() error {
 				s.ConnectedWebsite.Reset()
 				if err := s.ConnectedWebsite.Decode(d); err != nil {
@@ -23812,7 +23137,6 @@ func (s *Message) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"connected_website\"")
 			}
 		case "passport_data":
-
 			if err := func() error {
 				s.PassportData.Reset()
 				if err := s.PassportData.Decode(d); err != nil {
@@ -23823,7 +23147,6 @@ func (s *Message) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"passport_data\"")
 			}
 		case "proximity_alert_triggered":
-
 			if err := func() error {
 				s.ProximityAlertTriggered.Reset()
 				if err := s.ProximityAlertTriggered.Decode(d); err != nil {
@@ -23834,7 +23157,6 @@ func (s *Message) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"proximity_alert_triggered\"")
 			}
 		case "voice_chat_scheduled":
-
 			if err := func() error {
 				s.VoiceChatScheduled.Reset()
 				if err := s.VoiceChatScheduled.Decode(d); err != nil {
@@ -23845,7 +23167,6 @@ func (s *Message) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"voice_chat_scheduled\"")
 			}
 		case "voice_chat_started":
-
 			if err := func() error {
 				s.VoiceChatStarted = nil
 				var elem VoiceChatStarted
@@ -23858,7 +23179,6 @@ func (s *Message) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"voice_chat_started\"")
 			}
 		case "voice_chat_ended":
-
 			if err := func() error {
 				s.VoiceChatEnded.Reset()
 				if err := s.VoiceChatEnded.Decode(d); err != nil {
@@ -23869,7 +23189,6 @@ func (s *Message) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"voice_chat_ended\"")
 			}
 		case "voice_chat_participants_invited":
-
 			if err := func() error {
 				s.VoiceChatParticipantsInvited.Reset()
 				if err := s.VoiceChatParticipantsInvited.Decode(d); err != nil {
@@ -23880,7 +23199,6 @@ func (s *Message) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"voice_chat_participants_invited\"")
 			}
 		case "reply_markup":
-
 			if err := func() error {
 				s.ReplyMarkup.Reset()
 				if err := s.ReplyMarkup.Decode(d); err != nil {
@@ -23891,7 +23209,6 @@ func (s *Message) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"reply_markup\"")
 			}
 		case "new_chat_member":
-
 			if err := func() error {
 				s.NewChatMember.Reset()
 				if err := s.NewChatMember.Decode(d); err != nil {
@@ -23902,7 +23219,6 @@ func (s *Message) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"new_chat_member\"")
 			}
 		case "new_chat_participant":
-
 			if err := func() error {
 				s.NewChatParticipant.Reset()
 				if err := s.NewChatParticipant.Decode(d); err != nil {
@@ -23913,7 +23229,6 @@ func (s *Message) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"new_chat_participant\"")
 			}
 		case "left_chat_participant":
-
 			if err := func() error {
 				s.LeftChatParticipant.Reset()
 				if err := s.LeftChatParticipant.Decode(d); err != nil {
@@ -24007,7 +23322,6 @@ func (s *MessageAutoDeleteTimerChanged) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "message_auto_delete_time":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Int()
 				s.MessageAutoDeleteTime = int(v)
@@ -24139,7 +23453,6 @@ func (s *MessageEntity) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "type":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				if err := s.Type.Decode(d); err != nil {
 					return err
@@ -24150,7 +23463,6 @@ func (s *MessageEntity) Decode(d *jx.Decoder) error {
 			}
 		case "offset":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Int()
 				s.Offset = int(v)
@@ -24163,7 +23475,6 @@ func (s *MessageEntity) Decode(d *jx.Decoder) error {
 			}
 		case "length":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Int()
 				s.Length = int(v)
@@ -24175,7 +23486,6 @@ func (s *MessageEntity) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"length\"")
 			}
 		case "url":
-
 			if err := func() error {
 				s.URL.Reset()
 				if err := s.URL.Decode(d); err != nil {
@@ -24186,7 +23496,6 @@ func (s *MessageEntity) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"url\"")
 			}
 		case "user":
-
 			if err := func() error {
 				s.User.Reset()
 				if err := s.User.Decode(d); err != nil {
@@ -24197,7 +23506,6 @@ func (s *MessageEntity) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"user\"")
 			}
 		case "language":
-
 			if err := func() error {
 				s.Language.Reset()
 				if err := s.Language.Decode(d); err != nil {
@@ -24339,7 +23647,6 @@ func (s *MessageId) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "message_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Int()
 				s.MessageID = int(v)
@@ -26127,7 +25434,6 @@ func (s *OrderInfo) Decode(d *jx.Decoder) error {
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "name":
-
 			if err := func() error {
 				s.Name.Reset()
 				if err := s.Name.Decode(d); err != nil {
@@ -26138,7 +25444,6 @@ func (s *OrderInfo) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"name\"")
 			}
 		case "phone_number":
-
 			if err := func() error {
 				s.PhoneNumber.Reset()
 				if err := s.PhoneNumber.Decode(d); err != nil {
@@ -26149,7 +25454,6 @@ func (s *OrderInfo) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"phone_number\"")
 			}
 		case "email":
-
 			if err := func() error {
 				s.Email.Reset()
 				if err := s.Email.Decode(d); err != nil {
@@ -26160,7 +25464,6 @@ func (s *OrderInfo) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"email\"")
 			}
 		case "shipping_address":
-
 			if err := func() error {
 				s.ShippingAddress.Reset()
 				if err := s.ShippingAddress.Decode(d); err != nil {
@@ -26234,9 +25537,8 @@ func (s *PassportData) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "data":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
-				s.Data = nil
+				s.Data = make([]EncryptedPassportElement, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem EncryptedPassportElement
 					if err := elem.Decode(d); err != nil {
@@ -26253,7 +25555,6 @@ func (s *PassportData) Decode(d *jx.Decoder) error {
 			}
 		case "credentials":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				if err := s.Credentials.Decode(d); err != nil {
 					return err
@@ -26492,12 +25793,12 @@ func (s *PassportElementErrorDataField) Decode(d *jx.Decoder) error {
 		return errors.New("invalid: unable to decode PassportElementErrorDataField to nil")
 	}
 	var requiredBitSet [1]uint8
+	s.setDefaults()
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "source":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Source = string(v)
@@ -26510,7 +25811,6 @@ func (s *PassportElementErrorDataField) Decode(d *jx.Decoder) error {
 			}
 		case "type":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				if err := s.Type.Decode(d); err != nil {
 					return err
@@ -26521,7 +25821,6 @@ func (s *PassportElementErrorDataField) Decode(d *jx.Decoder) error {
 			}
 		case "field_name":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Str()
 				s.FieldName = string(v)
@@ -26534,7 +25833,6 @@ func (s *PassportElementErrorDataField) Decode(d *jx.Decoder) error {
 			}
 		case "data_hash":
 			requiredBitSet[0] |= 1 << 3
-
 			if err := func() error {
 				v, err := d.Str()
 				s.DataHash = string(v)
@@ -26547,7 +25845,6 @@ func (s *PassportElementErrorDataField) Decode(d *jx.Decoder) error {
 			}
 		case "message":
 			requiredBitSet[0] |= 1 << 4
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Message = string(v)
@@ -26686,12 +25983,12 @@ func (s *PassportElementErrorFile) Decode(d *jx.Decoder) error {
 		return errors.New("invalid: unable to decode PassportElementErrorFile to nil")
 	}
 	var requiredBitSet [1]uint8
+	s.setDefaults()
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "source":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Source = string(v)
@@ -26704,7 +26001,6 @@ func (s *PassportElementErrorFile) Decode(d *jx.Decoder) error {
 			}
 		case "type":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				if err := s.Type.Decode(d); err != nil {
 					return err
@@ -26715,7 +26011,6 @@ func (s *PassportElementErrorFile) Decode(d *jx.Decoder) error {
 			}
 		case "file_hash":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Str()
 				s.FileHash = string(v)
@@ -26728,7 +26023,6 @@ func (s *PassportElementErrorFile) Decode(d *jx.Decoder) error {
 			}
 		case "message":
 			requiredBitSet[0] |= 1 << 3
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Message = string(v)
@@ -26877,12 +26171,12 @@ func (s *PassportElementErrorFiles) Decode(d *jx.Decoder) error {
 		return errors.New("invalid: unable to decode PassportElementErrorFiles to nil")
 	}
 	var requiredBitSet [1]uint8
+	s.setDefaults()
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "source":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Source = string(v)
@@ -26895,7 +26189,6 @@ func (s *PassportElementErrorFiles) Decode(d *jx.Decoder) error {
 			}
 		case "type":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				if err := s.Type.Decode(d); err != nil {
 					return err
@@ -26906,9 +26199,8 @@ func (s *PassportElementErrorFiles) Decode(d *jx.Decoder) error {
 			}
 		case "file_hashes":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
-				s.FileHashes = nil
+				s.FileHashes = make([]string, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem string
 					v, err := d.Str()
@@ -26927,7 +26219,6 @@ func (s *PassportElementErrorFiles) Decode(d *jx.Decoder) error {
 			}
 		case "message":
 			requiredBitSet[0] |= 1 << 3
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Message = string(v)
@@ -27064,12 +26355,12 @@ func (s *PassportElementErrorFrontSide) Decode(d *jx.Decoder) error {
 		return errors.New("invalid: unable to decode PassportElementErrorFrontSide to nil")
 	}
 	var requiredBitSet [1]uint8
+	s.setDefaults()
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "source":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Source = string(v)
@@ -27082,7 +26373,6 @@ func (s *PassportElementErrorFrontSide) Decode(d *jx.Decoder) error {
 			}
 		case "type":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				if err := s.Type.Decode(d); err != nil {
 					return err
@@ -27093,7 +26383,6 @@ func (s *PassportElementErrorFrontSide) Decode(d *jx.Decoder) error {
 			}
 		case "file_hash":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Str()
 				s.FileHash = string(v)
@@ -27106,7 +26395,6 @@ func (s *PassportElementErrorFrontSide) Decode(d *jx.Decoder) error {
 			}
 		case "message":
 			requiredBitSet[0] |= 1 << 3
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Message = string(v)
@@ -27241,12 +26529,12 @@ func (s *PassportElementErrorReverseSide) Decode(d *jx.Decoder) error {
 		return errors.New("invalid: unable to decode PassportElementErrorReverseSide to nil")
 	}
 	var requiredBitSet [1]uint8
+	s.setDefaults()
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "source":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Source = string(v)
@@ -27259,7 +26547,6 @@ func (s *PassportElementErrorReverseSide) Decode(d *jx.Decoder) error {
 			}
 		case "type":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				if err := s.Type.Decode(d); err != nil {
 					return err
@@ -27270,7 +26557,6 @@ func (s *PassportElementErrorReverseSide) Decode(d *jx.Decoder) error {
 			}
 		case "file_hash":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Str()
 				s.FileHash = string(v)
@@ -27283,7 +26569,6 @@ func (s *PassportElementErrorReverseSide) Decode(d *jx.Decoder) error {
 			}
 		case "message":
 			requiredBitSet[0] |= 1 << 3
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Message = string(v)
@@ -27414,12 +26699,12 @@ func (s *PassportElementErrorSelfie) Decode(d *jx.Decoder) error {
 		return errors.New("invalid: unable to decode PassportElementErrorSelfie to nil")
 	}
 	var requiredBitSet [1]uint8
+	s.setDefaults()
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "source":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Source = string(v)
@@ -27432,7 +26717,6 @@ func (s *PassportElementErrorSelfie) Decode(d *jx.Decoder) error {
 			}
 		case "type":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				if err := s.Type.Decode(d); err != nil {
 					return err
@@ -27443,7 +26727,6 @@ func (s *PassportElementErrorSelfie) Decode(d *jx.Decoder) error {
 			}
 		case "file_hash":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Str()
 				s.FileHash = string(v)
@@ -27456,7 +26739,6 @@ func (s *PassportElementErrorSelfie) Decode(d *jx.Decoder) error {
 			}
 		case "message":
 			requiredBitSet[0] |= 1 << 3
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Message = string(v)
@@ -27591,12 +26873,12 @@ func (s *PassportElementErrorTranslationFile) Decode(d *jx.Decoder) error {
 		return errors.New("invalid: unable to decode PassportElementErrorTranslationFile to nil")
 	}
 	var requiredBitSet [1]uint8
+	s.setDefaults()
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "source":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Source = string(v)
@@ -27609,7 +26891,6 @@ func (s *PassportElementErrorTranslationFile) Decode(d *jx.Decoder) error {
 			}
 		case "type":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				if err := s.Type.Decode(d); err != nil {
 					return err
@@ -27620,7 +26901,6 @@ func (s *PassportElementErrorTranslationFile) Decode(d *jx.Decoder) error {
 			}
 		case "file_hash":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Str()
 				s.FileHash = string(v)
@@ -27633,7 +26913,6 @@ func (s *PassportElementErrorTranslationFile) Decode(d *jx.Decoder) error {
 			}
 		case "message":
 			requiredBitSet[0] |= 1 << 3
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Message = string(v)
@@ -27790,12 +27069,12 @@ func (s *PassportElementErrorTranslationFiles) Decode(d *jx.Decoder) error {
 		return errors.New("invalid: unable to decode PassportElementErrorTranslationFiles to nil")
 	}
 	var requiredBitSet [1]uint8
+	s.setDefaults()
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "source":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Source = string(v)
@@ -27808,7 +27087,6 @@ func (s *PassportElementErrorTranslationFiles) Decode(d *jx.Decoder) error {
 			}
 		case "type":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				if err := s.Type.Decode(d); err != nil {
 					return err
@@ -27819,9 +27097,8 @@ func (s *PassportElementErrorTranslationFiles) Decode(d *jx.Decoder) error {
 			}
 		case "file_hashes":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
-				s.FileHashes = nil
+				s.FileHashes = make([]string, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem string
 					v, err := d.Str()
@@ -27840,7 +27117,6 @@ func (s *PassportElementErrorTranslationFiles) Decode(d *jx.Decoder) error {
 			}
 		case "message":
 			requiredBitSet[0] |= 1 << 3
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Message = string(v)
@@ -27985,12 +27261,12 @@ func (s *PassportElementErrorUnspecified) Decode(d *jx.Decoder) error {
 		return errors.New("invalid: unable to decode PassportElementErrorUnspecified to nil")
 	}
 	var requiredBitSet [1]uint8
+	s.setDefaults()
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "source":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Source = string(v)
@@ -28003,7 +27279,6 @@ func (s *PassportElementErrorUnspecified) Decode(d *jx.Decoder) error {
 			}
 		case "type":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Type = string(v)
@@ -28016,7 +27291,6 @@ func (s *PassportElementErrorUnspecified) Decode(d *jx.Decoder) error {
 			}
 		case "element_hash":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Str()
 				s.ElementHash = string(v)
@@ -28029,7 +27303,6 @@ func (s *PassportElementErrorUnspecified) Decode(d *jx.Decoder) error {
 			}
 		case "message":
 			requiredBitSet[0] |= 1 << 3
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Message = string(v)
@@ -28138,7 +27411,6 @@ func (s *PassportFile) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "file_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.FileID = string(v)
@@ -28151,7 +27423,6 @@ func (s *PassportFile) Decode(d *jx.Decoder) error {
 			}
 		case "file_unique_id":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.FileUniqueID = string(v)
@@ -28164,7 +27435,6 @@ func (s *PassportFile) Decode(d *jx.Decoder) error {
 			}
 		case "file_size":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Int()
 				s.FileSize = int(v)
@@ -28177,7 +27447,6 @@ func (s *PassportFile) Decode(d *jx.Decoder) error {
 			}
 		case "file_date":
 			requiredBitSet[0] |= 1 << 3
-
 			if err := func() error {
 				v, err := d.Int()
 				s.FileDate = int(v)
@@ -28296,7 +27565,6 @@ func (s *PhotoSize) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "file_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.FileID = string(v)
@@ -28309,7 +27577,6 @@ func (s *PhotoSize) Decode(d *jx.Decoder) error {
 			}
 		case "file_unique_id":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.FileUniqueID = string(v)
@@ -28322,7 +27589,6 @@ func (s *PhotoSize) Decode(d *jx.Decoder) error {
 			}
 		case "width":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Int()
 				s.Width = int(v)
@@ -28335,7 +27601,6 @@ func (s *PhotoSize) Decode(d *jx.Decoder) error {
 			}
 		case "height":
 			requiredBitSet[0] |= 1 << 3
-
 			if err := func() error {
 				v, err := d.Int()
 				s.Height = int(v)
@@ -28347,7 +27612,6 @@ func (s *PhotoSize) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"height\"")
 			}
 		case "file_size":
-
 			if err := func() error {
 				s.FileSize.Reset()
 				if err := s.FileSize.Decode(d); err != nil {
@@ -28451,7 +27715,6 @@ func (s *PinChatMessage) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "chat_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				if err := s.ChatID.Decode(d); err != nil {
 					return err
@@ -28462,7 +27725,6 @@ func (s *PinChatMessage) Decode(d *jx.Decoder) error {
 			}
 		case "message_id":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Int()
 				s.MessageID = int(v)
@@ -28474,7 +27736,6 @@ func (s *PinChatMessage) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"message_id\"")
 			}
 		case "disable_notification":
-
 			if err := func() error {
 				s.DisableNotification.Reset()
 				if err := s.DisableNotification.Decode(d); err != nil {
@@ -28684,7 +27945,6 @@ func (s *Poll) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.ID = string(v)
@@ -28697,7 +27957,6 @@ func (s *Poll) Decode(d *jx.Decoder) error {
 			}
 		case "question":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Question = string(v)
@@ -28710,9 +27969,8 @@ func (s *Poll) Decode(d *jx.Decoder) error {
 			}
 		case "options":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
-				s.Options = nil
+				s.Options = make([]PollOption, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem PollOption
 					if err := elem.Decode(d); err != nil {
@@ -28729,7 +27987,6 @@ func (s *Poll) Decode(d *jx.Decoder) error {
 			}
 		case "total_voter_count":
 			requiredBitSet[0] |= 1 << 3
-
 			if err := func() error {
 				v, err := d.Int()
 				s.TotalVoterCount = int(v)
@@ -28742,7 +27999,6 @@ func (s *Poll) Decode(d *jx.Decoder) error {
 			}
 		case "is_closed":
 			requiredBitSet[0] |= 1 << 4
-
 			if err := func() error {
 				v, err := d.Bool()
 				s.IsClosed = bool(v)
@@ -28755,7 +28011,6 @@ func (s *Poll) Decode(d *jx.Decoder) error {
 			}
 		case "is_anonymous":
 			requiredBitSet[0] |= 1 << 5
-
 			if err := func() error {
 				v, err := d.Bool()
 				s.IsAnonymous = bool(v)
@@ -28768,7 +28023,6 @@ func (s *Poll) Decode(d *jx.Decoder) error {
 			}
 		case "type":
 			requiredBitSet[0] |= 1 << 6
-
 			if err := func() error {
 				if err := s.Type.Decode(d); err != nil {
 					return err
@@ -28779,7 +28033,6 @@ func (s *Poll) Decode(d *jx.Decoder) error {
 			}
 		case "allows_multiple_answers":
 			requiredBitSet[0] |= 1 << 7
-
 			if err := func() error {
 				v, err := d.Bool()
 				s.AllowsMultipleAnswers = bool(v)
@@ -28791,7 +28044,6 @@ func (s *Poll) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"allows_multiple_answers\"")
 			}
 		case "correct_option_id":
-
 			if err := func() error {
 				s.CorrectOptionID.Reset()
 				if err := s.CorrectOptionID.Decode(d); err != nil {
@@ -28802,7 +28054,6 @@ func (s *Poll) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"correct_option_id\"")
 			}
 		case "explanation":
-
 			if err := func() error {
 				s.Explanation.Reset()
 				if err := s.Explanation.Decode(d); err != nil {
@@ -28813,9 +28064,8 @@ func (s *Poll) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"explanation\"")
 			}
 		case "explanation_entities":
-
 			if err := func() error {
-				s.ExplanationEntities = nil
+				s.ExplanationEntities = make([]MessageEntity, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem MessageEntity
 					if err := elem.Decode(d); err != nil {
@@ -28831,7 +28081,6 @@ func (s *Poll) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"explanation_entities\"")
 			}
 		case "open_period":
-
 			if err := func() error {
 				s.OpenPeriod.Reset()
 				if err := s.OpenPeriod.Decode(d); err != nil {
@@ -28842,7 +28091,6 @@ func (s *Poll) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"open_period\"")
 			}
 		case "close_date":
-
 			if err := func() error {
 				s.CloseDate.Reset()
 				if err := s.CloseDate.Decode(d); err != nil {
@@ -28956,7 +28204,6 @@ func (s *PollAnswer) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "poll_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.PollID = string(v)
@@ -28969,7 +28216,6 @@ func (s *PollAnswer) Decode(d *jx.Decoder) error {
 			}
 		case "user":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				if err := s.User.Decode(d); err != nil {
 					return err
@@ -28980,9 +28226,8 @@ func (s *PollAnswer) Decode(d *jx.Decoder) error {
 			}
 		case "option_ids":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
-				s.OptionIds = nil
+				s.OptionIds = make([]int, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem int
 					v, err := d.Int()
@@ -29083,7 +28328,6 @@ func (s *PollOption) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "text":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Text = string(v)
@@ -29096,7 +28340,6 @@ func (s *PollOption) Decode(d *jx.Decoder) error {
 			}
 		case "voter_count":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Int()
 				s.VoterCount = int(v)
@@ -29259,7 +28502,6 @@ func (s *PreCheckoutQuery) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.ID = string(v)
@@ -29272,7 +28514,6 @@ func (s *PreCheckoutQuery) Decode(d *jx.Decoder) error {
 			}
 		case "from":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				if err := s.From.Decode(d); err != nil {
 					return err
@@ -29283,7 +28524,6 @@ func (s *PreCheckoutQuery) Decode(d *jx.Decoder) error {
 			}
 		case "currency":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Currency = string(v)
@@ -29296,7 +28536,6 @@ func (s *PreCheckoutQuery) Decode(d *jx.Decoder) error {
 			}
 		case "total_amount":
 			requiredBitSet[0] |= 1 << 3
-
 			if err := func() error {
 				v, err := d.Int()
 				s.TotalAmount = int(v)
@@ -29309,7 +28548,6 @@ func (s *PreCheckoutQuery) Decode(d *jx.Decoder) error {
 			}
 		case "invoice_payload":
 			requiredBitSet[0] |= 1 << 4
-
 			if err := func() error {
 				v, err := d.Str()
 				s.InvoicePayload = string(v)
@@ -29321,7 +28559,6 @@ func (s *PreCheckoutQuery) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"invoice_payload\"")
 			}
 		case "shipping_option_id":
-
 			if err := func() error {
 				s.ShippingOptionID.Reset()
 				if err := s.ShippingOptionID.Decode(d); err != nil {
@@ -29332,7 +28569,6 @@ func (s *PreCheckoutQuery) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"shipping_option_id\"")
 			}
 		case "order_info":
-
 			if err := func() error {
 				s.OrderInfo.Reset()
 				if err := s.OrderInfo.Decode(d); err != nil {
@@ -29536,7 +28772,6 @@ func (s *PromoteChatMember) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "chat_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				if err := s.ChatID.Decode(d); err != nil {
 					return err
@@ -29547,7 +28782,6 @@ func (s *PromoteChatMember) Decode(d *jx.Decoder) error {
 			}
 		case "user_id":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Int64()
 				s.UserID = int64(v)
@@ -29559,7 +28793,6 @@ func (s *PromoteChatMember) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"user_id\"")
 			}
 		case "is_anonymous":
-
 			if err := func() error {
 				s.IsAnonymous.Reset()
 				if err := s.IsAnonymous.Decode(d); err != nil {
@@ -29570,7 +28803,6 @@ func (s *PromoteChatMember) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"is_anonymous\"")
 			}
 		case "can_manage_chat":
-
 			if err := func() error {
 				s.CanManageChat.Reset()
 				if err := s.CanManageChat.Decode(d); err != nil {
@@ -29581,7 +28813,6 @@ func (s *PromoteChatMember) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"can_manage_chat\"")
 			}
 		case "can_post_messages":
-
 			if err := func() error {
 				s.CanPostMessages.Reset()
 				if err := s.CanPostMessages.Decode(d); err != nil {
@@ -29592,7 +28823,6 @@ func (s *PromoteChatMember) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"can_post_messages\"")
 			}
 		case "can_edit_messages":
-
 			if err := func() error {
 				s.CanEditMessages.Reset()
 				if err := s.CanEditMessages.Decode(d); err != nil {
@@ -29603,7 +28833,6 @@ func (s *PromoteChatMember) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"can_edit_messages\"")
 			}
 		case "can_delete_messages":
-
 			if err := func() error {
 				s.CanDeleteMessages.Reset()
 				if err := s.CanDeleteMessages.Decode(d); err != nil {
@@ -29614,7 +28843,6 @@ func (s *PromoteChatMember) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"can_delete_messages\"")
 			}
 		case "can_manage_voice_chats":
-
 			if err := func() error {
 				s.CanManageVoiceChats.Reset()
 				if err := s.CanManageVoiceChats.Decode(d); err != nil {
@@ -29625,7 +28853,6 @@ func (s *PromoteChatMember) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"can_manage_voice_chats\"")
 			}
 		case "can_restrict_members":
-
 			if err := func() error {
 				s.CanRestrictMembers.Reset()
 				if err := s.CanRestrictMembers.Decode(d); err != nil {
@@ -29636,7 +28863,6 @@ func (s *PromoteChatMember) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"can_restrict_members\"")
 			}
 		case "can_promote_members":
-
 			if err := func() error {
 				s.CanPromoteMembers.Reset()
 				if err := s.CanPromoteMembers.Decode(d); err != nil {
@@ -29647,7 +28873,6 @@ func (s *PromoteChatMember) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"can_promote_members\"")
 			}
 		case "can_change_info":
-
 			if err := func() error {
 				s.CanChangeInfo.Reset()
 				if err := s.CanChangeInfo.Decode(d); err != nil {
@@ -29658,7 +28883,6 @@ func (s *PromoteChatMember) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"can_change_info\"")
 			}
 		case "can_invite_users":
-
 			if err := func() error {
 				s.CanInviteUsers.Reset()
 				if err := s.CanInviteUsers.Decode(d); err != nil {
@@ -29669,7 +28893,6 @@ func (s *PromoteChatMember) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"can_invite_users\"")
 			}
 		case "can_pin_messages":
-
 			if err := func() error {
 				s.CanPinMessages.Reset()
 				if err := s.CanPinMessages.Decode(d); err != nil {
@@ -29771,7 +28994,6 @@ func (s *ProximityAlertTriggered) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "traveler":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				if err := s.Traveler.Decode(d); err != nil {
 					return err
@@ -29782,7 +29004,6 @@ func (s *ProximityAlertTriggered) Decode(d *jx.Decoder) error {
 			}
 		case "watcher":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				if err := s.Watcher.Decode(d); err != nil {
 					return err
@@ -29793,7 +29014,6 @@ func (s *ProximityAlertTriggered) Decode(d *jx.Decoder) error {
 			}
 		case "distance":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Int()
 				s.Distance = int(v)
@@ -29957,12 +29177,11 @@ func (s *ReplyKeyboardMarkup) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "keyboard":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
-				s.Keyboard = nil
+				s.Keyboard = make([][]KeyboardButton, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem []KeyboardButton
-					elem = nil
+					elem = make([]KeyboardButton, 0)
 					if err := d.Arr(func(d *jx.Decoder) error {
 						var elemElem KeyboardButton
 						if err := elemElem.Decode(d); err != nil {
@@ -29983,7 +29202,6 @@ func (s *ReplyKeyboardMarkup) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"keyboard\"")
 			}
 		case "resize_keyboard":
-
 			if err := func() error {
 				s.ResizeKeyboard.Reset()
 				if err := s.ResizeKeyboard.Decode(d); err != nil {
@@ -29994,7 +29212,6 @@ func (s *ReplyKeyboardMarkup) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"resize_keyboard\"")
 			}
 		case "one_time_keyboard":
-
 			if err := func() error {
 				s.OneTimeKeyboard.Reset()
 				if err := s.OneTimeKeyboard.Decode(d); err != nil {
@@ -30005,7 +29222,6 @@ func (s *ReplyKeyboardMarkup) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"one_time_keyboard\"")
 			}
 		case "input_field_placeholder":
-
 			if err := func() error {
 				s.InputFieldPlaceholder.Reset()
 				if err := s.InputFieldPlaceholder.Decode(d); err != nil {
@@ -30016,7 +29232,6 @@ func (s *ReplyKeyboardMarkup) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"input_field_placeholder\"")
 			}
 		case "selective":
-
 			if err := func() error {
 				s.Selective.Reset()
 				if err := s.Selective.Decode(d); err != nil {
@@ -30113,7 +29328,6 @@ func (s *ReplyKeyboardRemove) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "remove_keyboard":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Bool()
 				s.RemoveKeyboard = bool(v)
@@ -30125,7 +29339,6 @@ func (s *ReplyKeyboardRemove) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"remove_keyboard\"")
 			}
 		case "selective":
-
 			if err := func() error {
 				s.Selective.Reset()
 				if err := s.Selective.Decode(d); err != nil {
@@ -30226,7 +29439,6 @@ func (s *Response) Decode(d *jx.Decoder) error {
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "migrate_to_chat_id":
-
 			if err := func() error {
 				s.MigrateToChatID.Reset()
 				if err := s.MigrateToChatID.Decode(d); err != nil {
@@ -30237,7 +29449,6 @@ func (s *Response) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"migrate_to_chat_id\"")
 			}
 		case "retry_after":
-
 			if err := func() error {
 				s.RetryAfter.Reset()
 				if err := s.RetryAfter.Decode(d); err != nil {
@@ -30316,7 +29527,6 @@ func (s *RestrictChatMember) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "chat_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				if err := s.ChatID.Decode(d); err != nil {
 					return err
@@ -30327,7 +29537,6 @@ func (s *RestrictChatMember) Decode(d *jx.Decoder) error {
 			}
 		case "user_id":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Int64()
 				s.UserID = int64(v)
@@ -30340,7 +29549,6 @@ func (s *RestrictChatMember) Decode(d *jx.Decoder) error {
 			}
 		case "permissions":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				if err := s.Permissions.Decode(d); err != nil {
 					return err
@@ -30350,7 +29558,6 @@ func (s *RestrictChatMember) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"permissions\"")
 			}
 		case "until_date":
-
 			if err := func() error {
 				s.UntilDate.Reset()
 				if err := s.UntilDate.Decode(d); err != nil {
@@ -30445,11 +29652,11 @@ func (s *Result) Decode(d *jx.Decoder) error {
 		return errors.New("invalid: unable to decode Result to nil")
 	}
 	var requiredBitSet [1]uint8
+	s.setDefaults()
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "result":
-
 			if err := func() error {
 				s.Result.Reset()
 				if err := s.Result.Decode(d); err != nil {
@@ -30461,7 +29668,6 @@ func (s *Result) Decode(d *jx.Decoder) error {
 			}
 		case "ok":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Bool()
 				s.Ok = bool(v)
@@ -30569,13 +29775,13 @@ func (s *ResultArrayOfBotCommand) Decode(d *jx.Decoder) error {
 		return errors.New("invalid: unable to decode ResultArrayOfBotCommand to nil")
 	}
 	var requiredBitSet [1]uint8
+	s.setDefaults()
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "result":
-
 			if err := func() error {
-				s.Result = nil
+				s.Result = make([]BotCommand, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem BotCommand
 					if err := elem.Decode(d); err != nil {
@@ -30592,7 +29798,6 @@ func (s *ResultArrayOfBotCommand) Decode(d *jx.Decoder) error {
 			}
 		case "ok":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Bool()
 				s.Ok = bool(v)
@@ -30700,13 +29905,13 @@ func (s *ResultArrayOfChatMember) Decode(d *jx.Decoder) error {
 		return errors.New("invalid: unable to decode ResultArrayOfChatMember to nil")
 	}
 	var requiredBitSet [1]uint8
+	s.setDefaults()
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "result":
-
 			if err := func() error {
-				s.Result = nil
+				s.Result = make([]ChatMember, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem ChatMember
 					if err := elem.Decode(d); err != nil {
@@ -30723,7 +29928,6 @@ func (s *ResultArrayOfChatMember) Decode(d *jx.Decoder) error {
 			}
 		case "ok":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Bool()
 				s.Ok = bool(v)
@@ -30831,13 +30035,13 @@ func (s *ResultArrayOfGameHighScore) Decode(d *jx.Decoder) error {
 		return errors.New("invalid: unable to decode ResultArrayOfGameHighScore to nil")
 	}
 	var requiredBitSet [1]uint8
+	s.setDefaults()
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "result":
-
 			if err := func() error {
-				s.Result = nil
+				s.Result = make([]GameHighScore, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem GameHighScore
 					if err := elem.Decode(d); err != nil {
@@ -30854,7 +30058,6 @@ func (s *ResultArrayOfGameHighScore) Decode(d *jx.Decoder) error {
 			}
 		case "ok":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Bool()
 				s.Ok = bool(v)
@@ -30962,13 +30165,13 @@ func (s *ResultArrayOfMessage) Decode(d *jx.Decoder) error {
 		return errors.New("invalid: unable to decode ResultArrayOfMessage to nil")
 	}
 	var requiredBitSet [1]uint8
+	s.setDefaults()
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "result":
-
 			if err := func() error {
-				s.Result = nil
+				s.Result = make([]Message, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem Message
 					if err := elem.Decode(d); err != nil {
@@ -30985,7 +30188,6 @@ func (s *ResultArrayOfMessage) Decode(d *jx.Decoder) error {
 			}
 		case "ok":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Bool()
 				s.Ok = bool(v)
@@ -31093,13 +30295,13 @@ func (s *ResultArrayOfUpdate) Decode(d *jx.Decoder) error {
 		return errors.New("invalid: unable to decode ResultArrayOfUpdate to nil")
 	}
 	var requiredBitSet [1]uint8
+	s.setDefaults()
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "result":
-
 			if err := func() error {
-				s.Result = nil
+				s.Result = make([]Update, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem Update
 					if err := elem.Decode(d); err != nil {
@@ -31116,7 +30318,6 @@ func (s *ResultArrayOfUpdate) Decode(d *jx.Decoder) error {
 			}
 		case "ok":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Bool()
 				s.Ok = bool(v)
@@ -31212,11 +30413,11 @@ func (s *ResultChat) Decode(d *jx.Decoder) error {
 		return errors.New("invalid: unable to decode ResultChat to nil")
 	}
 	var requiredBitSet [1]uint8
+	s.setDefaults()
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "result":
-
 			if err := func() error {
 				s.Result.Reset()
 				if err := s.Result.Decode(d); err != nil {
@@ -31228,7 +30429,6 @@ func (s *ResultChat) Decode(d *jx.Decoder) error {
 			}
 		case "ok":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Bool()
 				s.Ok = bool(v)
@@ -31324,11 +30524,11 @@ func (s *ResultChatInviteLink) Decode(d *jx.Decoder) error {
 		return errors.New("invalid: unable to decode ResultChatInviteLink to nil")
 	}
 	var requiredBitSet [1]uint8
+	s.setDefaults()
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "result":
-
 			if err := func() error {
 				s.Result.Reset()
 				if err := s.Result.Decode(d); err != nil {
@@ -31340,7 +30540,6 @@ func (s *ResultChatInviteLink) Decode(d *jx.Decoder) error {
 			}
 		case "ok":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Bool()
 				s.Ok = bool(v)
@@ -31436,11 +30635,11 @@ func (s *ResultChatMember) Decode(d *jx.Decoder) error {
 		return errors.New("invalid: unable to decode ResultChatMember to nil")
 	}
 	var requiredBitSet [1]uint8
+	s.setDefaults()
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "result":
-
 			if err := func() error {
 				s.Result.Reset()
 				if err := s.Result.Decode(d); err != nil {
@@ -31452,7 +30651,6 @@ func (s *ResultChatMember) Decode(d *jx.Decoder) error {
 			}
 		case "ok":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Bool()
 				s.Ok = bool(v)
@@ -31548,11 +30746,11 @@ func (s *ResultFile) Decode(d *jx.Decoder) error {
 		return errors.New("invalid: unable to decode ResultFile to nil")
 	}
 	var requiredBitSet [1]uint8
+	s.setDefaults()
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "result":
-
 			if err := func() error {
 				s.Result.Reset()
 				if err := s.Result.Decode(d); err != nil {
@@ -31564,7 +30762,6 @@ func (s *ResultFile) Decode(d *jx.Decoder) error {
 			}
 		case "ok":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Bool()
 				s.Ok = bool(v)
@@ -31660,11 +30857,11 @@ func (s *ResultInt) Decode(d *jx.Decoder) error {
 		return errors.New("invalid: unable to decode ResultInt to nil")
 	}
 	var requiredBitSet [1]uint8
+	s.setDefaults()
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "result":
-
 			if err := func() error {
 				s.Result.Reset()
 				if err := s.Result.Decode(d); err != nil {
@@ -31676,7 +30873,6 @@ func (s *ResultInt) Decode(d *jx.Decoder) error {
 			}
 		case "ok":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Bool()
 				s.Ok = bool(v)
@@ -31772,11 +30968,11 @@ func (s *ResultMessage) Decode(d *jx.Decoder) error {
 		return errors.New("invalid: unable to decode ResultMessage to nil")
 	}
 	var requiredBitSet [1]uint8
+	s.setDefaults()
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "result":
-
 			if err := func() error {
 				s.Result.Reset()
 				if err := s.Result.Decode(d); err != nil {
@@ -31788,7 +30984,6 @@ func (s *ResultMessage) Decode(d *jx.Decoder) error {
 			}
 		case "ok":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Bool()
 				s.Ok = bool(v)
@@ -31884,11 +31079,11 @@ func (s *ResultMessageId) Decode(d *jx.Decoder) error {
 		return errors.New("invalid: unable to decode ResultMessageId to nil")
 	}
 	var requiredBitSet [1]uint8
+	s.setDefaults()
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "result":
-
 			if err := func() error {
 				s.Result.Reset()
 				if err := s.Result.Decode(d); err != nil {
@@ -31900,7 +31095,6 @@ func (s *ResultMessageId) Decode(d *jx.Decoder) error {
 			}
 		case "ok":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Bool()
 				s.Ok = bool(v)
@@ -31996,11 +31190,11 @@ func (s *ResultMessageOrBoolean) Decode(d *jx.Decoder) error {
 		return errors.New("invalid: unable to decode ResultMessageOrBoolean to nil")
 	}
 	var requiredBitSet [1]uint8
+	s.setDefaults()
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "result":
-
 			if err := func() error {
 				s.Result.Reset()
 				if err := s.Result.Decode(d); err != nil {
@@ -32012,7 +31206,6 @@ func (s *ResultMessageOrBoolean) Decode(d *jx.Decoder) error {
 			}
 		case "ok":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Bool()
 				s.Ok = bool(v)
@@ -32143,11 +31336,11 @@ func (s *ResultPoll) Decode(d *jx.Decoder) error {
 		return errors.New("invalid: unable to decode ResultPoll to nil")
 	}
 	var requiredBitSet [1]uint8
+	s.setDefaults()
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "result":
-
 			if err := func() error {
 				s.Result.Reset()
 				if err := s.Result.Decode(d); err != nil {
@@ -32159,7 +31352,6 @@ func (s *ResultPoll) Decode(d *jx.Decoder) error {
 			}
 		case "ok":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Bool()
 				s.Ok = bool(v)
@@ -32255,11 +31447,11 @@ func (s *ResultStickerSet) Decode(d *jx.Decoder) error {
 		return errors.New("invalid: unable to decode ResultStickerSet to nil")
 	}
 	var requiredBitSet [1]uint8
+	s.setDefaults()
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "result":
-
 			if err := func() error {
 				s.Result.Reset()
 				if err := s.Result.Decode(d); err != nil {
@@ -32271,7 +31463,6 @@ func (s *ResultStickerSet) Decode(d *jx.Decoder) error {
 			}
 		case "ok":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Bool()
 				s.Ok = bool(v)
@@ -32367,11 +31558,11 @@ func (s *ResultString) Decode(d *jx.Decoder) error {
 		return errors.New("invalid: unable to decode ResultString to nil")
 	}
 	var requiredBitSet [1]uint8
+	s.setDefaults()
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "result":
-
 			if err := func() error {
 				s.Result.Reset()
 				if err := s.Result.Decode(d); err != nil {
@@ -32383,7 +31574,6 @@ func (s *ResultString) Decode(d *jx.Decoder) error {
 			}
 		case "ok":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Bool()
 				s.Ok = bool(v)
@@ -32479,11 +31669,11 @@ func (s *ResultUser) Decode(d *jx.Decoder) error {
 		return errors.New("invalid: unable to decode ResultUser to nil")
 	}
 	var requiredBitSet [1]uint8
+	s.setDefaults()
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "result":
-
 			if err := func() error {
 				s.Result.Reset()
 				if err := s.Result.Decode(d); err != nil {
@@ -32495,7 +31685,6 @@ func (s *ResultUser) Decode(d *jx.Decoder) error {
 			}
 		case "ok":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Bool()
 				s.Ok = bool(v)
@@ -32591,11 +31780,11 @@ func (s *ResultUserProfilePhotos) Decode(d *jx.Decoder) error {
 		return errors.New("invalid: unable to decode ResultUserProfilePhotos to nil")
 	}
 	var requiredBitSet [1]uint8
+	s.setDefaults()
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "result":
-
 			if err := func() error {
 				s.Result.Reset()
 				if err := s.Result.Decode(d); err != nil {
@@ -32607,7 +31796,6 @@ func (s *ResultUserProfilePhotos) Decode(d *jx.Decoder) error {
 			}
 		case "ok":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Bool()
 				s.Ok = bool(v)
@@ -32703,11 +31891,11 @@ func (s *ResultWebhookInfo) Decode(d *jx.Decoder) error {
 		return errors.New("invalid: unable to decode ResultWebhookInfo to nil")
 	}
 	var requiredBitSet [1]uint8
+	s.setDefaults()
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "result":
-
 			if err := func() error {
 				s.Result.Reset()
 				if err := s.Result.Decode(d); err != nil {
@@ -32719,7 +31907,6 @@ func (s *ResultWebhookInfo) Decode(d *jx.Decoder) error {
 			}
 		case "ok":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Bool()
 				s.Ok = bool(v)
@@ -32814,7 +32001,6 @@ func (s *RevokeChatInviteLink) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "chat_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				if err := s.ChatID.Decode(d); err != nil {
 					return err
@@ -32825,7 +32011,6 @@ func (s *RevokeChatInviteLink) Decode(d *jx.Decoder) error {
 			}
 		case "invite_link":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.InviteLink = string(v)
@@ -33052,7 +32237,6 @@ func (s *SendAnimation) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "chat_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				if err := s.ChatID.Decode(d); err != nil {
 					return err
@@ -33063,7 +32247,6 @@ func (s *SendAnimation) Decode(d *jx.Decoder) error {
 			}
 		case "animation":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Animation = string(v)
@@ -33075,7 +32258,6 @@ func (s *SendAnimation) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"animation\"")
 			}
 		case "duration":
-
 			if err := func() error {
 				s.Duration.Reset()
 				if err := s.Duration.Decode(d); err != nil {
@@ -33086,7 +32268,6 @@ func (s *SendAnimation) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"duration\"")
 			}
 		case "width":
-
 			if err := func() error {
 				s.Width.Reset()
 				if err := s.Width.Decode(d); err != nil {
@@ -33097,7 +32278,6 @@ func (s *SendAnimation) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"width\"")
 			}
 		case "height":
-
 			if err := func() error {
 				s.Height.Reset()
 				if err := s.Height.Decode(d); err != nil {
@@ -33108,7 +32288,6 @@ func (s *SendAnimation) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"height\"")
 			}
 		case "thumb":
-
 			if err := func() error {
 				s.Thumb.Reset()
 				if err := s.Thumb.Decode(d); err != nil {
@@ -33119,7 +32298,6 @@ func (s *SendAnimation) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"thumb\"")
 			}
 		case "caption":
-
 			if err := func() error {
 				s.Caption.Reset()
 				if err := s.Caption.Decode(d); err != nil {
@@ -33130,7 +32308,6 @@ func (s *SendAnimation) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"caption\"")
 			}
 		case "parse_mode":
-
 			if err := func() error {
 				s.ParseMode.Reset()
 				if err := s.ParseMode.Decode(d); err != nil {
@@ -33141,9 +32318,8 @@ func (s *SendAnimation) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"parse_mode\"")
 			}
 		case "caption_entities":
-
 			if err := func() error {
-				s.CaptionEntities = nil
+				s.CaptionEntities = make([]MessageEntity, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem MessageEntity
 					if err := elem.Decode(d); err != nil {
@@ -33159,7 +32335,6 @@ func (s *SendAnimation) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"caption_entities\"")
 			}
 		case "disable_notification":
-
 			if err := func() error {
 				s.DisableNotification.Reset()
 				if err := s.DisableNotification.Decode(d); err != nil {
@@ -33170,7 +32345,6 @@ func (s *SendAnimation) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"disable_notification\"")
 			}
 		case "protect_content":
-
 			if err := func() error {
 				s.ProtectContent.Reset()
 				if err := s.ProtectContent.Decode(d); err != nil {
@@ -33181,7 +32355,6 @@ func (s *SendAnimation) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"protect_content\"")
 			}
 		case "reply_to_message_id":
-
 			if err := func() error {
 				s.ReplyToMessageID.Reset()
 				if err := s.ReplyToMessageID.Decode(d); err != nil {
@@ -33192,7 +32365,6 @@ func (s *SendAnimation) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"reply_to_message_id\"")
 			}
 		case "allow_sending_without_reply":
-
 			if err := func() error {
 				s.AllowSendingWithoutReply.Reset()
 				if err := s.AllowSendingWithoutReply.Decode(d); err != nil {
@@ -33203,7 +32375,6 @@ func (s *SendAnimation) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"allow_sending_without_reply\"")
 			}
 		case "reply_markup":
-
 			if err := func() error {
 				s.ReplyMarkup.Reset()
 				if err := s.ReplyMarkup.Decode(d); err != nil {
@@ -33430,7 +32601,6 @@ func (s *SendAudio) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "chat_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				if err := s.ChatID.Decode(d); err != nil {
 					return err
@@ -33441,7 +32611,6 @@ func (s *SendAudio) Decode(d *jx.Decoder) error {
 			}
 		case "audio":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Audio = string(v)
@@ -33453,7 +32622,6 @@ func (s *SendAudio) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"audio\"")
 			}
 		case "caption":
-
 			if err := func() error {
 				s.Caption.Reset()
 				if err := s.Caption.Decode(d); err != nil {
@@ -33464,7 +32632,6 @@ func (s *SendAudio) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"caption\"")
 			}
 		case "parse_mode":
-
 			if err := func() error {
 				s.ParseMode.Reset()
 				if err := s.ParseMode.Decode(d); err != nil {
@@ -33475,9 +32642,8 @@ func (s *SendAudio) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"parse_mode\"")
 			}
 		case "caption_entities":
-
 			if err := func() error {
-				s.CaptionEntities = nil
+				s.CaptionEntities = make([]MessageEntity, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem MessageEntity
 					if err := elem.Decode(d); err != nil {
@@ -33493,7 +32659,6 @@ func (s *SendAudio) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"caption_entities\"")
 			}
 		case "duration":
-
 			if err := func() error {
 				s.Duration.Reset()
 				if err := s.Duration.Decode(d); err != nil {
@@ -33504,7 +32669,6 @@ func (s *SendAudio) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"duration\"")
 			}
 		case "performer":
-
 			if err := func() error {
 				s.Performer.Reset()
 				if err := s.Performer.Decode(d); err != nil {
@@ -33515,7 +32679,6 @@ func (s *SendAudio) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"performer\"")
 			}
 		case "title":
-
 			if err := func() error {
 				s.Title.Reset()
 				if err := s.Title.Decode(d); err != nil {
@@ -33526,7 +32689,6 @@ func (s *SendAudio) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"title\"")
 			}
 		case "thumb":
-
 			if err := func() error {
 				s.Thumb.Reset()
 				if err := s.Thumb.Decode(d); err != nil {
@@ -33537,7 +32699,6 @@ func (s *SendAudio) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"thumb\"")
 			}
 		case "disable_notification":
-
 			if err := func() error {
 				s.DisableNotification.Reset()
 				if err := s.DisableNotification.Decode(d); err != nil {
@@ -33548,7 +32709,6 @@ func (s *SendAudio) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"disable_notification\"")
 			}
 		case "protect_content":
-
 			if err := func() error {
 				s.ProtectContent.Reset()
 				if err := s.ProtectContent.Decode(d); err != nil {
@@ -33559,7 +32719,6 @@ func (s *SendAudio) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"protect_content\"")
 			}
 		case "reply_to_message_id":
-
 			if err := func() error {
 				s.ReplyToMessageID.Reset()
 				if err := s.ReplyToMessageID.Decode(d); err != nil {
@@ -33570,7 +32729,6 @@ func (s *SendAudio) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"reply_to_message_id\"")
 			}
 		case "allow_sending_without_reply":
-
 			if err := func() error {
 				s.AllowSendingWithoutReply.Reset()
 				if err := s.AllowSendingWithoutReply.Decode(d); err != nil {
@@ -33581,7 +32739,6 @@ func (s *SendAudio) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"allow_sending_without_reply\"")
 			}
 		case "reply_markup":
-
 			if err := func() error {
 				s.ReplyMarkup.Reset()
 				if err := s.ReplyMarkup.Decode(d); err != nil {
@@ -33676,7 +32833,6 @@ func (s *SendChatAction) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "chat_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				if err := s.ChatID.Decode(d); err != nil {
 					return err
@@ -33687,7 +32843,6 @@ func (s *SendChatAction) Decode(d *jx.Decoder) error {
 			}
 		case "action":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Action = string(v)
@@ -33859,7 +33014,6 @@ func (s *SendContact) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "chat_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				if err := s.ChatID.Decode(d); err != nil {
 					return err
@@ -33870,7 +33024,6 @@ func (s *SendContact) Decode(d *jx.Decoder) error {
 			}
 		case "phone_number":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.PhoneNumber = string(v)
@@ -33883,7 +33036,6 @@ func (s *SendContact) Decode(d *jx.Decoder) error {
 			}
 		case "first_name":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Str()
 				s.FirstName = string(v)
@@ -33895,7 +33047,6 @@ func (s *SendContact) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"first_name\"")
 			}
 		case "last_name":
-
 			if err := func() error {
 				s.LastName.Reset()
 				if err := s.LastName.Decode(d); err != nil {
@@ -33906,7 +33057,6 @@ func (s *SendContact) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"last_name\"")
 			}
 		case "vcard":
-
 			if err := func() error {
 				s.Vcard.Reset()
 				if err := s.Vcard.Decode(d); err != nil {
@@ -33917,7 +33067,6 @@ func (s *SendContact) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"vcard\"")
 			}
 		case "disable_notification":
-
 			if err := func() error {
 				s.DisableNotification.Reset()
 				if err := s.DisableNotification.Decode(d); err != nil {
@@ -33928,7 +33077,6 @@ func (s *SendContact) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"disable_notification\"")
 			}
 		case "protect_content":
-
 			if err := func() error {
 				s.ProtectContent.Reset()
 				if err := s.ProtectContent.Decode(d); err != nil {
@@ -33939,7 +33087,6 @@ func (s *SendContact) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"protect_content\"")
 			}
 		case "reply_to_message_id":
-
 			if err := func() error {
 				s.ReplyToMessageID.Reset()
 				if err := s.ReplyToMessageID.Decode(d); err != nil {
@@ -33950,7 +33097,6 @@ func (s *SendContact) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"reply_to_message_id\"")
 			}
 		case "allow_sending_without_reply":
-
 			if err := func() error {
 				s.AllowSendingWithoutReply.Reset()
 				if err := s.AllowSendingWithoutReply.Decode(d); err != nil {
@@ -33961,7 +33107,6 @@ func (s *SendContact) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"allow_sending_without_reply\"")
 			}
 		case "reply_markup":
-
 			if err := func() error {
 				s.ReplyMarkup.Reset()
 				if err := s.ReplyMarkup.Decode(d); err != nil {
@@ -34109,7 +33254,6 @@ func (s *SendDice) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "chat_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				if err := s.ChatID.Decode(d); err != nil {
 					return err
@@ -34119,7 +33263,6 @@ func (s *SendDice) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"chat_id\"")
 			}
 		case "emoji":
-
 			if err := func() error {
 				s.Emoji.Reset()
 				if err := s.Emoji.Decode(d); err != nil {
@@ -34130,7 +33273,6 @@ func (s *SendDice) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"emoji\"")
 			}
 		case "disable_notification":
-
 			if err := func() error {
 				s.DisableNotification.Reset()
 				if err := s.DisableNotification.Decode(d); err != nil {
@@ -34141,7 +33283,6 @@ func (s *SendDice) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"disable_notification\"")
 			}
 		case "protect_content":
-
 			if err := func() error {
 				s.ProtectContent.Reset()
 				if err := s.ProtectContent.Decode(d); err != nil {
@@ -34152,7 +33293,6 @@ func (s *SendDice) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"protect_content\"")
 			}
 		case "reply_to_message_id":
-
 			if err := func() error {
 				s.ReplyToMessageID.Reset()
 				if err := s.ReplyToMessageID.Decode(d); err != nil {
@@ -34163,7 +33303,6 @@ func (s *SendDice) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"reply_to_message_id\"")
 			}
 		case "allow_sending_without_reply":
-
 			if err := func() error {
 				s.AllowSendingWithoutReply.Reset()
 				if err := s.AllowSendingWithoutReply.Decode(d); err != nil {
@@ -34174,7 +33313,6 @@ func (s *SendDice) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"allow_sending_without_reply\"")
 			}
 		case "reply_markup":
-
 			if err := func() error {
 				s.ReplyMarkup.Reset()
 				if err := s.ReplyMarkup.Decode(d); err != nil {
@@ -34380,7 +33518,6 @@ func (s *SendDocument) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "chat_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				if err := s.ChatID.Decode(d); err != nil {
 					return err
@@ -34391,7 +33528,6 @@ func (s *SendDocument) Decode(d *jx.Decoder) error {
 			}
 		case "document":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Document = string(v)
@@ -34403,7 +33539,6 @@ func (s *SendDocument) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"document\"")
 			}
 		case "thumb":
-
 			if err := func() error {
 				s.Thumb.Reset()
 				if err := s.Thumb.Decode(d); err != nil {
@@ -34414,7 +33549,6 @@ func (s *SendDocument) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"thumb\"")
 			}
 		case "caption":
-
 			if err := func() error {
 				s.Caption.Reset()
 				if err := s.Caption.Decode(d); err != nil {
@@ -34425,7 +33559,6 @@ func (s *SendDocument) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"caption\"")
 			}
 		case "parse_mode":
-
 			if err := func() error {
 				s.ParseMode.Reset()
 				if err := s.ParseMode.Decode(d); err != nil {
@@ -34436,9 +33569,8 @@ func (s *SendDocument) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"parse_mode\"")
 			}
 		case "caption_entities":
-
 			if err := func() error {
-				s.CaptionEntities = nil
+				s.CaptionEntities = make([]MessageEntity, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem MessageEntity
 					if err := elem.Decode(d); err != nil {
@@ -34454,7 +33586,6 @@ func (s *SendDocument) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"caption_entities\"")
 			}
 		case "disable_content_type_detection":
-
 			if err := func() error {
 				s.DisableContentTypeDetection.Reset()
 				if err := s.DisableContentTypeDetection.Decode(d); err != nil {
@@ -34465,7 +33596,6 @@ func (s *SendDocument) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"disable_content_type_detection\"")
 			}
 		case "disable_notification":
-
 			if err := func() error {
 				s.DisableNotification.Reset()
 				if err := s.DisableNotification.Decode(d); err != nil {
@@ -34476,7 +33606,6 @@ func (s *SendDocument) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"disable_notification\"")
 			}
 		case "protect_content":
-
 			if err := func() error {
 				s.ProtectContent.Reset()
 				if err := s.ProtectContent.Decode(d); err != nil {
@@ -34487,7 +33616,6 @@ func (s *SendDocument) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"protect_content\"")
 			}
 		case "reply_to_message_id":
-
 			if err := func() error {
 				s.ReplyToMessageID.Reset()
 				if err := s.ReplyToMessageID.Decode(d); err != nil {
@@ -34498,7 +33626,6 @@ func (s *SendDocument) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"reply_to_message_id\"")
 			}
 		case "allow_sending_without_reply":
-
 			if err := func() error {
 				s.AllowSendingWithoutReply.Reset()
 				if err := s.AllowSendingWithoutReply.Decode(d); err != nil {
@@ -34509,7 +33636,6 @@ func (s *SendDocument) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"allow_sending_without_reply\"")
 			}
 		case "reply_markup":
-
 			if err := func() error {
 				s.ReplyMarkup.Reset()
 				if err := s.ReplyMarkup.Decode(d); err != nil {
@@ -34654,7 +33780,6 @@ func (s *SendGame) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "chat_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Int64()
 				s.ChatID = int64(v)
@@ -34667,7 +33792,6 @@ func (s *SendGame) Decode(d *jx.Decoder) error {
 			}
 		case "game_short_name":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.GameShortName = string(v)
@@ -34679,7 +33803,6 @@ func (s *SendGame) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"game_short_name\"")
 			}
 		case "disable_notification":
-
 			if err := func() error {
 				s.DisableNotification.Reset()
 				if err := s.DisableNotification.Decode(d); err != nil {
@@ -34690,7 +33813,6 @@ func (s *SendGame) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"disable_notification\"")
 			}
 		case "protect_content":
-
 			if err := func() error {
 				s.ProtectContent.Reset()
 				if err := s.ProtectContent.Decode(d); err != nil {
@@ -34701,7 +33823,6 @@ func (s *SendGame) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"protect_content\"")
 			}
 		case "reply_to_message_id":
-
 			if err := func() error {
 				s.ReplyToMessageID.Reset()
 				if err := s.ReplyToMessageID.Decode(d); err != nil {
@@ -34712,7 +33833,6 @@ func (s *SendGame) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"reply_to_message_id\"")
 			}
 		case "allow_sending_without_reply":
-
 			if err := func() error {
 				s.AllowSendingWithoutReply.Reset()
 				if err := s.AllowSendingWithoutReply.Decode(d); err != nil {
@@ -34723,7 +33843,6 @@ func (s *SendGame) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"allow_sending_without_reply\"")
 			}
 		case "reply_markup":
-
 			if err := func() error {
 				s.ReplyMarkup.Reset()
 				if err := s.ReplyMarkup.Decode(d); err != nil {
@@ -35076,7 +34195,6 @@ func (s *SendInvoice) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "chat_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				if err := s.ChatID.Decode(d); err != nil {
 					return err
@@ -35087,7 +34205,6 @@ func (s *SendInvoice) Decode(d *jx.Decoder) error {
 			}
 		case "title":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Title = string(v)
@@ -35100,7 +34217,6 @@ func (s *SendInvoice) Decode(d *jx.Decoder) error {
 			}
 		case "description":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Description = string(v)
@@ -35113,7 +34229,6 @@ func (s *SendInvoice) Decode(d *jx.Decoder) error {
 			}
 		case "payload":
 			requiredBitSet[0] |= 1 << 3
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Payload = string(v)
@@ -35126,7 +34241,6 @@ func (s *SendInvoice) Decode(d *jx.Decoder) error {
 			}
 		case "provider_token":
 			requiredBitSet[0] |= 1 << 4
-
 			if err := func() error {
 				v, err := d.Str()
 				s.ProviderToken = string(v)
@@ -35139,7 +34253,6 @@ func (s *SendInvoice) Decode(d *jx.Decoder) error {
 			}
 		case "currency":
 			requiredBitSet[0] |= 1 << 5
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Currency = string(v)
@@ -35152,9 +34265,8 @@ func (s *SendInvoice) Decode(d *jx.Decoder) error {
 			}
 		case "prices":
 			requiredBitSet[0] |= 1 << 6
-
 			if err := func() error {
-				s.Prices = nil
+				s.Prices = make([]LabeledPrice, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem LabeledPrice
 					if err := elem.Decode(d); err != nil {
@@ -35170,7 +34282,6 @@ func (s *SendInvoice) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"prices\"")
 			}
 		case "max_tip_amount":
-
 			if err := func() error {
 				s.MaxTipAmount.Reset()
 				if err := s.MaxTipAmount.Decode(d); err != nil {
@@ -35181,9 +34292,8 @@ func (s *SendInvoice) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"max_tip_amount\"")
 			}
 		case "suggested_tip_amounts":
-
 			if err := func() error {
-				s.SuggestedTipAmounts = nil
+				s.SuggestedTipAmounts = make([]int64, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem int64
 					v, err := d.Int64()
@@ -35201,7 +34311,6 @@ func (s *SendInvoice) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"suggested_tip_amounts\"")
 			}
 		case "start_parameter":
-
 			if err := func() error {
 				s.StartParameter.Reset()
 				if err := s.StartParameter.Decode(d); err != nil {
@@ -35212,7 +34321,6 @@ func (s *SendInvoice) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"start_parameter\"")
 			}
 		case "provider_data":
-
 			if err := func() error {
 				s.ProviderData.Reset()
 				if err := s.ProviderData.Decode(d); err != nil {
@@ -35223,7 +34331,6 @@ func (s *SendInvoice) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"provider_data\"")
 			}
 		case "photo_url":
-
 			if err := func() error {
 				s.PhotoURL.Reset()
 				if err := s.PhotoURL.Decode(d); err != nil {
@@ -35234,7 +34341,6 @@ func (s *SendInvoice) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"photo_url\"")
 			}
 		case "photo_size":
-
 			if err := func() error {
 				s.PhotoSize.Reset()
 				if err := s.PhotoSize.Decode(d); err != nil {
@@ -35245,7 +34351,6 @@ func (s *SendInvoice) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"photo_size\"")
 			}
 		case "photo_width":
-
 			if err := func() error {
 				s.PhotoWidth.Reset()
 				if err := s.PhotoWidth.Decode(d); err != nil {
@@ -35256,7 +34361,6 @@ func (s *SendInvoice) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"photo_width\"")
 			}
 		case "photo_height":
-
 			if err := func() error {
 				s.PhotoHeight.Reset()
 				if err := s.PhotoHeight.Decode(d); err != nil {
@@ -35267,7 +34371,6 @@ func (s *SendInvoice) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"photo_height\"")
 			}
 		case "need_name":
-
 			if err := func() error {
 				s.NeedName.Reset()
 				if err := s.NeedName.Decode(d); err != nil {
@@ -35278,7 +34381,6 @@ func (s *SendInvoice) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"need_name\"")
 			}
 		case "need_phone_number":
-
 			if err := func() error {
 				s.NeedPhoneNumber.Reset()
 				if err := s.NeedPhoneNumber.Decode(d); err != nil {
@@ -35289,7 +34391,6 @@ func (s *SendInvoice) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"need_phone_number\"")
 			}
 		case "need_email":
-
 			if err := func() error {
 				s.NeedEmail.Reset()
 				if err := s.NeedEmail.Decode(d); err != nil {
@@ -35300,7 +34401,6 @@ func (s *SendInvoice) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"need_email\"")
 			}
 		case "need_shipping_address":
-
 			if err := func() error {
 				s.NeedShippingAddress.Reset()
 				if err := s.NeedShippingAddress.Decode(d); err != nil {
@@ -35311,7 +34411,6 @@ func (s *SendInvoice) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"need_shipping_address\"")
 			}
 		case "send_phone_number_to_provider":
-
 			if err := func() error {
 				s.SendPhoneNumberToProvider.Reset()
 				if err := s.SendPhoneNumberToProvider.Decode(d); err != nil {
@@ -35322,7 +34421,6 @@ func (s *SendInvoice) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"send_phone_number_to_provider\"")
 			}
 		case "send_email_to_provider":
-
 			if err := func() error {
 				s.SendEmailToProvider.Reset()
 				if err := s.SendEmailToProvider.Decode(d); err != nil {
@@ -35333,7 +34431,6 @@ func (s *SendInvoice) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"send_email_to_provider\"")
 			}
 		case "is_flexible":
-
 			if err := func() error {
 				s.IsFlexible.Reset()
 				if err := s.IsFlexible.Decode(d); err != nil {
@@ -35344,7 +34441,6 @@ func (s *SendInvoice) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"is_flexible\"")
 			}
 		case "disable_notification":
-
 			if err := func() error {
 				s.DisableNotification.Reset()
 				if err := s.DisableNotification.Decode(d); err != nil {
@@ -35355,7 +34451,6 @@ func (s *SendInvoice) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"disable_notification\"")
 			}
 		case "protect_content":
-
 			if err := func() error {
 				s.ProtectContent.Reset()
 				if err := s.ProtectContent.Decode(d); err != nil {
@@ -35366,7 +34461,6 @@ func (s *SendInvoice) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"protect_content\"")
 			}
 		case "reply_to_message_id":
-
 			if err := func() error {
 				s.ReplyToMessageID.Reset()
 				if err := s.ReplyToMessageID.Decode(d); err != nil {
@@ -35377,7 +34471,6 @@ func (s *SendInvoice) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"reply_to_message_id\"")
 			}
 		case "allow_sending_without_reply":
-
 			if err := func() error {
 				s.AllowSendingWithoutReply.Reset()
 				if err := s.AllowSendingWithoutReply.Decode(d); err != nil {
@@ -35388,7 +34481,6 @@ func (s *SendInvoice) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"allow_sending_without_reply\"")
 			}
 		case "reply_markup":
-
 			if err := func() error {
 				s.ReplyMarkup.Reset()
 				if err := s.ReplyMarkup.Decode(d); err != nil {
@@ -35582,7 +34674,6 @@ func (s *SendLocation) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "chat_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				if err := s.ChatID.Decode(d); err != nil {
 					return err
@@ -35593,7 +34684,6 @@ func (s *SendLocation) Decode(d *jx.Decoder) error {
 			}
 		case "latitude":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Float64()
 				s.Latitude = float64(v)
@@ -35606,7 +34696,6 @@ func (s *SendLocation) Decode(d *jx.Decoder) error {
 			}
 		case "longitude":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Float64()
 				s.Longitude = float64(v)
@@ -35618,7 +34707,6 @@ func (s *SendLocation) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"longitude\"")
 			}
 		case "horizontal_accuracy":
-
 			if err := func() error {
 				s.HorizontalAccuracy.Reset()
 				if err := s.HorizontalAccuracy.Decode(d); err != nil {
@@ -35629,7 +34717,6 @@ func (s *SendLocation) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"horizontal_accuracy\"")
 			}
 		case "live_period":
-
 			if err := func() error {
 				s.LivePeriod.Reset()
 				if err := s.LivePeriod.Decode(d); err != nil {
@@ -35640,7 +34727,6 @@ func (s *SendLocation) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"live_period\"")
 			}
 		case "heading":
-
 			if err := func() error {
 				s.Heading.Reset()
 				if err := s.Heading.Decode(d); err != nil {
@@ -35651,7 +34737,6 @@ func (s *SendLocation) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"heading\"")
 			}
 		case "proximity_alert_radius":
-
 			if err := func() error {
 				s.ProximityAlertRadius.Reset()
 				if err := s.ProximityAlertRadius.Decode(d); err != nil {
@@ -35662,7 +34747,6 @@ func (s *SendLocation) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"proximity_alert_radius\"")
 			}
 		case "disable_notification":
-
 			if err := func() error {
 				s.DisableNotification.Reset()
 				if err := s.DisableNotification.Decode(d); err != nil {
@@ -35673,7 +34757,6 @@ func (s *SendLocation) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"disable_notification\"")
 			}
 		case "protect_content":
-
 			if err := func() error {
 				s.ProtectContent.Reset()
 				if err := s.ProtectContent.Decode(d); err != nil {
@@ -35684,7 +34767,6 @@ func (s *SendLocation) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"protect_content\"")
 			}
 		case "reply_to_message_id":
-
 			if err := func() error {
 				s.ReplyToMessageID.Reset()
 				if err := s.ReplyToMessageID.Decode(d); err != nil {
@@ -35695,7 +34777,6 @@ func (s *SendLocation) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"reply_to_message_id\"")
 			}
 		case "allow_sending_without_reply":
-
 			if err := func() error {
 				s.AllowSendingWithoutReply.Reset()
 				if err := s.AllowSendingWithoutReply.Decode(d); err != nil {
@@ -35706,7 +34787,6 @@ func (s *SendLocation) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"allow_sending_without_reply\"")
 			}
 		case "reply_markup":
-
 			if err := func() error {
 				s.ReplyMarkup.Reset()
 				if err := s.ReplyMarkup.Decode(d); err != nil {
@@ -35853,7 +34933,6 @@ func (s *SendMediaGroup) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "chat_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				if err := s.ChatID.Decode(d); err != nil {
 					return err
@@ -35864,9 +34943,8 @@ func (s *SendMediaGroup) Decode(d *jx.Decoder) error {
 			}
 		case "media":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
-				s.Media = nil
+				s.Media = make([]SendMediaGroupMediaItem, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem SendMediaGroupMediaItem
 					if err := elem.Decode(d); err != nil {
@@ -35882,7 +34960,6 @@ func (s *SendMediaGroup) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"media\"")
 			}
 		case "disable_notification":
-
 			if err := func() error {
 				s.DisableNotification.Reset()
 				if err := s.DisableNotification.Decode(d); err != nil {
@@ -35893,7 +34970,6 @@ func (s *SendMediaGroup) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"disable_notification\"")
 			}
 		case "protect_content":
-
 			if err := func() error {
 				s.ProtectContent.Reset()
 				if err := s.ProtectContent.Decode(d); err != nil {
@@ -35904,7 +34980,6 @@ func (s *SendMediaGroup) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"protect_content\"")
 			}
 		case "reply_to_message_id":
-
 			if err := func() error {
 				s.ReplyToMessageID.Reset()
 				if err := s.ReplyToMessageID.Decode(d); err != nil {
@@ -35915,7 +34990,6 @@ func (s *SendMediaGroup) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"reply_to_message_id\"")
 			}
 		case "allow_sending_without_reply":
-
 			if err := func() error {
 				s.AllowSendingWithoutReply.Reset()
 				if err := s.AllowSendingWithoutReply.Decode(d); err != nil {
@@ -36186,7 +35260,6 @@ func (s *SendMessage) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "chat_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				if err := s.ChatID.Decode(d); err != nil {
 					return err
@@ -36197,7 +35270,6 @@ func (s *SendMessage) Decode(d *jx.Decoder) error {
 			}
 		case "text":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Text = string(v)
@@ -36209,7 +35281,6 @@ func (s *SendMessage) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"text\"")
 			}
 		case "parse_mode":
-
 			if err := func() error {
 				s.ParseMode.Reset()
 				if err := s.ParseMode.Decode(d); err != nil {
@@ -36220,9 +35291,8 @@ func (s *SendMessage) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"parse_mode\"")
 			}
 		case "entities":
-
 			if err := func() error {
-				s.Entities = nil
+				s.Entities = make([]MessageEntity, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem MessageEntity
 					if err := elem.Decode(d); err != nil {
@@ -36238,7 +35308,6 @@ func (s *SendMessage) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"entities\"")
 			}
 		case "disable_web_page_preview":
-
 			if err := func() error {
 				s.DisableWebPagePreview.Reset()
 				if err := s.DisableWebPagePreview.Decode(d); err != nil {
@@ -36249,7 +35318,6 @@ func (s *SendMessage) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"disable_web_page_preview\"")
 			}
 		case "disable_notification":
-
 			if err := func() error {
 				s.DisableNotification.Reset()
 				if err := s.DisableNotification.Decode(d); err != nil {
@@ -36260,7 +35328,6 @@ func (s *SendMessage) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"disable_notification\"")
 			}
 		case "protect_content":
-
 			if err := func() error {
 				s.ProtectContent.Reset()
 				if err := s.ProtectContent.Decode(d); err != nil {
@@ -36271,7 +35338,6 @@ func (s *SendMessage) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"protect_content\"")
 			}
 		case "reply_to_message_id":
-
 			if err := func() error {
 				s.ReplyToMessageID.Reset()
 				if err := s.ReplyToMessageID.Decode(d); err != nil {
@@ -36282,7 +35348,6 @@ func (s *SendMessage) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"reply_to_message_id\"")
 			}
 		case "allow_sending_without_reply":
-
 			if err := func() error {
 				s.AllowSendingWithoutReply.Reset()
 				if err := s.AllowSendingWithoutReply.Decode(d); err != nil {
@@ -36293,7 +35358,6 @@ func (s *SendMessage) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"allow_sending_without_reply\"")
 			}
 		case "reply_markup":
-
 			if err := func() error {
 				s.ReplyMarkup.Reset()
 				if err := s.ReplyMarkup.Decode(d); err != nil {
@@ -36480,7 +35544,6 @@ func (s *SendPhoto) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "chat_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				if err := s.ChatID.Decode(d); err != nil {
 					return err
@@ -36491,7 +35554,6 @@ func (s *SendPhoto) Decode(d *jx.Decoder) error {
 			}
 		case "photo":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Photo = string(v)
@@ -36503,7 +35565,6 @@ func (s *SendPhoto) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"photo\"")
 			}
 		case "caption":
-
 			if err := func() error {
 				s.Caption.Reset()
 				if err := s.Caption.Decode(d); err != nil {
@@ -36514,7 +35575,6 @@ func (s *SendPhoto) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"caption\"")
 			}
 		case "parse_mode":
-
 			if err := func() error {
 				s.ParseMode.Reset()
 				if err := s.ParseMode.Decode(d); err != nil {
@@ -36525,9 +35585,8 @@ func (s *SendPhoto) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"parse_mode\"")
 			}
 		case "caption_entities":
-
 			if err := func() error {
-				s.CaptionEntities = nil
+				s.CaptionEntities = make([]MessageEntity, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem MessageEntity
 					if err := elem.Decode(d); err != nil {
@@ -36543,7 +35602,6 @@ func (s *SendPhoto) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"caption_entities\"")
 			}
 		case "disable_notification":
-
 			if err := func() error {
 				s.DisableNotification.Reset()
 				if err := s.DisableNotification.Decode(d); err != nil {
@@ -36554,7 +35612,6 @@ func (s *SendPhoto) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"disable_notification\"")
 			}
 		case "protect_content":
-
 			if err := func() error {
 				s.ProtectContent.Reset()
 				if err := s.ProtectContent.Decode(d); err != nil {
@@ -36565,7 +35622,6 @@ func (s *SendPhoto) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"protect_content\"")
 			}
 		case "reply_to_message_id":
-
 			if err := func() error {
 				s.ReplyToMessageID.Reset()
 				if err := s.ReplyToMessageID.Decode(d); err != nil {
@@ -36576,7 +35632,6 @@ func (s *SendPhoto) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"reply_to_message_id\"")
 			}
 		case "allow_sending_without_reply":
-
 			if err := func() error {
 				s.AllowSendingWithoutReply.Reset()
 				if err := s.AllowSendingWithoutReply.Decode(d); err != nil {
@@ -36587,7 +35642,6 @@ func (s *SendPhoto) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"allow_sending_without_reply\"")
 			}
 		case "reply_markup":
-
 			if err := func() error {
 				s.ReplyMarkup.Reset()
 				if err := s.ReplyMarkup.Decode(d); err != nil {
@@ -36863,7 +35917,6 @@ func (s *SendPoll) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "chat_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				if err := s.ChatID.Decode(d); err != nil {
 					return err
@@ -36874,7 +35927,6 @@ func (s *SendPoll) Decode(d *jx.Decoder) error {
 			}
 		case "question":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Question = string(v)
@@ -36887,9 +35939,8 @@ func (s *SendPoll) Decode(d *jx.Decoder) error {
 			}
 		case "options":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
-				s.Options = nil
+				s.Options = make([]string, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem string
 					v, err := d.Str()
@@ -36907,7 +35958,6 @@ func (s *SendPoll) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"options\"")
 			}
 		case "is_anonymous":
-
 			if err := func() error {
 				s.IsAnonymous.Reset()
 				if err := s.IsAnonymous.Decode(d); err != nil {
@@ -36918,7 +35968,6 @@ func (s *SendPoll) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"is_anonymous\"")
 			}
 		case "type":
-
 			if err := func() error {
 				s.Type.Reset()
 				if err := s.Type.Decode(d); err != nil {
@@ -36929,7 +35978,6 @@ func (s *SendPoll) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"type\"")
 			}
 		case "allows_multiple_answers":
-
 			if err := func() error {
 				s.AllowsMultipleAnswers.Reset()
 				if err := s.AllowsMultipleAnswers.Decode(d); err != nil {
@@ -36940,7 +35988,6 @@ func (s *SendPoll) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"allows_multiple_answers\"")
 			}
 		case "correct_option_id":
-
 			if err := func() error {
 				s.CorrectOptionID.Reset()
 				if err := s.CorrectOptionID.Decode(d); err != nil {
@@ -36951,7 +35998,6 @@ func (s *SendPoll) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"correct_option_id\"")
 			}
 		case "explanation":
-
 			if err := func() error {
 				s.Explanation.Reset()
 				if err := s.Explanation.Decode(d); err != nil {
@@ -36962,7 +36008,6 @@ func (s *SendPoll) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"explanation\"")
 			}
 		case "explanation_parse_mode":
-
 			if err := func() error {
 				s.ExplanationParseMode.Reset()
 				if err := s.ExplanationParseMode.Decode(d); err != nil {
@@ -36973,9 +36018,8 @@ func (s *SendPoll) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"explanation_parse_mode\"")
 			}
 		case "explanation_entities":
-
 			if err := func() error {
-				s.ExplanationEntities = nil
+				s.ExplanationEntities = make([]MessageEntity, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem MessageEntity
 					if err := elem.Decode(d); err != nil {
@@ -36991,7 +36035,6 @@ func (s *SendPoll) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"explanation_entities\"")
 			}
 		case "open_period":
-
 			if err := func() error {
 				s.OpenPeriod.Reset()
 				if err := s.OpenPeriod.Decode(d); err != nil {
@@ -37002,7 +36045,6 @@ func (s *SendPoll) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"open_period\"")
 			}
 		case "close_date":
-
 			if err := func() error {
 				s.CloseDate.Reset()
 				if err := s.CloseDate.Decode(d); err != nil {
@@ -37013,7 +36055,6 @@ func (s *SendPoll) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"close_date\"")
 			}
 		case "is_closed":
-
 			if err := func() error {
 				s.IsClosed.Reset()
 				if err := s.IsClosed.Decode(d); err != nil {
@@ -37024,7 +36065,6 @@ func (s *SendPoll) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"is_closed\"")
 			}
 		case "disable_notification":
-
 			if err := func() error {
 				s.DisableNotification.Reset()
 				if err := s.DisableNotification.Decode(d); err != nil {
@@ -37035,7 +36075,6 @@ func (s *SendPoll) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"disable_notification\"")
 			}
 		case "protect_content":
-
 			if err := func() error {
 				s.ProtectContent.Reset()
 				if err := s.ProtectContent.Decode(d); err != nil {
@@ -37046,7 +36085,6 @@ func (s *SendPoll) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"protect_content\"")
 			}
 		case "reply_to_message_id":
-
 			if err := func() error {
 				s.ReplyToMessageID.Reset()
 				if err := s.ReplyToMessageID.Decode(d); err != nil {
@@ -37057,7 +36095,6 @@ func (s *SendPoll) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"reply_to_message_id\"")
 			}
 		case "allow_sending_without_reply":
-
 			if err := func() error {
 				s.AllowSendingWithoutReply.Reset()
 				if err := s.AllowSendingWithoutReply.Decode(d); err != nil {
@@ -37068,7 +36105,6 @@ func (s *SendPoll) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"allow_sending_without_reply\"")
 			}
 		case "reply_markup":
-
 			if err := func() error {
 				s.ReplyMarkup.Reset()
 				if err := s.ReplyMarkup.Decode(d); err != nil {
@@ -37295,7 +36331,6 @@ func (s *SendSticker) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "chat_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				if err := s.ChatID.Decode(d); err != nil {
 					return err
@@ -37306,7 +36341,6 @@ func (s *SendSticker) Decode(d *jx.Decoder) error {
 			}
 		case "sticker":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Sticker = string(v)
@@ -37318,7 +36352,6 @@ func (s *SendSticker) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"sticker\"")
 			}
 		case "disable_notification":
-
 			if err := func() error {
 				s.DisableNotification.Reset()
 				if err := s.DisableNotification.Decode(d); err != nil {
@@ -37329,7 +36362,6 @@ func (s *SendSticker) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"disable_notification\"")
 			}
 		case "protect_content":
-
 			if err := func() error {
 				s.ProtectContent.Reset()
 				if err := s.ProtectContent.Decode(d); err != nil {
@@ -37340,7 +36372,6 @@ func (s *SendSticker) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"protect_content\"")
 			}
 		case "reply_to_message_id":
-
 			if err := func() error {
 				s.ReplyToMessageID.Reset()
 				if err := s.ReplyToMessageID.Decode(d); err != nil {
@@ -37351,7 +36382,6 @@ func (s *SendSticker) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"reply_to_message_id\"")
 			}
 		case "allow_sending_without_reply":
-
 			if err := func() error {
 				s.AllowSendingWithoutReply.Reset()
 				if err := s.AllowSendingWithoutReply.Decode(d); err != nil {
@@ -37362,7 +36392,6 @@ func (s *SendSticker) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"allow_sending_without_reply\"")
 			}
 		case "reply_markup":
-
 			if err := func() error {
 				s.ReplyMarkup.Reset()
 				if err := s.ReplyMarkup.Decode(d); err != nil {
@@ -37567,7 +36596,6 @@ func (s *SendVenue) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "chat_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				if err := s.ChatID.Decode(d); err != nil {
 					return err
@@ -37578,7 +36606,6 @@ func (s *SendVenue) Decode(d *jx.Decoder) error {
 			}
 		case "latitude":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Float64()
 				s.Latitude = float64(v)
@@ -37591,7 +36618,6 @@ func (s *SendVenue) Decode(d *jx.Decoder) error {
 			}
 		case "longitude":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Float64()
 				s.Longitude = float64(v)
@@ -37604,7 +36630,6 @@ func (s *SendVenue) Decode(d *jx.Decoder) error {
 			}
 		case "title":
 			requiredBitSet[0] |= 1 << 3
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Title = string(v)
@@ -37617,7 +36642,6 @@ func (s *SendVenue) Decode(d *jx.Decoder) error {
 			}
 		case "address":
 			requiredBitSet[0] |= 1 << 4
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Address = string(v)
@@ -37629,7 +36653,6 @@ func (s *SendVenue) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"address\"")
 			}
 		case "foursquare_id":
-
 			if err := func() error {
 				s.FoursquareID.Reset()
 				if err := s.FoursquareID.Decode(d); err != nil {
@@ -37640,7 +36663,6 @@ func (s *SendVenue) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"foursquare_id\"")
 			}
 		case "foursquare_type":
-
 			if err := func() error {
 				s.FoursquareType.Reset()
 				if err := s.FoursquareType.Decode(d); err != nil {
@@ -37651,7 +36673,6 @@ func (s *SendVenue) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"foursquare_type\"")
 			}
 		case "google_place_id":
-
 			if err := func() error {
 				s.GooglePlaceID.Reset()
 				if err := s.GooglePlaceID.Decode(d); err != nil {
@@ -37662,7 +36683,6 @@ func (s *SendVenue) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"google_place_id\"")
 			}
 		case "google_place_type":
-
 			if err := func() error {
 				s.GooglePlaceType.Reset()
 				if err := s.GooglePlaceType.Decode(d); err != nil {
@@ -37673,7 +36693,6 @@ func (s *SendVenue) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"google_place_type\"")
 			}
 		case "disable_notification":
-
 			if err := func() error {
 				s.DisableNotification.Reset()
 				if err := s.DisableNotification.Decode(d); err != nil {
@@ -37684,7 +36703,6 @@ func (s *SendVenue) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"disable_notification\"")
 			}
 		case "protect_content":
-
 			if err := func() error {
 				s.ProtectContent.Reset()
 				if err := s.ProtectContent.Decode(d); err != nil {
@@ -37695,7 +36713,6 @@ func (s *SendVenue) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"protect_content\"")
 			}
 		case "reply_to_message_id":
-
 			if err := func() error {
 				s.ReplyToMessageID.Reset()
 				if err := s.ReplyToMessageID.Decode(d); err != nil {
@@ -37706,7 +36723,6 @@ func (s *SendVenue) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"reply_to_message_id\"")
 			}
 		case "allow_sending_without_reply":
-
 			if err := func() error {
 				s.AllowSendingWithoutReply.Reset()
 				if err := s.AllowSendingWithoutReply.Decode(d); err != nil {
@@ -37717,7 +36733,6 @@ func (s *SendVenue) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"allow_sending_without_reply\"")
 			}
 		case "reply_markup":
-
 			if err := func() error {
 				s.ReplyMarkup.Reset()
 				if err := s.ReplyMarkup.Decode(d); err != nil {
@@ -37954,7 +36969,6 @@ func (s *SendVideo) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "chat_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				if err := s.ChatID.Decode(d); err != nil {
 					return err
@@ -37965,7 +36979,6 @@ func (s *SendVideo) Decode(d *jx.Decoder) error {
 			}
 		case "video":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Video = string(v)
@@ -37977,7 +36990,6 @@ func (s *SendVideo) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"video\"")
 			}
 		case "duration":
-
 			if err := func() error {
 				s.Duration.Reset()
 				if err := s.Duration.Decode(d); err != nil {
@@ -37988,7 +37000,6 @@ func (s *SendVideo) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"duration\"")
 			}
 		case "width":
-
 			if err := func() error {
 				s.Width.Reset()
 				if err := s.Width.Decode(d); err != nil {
@@ -37999,7 +37010,6 @@ func (s *SendVideo) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"width\"")
 			}
 		case "height":
-
 			if err := func() error {
 				s.Height.Reset()
 				if err := s.Height.Decode(d); err != nil {
@@ -38010,7 +37020,6 @@ func (s *SendVideo) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"height\"")
 			}
 		case "thumb":
-
 			if err := func() error {
 				s.Thumb.Reset()
 				if err := s.Thumb.Decode(d); err != nil {
@@ -38021,7 +37030,6 @@ func (s *SendVideo) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"thumb\"")
 			}
 		case "caption":
-
 			if err := func() error {
 				s.Caption.Reset()
 				if err := s.Caption.Decode(d); err != nil {
@@ -38032,7 +37040,6 @@ func (s *SendVideo) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"caption\"")
 			}
 		case "parse_mode":
-
 			if err := func() error {
 				s.ParseMode.Reset()
 				if err := s.ParseMode.Decode(d); err != nil {
@@ -38043,9 +37050,8 @@ func (s *SendVideo) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"parse_mode\"")
 			}
 		case "caption_entities":
-
 			if err := func() error {
-				s.CaptionEntities = nil
+				s.CaptionEntities = make([]MessageEntity, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem MessageEntity
 					if err := elem.Decode(d); err != nil {
@@ -38061,7 +37067,6 @@ func (s *SendVideo) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"caption_entities\"")
 			}
 		case "supports_streaming":
-
 			if err := func() error {
 				s.SupportsStreaming.Reset()
 				if err := s.SupportsStreaming.Decode(d); err != nil {
@@ -38072,7 +37077,6 @@ func (s *SendVideo) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"supports_streaming\"")
 			}
 		case "disable_notification":
-
 			if err := func() error {
 				s.DisableNotification.Reset()
 				if err := s.DisableNotification.Decode(d); err != nil {
@@ -38083,7 +37087,6 @@ func (s *SendVideo) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"disable_notification\"")
 			}
 		case "protect_content":
-
 			if err := func() error {
 				s.ProtectContent.Reset()
 				if err := s.ProtectContent.Decode(d); err != nil {
@@ -38094,7 +37097,6 @@ func (s *SendVideo) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"protect_content\"")
 			}
 		case "reply_to_message_id":
-
 			if err := func() error {
 				s.ReplyToMessageID.Reset()
 				if err := s.ReplyToMessageID.Decode(d); err != nil {
@@ -38105,7 +37107,6 @@ func (s *SendVideo) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"reply_to_message_id\"")
 			}
 		case "allow_sending_without_reply":
-
 			if err := func() error {
 				s.AllowSendingWithoutReply.Reset()
 				if err := s.AllowSendingWithoutReply.Decode(d); err != nil {
@@ -38116,7 +37117,6 @@ func (s *SendVideo) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"allow_sending_without_reply\"")
 			}
 		case "reply_markup":
-
 			if err := func() error {
 				s.ReplyMarkup.Reset()
 				if err := s.ReplyMarkup.Decode(d); err != nil {
@@ -38291,7 +37291,6 @@ func (s *SendVideoNote) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "chat_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				if err := s.ChatID.Decode(d); err != nil {
 					return err
@@ -38302,7 +37301,6 @@ func (s *SendVideoNote) Decode(d *jx.Decoder) error {
 			}
 		case "video_note":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.VideoNote = string(v)
@@ -38314,7 +37312,6 @@ func (s *SendVideoNote) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"video_note\"")
 			}
 		case "duration":
-
 			if err := func() error {
 				s.Duration.Reset()
 				if err := s.Duration.Decode(d); err != nil {
@@ -38325,7 +37322,6 @@ func (s *SendVideoNote) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"duration\"")
 			}
 		case "length":
-
 			if err := func() error {
 				s.Length.Reset()
 				if err := s.Length.Decode(d); err != nil {
@@ -38336,7 +37332,6 @@ func (s *SendVideoNote) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"length\"")
 			}
 		case "thumb":
-
 			if err := func() error {
 				s.Thumb.Reset()
 				if err := s.Thumb.Decode(d); err != nil {
@@ -38347,7 +37342,6 @@ func (s *SendVideoNote) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"thumb\"")
 			}
 		case "disable_notification":
-
 			if err := func() error {
 				s.DisableNotification.Reset()
 				if err := s.DisableNotification.Decode(d); err != nil {
@@ -38358,7 +37352,6 @@ func (s *SendVideoNote) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"disable_notification\"")
 			}
 		case "protect_content":
-
 			if err := func() error {
 				s.ProtectContent.Reset()
 				if err := s.ProtectContent.Decode(d); err != nil {
@@ -38369,7 +37362,6 @@ func (s *SendVideoNote) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"protect_content\"")
 			}
 		case "reply_to_message_id":
-
 			if err := func() error {
 				s.ReplyToMessageID.Reset()
 				if err := s.ReplyToMessageID.Decode(d); err != nil {
@@ -38380,7 +37372,6 @@ func (s *SendVideoNote) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"reply_to_message_id\"")
 			}
 		case "allow_sending_without_reply":
-
 			if err := func() error {
 				s.AllowSendingWithoutReply.Reset()
 				if err := s.AllowSendingWithoutReply.Decode(d); err != nil {
@@ -38391,7 +37382,6 @@ func (s *SendVideoNote) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"allow_sending_without_reply\"")
 			}
 		case "reply_markup":
-
 			if err := func() error {
 				s.ReplyMarkup.Reset()
 				if err := s.ReplyMarkup.Decode(d); err != nil {
@@ -38588,7 +37578,6 @@ func (s *SendVoice) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "chat_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				if err := s.ChatID.Decode(d); err != nil {
 					return err
@@ -38599,7 +37588,6 @@ func (s *SendVoice) Decode(d *jx.Decoder) error {
 			}
 		case "voice":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Voice = string(v)
@@ -38611,7 +37599,6 @@ func (s *SendVoice) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"voice\"")
 			}
 		case "caption":
-
 			if err := func() error {
 				s.Caption.Reset()
 				if err := s.Caption.Decode(d); err != nil {
@@ -38622,7 +37609,6 @@ func (s *SendVoice) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"caption\"")
 			}
 		case "parse_mode":
-
 			if err := func() error {
 				s.ParseMode.Reset()
 				if err := s.ParseMode.Decode(d); err != nil {
@@ -38633,9 +37619,8 @@ func (s *SendVoice) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"parse_mode\"")
 			}
 		case "caption_entities":
-
 			if err := func() error {
-				s.CaptionEntities = nil
+				s.CaptionEntities = make([]MessageEntity, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem MessageEntity
 					if err := elem.Decode(d); err != nil {
@@ -38651,7 +37636,6 @@ func (s *SendVoice) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"caption_entities\"")
 			}
 		case "duration":
-
 			if err := func() error {
 				s.Duration.Reset()
 				if err := s.Duration.Decode(d); err != nil {
@@ -38662,7 +37646,6 @@ func (s *SendVoice) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"duration\"")
 			}
 		case "disable_notification":
-
 			if err := func() error {
 				s.DisableNotification.Reset()
 				if err := s.DisableNotification.Decode(d); err != nil {
@@ -38673,7 +37656,6 @@ func (s *SendVoice) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"disable_notification\"")
 			}
 		case "protect_content":
-
 			if err := func() error {
 				s.ProtectContent.Reset()
 				if err := s.ProtectContent.Decode(d); err != nil {
@@ -38684,7 +37666,6 @@ func (s *SendVoice) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"protect_content\"")
 			}
 		case "reply_to_message_id":
-
 			if err := func() error {
 				s.ReplyToMessageID.Reset()
 				if err := s.ReplyToMessageID.Decode(d); err != nil {
@@ -38695,7 +37676,6 @@ func (s *SendVoice) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"reply_to_message_id\"")
 			}
 		case "allow_sending_without_reply":
-
 			if err := func() error {
 				s.AllowSendingWithoutReply.Reset()
 				if err := s.AllowSendingWithoutReply.Decode(d); err != nil {
@@ -38706,7 +37686,6 @@ func (s *SendVoice) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"allow_sending_without_reply\"")
 			}
 		case "reply_markup":
-
 			if err := func() error {
 				s.ReplyMarkup.Reset()
 				if err := s.ReplyMarkup.Decode(d); err != nil {
@@ -38808,7 +37787,6 @@ func (s *SetChatAdministratorCustomTitle) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "chat_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				if err := s.ChatID.Decode(d); err != nil {
 					return err
@@ -38819,7 +37797,6 @@ func (s *SetChatAdministratorCustomTitle) Decode(d *jx.Decoder) error {
 			}
 		case "user_id":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Int64()
 				s.UserID = int64(v)
@@ -38832,7 +37809,6 @@ func (s *SetChatAdministratorCustomTitle) Decode(d *jx.Decoder) error {
 			}
 		case "custom_title":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Str()
 				s.CustomTitle = string(v)
@@ -38930,7 +37906,6 @@ func (s *SetChatDescription) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "chat_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				if err := s.ChatID.Decode(d); err != nil {
 					return err
@@ -38940,7 +37915,6 @@ func (s *SetChatDescription) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"chat_id\"")
 			}
 		case "description":
-
 			if err := func() error {
 				s.Description.Reset()
 				if err := s.Description.Decode(d); err != nil {
@@ -39034,7 +38008,6 @@ func (s *SetChatPermissions) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "chat_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				if err := s.ChatID.Decode(d); err != nil {
 					return err
@@ -39045,7 +38018,6 @@ func (s *SetChatPermissions) Decode(d *jx.Decoder) error {
 			}
 		case "permissions":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				if err := s.Permissions.Decode(d); err != nil {
 					return err
@@ -39138,7 +38110,6 @@ func (s *SetChatPhoto) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "chat_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				if err := s.ChatID.Decode(d); err != nil {
 					return err
@@ -39149,7 +38120,6 @@ func (s *SetChatPhoto) Decode(d *jx.Decoder) error {
 			}
 		case "photo":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Photo = string(v)
@@ -39244,7 +38214,6 @@ func (s *SetChatStickerSet) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "chat_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				if err := s.ChatID.Decode(d); err != nil {
 					return err
@@ -39255,7 +38224,6 @@ func (s *SetChatStickerSet) Decode(d *jx.Decoder) error {
 			}
 		case "sticker_set_name":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.StickerSetName = string(v)
@@ -39350,7 +38318,6 @@ func (s *SetChatTitle) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "chat_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				if err := s.ChatID.Decode(d); err != nil {
 					return err
@@ -39361,7 +38328,6 @@ func (s *SetChatTitle) Decode(d *jx.Decoder) error {
 			}
 		case "title":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Title = string(v)
@@ -39506,7 +38472,6 @@ func (s *SetGameScore) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "user_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Int64()
 				s.UserID = int64(v)
@@ -39519,7 +38484,6 @@ func (s *SetGameScore) Decode(d *jx.Decoder) error {
 			}
 		case "score":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Int()
 				s.Score = int(v)
@@ -39531,7 +38495,6 @@ func (s *SetGameScore) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"score\"")
 			}
 		case "force":
-
 			if err := func() error {
 				s.Force.Reset()
 				if err := s.Force.Decode(d); err != nil {
@@ -39542,7 +38505,6 @@ func (s *SetGameScore) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"force\"")
 			}
 		case "disable_edit_message":
-
 			if err := func() error {
 				s.DisableEditMessage.Reset()
 				if err := s.DisableEditMessage.Decode(d); err != nil {
@@ -39553,7 +38515,6 @@ func (s *SetGameScore) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"disable_edit_message\"")
 			}
 		case "chat_id":
-
 			if err := func() error {
 				s.ChatID.Reset()
 				if err := s.ChatID.Decode(d); err != nil {
@@ -39564,7 +38525,6 @@ func (s *SetGameScore) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"chat_id\"")
 			}
 		case "message_id":
-
 			if err := func() error {
 				s.MessageID.Reset()
 				if err := s.MessageID.Decode(d); err != nil {
@@ -39575,7 +38535,6 @@ func (s *SetGameScore) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"message_id\"")
 			}
 		case "inline_message_id":
-
 			if err := func() error {
 				s.InlineMessageID.Reset()
 				if err := s.InlineMessageID.Decode(d); err != nil {
@@ -39694,9 +38653,8 @@ func (s *SetMyCommands) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "commands":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
-				s.Commands = nil
+				s.Commands = make([]BotCommand, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem BotCommand
 					if err := elem.Decode(d); err != nil {
@@ -39712,7 +38670,6 @@ func (s *SetMyCommands) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"commands\"")
 			}
 		case "scope":
-
 			if err := func() error {
 				s.Scope.Reset()
 				if err := s.Scope.Decode(d); err != nil {
@@ -39723,7 +38680,6 @@ func (s *SetMyCommands) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"scope\"")
 			}
 		case "language_code":
-
 			if err := func() error {
 				s.LanguageCode.Reset()
 				if err := s.LanguageCode.Decode(d); err != nil {
@@ -39829,7 +38785,6 @@ func (s *SetPassportDataErrors) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "user_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Int64()
 				s.UserID = int64(v)
@@ -39842,9 +38797,8 @@ func (s *SetPassportDataErrors) Decode(d *jx.Decoder) error {
 			}
 		case "errors":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
-				s.Errors = nil
+				s.Errors = make([]PassportElementError, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem PassportElementError
 					if err := elem.Decode(d); err != nil {
@@ -39943,7 +38897,6 @@ func (s *SetStickerPositionInSet) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "sticker":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Sticker = string(v)
@@ -39956,7 +38909,6 @@ func (s *SetStickerPositionInSet) Decode(d *jx.Decoder) error {
 			}
 		case "position":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Int()
 				s.Position = int(v)
@@ -40061,7 +39013,6 @@ func (s *SetStickerSetThumb) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "name":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Name = string(v)
@@ -40074,7 +39025,6 @@ func (s *SetStickerSetThumb) Decode(d *jx.Decoder) error {
 			}
 		case "user_id":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Int64()
 				s.UserID = int64(v)
@@ -40086,7 +39036,6 @@ func (s *SetStickerSetThumb) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"user_id\"")
 			}
 		case "thumb":
-
 			if err := func() error {
 				s.Thumb.Reset()
 				if err := s.Thumb.Decode(d); err != nil {
@@ -40235,7 +39184,6 @@ func (s *SetWebhook) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "url":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.URL = string(v)
@@ -40247,7 +39195,6 @@ func (s *SetWebhook) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"url\"")
 			}
 		case "certificate":
-
 			if err := func() error {
 				s.Certificate.Reset()
 				if err := s.Certificate.Decode(d); err != nil {
@@ -40258,7 +39205,6 @@ func (s *SetWebhook) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"certificate\"")
 			}
 		case "ip_address":
-
 			if err := func() error {
 				s.IPAddress.Reset()
 				if err := s.IPAddress.Decode(d); err != nil {
@@ -40269,7 +39215,6 @@ func (s *SetWebhook) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"ip_address\"")
 			}
 		case "max_connections":
-
 			if err := func() error {
 				s.MaxConnections.Reset()
 				if err := s.MaxConnections.Decode(d); err != nil {
@@ -40280,9 +39225,8 @@ func (s *SetWebhook) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"max_connections\"")
 			}
 		case "allowed_updates":
-
 			if err := func() error {
-				s.AllowedUpdates = nil
+				s.AllowedUpdates = make([]string, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem string
 					v, err := d.Str()
@@ -40300,7 +39244,6 @@ func (s *SetWebhook) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"allowed_updates\"")
 			}
 		case "drop_pending_updates":
-
 			if err := func() error {
 				s.DropPendingUpdates.Reset()
 				if err := s.DropPendingUpdates.Decode(d); err != nil {
@@ -40422,7 +39365,6 @@ func (s *ShippingAddress) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "country_code":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.CountryCode = string(v)
@@ -40435,7 +39377,6 @@ func (s *ShippingAddress) Decode(d *jx.Decoder) error {
 			}
 		case "state":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.State = string(v)
@@ -40448,7 +39389,6 @@ func (s *ShippingAddress) Decode(d *jx.Decoder) error {
 			}
 		case "city":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Str()
 				s.City = string(v)
@@ -40461,7 +39401,6 @@ func (s *ShippingAddress) Decode(d *jx.Decoder) error {
 			}
 		case "street_line1":
 			requiredBitSet[0] |= 1 << 3
-
 			if err := func() error {
 				v, err := d.Str()
 				s.StreetLine1 = string(v)
@@ -40474,7 +39413,6 @@ func (s *ShippingAddress) Decode(d *jx.Decoder) error {
 			}
 		case "street_line2":
 			requiredBitSet[0] |= 1 << 4
-
 			if err := func() error {
 				v, err := d.Str()
 				s.StreetLine2 = string(v)
@@ -40487,7 +39425,6 @@ func (s *ShippingAddress) Decode(d *jx.Decoder) error {
 			}
 		case "post_code":
 			requiredBitSet[0] |= 1 << 5
-
 			if err := func() error {
 				v, err := d.Str()
 				s.PostCode = string(v)
@@ -40601,7 +39538,6 @@ func (s *ShippingOption) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.ID = string(v)
@@ -40614,7 +39550,6 @@ func (s *ShippingOption) Decode(d *jx.Decoder) error {
 			}
 		case "title":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Title = string(v)
@@ -40627,9 +39562,8 @@ func (s *ShippingOption) Decode(d *jx.Decoder) error {
 			}
 		case "prices":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
-				s.Prices = nil
+				s.Prices = make([]LabeledPrice, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem LabeledPrice
 					if err := elem.Decode(d); err != nil {
@@ -40742,7 +39676,6 @@ func (s *ShippingQuery) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.ID = string(v)
@@ -40755,7 +39688,6 @@ func (s *ShippingQuery) Decode(d *jx.Decoder) error {
 			}
 		case "from":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				if err := s.From.Decode(d); err != nil {
 					return err
@@ -40766,7 +39698,6 @@ func (s *ShippingQuery) Decode(d *jx.Decoder) error {
 			}
 		case "invoice_payload":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Str()
 				s.InvoicePayload = string(v)
@@ -40779,7 +39710,6 @@ func (s *ShippingQuery) Decode(d *jx.Decoder) error {
 			}
 		case "shipping_address":
 			requiredBitSet[0] |= 1 << 3
-
 			if err := func() error {
 				if err := s.ShippingAddress.Decode(d); err != nil {
 					return err
@@ -40950,7 +39880,6 @@ func (s *Sticker) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "file_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.FileID = string(v)
@@ -40963,7 +39892,6 @@ func (s *Sticker) Decode(d *jx.Decoder) error {
 			}
 		case "file_unique_id":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.FileUniqueID = string(v)
@@ -40976,7 +39904,6 @@ func (s *Sticker) Decode(d *jx.Decoder) error {
 			}
 		case "width":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Int()
 				s.Width = int(v)
@@ -40989,7 +39916,6 @@ func (s *Sticker) Decode(d *jx.Decoder) error {
 			}
 		case "height":
 			requiredBitSet[0] |= 1 << 3
-
 			if err := func() error {
 				v, err := d.Int()
 				s.Height = int(v)
@@ -41002,7 +39928,6 @@ func (s *Sticker) Decode(d *jx.Decoder) error {
 			}
 		case "is_animated":
 			requiredBitSet[0] |= 1 << 4
-
 			if err := func() error {
 				v, err := d.Bool()
 				s.IsAnimated = bool(v)
@@ -41015,7 +39940,6 @@ func (s *Sticker) Decode(d *jx.Decoder) error {
 			}
 		case "is_video":
 			requiredBitSet[0] |= 1 << 5
-
 			if err := func() error {
 				v, err := d.Bool()
 				s.IsVideo = bool(v)
@@ -41027,7 +39951,6 @@ func (s *Sticker) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"is_video\"")
 			}
 		case "thumb":
-
 			if err := func() error {
 				s.Thumb.Reset()
 				if err := s.Thumb.Decode(d); err != nil {
@@ -41038,7 +39961,6 @@ func (s *Sticker) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"thumb\"")
 			}
 		case "emoji":
-
 			if err := func() error {
 				s.Emoji.Reset()
 				if err := s.Emoji.Decode(d); err != nil {
@@ -41049,7 +39971,6 @@ func (s *Sticker) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"emoji\"")
 			}
 		case "set_name":
-
 			if err := func() error {
 				s.SetName.Reset()
 				if err := s.SetName.Decode(d); err != nil {
@@ -41060,7 +39981,6 @@ func (s *Sticker) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"set_name\"")
 			}
 		case "mask_position":
-
 			if err := func() error {
 				s.MaskPosition.Reset()
 				if err := s.MaskPosition.Decode(d); err != nil {
@@ -41071,7 +39991,6 @@ func (s *Sticker) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"mask_position\"")
 			}
 		case "file_size":
-
 			if err := func() error {
 				s.FileSize.Reset()
 				if err := s.FileSize.Decode(d); err != nil {
@@ -41216,7 +40135,6 @@ func (s *StickerSet) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "name":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Name = string(v)
@@ -41229,7 +40147,6 @@ func (s *StickerSet) Decode(d *jx.Decoder) error {
 			}
 		case "title":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Title = string(v)
@@ -41242,7 +40159,6 @@ func (s *StickerSet) Decode(d *jx.Decoder) error {
 			}
 		case "is_animated":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Bool()
 				s.IsAnimated = bool(v)
@@ -41255,7 +40171,6 @@ func (s *StickerSet) Decode(d *jx.Decoder) error {
 			}
 		case "is_video":
 			requiredBitSet[0] |= 1 << 3
-
 			if err := func() error {
 				v, err := d.Bool()
 				s.IsVideo = bool(v)
@@ -41268,7 +40183,6 @@ func (s *StickerSet) Decode(d *jx.Decoder) error {
 			}
 		case "contains_masks":
 			requiredBitSet[0] |= 1 << 4
-
 			if err := func() error {
 				v, err := d.Bool()
 				s.ContainsMasks = bool(v)
@@ -41281,9 +40195,8 @@ func (s *StickerSet) Decode(d *jx.Decoder) error {
 			}
 		case "stickers":
 			requiredBitSet[0] |= 1 << 5
-
 			if err := func() error {
-				s.Stickers = nil
+				s.Stickers = make([]Sticker, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem Sticker
 					if err := elem.Decode(d); err != nil {
@@ -41299,7 +40212,6 @@ func (s *StickerSet) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"stickers\"")
 			}
 		case "thumb":
-
 			if err := func() error {
 				s.Thumb.Reset()
 				if err := s.Thumb.Decode(d); err != nil {
@@ -41426,7 +40338,6 @@ func (s *StopMessageLiveLocation) Decode(d *jx.Decoder) error {
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "chat_id":
-
 			if err := func() error {
 				s.ChatID.Reset()
 				if err := s.ChatID.Decode(d); err != nil {
@@ -41437,7 +40348,6 @@ func (s *StopMessageLiveLocation) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"chat_id\"")
 			}
 		case "message_id":
-
 			if err := func() error {
 				s.MessageID.Reset()
 				if err := s.MessageID.Decode(d); err != nil {
@@ -41448,7 +40358,6 @@ func (s *StopMessageLiveLocation) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"message_id\"")
 			}
 		case "inline_message_id":
-
 			if err := func() error {
 				s.InlineMessageID.Reset()
 				if err := s.InlineMessageID.Decode(d); err != nil {
@@ -41459,7 +40368,6 @@ func (s *StopMessageLiveLocation) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"inline_message_id\"")
 			}
 		case "reply_markup":
-
 			if err := func() error {
 				s.ReplyMarkup.Reset()
 				if err := s.ReplyMarkup.Decode(d); err != nil {
@@ -41531,7 +40439,6 @@ func (s *StopPoll) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "chat_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				if err := s.ChatID.Decode(d); err != nil {
 					return err
@@ -41542,7 +40449,6 @@ func (s *StopPoll) Decode(d *jx.Decoder) error {
 			}
 		case "message_id":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Int()
 				s.MessageID = int(v)
@@ -41554,7 +40460,6 @@ func (s *StopPoll) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"message_id\"")
 			}
 		case "reply_markup":
-
 			if err := func() error {
 				s.ReplyMarkup.Reset()
 				if err := s.ReplyMarkup.Decode(d); err != nil {
@@ -41689,7 +40594,6 @@ func (s *SuccessfulPayment) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "currency":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Currency = string(v)
@@ -41702,7 +40606,6 @@ func (s *SuccessfulPayment) Decode(d *jx.Decoder) error {
 			}
 		case "total_amount":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Int()
 				s.TotalAmount = int(v)
@@ -41715,7 +40618,6 @@ func (s *SuccessfulPayment) Decode(d *jx.Decoder) error {
 			}
 		case "invoice_payload":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Str()
 				s.InvoicePayload = string(v)
@@ -41727,7 +40629,6 @@ func (s *SuccessfulPayment) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"invoice_payload\"")
 			}
 		case "shipping_option_id":
-
 			if err := func() error {
 				s.ShippingOptionID.Reset()
 				if err := s.ShippingOptionID.Decode(d); err != nil {
@@ -41738,7 +40639,6 @@ func (s *SuccessfulPayment) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"shipping_option_id\"")
 			}
 		case "order_info":
-
 			if err := func() error {
 				s.OrderInfo.Reset()
 				if err := s.OrderInfo.Decode(d); err != nil {
@@ -41750,7 +40650,6 @@ func (s *SuccessfulPayment) Decode(d *jx.Decoder) error {
 			}
 		case "telegram_payment_charge_id":
 			requiredBitSet[0] |= 1 << 5
-
 			if err := func() error {
 				v, err := d.Str()
 				s.TelegramPaymentChargeID = string(v)
@@ -41763,7 +40662,6 @@ func (s *SuccessfulPayment) Decode(d *jx.Decoder) error {
 			}
 		case "provider_payment_charge_id":
 			requiredBitSet[0] |= 1 << 6
-
 			if err := func() error {
 				v, err := d.Str()
 				s.ProviderPaymentChargeID = string(v)
@@ -41868,7 +40766,6 @@ func (s *UnbanChatMember) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "chat_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				if err := s.ChatID.Decode(d); err != nil {
 					return err
@@ -41879,7 +40776,6 @@ func (s *UnbanChatMember) Decode(d *jx.Decoder) error {
 			}
 		case "user_id":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Int64()
 				s.UserID = int64(v)
@@ -41891,7 +40787,6 @@ func (s *UnbanChatMember) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"user_id\"")
 			}
 		case "only_if_banned":
-
 			if err := func() error {
 				s.OnlyIfBanned.Reset()
 				if err := s.OnlyIfBanned.Decode(d); err != nil {
@@ -41985,7 +40880,6 @@ func (s *UnbanChatSenderChat) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "chat_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				if err := s.ChatID.Decode(d); err != nil {
 					return err
@@ -41996,7 +40890,6 @@ func (s *UnbanChatSenderChat) Decode(d *jx.Decoder) error {
 			}
 		case "sender_chat_id":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Int64()
 				s.SenderChatID = int64(v)
@@ -42084,7 +40977,6 @@ func (s *UnpinAllChatMessages) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "chat_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				if err := s.ChatID.Decode(d); err != nil {
 					return err
@@ -42180,7 +41072,6 @@ func (s *UnpinChatMessage) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "chat_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				if err := s.ChatID.Decode(d); err != nil {
 					return err
@@ -42190,7 +41081,6 @@ func (s *UnpinChatMessage) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"chat_id\"")
 			}
 		case "message_id":
-
 			if err := func() error {
 				s.MessageID.Reset()
 				if err := s.MessageID.Decode(d); err != nil {
@@ -42417,7 +41307,6 @@ func (s *Update) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "update_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Int()
 				s.UpdateID = int(v)
@@ -42429,7 +41318,6 @@ func (s *Update) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"update_id\"")
 			}
 		case "message":
-
 			if err := func() error {
 				s.Message.Reset()
 				if err := s.Message.Decode(d); err != nil {
@@ -42440,7 +41328,6 @@ func (s *Update) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"message\"")
 			}
 		case "edited_message":
-
 			if err := func() error {
 				s.EditedMessage.Reset()
 				if err := s.EditedMessage.Decode(d); err != nil {
@@ -42451,7 +41338,6 @@ func (s *Update) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"edited_message\"")
 			}
 		case "channel_post":
-
 			if err := func() error {
 				s.ChannelPost.Reset()
 				if err := s.ChannelPost.Decode(d); err != nil {
@@ -42462,7 +41348,6 @@ func (s *Update) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"channel_post\"")
 			}
 		case "edited_channel_post":
-
 			if err := func() error {
 				s.EditedChannelPost.Reset()
 				if err := s.EditedChannelPost.Decode(d); err != nil {
@@ -42473,7 +41358,6 @@ func (s *Update) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"edited_channel_post\"")
 			}
 		case "inline_query":
-
 			if err := func() error {
 				s.InlineQuery.Reset()
 				if err := s.InlineQuery.Decode(d); err != nil {
@@ -42484,7 +41368,6 @@ func (s *Update) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"inline_query\"")
 			}
 		case "chosen_inline_result":
-
 			if err := func() error {
 				s.ChosenInlineResult.Reset()
 				if err := s.ChosenInlineResult.Decode(d); err != nil {
@@ -42495,7 +41378,6 @@ func (s *Update) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"chosen_inline_result\"")
 			}
 		case "callback_query":
-
 			if err := func() error {
 				s.CallbackQuery.Reset()
 				if err := s.CallbackQuery.Decode(d); err != nil {
@@ -42506,7 +41388,6 @@ func (s *Update) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"callback_query\"")
 			}
 		case "shipping_query":
-
 			if err := func() error {
 				s.ShippingQuery.Reset()
 				if err := s.ShippingQuery.Decode(d); err != nil {
@@ -42517,7 +41398,6 @@ func (s *Update) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"shipping_query\"")
 			}
 		case "pre_checkout_query":
-
 			if err := func() error {
 				s.PreCheckoutQuery.Reset()
 				if err := s.PreCheckoutQuery.Decode(d); err != nil {
@@ -42528,7 +41408,6 @@ func (s *Update) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"pre_checkout_query\"")
 			}
 		case "poll":
-
 			if err := func() error {
 				s.Poll.Reset()
 				if err := s.Poll.Decode(d); err != nil {
@@ -42539,7 +41418,6 @@ func (s *Update) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"poll\"")
 			}
 		case "poll_answer":
-
 			if err := func() error {
 				s.PollAnswer.Reset()
 				if err := s.PollAnswer.Decode(d); err != nil {
@@ -42550,7 +41428,6 @@ func (s *Update) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"poll_answer\"")
 			}
 		case "my_chat_member":
-
 			if err := func() error {
 				s.MyChatMember.Reset()
 				if err := s.MyChatMember.Decode(d); err != nil {
@@ -42561,7 +41438,6 @@ func (s *Update) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"my_chat_member\"")
 			}
 		case "chat_member":
-
 			if err := func() error {
 				s.ChatMember.Reset()
 				if err := s.ChatMember.Decode(d); err != nil {
@@ -42572,7 +41448,6 @@ func (s *Update) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"chat_member\"")
 			}
 		case "chat_join_request":
-
 			if err := func() error {
 				s.ChatJoinRequest.Reset()
 				if err := s.ChatJoinRequest.Decode(d); err != nil {
@@ -42667,7 +41542,6 @@ func (s *UploadStickerFile) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "user_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Int64()
 				s.UserID = int64(v)
@@ -42680,7 +41554,6 @@ func (s *UploadStickerFile) Decode(d *jx.Decoder) error {
 			}
 		case "png_sticker":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.PNGSticker = string(v)
@@ -42842,7 +41715,6 @@ func (s *User) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Int64()
 				s.ID = int64(v)
@@ -42855,7 +41727,6 @@ func (s *User) Decode(d *jx.Decoder) error {
 			}
 		case "is_bot":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Bool()
 				s.IsBot = bool(v)
@@ -42868,7 +41739,6 @@ func (s *User) Decode(d *jx.Decoder) error {
 			}
 		case "first_name":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Str()
 				s.FirstName = string(v)
@@ -42880,7 +41750,6 @@ func (s *User) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"first_name\"")
 			}
 		case "last_name":
-
 			if err := func() error {
 				s.LastName.Reset()
 				if err := s.LastName.Decode(d); err != nil {
@@ -42891,7 +41760,6 @@ func (s *User) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"last_name\"")
 			}
 		case "username":
-
 			if err := func() error {
 				s.Username.Reset()
 				if err := s.Username.Decode(d); err != nil {
@@ -42902,7 +41770,6 @@ func (s *User) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"username\"")
 			}
 		case "language_code":
-
 			if err := func() error {
 				s.LanguageCode.Reset()
 				if err := s.LanguageCode.Decode(d); err != nil {
@@ -42913,7 +41780,6 @@ func (s *User) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"language_code\"")
 			}
 		case "can_join_groups":
-
 			if err := func() error {
 				s.CanJoinGroups.Reset()
 				if err := s.CanJoinGroups.Decode(d); err != nil {
@@ -42924,7 +41790,6 @@ func (s *User) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"can_join_groups\"")
 			}
 		case "can_read_all_group_messages":
-
 			if err := func() error {
 				s.CanReadAllGroupMessages.Reset()
 				if err := s.CanReadAllGroupMessages.Decode(d); err != nil {
@@ -42935,7 +41800,6 @@ func (s *User) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"can_read_all_group_messages\"")
 			}
 		case "supports_inline_queries":
-
 			if err := func() error {
 				s.SupportsInlineQueries.Reset()
 				if err := s.SupportsInlineQueries.Decode(d); err != nil {
@@ -43066,7 +41930,6 @@ func (s *UserProfilePhotos) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "total_count":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Int()
 				s.TotalCount = int(v)
@@ -43079,12 +41942,11 @@ func (s *UserProfilePhotos) Decode(d *jx.Decoder) error {
 			}
 		case "photos":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
-				s.Photos = nil
+				s.Photos = make([][]PhotoSize, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem []PhotoSize
-					elem = nil
+					elem = make([]PhotoSize, 0)
 					if err := d.Arr(func(d *jx.Decoder) error {
 						var elemElem PhotoSize
 						if err := elemElem.Decode(d); err != nil {
@@ -43235,7 +42097,6 @@ func (s *Venue) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "location":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				if err := s.Location.Decode(d); err != nil {
 					return err
@@ -43246,7 +42107,6 @@ func (s *Venue) Decode(d *jx.Decoder) error {
 			}
 		case "title":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Title = string(v)
@@ -43259,7 +42119,6 @@ func (s *Venue) Decode(d *jx.Decoder) error {
 			}
 		case "address":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Str()
 				s.Address = string(v)
@@ -43271,7 +42130,6 @@ func (s *Venue) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"address\"")
 			}
 		case "foursquare_id":
-
 			if err := func() error {
 				s.FoursquareID.Reset()
 				if err := s.FoursquareID.Decode(d); err != nil {
@@ -43282,7 +42140,6 @@ func (s *Venue) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"foursquare_id\"")
 			}
 		case "foursquare_type":
-
 			if err := func() error {
 				s.FoursquareType.Reset()
 				if err := s.FoursquareType.Decode(d); err != nil {
@@ -43293,7 +42150,6 @@ func (s *Venue) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"foursquare_type\"")
 			}
 		case "google_place_id":
-
 			if err := func() error {
 				s.GooglePlaceID.Reset()
 				if err := s.GooglePlaceID.Decode(d); err != nil {
@@ -43304,7 +42160,6 @@ func (s *Venue) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"google_place_id\"")
 			}
 		case "google_place_type":
-
 			if err := func() error {
 				s.GooglePlaceType.Reset()
 				if err := s.GooglePlaceType.Decode(d); err != nil {
@@ -43459,7 +42314,6 @@ func (s *Video) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "file_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.FileID = string(v)
@@ -43472,7 +42326,6 @@ func (s *Video) Decode(d *jx.Decoder) error {
 			}
 		case "file_unique_id":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.FileUniqueID = string(v)
@@ -43485,7 +42338,6 @@ func (s *Video) Decode(d *jx.Decoder) error {
 			}
 		case "width":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Int()
 				s.Width = int(v)
@@ -43498,7 +42350,6 @@ func (s *Video) Decode(d *jx.Decoder) error {
 			}
 		case "height":
 			requiredBitSet[0] |= 1 << 3
-
 			if err := func() error {
 				v, err := d.Int()
 				s.Height = int(v)
@@ -43511,7 +42362,6 @@ func (s *Video) Decode(d *jx.Decoder) error {
 			}
 		case "duration":
 			requiredBitSet[0] |= 1 << 4
-
 			if err := func() error {
 				v, err := d.Int()
 				s.Duration = int(v)
@@ -43523,7 +42373,6 @@ func (s *Video) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"duration\"")
 			}
 		case "thumb":
-
 			if err := func() error {
 				s.Thumb.Reset()
 				if err := s.Thumb.Decode(d); err != nil {
@@ -43534,7 +42383,6 @@ func (s *Video) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"thumb\"")
 			}
 		case "file_name":
-
 			if err := func() error {
 				s.FileName.Reset()
 				if err := s.FileName.Decode(d); err != nil {
@@ -43545,7 +42393,6 @@ func (s *Video) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"file_name\"")
 			}
 		case "mime_type":
-
 			if err := func() error {
 				s.MimeType.Reset()
 				if err := s.MimeType.Decode(d); err != nil {
@@ -43556,7 +42403,6 @@ func (s *Video) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"mime_type\"")
 			}
 		case "file_size":
-
 			if err := func() error {
 				s.FileSize.Reset()
 				if err := s.FileSize.Decode(d); err != nil {
@@ -43685,7 +42531,6 @@ func (s *VideoNote) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "file_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.FileID = string(v)
@@ -43698,7 +42543,6 @@ func (s *VideoNote) Decode(d *jx.Decoder) error {
 			}
 		case "file_unique_id":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.FileUniqueID = string(v)
@@ -43711,7 +42555,6 @@ func (s *VideoNote) Decode(d *jx.Decoder) error {
 			}
 		case "length":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Int()
 				s.Length = int(v)
@@ -43724,7 +42567,6 @@ func (s *VideoNote) Decode(d *jx.Decoder) error {
 			}
 		case "duration":
 			requiredBitSet[0] |= 1 << 3
-
 			if err := func() error {
 				v, err := d.Int()
 				s.Duration = int(v)
@@ -43736,7 +42578,6 @@ func (s *VideoNote) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"duration\"")
 			}
 		case "thumb":
-
 			if err := func() error {
 				s.Thumb.Reset()
 				if err := s.Thumb.Decode(d); err != nil {
@@ -43747,7 +42588,6 @@ func (s *VideoNote) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"thumb\"")
 			}
 		case "file_size":
-
 			if err := func() error {
 				s.FileSize.Reset()
 				if err := s.FileSize.Decode(d); err != nil {
@@ -43868,7 +42708,6 @@ func (s *Voice) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "file_id":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.FileID = string(v)
@@ -43881,7 +42720,6 @@ func (s *Voice) Decode(d *jx.Decoder) error {
 			}
 		case "file_unique_id":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Str()
 				s.FileUniqueID = string(v)
@@ -43894,7 +42732,6 @@ func (s *Voice) Decode(d *jx.Decoder) error {
 			}
 		case "duration":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Int()
 				s.Duration = int(v)
@@ -43906,7 +42743,6 @@ func (s *Voice) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"duration\"")
 			}
 		case "mime_type":
-
 			if err := func() error {
 				s.MimeType.Reset()
 				if err := s.MimeType.Decode(d); err != nil {
@@ -43917,7 +42753,6 @@ func (s *Voice) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"mime_type\"")
 			}
 		case "file_size":
-
 			if err := func() error {
 				s.FileSize.Reset()
 				if err := s.FileSize.Decode(d); err != nil {
@@ -44004,7 +42839,6 @@ func (s *VoiceChatEnded) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "duration":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Int()
 				s.Duration = int(v)
@@ -44105,9 +42939,8 @@ func (s *VoiceChatParticipantsInvited) Decode(d *jx.Decoder) error {
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "users":
-
 			if err := func() error {
-				s.Users = nil
+				s.Users = make([]User, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem User
 					if err := elem.Decode(d); err != nil {
@@ -44167,7 +43000,6 @@ func (s *VoiceChatScheduled) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "start_date":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Int()
 				s.StartDate = int(v)
@@ -44362,7 +43194,6 @@ func (s *WebhookInfo) Decode(d *jx.Decoder) error {
 		switch string(k) {
 		case "url":
 			requiredBitSet[0] |= 1 << 0
-
 			if err := func() error {
 				v, err := d.Str()
 				s.URL = string(v)
@@ -44375,7 +43206,6 @@ func (s *WebhookInfo) Decode(d *jx.Decoder) error {
 			}
 		case "has_custom_certificate":
 			requiredBitSet[0] |= 1 << 1
-
 			if err := func() error {
 				v, err := d.Bool()
 				s.HasCustomCertificate = bool(v)
@@ -44388,7 +43218,6 @@ func (s *WebhookInfo) Decode(d *jx.Decoder) error {
 			}
 		case "pending_update_count":
 			requiredBitSet[0] |= 1 << 2
-
 			if err := func() error {
 				v, err := d.Int()
 				s.PendingUpdateCount = int(v)
@@ -44400,7 +43229,6 @@ func (s *WebhookInfo) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"pending_update_count\"")
 			}
 		case "ip_address":
-
 			if err := func() error {
 				s.IPAddress.Reset()
 				if err := s.IPAddress.Decode(d); err != nil {
@@ -44411,7 +43239,6 @@ func (s *WebhookInfo) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"ip_address\"")
 			}
 		case "last_error_date":
-
 			if err := func() error {
 				s.LastErrorDate.Reset()
 				if err := s.LastErrorDate.Decode(d); err != nil {
@@ -44422,7 +43249,6 @@ func (s *WebhookInfo) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"last_error_date\"")
 			}
 		case "last_error_message":
-
 			if err := func() error {
 				s.LastErrorMessage.Reset()
 				if err := s.LastErrorMessage.Decode(d); err != nil {
@@ -44433,7 +43259,6 @@ func (s *WebhookInfo) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"last_error_message\"")
 			}
 		case "max_connections":
-
 			if err := func() error {
 				s.MaxConnections.Reset()
 				if err := s.MaxConnections.Decode(d); err != nil {
@@ -44444,9 +43269,8 @@ func (s *WebhookInfo) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"max_connections\"")
 			}
 		case "allowed_updates":
-
 			if err := func() error {
-				s.AllowedUpdates = nil
+				s.AllowedUpdates = make([]string, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
 					var elem string
 					v, err := d.Str()
