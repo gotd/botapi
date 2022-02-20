@@ -82,7 +82,7 @@ func (a API) typeOAS(f Field) *ogen.Schema {
 
 			if isExclusiveMinimum(f.Name) {
 				v := int64(0)
-				p.Minimum = &v
+				p.Minimum = strconv.AppendInt(nil, v, 10)
 				p.ExclusiveMinimum = true
 			}
 			if f.Name == "offset" {
@@ -90,11 +90,10 @@ func (a API) typeOAS(f Field) *ogen.Schema {
 			}
 			b := intBounds(p.Description)
 			if b.Max > 0 {
-				v := int64(b.Max)
-				p.Maximum = &v
+				p.Maximum = strconv.AppendInt(nil, b.Max, 10)
 			}
 			if b.Min > 0 {
-				p.Minimum = &b.Min
+				p.Minimum = strconv.AppendInt(nil, b.Min, 10)
 			}
 		case Float:
 			p.Type = "number"

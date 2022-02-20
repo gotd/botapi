@@ -5,9 +5,14 @@ import (
 	"strconv"
 )
 
-type bound struct {
-	Min int64
+type lengthBound struct {
+	Min uint64
 	Max uint64
+}
+
+type intBound struct {
+	Min int64
+	Max int64
 }
 
 var (
@@ -35,12 +40,12 @@ func regexBounds(r *regexp.Regexp, s string) (a, b int) {
 	return matchBounds(r, matches)
 }
 
-func stringBounds(s string) bound {
+func stringBounds(s string) lengthBound {
 	start, end := regexBounds(charBoundRegex, s)
-	return bound{Min: int64(start), Max: uint64(end)}
+	return lengthBound{Min: uint64(start), Max: uint64(end)}
 }
 
-func intBounds(s string) bound {
+func intBounds(s string) intBound {
 	start, end := regexBounds(intBoundRegex, s)
-	return bound{Min: int64(start), Max: uint64(end)}
+	return intBound{Min: int64(start), Max: int64(end)}
 }
