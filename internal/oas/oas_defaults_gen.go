@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"io"
 	"math"
+	"math/big"
 	"math/bits"
 	"net"
 	"net/http"
@@ -29,6 +30,7 @@ import (
 	"github.com/ogen-go/ogen/uri"
 	"github.com/ogen-go/ogen/validate"
 	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/metric"
 	"go.opentelemetry.io/otel/trace"
@@ -53,10 +55,12 @@ var (
 	_ = url.URL{}
 	_ = math.Mod
 	_ = bits.LeadingZeros64
+	_ = big.Rat{}
 	_ = validate.Int{}
 	_ = ht.NewRequest
 	_ = net.IP{}
 	_ = otelogen.Version
+	_ = attribute.KeyValue{}
 	_ = trace.TraceIDFromHex
 	_ = otel.GetTracerProvider
 	_ = metric.NewNoopMeterProvider
@@ -126,6 +130,33 @@ func (s *BotCommandScopeDefault) setDefaults() {
 		val := string("default")
 
 		s.Type = val
+	}
+}
+
+// setDefaults set default value of fields.
+func (s *Error) setDefaults() {
+	{
+		val := bool(false)
+
+		s.Ok = val
+	}
+}
+
+// setDefaults set default value of fields.
+func (s *GetUpdates) setDefaults() {
+	{
+		val := int(0)
+
+		s.Offset.SetTo(val)
+	}
+}
+
+// setDefaults set default value of fields.
+func (s *GetUserProfilePhotos) setDefaults() {
+	{
+		val := int(0)
+
+		s.Offset.SetTo(val)
 	}
 }
 
@@ -351,6 +382,15 @@ func (s *InputMediaVideo) setDefaults() {
 		val := string("video")
 
 		s.Type = val
+	}
+}
+
+// setDefaults set default value of fields.
+func (s *MessageEntity) setDefaults() {
+	{
+		val := int(0)
+
+		s.Offset = val
 	}
 }
 
