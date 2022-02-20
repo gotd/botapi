@@ -10,12 +10,12 @@ func Test_intBounds(t *testing.T) {
 	tests := []struct {
 		name  string
 		input string
-		want  bound
+		want  intBound
 	}{
 		{
 			"BetweenHyphen",
 			"Values between 1-100 are accepted.",
-			bound{
+			intBound{
 				Min: 1,
 				Max: 100,
 			},
@@ -23,7 +23,7 @@ func Test_intBounds(t *testing.T) {
 		{
 			"BetweenAnd",
 			"Must be between 1 and 100000 if specified",
-			bound{
+			intBound{
 				Min: 1,
 				Max: 100000,
 			},
@@ -31,7 +31,7 @@ func Test_intBounds(t *testing.T) {
 		{
 			"SemicolonHyphen",
 			"measured in meters; 0-1500",
-			bound{
+			intBound{
 				Min: 0,
 				Max: 1500,
 			},
@@ -48,22 +48,33 @@ func Test_stringBounds(t *testing.T) {
 	tests := []struct {
 		name  string
 		input string
-		want  bound
+		want  lengthBound
 	}{
 		{
 			"Characters",
 			"Text of the message to be sent, 1-4096 characters after entities parsing",
-			bound{
+			lengthBound{
 				Min: 1,
 				Max: 4096,
 			},
-		}, {
+		},
+		{
 			"Bytes",
 			"Bot-defined invoice payload, 1-128 bytes.",
-			bound{
+			lengthBound{
 				Min: 1,
 				Max: 128,
 			},
+		},
+		{
+			name:  "BadBothLetter",
+			input: `F-D characters`,
+			want:  lengthBound{},
+		},
+		{
+			name:  "BadOneLetter",
+			input: `F-1 characters`,
+			want:  lengthBound{},
 		},
 	}
 	for _, tt := range tests {
