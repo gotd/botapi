@@ -124,7 +124,12 @@ func run(ctx context.Context) error {
 		log.Info("New request")
 		if err := p.Do(r.Context(), token, func(client *botapi.BotAPI) error {
 			r.URL.Path = botapi.CorrectMethod(method)
-			oas.NewServer(client).ServeHTTP(w, r)
+			// TODO(tdakkota): move server creation to client creation
+			srv, err := oas.NewServer(client)
+			if err != nil {
+				return errors.Wrap(err, "setup server")
+			}
+			srv.ServeHTTP(w, r)
 			return nil
 		}); err != nil {
 			log.Warn("Do error", zap.Error(err))
