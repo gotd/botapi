@@ -1,0 +1,11 @@
+name: commit
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  commit:
+    uses: go-faster/x/.github/workflows/commit.yml@main

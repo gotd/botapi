@@ -1,4 +1,4 @@
-name: lint
+name: nancy
 
 on:
   push:
@@ -7,5 +7,5 @@ on:
   workflow_dispatch:
 
 jobs:
-  lint:
-    uses: go-faster/x/.github/workflows/lint.yml@main
+  nancy:
+    uses: go-faster/x/.github/workflows/nancy.yml@main
