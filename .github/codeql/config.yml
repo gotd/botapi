@@ -1,0 +1,6 @@
+paths:
+  - 'botdoc'
+  - 'cmd'
+  - 'internal'
+paths-ignore:
+  - 'internal/oas'
