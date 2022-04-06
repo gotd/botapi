@@ -12,6 +12,7 @@ import (
 	"math/bits"
 	"net"
 	"net/http"
+	"net/netip"
 	"net/url"
 	"regexp"
 	"sort"
@@ -23,115 +24,60 @@ import (
 	"github.com/go-faster/errors"
 	"github.com/go-faster/jx"
 	"github.com/google/uuid"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/codes"
+	"go.opentelemetry.io/otel/metric"
+	"go.opentelemetry.io/otel/metric/instrument/syncint64"
+	"go.opentelemetry.io/otel/metric/nonrecording"
+	"go.opentelemetry.io/otel/trace"
+
 	"github.com/ogen-go/ogen/conv"
 	ht "github.com/ogen-go/ogen/http"
 	"github.com/ogen-go/ogen/json"
 	"github.com/ogen-go/ogen/otelogen"
 	"github.com/ogen-go/ogen/uri"
 	"github.com/ogen-go/ogen/validate"
-	"go.opentelemetry.io/otel"
-	"go.opentelemetry.io/otel/attribute"
-	"go.opentelemetry.io/otel/codes"
-	"go.opentelemetry.io/otel/metric"
-	"go.opentelemetry.io/otel/trace"
 )
 
 // No-op definition for keeping imports.
 var (
+	_ = bytes.NewReader
 	_ = context.Background()
 	_ = fmt.Stringer(nil)
-	_ = strings.Builder{}
-	_ = errors.Is
-	_ = sort.Ints
-	_ = http.MethodGet
 	_ = io.Copy
-	_ = json.Marshal
-	_ = bytes.NewReader
-	_ = strconv.ParseInt
-	_ = time.Time{}
-	_ = conv.ToInt32
-	_ = uuid.UUID{}
-	_ = uri.PathEncoder{}
-	_ = url.URL{}
 	_ = math.Mod
-	_ = bits.LeadingZeros64
 	_ = big.Rat{}
-	_ = validate.Int{}
-	_ = ht.NewRequest
+	_ = bits.LeadingZeros64
 	_ = net.IP{}
-	_ = otelogen.Version
-	_ = attribute.KeyValue{}
-	_ = trace.TraceIDFromHex
-	_ = otel.GetTracerProvider
-	_ = metric.NewNoopMeterProvider
+	_ = http.MethodGet
+	_ = netip.Addr{}
+	_ = url.URL{}
 	_ = regexp.MustCompile
-	_ = jx.Null
+	_ = sort.Ints
+	_ = strconv.ParseInt
+	_ = strings.Builder{}
 	_ = sync.Pool{}
+	_ = time.Time{}
+
+	_ = errors.Is
+	_ = jx.Null
+	_ = uuid.UUID{}
+	_ = otel.GetTracerProvider
+	_ = attribute.KeyValue{}
 	_ = codes.Unset
+	_ = metric.MeterConfig{}
+	_ = syncint64.Counter(nil)
+	_ = nonrecording.NewNoopMeterProvider
+	_ = trace.TraceIDFromHex
+
+	_ = conv.ToInt32
+	_ = ht.NewRequest
+	_ = json.Marshal
+	_ = otelogen.Version
+	_ = uri.PathEncoder{}
+	_ = validate.Int{}
 )
-
-// setDefaults set default value of fields.
-func (s *BotCommandScopeAllChatAdministrators) setDefaults() {
-	{
-		val := string("all_chat_administrators")
-
-		s.Type = val
-	}
-}
-
-// setDefaults set default value of fields.
-func (s *BotCommandScopeAllGroupChats) setDefaults() {
-	{
-		val := string("all_group_chats")
-
-		s.Type = val
-	}
-}
-
-// setDefaults set default value of fields.
-func (s *BotCommandScopeAllPrivateChats) setDefaults() {
-	{
-		val := string("all_private_chats")
-
-		s.Type = val
-	}
-}
-
-// setDefaults set default value of fields.
-func (s *BotCommandScopeChat) setDefaults() {
-	{
-		val := string("chat")
-
-		s.Type = val
-	}
-}
-
-// setDefaults set default value of fields.
-func (s *BotCommandScopeChatAdministrators) setDefaults() {
-	{
-		val := string("chat_administrators")
-
-		s.Type = val
-	}
-}
-
-// setDefaults set default value of fields.
-func (s *BotCommandScopeChatMember) setDefaults() {
-	{
-		val := string("chat_member")
-
-		s.Type = val
-	}
-}
-
-// setDefaults set default value of fields.
-func (s *BotCommandScopeDefault) setDefaults() {
-	{
-		val := string("default")
-
-		s.Type = val
-	}
-}
 
 // setDefaults set default value of fields.
 func (s *Error) setDefaults() {
@@ -157,24 +103,6 @@ func (s *GetUserProfilePhotos) setDefaults() {
 		val := int(0)
 
 		s.Offset.SetTo(val)
-	}
-}
-
-// setDefaults set default value of fields.
-func (s *InlineQueryResultArticle) setDefaults() {
-	{
-		val := string("article")
-
-		s.Type = val
-	}
-}
-
-// setDefaults set default value of fields.
-func (s *InlineQueryResultAudio) setDefaults() {
-	{
-		val := string("audio")
-
-		s.Type = val
 	}
 }
 
@@ -224,15 +152,6 @@ func (s *InlineQueryResultCachedPhoto) setDefaults() {
 }
 
 // setDefaults set default value of fields.
-func (s *InlineQueryResultCachedSticker) setDefaults() {
-	{
-		val := string("sticker")
-
-		s.Type = val
-	}
-}
-
-// setDefaults set default value of fields.
 func (s *InlineQueryResultCachedVideo) setDefaults() {
 	{
 		val := string("video")
@@ -245,141 +164,6 @@ func (s *InlineQueryResultCachedVideo) setDefaults() {
 func (s *InlineQueryResultCachedVoice) setDefaults() {
 	{
 		val := string("voice")
-
-		s.Type = val
-	}
-}
-
-// setDefaults set default value of fields.
-func (s *InlineQueryResultContact) setDefaults() {
-	{
-		val := string("contact")
-
-		s.Type = val
-	}
-}
-
-// setDefaults set default value of fields.
-func (s *InlineQueryResultDocument) setDefaults() {
-	{
-		val := string("document")
-
-		s.Type = val
-	}
-}
-
-// setDefaults set default value of fields.
-func (s *InlineQueryResultGame) setDefaults() {
-	{
-		val := string("game")
-
-		s.Type = val
-	}
-}
-
-// setDefaults set default value of fields.
-func (s *InlineQueryResultGif) setDefaults() {
-	{
-		val := string("gif")
-
-		s.Type = val
-	}
-}
-
-// setDefaults set default value of fields.
-func (s *InlineQueryResultLocation) setDefaults() {
-	{
-		val := string("location")
-
-		s.Type = val
-	}
-}
-
-// setDefaults set default value of fields.
-func (s *InlineQueryResultMpeg4Gif) setDefaults() {
-	{
-		val := string("mpeg4_gif")
-
-		s.Type = val
-	}
-}
-
-// setDefaults set default value of fields.
-func (s *InlineQueryResultPhoto) setDefaults() {
-	{
-		val := string("photo")
-
-		s.Type = val
-	}
-}
-
-// setDefaults set default value of fields.
-func (s *InlineQueryResultVenue) setDefaults() {
-	{
-		val := string("venue")
-
-		s.Type = val
-	}
-}
-
-// setDefaults set default value of fields.
-func (s *InlineQueryResultVideo) setDefaults() {
-	{
-		val := string("video")
-
-		s.Type = val
-	}
-}
-
-// setDefaults set default value of fields.
-func (s *InlineQueryResultVoice) setDefaults() {
-	{
-		val := string("voice")
-
-		s.Type = val
-	}
-}
-
-// setDefaults set default value of fields.
-func (s *InputMediaAnimation) setDefaults() {
-	{
-		val := string("animation")
-
-		s.Type = val
-	}
-}
-
-// setDefaults set default value of fields.
-func (s *InputMediaAudio) setDefaults() {
-	{
-		val := string("audio")
-
-		s.Type = val
-	}
-}
-
-// setDefaults set default value of fields.
-func (s *InputMediaDocument) setDefaults() {
-	{
-		val := string("document")
-
-		s.Type = val
-	}
-}
-
-// setDefaults set default value of fields.
-func (s *InputMediaPhoto) setDefaults() {
-	{
-		val := string("photo")
-
-		s.Type = val
-	}
-}
-
-// setDefaults set default value of fields.
-func (s *InputMediaVideo) setDefaults() {
-	{
-		val := string("video")
 
 		s.Type = val
 	}

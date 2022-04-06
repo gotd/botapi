@@ -12,6 +12,7 @@ import (
 	"math/bits"
 	"net"
 	"net/http"
+	"net/netip"
 	"net/url"
 	"regexp"
 	"sort"
@@ -23,51 +24,59 @@ import (
 	"github.com/go-faster/errors"
 	"github.com/go-faster/jx"
 	"github.com/google/uuid"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/codes"
+	"go.opentelemetry.io/otel/metric"
+	"go.opentelemetry.io/otel/metric/instrument/syncint64"
+	"go.opentelemetry.io/otel/metric/nonrecording"
+	"go.opentelemetry.io/otel/trace"
+
 	"github.com/ogen-go/ogen/conv"
 	ht "github.com/ogen-go/ogen/http"
 	"github.com/ogen-go/ogen/json"
 	"github.com/ogen-go/ogen/otelogen"
 	"github.com/ogen-go/ogen/uri"
 	"github.com/ogen-go/ogen/validate"
-	"go.opentelemetry.io/otel"
-	"go.opentelemetry.io/otel/attribute"
-	"go.opentelemetry.io/otel/codes"
-	"go.opentelemetry.io/otel/metric"
-	"go.opentelemetry.io/otel/trace"
 )
 
 // No-op definition for keeping imports.
 var (
+	_ = bytes.NewReader
 	_ = context.Background()
 	_ = fmt.Stringer(nil)
-	_ = strings.Builder{}
-	_ = errors.Is
-	_ = sort.Ints
-	_ = http.MethodGet
 	_ = io.Copy
-	_ = json.Marshal
-	_ = bytes.NewReader
-	_ = strconv.ParseInt
-	_ = time.Time{}
-	_ = conv.ToInt32
-	_ = uuid.UUID{}
-	_ = uri.PathEncoder{}
-	_ = url.URL{}
 	_ = math.Mod
-	_ = bits.LeadingZeros64
 	_ = big.Rat{}
-	_ = validate.Int{}
-	_ = ht.NewRequest
+	_ = bits.LeadingZeros64
 	_ = net.IP{}
-	_ = otelogen.Version
-	_ = attribute.KeyValue{}
-	_ = trace.TraceIDFromHex
-	_ = otel.GetTracerProvider
-	_ = metric.NewNoopMeterProvider
+	_ = http.MethodGet
+	_ = netip.Addr{}
+	_ = url.URL{}
 	_ = regexp.MustCompile
-	_ = jx.Null
+	_ = sort.Ints
+	_ = strconv.ParseInt
+	_ = strings.Builder{}
 	_ = sync.Pool{}
+	_ = time.Time{}
+
+	_ = errors.Is
+	_ = jx.Null
+	_ = uuid.UUID{}
+	_ = otel.GetTracerProvider
+	_ = attribute.KeyValue{}
 	_ = codes.Unset
+	_ = metric.MeterConfig{}
+	_ = syncint64.Counter(nil)
+	_ = nonrecording.NewNoopMeterProvider
+	_ = trace.TraceIDFromHex
+
+	_ = conv.ToInt32
+	_ = ht.NewRequest
+	_ = json.Marshal
+	_ = otelogen.Version
+	_ = uri.PathEncoder{}
+	_ = validate.Int{}
 )
 
 // Handler handles operations described by OpenAPI v3 specification.
@@ -412,9 +421,9 @@ type Server struct {
 	h   Handler
 	cfg config
 
-	requests metric.Int64Counter
-	errors   metric.Int64Counter
-	duration metric.Int64Histogram
+	requests syncint64.Counter
+	errors   syncint64.Counter
+	duration syncint64.Histogram
 }
 
 func NewServer(h Handler, opts ...Option) (*Server, error) {
@@ -423,13 +432,13 @@ func NewServer(h Handler, opts ...Option) (*Server, error) {
 		cfg: newConfig(opts...),
 	}
 	var err error
-	if s.requests, err = s.cfg.Meter.NewInt64Counter(otelogen.ServerRequestCount); err != nil {
+	if s.requests, err = s.cfg.Meter.SyncInt64().Counter(otelogen.ServerRequestCount); err != nil {
 		return nil, err
 	}
-	if s.errors, err = s.cfg.Meter.NewInt64Counter(otelogen.ServerErrorsCount); err != nil {
+	if s.errors, err = s.cfg.Meter.SyncInt64().Counter(otelogen.ServerErrorsCount); err != nil {
 		return nil, err
 	}
-	if s.duration, err = s.cfg.Meter.NewInt64Histogram(otelogen.ServerDuration); err != nil {
+	if s.duration, err = s.cfg.Meter.SyncInt64().Histogram(otelogen.ServerDuration); err != nil {
 		return nil, err
 	}
 	return s, nil
