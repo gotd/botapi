@@ -7688,7 +7688,7 @@
             "format": "int64"
           },
           "name": {
-            "description": "Short name of sticker set, to be used in t.me/addstickers/ URLs (e.g., animals). Can contain only english letters, digits and underscores. Must begin with a letter, can't contain consecutive underscores and must end in \"_by_\u003cbot username\u003e\". \u003cbot_username\u003e is case insensitive. 1-64 characters",
+            "description": "Short name of sticker set, to be used in t.me/addstickers/ URLs (e.g., animals). Can contain only english letters, digits and underscores. Must begin with a letter, can't contain consecutive underscores and must end in \"_by_\u003cbot_username\u003e\". \u003cbot_username\u003e is case insensitive. 1-64 characters",
             "type": "string",
             "maxLength": 64,
             "minLength": 1
