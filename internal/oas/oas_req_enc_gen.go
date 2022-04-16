@@ -35,6 +35,7 @@ import (
 	"github.com/ogen-go/ogen/conv"
 	ht "github.com/ogen-go/ogen/http"
 	"github.com/ogen-go/ogen/json"
+	"github.com/ogen-go/ogen/ogenerrors"
 	"github.com/ogen-go/ogen/otelogen"
 	"github.com/ogen-go/ogen/uri"
 	"github.com/ogen-go/ogen/validate"
@@ -74,6 +75,7 @@ var (
 	_ = conv.ToInt32
 	_ = ht.NewRequest
 	_ = json.Marshal
+	_ = ogenerrors.SecurityError{}
 	_ = otelogen.Version
 	_ = uri.PathEncoder{}
 	_ = validate.Int{}
@@ -112,6 +114,14 @@ func encodeAnswerPreCheckoutQueryRequestJSON(req AnswerPreCheckoutQuery, span tr
 }
 
 func encodeAnswerShippingQueryRequestJSON(req AnswerShippingQuery, span trace.Span) (data *jx.Encoder, err error) {
+	e := jx.GetEncoder()
+
+	req.Encode(e)
+
+	return e, nil
+}
+
+func encodeAnswerWebAppQueryRequestJSON(req AnswerWebAppQuery, span trace.Span) (data *jx.Encoder, err error) {
 	e := jx.GetEncoder()
 
 	req.Encode(e)
@@ -321,6 +331,15 @@ func encodeGetChatMemberCountRequestJSON(req GetChatMemberCount, span trace.Span
 	return e, nil
 }
 
+func encodeGetChatMenuButtonRequestJSON(req OptGetChatMenuButton, span trace.Span) (data *jx.Encoder, err error) {
+	e := jx.GetEncoder()
+	if req.Set {
+		req.Encode(e)
+	}
+
+	return e, nil
+}
+
 func encodeGetFileRequestJSON(req GetFile, span trace.Span) (data *jx.Encoder, err error) {
 	e := jx.GetEncoder()
 
@@ -338,6 +357,15 @@ func encodeGetGameHighScoresRequestJSON(req GetGameHighScores, span trace.Span) 
 }
 
 func encodeGetMyCommandsRequestJSON(req OptGetMyCommands, span trace.Span) (data *jx.Encoder, err error) {
+	e := jx.GetEncoder()
+	if req.Set {
+		req.Encode(e)
+	}
+
+	return e, nil
+}
+
+func encodeGetMyDefaultAdministratorRightsRequestJSON(req OptGetMyDefaultAdministratorRights, span trace.Span) (data *jx.Encoder, err error) {
 	e := jx.GetEncoder()
 	if req.Set {
 		req.Encode(e)
@@ -571,6 +599,15 @@ func encodeSetChatDescriptionRequestJSON(req SetChatDescription, span trace.Span
 	return e, nil
 }
 
+func encodeSetChatMenuButtonRequestJSON(req OptSetChatMenuButton, span trace.Span) (data *jx.Encoder, err error) {
+	e := jx.GetEncoder()
+	if req.Set {
+		req.Encode(e)
+	}
+
+	return e, nil
+}
+
 func encodeSetChatPermissionsRequestJSON(req SetChatPermissions, span trace.Span) (data *jx.Encoder, err error) {
 	e := jx.GetEncoder()
 
@@ -615,6 +652,15 @@ func encodeSetMyCommandsRequestJSON(req SetMyCommands, span trace.Span) (data *j
 	e := jx.GetEncoder()
 
 	req.Encode(e)
+
+	return e, nil
+}
+
+func encodeSetMyDefaultAdministratorRightsRequestJSON(req OptSetMyDefaultAdministratorRights, span trace.Span) (data *jx.Encoder, err error) {
+	e := jx.GetEncoder()
+	if req.Set {
+		req.Encode(e)
+	}
 
 	return e, nil
 }
