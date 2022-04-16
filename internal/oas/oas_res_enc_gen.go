@@ -154,6 +154,21 @@ func encodeAnswerShippingQueryResponse(response Result, w http.ResponseWriter, s
 	return nil
 }
 
+func encodeAnswerWebAppQueryResponse(response Result, w http.ResponseWriter, span trace.Span) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	span.SetStatus(codes.Ok, http.StatusText(200))
+	e := jx.GetEncoder()
+	defer jx.PutEncoder(e)
+
+	response.Encode(e)
+	if _, err := e.WriteTo(w); err != nil {
+		return errors.Wrap(err, "write")
+	}
+
+	return nil
+}
+
 func encodeApproveChatJoinRequestResponse(response Result, w http.ResponseWriter, span trace.Span) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
@@ -544,6 +559,21 @@ func encodeGetChatMemberCountResponse(response ResultInt, w http.ResponseWriter,
 	return nil
 }
 
+func encodeGetChatMenuButtonResponse(response Result, w http.ResponseWriter, span trace.Span) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	span.SetStatus(codes.Ok, http.StatusText(200))
+	e := jx.GetEncoder()
+	defer jx.PutEncoder(e)
+
+	response.Encode(e)
+	if _, err := e.WriteTo(w); err != nil {
+		return errors.Wrap(err, "write")
+	}
+
+	return nil
+}
+
 func encodeGetFileResponse(response ResultFile, w http.ResponseWriter, span trace.Span) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
@@ -590,6 +620,21 @@ func encodeGetMeResponse(response ResultUser, w http.ResponseWriter, span trace.
 }
 
 func encodeGetMyCommandsResponse(response ResultArrayOfBotCommand, w http.ResponseWriter, span trace.Span) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	span.SetStatus(codes.Ok, http.StatusText(200))
+	e := jx.GetEncoder()
+	defer jx.PutEncoder(e)
+
+	response.Encode(e)
+	if _, err := e.WriteTo(w); err != nil {
+		return errors.Wrap(err, "write")
+	}
+
+	return nil
+}
+
+func encodeGetMyDefaultAdministratorRightsResponse(response Result, w http.ResponseWriter, span trace.Span) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 	span.SetStatus(codes.Ok, http.StatusText(200))
@@ -1054,6 +1099,21 @@ func encodeSetChatDescriptionResponse(response Result, w http.ResponseWriter, sp
 	return nil
 }
 
+func encodeSetChatMenuButtonResponse(response Result, w http.ResponseWriter, span trace.Span) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	span.SetStatus(codes.Ok, http.StatusText(200))
+	e := jx.GetEncoder()
+	defer jx.PutEncoder(e)
+
+	response.Encode(e)
+	if _, err := e.WriteTo(w); err != nil {
+		return errors.Wrap(err, "write")
+	}
+
+	return nil
+}
+
 func encodeSetChatPermissionsResponse(response Result, w http.ResponseWriter, span trace.Span) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
@@ -1130,6 +1190,21 @@ func encodeSetGameScoreResponse(response Result, w http.ResponseWriter, span tra
 }
 
 func encodeSetMyCommandsResponse(response Result, w http.ResponseWriter, span trace.Span) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	span.SetStatus(codes.Ok, http.StatusText(200))
+	e := jx.GetEncoder()
+	defer jx.PutEncoder(e)
+
+	response.Encode(e)
+	if _, err := e.WriteTo(w); err != nil {
+		return errors.Wrap(err, "write")
+	}
+
+	return nil
+}
+
+func encodeSetMyDefaultAdministratorRightsResponse(response Result, w http.ResponseWriter, span trace.Span) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 	span.SetStatus(codes.Ok, http.StatusText(200))
