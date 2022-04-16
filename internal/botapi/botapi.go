@@ -25,6 +25,8 @@ type BotAPI struct {
 
 	debug  bool
 	logger *zap.Logger
+
+	oas.UnimplementedHandler
 }
 
 // NewBotAPI creates new BotAPI instance.
