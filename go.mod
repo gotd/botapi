@@ -7,7 +7,6 @@ require (
 	github.com/go-chi/chi/v5 v5.0.7
 	github.com/go-faster/errors v0.5.0
 	github.com/go-faster/jx v0.34.0
-	github.com/google/uuid v1.3.0
 	github.com/gotd/td v0.57.0
 	github.com/ogen-go/ogen v0.29.0
 	github.com/stretchr/testify v1.7.1
@@ -30,6 +29,7 @@ require (
 	github.com/go-logr/logr v1.2.3 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-playground/validator/v10 v10.4.1 // indirect
+	github.com/google/uuid v1.3.0 // indirect
 	github.com/gotd/ige v0.2.2 // indirect
 	github.com/gotd/neo v0.1.5 // indirect
 	github.com/klauspost/compress v1.15.1 // indirect
