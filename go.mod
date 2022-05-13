@@ -7,7 +7,7 @@ require (
 	github.com/go-chi/chi/v5 v5.0.7
 	github.com/go-faster/errors v0.5.0
 	github.com/go-faster/jx v0.34.0
-	github.com/gotd/td v0.58.0
+	github.com/gotd/td v0.59.0
 	github.com/ogen-go/ogen v0.30.2
 	github.com/stretchr/testify v1.7.1
 	go.etcd.io/bbolt v1.3.6
@@ -32,7 +32,7 @@ require (
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/gotd/ige v0.2.2 // indirect
 	github.com/gotd/neo v0.1.5 // indirect
-	github.com/klauspost/compress v1.15.2 // indirect
+	github.com/klauspost/compress v1.15.4 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/segmentio/asm v1.1.3 // indirect
 	go.uber.org/atomic v1.9.0 // indirect
