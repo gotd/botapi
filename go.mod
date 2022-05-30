@@ -6,7 +6,7 @@ require (
 	github.com/PuerkitoBio/goquery v1.8.0
 	github.com/go-chi/chi/v5 v5.0.7
 	github.com/go-faster/errors v0.5.0
-	github.com/go-faster/jx v0.35.0
+	github.com/go-faster/jx v0.35.1
 	github.com/gotd/td v0.59.0
 	github.com/ogen-go/ogen v0.33.0
 	github.com/stretchr/testify v1.7.1
@@ -40,7 +40,7 @@ require (
 	golang.org/x/net v0.0.0-20220127200216-cd36cc0744dd // indirect
 	golang.org/x/sys v0.0.0-20220412211240-33da011f77ad // indirect
 	gopkg.in/yaml.v2 v2.3.0 // indirect
-	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
+	gopkg.in/yaml.v3 v3.0.0 // indirect
 	nhooyr.io/websocket v1.8.7 // indirect
 	rsc.io/qr v0.2.0 // indirect
 )
