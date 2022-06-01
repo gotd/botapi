@@ -479,8 +479,8 @@ type CallbackQuery struct {
 	// Global identifier, uniquely corresponding to the chat to which the message with the callback
 	// button was sent. Useful for high scores in games.
 	ChatInstance string "json:\"chat_instance\""
-	// Data associated with the callback button. Be aware that a bad client can send arbitrary data in
-	// this field.
+	// Data associated with the callback button. Be aware that the message, which originated the query,
+	// can contain no callback buttons with this data.
 	Data OptString "json:\"data\""
 	// Short name of a Game to be returned, serves as the unique identifier for the game.
 	GameShortName OptString "json:\"game_short_name\""
