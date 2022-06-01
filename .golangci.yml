@@ -116,6 +116,9 @@ issues:
     - linters: [staticcheck]
       text: "SA1019: (telegram|client).+ is deprecated:"
 
+    - linters: [typecheck]
+      text: "missing type in composite literal"
+
     # TODO: Rewrite
     - path: pool\.go
       linters: [revive, govet, gocritic, misspell]
