@@ -52,7 +52,9 @@ type Animation struct {
 	FileName OptString "json:\"file_name\""
 	// MIME type of the file as defined by sender.
 	MimeType OptString "json:\"mime_type\""
-	// File size in bytes.
+	// File size in bytes. It can be bigger than 2^31 and some programming languages may have
+	// difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed
+	// 64-bit integer or double-precision float type are safe for storing this value.
 	FileSize OptInt "json:\"file_size\""
 }
 
@@ -67,7 +69,7 @@ type AnswerCallbackQuery struct {
 	// screen. Defaults to false.
 	ShowAlert OptBool "json:\"show_alert\""
 	// URL that will be opened by the user's client. If you have created a Game and accepted the
-	// conditions via @Botfather, specify the URL that opens your game — note that this will only work
+	// conditions via @BotFather, specify the URL that opens your game — note that this will only work
 	// if the query comes from a callback_game button.Otherwise, you may use links like t.
 	// me/your_bot?start=XXXX that open your bot with a parameter.
 	URL OptString "json:\"url\""
@@ -172,7 +174,9 @@ type Audio struct {
 	FileName OptString "json:\"file_name\""
 	// MIME type of the file as defined by sender.
 	MimeType OptString "json:\"mime_type\""
-	// File size in bytes.
+	// File size in bytes. It can be bigger than 2^31 and some programming languages may have
+	// difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed
+	// 64-bit integer or double-precision float type are safe for storing this value.
 	FileSize OptInt       "json:\"file_size\""
 	Thumb    OptPhotoSize "json:\"thumb\""
 }
@@ -479,8 +483,8 @@ type CallbackQuery struct {
 	// Global identifier, uniquely corresponding to the chat to which the message with the callback
 	// button was sent. Useful for high scores in games.
 	ChatInstance string "json:\"chat_instance\""
-	// Data associated with the callback button. Be aware that the message, which originated the query,
-	// can contain no callback buttons with this data.
+	// Data associated with the callback button. Be aware that the message, from which originated the
+	// query, can contain no callback buttons with this data.
 	Data OptString "json:\"data\""
 	// Short name of a Game to be returned, serves as the unique identifier for the game.
 	GameShortName OptString "json:\"game_short_name\""
@@ -1135,7 +1139,9 @@ type Document struct {
 	FileName OptString "json:\"file_name\""
 	// MIME type of the file as defined by sender.
 	MimeType OptString "json:\"mime_type\""
-	// File size in bytes.
+	// File size in bytes. It can be bigger than 2^31 and some programming languages may have
+	// difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed
+	// 64-bit integer or double-precision float type are safe for storing this value.
 	FileSize OptInt "json:\"file_size\""
 }
 
@@ -1337,7 +1343,9 @@ type File struct {
 	// Unique identifier for this file, which is supposed to be the same over time and for different bots.
 	//  Can't be used to download or reuse the file.
 	FileUniqueID string "json:\"file_unique_id\""
-	// File size in bytes, if known.
+	// File size in bytes. It can be bigger than 2^31 and some programming languages may have
+	// difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed
+	// 64-bit integer or double-precision float type are safe for storing this value.
 	FileSize OptInt "json:\"file_size\""
 	// File path. Use https://api.telegram.org/file/bot<token>/<file_path> to get the file.
 	FilePath OptString "json:\"file_path\""
@@ -1584,7 +1592,7 @@ func NewInt64ID(v int64) ID {
 type InlineKeyboardButton struct {
 	// Label text on the button.
 	Text string "json:\"text\""
-	// HTTP or tg:// url to be opened when the button is pressed. Links tg://user?id=<user_id> can be
+	// HTTP or tg:// URL to be opened when the button is pressed. Links tg://user?id=<user_id> can be
 	// used to mention a user by their ID without using a username, if this is allowed by their privacy
 	// settings.
 	URL OptString "json:\"url\""
@@ -2685,7 +2693,7 @@ type InlineQueryResultVideo struct {
 	ID string "json:\"id\""
 	// A valid URL for the embedded video player or video file.
 	VideoURL string "json:\"video_url\""
-	// Mime type of the content of video url, "text/html" or "video/mp4".
+	// Mime type of the content of the video URL, "text/html" or "video/mp4".
 	MimeType string "json:\"mime_type\""
 	// URL of the thumbnail (JPEG only) for the video.
 	ThumbURL string "json:\"thumb_url\""
@@ -2755,7 +2763,7 @@ type InputInvoiceMessageContent struct {
 	// Bot-defined invoice payload, 1-128 bytes. This will not be displayed to the user, use for your
 	// internal processes.
 	Payload string "json:\"payload\""
-	// Payment provider token, obtained via Botfather.
+	// Payment provider token, obtained via @BotFather.
 	ProviderToken string "json:\"provider_token\""
 	// Three-letter ISO 4217 currency code, see more on currencies.
 	Currency string "json:\"currency\""
@@ -2775,9 +2783,9 @@ type InputInvoiceMessageContent struct {
 	// provider. A detailed description of the required fields should be provided by the payment provider.
 	ProviderData OptString "json:\"provider_data\""
 	// URL of the product photo for the invoice. Can be a photo of the goods or a marketing image for a
-	// service. People like it better when they see what they are paying for.
+	// service.
 	PhotoURL OptString "json:\"photo_url\""
-	// Photo size.
+	// Photo size in bytes.
 	PhotoSize OptInt "json:\"photo_size\""
 	// Photo width.
 	PhotoWidth OptInt "json:\"photo_width\""
@@ -2791,9 +2799,9 @@ type InputInvoiceMessageContent struct {
 	NeedEmail OptBool "json:\"need_email\""
 	// Pass True, if you require the user's shipping address to complete the order.
 	NeedShippingAddress OptBool "json:\"need_shipping_address\""
-	// Pass True, if user's phone number should be sent to provider.
+	// Pass True, if the user's phone number should be sent to provider.
 	SendPhoneNumberToProvider OptBool "json:\"send_phone_number_to_provider\""
-	// Pass True, if user's email address should be sent to provider.
+	// Pass True, if the user's email address should be sent to provider.
 	SendEmailToProvider OptBool "json:\"send_email_to_provider\""
 	// Pass True, if the final price depends on the shipping method.
 	IsFlexible OptBool "json:\"is_flexible\""
@@ -3711,7 +3719,7 @@ type MessageEntity struct {
 	Offset int "json:\"offset\""
 	// Length of the entity in UTF-16 code units.
 	Length int "json:\"length\""
-	// For "text_link" only, url that will be opened after user taps on the text.
+	// For "text_link" only, URL that will be opened after user taps on the text.
 	URL  OptString "json:\"url\""
 	User OptUser   "json:\"user\""
 	// For "pre" only, the programming language of the entity text.
@@ -8262,7 +8270,7 @@ type SendGame struct {
 	// Unique identifier for the target chat.
 	ChatID int64 "json:\"chat_id\""
 	// Short name of the game, serves as the unique identifier for the game. Set up your games via
-	// Botfather.
+	// @BotFather.
 	GameShortName string "json:\"game_short_name\""
 	// Sends the message silently. Users will receive a notification with no sound.
 	DisableNotification OptBool "json:\"disable_notification\""
@@ -8286,7 +8294,7 @@ type SendInvoice struct {
 	// Bot-defined invoice payload, 1-128 bytes. This will not be displayed to the user, use for your
 	// internal processes.
 	Payload string "json:\"payload\""
-	// Payments provider token, obtained via Botfather.
+	// Payment provider token, obtained via @BotFather.
 	ProviderToken string "json:\"provider_token\""
 	// Three-letter ISO 4217 currency code, see more on currencies.
 	Currency string "json:\"currency\""
@@ -8307,13 +8315,13 @@ type SendInvoice struct {
 	//  If non-empty, forwarded copies of the sent message will have a URL button with a deep link to the
 	// bot (instead of a Pay button), with the value used as the start parameter.
 	StartParameter OptString "json:\"start_parameter\""
-	// A JSON-serialized data about the invoice, which will be shared with the payment provider. A
-	// detailed description of required fields should be provided by the payment provider.
+	// JSON-serialized data about the invoice, which will be shared with the payment provider. A detailed
+	// description of required fields should be provided by the payment provider.
 	ProviderData OptString "json:\"provider_data\""
 	// URL of the product photo for the invoice. Can be a photo of the goods or a marketing image for a
 	// service. People like it better when they see what they are paying for.
 	PhotoURL OptString "json:\"photo_url\""
-	// Photo size.
+	// Photo size in bytes.
 	PhotoSize OptInt "json:\"photo_size\""
 	// Photo width.
 	PhotoWidth OptInt "json:\"photo_width\""
@@ -8327,9 +8335,9 @@ type SendInvoice struct {
 	NeedEmail OptBool "json:\"need_email\""
 	// Pass True, if you require the user's shipping address to complete the order.
 	NeedShippingAddress OptBool "json:\"need_shipping_address\""
-	// Pass True, if user's phone number should be sent to provider.
+	// Pass True, if the user's phone number should be sent to provider.
 	SendPhoneNumberToProvider OptBool "json:\"send_phone_number_to_provider\""
-	// Pass True, if user's email address should be sent to provider.
+	// Pass True, if the user's email address should be sent to provider.
 	SendEmailToProvider OptBool "json:\"send_email_to_provider\""
 	// Pass True, if the final price depends on the shipping method.
 	IsFlexible OptBool "json:\"is_flexible\""
@@ -9021,7 +9029,7 @@ type SetStickerSetThumb struct {
 // Input for setWebhook.
 // Ref: #/components/schemas/setWebhook
 type SetWebhook struct {
-	// HTTPS url to send updates to. Use an empty string to remove webhook integration.
+	// HTTPS URL to send updates to. Use an empty string to remove webhook integration.
 	URL string "json:\"url\""
 	// Upload your public key certificate so that the root certificate in use can be checked. See our
 	// self-signed guide for details.
@@ -9206,7 +9214,7 @@ type UnpinChatMessage struct {
 // Ref: #/components/schemas/Update
 type Update struct {
 	// The update's unique identifier. Update identifiers start from a certain positive number and
-	// increase sequentially. This ID becomes especially handy if you're using Webhooks, since it allows
+	// increase sequentially. This ID becomes especially handy if you're using webhooks, since it allows
 	// you to ignore repeated updates or to restore the correct update sequence, should they get out of
 	// order. If there are no new updates for at least a week, then identifier of the next update will be
 	// chosen randomly instead of sequentially.
@@ -9308,9 +9316,11 @@ type Video struct {
 	Thumb    OptPhotoSize "json:\"thumb\""
 	// Original filename as defined by sender.
 	FileName OptString "json:\"file_name\""
-	// Mime type of a file as defined by sender.
+	// Mime type of the file as defined by sender.
 	MimeType OptString "json:\"mime_type\""
-	// File size in bytes.
+	// File size in bytes. It can be bigger than 2^31 and some programming languages may have
+	// difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed
+	// 64-bit integer or double-precision float type are safe for storing this value.
 	FileSize OptInt "json:\"file_size\""
 }
 
@@ -9370,7 +9380,9 @@ type Voice struct {
 	Duration int "json:\"duration\""
 	// MIME type of the file as defined by sender.
 	MimeType OptString "json:\"mime_type\""
-	// File size in bytes.
+	// File size in bytes. It can be bigger than 2^31 and some programming languages may have
+	// difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed
+	// 64-bit integer or double-precision float type are safe for storing this value.
 	FileSize OptInt "json:\"file_size\""
 }
 

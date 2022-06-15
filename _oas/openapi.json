@@ -1862,7 +1862,7 @@
       }
     },
     "/setWebhook": {
-      "description": "If you'd like to make sure that the Webhook request comes from Telegram, we recommend using a secret path in the URL, e.g. https://www.example.com/\u003ctoken\u003e. Since nobody else knows your bot's token, you can be pretty sure it's us.",
+      "description": "If you'd like to make sure that the webhook request comes from Telegram, we recommend using a secret path in the URL, e.g. https://www.example.com/\u003ctoken\u003e. Since nobody else knows your bot's token, you can be pretty sure it's us.",
       "post": {
         "operationId": "setWebhook",
         "requestBody": {
@@ -2098,7 +2098,7 @@
             "type": "string"
           },
           "file_size": {
-            "description": "File size in bytes",
+            "description": "File size in bytes. It can be bigger than 2^31 and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this value",
             "type": "integer"
           }
         },
@@ -2145,7 +2145,7 @@
             "type": "string"
           },
           "file_size": {
-            "description": "File size in bytes",
+            "description": "File size in bytes. It can be bigger than 2^31 and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this value",
             "type": "integer"
           },
           "thumb": {
@@ -2361,7 +2361,7 @@
             "type": "string"
           },
           "data": {
-            "description": "Data associated with the callback button. Be aware that the message, which originated the query, can contain no callback buttons with this data",
+            "description": "Data associated with the callback button. Be aware that the message, from which originated the query, can contain no callback buttons with this data",
             "type": "string"
           },
           "game_short_name": {
@@ -3082,7 +3082,7 @@
             "type": "string"
           },
           "file_size": {
-            "description": "File size in bytes",
+            "description": "File size in bytes. It can be bigger than 2^31 and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this value",
             "type": "integer"
           }
         },
@@ -3218,7 +3218,7 @@
             "type": "string"
           },
           "file_size": {
-            "description": "File size in bytes, if known",
+            "description": "File size in bytes. It can be bigger than 2^31 and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this value",
             "type": "integer"
           },
           "file_path": {
@@ -3337,7 +3337,7 @@
             "type": "string"
           },
           "url": {
-            "description": "HTTP or tg:// url to be opened when the button is pressed. Links tg://user?id=\u003cuser_id\u003e can be used to mention a user by their ID without using a username, if this is allowed by their privacy settings",
+            "description": "HTTP or tg:// URL to be opened when the button is pressed. Links tg://user?id=\u003cuser_id\u003e can be used to mention a user by their ID without using a username, if this is allowed by their privacy settings",
             "type": "string"
           },
           "callback_data": {
@@ -4617,7 +4617,7 @@
             "type": "string"
           },
           "mime_type": {
-            "description": "Mime type of the content of video url, \"text/html\" or \"video/mp4\"",
+            "description": "Mime type of the content of the video URL, \"text/html\" or \"video/mp4\"",
             "type": "string"
           },
           "thumb_url": {
@@ -4791,7 +4791,7 @@
             "minLength": 1
           },
           "provider_token": {
-            "description": "Payment provider token, obtained via Botfather",
+            "description": "Payment provider token, obtained via @BotFather",
             "type": "string"
           },
           "currency": {
@@ -4822,11 +4822,11 @@
             "type": "string"
           },
           "photo_url": {
-            "description": "URL of the product photo for the invoice. Can be a photo of the goods or a marketing image for a service. People like it better when they see what they are paying for",
+            "description": "URL of the product photo for the invoice. Can be a photo of the goods or a marketing image for a service",
             "type": "string"
           },
           "photo_size": {
-            "description": "Photo size",
+            "description": "Photo size in bytes",
             "type": "integer"
           },
           "photo_width": {
@@ -4858,11 +4858,11 @@
             "type": "boolean"
           },
           "send_phone_number_to_provider": {
-            "description": "Pass True, if user's phone number should be sent to provider",
+            "description": "Pass True, if the user's phone number should be sent to provider",
             "type": "boolean"
           },
           "send_email_to_provider": {
-            "description": "Pass True, if user's email address should be sent to provider",
+            "description": "Pass True, if the user's email address should be sent to provider",
             "type": "boolean"
           },
           "is_flexible": {
@@ -5844,7 +5844,7 @@
             "type": "integer"
           },
           "url": {
-            "description": "For \"text_link\" only, url that will be opened after user taps on the text",
+            "description": "For \"text_link\" only, URL that will be opened after user taps on the text",
             "type": "string"
           },
           "user": {
@@ -7259,7 +7259,7 @@
         "type": "object",
         "properties": {
           "update_id": {
-            "description": "The update's unique identifier. Update identifiers start from a certain positive number and increase sequentially. This ID becomes especially handy if you're using Webhooks, since it allows you to ignore repeated updates or to restore the correct update sequence, should they get out of order. If there are no new updates for at least a week, then identifier of the next update will be chosen randomly instead of sequentially",
+            "description": "The update's unique identifier. Update identifiers start from a certain positive number and increase sequentially. This ID becomes especially handy if you're using webhooks, since it allows you to ignore repeated updates or to restore the correct update sequence, should they get out of order. If there are no new updates for at least a week, then identifier of the next update will be chosen randomly instead of sequentially",
             "type": "integer"
           },
           "message": {
@@ -7457,11 +7457,11 @@
             "type": "string"
           },
           "mime_type": {
-            "description": "Mime type of a file as defined by sender",
+            "description": "Mime type of the file as defined by sender",
             "type": "string"
           },
           "file_size": {
-            "description": "File size in bytes",
+            "description": "File size in bytes. It can be bigger than 2^31 and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this value",
             "type": "integer"
           }
         },
@@ -7581,7 +7581,7 @@
             "type": "string"
           },
           "file_size": {
-            "description": "File size in bytes",
+            "description": "File size in bytes. It can be bigger than 2^31 and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this value",
             "type": "integer"
           }
         },
@@ -7729,7 +7729,7 @@
             "type": "boolean"
           },
           "url": {
-            "description": "URL that will be opened by the user's client. If you have created a Game and accepted the conditions via @Botfather, specify the URL that opens your game — note that this will only work if the query comes from a callback_game button.Otherwise, you may use links like t.me/your_bot?start=XXXX that open your bot with a parameter",
+            "description": "URL that will be opened by the user's client. If you have created a Game and accepted the conditions via @BotFather, specify the URL that opens your game — note that this will only work if the query comes from a callback_game button.Otherwise, you may use links like t.me/your_bot?start=XXXX that open your bot with a parameter",
             "type": "string"
           },
           "cache_time": {
@@ -9047,7 +9047,7 @@
             "format": "int64"
           },
           "game_short_name": {
-            "description": "Short name of the game, serves as the unique identifier for the game. Set up your games via Botfather",
+            "description": "Short name of the game, serves as the unique identifier for the game. Set up your games via @BotFather",
             "type": "string"
           },
           "disable_notification": {
@@ -9101,7 +9101,7 @@
             "minLength": 1
           },
           "provider_token": {
-            "description": "Payments provider token, obtained via Botfather",
+            "description": "Payment provider token, obtained via @BotFather",
             "type": "string"
           },
           "currency": {
@@ -9132,7 +9132,7 @@
             "type": "string"
           },
           "provider_data": {
-            "description": "A JSON-serialized data about the invoice, which will be shared with the payment provider. A detailed description of required fields should be provided by the payment provider",
+            "description": "JSON-serialized data about the invoice, which will be shared with the payment provider. A detailed description of required fields should be provided by the payment provider",
             "type": "string"
           },
           "photo_url": {
@@ -9140,7 +9140,7 @@
             "type": "string"
           },
           "photo_size": {
-            "description": "Photo size",
+            "description": "Photo size in bytes",
             "type": "integer"
           },
           "photo_width": {
@@ -9172,11 +9172,11 @@
             "type": "boolean"
           },
           "send_phone_number_to_provider": {
-            "description": "Pass True, if user's phone number should be sent to provider",
+            "description": "Pass True, if the user's phone number should be sent to provider",
             "type": "boolean"
           },
           "send_email_to_provider": {
-            "description": "Pass True, if user's email address should be sent to provider",
+            "description": "Pass True, if the user's email address should be sent to provider",
             "type": "boolean"
           },
           "is_flexible": {
@@ -10086,7 +10086,7 @@
         "type": "object",
         "properties": {
           "url": {
-            "description": "HTTPS url to send updates to. Use an empty string to remove webhook integration",
+            "description": "HTTPS URL to send updates to. Use an empty string to remove webhook integration",
             "type": "string"
           },
           "certificate": {
