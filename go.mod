@@ -6,9 +6,9 @@ require (
 	github.com/PuerkitoBio/goquery v1.8.0
 	github.com/go-chi/chi/v5 v5.0.7
 	github.com/go-faster/errors v0.6.1
-	github.com/go-faster/jx v0.35.2
+	github.com/go-faster/jx v0.36.0
 	github.com/gotd/td v0.60.0
-	github.com/ogen-go/ogen v0.36.0
+	github.com/ogen-go/ogen v0.37.1
 	github.com/stretchr/testify v1.7.2
 	go.etcd.io/bbolt v1.3.6
 	go.opentelemetry.io/otel v1.7.0
