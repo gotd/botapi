@@ -20,7 +20,8 @@ type AddStickerToSet struct {
 	// PNG image with the sticker, must be up to 512 kilobytes in size, dimensions must not exceed 512px,
 	// and either width or height must be exactly 512px. Pass a file_id as a String to send a file that
 	// already exists on the Telegram servers, pass an HTTP URL as a String for Telegram to get a file
-	// from the Internet, or upload a new one using multipart/form-data.
+	// from the Internet, or upload a new one using multipart/form-data. More information on Sending
+	// Files ».
 	PNGSticker OptString "json:\"png_sticker\""
 	// TGS animation with the sticker, uploaded using multipart/form-data. See https://core.telegram.
 	// org/stickers#animated-sticker-requirements for technical requirements.
@@ -69,8 +70,8 @@ type AnswerCallbackQuery struct {
 	// screen. Defaults to false.
 	ShowAlert OptBool "json:\"show_alert\""
 	// URL that will be opened by the user's client. If you have created a Game and accepted the
-	// conditions via @BotFather, specify the URL that opens your game — note that this will only work
-	// if the query comes from a callback_game button.Otherwise, you may use links like t.
+	// conditions via @BotFather, specify the URL that opens your game - note that this will only work if
+	// the query comes from a callback_game button.Otherwise, you may use links like t.
 	// me/your_bot?start=XXXX that open your bot with a parameter.
 	URL OptString "json:\"url\""
 	// The maximum amount of time in seconds that the result of the callback query may be cached
@@ -483,8 +484,8 @@ type CallbackQuery struct {
 	// Global identifier, uniquely corresponding to the chat to which the message with the callback
 	// button was sent. Useful for high scores in games.
 	ChatInstance string "json:\"chat_instance\""
-	// Data associated with the callback button. Be aware that the message, from which originated the
-	// query, can contain no callback buttons with this data.
+	// Data associated with the callback button. Be aware that the message originated the query can
+	// contain no callback buttons with this data.
 	Data OptString "json:\"data\""
 	// Short name of a Game to be returned, serves as the unique identifier for the game.
 	GameShortName OptString "json:\"game_short_name\""
@@ -590,8 +591,8 @@ type ChatInviteLink struct {
 	Name OptString "json:\"name\""
 	// Point in time (Unix timestamp) when the link will expire or has been expired.
 	ExpireDate OptInt "json:\"expire_date\""
-	// Maximum number of users that can be members of the chat simultaneously after joining the chat via
-	// this invite link; 1-99999.
+	// The maximum number of users that can be members of the chat simultaneously after joining the chat
+	// via this invite link; 1-99999.
 	MemberLimit OptInt "json:\"member_limit\""
 	// Number of pending join requests created using this link.
 	PendingJoinRequestCount OptInt "json:\"pending_join_request_count\""
@@ -1027,8 +1028,8 @@ type CreateChatInviteLink struct {
 	Name OptString "json:\"name\""
 	// Point in time (Unix timestamp) when the link will expire.
 	ExpireDate OptInt "json:\"expire_date\""
-	// Maximum number of users that can be members of the chat simultaneously after joining the chat via
-	// this invite link; 1-99999.
+	// The maximum number of users that can be members of the chat simultaneously after joining the chat
+	// via this invite link; 1-99999.
 	MemberLimit OptInt "json:\"member_limit\""
 	// True, if users joining the chat via the link need to be approved by chat administrators. If True,
 	// member_limit can't be specified.
@@ -1041,7 +1042,7 @@ type CreateNewStickerSet struct {
 	// User identifier of created sticker set owner.
 	UserID int64 "json:\"user_id\""
 	// Short name of sticker set, to be used in t.me/addstickers/ URLs (e.g., animals). Can contain only
-	// english letters, digits and underscores. Must begin with a letter, can't contain consecutive
+	// English letters, digits and underscores. Must begin with a letter, can't contain consecutive
 	// underscores and must end in "_by_<bot_username>". <bot_username> is case insensitive. 1-64
 	// characters.
 	Name string "json:\"name\""
@@ -1050,7 +1051,8 @@ type CreateNewStickerSet struct {
 	// PNG image with the sticker, must be up to 512 kilobytes in size, dimensions must not exceed 512px,
 	// and either width or height must be exactly 512px. Pass a file_id as a String to send a file that
 	// already exists on the Telegram servers, pass an HTTP URL as a String for Telegram to get a file
-	// from the Internet, or upload a new one using multipart/form-data.
+	// from the Internet, or upload a new one using multipart/form-data. More information on Sending
+	// Files ».
 	PNGSticker OptString "json:\"png_sticker\""
 	// TGS animation with the sticker, uploaded using multipart/form-data. See https://core.telegram.
 	// org/stickers#animated-sticker-requirements for technical requirements.
@@ -1155,8 +1157,8 @@ type EditChatInviteLink struct {
 	Name OptString "json:\"name\""
 	// Point in time (Unix timestamp) when the link will expire.
 	ExpireDate OptInt "json:\"expire_date\""
-	// Maximum number of users that can be members of the chat simultaneously after joining the chat via
-	// this invite link; 1-99999.
+	// The maximum number of users that can be members of the chat simultaneously after joining the chat
+	// via this invite link; 1-99999.
 	MemberLimit OptInt "json:\"member_limit\""
 	// True, if users joining the chat via the link need to be approved by chat administrators. If True,
 	// member_limit can't be specified.
@@ -1197,8 +1199,8 @@ type EditMessageLiveLocation struct {
 	HorizontalAccuracy OptFloat64 "json:\"horizontal_accuracy\""
 	// Direction in which the user is moving, in degrees. Must be between 1 and 360 if specified.
 	Heading OptInt "json:\"heading\""
-	// Maximum distance for proximity alerts about approaching another chat member, in meters. Must be
-	// between 1 and 100000 if specified.
+	// The maximum distance for proximity alerts about approaching another chat member, in meters. Must
+	// be between 1 and 100000 if specified.
 	ProximityAlertRadius OptInt                  "json:\"proximity_alert_radius\""
 	ReplyMarkup          OptInlineKeyboardMarkup "json:\"reply_markup\""
 }
@@ -1246,7 +1248,7 @@ type EditMessageText struct {
 	ReplyMarkup           OptInlineKeyboardMarkup "json:\"reply_markup\""
 }
 
-// Contains data required for decrypting and authenticating EncryptedPassportElement. See the
+// Describes data required for decrypting and authenticating EncryptedPassportElement. See the
 // Telegram Passport Documentation for a complete description of the data decryption and
 // authentication processes.
 // Ref: #/components/schemas/EncryptedCredentials
@@ -1260,8 +1262,7 @@ type EncryptedCredentials struct {
 	Secret string "json:\"secret\""
 }
 
-// Contains information about documents or other Telegram Passport elements shared with the bot by
-// the user.
+// Describes documents or other Telegram Passport elements shared with the bot by the user.
 // Ref: #/components/schemas/EncryptedPassportElement
 type EncryptedPassportElement struct {
 	// Element type. One of "personal_details", "passport", "driver_license", "identity_card",
@@ -1447,7 +1448,7 @@ type GetChatMenuButton struct {
 // Input for getFile.
 // Ref: #/components/schemas/getFile
 type GetFile struct {
-	// File identifier to get info about.
+	// File identifier to get information about.
 	FileID string "json:\"file_id\""
 }
 
@@ -1601,15 +1602,15 @@ type InlineKeyboardButton struct {
 	WebApp       OptWebAppInfo "json:\"web_app\""
 	LoginURL     OptLoginUrl   "json:\"login_url\""
 	// If set, pressing the button will prompt the user to select one of their chats, open that chat and
-	// insert the bot's username and the specified inline query in the input field. Can be empty, in
+	// insert the bot's username and the specified inline query in the input field. May be empty, in
 	// which case just the bot's username will be inserted.Note: This offers an easy way for users to
 	// start using your bot in inline mode when they are currently in a private chat with it. Especially
-	// useful when combined with switch_pm… actions – in this case the user will be automatically
+	// useful when combined with switch_pm… actions - in this case the user will be automatically
 	// returned to the chat they switched from, skipping the chat selection screen.
 	SwitchInlineQuery OptString "json:\"switch_inline_query\""
 	// If set, pressing the button will insert the bot's username and the specified inline query in the
-	// current chat's input field. Can be empty, in which case only the bot's username will be inserted.
-	// This offers a quick way for the user to open your bot in inline mode in the same chat – good for
+	// current chat's input field. May be empty, in which case only the bot's username will be inserted.
+	// This offers a quick way for the user to open your bot in inline mode in the same chat - good for
 	// selecting something from multiple options.
 	SwitchInlineQueryCurrentChat OptString     "json:\"switch_inline_query_current_chat\""
 	CallbackGame                 *CallbackGame "json:\"callback_game\""
@@ -1636,7 +1637,7 @@ type InlineQuery struct {
 	Query string "json:\"query\""
 	// Offset of the results to be returned, can be controlled by the bot.
 	Offset string "json:\"offset\""
-	// Type of the chat, from which the inline query was sent. Can be either "sender" for a private chat
+	// Type of the chat from which the inline query was sent. Can be either "sender" for a private chat
 	// with the inline query sender, "private", "group", "supergroup", or "channel". The chat type should
 	// be always known for requests sent from official clients and most third-party clients, unless the
 	// request was sent from a secret chat.
@@ -1644,7 +1645,7 @@ type InlineQuery struct {
 	Location OptLocation            "json:\"location\""
 }
 
-// Type of the chat, from which the inline query was sent. Can be either "sender" for a private chat
+// Type of the chat from which the inline query was sent. Can be either "sender" for a private chat
 // with the inline query sender, "private", "group", "supergroup", or "channel". The chat type should
 // be always known for requests sent from official clients and most third-party clients, unless the
 // request was sent from a secret chat.
@@ -2359,7 +2360,7 @@ type InlineQueryResultCachedMpeg4Gif struct {
 	Type string "json:\"type\""
 	// Unique identifier for this result, 1-64 bytes.
 	ID string "json:\"id\""
-	// A valid file identifier for the MP4 file.
+	// A valid file identifier for the MPEG4 file.
 	Mpeg4FileID string "json:\"mpeg4_file_id\""
 	// Title for the result.
 	Title OptString "json:\"title\""
@@ -2501,7 +2502,7 @@ type InlineQueryResultDocument struct {
 	CaptionEntities []MessageEntity "json:\"caption_entities\""
 	// A valid URL for the file.
 	DocumentURL string "json:\"document_url\""
-	// Mime type of the content of the file, either "application/pdf" or "application/zip".
+	// MIME type of the content of the file, either "application/pdf" or "application/zip".
 	MimeType string "json:\"mime_type\""
 	// Short description of the result.
 	Description         OptString               "json:\"description\""
@@ -2597,7 +2598,7 @@ type InlineQueryResultLocation struct {
 type InlineQueryResultMpeg4Gif struct {
 	// Unique identifier for this result, 1-64 bytes.
 	ID string "json:\"id\""
-	// A valid URL for the MP4 file. File size must not exceed 1MB.
+	// A valid URL for the MPEG4 file. File size must not exceed 1MB.
 	Mpeg4URL string "json:\"mpeg4_url\""
 	// Video width.
 	Mpeg4Width OptInt "json:\"mpeg4_width\""
@@ -2693,7 +2694,7 @@ type InlineQueryResultVideo struct {
 	ID string "json:\"id\""
 	// A valid URL for the embedded video player or video file.
 	VideoURL string "json:\"video_url\""
-	// Mime type of the content of the video URL, "text/html" or "video/mp4".
+	// MIME type of the content of the video URL, "text/html" or "video/mp4".
 	MimeType string "json:\"mime_type\""
 	// URL of the thumbnail (JPEG only) for the video.
 	ThumbURL string "json:\"thumb_url\""
@@ -2976,14 +2977,14 @@ type InputMediaAnimation struct {
 	// File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended),
 	// pass an HTTP URL for Telegram to get a file from the Internet, or pass
 	// "attach://<file_attach_name>" to upload a new one using multipart/form-data under
-	// <file_attach_name> name.
+	// <file_attach_name> name. More information on Sending Files ».
 	Media string "json:\"media\""
 	// Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported
 	// server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's
 	// width and height should not exceed 320. Ignored if the file is not uploaded using
 	// multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can
 	// pass "attach://<file_attach_name>" if the thumbnail was uploaded using multipart/form-data under
-	// <file_attach_name>.
+	// <file_attach_name>. More information on Sending Files ».
 	Thumb OptString "json:\"thumb\""
 	// Caption of the animation to be sent, 0-1024 characters after entities parsing.
 	Caption OptString "json:\"caption\""
@@ -3005,14 +3006,14 @@ type InputMediaAudio struct {
 	// File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended),
 	// pass an HTTP URL for Telegram to get a file from the Internet, or pass
 	// "attach://<file_attach_name>" to upload a new one using multipart/form-data under
-	// <file_attach_name> name.
+	// <file_attach_name> name. More information on Sending Files ».
 	Media string "json:\"media\""
 	// Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported
 	// server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's
 	// width and height should not exceed 320. Ignored if the file is not uploaded using
 	// multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can
 	// pass "attach://<file_attach_name>" if the thumbnail was uploaded using multipart/form-data under
-	// <file_attach_name>.
+	// <file_attach_name>. More information on Sending Files ».
 	Thumb OptString "json:\"thumb\""
 	// Caption of the audio to be sent, 0-1024 characters after entities parsing.
 	Caption OptString "json:\"caption\""
@@ -3034,14 +3035,14 @@ type InputMediaDocument struct {
 	// File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended),
 	// pass an HTTP URL for Telegram to get a file from the Internet, or pass
 	// "attach://<file_attach_name>" to upload a new one using multipart/form-data under
-	// <file_attach_name> name.
+	// <file_attach_name> name. More information on Sending Files ».
 	Media string "json:\"media\""
 	// Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported
 	// server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's
 	// width and height should not exceed 320. Ignored if the file is not uploaded using
 	// multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can
 	// pass "attach://<file_attach_name>" if the thumbnail was uploaded using multipart/form-data under
-	// <file_attach_name>.
+	// <file_attach_name>. More information on Sending Files ».
 	Thumb OptString "json:\"thumb\""
 	// Caption of the document to be sent, 0-1024 characters after entities parsing.
 	Caption OptString "json:\"caption\""
@@ -3060,7 +3061,7 @@ type InputMediaPhoto struct {
 	// File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended),
 	// pass an HTTP URL for Telegram to get a file from the Internet, or pass
 	// "attach://<file_attach_name>" to upload a new one using multipart/form-data under
-	// <file_attach_name> name.
+	// <file_attach_name> name. More information on Sending Files ».
 	Media string "json:\"media\""
 	// Caption of the photo to be sent, 0-1024 characters after entities parsing.
 	Caption OptString "json:\"caption\""
@@ -3076,14 +3077,14 @@ type InputMediaVideo struct {
 	// File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended),
 	// pass an HTTP URL for Telegram to get a file from the Internet, or pass
 	// "attach://<file_attach_name>" to upload a new one using multipart/form-data under
-	// <file_attach_name> name.
+	// <file_attach_name> name. More information on Sending Files ».
 	Media string "json:\"media\""
 	// Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported
 	// server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's
 	// width and height should not exceed 320. Ignored if the file is not uploaded using
 	// multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can
 	// pass "attach://<file_attach_name>" if the thumbnail was uploaded using multipart/form-data under
-	// <file_attach_name>.
+	// <file_attach_name>. More information on Sending Files ».
 	Thumb OptString "json:\"thumb\""
 	// Caption of the video to be sent, 0-1024 characters after entities parsing.
 	Caption OptString "json:\"caption\""
@@ -3438,8 +3439,8 @@ type Location struct {
 	LivePeriod OptInt "json:\"live_period\""
 	// The direction in which user is moving, in degrees; 1-360. For active live locations only.
 	Heading OptInt "json:\"heading\""
-	// Maximum distance for proximity alerts about approaching another chat member, in meters. For sent
-	// live locations only.
+	// The maximum distance for proximity alerts about approaching another chat member, in meters. For
+	// sent live locations only.
 	ProximityAlertRadius OptInt "json:\"proximity_alert_radius\""
 }
 
@@ -7176,7 +7177,7 @@ type OrderInfo struct {
 	ShippingAddress OptShippingAddress "json:\"shipping_address\""
 }
 
-// Contains information about Telegram Passport data shared with the bot by the user.
+// Describes Telegram Passport data shared with the bot by the user.
 // Ref: #/components/schemas/PassportData
 type PassportData struct {
 	// Array with information about documents and other Telegram Passport elements that was shared with
@@ -7842,9 +7843,8 @@ type ReplyKeyboardMarkup struct {
 	// keyboard is always of the same height as the app's standard keyboard.
 	ResizeKeyboard OptBool "json:\"resize_keyboard\""
 	// Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be
-	// available, but clients will automatically display the usual letter-keyboard in the chat – the
-	// user can press a special button in the input field to see the custom keyboard again. Defaults to
-	// false.
+	// available, but clients will automatically display the usual letter-keyboard in the chat - the user
+	// can press a special button in the input field to see the custom keyboard again. Defaults to false.
 	OneTimeKeyboard OptBool "json:\"one_time_keyboard\""
 	// The placeholder to be shown in the input field when the keyboard is active; 1-64 characters.
 	InputFieldPlaceholder OptString "json:\"input_field_placeholder\""
@@ -8102,7 +8102,7 @@ type SendAnimation struct {
 	ChatID ID "json:\"chat_id\""
 	// Animation to send. Pass a file_id as String to send an animation that exists on the Telegram
 	// servers (recommended), pass an HTTP URL as a String for Telegram to get an animation from the
-	// Internet, or upload a new animation using multipart/form-data.
+	// Internet, or upload a new animation using multipart/form-data. More information on Sending Files ».
 	Animation string "json:\"animation\""
 	// Duration of sent animation in seconds.
 	Duration OptInt "json:\"duration\""
@@ -8115,7 +8115,7 @@ type SendAnimation struct {
 	// width and height should not exceed 320. Ignored if the file is not uploaded using
 	// multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can
 	// pass "attach://<file_attach_name>" if the thumbnail was uploaded using multipart/form-data under
-	// <file_attach_name>.
+	// <file_attach_name>. More information on Sending Files ».
 	Thumb OptString "json:\"thumb\""
 	// Animation caption (may also be used when resending animation by file_id), 0-1024 characters after
 	// entities parsing.
@@ -8142,7 +8142,7 @@ type SendAudio struct {
 	ChatID ID "json:\"chat_id\""
 	// Audio file to send. Pass a file_id as String to send an audio file that exists on the Telegram
 	// servers (recommended), pass an HTTP URL as a String for Telegram to get an audio file from the
-	// Internet, or upload a new one using multipart/form-data.
+	// Internet, or upload a new one using multipart/form-data. More information on Sending Files ».
 	Audio string "json:\"audio\""
 	// Audio caption, 0-1024 characters after entities parsing.
 	Caption OptString "json:\"caption\""
@@ -8162,7 +8162,7 @@ type SendAudio struct {
 	// width and height should not exceed 320. Ignored if the file is not uploaded using
 	// multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can
 	// pass "attach://<file_attach_name>" if the thumbnail was uploaded using multipart/form-data under
-	// <file_attach_name>.
+	// <file_attach_name>. More information on Sending Files ».
 	Thumb OptString "json:\"thumb\""
 	// Sends the message silently. Users will receive a notification with no sound.
 	DisableNotification OptBool "json:\"disable_notification\""
@@ -8234,14 +8234,14 @@ type SendDocument struct {
 	ChatID ID "json:\"chat_id\""
 	// File to send. Pass a file_id as String to send a file that exists on the Telegram servers
 	// (recommended), pass an HTTP URL as a String for Telegram to get a file from the Internet, or
-	// upload a new one using multipart/form-data.
+	// upload a new one using multipart/form-data. More information on Sending Files ».
 	Document string "json:\"document\""
 	// Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported
 	// server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's
 	// width and height should not exceed 320. Ignored if the file is not uploaded using
 	// multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can
 	// pass "attach://<file_attach_name>" if the thumbnail was uploaded using multipart/form-data under
-	// <file_attach_name>.
+	// <file_attach_name>. More information on Sending Files ».
 	Thumb OptString "json:\"thumb\""
 	// Document caption (may also be used when resending documents by file_id), 0-1024 characters after
 	// entities parsing.
@@ -8553,7 +8553,8 @@ type SendPhoto struct {
 	// Photo to send. Pass a file_id as String to send a photo that exists on the Telegram servers
 	// (recommended), pass an HTTP URL as a String for Telegram to get a photo from the Internet, or
 	// upload a new photo using multipart/form-data. The photo must be at most 10 MB in size. The photo's
-	// width and height must not exceed 10000 in total. Width and height ratio must be at most 20.
+	// width and height must not exceed 10000 in total. Width and height ratio must be at most 20. More
+	// information on Sending Files ».
 	Photo string "json:\"photo\""
 	// Photo caption (may also be used when resending photos by file_id), 0-1024 characters after
 	// entities parsing.
@@ -8746,7 +8747,7 @@ type SendSticker struct {
 	ChatID ID "json:\"chat_id\""
 	// Sticker to send. Pass a file_id as String to send a file that exists on the Telegram servers
 	// (recommended), pass an HTTP URL as a String for Telegram to get a .WEBP file from the Internet, or
-	// upload a new one using multipart/form-data.
+	// upload a new one using multipart/form-data. More information on Sending Files ».
 	Sticker string "json:\"sticker\""
 	// Sends the message silently. Users will receive a notification with no sound.
 	DisableNotification OptBool "json:\"disable_notification\""
@@ -8797,7 +8798,7 @@ type SendVideo struct {
 	ChatID ID "json:\"chat_id\""
 	// Video to send. Pass a file_id as String to send a video that exists on the Telegram servers
 	// (recommended), pass an HTTP URL as a String for Telegram to get a video from the Internet, or
-	// upload a new video using multipart/form-data.
+	// upload a new video using multipart/form-data. More information on Sending Files ».
 	Video string "json:\"video\""
 	// Duration of sent video in seconds.
 	Duration OptInt "json:\"duration\""
@@ -8810,7 +8811,7 @@ type SendVideo struct {
 	// width and height should not exceed 320. Ignored if the file is not uploaded using
 	// multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can
 	// pass "attach://<file_attach_name>" if the thumbnail was uploaded using multipart/form-data under
-	// <file_attach_name>.
+	// <file_attach_name>. More information on Sending Files ».
 	Thumb OptString "json:\"thumb\""
 	// Video caption (may also be used when resending videos by file_id), 0-1024 characters after
 	// entities parsing.
@@ -8838,8 +8839,8 @@ type SendVideo struct {
 type SendVideoNote struct {
 	ChatID ID "json:\"chat_id\""
 	// Video note to send. Pass a file_id as String to send a video note that exists on the Telegram
-	// servers (recommended) or upload a new video using multipart/form-data. . Sending video notes by a
-	// URL is currently unsupported.
+	// servers (recommended) or upload a new video using multipart/form-data. More information on Sending
+	// Files ». Sending video notes by a URL is currently unsupported.
 	VideoNote string "json:\"video_note\""
 	// Duration of sent video in seconds.
 	Duration OptInt "json:\"duration\""
@@ -8850,7 +8851,7 @@ type SendVideoNote struct {
 	// width and height should not exceed 320. Ignored if the file is not uploaded using
 	// multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can
 	// pass "attach://<file_attach_name>" if the thumbnail was uploaded using multipart/form-data under
-	// <file_attach_name>.
+	// <file_attach_name>. More information on Sending Files ».
 	Thumb OptString "json:\"thumb\""
 	// Sends the message silently. Users will receive a notification with no sound.
 	DisableNotification OptBool "json:\"disable_notification\""
@@ -8869,7 +8870,7 @@ type SendVoice struct {
 	ChatID ID "json:\"chat_id\""
 	// Audio file to send. Pass a file_id as String to send a file that exists on the Telegram servers
 	// (recommended), pass an HTTP URL as a String for Telegram to get a file from the Internet, or
-	// upload a new one using multipart/form-data.
+	// upload a new one using multipart/form-data. More information on Sending Files ».
 	Voice string "json:\"voice\""
 	// Voice message caption, 0-1024 characters after entities parsing.
 	Caption OptString "json:\"caption\""
@@ -9022,7 +9023,8 @@ type SetStickerSetThumb struct {
 	// org/stickers#video-sticker-requirements for video sticker technical requirements. Pass a file_id
 	// as a String to send a file that already exists on the Telegram servers, pass an HTTP URL as a
 	// String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data.
-	//  . Animated sticker set thumbnails can't be uploaded via HTTP URL.
+	//  More information on Sending Files ». Animated sticker set thumbnails can't be uploaded via HTTP
+	// URL.
 	Thumb OptString "json:\"thumb\""
 }
 
@@ -9037,9 +9039,9 @@ type SetWebhook struct {
 	// The fixed IP address which will be used to send webhook requests instead of the IP address
 	// resolved through DNS.
 	IPAddress OptString "json:\"ip_address\""
-	// Maximum allowed number of simultaneous HTTPS connections to the webhook for update delivery, 1-100.
-	//  Defaults to 40. Use lower values to limit the load on your bot's server, and higher values to
-	// increase your bot's throughput.
+	// The maximum allowed number of simultaneous HTTPS connections to the webhook for update delivery,
+	// 1-100. Defaults to 40. Use lower values to limit the load on your bot's server, and higher values
+	// to increase your bot's throughput.
 	MaxConnections OptInt "json:\"max_connections\""
 	// A JSON-serialized list of the update types you want your bot to receive. For example, specify
 	// ["message", "edited_channel_post", "callback_query"] to only receive updates of these types. See
@@ -9055,7 +9057,7 @@ type SetWebhook struct {
 // This object represents a shipping address.
 // Ref: #/components/schemas/ShippingAddress
 type ShippingAddress struct {
-	// ISO 3166-1 alpha-2 country code.
+	// Two-letter ISO 3166-1 alpha-2 country code.
 	CountryCode string "json:\"country_code\""
 	// State, if applicable.
 	State string "json:\"state\""
@@ -9241,7 +9243,7 @@ type UploadStickerFile struct {
 	// User identifier of sticker file owner.
 	UserID int64 "json:\"user_id\""
 	// PNG image with the sticker, must be up to 512 kilobytes in size, dimensions must not exceed 512px,
-	// and either width or height must be exactly 512px.
+	// and either width or height must be exactly 512px. More information on Sending Files ».
 	PNGSticker string "json:\"png_sticker\""
 }
 
@@ -9316,7 +9318,7 @@ type Video struct {
 	Thumb    OptPhotoSize "json:\"thumb\""
 	// Original filename as defined by sender.
 	FileName OptString "json:\"file_name\""
-	// Mime type of the file as defined by sender.
+	// MIME type of the file as defined by sender.
 	MimeType OptString "json:\"mime_type\""
 	// File size in bytes. It can be bigger than 2^31 and some programming languages may have
 	// difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed
@@ -9386,24 +9388,24 @@ type Voice struct {
 	FileSize OptInt "json:\"file_size\""
 }
 
-// Contains data sent from a Web App to the bot.
+// Describes data sent from a Web App to the bot.
 // Ref: #/components/schemas/WebAppData
 type WebAppData struct {
 	// The data. Be aware that a bad client can send arbitrary data in this field.
 	Data string "json:\"data\""
-	// Text of the web_app keyboard button, from which the Web App was opened. Be aware that a bad client
+	// Text of the web_app keyboard button from which the Web App was opened. Be aware that a bad client
 	// can send arbitrary data in this field.
 	ButtonText string "json:\"button_text\""
 }
 
-// Contains information about a Web App.
+// Describes a Web App.
 // Ref: #/components/schemas/WebAppInfo
 type WebAppInfo struct {
 	// An HTTPS URL of a Web App to be opened with additional data as specified in Initializing Web Apps.
 	URL string "json:\"url\""
 }
 
-// Contains information about the current status of a webhook.
+// Describes the current status of a webhook.
 // Ref: #/components/schemas/WebhookInfo
 type WebhookInfo struct {
 	// Webhook URL, may be empty if webhook is not set up.
@@ -9422,7 +9424,7 @@ type WebhookInfo struct {
 	// Unix time of the most recent error that happened when trying to synchronize available updates with
 	// Telegram datacenters.
 	LastSynchronizationErrorDate OptInt "json:\"last_synchronization_error_date\""
-	// Maximum allowed number of simultaneous HTTPS connections to the webhook for update delivery.
+	// The maximum allowed number of simultaneous HTTPS connections to the webhook for update delivery.
 	MaxConnections OptInt "json:\"max_connections\""
 	// A list of update types the bot is subscribed to. Defaults to all update types except chat_member.
 	AllowedUpdates []string "json:\"allowed_updates\""
