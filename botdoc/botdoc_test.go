@@ -33,9 +33,9 @@ func TestExtract(t *testing.T) {
 	assertNoUnknown(t, a.Types)
 
 	for _, dd := range a.Types {
-		t.Log(dd.Name, dd.Description)
+		t.Log(dd.Name, dd.PrettyDescription)
 		for _, f := range dd.Fields {
-			t.Logf(" %s %s (%s)", f.Name, f.Type, f.Description)
+			t.Logf(" %s %s (%s)", f.Name, f.Type, f.PrettyDescription)
 		}
 	}
 }
