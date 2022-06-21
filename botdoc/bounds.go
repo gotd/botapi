@@ -16,8 +16,8 @@ type intBound struct {
 }
 
 var (
-	charBoundRegex = regexp.MustCompile(`(?P<start>\d+)-(?P<end>\d+) (characters|bytes)`)
-	intBoundRegex  = regexp.MustCompile(`(?:between|;) (?P<start>\d+)(?:-|\sand\s)(?P<end>\d+)`)
+	charBoundRegex = regexp.MustCompile(`(?P<start>\d+)\s*-\s*(?P<end>\d+)\s*(characters|bytes)`)
+	intBoundRegex  = regexp.MustCompile(`(?:between|;)\s*(?P<start>\d+)\s*(?:-|and)\s*(?P<end>\d+)`)
 )
 
 func matchBounds(r *regexp.Regexp, matches []string) (a, b int) {
