@@ -1,8 +1,15 @@
 package botdoc
 
-import "strings"
+import (
+	"net/url"
+	"strings"
+
+	"github.com/go-faster/errors"
+)
 
 var (
+	rootURL = errors.Must(url.Parse("https://core.telegram.org/bots/api"))
+
 	wellKnownTypes = []string{
 		"Update",
 		"Message",
