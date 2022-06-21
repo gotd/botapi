@@ -39,26 +39,28 @@ func resultFor(s *ogen.Schema) *ogen.Schema {
 func (a API) typeOAS(f Field) *ogen.Schema {
 	t := f.Type
 	p := &ogen.Schema{
-		Description: cleanDescription(f.Description),
+		Description: f.PrettyDescription,
 	}
 	for _, value := range f.Enum {
 		p.Enum = append(p.Enum, strconv.AppendQuoteToASCII(nil, value))
 	}
+
+	rawText := f.RawText
 	switch t.Kind {
 	case KindPrimitive:
 		switch t.Primitive {
 		case String:
 			p.Type = "string"
 			const defaultMarker = `, must be `
-			if idx := strings.LastIndex(p.Description, defaultMarker); idx > 0 {
+			if idx := strings.LastIndex(rawText, defaultMarker); idx > 0 {
 				// Handle possible default value.
-				v := p.Description[idx+len(defaultMarker):]
+				v := rawText[idx+len(defaultMarker):]
 				if spaceIdx := strings.IndexAny(v, " \n\r."); spaceIdx > 0 {
 					v = v[:spaceIdx]
 				}
 				if v != "" &&
-					!strings.Contains(p.Description, `one of `) &&
-					!strings.Contains(p.Description, `PNG image`) {
+					!strings.Contains(rawText, `one of `) &&
+					!strings.Contains(rawText, `PNG image`) {
 					data, err := json.Marshal(v)
 					if err != nil {
 						panic(err)
@@ -66,7 +68,7 @@ func (a API) typeOAS(f Field) *ogen.Schema {
 					p.Default = data
 				}
 			}
-			b := stringBounds(f.Description)
+			b := stringBounds(rawText)
 			if b.Max > 0 {
 				p.MaxLength = &b.Max
 			}
@@ -76,7 +78,7 @@ func (a API) typeOAS(f Field) *ogen.Schema {
 		case Integer:
 			p.Type = "integer"
 			// Telegram uses int64 (int53, really) for IDs.
-			if isIDLikeName(f.Name) || isIDLikeDesc(f.Description) {
+			if isIDLikeName(f.Name) || isIDLikeDesc(rawText) {
 				p.Format = "int64"
 			}
 
@@ -88,7 +90,7 @@ func (a API) typeOAS(f Field) *ogen.Schema {
 			if f.Name == "offset" {
 				p.Default = []byte(`0`)
 			}
-			b := intBounds(p.Description)
+			b := intBounds(rawText)
 			if b.Max > 0 {
 				p.Maximum = strconv.AppendInt(nil, b.Max, 10)
 			}
@@ -153,7 +155,7 @@ func (a API) OAS() (*ogen.Spec, error) {
 
 	for _, d := range a.Types {
 		s := &ogen.Schema{
-			Description: cleanDescription(d.Description),
+			Description: d.PrettyDescription,
 			Type:        "object",
 		}
 		if d.Ret != nil && d.Ret.Kind == KindSum {
@@ -353,7 +355,7 @@ Schemas:
 		}
 		var hasConditionalRequired bool
 		for _, f := range m.Fields {
-			if strings.Contains(f.Description, "Required if") {
+			if strings.Contains(f.RawText, "Required if") {
 				hasConditionalRequired = true
 			}
 			p := a.fieldOAS(s, f)
@@ -487,7 +489,7 @@ Schemas:
 		}
 		item := &ogen.PathItem{
 			Post: &ogen.Operation{
-				Description: m.Description,
+				Description: m.PrettyDescription,
 				OperationID: m.Name,
 				RequestBody: reqBody,
 				Responses:   responses,

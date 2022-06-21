@@ -49,11 +49,11 @@ func Extract(doc *goquery.Document) (a API) {
 				}
 			}
 			const canBeString = "String can be used instead of this object"
-			if strings.Contains(d.Description, canBeString) {
+			if strings.Contains(d.RawText, canBeString) {
 				newName := d.Name + "Object"
 				a.Types = append(a.Types, Definition{
-					Name:        d.Name,
-					Description: d.Description,
+					Name:    d.Name,
+					RawText: d.RawText,
 					Ret: &Type{
 						Name: d.Name,
 						Kind: KindSum,
@@ -78,11 +78,12 @@ func Extract(doc *goquery.Document) (a API) {
 			return
 		}
 		if s.Is("p") && d.Name != "" {
-			d.Description = selDescription(s)
-			if strings.Contains(strings.ToLower(d.Description), `currently holds no information`) {
+			d.RawText = strings.TrimSpace(s.Text())
+			d.PrettyDescription = selDescription(s)
+			if strings.Contains(strings.ToLower(d.RawText), `currently holds no information`) {
 				appendDefinition()
 			}
-			if strings.Contains(d.Description, `Returns basic information about the bot`) {
+			if strings.Contains(d.RawText, `Returns basic information about the bot`) {
 				d.Ret = &Type{
 					Kind: KindObject,
 					Name: "User",
@@ -90,7 +91,7 @@ func Extract(doc *goquery.Document) (a API) {
 				appendDefinition()
 			}
 		}
-		switch desc := d.Description; {
+		switch desc := d.RawText; {
 		case strings.Contains(desc, `as String on success`):
 			t := newPrimitive(String)
 			d.Ret = &t
@@ -113,7 +114,7 @@ func Extract(doc *goquery.Document) (a API) {
 			`Currently, the following`,
 			`This object represents one result of`,
 		} {
-			if strings.Contains(d.Description, sumMarker) {
+			if strings.Contains(d.RawText, sumMarker) {
 				probablySum = true
 				probablyMarker = sumMarker
 			}
@@ -122,7 +123,7 @@ func Extract(doc *goquery.Document) (a API) {
 			t := &Type{
 				Kind: KindSum,
 			}
-			d.Description = strings.TrimSpace(strings.ReplaceAll(d.Description, probablyMarker, ""))
+			d.RawText = strings.TrimSpace(strings.ReplaceAll(d.RawText, probablyMarker, ""))
 			s.Find("li").Each(func(i int, s *goquery.Selection) {
 				t.Sum = append(t.Sum, ParseType(s.Text()))
 			})
@@ -154,7 +155,7 @@ func Extract(doc *goquery.Document) (a API) {
 				start, end int
 				prefix     string
 			)
-			loweredDesc := strings.TrimSuffix(strings.ToLower(d.Description), ".")
+			loweredDesc := strings.TrimSuffix(strings.ToLower(d.RawText), ".")
 			start, prefix = IndexOneOf(loweredDesc,
 				retArrayPrefix,
 				retArrayPrefix2,
@@ -170,7 +171,7 @@ func Extract(doc *goquery.Document) (a API) {
 
 			end, _ = IndexOneOf(loweredDesc, retSuffix, retSuffix2, retSuffix3, retSuffix4)
 			if start > 0 && end > start {
-				ret := strings.TrimSpace(d.Description[start+len(prefix) : end])
+				ret := strings.TrimSpace(d.RawText[start+len(prefix) : end])
 				ret = strings.TrimSuffix(ret, ".")
 				ret = strings.TrimSuffix(ret, "object")
 				ret = strings.TrimSuffix(ret, "objects")
@@ -206,7 +207,7 @@ func Extract(doc *goquery.Document) (a API) {
 		}
 
 		if !s.Is("table") {
-			if strings.Contains(d.Description, "Requires no parameters") {
+			if strings.Contains(d.RawText, "Requires no parameters") {
 				appendDefinition()
 			}
 			return
@@ -247,11 +248,12 @@ func Extract(doc *goquery.Document) (a API) {
 
 			description := selDescription(sel.Eq(fDescription))
 			d.Fields = append(d.Fields, Field{
-				Name:        name,
-				Description: strings.TrimSuffix(strings.TrimPrefix(description, optPrefix), "."),
-				Optional:    optional,
-				Enum:        collectEnum(typ, name, rawText),
-				Type:        typ,
+				Name:              name,
+				RawText:           rawText,
+				PrettyDescription: strings.TrimSuffix(strings.TrimPrefix(description, optPrefix), "."),
+				Optional:          optional,
+				Enum:              collectEnum(typ, name, rawText),
+				Type:              typ,
 			})
 		})
 		appendDefinition()

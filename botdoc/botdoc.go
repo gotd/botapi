@@ -119,19 +119,21 @@ func (t Type) String() string {
 
 // Field of object or argument of function.
 type Field struct {
-	Type        Type
-	Name        string
-	Description string
-	Enum        []string
-	Optional    bool
+	Type              Type
+	Name              string
+	RawText           string
+	PrettyDescription string
+	Enum              []string
+	Optional          bool
 }
 
 // Definition of structure (method or object).
 type Definition struct {
-	Name        string
-	Description string
-	Fields      []Field
-	Ret         *Type
+	Name              string
+	RawText           string
+	PrettyDescription string
+	Fields            []Field
+	Ret               *Type
 }
 
 // API definition.
