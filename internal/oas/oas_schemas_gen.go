@@ -515,6 +515,11 @@ type Chat struct {
 	// True, if privacy settings of the other party in the private chat allows to use
 	// tg://user?id=<user_id> links only in chats with the user. Returned only in getChat.
 	HasPrivateForwards OptBool "json:\"has_private_forwards\""
+	// True, if users need to join the supergroup before they can send messages. Returned only in getChat.
+	JoinToSendMessages OptBool "json:\"join_to_send_messages\""
+	// True, if all users directly joining the supergroup need to be approved by supergroup
+	// administrators. Returned only in getChat.
+	JoinByRequest OptBool "json:\"join_by_request\""
 	// Description, for groups, supergroups and channel chats. Returned only in getChat.
 	Description OptString "json:\"description\""
 	// Primary invite link, for groups, supergroups and channel chats. Returned only in getChat.
@@ -1034,6 +1039,60 @@ type CreateChatInviteLink struct {
 	// True, if users joining the chat via the link need to be approved by chat administrators. If True,
 	// member_limit can't be specified.
 	CreatesJoinRequest OptBool "json:\"creates_join_request\""
+}
+
+// Input for createInvoiceLink.
+// Ref: #/components/schemas/createInvoiceLink
+type CreateInvoiceLink struct {
+	// Product name, 1-32 characters.
+	Title string "json:\"title\""
+	// Product description, 1-255 characters.
+	Description string "json:\"description\""
+	// Bot-defined invoice payload, 1-128 bytes. This will not be displayed to the user, use for your
+	// internal processes.
+	Payload string "json:\"payload\""
+	// Payment provider token, obtained via BotFather.
+	ProviderToken string "json:\"provider_token\""
+	// Three-letter ISO 4217 currency code, see more on currencies.
+	Currency string "json:\"currency\""
+	// Price breakdown, a JSON-serialized list of components (e.g. product price, tax, discount, delivery
+	// cost, delivery tax, bonus, etc.).
+	Prices []LabeledPrice "json:\"prices\""
+	// The maximum accepted amount for tips in the smallest units of the currency (integer, not
+	// float/double). For example, for a maximum tip of US$ 1.45 pass max_tip_amount = 145. See the exp
+	// parameter in currencies.json, it shows the number of digits past the decimal point for each
+	// currency (2 for the majority of currencies). Defaults to 0.
+	MaxTipAmount OptInt "json:\"max_tip_amount\""
+	// A JSON-serialized array of suggested amounts of tips in the smallest units of the currency
+	// (integer, not float/double). At most 4 suggested tip amounts can be specified. The suggested tip
+	// amounts must be positive, passed in a strictly increased order and must not exceed max_tip_amount.
+	SuggestedTipAmounts []int "json:\"suggested_tip_amounts\""
+	// JSON-serialized data about the invoice, which will be shared with the payment provider. A detailed
+	// description of required fields should be provided by the payment provider.
+	ProviderData OptString "json:\"provider_data\""
+	// URL of the product photo for the invoice. Can be a photo of the goods or a marketing image for a
+	// service.
+	PhotoURL OptString "json:\"photo_url\""
+	// Photo size in bytes.
+	PhotoSize OptInt "json:\"photo_size\""
+	// Photo width.
+	PhotoWidth OptInt "json:\"photo_width\""
+	// Photo height.
+	PhotoHeight OptInt "json:\"photo_height\""
+	// Pass True, if you require the user's full name to complete the order.
+	NeedName OptBool "json:\"need_name\""
+	// Pass True, if you require the user's phone number to complete the order.
+	NeedPhoneNumber OptBool "json:\"need_phone_number\""
+	// Pass True, if you require the user's email address to complete the order.
+	NeedEmail OptBool "json:\"need_email\""
+	// Pass True, if you require the user's shipping address to complete the order.
+	NeedShippingAddress OptBool "json:\"need_shipping_address\""
+	// Pass True, if the user's phone number should be sent to the provider.
+	SendPhoneNumberToProvider OptBool "json:\"send_phone_number_to_provider\""
+	// Pass True, if the user's email address should be sent to the provider.
+	SendEmailToProvider OptBool "json:\"send_email_to_provider\""
+	// Pass True, if the final price depends on the shipping method.
+	IsFlexible OptBool "json:\"is_flexible\""
 }
 
 // Input for createNewStickerSet.
@@ -3623,7 +3682,7 @@ type Message struct {
 	// Signature of the post author for messages in channels, or the custom title of an anonymous group
 	// administrator.
 	AuthorSignature OptString "json:\"author_signature\""
-	// For text messages, the actual UTF-8 text of the message, 0-4096 characters.
+	// For text messages, the actual UTF-8 text of the message.
 	Text OptString "json:\"text\""
 	// For text messages, special entities like usernames, URLs, bot commands, etc. that appear in the
 	// text.
@@ -3637,7 +3696,7 @@ type Message struct {
 	Video     OptVideo     "json:\"video\""
 	VideoNote OptVideoNote "json:\"video_note\""
 	Voice     OptVoice     "json:\"voice\""
-	// Caption for the animation, audio, document, photo, video or voice, 0-1024 characters.
+	// Caption for the animation, audio, document, photo, video or voice.
 	Caption OptString "json:\"caption\""
 	// For messages with a caption, special entities like usernames, URLs, bot commands, etc. that appear
 	// in the caption.
@@ -9052,6 +9111,10 @@ type SetWebhook struct {
 	AllowedUpdates []string "json:\"allowed_updates\""
 	// Pass True to drop all pending updates.
 	DropPendingUpdates OptBool "json:\"drop_pending_updates\""
+	// A secret token to be sent in a header "X-Telegram-Bot-Api-Secret-Token" in every webhook request,
+	// 1-256 characters. Only characters A-Z, a-z, 0-9, _ and - are allowed. The header is useful to
+	// ensure that the request comes from a webhook set by you.
+	SecretToken OptString "json:\"secret_token\""
 }
 
 // This object represents a shipping address.
@@ -9113,8 +9176,9 @@ type Sticker struct {
 	// Emoji associated with the sticker.
 	Emoji OptString "json:\"emoji\""
 	// Name of the sticker set to which the sticker belongs.
-	SetName      OptString       "json:\"set_name\""
-	MaskPosition OptMaskPosition "json:\"mask_position\""
+	SetName          OptString       "json:\"set_name\""
+	PremiumAnimation OptFile         "json:\"premium_animation\""
+	MaskPosition     OptMaskPosition "json:\"mask_position\""
 	// File size in bytes.
 	FileSize OptInt "json:\"file_size\""
 }
@@ -9265,6 +9329,10 @@ type User struct {
 	Username OptString "json:\"username\""
 	// IETF language tag of the user's language.
 	LanguageCode OptString "json:\"language_code\""
+	// True, if this user is a Telegram Premium user.
+	IsPremium OptBool "json:\"is_premium\""
+	// True, if this user added the bot to the attachment menu.
+	AddedToAttachmentMenu OptBool "json:\"added_to_attachment_menu\""
 	// True, if the bot can be invited to groups. Returned only in getMe.
 	CanJoinGroups OptBool "json:\"can_join_groups\""
 	// True, if privacy mode is disabled for the bot. Returned only in getMe.

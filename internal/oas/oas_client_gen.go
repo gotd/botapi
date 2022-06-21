@@ -829,6 +829,76 @@ func (c *Client) CreateChatInviteLink(ctx context.Context, request CreateChatInv
 	return result, nil
 }
 
+// CreateInvoiceLink invokes createInvoiceLink operation.
+//
+// POST /createInvoiceLink
+func (c *Client) CreateInvoiceLink(ctx context.Context, request CreateInvoiceLink) (res ResultString, err error) {
+	if err := func() error {
+		if err := request.Validate(); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return res, errors.Wrap(err, "validate")
+	}
+	startTime := time.Now()
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("createInvoiceLink"),
+	}
+	ctx, span := c.cfg.Tracer.Start(ctx, "CreateInvoiceLink",
+		trace.WithAttributes(otelAttrs...),
+		trace.WithSpanKind(trace.SpanKindClient),
+	)
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			c.errors.Add(ctx, 1, otelAttrs...)
+		} else {
+			elapsedDuration := time.Since(startTime)
+			c.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+		}
+		span.End()
+	}()
+	c.requests.Add(ctx, 1, otelAttrs...)
+	var (
+		contentType string
+		reqBody     func() (io.ReadCloser, error)
+	)
+	contentType = "application/json"
+	fn, err := encodeCreateInvoiceLinkRequestJSON(request, span)
+	if err != nil {
+		return res, err
+	}
+	reqBody = fn
+
+	u := uri.Clone(c.serverURL)
+	u.Path += "/createInvoiceLink"
+
+	body, err := reqBody()
+	if err != nil {
+		return res, errors.Wrap(err, "request body")
+	}
+	defer body.Close()
+
+	r := ht.NewRequest(ctx, "POST", u, body)
+	r.GetBody = reqBody
+
+	r.Header.Set("Content-Type", contentType)
+
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	result, err := decodeCreateInvoiceLinkResponse(resp, span)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
 // CreateNewStickerSet invokes createNewStickerSet operation.
 //
 // POST /createNewStickerSet
@@ -5182,6 +5252,14 @@ func (c *Client) SetStickerSetThumb(ctx context.Context, request SetStickerSetTh
 //
 // POST /setWebhook
 func (c *Client) SetWebhook(ctx context.Context, request SetWebhook) (res Result, err error) {
+	if err := func() error {
+		if err := request.Validate(); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return res, errors.Wrap(err, "validate")
+	}
 	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setWebhook"),
