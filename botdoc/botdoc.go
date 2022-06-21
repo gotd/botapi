@@ -183,6 +183,11 @@ func Extract(doc *goquery.Document) (a API) {
 		sec section
 	)
 	doc.Find("#dev_page_content").Children().Each(func(i int, s *goquery.Selection) {
+		// Replace emoji images with alts.
+		s.Find(".emoji").Each(func(i int, s *goquery.Selection) {
+			s.ReplaceWithHtml(s.AttrOr("alt", ""))
+		})
+
 		if text := strings.TrimPrefix(s.Text(), "Bot API "); s.Is("p") &&
 			text != s.Text() &&
 			(a.Version == "" || text > a.Version) {
