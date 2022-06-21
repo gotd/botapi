@@ -250,6 +250,19 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 							return
 						}
+					case 'I': // Prefix: "InvoiceLink"
+						if l := len("InvoiceLink"); len(elem) >= l && elem[0:l] == "InvoiceLink" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							// Leaf: CreateInvoiceLink
+							s.handleCreateInvoiceLinkRequest([0]string{}, w, r)
+
+							return
+						}
 					case 'N': // Prefix: "NewStickerSet"
 						if l := len("NewStickerSet"); len(elem) >= l && elem[0:l] == "NewStickerSet" {
 							elem = elem[l:]
@@ -1912,6 +1925,20 @@ func (s *Server) FindRoute(method, path string) (r Route, _ bool) {
 						if len(elem) == 0 {
 							// Leaf: CreateChatInviteLink
 							r.name = "CreateChatInviteLink"
+							r.args = args
+							r.count = 0
+							return r, true
+						}
+					case 'I': // Prefix: "InvoiceLink"
+						if l := len("InvoiceLink"); len(elem) >= l && elem[0:l] == "InvoiceLink" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							// Leaf: CreateInvoiceLink
+							r.name = "CreateInvoiceLink"
 							r.args = args
 							r.count = 0
 							return r, true

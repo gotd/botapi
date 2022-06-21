@@ -60,6 +60,10 @@ type Handler interface {
 	//
 	// POST /createChatInviteLink
 	CreateChatInviteLink(ctx context.Context, req CreateChatInviteLink) (ResultChatInviteLink, error)
+	// CreateInvoiceLink implements createInvoiceLink operation.
+	//
+	// POST /createInvoiceLink
+	CreateInvoiceLink(ctx context.Context, req CreateInvoiceLink) (ResultString, error)
 	// CreateNewStickerSet implements createNewStickerSet operation.
 	//
 	// POST /createNewStickerSet

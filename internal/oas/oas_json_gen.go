@@ -2897,6 +2897,18 @@ func (s Chat) encodeFields(e *jx.Encoder) {
 		}
 	}
 	{
+		if s.JoinToSendMessages.Set {
+			e.FieldStart("join_to_send_messages")
+			s.JoinToSendMessages.Encode(e)
+		}
+	}
+	{
+		if s.JoinByRequest.Set {
+			e.FieldStart("join_by_request")
+			s.JoinByRequest.Encode(e)
+		}
+	}
+	{
 		if s.Description.Set {
 			e.FieldStart("description")
 			s.Description.Encode(e)
@@ -2970,7 +2982,7 @@ func (s Chat) encodeFields(e *jx.Encoder) {
 	}
 }
 
-var jsonFieldsNameOfChat = [21]string{
+var jsonFieldsNameOfChat = [23]string{
 	0:  "id",
 	1:  "type",
 	2:  "title",
@@ -2980,18 +2992,20 @@ var jsonFieldsNameOfChat = [21]string{
 	6:  "photo",
 	7:  "bio",
 	8:  "has_private_forwards",
-	9:  "description",
-	10: "invite_link",
-	11: "pinned_message",
-	12: "permissions",
-	13: "slow_mode_delay",
-	14: "message_auto_delete_time",
-	15: "has_protected_content",
-	16: "sticker_set_name",
-	17: "can_set_sticker_set",
-	18: "linked_chat_id",
-	19: "location",
-	20: "all_members_are_administrators",
+	9:  "join_to_send_messages",
+	10: "join_by_request",
+	11: "description",
+	12: "invite_link",
+	13: "pinned_message",
+	14: "permissions",
+	15: "slow_mode_delay",
+	16: "message_auto_delete_time",
+	17: "has_protected_content",
+	18: "sticker_set_name",
+	19: "can_set_sticker_set",
+	20: "linked_chat_id",
+	21: "location",
+	22: "all_members_are_administrators",
 }
 
 // Decode decodes Chat from json.
@@ -3094,6 +3108,26 @@ func (s *Chat) Decode(d *jx.Decoder) error {
 				return nil
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"has_private_forwards\"")
+			}
+		case "join_to_send_messages":
+			if err := func() error {
+				s.JoinToSendMessages.Reset()
+				if err := s.JoinToSendMessages.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"join_to_send_messages\"")
+			}
+		case "join_by_request":
+			if err := func() error {
+				s.JoinByRequest.Reset()
+				if err := s.JoinByRequest.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"join_by_request\"")
 			}
 		case "description":
 			if err := func() error {
@@ -6667,6 +6701,456 @@ func (s CreateChatInviteLink) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
 func (s *CreateChatInviteLink) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode implements json.Marshaler.
+func (s CreateInvoiceLink) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	s.encodeFields(e)
+	e.ObjEnd()
+}
+
+// encodeFields encodes fields.
+func (s CreateInvoiceLink) encodeFields(e *jx.Encoder) {
+	{
+
+		e.FieldStart("title")
+		e.Str(s.Title)
+	}
+	{
+
+		e.FieldStart("description")
+		e.Str(s.Description)
+	}
+	{
+
+		e.FieldStart("payload")
+		e.Str(s.Payload)
+	}
+	{
+
+		e.FieldStart("provider_token")
+		e.Str(s.ProviderToken)
+	}
+	{
+
+		e.FieldStart("currency")
+		e.Str(s.Currency)
+	}
+	{
+
+		e.FieldStart("prices")
+		e.ArrStart()
+		for _, elem := range s.Prices {
+			elem.Encode(e)
+		}
+		e.ArrEnd()
+	}
+	{
+		if s.MaxTipAmount.Set {
+			e.FieldStart("max_tip_amount")
+			s.MaxTipAmount.Encode(e)
+		}
+	}
+	{
+		if s.SuggestedTipAmounts != nil {
+			e.FieldStart("suggested_tip_amounts")
+			e.ArrStart()
+			for _, elem := range s.SuggestedTipAmounts {
+				e.Int(elem)
+			}
+			e.ArrEnd()
+		}
+	}
+	{
+		if s.ProviderData.Set {
+			e.FieldStart("provider_data")
+			s.ProviderData.Encode(e)
+		}
+	}
+	{
+		if s.PhotoURL.Set {
+			e.FieldStart("photo_url")
+			s.PhotoURL.Encode(e)
+		}
+	}
+	{
+		if s.PhotoSize.Set {
+			e.FieldStart("photo_size")
+			s.PhotoSize.Encode(e)
+		}
+	}
+	{
+		if s.PhotoWidth.Set {
+			e.FieldStart("photo_width")
+			s.PhotoWidth.Encode(e)
+		}
+	}
+	{
+		if s.PhotoHeight.Set {
+			e.FieldStart("photo_height")
+			s.PhotoHeight.Encode(e)
+		}
+	}
+	{
+		if s.NeedName.Set {
+			e.FieldStart("need_name")
+			s.NeedName.Encode(e)
+		}
+	}
+	{
+		if s.NeedPhoneNumber.Set {
+			e.FieldStart("need_phone_number")
+			s.NeedPhoneNumber.Encode(e)
+		}
+	}
+	{
+		if s.NeedEmail.Set {
+			e.FieldStart("need_email")
+			s.NeedEmail.Encode(e)
+		}
+	}
+	{
+		if s.NeedShippingAddress.Set {
+			e.FieldStart("need_shipping_address")
+			s.NeedShippingAddress.Encode(e)
+		}
+	}
+	{
+		if s.SendPhoneNumberToProvider.Set {
+			e.FieldStart("send_phone_number_to_provider")
+			s.SendPhoneNumberToProvider.Encode(e)
+		}
+	}
+	{
+		if s.SendEmailToProvider.Set {
+			e.FieldStart("send_email_to_provider")
+			s.SendEmailToProvider.Encode(e)
+		}
+	}
+	{
+		if s.IsFlexible.Set {
+			e.FieldStart("is_flexible")
+			s.IsFlexible.Encode(e)
+		}
+	}
+}
+
+var jsonFieldsNameOfCreateInvoiceLink = [20]string{
+	0:  "title",
+	1:  "description",
+	2:  "payload",
+	3:  "provider_token",
+	4:  "currency",
+	5:  "prices",
+	6:  "max_tip_amount",
+	7:  "suggested_tip_amounts",
+	8:  "provider_data",
+	9:  "photo_url",
+	10: "photo_size",
+	11: "photo_width",
+	12: "photo_height",
+	13: "need_name",
+	14: "need_phone_number",
+	15: "need_email",
+	16: "need_shipping_address",
+	17: "send_phone_number_to_provider",
+	18: "send_email_to_provider",
+	19: "is_flexible",
+}
+
+// Decode decodes CreateInvoiceLink from json.
+func (s *CreateInvoiceLink) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode CreateInvoiceLink to nil")
+	}
+	var requiredBitSet [3]uint8
+
+	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "title":
+			requiredBitSet[0] |= 1 << 0
+			if err := func() error {
+				v, err := d.Str()
+				s.Title = string(v)
+				if err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"title\"")
+			}
+		case "description":
+			requiredBitSet[0] |= 1 << 1
+			if err := func() error {
+				v, err := d.Str()
+				s.Description = string(v)
+				if err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"description\"")
+			}
+		case "payload":
+			requiredBitSet[0] |= 1 << 2
+			if err := func() error {
+				v, err := d.Str()
+				s.Payload = string(v)
+				if err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"payload\"")
+			}
+		case "provider_token":
+			requiredBitSet[0] |= 1 << 3
+			if err := func() error {
+				v, err := d.Str()
+				s.ProviderToken = string(v)
+				if err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"provider_token\"")
+			}
+		case "currency":
+			requiredBitSet[0] |= 1 << 4
+			if err := func() error {
+				v, err := d.Str()
+				s.Currency = string(v)
+				if err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"currency\"")
+			}
+		case "prices":
+			requiredBitSet[0] |= 1 << 5
+			if err := func() error {
+				s.Prices = make([]LabeledPrice, 0)
+				if err := d.Arr(func(d *jx.Decoder) error {
+					var elem LabeledPrice
+					if err := elem.Decode(d); err != nil {
+						return err
+					}
+					s.Prices = append(s.Prices, elem)
+					return nil
+				}); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"prices\"")
+			}
+		case "max_tip_amount":
+			if err := func() error {
+				s.MaxTipAmount.Reset()
+				if err := s.MaxTipAmount.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"max_tip_amount\"")
+			}
+		case "suggested_tip_amounts":
+			if err := func() error {
+				s.SuggestedTipAmounts = make([]int, 0)
+				if err := d.Arr(func(d *jx.Decoder) error {
+					var elem int
+					v, err := d.Int()
+					elem = int(v)
+					if err != nil {
+						return err
+					}
+					s.SuggestedTipAmounts = append(s.SuggestedTipAmounts, elem)
+					return nil
+				}); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"suggested_tip_amounts\"")
+			}
+		case "provider_data":
+			if err := func() error {
+				s.ProviderData.Reset()
+				if err := s.ProviderData.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"provider_data\"")
+			}
+		case "photo_url":
+			if err := func() error {
+				s.PhotoURL.Reset()
+				if err := s.PhotoURL.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"photo_url\"")
+			}
+		case "photo_size":
+			if err := func() error {
+				s.PhotoSize.Reset()
+				if err := s.PhotoSize.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"photo_size\"")
+			}
+		case "photo_width":
+			if err := func() error {
+				s.PhotoWidth.Reset()
+				if err := s.PhotoWidth.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"photo_width\"")
+			}
+		case "photo_height":
+			if err := func() error {
+				s.PhotoHeight.Reset()
+				if err := s.PhotoHeight.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"photo_height\"")
+			}
+		case "need_name":
+			if err := func() error {
+				s.NeedName.Reset()
+				if err := s.NeedName.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"need_name\"")
+			}
+		case "need_phone_number":
+			if err := func() error {
+				s.NeedPhoneNumber.Reset()
+				if err := s.NeedPhoneNumber.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"need_phone_number\"")
+			}
+		case "need_email":
+			if err := func() error {
+				s.NeedEmail.Reset()
+				if err := s.NeedEmail.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"need_email\"")
+			}
+		case "need_shipping_address":
+			if err := func() error {
+				s.NeedShippingAddress.Reset()
+				if err := s.NeedShippingAddress.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"need_shipping_address\"")
+			}
+		case "send_phone_number_to_provider":
+			if err := func() error {
+				s.SendPhoneNumberToProvider.Reset()
+				if err := s.SendPhoneNumberToProvider.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"send_phone_number_to_provider\"")
+			}
+		case "send_email_to_provider":
+			if err := func() error {
+				s.SendEmailToProvider.Reset()
+				if err := s.SendEmailToProvider.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"send_email_to_provider\"")
+			}
+		case "is_flexible":
+			if err := func() error {
+				s.IsFlexible.Reset()
+				if err := s.IsFlexible.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"is_flexible\"")
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	}); err != nil {
+		return errors.Wrap(err, "decode CreateInvoiceLink")
+	}
+	// Validate required fields.
+	var failures []validate.FieldError
+	for i, mask := range [3]uint8{
+		0b00111111,
+		0b00000000,
+		0b00000000,
+	} {
+		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
+			// Mask only required fields and check equality to mask using XOR.
+			//
+			// If XOR result is not zero, result is not equal to expected, so some fields are missed.
+			// Bits of fields which would be set are actually bits of missed fields.
+			missed := bits.OnesCount8(result)
+			for bitN := 0; bitN < missed; bitN++ {
+				bitIdx := bits.TrailingZeros8(result)
+				fieldIdx := i*8 + bitIdx
+				var name string
+				if fieldIdx < len(jsonFieldsNameOfCreateInvoiceLink) {
+					name = jsonFieldsNameOfCreateInvoiceLink[fieldIdx]
+				} else {
+					name = strconv.Itoa(fieldIdx)
+				}
+				failures = append(failures, validate.FieldError{
+					Name:  name,
+					Error: validate.ErrFieldRequired,
+				})
+				// Reset bit.
+				result &^= 1 << bitIdx
+			}
+		}
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s CreateInvoiceLink) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *CreateInvoiceLink) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
@@ -39415,15 +39899,22 @@ func (s SetWebhook) encodeFields(e *jx.Encoder) {
 			s.DropPendingUpdates.Encode(e)
 		}
 	}
+	{
+		if s.SecretToken.Set {
+			e.FieldStart("secret_token")
+			s.SecretToken.Encode(e)
+		}
+	}
 }
 
-var jsonFieldsNameOfSetWebhook = [6]string{
+var jsonFieldsNameOfSetWebhook = [7]string{
 	0: "url",
 	1: "certificate",
 	2: "ip_address",
 	3: "max_connections",
 	4: "allowed_updates",
 	5: "drop_pending_updates",
+	6: "secret_token",
 }
 
 // Decode decodes SetWebhook from json.
@@ -39505,6 +39996,16 @@ func (s *SetWebhook) Decode(d *jx.Decoder) error {
 				return nil
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"drop_pending_updates\"")
+			}
+		case "secret_token":
+			if err := func() error {
+				s.SecretToken.Reset()
+				if err := s.SecretToken.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"secret_token\"")
 			}
 		default:
 			return d.Skip()
@@ -40097,6 +40598,12 @@ func (s Sticker) encodeFields(e *jx.Encoder) {
 		}
 	}
 	{
+		if s.PremiumAnimation.Set {
+			e.FieldStart("premium_animation")
+			s.PremiumAnimation.Encode(e)
+		}
+	}
+	{
 		if s.MaskPosition.Set {
 			e.FieldStart("mask_position")
 			s.MaskPosition.Encode(e)
@@ -40110,7 +40617,7 @@ func (s Sticker) encodeFields(e *jx.Encoder) {
 	}
 }
 
-var jsonFieldsNameOfSticker = [11]string{
+var jsonFieldsNameOfSticker = [12]string{
 	0:  "file_id",
 	1:  "file_unique_id",
 	2:  "width",
@@ -40120,8 +40627,9 @@ var jsonFieldsNameOfSticker = [11]string{
 	6:  "thumb",
 	7:  "emoji",
 	8:  "set_name",
-	9:  "mask_position",
-	10: "file_size",
+	9:  "premium_animation",
+	10: "mask_position",
+	11: "file_size",
 }
 
 // Decode decodes Sticker from json.
@@ -40234,6 +40742,16 @@ func (s *Sticker) Decode(d *jx.Decoder) error {
 				return nil
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"set_name\"")
+			}
+		case "premium_animation":
+			if err := func() error {
+				s.PremiumAnimation.Reset()
+				if err := s.PremiumAnimation.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"premium_animation\"")
 			}
 		case "mask_position":
 			if err := func() error {
@@ -41917,6 +42435,18 @@ func (s User) encodeFields(e *jx.Encoder) {
 		}
 	}
 	{
+		if s.IsPremium.Set {
+			e.FieldStart("is_premium")
+			s.IsPremium.Encode(e)
+		}
+	}
+	{
+		if s.AddedToAttachmentMenu.Set {
+			e.FieldStart("added_to_attachment_menu")
+			s.AddedToAttachmentMenu.Encode(e)
+		}
+	}
+	{
 		if s.CanJoinGroups.Set {
 			e.FieldStart("can_join_groups")
 			s.CanJoinGroups.Encode(e)
@@ -41936,16 +42466,18 @@ func (s User) encodeFields(e *jx.Encoder) {
 	}
 }
 
-var jsonFieldsNameOfUser = [9]string{
-	0: "id",
-	1: "is_bot",
-	2: "first_name",
-	3: "last_name",
-	4: "username",
-	5: "language_code",
-	6: "can_join_groups",
-	7: "can_read_all_group_messages",
-	8: "supports_inline_queries",
+var jsonFieldsNameOfUser = [11]string{
+	0:  "id",
+	1:  "is_bot",
+	2:  "first_name",
+	3:  "last_name",
+	4:  "username",
+	5:  "language_code",
+	6:  "is_premium",
+	7:  "added_to_attachment_menu",
+	8:  "can_join_groups",
+	9:  "can_read_all_group_messages",
+	10: "supports_inline_queries",
 }
 
 // Decode decodes User from json.
@@ -42022,6 +42554,26 @@ func (s *User) Decode(d *jx.Decoder) error {
 				return nil
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"language_code\"")
+			}
+		case "is_premium":
+			if err := func() error {
+				s.IsPremium.Reset()
+				if err := s.IsPremium.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"is_premium\"")
+			}
+		case "added_to_attachment_menu":
+			if err := func() error {
+				s.AddedToAttachmentMenu.Reset()
+				if err := s.AddedToAttachmentMenu.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"added_to_attachment_menu\"")
 			}
 		case "can_join_groups":
 			if err := func() error {

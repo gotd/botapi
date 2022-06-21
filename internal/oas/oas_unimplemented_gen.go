@@ -97,6 +97,13 @@ func (UnimplementedHandler) CreateChatInviteLink(ctx context.Context, req Create
 	return r, ht.ErrNotImplemented
 }
 
+// CreateInvoiceLink implements createInvoiceLink operation.
+//
+// POST /createInvoiceLink
+func (UnimplementedHandler) CreateInvoiceLink(ctx context.Context, req CreateInvoiceLink) (r ResultString, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
 // CreateNewStickerSet implements createNewStickerSet operation.
 //
 // POST /createNewStickerSet

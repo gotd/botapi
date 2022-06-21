@@ -175,6 +175,21 @@ func encodeCreateChatInviteLinkRequestJSON(
 		return io.NopCloser(bytes.NewReader(encoded)), nil
 	}, nil
 }
+func encodeCreateInvoiceLinkRequestJSON(
+	req CreateInvoiceLink,
+	span trace.Span,
+) (
+	data func() (io.ReadCloser, error),
+	rerr error,
+) {
+	e := jx.GetEncoder()
+
+	req.Encode(e)
+	encoded := e.Bytes()
+	return func() (io.ReadCloser, error) {
+		return io.NopCloser(bytes.NewReader(encoded)), nil
+	}, nil
+}
 func encodeCreateNewStickerSetRequestJSON(
 	req CreateNewStickerSet,
 	span trace.Span,
