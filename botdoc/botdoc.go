@@ -156,8 +156,16 @@ var typosReplacer = strings.NewReplacer(
 	`unpriviledged`, `unprivileged`,
 	`Url`, `URL`,
 	"More info on Sending Files »", "",
+	// Replace Unicode quotes.
 	"“", `"`,
 	"”", `"`,
+	// Replace apostrophe to single quote.
+	"\u2019", `'`,
+	// Replace ellipsis to 3 dots.
+	"…", `...`,
+	// Replace Unicode dashes to ASCII dash.
+	"\u2013", `-`,
+	"\u2014", `-`,
 )
 
 func fixTypos(s string) string {
