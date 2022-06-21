@@ -51,6 +51,11 @@ func NewClient(serverURL string, opts ...Option) (*Client, error) {
 
 // AddStickerToSet invokes addStickerToSet operation.
 //
+// Use this method to add a new sticker to a set created by the bot. You **must** use exactly one of
+// the fields _png_sticker_, _tgs_sticker_, or _webm_sticker_. Animated stickers can be added to
+// animated sticker sets and only to them. Animated sticker sets can have up to 50 stickers. Static
+// sticker sets can have up to 120 stickers. Returns _True_ on success.
+//
 // POST /addStickerToSet
 func (c *Client) AddStickerToSet(ctx context.Context, request AddStickerToSet) (res Result, err error) {
 	if err := func() error {
@@ -120,6 +125,11 @@ func (c *Client) AddStickerToSet(ctx context.Context, request AddStickerToSet) (
 }
 
 // AnswerCallbackQuery invokes answerCallbackQuery operation.
+//
+// Use this method to send answers to callback queries sent from [inline keyboards](https://core.
+// telegram.org/bots#inline-keyboards-and-on-the-fly-updating). The answer will be displayed to the
+// user as a notification at the top of the chat screen or as an alert. On success, _True_ is
+// returned.
 //
 // POST /answerCallbackQuery
 func (c *Client) AnswerCallbackQuery(ctx context.Context, request AnswerCallbackQuery) (res Result, err error) {
@@ -191,6 +201,9 @@ func (c *Client) AnswerCallbackQuery(ctx context.Context, request AnswerCallback
 
 // AnswerInlineQuery invokes answerInlineQuery operation.
 //
+// Use this method to send answers to an inline query. On success, _True_ is returned.No more than
+// **50** results per query are allowed.
+//
 // POST /answerInlineQuery
 func (c *Client) AnswerInlineQuery(ctx context.Context, request AnswerInlineQuery) (res Result, err error) {
 	if err := func() error {
@@ -261,6 +274,12 @@ func (c *Client) AnswerInlineQuery(ctx context.Context, request AnswerInlineQuer
 
 // AnswerPreCheckoutQuery invokes answerPreCheckoutQuery operation.
 //
+// Once the user has confirmed their payment and shipping details, the Bot API sends the final
+// confirmation in the form of an [Update](https://core.telegram.org/bots/api#update) with the field
+// _pre_checkout_query_. Use this method to respond to such pre-checkout queries. On success, _True_
+// is returned. **Note:** The Bot API must receive an answer within 10 seconds after the pre-checkout
+// query was sent.
+//
 // POST /answerPreCheckoutQuery
 func (c *Client) AnswerPreCheckoutQuery(ctx context.Context, request AnswerPreCheckoutQuery) (res Result, err error) {
 	startTime := time.Now()
@@ -322,6 +341,11 @@ func (c *Client) AnswerPreCheckoutQuery(ctx context.Context, request AnswerPreCh
 }
 
 // AnswerShippingQuery invokes answerShippingQuery operation.
+//
+// If you sent an invoice requesting a shipping address and the parameter _is_flexible_ was specified,
+//  the Bot API will send an [Update](https://core.telegram.org/bots/api#update) with a
+// _shipping_query_ field to the bot. Use this method to reply to shipping queries. On success,
+// _True_ is returned.
 //
 // POST /answerShippingQuery
 func (c *Client) AnswerShippingQuery(ctx context.Context, request AnswerShippingQuery) (res Result, err error) {
@@ -393,6 +417,11 @@ func (c *Client) AnswerShippingQuery(ctx context.Context, request AnswerShipping
 
 // AnswerWebAppQuery invokes answerWebAppQuery operation.
 //
+// Use this method to set the result of an interaction with a [Web App](https://core.telegram.
+// org/bots/webapps) and send a corresponding message on behalf of the user to the chat from which
+// the query originated. On success, a [SentWebAppMessage](https://core.telegram.
+// org/bots/api#sentwebappmessage) object is returned.
+//
 // POST /answerWebAppQuery
 func (c *Client) AnswerWebAppQuery(ctx context.Context, request AnswerWebAppQuery) (res Result, err error) {
 	if err := func() error {
@@ -463,6 +492,9 @@ func (c *Client) AnswerWebAppQuery(ctx context.Context, request AnswerWebAppQuer
 
 // ApproveChatJoinRequest invokes approveChatJoinRequest operation.
 //
+// Use this method to approve a chat join request. The bot must be an administrator in the chat for
+// this to work and must have the _can_invite_users_ administrator right. Returns _True_ on success.
+//
 // POST /approveChatJoinRequest
 func (c *Client) ApproveChatJoinRequest(ctx context.Context, request ApproveChatJoinRequest) (res Result, err error) {
 	startTime := time.Now()
@@ -524,6 +556,12 @@ func (c *Client) ApproveChatJoinRequest(ctx context.Context, request ApproveChat
 }
 
 // BanChatMember invokes banChatMember operation.
+//
+// Use this method to ban a user in a group, a supergroup or a channel. In the case of supergroups
+// and channels, the user will not be able to return to the chat on their own using invite links, etc.
+// , unless [unbanned](https://core.telegram.org/bots/api#unbanchatmember) first. The bot must be an
+// administrator in the chat for this to work and must have the appropriate administrator rights.
+// Returns _True_ on success.
 //
 // POST /banChatMember
 func (c *Client) BanChatMember(ctx context.Context, request BanChatMember) (res Result, err error) {
@@ -587,6 +625,12 @@ func (c *Client) BanChatMember(ctx context.Context, request BanChatMember) (res 
 
 // BanChatSenderChat invokes banChatSenderChat operation.
 //
+// Use this method to ban a channel chat in a supergroup or a channel. Until the chat is
+// [unbanned](https://core.telegram.org/bots/api#unbanchatsenderchat), the owner of the banned chat
+// won't be able to send messages on behalf of **any of their channels**. The bot must be an
+// administrator in the supergroup or channel for this to work and must have the appropriate
+// administrator rights. Returns _True_ on success.
+//
 // POST /banChatSenderChat
 func (c *Client) BanChatSenderChat(ctx context.Context, request BanChatSenderChat) (res Result, err error) {
 	startTime := time.Now()
@@ -649,6 +693,11 @@ func (c *Client) BanChatSenderChat(ctx context.Context, request BanChatSenderCha
 
 // Close invokes close operation.
 //
+// Use this method to close the bot instance before moving it from one local server to another. You
+// need to delete the webhook before calling this method to ensure that the bot isn't launched again
+// after server restart. The method will return error 429 in the first 10 minutes after the bot is
+// launched. Returns _True_ on success. Requires no parameters.
+//
 // POST /close
 func (c *Client) Close(ctx context.Context) (res Result, err error) {
 	startTime := time.Now()
@@ -690,6 +739,12 @@ func (c *Client) Close(ctx context.Context) (res Result, err error) {
 }
 
 // CopyMessage invokes copyMessage operation.
+//
+// Use this method to copy messages of any kind. Service messages and invoice messages can't be
+// copied. The method is analogous to the method [forwardMessage](https://core.telegram.
+// org/bots/api#forwardmessage), but the copied message doesn't have a link to the original message.
+// Returns the [MessageId](https://core.telegram.org/bots/api#messageid) of the sent message on
+// success.
 //
 // POST /copyMessage
 func (c *Client) CopyMessage(ctx context.Context, request CopyMessage) (res ResultMessageId, err error) {
@@ -761,6 +816,12 @@ func (c *Client) CopyMessage(ctx context.Context, request CopyMessage) (res Resu
 
 // CreateChatInviteLink invokes createChatInviteLink operation.
 //
+// Use this method to create an additional invite link for a chat. The bot must be an administrator
+// in the chat for this to work and must have the appropriate administrator rights. The link can be
+// revoked using the method [revokeChatInviteLink](https://core.telegram.
+// org/bots/api#revokechatinvitelink). Returns the new invite link as [ChatInviteLink](https://core.
+// telegram.org/bots/api#chatinvitelink) object.
+//
 // POST /createChatInviteLink
 func (c *Client) CreateChatInviteLink(ctx context.Context, request CreateChatInviteLink) (res ResultChatInviteLink, err error) {
 	if err := func() error {
@@ -830,6 +891,9 @@ func (c *Client) CreateChatInviteLink(ctx context.Context, request CreateChatInv
 }
 
 // CreateInvoiceLink invokes createInvoiceLink operation.
+//
+// Use this method to create a link for an invoice. Returns the created invoice link as _String_ on
+// success.
 //
 // POST /createInvoiceLink
 func (c *Client) CreateInvoiceLink(ctx context.Context, request CreateInvoiceLink) (res ResultString, err error) {
@@ -901,6 +965,10 @@ func (c *Client) CreateInvoiceLink(ctx context.Context, request CreateInvoiceLin
 
 // CreateNewStickerSet invokes createNewStickerSet operation.
 //
+// Use this method to create a new sticker set owned by a user. The bot will be able to edit the
+// sticker set thus created. You **must** use exactly one of the fields _png_sticker_, _tgs_sticker_,
+// or _webm_sticker_. Returns _True_ on success.
+//
 // POST /createNewStickerSet
 func (c *Client) CreateNewStickerSet(ctx context.Context, request CreateNewStickerSet) (res Result, err error) {
 	if err := func() error {
@@ -971,6 +1039,9 @@ func (c *Client) CreateNewStickerSet(ctx context.Context, request CreateNewStick
 
 // DeclineChatJoinRequest invokes declineChatJoinRequest operation.
 //
+// Use this method to decline a chat join request. The bot must be an administrator in the chat for
+// this to work and must have the _can_invite_users_ administrator right. Returns _True_ on success.
+//
 // POST /declineChatJoinRequest
 func (c *Client) DeclineChatJoinRequest(ctx context.Context, request DeclineChatJoinRequest) (res Result, err error) {
 	startTime := time.Now()
@@ -1032,6 +1103,10 @@ func (c *Client) DeclineChatJoinRequest(ctx context.Context, request DeclineChat
 }
 
 // DeleteChatPhoto invokes deleteChatPhoto operation.
+//
+// Use this method to delete a chat photo. Photos can't be changed for private chats. The bot must be
+// an administrator in the chat for this to work and must have the appropriate administrator rights.
+// Returns _True_ on success.
 //
 // POST /deleteChatPhoto
 func (c *Client) DeleteChatPhoto(ctx context.Context, request DeleteChatPhoto) (res Result, err error) {
@@ -1095,6 +1170,11 @@ func (c *Client) DeleteChatPhoto(ctx context.Context, request DeleteChatPhoto) (
 
 // DeleteChatStickerSet invokes deleteChatStickerSet operation.
 //
+// Use this method to delete a group sticker set from a supergroup. The bot must be an administrator
+// in the chat for this to work and must have the appropriate administrator rights. Use the field
+// _can_set_sticker_set_ optionally returned in [getChat](https://core.telegram.org/bots/api#getchat)
+// requests to check if the bot can use this method. Returns _True_ on success.
+//
 // POST /deleteChatStickerSet
 func (c *Client) DeleteChatStickerSet(ctx context.Context, request DeleteChatStickerSet) (res Result, err error) {
 	startTime := time.Now()
@@ -1156,6 +1236,15 @@ func (c *Client) DeleteChatStickerSet(ctx context.Context, request DeleteChatSti
 }
 
 // DeleteMessage invokes deleteMessage operation.
+//
+// Use this method to delete a message, including service messages, with the following limitations:-
+// A message can only be deleted if it was sent less than 48 hours ago.- A dice message in a private
+// chat can only be deleted if it was sent more than 24 hours ago.- Bots can delete outgoing messages
+// in private chats, groups, and supergroups.- Bots can delete incoming messages in private chats.-
+// Bots granted _can_post_messages_ permissions can delete outgoing messages in channels.- If the bot
+// is an administrator of a group, it can delete any message there.- If the bot has
+// _can_delete_messages_ permission in a supergroup or a channel, it can delete any message there.
+// Returns _True_ on success.
 //
 // POST /deleteMessage
 func (c *Client) DeleteMessage(ctx context.Context, request DeleteMessage) (res Result, err error) {
@@ -1219,6 +1308,11 @@ func (c *Client) DeleteMessage(ctx context.Context, request DeleteMessage) (res 
 
 // DeleteMyCommands invokes deleteMyCommands operation.
 //
+// Use this method to delete the list of the bot's commands for the given scope and user language.
+// After deletion, [higher level commands](https://core.telegram.
+// org/bots/api#determining-list-of-commands) will be shown to affected users. Returns _True_ on
+// success.
+//
 // POST /deleteMyCommands
 func (c *Client) DeleteMyCommands(ctx context.Context, request OptDeleteMyCommands) (res Result, err error) {
 	startTime := time.Now()
@@ -1280,6 +1374,8 @@ func (c *Client) DeleteMyCommands(ctx context.Context, request OptDeleteMyComman
 }
 
 // DeleteStickerFromSet invokes deleteStickerFromSet operation.
+//
+// Use this method to delete a sticker from a set created by the bot. Returns _True_ on success.
 //
 // POST /deleteStickerFromSet
 func (c *Client) DeleteStickerFromSet(ctx context.Context, request DeleteStickerFromSet) (res Result, err error) {
@@ -1343,6 +1439,9 @@ func (c *Client) DeleteStickerFromSet(ctx context.Context, request DeleteSticker
 
 // DeleteWebhook invokes deleteWebhook operation.
 //
+// Use this method to remove webhook integration if you decide to switch back to
+// [getUpdates](https://core.telegram.org/bots/api#getupdates). Returns _True_ on success.
+//
 // POST /deleteWebhook
 func (c *Client) DeleteWebhook(ctx context.Context, request OptDeleteWebhook) (res Result, err error) {
 	startTime := time.Now()
@@ -1404,6 +1503,11 @@ func (c *Client) DeleteWebhook(ctx context.Context, request OptDeleteWebhook) (r
 }
 
 // EditChatInviteLink invokes editChatInviteLink operation.
+//
+// Use this method to edit a non-primary invite link created by the bot. The bot must be an
+// administrator in the chat for this to work and must have the appropriate administrator rights.
+// Returns the edited invite link as a [ChatInviteLink](https://core.telegram.
+// org/bots/api#chatinvitelink) object.
 //
 // POST /editChatInviteLink
 func (c *Client) EditChatInviteLink(ctx context.Context, request EditChatInviteLink) (res ResultChatInviteLink, err error) {
@@ -1475,6 +1579,10 @@ func (c *Client) EditChatInviteLink(ctx context.Context, request EditChatInviteL
 
 // EditMessageCaption invokes editMessageCaption operation.
 //
+// Use this method to edit captions of messages. On success, if the edited message is not an inline
+// message, the edited [Message](https://core.telegram.org/bots/api#message) is returned, otherwise
+// _True_ is returned.
+//
 // POST /editMessageCaption
 func (c *Client) EditMessageCaption(ctx context.Context, request EditMessageCaption) (res ResultMessageOrBoolean, err error) {
 	if err := func() error {
@@ -1544,6 +1652,12 @@ func (c *Client) EditMessageCaption(ctx context.Context, request EditMessageCapt
 }
 
 // EditMessageLiveLocation invokes editMessageLiveLocation operation.
+//
+// Use this method to edit live location messages. A location can be edited until its _live_period_
+// expires or editing is explicitly disabled by a call to [stopMessageLiveLocation](https://core.
+// telegram.org/bots/api#stopmessagelivelocation). On success, if the edited message is not an inline
+// message, the edited [Message](https://core.telegram.org/bots/api#message) is returned, otherwise
+// _True_ is returned.
 //
 // POST /editMessageLiveLocation
 func (c *Client) EditMessageLiveLocation(ctx context.Context, request EditMessageLiveLocation) (res ResultMessageOrBoolean, err error) {
@@ -1615,6 +1729,13 @@ func (c *Client) EditMessageLiveLocation(ctx context.Context, request EditMessag
 
 // EditMessageMedia invokes editMessageMedia operation.
 //
+// Use this method to edit animation, audio, document, photo, or video messages. If a message is part
+// of a message album, then it can be edited only to an audio for audio albums, only to a document
+// for document albums and to a photo or a video otherwise. When an inline message is edited, a new
+// file can't be uploaded; use a previously uploaded file via its file_id or specify a URL. On
+// success, if the edited message is not an inline message, the edited [Message](https://core.
+// telegram.org/bots/api#message) is returned, otherwise _True_ is returned.
+//
 // POST /editMessageMedia
 func (c *Client) EditMessageMedia(ctx context.Context, request EditMessageMedia) (res ResultMessageOrBoolean, err error) {
 	if err := func() error {
@@ -1684,6 +1805,10 @@ func (c *Client) EditMessageMedia(ctx context.Context, request EditMessageMedia)
 }
 
 // EditMessageReplyMarkup invokes editMessageReplyMarkup operation.
+//
+// Use this method to edit only the reply markup of messages. On success, if the edited message is
+// not an inline message, the edited [Message](https://core.telegram.org/bots/api#message) is
+// returned, otherwise _True_ is returned.
 //
 // POST /editMessageReplyMarkup
 func (c *Client) EditMessageReplyMarkup(ctx context.Context, request EditMessageReplyMarkup) (res ResultMessageOrBoolean, err error) {
@@ -1755,6 +1880,10 @@ func (c *Client) EditMessageReplyMarkup(ctx context.Context, request EditMessage
 
 // EditMessageText invokes editMessageText operation.
 //
+// Use this method to edit text and [game](https://core.telegram.org/bots/api#games) messages. On
+// success, if the edited message is not an inline message, the edited [Message](https://core.
+// telegram.org/bots/api#message) is returned, otherwise _True_ is returned.
+//
 // POST /editMessageText
 func (c *Client) EditMessageText(ctx context.Context, request EditMessageText) (res ResultMessageOrBoolean, err error) {
 	if err := func() error {
@@ -1825,6 +1954,10 @@ func (c *Client) EditMessageText(ctx context.Context, request EditMessageText) (
 
 // ExportChatInviteLink invokes exportChatInviteLink operation.
 //
+// Use this method to generate a new primary invite link for a chat; any previously generated primary
+// link is revoked. The bot must be an administrator in the chat for this to work and must have the
+// appropriate administrator rights. Returns the new invite link as _String_ on success.
+//
 // POST /exportChatInviteLink
 func (c *Client) ExportChatInviteLink(ctx context.Context, request ExportChatInviteLink) (res ResultString, err error) {
 	startTime := time.Now()
@@ -1886,6 +2019,9 @@ func (c *Client) ExportChatInviteLink(ctx context.Context, request ExportChatInv
 }
 
 // ForwardMessage invokes forwardMessage operation.
+//
+// Use this method to forward messages of any kind. Service messages can't be forwarded. On success,
+// the sent [Message](https://core.telegram.org/bots/api#message) is returned.
 //
 // POST /forwardMessage
 func (c *Client) ForwardMessage(ctx context.Context, request ForwardMessage) (res ResultMessage, err error) {
@@ -1949,6 +2085,10 @@ func (c *Client) ForwardMessage(ctx context.Context, request ForwardMessage) (re
 
 // GetChat invokes getChat operation.
 //
+// Use this method to get up to date information about the chat (current name of the user for
+// one-on-one conversations, current username of a user, group or channel, etc.). Returns a
+// [Chat](https://core.telegram.org/bots/api#chat) object on success.
+//
 // POST /getChat
 func (c *Client) GetChat(ctx context.Context, request GetChat) (res ResultChat, err error) {
 	startTime := time.Now()
@@ -2010,6 +2150,11 @@ func (c *Client) GetChat(ctx context.Context, request GetChat) (res ResultChat, 
 }
 
 // GetChatAdministrators invokes getChatAdministrators operation.
+//
+// Use this method to get a list of administrators in a chat. On success, returns an Array of
+// [ChatMember](https://core.telegram.org/bots/api#chatmember) objects that contains information
+// about all chat administrators except other bots. If the chat is a group or a supergroup and no
+// administrators were appointed, only the creator will be returned.
 //
 // POST /getChatAdministrators
 func (c *Client) GetChatAdministrators(ctx context.Context, request GetChatAdministrators) (res ResultArrayOfChatMember, err error) {
@@ -2073,6 +2218,9 @@ func (c *Client) GetChatAdministrators(ctx context.Context, request GetChatAdmin
 
 // GetChatMember invokes getChatMember operation.
 //
+// Use this method to get information about a member of a chat. Returns a [ChatMember](https://core.
+// telegram.org/bots/api#chatmember) object on success.
+//
 // POST /getChatMember
 func (c *Client) GetChatMember(ctx context.Context, request GetChatMember) (res ResultChatMember, err error) {
 	startTime := time.Now()
@@ -2134,6 +2282,8 @@ func (c *Client) GetChatMember(ctx context.Context, request GetChatMember) (res 
 }
 
 // GetChatMemberCount invokes getChatMemberCount operation.
+//
+// Use this method to get the number of members in a chat. Returns _Int_ on success.
 //
 // POST /getChatMemberCount
 func (c *Client) GetChatMemberCount(ctx context.Context, request GetChatMemberCount) (res ResultInt, err error) {
@@ -2197,6 +2347,10 @@ func (c *Client) GetChatMemberCount(ctx context.Context, request GetChatMemberCo
 
 // GetChatMenuButton invokes getChatMenuButton operation.
 //
+// Use this method to get the current value of the bot's menu button in a private chat, or the
+// default menu button. Returns [MenuButton](https://core.telegram.org/bots/api#menubutton) on
+// success.
+//
 // POST /getChatMenuButton
 func (c *Client) GetChatMenuButton(ctx context.Context, request OptGetChatMenuButton) (res Result, err error) {
 	startTime := time.Now()
@@ -2258,6 +2412,13 @@ func (c *Client) GetChatMenuButton(ctx context.Context, request OptGetChatMenuBu
 }
 
 // GetFile invokes getFile operation.
+//
+// Use this method to get basic information about a file and prepare it for downloading. For the
+// moment, bots can download files of up to 20MB in size. On success, a [File](https://core.telegram.
+// org/bots/api#file) object is returned. The file can then be downloaded via the link `https://api.
+// telegram.org/file/bot<token>/<file_path>`, where `<file_path>` is taken from the response. It is
+// guaranteed that the link will be valid for at least 1 hour. When the link expires, a new one can
+// be requested by calling [getFile](https://core.telegram.org/bots/api#getfile) again.
 //
 // POST /getFile
 func (c *Client) GetFile(ctx context.Context, request GetFile) (res ResultFile, err error) {
@@ -2321,6 +2482,10 @@ func (c *Client) GetFile(ctx context.Context, request GetFile) (res ResultFile, 
 
 // GetGameHighScores invokes getGameHighScores operation.
 //
+// Use this method to get data for high score tables. Will return the score of the specified user and
+// several of their neighbors in a game. On success, returns an _Array_ of
+// [GameHighScore](https://core.telegram.org/bots/api#gamehighscore) objects.
+//
 // POST /getGameHighScores
 func (c *Client) GetGameHighScores(ctx context.Context, request GetGameHighScores) (res ResultArrayOfGameHighScore, err error) {
 	startTime := time.Now()
@@ -2383,6 +2548,9 @@ func (c *Client) GetGameHighScores(ctx context.Context, request GetGameHighScore
 
 // GetMe invokes getMe operation.
 //
+// A simple method for testing your bot's authentication token. Requires no parameters. Returns basic
+// information about the bot in form of a [User](https://core.telegram.org/bots/api#user) object.
+//
 // POST /getMe
 func (c *Client) GetMe(ctx context.Context) (res ResultUser, err error) {
 	startTime := time.Now()
@@ -2424,6 +2592,10 @@ func (c *Client) GetMe(ctx context.Context) (res ResultUser, err error) {
 }
 
 // GetMyCommands invokes getMyCommands operation.
+//
+// Use this method to get the current list of the bot's commands for the given scope and user
+// language. Returns Array of [BotCommand](https://core.telegram.org/bots/api#botcommand) on success.
+// If commands aren't set, an empty list is returned.
 //
 // POST /getMyCommands
 func (c *Client) GetMyCommands(ctx context.Context, request OptGetMyCommands) (res ResultArrayOfBotCommand, err error) {
@@ -2487,6 +2659,9 @@ func (c *Client) GetMyCommands(ctx context.Context, request OptGetMyCommands) (r
 
 // GetMyDefaultAdministratorRights invokes getMyDefaultAdministratorRights operation.
 //
+// Use this method to get the current default administrator rights of the bot. Returns
+// [ChatAdministratorRights](https://core.telegram.org/bots/api#chatadministratorrights) on success.
+//
 // POST /getMyDefaultAdministratorRights
 func (c *Client) GetMyDefaultAdministratorRights(ctx context.Context, request OptGetMyDefaultAdministratorRights) (res Result, err error) {
 	startTime := time.Now()
@@ -2549,6 +2724,9 @@ func (c *Client) GetMyDefaultAdministratorRights(ctx context.Context, request Op
 
 // GetStickerSet invokes getStickerSet operation.
 //
+// Use this method to get a sticker set. On success, a [StickerSet](https://core.telegram.
+// org/bots/api#stickerset) object is returned.
+//
 // POST /getStickerSet
 func (c *Client) GetStickerSet(ctx context.Context, request GetStickerSet) (res ResultStickerSet, err error) {
 	startTime := time.Now()
@@ -2610,6 +2788,10 @@ func (c *Client) GetStickerSet(ctx context.Context, request GetStickerSet) (res 
 }
 
 // GetUpdates invokes getUpdates operation.
+//
+// Use this method to receive incoming updates using long polling ([wiki](https://en.wikipedia.
+// org/wiki/Push_technology#Long_polling)). An Array of [Update](https://core.telegram.
+// org/bots/api#update) objects is returned.
 //
 // POST /getUpdates
 func (c *Client) GetUpdates(ctx context.Context, request OptGetUpdates) (res ResultArrayOfUpdate, err error) {
@@ -2688,6 +2870,9 @@ func (c *Client) GetUpdates(ctx context.Context, request OptGetUpdates) (res Res
 
 // GetUserProfilePhotos invokes getUserProfilePhotos operation.
 //
+// Use this method to get a list of profile pictures for a user. Returns a
+// [UserProfilePhotos](https://core.telegram.org/bots/api#userprofilephotos) object.
+//
 // POST /getUserProfilePhotos
 func (c *Client) GetUserProfilePhotos(ctx context.Context, request GetUserProfilePhotos) (res ResultUserProfilePhotos, err error) {
 	if err := func() error {
@@ -2758,6 +2943,11 @@ func (c *Client) GetUserProfilePhotos(ctx context.Context, request GetUserProfil
 
 // GetWebhookInfo invokes getWebhookInfo operation.
 //
+// Use this method to get current webhook status. Requires no parameters. On success, returns a
+// [WebhookInfo](https://core.telegram.org/bots/api#webhookinfo) object. If the bot is using
+// [getUpdates](https://core.telegram.org/bots/api#getupdates), will return an object with the _url_
+// field empty.
+//
 // POST /getWebhookInfo
 func (c *Client) GetWebhookInfo(ctx context.Context) (res ResultWebhookInfo, err error) {
 	startTime := time.Now()
@@ -2799,6 +2989,8 @@ func (c *Client) GetWebhookInfo(ctx context.Context) (res ResultWebhookInfo, err
 }
 
 // LeaveChat invokes leaveChat operation.
+//
+// Use this method for your bot to leave a group, supergroup or channel. Returns _True_ on success.
 //
 // POST /leaveChat
 func (c *Client) LeaveChat(ctx context.Context, request LeaveChat) (res Result, err error) {
@@ -2862,6 +3054,12 @@ func (c *Client) LeaveChat(ctx context.Context, request LeaveChat) (res Result, 
 
 // LogOut invokes logOut operation.
 //
+// Use this method to log out from the cloud Bot API server before launching the bot locally. You
+// **must** log out the bot before running it locally, otherwise there is no guarantee that the bot
+// will receive updates. After a successful call, you can immediately log in on a local server, but
+// will not be able to log in back to the cloud Bot API server for 10 minutes. Returns _True_ on
+// success. Requires no parameters.
+//
 // POST /logOut
 func (c *Client) LogOut(ctx context.Context) (res Result, err error) {
 	startTime := time.Now()
@@ -2903,6 +3101,11 @@ func (c *Client) LogOut(ctx context.Context) (res Result, err error) {
 }
 
 // PinChatMessage invokes pinChatMessage operation.
+//
+// Use this method to add a message to the list of pinned messages in a chat. If the chat is not a
+// private chat, the bot must be an administrator in the chat for this to work and must have the
+// 'can_pin_messages' administrator right in a supergroup or 'can_edit_messages' administrator right
+// in a channel. Returns _True_ on success.
 //
 // POST /pinChatMessage
 func (c *Client) PinChatMessage(ctx context.Context, request PinChatMessage) (res Result, err error) {
@@ -2966,6 +3169,10 @@ func (c *Client) PinChatMessage(ctx context.Context, request PinChatMessage) (re
 
 // PromoteChatMember invokes promoteChatMember operation.
 //
+// Use this method to promote or demote a user in a supergroup or a channel. The bot must be an
+// administrator in the chat for this to work and must have the appropriate administrator rights.
+// Pass _False_ for all boolean parameters to demote a user. Returns _True_ on success.
+//
 // POST /promoteChatMember
 func (c *Client) PromoteChatMember(ctx context.Context, request PromoteChatMember) (res Result, err error) {
 	startTime := time.Now()
@@ -3027,6 +3234,10 @@ func (c *Client) PromoteChatMember(ctx context.Context, request PromoteChatMembe
 }
 
 // RestrictChatMember invokes restrictChatMember operation.
+//
+// Use this method to restrict a user in a supergroup. The bot must be an administrator in the
+// supergroup for this to work and must have the appropriate administrator rights. Pass _True_ for
+// all permissions to lift restrictions from a user. Returns _True_ on success.
 //
 // POST /restrictChatMember
 func (c *Client) RestrictChatMember(ctx context.Context, request RestrictChatMember) (res Result, err error) {
@@ -3090,6 +3301,11 @@ func (c *Client) RestrictChatMember(ctx context.Context, request RestrictChatMem
 
 // RevokeChatInviteLink invokes revokeChatInviteLink operation.
 //
+// Use this method to revoke an invite link created by the bot. If the primary link is revoked, a new
+// link is automatically generated. The bot must be an administrator in the chat for this to work and
+// must have the appropriate administrator rights. Returns the revoked invite link as
+// [ChatInviteLink](https://core.telegram.org/bots/api#chatinvitelink) object.
+//
 // POST /revokeChatInviteLink
 func (c *Client) RevokeChatInviteLink(ctx context.Context, request RevokeChatInviteLink) (res ResultChatInviteLink, err error) {
 	startTime := time.Now()
@@ -3151,6 +3367,10 @@ func (c *Client) RevokeChatInviteLink(ctx context.Context, request RevokeChatInv
 }
 
 // SendAnimation invokes sendAnimation operation.
+//
+// Use this method to send animation files (GIF or H.264/MPEG-4 AVC video without sound). On success,
+// the sent [Message](https://core.telegram.org/bots/api#message) is returned. Bots can currently
+// send animation files of up to 50 MB in size, this limit may be changed in the future.
 //
 // POST /sendAnimation
 func (c *Client) SendAnimation(ctx context.Context, request SendAnimation) (res ResultMessage, err error) {
@@ -3222,6 +3442,9 @@ func (c *Client) SendAnimation(ctx context.Context, request SendAnimation) (res 
 
 // SendAudio invokes sendAudio operation.
 //
+// For sending voice messages, use the [sendVoice](https://core.telegram.org/bots/api#sendvoice)
+// method instead.
+//
 // POST /sendAudio
 func (c *Client) SendAudio(ctx context.Context, request SendAudio) (res ResultMessage, err error) {
 	if err := func() error {
@@ -3292,6 +3515,9 @@ func (c *Client) SendAudio(ctx context.Context, request SendAudio) (res ResultMe
 
 // SendChatAction invokes sendChatAction operation.
 //
+// We only recommend using this method when a response from the bot will take a **noticeable** amount
+// of time to arrive.
+//
 // POST /sendChatAction
 func (c *Client) SendChatAction(ctx context.Context, request SendChatAction) (res Result, err error) {
 	startTime := time.Now()
@@ -3353,6 +3579,9 @@ func (c *Client) SendChatAction(ctx context.Context, request SendChatAction) (re
 }
 
 // SendContact invokes sendContact operation.
+//
+// Use this method to send phone contacts. On success, the sent [Message](https://core.telegram.
+// org/bots/api#message) is returned.
 //
 // POST /sendContact
 func (c *Client) SendContact(ctx context.Context, request SendContact) (res ResultMessage, err error) {
@@ -3424,6 +3653,9 @@ func (c *Client) SendContact(ctx context.Context, request SendContact) (res Resu
 
 // SendDice invokes sendDice operation.
 //
+// Use this method to send an animated emoji that will display a random value. On success, the sent
+// [Message](https://core.telegram.org/bots/api#message) is returned.
+//
 // POST /sendDice
 func (c *Client) SendDice(ctx context.Context, request SendDice) (res ResultMessage, err error) {
 	if err := func() error {
@@ -3493,6 +3725,10 @@ func (c *Client) SendDice(ctx context.Context, request SendDice) (res ResultMess
 }
 
 // SendDocument invokes sendDocument operation.
+//
+// Use this method to send general files. On success, the sent [Message](https://core.telegram.
+// org/bots/api#message) is returned. Bots can currently send files of any type of up to 50 MB in
+// size, this limit may be changed in the future.
 //
 // POST /sendDocument
 func (c *Client) SendDocument(ctx context.Context, request SendDocument) (res ResultMessage, err error) {
@@ -3564,6 +3800,9 @@ func (c *Client) SendDocument(ctx context.Context, request SendDocument) (res Re
 
 // SendGame invokes sendGame operation.
 //
+// Use this method to send a game. On success, the sent [Message](https://core.telegram.
+// org/bots/api#message) is returned.
+//
 // POST /sendGame
 func (c *Client) SendGame(ctx context.Context, request SendGame) (res ResultMessage, err error) {
 	if err := func() error {
@@ -3633,6 +3872,9 @@ func (c *Client) SendGame(ctx context.Context, request SendGame) (res ResultMess
 }
 
 // SendInvoice invokes sendInvoice operation.
+//
+// Use this method to send invoices. On success, the sent [Message](https://core.telegram.
+// org/bots/api#message) is returned.
 //
 // POST /sendInvoice
 func (c *Client) SendInvoice(ctx context.Context, request SendInvoice) (res ResultMessage, err error) {
@@ -3704,6 +3946,9 @@ func (c *Client) SendInvoice(ctx context.Context, request SendInvoice) (res Resu
 
 // SendLocation invokes sendLocation operation.
 //
+// Use this method to send point on the map. On success, the sent [Message](https://core.telegram.
+// org/bots/api#message) is returned.
+//
 // POST /sendLocation
 func (c *Client) SendLocation(ctx context.Context, request SendLocation) (res ResultMessage, err error) {
 	if err := func() error {
@@ -3773,6 +4018,10 @@ func (c *Client) SendLocation(ctx context.Context, request SendLocation) (res Re
 }
 
 // SendMediaGroup invokes sendMediaGroup operation.
+//
+// Use this method to send a group of photos, videos, documents or audios as an album. Documents and
+// audio files can be only grouped in an album with messages of the same type. On success, an array
+// of [Messages](https://core.telegram.org/bots/api#message) that were sent is returned.
 //
 // POST /sendMediaGroup
 func (c *Client) SendMediaGroup(ctx context.Context, request SendMediaGroup) (res ResultArrayOfMessage, err error) {
@@ -3844,6 +4093,9 @@ func (c *Client) SendMediaGroup(ctx context.Context, request SendMediaGroup) (re
 
 // SendMessage invokes sendMessage operation.
 //
+// Use this method to send text messages. On success, the sent [Message](https://core.telegram.
+// org/bots/api#message) is returned.
+//
 // POST /sendMessage
 func (c *Client) SendMessage(ctx context.Context, request SendMessage) (res ResultMessage, err error) {
 	if err := func() error {
@@ -3913,6 +4165,9 @@ func (c *Client) SendMessage(ctx context.Context, request SendMessage) (res Resu
 }
 
 // SendPhoto invokes sendPhoto operation.
+//
+// Use this method to send photos. On success, the sent [Message](https://core.telegram.
+// org/bots/api#message) is returned.
 //
 // POST /sendPhoto
 func (c *Client) SendPhoto(ctx context.Context, request SendPhoto) (res ResultMessage, err error) {
@@ -3984,6 +4239,9 @@ func (c *Client) SendPhoto(ctx context.Context, request SendPhoto) (res ResultMe
 
 // SendPoll invokes sendPoll operation.
 //
+// Use this method to send a native poll. On success, the sent [Message](https://core.telegram.
+// org/bots/api#message) is returned.
+//
 // POST /sendPoll
 func (c *Client) SendPoll(ctx context.Context, request SendPoll) (res ResultMessage, err error) {
 	if err := func() error {
@@ -4053,6 +4311,10 @@ func (c *Client) SendPoll(ctx context.Context, request SendPoll) (res ResultMess
 }
 
 // SendSticker invokes sendSticker operation.
+//
+// Use this method to send static .WEBP, [animated](https://telegram.org/blog/animated-stickers) .TGS,
+//  or [video](https://telegram.org/blog/video-stickers-better-reactions) .WEBM stickers. On success,
+// the sent [Message](https://core.telegram.org/bots/api#message) is returned.
 //
 // POST /sendSticker
 func (c *Client) SendSticker(ctx context.Context, request SendSticker) (res ResultMessage, err error) {
@@ -4124,6 +4386,9 @@ func (c *Client) SendSticker(ctx context.Context, request SendSticker) (res Resu
 
 // SendVenue invokes sendVenue operation.
 //
+// Use this method to send information about a venue. On success, the sent [Message](https://core.
+// telegram.org/bots/api#message) is returned.
+//
 // POST /sendVenue
 func (c *Client) SendVenue(ctx context.Context, request SendVenue) (res ResultMessage, err error) {
 	if err := func() error {
@@ -4193,6 +4458,11 @@ func (c *Client) SendVenue(ctx context.Context, request SendVenue) (res ResultMe
 }
 
 // SendVideo invokes sendVideo operation.
+//
+// Use this method to send video files, Telegram clients support MPEG4 videos (other formats may be
+// sent as [Document](https://core.telegram.org/bots/api#document)). On success, the sent
+// [Message](https://core.telegram.org/bots/api#message) is returned. Bots can currently send video
+// files of up to 50 MB in size, this limit may be changed in the future.
 //
 // POST /sendVideo
 func (c *Client) SendVideo(ctx context.Context, request SendVideo) (res ResultMessage, err error) {
@@ -4264,6 +4534,10 @@ func (c *Client) SendVideo(ctx context.Context, request SendVideo) (res ResultMe
 
 // SendVideoNote invokes sendVideoNote operation.
 //
+// As of [v.4.0](https://telegram.org/blog/video-messages-and-telescope), Telegram clients support
+// rounded square MPEG4 videos of up to 1 minute long. Use this method to send video messages. On
+// success, the sent [Message](https://core.telegram.org/bots/api#message) is returned.
+//
 // POST /sendVideoNote
 func (c *Client) SendVideoNote(ctx context.Context, request SendVideoNote) (res ResultMessage, err error) {
 	if err := func() error {
@@ -4333,6 +4607,13 @@ func (c *Client) SendVideoNote(ctx context.Context, request SendVideoNote) (res 
 }
 
 // SendVoice invokes sendVoice operation.
+//
+// Use this method to send audio files, if you want Telegram clients to display the file as a
+// playable voice message. For this to work, your audio must be in an .OGG file encoded with OPUS
+// (other formats may be sent as [Audio](https://core.telegram.org/bots/api#audio) or
+// [Document](https://core.telegram.org/bots/api#document)). On success, the sent
+// [Message](https://core.telegram.org/bots/api#message) is returned. Bots can currently send voice
+// messages of up to 50 MB in size, this limit may be changed in the future.
 //
 // POST /sendVoice
 func (c *Client) SendVoice(ctx context.Context, request SendVoice) (res ResultMessage, err error) {
@@ -4404,6 +4685,9 @@ func (c *Client) SendVoice(ctx context.Context, request SendVoice) (res ResultMe
 
 // SetChatAdministratorCustomTitle invokes setChatAdministratorCustomTitle operation.
 //
+// Use this method to set a custom title for an administrator in a supergroup promoted by the bot.
+// Returns _True_ on success.
+//
 // POST /setChatAdministratorCustomTitle
 func (c *Client) SetChatAdministratorCustomTitle(ctx context.Context, request SetChatAdministratorCustomTitle) (res Result, err error) {
 	if err := func() error {
@@ -4473,6 +4757,10 @@ func (c *Client) SetChatAdministratorCustomTitle(ctx context.Context, request Se
 }
 
 // SetChatDescription invokes setChatDescription operation.
+//
+// Use this method to change the description of a group, a supergroup or a channel. The bot must be
+// an administrator in the chat for this to work and must have the appropriate administrator rights.
+// Returns _True_ on success.
 //
 // POST /setChatDescription
 func (c *Client) SetChatDescription(ctx context.Context, request SetChatDescription) (res Result, err error) {
@@ -4544,6 +4832,9 @@ func (c *Client) SetChatDescription(ctx context.Context, request SetChatDescript
 
 // SetChatMenuButton invokes setChatMenuButton operation.
 //
+// Use this method to change the bot's menu button in a private chat, or the default menu button.
+// Returns _True_ on success.
+//
 // POST /setChatMenuButton
 func (c *Client) SetChatMenuButton(ctx context.Context, request OptSetChatMenuButton) (res Result, err error) {
 	startTime := time.Now()
@@ -4605,6 +4896,10 @@ func (c *Client) SetChatMenuButton(ctx context.Context, request OptSetChatMenuBu
 }
 
 // SetChatPermissions invokes setChatPermissions operation.
+//
+// Use this method to set default chat permissions for all members. The bot must be an administrator
+// in the group or a supergroup for this to work and must have the _can_restrict_members_
+// administrator rights. Returns _True_ on success.
 //
 // POST /setChatPermissions
 func (c *Client) SetChatPermissions(ctx context.Context, request SetChatPermissions) (res Result, err error) {
@@ -4668,6 +4963,10 @@ func (c *Client) SetChatPermissions(ctx context.Context, request SetChatPermissi
 
 // SetChatPhoto invokes setChatPhoto operation.
 //
+// Use this method to set a new profile photo for the chat. Photos can't be changed for private chats.
+//  The bot must be an administrator in the chat for this to work and must have the appropriate
+// administrator rights. Returns _True_ on success.
+//
 // POST /setChatPhoto
 func (c *Client) SetChatPhoto(ctx context.Context, request SetChatPhoto) (res Result, err error) {
 	startTime := time.Now()
@@ -4730,6 +5029,11 @@ func (c *Client) SetChatPhoto(ctx context.Context, request SetChatPhoto) (res Re
 
 // SetChatStickerSet invokes setChatStickerSet operation.
 //
+// Use this method to set a new group sticker set for a supergroup. The bot must be an administrator
+// in the chat for this to work and must have the appropriate administrator rights. Use the field
+// _can_set_sticker_set_ optionally returned in [getChat](https://core.telegram.org/bots/api#getchat)
+// requests to check if the bot can use this method. Returns _True_ on success.
+//
 // POST /setChatStickerSet
 func (c *Client) SetChatStickerSet(ctx context.Context, request SetChatStickerSet) (res Result, err error) {
 	startTime := time.Now()
@@ -4791,6 +5095,10 @@ func (c *Client) SetChatStickerSet(ctx context.Context, request SetChatStickerSe
 }
 
 // SetChatTitle invokes setChatTitle operation.
+//
+// Use this method to change the title of a chat. Titles can't be changed for private chats. The bot
+// must be an administrator in the chat for this to work and must have the appropriate administrator
+// rights. Returns _True_ on success.
 //
 // POST /setChatTitle
 func (c *Client) SetChatTitle(ctx context.Context, request SetChatTitle) (res Result, err error) {
@@ -4862,6 +5170,11 @@ func (c *Client) SetChatTitle(ctx context.Context, request SetChatTitle) (res Re
 
 // SetGameScore invokes setGameScore operation.
 //
+// Use this method to set the score of the specified user in a game message. On success, if the
+// message is not an inline message, the [Message](https://core.telegram.org/bots/api#message) is
+// returned, otherwise _True_ is returned. Returns an error, if the new score is not greater than the
+// user's current score in the chat and _force_ is _False_.
+//
 // POST /setGameScore
 func (c *Client) SetGameScore(ctx context.Context, request SetGameScore) (res Result, err error) {
 	startTime := time.Now()
@@ -4923,6 +5236,10 @@ func (c *Client) SetGameScore(ctx context.Context, request SetGameScore) (res Re
 }
 
 // SetMyCommands invokes setMyCommands operation.
+//
+// Use this method to change the list of the bot's commands. See [](https://core.telegram.
+// org/bots#commands)[https://core.telegram.org/bots#commands](https://core.telegram.
+// org/bots#commands) for more details about bot commands. Returns _True_ on success.
 //
 // POST /setMyCommands
 func (c *Client) SetMyCommands(ctx context.Context, request SetMyCommands) (res Result, err error) {
@@ -4994,6 +5311,10 @@ func (c *Client) SetMyCommands(ctx context.Context, request SetMyCommands) (res 
 
 // SetMyDefaultAdministratorRights invokes setMyDefaultAdministratorRights operation.
 //
+// Use this method to change the default administrator rights requested by the bot when it's added as
+// an administrator to groups or channels. These rights will be suggested to users, but they are are
+// free to modify the list before adding the bot. Returns _True_ on success.
+//
 // POST /setMyDefaultAdministratorRights
 func (c *Client) SetMyDefaultAdministratorRights(ctx context.Context, request OptSetMyDefaultAdministratorRights) (res Result, err error) {
 	startTime := time.Now()
@@ -5055,6 +5376,11 @@ func (c *Client) SetMyDefaultAdministratorRights(ctx context.Context, request Op
 }
 
 // SetPassportDataErrors invokes setPassportDataErrors operation.
+//
+// Use this if the data submitted by the user doesn't satisfy the standards your service requires for
+// any reason. For example, if a birthday date seems invalid, a submitted document is blurry, a scan
+// shows evidence of tampering, etc. Supply some details in the error message to make sure the user
+// knows how to correct the issues.
 //
 // POST /setPassportDataErrors
 func (c *Client) SetPassportDataErrors(ctx context.Context, request SetPassportDataErrors) (res Result, err error) {
@@ -5126,6 +5452,9 @@ func (c *Client) SetPassportDataErrors(ctx context.Context, request SetPassportD
 
 // SetStickerPositionInSet invokes setStickerPositionInSet operation.
 //
+// Use this method to move a sticker in a set created by the bot to a specific position. Returns
+// _True_ on success.
+//
 // POST /setStickerPositionInSet
 func (c *Client) SetStickerPositionInSet(ctx context.Context, request SetStickerPositionInSet) (res Result, err error) {
 	startTime := time.Now()
@@ -5188,6 +5517,10 @@ func (c *Client) SetStickerPositionInSet(ctx context.Context, request SetSticker
 
 // SetStickerSetThumb invokes setStickerSetThumb operation.
 //
+// Use this method to set the thumbnail of a sticker set. Animated thumbnails can be set for animated
+// sticker sets only. Video thumbnails can be set only for video sticker sets only. Returns _True_ on
+// success.
+//
 // POST /setStickerSetThumb
 func (c *Client) SetStickerSetThumb(ctx context.Context, request SetStickerSetThumb) (res Result, err error) {
 	startTime := time.Now()
@@ -5249,6 +5582,10 @@ func (c *Client) SetStickerSetThumb(ctx context.Context, request SetStickerSetTh
 }
 
 // SetWebhook invokes setWebhook operation.
+//
+// If you'd like to make sure that the webhook was set by you, you can specify secret data in the
+// parameter _secret_token_. If specified, the request will contain a header
+// `X-Telegram-Bot-Api-Secret-Token` with the secret token as content.
 //
 // POST /setWebhook
 func (c *Client) SetWebhook(ctx context.Context, request SetWebhook) (res Result, err error) {
@@ -5320,6 +5657,10 @@ func (c *Client) SetWebhook(ctx context.Context, request SetWebhook) (res Result
 
 // StopMessageLiveLocation invokes stopMessageLiveLocation operation.
 //
+// Use this method to stop updating a live location message before _live_period_ expires. On success,
+// if the message is not an inline message, the edited [Message](https://core.telegram.
+// org/bots/api#message) is returned, otherwise _True_ is returned.
+//
 // POST /stopMessageLiveLocation
 func (c *Client) StopMessageLiveLocation(ctx context.Context, request StopMessageLiveLocation) (res ResultMessageOrBoolean, err error) {
 	if err := func() error {
@@ -5389,6 +5730,9 @@ func (c *Client) StopMessageLiveLocation(ctx context.Context, request StopMessag
 }
 
 // StopPoll invokes stopPoll operation.
+//
+// Use this method to stop a poll which was sent by the bot. On success, the stopped
+// [Poll](https://core.telegram.org/bots/api#poll) is returned.
 //
 // POST /stopPoll
 func (c *Client) StopPoll(ctx context.Context, request StopPoll) (res ResultPoll, err error) {
@@ -5460,6 +5804,13 @@ func (c *Client) StopPoll(ctx context.Context, request StopPoll) (res ResultPoll
 
 // UnbanChatMember invokes unbanChatMember operation.
 //
+// Use this method to unban a previously banned user in a supergroup or channel. The user will
+// **not** return to the group or channel automatically, but will be able to join via link, etc. The
+// bot must be an administrator for this to work. By default, this method guarantees that after the
+// call the user is not a member of the chat, but will be able to join it. So if the user is a member
+// of the chat they will also be **removed** from the chat. If you don't want this, use the parameter
+// _only_if_banned_. Returns _True_ on success.
+//
 // POST /unbanChatMember
 func (c *Client) UnbanChatMember(ctx context.Context, request UnbanChatMember) (res Result, err error) {
 	startTime := time.Now()
@@ -5521,6 +5872,10 @@ func (c *Client) UnbanChatMember(ctx context.Context, request UnbanChatMember) (
 }
 
 // UnbanChatSenderChat invokes unbanChatSenderChat operation.
+//
+// Use this method to unban a previously banned channel chat in a supergroup or channel. The bot must
+// be an administrator for this to work and must have the appropriate administrator rights. Returns
+// _True_ on success.
 //
 // POST /unbanChatSenderChat
 func (c *Client) UnbanChatSenderChat(ctx context.Context, request UnbanChatSenderChat) (res Result, err error) {
@@ -5584,6 +5939,11 @@ func (c *Client) UnbanChatSenderChat(ctx context.Context, request UnbanChatSende
 
 // UnpinAllChatMessages invokes unpinAllChatMessages operation.
 //
+// Use this method to clear the list of pinned messages in a chat. If the chat is not a private chat,
+// the bot must be an administrator in the chat for this to work and must have the 'can_pin_messages'
+// administrator right in a supergroup or 'can_edit_messages' administrator right in a channel.
+// Returns _True_ on success.
+//
 // POST /unpinAllChatMessages
 func (c *Client) UnpinAllChatMessages(ctx context.Context, request UnpinAllChatMessages) (res Result, err error) {
 	startTime := time.Now()
@@ -5646,6 +6006,11 @@ func (c *Client) UnpinAllChatMessages(ctx context.Context, request UnpinAllChatM
 
 // UnpinChatMessage invokes unpinChatMessage operation.
 //
+// Use this method to remove a message from the list of pinned messages in a chat. If the chat is not
+// a private chat, the bot must be an administrator in the chat for this to work and must have the
+// 'can_pin_messages' administrator right in a supergroup or 'can_edit_messages' administrator right
+// in a channel. Returns _True_ on success.
+//
 // POST /unpinChatMessage
 func (c *Client) UnpinChatMessage(ctx context.Context, request UnpinChatMessage) (res Result, err error) {
 	startTime := time.Now()
@@ -5707,6 +6072,10 @@ func (c *Client) UnpinChatMessage(ctx context.Context, request UnpinChatMessage)
 }
 
 // UploadStickerFile invokes uploadStickerFile operation.
+//
+// Use this method to upload a .PNG file with a sticker for later use in _createNewStickerSet_ and
+// _addStickerToSet_ methods (can be used multiple times). Returns the uploaded [File](https://core.
+// telegram.org/bots/api#file) on success.
 //
 // POST /uploadStickerFile
 func (c *Client) UploadStickerFile(ctx context.Context, request UploadStickerFile) (res ResultFile, err error) {

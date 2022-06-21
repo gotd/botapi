@@ -25791,18 +25791,18 @@ func (s *OptProximityAlertTriggered) UnmarshalJSON(data []byte) error {
 	return s.Decode(d)
 }
 
-// Encode encodes Response as json.
-func (o OptResponse) Encode(e *jx.Encoder) {
+// Encode encodes ResponseParameters as json.
+func (o OptResponseParameters) Encode(e *jx.Encoder) {
 	if !o.Set {
 		return
 	}
 	o.Value.Encode(e)
 }
 
-// Decode decodes Response from json.
-func (o *OptResponse) Decode(d *jx.Decoder) error {
+// Decode decodes ResponseParameters from json.
+func (o *OptResponseParameters) Decode(d *jx.Decoder) error {
 	if o == nil {
-		return errors.New("invalid: unable to decode OptResponse to nil")
+		return errors.New("invalid: unable to decode OptResponseParameters to nil")
 	}
 	o.Set = true
 	if err := o.Value.Decode(d); err != nil {
@@ -25812,14 +25812,14 @@ func (o *OptResponse) Decode(d *jx.Decoder) error {
 }
 
 // MarshalJSON implements stdjson.Marshaler.
-func (s OptResponse) MarshalJSON() ([]byte, error) {
+func (s OptResponseParameters) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	s.Encode(&e)
 	return e.Bytes(), nil
 }
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *OptResponse) UnmarshalJSON(data []byte) error {
+func (s *OptResponseParameters) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
@@ -30224,14 +30224,14 @@ func (s *ReplyKeyboardRemove) UnmarshalJSON(data []byte) error {
 }
 
 // Encode implements json.Marshaler.
-func (s Response) Encode(e *jx.Encoder) {
+func (s ResponseParameters) Encode(e *jx.Encoder) {
 	e.ObjStart()
 	s.encodeFields(e)
 	e.ObjEnd()
 }
 
 // encodeFields encodes fields.
-func (s Response) encodeFields(e *jx.Encoder) {
+func (s ResponseParameters) encodeFields(e *jx.Encoder) {
 	{
 		if s.MigrateToChatID.Set {
 			e.FieldStart("migrate_to_chat_id")
@@ -30246,15 +30246,15 @@ func (s Response) encodeFields(e *jx.Encoder) {
 	}
 }
 
-var jsonFieldsNameOfResponse = [2]string{
+var jsonFieldsNameOfResponseParameters = [2]string{
 	0: "migrate_to_chat_id",
 	1: "retry_after",
 }
 
-// Decode decodes Response from json.
-func (s *Response) Decode(d *jx.Decoder) error {
+// Decode decodes ResponseParameters from json.
+func (s *ResponseParameters) Decode(d *jx.Decoder) error {
 	if s == nil {
-		return errors.New("invalid: unable to decode Response to nil")
+		return errors.New("invalid: unable to decode ResponseParameters to nil")
 	}
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
@@ -30284,21 +30284,21 @@ func (s *Response) Decode(d *jx.Decoder) error {
 		}
 		return nil
 	}); err != nil {
-		return errors.Wrap(err, "decode Response")
+		return errors.Wrap(err, "decode ResponseParameters")
 	}
 
 	return nil
 }
 
 // MarshalJSON implements stdjson.Marshaler.
-func (s Response) MarshalJSON() ([]byte, error) {
+func (s ResponseParameters) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	s.Encode(&e)
 	return e.Bytes(), nil
 }
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *Response) UnmarshalJSON(data []byte) error {
+func (s *ResponseParameters) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
