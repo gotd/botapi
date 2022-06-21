@@ -486,8 +486,8 @@ Schemas:
 			"default": &ogen.Response{Ref: "#/components/responses/Error"},
 		}
 		item := &ogen.PathItem{
-			Description: m.Description,
 			Post: &ogen.Operation{
+				Description: m.Description,
 				OperationID: m.Name,
 				RequestBody: reqBody,
 				Responses:   responses,
