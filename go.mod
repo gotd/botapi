@@ -8,7 +8,7 @@ require (
 	github.com/go-faster/errors v0.6.1
 	github.com/go-faster/jx v0.37.0
 	github.com/gotd/td v0.60.0
-	github.com/ogen-go/ogen v0.39.0
+	github.com/ogen-go/ogen v0.40.0
 	github.com/stretchr/testify v1.7.4
 	go.etcd.io/bbolt v1.3.6
 	go.opentelemetry.io/otel v1.7.0
