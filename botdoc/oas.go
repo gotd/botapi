@@ -476,14 +476,31 @@ Schemas:
 		OpenAPI: "3.0.3",
 		Info: ogen.Info{
 			Title:          "Telegram Bot API",
-			TermsOfService: "https://telegram.org/tos",
 			Description:    "API for Telegram bots",
+			TermsOfService: "https://telegram.org/tos",
 			Version:        a.Version,
 		},
 		Servers: []ogen.Server{
 			{
 				Description: "production",
-				URL:         "https://api.telegram.org/",
+				URL:         "https://api.telegram.org/bot{token}/",
+				Variables: map[string]ogen.ServerVariable{
+					"token": {
+						Default:     "123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11",
+						Description: "Telegram Bot API token",
+					},
+				},
+			},
+			// https://github.com/tdlib/telegram-bot-api/blob/24ee05d15fca6f771c8229c38d96d6008b81c64a/telegram-bot-api/HttpConnection.cpp#L37-L40
+			{
+				Description: "test",
+				URL:         "https://api.telegram.org/bot{token}/test",
+				Variables: map[string]ogen.ServerVariable{
+					"token": {
+						Default:     "123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11",
+						Description: "Telegram Bot API token",
+					},
+				},
 			},
 		},
 		Paths:      p,
