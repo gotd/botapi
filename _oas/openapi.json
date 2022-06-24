@@ -8,8 +8,8 @@
   },
   "servers": [
     {
-      "description": "production",
-      "url": "https://api.telegram.org/"
+      "url": "https://api.telegram.org/",
+      "description": "production"
     }
   ],
   "paths": {
