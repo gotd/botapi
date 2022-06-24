@@ -8,14 +8,33 @@
   },
   "servers": [
     {
-      "url": "https://api.telegram.org/",
-      "description": "production"
+      "url": "https://api.telegram.org/bot{token}/",
+      "description": "production",
+      "variables": {
+        "token": {
+          "default": "123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11",
+          "description": "Telegram Bot API token"
+        }
+      }
+    },
+    {
+      "url": "https://api.telegram.org/bot{token}/test",
+      "description": "test",
+      "variables": {
+        "token": {
+          "default": "123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11",
+          "description": "Telegram Bot API token"
+        }
+      }
     }
   ],
   "paths": {
     "/addStickerToSet": {
       "post": {
         "description": "Use this method to add a new sticker to a set created by the bot. You **must** use exactly one of the fields _png_sticker_, _tgs_sticker_, or _webm_sticker_. Animated stickers can be added to animated sticker sets and only to them. Animated sticker sets can have up to 50 stickers. Static sticker sets can have up to 120 stickers. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#addstickertoset"
+        },
         "operationId": "addStickerToSet",
         "requestBody": {
           "content": {
@@ -40,6 +59,9 @@
     "/answerCallbackQuery": {
       "post": {
         "description": "Use this method to send answers to callback queries sent from [inline keyboards](https://core.telegram.org/bots#inline-keyboards-and-on-the-fly-updating). The answer will be displayed to the user as a notification at the top of the chat screen or as an alert. On success, _True_ is returned.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#answercallbackquery"
+        },
         "operationId": "answerCallbackQuery",
         "requestBody": {
           "content": {
@@ -64,6 +86,9 @@
     "/answerInlineQuery": {
       "post": {
         "description": "Use this method to send answers to an inline query. On success, _True_ is returned.No more than **50** results per query are allowed.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#answerinlinequery"
+        },
         "operationId": "answerInlineQuery",
         "requestBody": {
           "content": {
@@ -88,6 +113,9 @@
     "/answerPreCheckoutQuery": {
       "post": {
         "description": "Once the user has confirmed their payment and shipping details, the Bot API sends the final confirmation in the form of an [Update](https://core.telegram.org/bots/api#update) with the field _pre_checkout_query_. Use this method to respond to such pre-checkout queries. On success, _True_ is returned. **Note:** The Bot API must receive an answer within 10 seconds after the pre-checkout query was sent.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#answerprecheckoutquery"
+        },
         "operationId": "answerPreCheckoutQuery",
         "requestBody": {
           "content": {
@@ -112,6 +140,9 @@
     "/answerShippingQuery": {
       "post": {
         "description": "If you sent an invoice requesting a shipping address and the parameter _is_flexible_ was specified, the Bot API will send an [Update](https://core.telegram.org/bots/api#update) with a _shipping_query_ field to the bot. Use this method to reply to shipping queries. On success, _True_ is returned.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#answershippingquery"
+        },
         "operationId": "answerShippingQuery",
         "requestBody": {
           "content": {
@@ -136,6 +167,9 @@
     "/answerWebAppQuery": {
       "post": {
         "description": "Use this method to set the result of an interaction with a [Web App](https://core.telegram.org/bots/webapps) and send a corresponding message on behalf of the user to the chat from which the query originated. On success, a [SentWebAppMessage](https://core.telegram.org/bots/api#sentwebappmessage) object is returned.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#answerwebappquery"
+        },
         "operationId": "answerWebAppQuery",
         "requestBody": {
           "content": {
@@ -160,6 +194,9 @@
     "/approveChatJoinRequest": {
       "post": {
         "description": "Use this method to approve a chat join request. The bot must be an administrator in the chat for this to work and must have the _can_invite_users_ administrator right. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#approvechatjoinrequest"
+        },
         "operationId": "approveChatJoinRequest",
         "requestBody": {
           "content": {
@@ -184,6 +221,9 @@
     "/banChatMember": {
       "post": {
         "description": "Use this method to ban a user in a group, a supergroup or a channel. In the case of supergroups and channels, the user will not be able to return to the chat on their own using invite links, etc., unless [unbanned](https://core.telegram.org/bots/api#unbanchatmember) first. The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#banchatmember"
+        },
         "operationId": "banChatMember",
         "requestBody": {
           "content": {
@@ -208,6 +248,9 @@
     "/banChatSenderChat": {
       "post": {
         "description": "Use this method to ban a channel chat in a supergroup or a channel. Until the chat is [unbanned](https://core.telegram.org/bots/api#unbanchatsenderchat), the owner of the banned chat won't be able to send messages on behalf of **any of their channels**. The bot must be an administrator in the supergroup or channel for this to work and must have the appropriate administrator rights. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#banchatsenderchat"
+        },
         "operationId": "banChatSenderChat",
         "requestBody": {
           "content": {
@@ -232,6 +275,9 @@
     "/close": {
       "post": {
         "description": "Use this method to close the bot instance before moving it from one local server to another. You need to delete the webhook before calling this method to ensure that the bot isn't launched again after server restart. The method will return error 429 in the first 10 minutes after the bot is launched. Returns _True_ on success. Requires no parameters.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#close"
+        },
         "operationId": "close",
         "responses": {
           "200": {
@@ -246,6 +292,9 @@
     "/copyMessage": {
       "post": {
         "description": "Use this method to copy messages of any kind. Service messages and invoice messages can't be copied. The method is analogous to the method [forwardMessage](https://core.telegram.org/bots/api#forwardmessage), but the copied message doesn't have a link to the original message. Returns the [MessageId](https://core.telegram.org/bots/api#messageid) of the sent message on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#copymessage"
+        },
         "operationId": "copyMessage",
         "requestBody": {
           "content": {
@@ -270,6 +319,9 @@
     "/createChatInviteLink": {
       "post": {
         "description": "Use this method to create an additional invite link for a chat. The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights. The link can be revoked using the method [revokeChatInviteLink](https://core.telegram.org/bots/api#revokechatinvitelink). Returns the new invite link as [ChatInviteLink](https://core.telegram.org/bots/api#chatinvitelink) object.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#createchatinvitelink"
+        },
         "operationId": "createChatInviteLink",
         "requestBody": {
           "content": {
@@ -294,6 +346,9 @@
     "/createInvoiceLink": {
       "post": {
         "description": "Use this method to create a link for an invoice. Returns the created invoice link as _String_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#createinvoicelink"
+        },
         "operationId": "createInvoiceLink",
         "requestBody": {
           "content": {
@@ -318,6 +373,9 @@
     "/createNewStickerSet": {
       "post": {
         "description": "Use this method to create a new sticker set owned by a user. The bot will be able to edit the sticker set thus created. You **must** use exactly one of the fields _png_sticker_, _tgs_sticker_, or _webm_sticker_. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#createnewstickerset"
+        },
         "operationId": "createNewStickerSet",
         "requestBody": {
           "content": {
@@ -342,6 +400,9 @@
     "/declineChatJoinRequest": {
       "post": {
         "description": "Use this method to decline a chat join request. The bot must be an administrator in the chat for this to work and must have the _can_invite_users_ administrator right. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#declinechatjoinrequest"
+        },
         "operationId": "declineChatJoinRequest",
         "requestBody": {
           "content": {
@@ -366,6 +427,9 @@
     "/deleteChatPhoto": {
       "post": {
         "description": "Use this method to delete a chat photo. Photos can't be changed for private chats. The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#deletechatphoto"
+        },
         "operationId": "deleteChatPhoto",
         "requestBody": {
           "content": {
@@ -390,6 +454,9 @@
     "/deleteChatStickerSet": {
       "post": {
         "description": "Use this method to delete a group sticker set from a supergroup. The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights. Use the field _can_set_sticker_set_ optionally returned in [getChat](https://core.telegram.org/bots/api#getchat) requests to check if the bot can use this method. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#deletechatstickerset"
+        },
         "operationId": "deleteChatStickerSet",
         "requestBody": {
           "content": {
@@ -414,6 +481,9 @@
     "/deleteMessage": {
       "post": {
         "description": "Use this method to delete a message, including service messages, with the following limitations:- A message can only be deleted if it was sent less than 48 hours ago.- A dice message in a private chat can only be deleted if it was sent more than 24 hours ago.- Bots can delete outgoing messages in private chats, groups, and supergroups.- Bots can delete incoming messages in private chats.- Bots granted _can_post_messages_ permissions can delete outgoing messages in channels.- If the bot is an administrator of a group, it can delete any message there.- If the bot has _can_delete_messages_ permission in a supergroup or a channel, it can delete any message there.Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#deletemessage"
+        },
         "operationId": "deleteMessage",
         "requestBody": {
           "content": {
@@ -438,6 +508,9 @@
     "/deleteMyCommands": {
       "post": {
         "description": "Use this method to delete the list of the bot's commands for the given scope and user language. After deletion, [higher level commands](https://core.telegram.org/bots/api#determining-list-of-commands) will be shown to affected users. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#deletemycommands"
+        },
         "operationId": "deleteMyCommands",
         "requestBody": {
           "content": {
@@ -461,6 +534,9 @@
     "/deleteStickerFromSet": {
       "post": {
         "description": "Use this method to delete a sticker from a set created by the bot. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#deletestickerfromset"
+        },
         "operationId": "deleteStickerFromSet",
         "requestBody": {
           "content": {
@@ -485,6 +561,9 @@
     "/deleteWebhook": {
       "post": {
         "description": "Use this method to remove webhook integration if you decide to switch back to [getUpdates](https://core.telegram.org/bots/api#getupdates). Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#deletewebhook"
+        },
         "operationId": "deleteWebhook",
         "requestBody": {
           "content": {
@@ -508,6 +587,9 @@
     "/editChatInviteLink": {
       "post": {
         "description": "Use this method to edit a non-primary invite link created by the bot. The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights. Returns the edited invite link as a [ChatInviteLink](https://core.telegram.org/bots/api#chatinvitelink) object.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#editchatinvitelink"
+        },
         "operationId": "editChatInviteLink",
         "requestBody": {
           "content": {
@@ -532,6 +614,9 @@
     "/editMessageCaption": {
       "post": {
         "description": "Use this method to edit captions of messages. On success, if the edited message is not an inline message, the edited [Message](https://core.telegram.org/bots/api#message) is returned, otherwise _True_ is returned.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#editmessagecaption"
+        },
         "operationId": "editMessageCaption",
         "requestBody": {
           "content": {
@@ -556,6 +641,9 @@
     "/editMessageLiveLocation": {
       "post": {
         "description": "Use this method to edit live location messages. A location can be edited until its _live_period_ expires or editing is explicitly disabled by a call to [stopMessageLiveLocation](https://core.telegram.org/bots/api#stopmessagelivelocation). On success, if the edited message is not an inline message, the edited [Message](https://core.telegram.org/bots/api#message) is returned, otherwise _True_ is returned.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#editmessagelivelocation"
+        },
         "operationId": "editMessageLiveLocation",
         "requestBody": {
           "content": {
@@ -580,6 +668,9 @@
     "/editMessageMedia": {
       "post": {
         "description": "Use this method to edit animation, audio, document, photo, or video messages. If a message is part of a message album, then it can be edited only to an audio for audio albums, only to a document for document albums and to a photo or a video otherwise. When an inline message is edited, a new file can't be uploaded; use a previously uploaded file via its file_id or specify a URL. On success, if the edited message is not an inline message, the edited [Message](https://core.telegram.org/bots/api#message) is returned, otherwise _True_ is returned.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#editmessagemedia"
+        },
         "operationId": "editMessageMedia",
         "requestBody": {
           "content": {
@@ -604,6 +695,9 @@
     "/editMessageReplyMarkup": {
       "post": {
         "description": "Use this method to edit only the reply markup of messages. On success, if the edited message is not an inline message, the edited [Message](https://core.telegram.org/bots/api#message) is returned, otherwise _True_ is returned.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#editmessagereplymarkup"
+        },
         "operationId": "editMessageReplyMarkup",
         "requestBody": {
           "content": {
@@ -628,6 +722,9 @@
     "/editMessageText": {
       "post": {
         "description": "Use this method to edit text and [game](https://core.telegram.org/bots/api#games) messages. On success, if the edited message is not an inline message, the edited [Message](https://core.telegram.org/bots/api#message) is returned, otherwise _True_ is returned.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#editmessagetext"
+        },
         "operationId": "editMessageText",
         "requestBody": {
           "content": {
@@ -652,6 +749,9 @@
     "/exportChatInviteLink": {
       "post": {
         "description": "Use this method to generate a new primary invite link for a chat; any previously generated primary link is revoked. The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights. Returns the new invite link as _String_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#exportchatinvitelink"
+        },
         "operationId": "exportChatInviteLink",
         "requestBody": {
           "content": {
@@ -676,6 +776,9 @@
     "/forwardMessage": {
       "post": {
         "description": "Use this method to forward messages of any kind. Service messages can't be forwarded. On success, the sent [Message](https://core.telegram.org/bots/api#message) is returned.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#forwardmessage"
+        },
         "operationId": "forwardMessage",
         "requestBody": {
           "content": {
@@ -700,6 +803,9 @@
     "/getChat": {
       "post": {
         "description": "Use this method to get up to date information about the chat (current name of the user for one-on-one conversations, current username of a user, group or channel, etc.). Returns a [Chat](https://core.telegram.org/bots/api#chat) object on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#getchat"
+        },
         "operationId": "getChat",
         "requestBody": {
           "content": {
@@ -724,6 +830,9 @@
     "/getChatAdministrators": {
       "post": {
         "description": "Use this method to get a list of administrators in a chat. On success, returns an Array of [ChatMember](https://core.telegram.org/bots/api#chatmember) objects that contains information about all chat administrators except other bots. If the chat is a group or a supergroup and no administrators were appointed, only the creator will be returned.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#getchatadministrators"
+        },
         "operationId": "getChatAdministrators",
         "requestBody": {
           "content": {
@@ -748,6 +857,9 @@
     "/getChatMember": {
       "post": {
         "description": "Use this method to get information about a member of a chat. Returns a [ChatMember](https://core.telegram.org/bots/api#chatmember) object on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#getchatmember"
+        },
         "operationId": "getChatMember",
         "requestBody": {
           "content": {
@@ -772,6 +884,9 @@
     "/getChatMemberCount": {
       "post": {
         "description": "Use this method to get the number of members in a chat. Returns _Int_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#getchatmembercount"
+        },
         "operationId": "getChatMemberCount",
         "requestBody": {
           "content": {
@@ -796,6 +911,9 @@
     "/getChatMenuButton": {
       "post": {
         "description": "Use this method to get the current value of the bot's menu button in a private chat, or the default menu button. Returns [MenuButton](https://core.telegram.org/bots/api#menubutton) on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#getchatmenubutton"
+        },
         "operationId": "getChatMenuButton",
         "requestBody": {
           "content": {
@@ -819,6 +937,9 @@
     "/getFile": {
       "post": {
         "description": "Use this method to get basic information about a file and prepare it for downloading. For the moment, bots can download files of up to 20MB in size. On success, a [File](https://core.telegram.org/bots/api#file) object is returned. The file can then be downloaded via the link `https://api.telegram.org/file/bot\u003ctoken\u003e/\u003cfile_path\u003e`, where `\u003cfile_path\u003e` is taken from the response. It is guaranteed that the link will be valid for at least 1 hour. When the link expires, a new one can be requested by calling [getFile](https://core.telegram.org/bots/api#getfile) again.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#getfile"
+        },
         "operationId": "getFile",
         "requestBody": {
           "content": {
@@ -843,6 +964,9 @@
     "/getGameHighScores": {
       "post": {
         "description": "Use this method to get data for high score tables. Will return the score of the specified user and several of their neighbors in a game. On success, returns an _Array_ of [GameHighScore](https://core.telegram.org/bots/api#gamehighscore) objects.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#getgamehighscores"
+        },
         "operationId": "getGameHighScores",
         "requestBody": {
           "content": {
@@ -867,6 +991,9 @@
     "/getMe": {
       "post": {
         "description": "A simple method for testing your bot's authentication token. Requires no parameters. Returns basic information about the bot in form of a [User](https://core.telegram.org/bots/api#user) object.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#getme"
+        },
         "operationId": "getMe",
         "responses": {
           "200": {
@@ -881,6 +1008,9 @@
     "/getMyCommands": {
       "post": {
         "description": "Use this method to get the current list of the bot's commands for the given scope and user language. Returns Array of [BotCommand](https://core.telegram.org/bots/api#botcommand) on success. If commands aren't set, an empty list is returned.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#getmycommands"
+        },
         "operationId": "getMyCommands",
         "requestBody": {
           "content": {
@@ -904,6 +1034,9 @@
     "/getMyDefaultAdministratorRights": {
       "post": {
         "description": "Use this method to get the current default administrator rights of the bot. Returns [ChatAdministratorRights](https://core.telegram.org/bots/api#chatadministratorrights) on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#getmydefaultadministratorrights"
+        },
         "operationId": "getMyDefaultAdministratorRights",
         "requestBody": {
           "content": {
@@ -927,6 +1060,9 @@
     "/getStickerSet": {
       "post": {
         "description": "Use this method to get a sticker set. On success, a [StickerSet](https://core.telegram.org/bots/api#stickerset) object is returned.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#getstickerset"
+        },
         "operationId": "getStickerSet",
         "requestBody": {
           "content": {
@@ -951,6 +1087,9 @@
     "/getUpdates": {
       "post": {
         "description": "Use this method to receive incoming updates using long polling ([wiki](https://en.wikipedia.org/wiki/Push_technology#Long_polling)). An Array of [Update](https://core.telegram.org/bots/api#update) objects is returned.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#getupdates"
+        },
         "operationId": "getUpdates",
         "requestBody": {
           "content": {
@@ -974,6 +1113,9 @@
     "/getUserProfilePhotos": {
       "post": {
         "description": "Use this method to get a list of profile pictures for a user. Returns a [UserProfilePhotos](https://core.telegram.org/bots/api#userprofilephotos) object.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#getuserprofilephotos"
+        },
         "operationId": "getUserProfilePhotos",
         "requestBody": {
           "content": {
@@ -998,6 +1140,9 @@
     "/getWebhookInfo": {
       "post": {
         "description": "Use this method to get current webhook status. Requires no parameters. On success, returns a [WebhookInfo](https://core.telegram.org/bots/api#webhookinfo) object. If the bot is using [getUpdates](https://core.telegram.org/bots/api#getupdates), will return an object with the _url_ field empty.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#getwebhookinfo"
+        },
         "operationId": "getWebhookInfo",
         "responses": {
           "200": {
@@ -1012,6 +1157,9 @@
     "/leaveChat": {
       "post": {
         "description": "Use this method for your bot to leave a group, supergroup or channel. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#leavechat"
+        },
         "operationId": "leaveChat",
         "requestBody": {
           "content": {
@@ -1036,6 +1184,9 @@
     "/logOut": {
       "post": {
         "description": "Use this method to log out from the cloud Bot API server before launching the bot locally. You **must** log out the bot before running it locally, otherwise there is no guarantee that the bot will receive updates. After a successful call, you can immediately log in on a local server, but will not be able to log in back to the cloud Bot API server for 10 minutes. Returns _True_ on success. Requires no parameters.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#logout"
+        },
         "operationId": "logOut",
         "responses": {
           "200": {
@@ -1050,6 +1201,9 @@
     "/pinChatMessage": {
       "post": {
         "description": "Use this method to add a message to the list of pinned messages in a chat. If the chat is not a private chat, the bot must be an administrator in the chat for this to work and must have the 'can_pin_messages' administrator right in a supergroup or 'can_edit_messages' administrator right in a channel. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#pinchatmessage"
+        },
         "operationId": "pinChatMessage",
         "requestBody": {
           "content": {
@@ -1074,6 +1228,9 @@
     "/promoteChatMember": {
       "post": {
         "description": "Use this method to promote or demote a user in a supergroup or a channel. The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights. Pass _False_ for all boolean parameters to demote a user. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#promotechatmember"
+        },
         "operationId": "promoteChatMember",
         "requestBody": {
           "content": {
@@ -1098,6 +1255,9 @@
     "/restrictChatMember": {
       "post": {
         "description": "Use this method to restrict a user in a supergroup. The bot must be an administrator in the supergroup for this to work and must have the appropriate administrator rights. Pass _True_ for all permissions to lift restrictions from a user. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#restrictchatmember"
+        },
         "operationId": "restrictChatMember",
         "requestBody": {
           "content": {
@@ -1122,6 +1282,9 @@
     "/revokeChatInviteLink": {
       "post": {
         "description": "Use this method to revoke an invite link created by the bot. If the primary link is revoked, a new link is automatically generated. The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights. Returns the revoked invite link as [ChatInviteLink](https://core.telegram.org/bots/api#chatinvitelink) object.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#revokechatinvitelink"
+        },
         "operationId": "revokeChatInviteLink",
         "requestBody": {
           "content": {
@@ -1146,6 +1309,9 @@
     "/sendAnimation": {
       "post": {
         "description": "Use this method to send animation files (GIF or H.264/MPEG-4 AVC video without sound). On success, the sent [Message](https://core.telegram.org/bots/api#message) is returned. Bots can currently send animation files of up to 50 MB in size, this limit may be changed in the future.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#sendanimation"
+        },
         "operationId": "sendAnimation",
         "requestBody": {
           "content": {
@@ -1170,6 +1336,9 @@
     "/sendAudio": {
       "post": {
         "description": "For sending voice messages, use the [sendVoice](https://core.telegram.org/bots/api#sendvoice) method instead.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#sendaudio"
+        },
         "operationId": "sendAudio",
         "requestBody": {
           "content": {
@@ -1194,6 +1363,9 @@
     "/sendChatAction": {
       "post": {
         "description": "We only recommend using this method when a response from the bot will take a **noticeable** amount of time to arrive.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#sendchataction"
+        },
         "operationId": "sendChatAction",
         "requestBody": {
           "content": {
@@ -1218,6 +1390,9 @@
     "/sendContact": {
       "post": {
         "description": "Use this method to send phone contacts. On success, the sent [Message](https://core.telegram.org/bots/api#message) is returned.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#sendcontact"
+        },
         "operationId": "sendContact",
         "requestBody": {
           "content": {
@@ -1242,6 +1417,9 @@
     "/sendDice": {
       "post": {
         "description": "Use this method to send an animated emoji that will display a random value. On success, the sent [Message](https://core.telegram.org/bots/api#message) is returned.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#senddice"
+        },
         "operationId": "sendDice",
         "requestBody": {
           "content": {
@@ -1266,6 +1444,9 @@
     "/sendDocument": {
       "post": {
         "description": "Use this method to send general files. On success, the sent [Message](https://core.telegram.org/bots/api#message) is returned. Bots can currently send files of any type of up to 50 MB in size, this limit may be changed in the future.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#senddocument"
+        },
         "operationId": "sendDocument",
         "requestBody": {
           "content": {
@@ -1290,6 +1471,9 @@
     "/sendGame": {
       "post": {
         "description": "Use this method to send a game. On success, the sent [Message](https://core.telegram.org/bots/api#message) is returned.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#sendgame"
+        },
         "operationId": "sendGame",
         "requestBody": {
           "content": {
@@ -1314,6 +1498,9 @@
     "/sendInvoice": {
       "post": {
         "description": "Use this method to send invoices. On success, the sent [Message](https://core.telegram.org/bots/api#message) is returned.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#sendinvoice"
+        },
         "operationId": "sendInvoice",
         "requestBody": {
           "content": {
@@ -1338,6 +1525,9 @@
     "/sendLocation": {
       "post": {
         "description": "Use this method to send point on the map. On success, the sent [Message](https://core.telegram.org/bots/api#message) is returned.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#sendlocation"
+        },
         "operationId": "sendLocation",
         "requestBody": {
           "content": {
@@ -1362,6 +1552,9 @@
     "/sendMediaGroup": {
       "post": {
         "description": "Use this method to send a group of photos, videos, documents or audios as an album. Documents and audio files can be only grouped in an album with messages of the same type. On success, an array of [Messages](https://core.telegram.org/bots/api#message) that were sent is returned.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#sendmediagroup"
+        },
         "operationId": "sendMediaGroup",
         "requestBody": {
           "content": {
@@ -1386,6 +1579,9 @@
     "/sendMessage": {
       "post": {
         "description": "Use this method to send text messages. On success, the sent [Message](https://core.telegram.org/bots/api#message) is returned.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#sendmessage"
+        },
         "operationId": "sendMessage",
         "requestBody": {
           "content": {
@@ -1410,6 +1606,9 @@
     "/sendPhoto": {
       "post": {
         "description": "Use this method to send photos. On success, the sent [Message](https://core.telegram.org/bots/api#message) is returned.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#sendphoto"
+        },
         "operationId": "sendPhoto",
         "requestBody": {
           "content": {
@@ -1434,6 +1633,9 @@
     "/sendPoll": {
       "post": {
         "description": "Use this method to send a native poll. On success, the sent [Message](https://core.telegram.org/bots/api#message) is returned.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#sendpoll"
+        },
         "operationId": "sendPoll",
         "requestBody": {
           "content": {
@@ -1458,6 +1660,9 @@
     "/sendSticker": {
       "post": {
         "description": "Use this method to send static .WEBP, [animated](https://telegram.org/blog/animated-stickers) .TGS, or [video](https://telegram.org/blog/video-stickers-better-reactions) .WEBM stickers. On success, the sent [Message](https://core.telegram.org/bots/api#message) is returned.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#sendsticker"
+        },
         "operationId": "sendSticker",
         "requestBody": {
           "content": {
@@ -1482,6 +1687,9 @@
     "/sendVenue": {
       "post": {
         "description": "Use this method to send information about a venue. On success, the sent [Message](https://core.telegram.org/bots/api#message) is returned.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#sendvenue"
+        },
         "operationId": "sendVenue",
         "requestBody": {
           "content": {
@@ -1506,6 +1714,9 @@
     "/sendVideo": {
       "post": {
         "description": "Use this method to send video files, Telegram clients support MPEG4 videos (other formats may be sent as [Document](https://core.telegram.org/bots/api#document)). On success, the sent [Message](https://core.telegram.org/bots/api#message) is returned. Bots can currently send video files of up to 50 MB in size, this limit may be changed in the future.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#sendvideo"
+        },
         "operationId": "sendVideo",
         "requestBody": {
           "content": {
@@ -1530,6 +1741,9 @@
     "/sendVideoNote": {
       "post": {
         "description": "As of [v.4.0](https://telegram.org/blog/video-messages-and-telescope), Telegram clients support rounded square MPEG4 videos of up to 1 minute long. Use this method to send video messages. On success, the sent [Message](https://core.telegram.org/bots/api#message) is returned.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#sendvideonote"
+        },
         "operationId": "sendVideoNote",
         "requestBody": {
           "content": {
@@ -1554,6 +1768,9 @@
     "/sendVoice": {
       "post": {
         "description": "Use this method to send audio files, if you want Telegram clients to display the file as a playable voice message. For this to work, your audio must be in an .OGG file encoded with OPUS (other formats may be sent as [Audio](https://core.telegram.org/bots/api#audio) or [Document](https://core.telegram.org/bots/api#document)). On success, the sent [Message](https://core.telegram.org/bots/api#message) is returned. Bots can currently send voice messages of up to 50 MB in size, this limit may be changed in the future.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#sendvoice"
+        },
         "operationId": "sendVoice",
         "requestBody": {
           "content": {
@@ -1578,6 +1795,9 @@
     "/setChatAdministratorCustomTitle": {
       "post": {
         "description": "Use this method to set a custom title for an administrator in a supergroup promoted by the bot. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#setchatadministratorcustomtitle"
+        },
         "operationId": "setChatAdministratorCustomTitle",
         "requestBody": {
           "content": {
@@ -1602,6 +1822,9 @@
     "/setChatDescription": {
       "post": {
         "description": "Use this method to change the description of a group, a supergroup or a channel. The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#setchatdescription"
+        },
         "operationId": "setChatDescription",
         "requestBody": {
           "content": {
@@ -1626,6 +1849,9 @@
     "/setChatMenuButton": {
       "post": {
         "description": "Use this method to change the bot's menu button in a private chat, or the default menu button. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#setchatmenubutton"
+        },
         "operationId": "setChatMenuButton",
         "requestBody": {
           "content": {
@@ -1649,6 +1875,9 @@
     "/setChatPermissions": {
       "post": {
         "description": "Use this method to set default chat permissions for all members. The bot must be an administrator in the group or a supergroup for this to work and must have the _can_restrict_members_ administrator rights. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#setchatpermissions"
+        },
         "operationId": "setChatPermissions",
         "requestBody": {
           "content": {
@@ -1673,6 +1902,9 @@
     "/setChatPhoto": {
       "post": {
         "description": "Use this method to set a new profile photo for the chat. Photos can't be changed for private chats. The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#setchatphoto"
+        },
         "operationId": "setChatPhoto",
         "requestBody": {
           "content": {
@@ -1697,6 +1929,9 @@
     "/setChatStickerSet": {
       "post": {
         "description": "Use this method to set a new group sticker set for a supergroup. The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights. Use the field _can_set_sticker_set_ optionally returned in [getChat](https://core.telegram.org/bots/api#getchat) requests to check if the bot can use this method. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#setchatstickerset"
+        },
         "operationId": "setChatStickerSet",
         "requestBody": {
           "content": {
@@ -1721,6 +1956,9 @@
     "/setChatTitle": {
       "post": {
         "description": "Use this method to change the title of a chat. Titles can't be changed for private chats. The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#setchattitle"
+        },
         "operationId": "setChatTitle",
         "requestBody": {
           "content": {
@@ -1745,6 +1983,9 @@
     "/setGameScore": {
       "post": {
         "description": "Use this method to set the score of the specified user in a game message. On success, if the message is not an inline message, the [Message](https://core.telegram.org/bots/api#message) is returned, otherwise _True_ is returned. Returns an error, if the new score is not greater than the user's current score in the chat and _force_ is _False_.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#setgamescore"
+        },
         "operationId": "setGameScore",
         "requestBody": {
           "content": {
@@ -1769,6 +2010,9 @@
     "/setMyCommands": {
       "post": {
         "description": "Use this method to change the list of the bot's commands. See [](https://core.telegram.org/bots#commands)[https://core.telegram.org/bots#commands](https://core.telegram.org/bots#commands) for more details about bot commands. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#setmycommands"
+        },
         "operationId": "setMyCommands",
         "requestBody": {
           "content": {
@@ -1793,6 +2037,9 @@
     "/setMyDefaultAdministratorRights": {
       "post": {
         "description": "Use this method to change the default administrator rights requested by the bot when it's added as an administrator to groups or channels. These rights will be suggested to users, but they are are free to modify the list before adding the bot. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#setmydefaultadministratorrights"
+        },
         "operationId": "setMyDefaultAdministratorRights",
         "requestBody": {
           "content": {
@@ -1816,6 +2063,9 @@
     "/setPassportDataErrors": {
       "post": {
         "description": "Use this if the data submitted by the user doesn't satisfy the standards your service requires for any reason. For example, if a birthday date seems invalid, a submitted document is blurry, a scan shows evidence of tampering, etc. Supply some details in the error message to make sure the user knows how to correct the issues.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#setpassportdataerrors"
+        },
         "operationId": "setPassportDataErrors",
         "requestBody": {
           "content": {
@@ -1840,6 +2090,9 @@
     "/setStickerPositionInSet": {
       "post": {
         "description": "Use this method to move a sticker in a set created by the bot to a specific position. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#setstickerpositioninset"
+        },
         "operationId": "setStickerPositionInSet",
         "requestBody": {
           "content": {
@@ -1864,6 +2117,9 @@
     "/setStickerSetThumb": {
       "post": {
         "description": "Use this method to set the thumbnail of a sticker set. Animated thumbnails can be set for animated sticker sets only. Video thumbnails can be set only for video sticker sets only. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#setstickersetthumb"
+        },
         "operationId": "setStickerSetThumb",
         "requestBody": {
           "content": {
@@ -1888,6 +2144,9 @@
     "/setWebhook": {
       "post": {
         "description": "If you'd like to make sure that the webhook was set by you, you can specify secret data in the parameter _secret_token_. If specified, the request will contain a header `X-Telegram-Bot-Api-Secret-Token` with the secret token as content.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#setwebhook"
+        },
         "operationId": "setWebhook",
         "requestBody": {
           "content": {
@@ -1912,6 +2171,9 @@
     "/stopMessageLiveLocation": {
       "post": {
         "description": "Use this method to stop updating a live location message before _live_period_ expires. On success, if the message is not an inline message, the edited [Message](https://core.telegram.org/bots/api#message) is returned, otherwise _True_ is returned.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#stopmessagelivelocation"
+        },
         "operationId": "stopMessageLiveLocation",
         "requestBody": {
           "content": {
@@ -1936,6 +2198,9 @@
     "/stopPoll": {
       "post": {
         "description": "Use this method to stop a poll which was sent by the bot. On success, the stopped [Poll](https://core.telegram.org/bots/api#poll) is returned.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#stoppoll"
+        },
         "operationId": "stopPoll",
         "requestBody": {
           "content": {
@@ -1960,6 +2225,9 @@
     "/unbanChatMember": {
       "post": {
         "description": "Use this method to unban a previously banned user in a supergroup or channel. The user will **not** return to the group or channel automatically, but will be able to join via link, etc. The bot must be an administrator for this to work. By default, this method guarantees that after the call the user is not a member of the chat, but will be able to join it. So if the user is a member of the chat they will also be **removed** from the chat. If you don't want this, use the parameter _only_if_banned_. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#unbanchatmember"
+        },
         "operationId": "unbanChatMember",
         "requestBody": {
           "content": {
@@ -1984,6 +2252,9 @@
     "/unbanChatSenderChat": {
       "post": {
         "description": "Use this method to unban a previously banned channel chat in a supergroup or channel. The bot must be an administrator for this to work and must have the appropriate administrator rights. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#unbanchatsenderchat"
+        },
         "operationId": "unbanChatSenderChat",
         "requestBody": {
           "content": {
@@ -2008,6 +2279,9 @@
     "/unpinAllChatMessages": {
       "post": {
         "description": "Use this method to clear the list of pinned messages in a chat. If the chat is not a private chat, the bot must be an administrator in the chat for this to work and must have the 'can_pin_messages' administrator right in a supergroup or 'can_edit_messages' administrator right in a channel. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#unpinallchatmessages"
+        },
         "operationId": "unpinAllChatMessages",
         "requestBody": {
           "content": {
@@ -2032,6 +2306,9 @@
     "/unpinChatMessage": {
       "post": {
         "description": "Use this method to remove a message from the list of pinned messages in a chat. If the chat is not a private chat, the bot must be an administrator in the chat for this to work and must have the 'can_pin_messages' administrator right in a supergroup or 'can_edit_messages' administrator right in a channel. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#unpinchatmessage"
+        },
         "operationId": "unpinChatMessage",
         "requestBody": {
           "content": {
@@ -2056,6 +2333,9 @@
     "/uploadStickerFile": {
       "post": {
         "description": "Use this method to upload a .PNG file with a sticker for later use in _createNewStickerSet_ and _addStickerToSet_ methods (can be used multiple times). Returns the uploaded [File](https://core.telegram.org/bots/api#file) on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#uploadstickerfile"
+        },
         "operationId": "uploadStickerFile",
         "requestBody": {
           "content": {
@@ -2082,6 +2362,9 @@
     "schemas": {
       "Animation": {
         "description": "This object represents an animation file (GIF or H.264/MPEG-4 AVC video without sound).",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#animation"
+        },
         "type": "object",
         "properties": {
           "file_id": {
@@ -2136,6 +2419,9 @@
       },
       "Audio": {
         "description": "This object represents an audio file to be treated as music by the Telegram clients.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#audio"
+        },
         "type": "object",
         "properties": {
           "file_id": {
@@ -2184,6 +2470,9 @@
       },
       "BotCommand": {
         "description": "This object represents a bot command.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#botcommand"
+        },
         "type": "object",
         "properties": {
           "command": {
@@ -2206,6 +2495,9 @@
       },
       "BotCommandScope": {
         "description": "This object represents the scope to which bot commands are applied. Currently, the following 7 scopes are supported:",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#botcommandscope"
+        },
         "oneOf": [
           {
             "$ref": "#/components/schemas/BotCommandScopeDefault"
@@ -2244,6 +2536,9 @@
       },
       "BotCommandScopeAllChatAdministrators": {
         "description": "Represents the [scope](https://core.telegram.org/bots/api#botcommandscope) of bot commands, covering all group and supergroup chat administrators.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#botcommandscopeallchatadministrators"
+        },
         "type": "object",
         "properties": {
           "type": {
@@ -2258,6 +2553,9 @@
       },
       "BotCommandScopeAllGroupChats": {
         "description": "Represents the [scope](https://core.telegram.org/bots/api#botcommandscope) of bot commands, covering all group and supergroup chats.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#botcommandscopeallgroupchats"
+        },
         "type": "object",
         "properties": {
           "type": {
@@ -2272,6 +2570,9 @@
       },
       "BotCommandScopeAllPrivateChats": {
         "description": "Represents the [scope](https://core.telegram.org/bots/api#botcommandscope) of bot commands, covering all private chats.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#botcommandscopeallprivatechats"
+        },
         "type": "object",
         "properties": {
           "type": {
@@ -2286,6 +2587,9 @@
       },
       "BotCommandScopeChat": {
         "description": "Represents the [scope](https://core.telegram.org/bots/api#botcommandscope) of bot commands, covering a specific chat.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#botcommandscopechat"
+        },
         "type": "object",
         "properties": {
           "type": {
@@ -2304,6 +2608,9 @@
       },
       "BotCommandScopeChatAdministrators": {
         "description": "Represents the [scope](https://core.telegram.org/bots/api#botcommandscope) of bot commands, covering all administrators of a specific group or supergroup chat.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#botcommandscopechatadministrators"
+        },
         "type": "object",
         "properties": {
           "type": {
@@ -2322,6 +2629,9 @@
       },
       "BotCommandScopeChatMember": {
         "description": "Represents the [scope](https://core.telegram.org/bots/api#botcommandscope) of bot commands, covering a specific member of a group or supergroup chat.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#botcommandscopechatmember"
+        },
         "type": "object",
         "properties": {
           "type": {
@@ -2346,6 +2656,9 @@
       },
       "BotCommandScopeDefault": {
         "description": "Represents the default [scope](https://core.telegram.org/bots/api#botcommandscope) of bot commands. Default commands are used if no commands with a [narrower scope](https://core.telegram.org/bots/api#determining-list-of-commands) are specified for the user.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#botcommandscopedefault"
+        },
         "type": "object",
         "properties": {
           "type": {
@@ -2360,10 +2673,16 @@
       },
       "CallbackGame": {
         "description": "A placeholder, currently holds no information. Use [BotFather](https://t.me/botfather) to set up your game.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#callbackgame"
+        },
         "type": "object"
       },
       "CallbackQuery": {
         "description": "This object represents an incoming callback query from a callback button in an [inline keyboard](https://core.telegram.org/bots#inline-keyboards-and-on-the-fly-updating). If the button that originated the query was attached to a message sent by the bot, the field _message_ will be present. If the button was attached to a message sent via the bot (in [inline mode](https://core.telegram.org/bots/api#inline-mode)), the field _inline_message_id_ will be present. Exactly one of the fields _data_ or _game_short_name_ will be present.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#callbackquery"
+        },
         "type": "object",
         "properties": {
           "id": {
@@ -2401,6 +2720,9 @@
       },
       "Chat": {
         "description": "This object represents a chat.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#chat"
+        },
         "type": "object",
         "properties": {
           "id": {
@@ -2506,6 +2828,9 @@
       },
       "ChatAdministratorRights": {
         "description": "Represents the rights of an administrator in a chat.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#chatadministratorrights"
+        },
         "type": "object",
         "properties": {
           "is_anonymous": {
@@ -2566,6 +2891,9 @@
       },
       "ChatInviteLink": {
         "description": "Represents an invite link for a chat.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#chatinvitelink"
+        },
         "type": "object",
         "properties": {
           "invite_link": {
@@ -2616,6 +2944,9 @@
       },
       "ChatJoinRequest": {
         "description": "Represents a join request sent to a chat.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#chatjoinrequest"
+        },
         "type": "object",
         "properties": {
           "chat": {
@@ -2644,6 +2975,9 @@
       },
       "ChatLocation": {
         "description": "Represents a location to which a chat is connected.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#chatlocation"
+        },
         "type": "object",
         "properties": {
           "location": {
@@ -2663,6 +2997,9 @@
       },
       "ChatMember": {
         "description": "This object contains information about one member of a chat. Currently, the following 6 types of chat members are supported:",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#chatmember"
+        },
         "oneOf": [
           {
             "$ref": "#/components/schemas/ChatMemberOwner"
@@ -2689,6 +3026,9 @@
       },
       "ChatMemberAdministrator": {
         "description": "Represents a [chat member](https://core.telegram.org/bots/api#chatmember) that has some additional privileges.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#chatmemberadministrator"
+        },
         "type": "object",
         "properties": {
           "status": {
@@ -2767,6 +3107,9 @@
       },
       "ChatMemberBanned": {
         "description": "Represents a [chat member](https://core.telegram.org/bots/api#chatmember) that was banned in the chat and can't return to the chat or view chat messages.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#chatmemberbanned"
+        },
         "type": "object",
         "properties": {
           "status": {
@@ -2789,6 +3132,9 @@
       },
       "ChatMemberLeft": {
         "description": "Represents a [chat member](https://core.telegram.org/bots/api#chatmember) that isn't currently a member of the chat, but may join it themselves.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#chatmemberleft"
+        },
         "type": "object",
         "properties": {
           "status": {
@@ -2806,6 +3152,9 @@
       },
       "ChatMemberMember": {
         "description": "Represents a [chat member](https://core.telegram.org/bots/api#chatmember) that has no additional privileges or restrictions.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#chatmembermember"
+        },
         "type": "object",
         "properties": {
           "status": {
@@ -2823,6 +3172,9 @@
       },
       "ChatMemberOwner": {
         "description": "Represents a [chat member](https://core.telegram.org/bots/api#chatmember) that owns the chat and has all administrator privileges.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#chatmemberowner"
+        },
         "type": "object",
         "properties": {
           "status": {
@@ -2849,6 +3201,9 @@
       },
       "ChatMemberRestricted": {
         "description": "Represents a [chat member](https://core.telegram.org/bots/api#chatmember) that is under certain restrictions in the chat. Supergroups only.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#chatmemberrestricted"
+        },
         "type": "object",
         "properties": {
           "status": {
@@ -2916,6 +3271,9 @@
       },
       "ChatMemberUpdated": {
         "description": "This object represents changes in the status of a chat member.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#chatmemberupdated"
+        },
         "type": "object",
         "properties": {
           "chat": {
@@ -2948,6 +3306,9 @@
       },
       "ChatPermissions": {
         "description": "Describes actions that a non-administrator user is allowed to take in a chat.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#chatpermissions"
+        },
         "type": "object",
         "properties": {
           "can_send_messages": {
@@ -2986,6 +3347,9 @@
       },
       "ChatPhoto": {
         "description": "This object represents a chat photo.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#chatphoto"
+        },
         "type": "object",
         "properties": {
           "small_file_id": {
@@ -3014,6 +3378,9 @@
       },
       "ChosenInlineResult": {
         "description": "Represents a [result](https://core.telegram.org/bots/api#inlinequeryresult) of an inline query that was chosen by the user and sent to their chat partner.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#choseninlineresult"
+        },
         "type": "object",
         "properties": {
           "result_id": {
@@ -3043,6 +3410,9 @@
       },
       "Contact": {
         "description": "This object represents a phone contact.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#contact"
+        },
         "type": "object",
         "properties": {
           "phone_number": {
@@ -3074,6 +3444,9 @@
       },
       "Dice": {
         "description": "This object represents an animated emoji that displays a random value.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#dice"
+        },
         "type": "object",
         "properties": {
           "emoji": {
@@ -3092,6 +3465,9 @@
       },
       "Document": {
         "description": "This object represents a general file (as opposed to [photos](https://core.telegram.org/bots/api#photosize), [voice messages](https://core.telegram.org/bots/api#voice) and [audio files](https://core.telegram.org/bots/api#audio)).",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#document"
+        },
         "type": "object",
         "properties": {
           "file_id": {
@@ -3125,6 +3501,9 @@
       },
       "EncryptedCredentials": {
         "description": "Describes data required for decrypting and authenticating [EncryptedPassportElement](https://core.telegram.org/bots/api#encryptedpassportelement). See the [Telegram Passport Documentation](https://core.telegram.org/passport#receiving-information) for a complete description of the data decryption and authentication processes.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#encryptedcredentials"
+        },
         "type": "object",
         "properties": {
           "data": {
@@ -3148,6 +3527,9 @@
       },
       "EncryptedPassportElement": {
         "description": "Describes documents or other Telegram Passport elements shared with the bot by the user.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#encryptedpassportelement"
+        },
         "type": "object",
         "properties": {
           "type": {
@@ -3239,6 +3621,9 @@
       },
       "File": {
         "description": "This object represents a file ready to be downloaded. The file can be downloaded via the link `https://api.telegram.org/file/bot\u003ctoken\u003e/\u003cfile_path\u003e`. It is guaranteed that the link will be valid for at least 1 hour. When the link expires, a new one can be requested by calling [getFile](https://core.telegram.org/bots/api#getfile).",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#file"
+        },
         "type": "object",
         "properties": {
           "file_id": {
@@ -3265,6 +3650,9 @@
       },
       "ForceReply": {
         "description": "Upon receiving a message with this object, Telegram clients will display a reply interface to the user (act as if the user has selected the bot's message and tapped 'Reply'). This can be extremely useful if you want to create user-friendly step-by-step interfaces without having to sacrifice [privacy mode](https://core.telegram.org/bots#privacy-mode).",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#forcereply"
+        },
         "type": "object",
         "properties": {
           "force_reply": {
@@ -3288,6 +3676,9 @@
       },
       "Game": {
         "description": "This object represents a game. Use BotFather to create and edit games, their short names will act as unique identifiers.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#game"
+        },
         "type": "object",
         "properties": {
           "title": {
@@ -3329,6 +3720,9 @@
       },
       "GameHighScore": {
         "description": "This object represents one row of the high scores table for a game.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#gamehighscore"
+        },
         "type": "object",
         "properties": {
           "position": {
@@ -3362,6 +3756,9 @@
       },
       "InlineKeyboardButton": {
         "description": "This object represents one button of an inline keyboard. You **must** use exactly one of the optional fields.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#inlinekeyboardbutton"
+        },
         "type": "object",
         "properties": {
           "text": {
@@ -3406,6 +3803,9 @@
       },
       "InlineKeyboardMarkup": {
         "description": "This object represents an [inline keyboard](https://core.telegram.org/bots#inline-keyboards-and-on-the-fly-updating) that appears right next to the message it belongs to.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#inlinekeyboardmarkup"
+        },
         "type": "object",
         "properties": {
           "inline_keyboard": {
@@ -3425,6 +3825,9 @@
       },
       "InlineQuery": {
         "description": "This object represents an incoming inline query. When the user sends an empty query, your bot could return some default or trending results.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#inlinequery"
+        },
         "type": "object",
         "properties": {
           "id": {
@@ -3466,6 +3869,9 @@
       },
       "InlineQueryResult": {
         "description": "This object represents one result of an inline query. Telegram clients currently support results of the following 20 types:",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#inlinequeryresult"
+        },
         "oneOf": [
           {
             "$ref": "#/components/schemas/InlineQueryResultCachedAudio"
@@ -3549,6 +3955,9 @@
       },
       "InlineQueryResultArticle": {
         "description": "Represents a link to an article or web page.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#inlinequeryresultarticle"
+        },
         "type": "object",
         "properties": {
           "type": {
@@ -3608,6 +4017,9 @@
       },
       "InlineQueryResultAudio": {
         "description": "Represents a link to an MP3 audio file. By default, this audio file will be sent by the user. Alternatively, you can use _input_message_content_ to send a message with the specified content instead of the audio.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#inlinequeryresultaudio"
+        },
         "type": "object",
         "properties": {
           "type": {
@@ -3671,6 +4083,9 @@
       },
       "InlineQueryResultCachedAudio": {
         "description": "Represents a link to an MP3 audio file stored on the Telegram servers. By default, this audio file will be sent by the user. Alternatively, you can use _input_message_content_ to send a message with the specified content instead of the audio.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#inlinequeryresultcachedaudio"
+        },
         "type": "object",
         "properties": {
           "type": {
@@ -3719,6 +4134,9 @@
       },
       "InlineQueryResultCachedDocument": {
         "description": "Represents a link to a file stored on the Telegram servers. By default, this file will be sent by the user with an optional caption. Alternatively, you can use _input_message_content_ to send a message with the specified content instead of the file.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#inlinequeryresultcacheddocument"
+        },
         "type": "object",
         "properties": {
           "type": {
@@ -3776,6 +4194,9 @@
       },
       "InlineQueryResultCachedGif": {
         "description": "Represents a link to an animated GIF file stored on the Telegram servers. By default, this animated GIF file will be sent by the user with an optional caption. Alternatively, you can use _input_message_content_ to send a message with specified content instead of the animation.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#inlinequeryresultcachedgif"
+        },
         "type": "object",
         "properties": {
           "type": {
@@ -3828,6 +4249,9 @@
       },
       "InlineQueryResultCachedMpeg4Gif": {
         "description": "Represents a link to a video animation (H.264/MPEG-4 AVC video without sound) stored on the Telegram servers. By default, this animated MPEG-4 file will be sent by the user with an optional caption. Alternatively, you can use _input_message_content_ to send a message with the specified content instead of the animation.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#inlinequeryresultcachedmpeg4gif"
+        },
         "type": "object",
         "properties": {
           "type": {
@@ -3880,6 +4304,9 @@
       },
       "InlineQueryResultCachedPhoto": {
         "description": "Represents a link to a photo stored on the Telegram servers. By default, this photo will be sent by the user with an optional caption. Alternatively, you can use _input_message_content_ to send a message with the specified content instead of the photo.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#inlinequeryresultcachedphoto"
+        },
         "type": "object",
         "properties": {
           "type": {
@@ -3936,6 +4363,9 @@
       },
       "InlineQueryResultCachedSticker": {
         "description": "Represents a link to a sticker stored on the Telegram servers. By default, this sticker will be sent by the user. Alternatively, you can use _input_message_content_ to send a message with the specified content instead of the sticker.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#inlinequeryresultcachedsticker"
+        },
         "type": "object",
         "properties": {
           "type": {
@@ -3968,6 +4398,9 @@
       },
       "InlineQueryResultCachedVideo": {
         "description": "Represents a link to a video file stored on the Telegram servers. By default, this video file will be sent by the user with an optional caption. Alternatively, you can use _input_message_content_ to send a message with the specified content instead of the video.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#inlinequeryresultcachedvideo"
+        },
         "type": "object",
         "properties": {
           "type": {
@@ -4025,6 +4458,9 @@
       },
       "InlineQueryResultCachedVoice": {
         "description": "Represents a link to a voice message stored on the Telegram servers. By default, this voice message will be sent by the user. Alternatively, you can use _input_message_content_ to send a message with the specified content instead of the voice message.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#inlinequeryresultcachedvoice"
+        },
         "type": "object",
         "properties": {
           "type": {
@@ -4078,6 +4514,9 @@
       },
       "InlineQueryResultContact": {
         "description": "Represents a contact with a phone number. By default, this contact will be sent by the user. Alternatively, you can use _input_message_content_ to send a message with the specified content instead of the contact.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#inlinequeryresultcontact"
+        },
         "type": "object",
         "properties": {
           "type": {
@@ -4138,6 +4577,9 @@
       },
       "InlineQueryResultDocument": {
         "description": "Represents a link to a file. By default, this file will be sent by the user with an optional caption. Alternatively, you can use _input_message_content_ to send a message with the specified content instead of the file. Currently, only **.PDF** and **.ZIP** files can be sent using this method.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#inlinequeryresultdocument"
+        },
         "type": "object",
         "properties": {
           "type": {
@@ -4216,6 +4658,9 @@
       },
       "InlineQueryResultGame": {
         "description": "Represents a [Game](https://core.telegram.org/bots/api#games).",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#inlinequeryresultgame"
+        },
         "type": "object",
         "properties": {
           "type": {
@@ -4245,6 +4690,9 @@
       },
       "InlineQueryResultGif": {
         "description": "Represents a link to an animated GIF file. By default, this animated GIF file will be sent by the user with optional caption. Alternatively, you can use _input_message_content_ to send a message with the specified content instead of the animation.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#inlinequeryresultgif"
+        },
         "type": "object",
         "properties": {
           "type": {
@@ -4324,6 +4772,9 @@
       },
       "InlineQueryResultLocation": {
         "description": "Represents a location on a map. By default, the location will be sent by the user. Alternatively, you can use _input_message_content_ to send a message with the specified content instead of the location.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#inlinequeryresultlocation"
+        },
         "type": "object",
         "properties": {
           "type": {
@@ -4402,6 +4853,9 @@
       },
       "InlineQueryResultMpeg4Gif": {
         "description": "Represents a link to a video animation (H.264/MPEG-4 AVC video without sound). By default, this animated MPEG-4 file will be sent by the user with optional caption. Alternatively, you can use _input_message_content_ to send a message with the specified content instead of the animation.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#inlinequeryresultmpeg4gif"
+        },
         "type": "object",
         "properties": {
           "type": {
@@ -4481,6 +4935,9 @@
       },
       "InlineQueryResultPhoto": {
         "description": "Represents a link to a photo. By default, this photo will be sent by the user with optional caption. Alternatively, you can use _input_message_content_ to send a message with the specified content instead of the photo.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#inlinequeryresultphoto"
+        },
         "type": "object",
         "properties": {
           "type": {
@@ -4554,6 +5011,9 @@
       },
       "InlineQueryResultVenue": {
         "description": "Represents a venue. By default, the venue will be sent by the user. Alternatively, you can use _input_message_content_ to send a message with the specified content instead of the venue.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#inlinequeryresultvenue"
+        },
         "type": "object",
         "properties": {
           "type": {
@@ -4631,6 +5091,9 @@
       },
       "InlineQueryResultVideo": {
         "description": "Represents a link to a page containing an embedded video player or a video file. By default, this video file will be sent by the user with an optional caption. Alternatively, you can use _input_message_content_ to send a message with the specified content instead of the video.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#inlinequeryresultvideo"
+        },
         "type": "object",
         "properties": {
           "type": {
@@ -4716,6 +5179,9 @@
       },
       "InlineQueryResultVoice": {
         "description": "Represents a link to a voice recording in an .OGG container encoded with OPUS. By default, this voice recording will be sent by the user. Alternatively, you can use _input_message_content_ to send a message with the specified content instead of the the voice message.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#inlinequeryresultvoice"
+        },
         "type": "object",
         "properties": {
           "type": {
@@ -4775,6 +5241,9 @@
       },
       "InputContactMessageContent": {
         "description": "Represents the [content](https://core.telegram.org/bots/api#inputmessagecontent) of a contact message to be sent as the result of an inline query.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#inputcontactmessagecontent"
+        },
         "type": "object",
         "properties": {
           "phone_number": {
@@ -4802,6 +5271,9 @@
       },
       "InputInvoiceMessageContent": {
         "description": "Represents the [content](https://core.telegram.org/bots/api#inputmessagecontent) of an invoice message to be sent as the result of an inline query.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#inputinvoicemessagecontent"
+        },
         "type": "object",
         "properties": {
           "title": {
@@ -4913,6 +5385,9 @@
       },
       "InputLocationMessageContent": {
         "description": "Represents the [content](https://core.telegram.org/bots/api#inputmessagecontent) of a location message to be sent as the result of an inline query.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#inputlocationmessagecontent"
+        },
         "type": "object",
         "properties": {
           "latitude": {
@@ -4953,6 +5428,9 @@
       },
       "InputMedia": {
         "description": "This object represents the content of a media message to be sent. It should be one of",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#inputmedia"
+        },
         "oneOf": [
           {
             "$ref": "#/components/schemas/InputMediaAnimation"
@@ -4983,6 +5461,9 @@
       },
       "InputMediaAnimation": {
         "description": "Represents an animation file (GIF or H.264/MPEG-4 AVC video without sound) to be sent.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#inputmediaanimation"
+        },
         "type": "object",
         "properties": {
           "type": {
@@ -5040,6 +5521,9 @@
       },
       "InputMediaAudio": {
         "description": "Represents an audio file to be treated as music to be sent.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#inputmediaaudio"
+        },
         "type": "object",
         "properties": {
           "type": {
@@ -5093,6 +5577,9 @@
       },
       "InputMediaDocument": {
         "description": "Represents a general file to be sent.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#inputmediadocument"
+        },
         "type": "object",
         "properties": {
           "type": {
@@ -5136,6 +5623,9 @@
       },
       "InputMediaPhoto": {
         "description": "Represents a photo to be sent.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#inputmediaphoto"
+        },
         "type": "object",
         "properties": {
           "type": {
@@ -5171,6 +5661,9 @@
       },
       "InputMediaVideo": {
         "description": "Represents a video to be sent.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#inputmediavideo"
+        },
         "type": "object",
         "properties": {
           "type": {
@@ -5232,6 +5725,9 @@
       },
       "InputMessageContent": {
         "description": "This object represents the content of a message to be sent as a result of an inline query. Telegram clients currently support the following 5 types:",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#inputmessagecontent"
+        },
         "oneOf": [
           {
             "$ref": "#/components/schemas/InputTextMessageContent"
@@ -5252,6 +5748,9 @@
       },
       "InputTextMessageContent": {
         "description": "Represents the [content](https://core.telegram.org/bots/api#inputmessagecontent) of a text message to be sent as the result of an inline query.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#inputtextmessagecontent"
+        },
         "type": "object",
         "properties": {
           "message_text": {
@@ -5282,6 +5781,9 @@
       },
       "InputVenueMessageContent": {
         "description": "Represents the [content](https://core.telegram.org/bots/api#inputmessagecontent) of a venue message to be sent as the result of an inline query.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#inputvenuemessagecontent"
+        },
         "type": "object",
         "properties": {
           "latitude": {
@@ -5326,6 +5828,9 @@
       },
       "Invoice": {
         "description": "This object contains basic information about an invoice.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#invoice"
+        },
         "type": "object",
         "properties": {
           "title": {
@@ -5358,6 +5863,9 @@
         ]
       },
       "KeyboardButton": {
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#keyboardbutton"
+        },
         "oneOf": [
           {
             "type": "string"
@@ -5369,6 +5877,9 @@
       },
       "KeyboardButtonObject": {
         "description": "This object represents one button of the reply keyboard. For simple text buttons _String_ can be used instead of this object to specify text of the button. Optional fields _web_app_, _request_contact_, _request_location_, and _request_poll_ are mutually exclusive.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#keyboardbuttonobject"
+        },
         "type": "object",
         "properties": {
           "text": {
@@ -5396,6 +5907,9 @@
       },
       "KeyboardButtonPollType": {
         "description": "This object represents type of a poll, which is allowed to be created and sent when the corresponding button is pressed.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#keyboardbuttonpolltype"
+        },
         "type": "object",
         "properties": {
           "type": {
@@ -5406,6 +5920,9 @@
       },
       "LabeledPrice": {
         "description": "This object represents a portion of the price for goods or services.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#labeledprice"
+        },
         "type": "object",
         "properties": {
           "label": {
@@ -5424,6 +5941,9 @@
       },
       "Location": {
         "description": "This object represents a point on the map.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#location"
+        },
         "type": "object",
         "properties": {
           "longitude": {
@@ -5460,6 +5980,9 @@
       },
       "LoginUrl": {
         "description": "Telegram apps support these buttons as of [version 5.7](https://telegram.org/blog/privacy-discussions-web-bots#meet-seamless-web-bots).",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#loginurl"
+        },
         "type": "object",
         "properties": {
           "url": {
@@ -5485,6 +6008,9 @@
       },
       "MaskPosition": {
         "description": "This object describes the position on faces where a mask should be placed by default.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#maskposition"
+        },
         "type": "object",
         "properties": {
           "point": {
@@ -5513,6 +6039,9 @@
       },
       "MenuButton": {
         "description": "This object describes the bot's menu button in a private chat. It should be one of",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#menubutton"
+        },
         "oneOf": [
           {
             "$ref": "#/components/schemas/MenuButtonCommands"
@@ -5535,6 +6064,9 @@
       },
       "MenuButtonCommands": {
         "description": "Represents a menu button, which opens the bot's list of commands.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#menubuttoncommands"
+        },
         "type": "object",
         "properties": {
           "type": {
@@ -5549,6 +6081,9 @@
       },
       "MenuButtonDefault": {
         "description": "Describes that no specific value for the menu button was set.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#menubuttondefault"
+        },
         "type": "object",
         "properties": {
           "type": {
@@ -5563,6 +6098,9 @@
       },
       "MenuButtonWebApp": {
         "description": "Represents a menu button, which launches a [Web App](https://core.telegram.org/bots/webapps).",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#menubuttonwebapp"
+        },
         "type": "object",
         "properties": {
           "type": {
@@ -5586,6 +6124,9 @@
       },
       "Message": {
         "description": "This object represents a message.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#message"
+        },
         "type": "object",
         "properties": {
           "message_id": {
@@ -5826,6 +6367,9 @@
       },
       "MessageAutoDeleteTimerChanged": {
         "description": "This object represents a service message about a change in auto-delete timer settings.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#messageautodeletetimerchanged"
+        },
         "type": "object",
         "properties": {
           "message_auto_delete_time": {
@@ -5839,6 +6383,9 @@
       },
       "MessageEntity": {
         "description": "This object represents one special entity in a text message. For example, hashtags, usernames, URLs, etc.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#messageentity"
+        },
         "type": "object",
         "properties": {
           "type": {
@@ -5892,6 +6439,9 @@
       },
       "MessageId": {
         "description": "This object represents a unique message identifier.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#messageid"
+        },
         "type": "object",
         "properties": {
           "message_id": {
@@ -5905,6 +6455,9 @@
       },
       "OrderInfo": {
         "description": "This object represents information about an order.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#orderinfo"
+        },
         "type": "object",
         "properties": {
           "name": {
@@ -5926,6 +6479,9 @@
       },
       "PassportData": {
         "description": "Describes Telegram Passport data shared with the bot by the user.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#passportdata"
+        },
         "type": "object",
         "properties": {
           "data": {
@@ -5946,6 +6502,9 @@
       },
       "PassportElementError": {
         "description": "This object represents an error in the Telegram Passport element which was submitted that should be resolved by the user. It should be one of:",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#passportelementerror"
+        },
         "oneOf": [
           {
             "$ref": "#/components/schemas/PassportElementErrorDataField"
@@ -5992,6 +6551,9 @@
       },
       "PassportElementErrorDataField": {
         "description": "Represents an issue in one of the data fields that was provided by the user. The error is considered resolved when the field's value changes.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#passportelementerrordatafield"
+        },
         "type": "object",
         "properties": {
           "source": {
@@ -6034,6 +6596,9 @@
       },
       "PassportElementErrorFile": {
         "description": "Represents an issue with a document scan. The error is considered resolved when the file with the document scan changes.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#passportelementerrorfile"
+        },
         "type": "object",
         "properties": {
           "source": {
@@ -6070,6 +6635,9 @@
       },
       "PassportElementErrorFiles": {
         "description": "Represents an issue with a list of scans. The error is considered resolved when the list of files containing the scans changes.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#passportelementerrorfiles"
+        },
         "type": "object",
         "properties": {
           "source": {
@@ -6109,6 +6677,9 @@
       },
       "PassportElementErrorFrontSide": {
         "description": "Represents an issue with the front side of a document. The error is considered resolved when the file with the front side of the document changes.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#passportelementerrorfrontside"
+        },
         "type": "object",
         "properties": {
           "source": {
@@ -6144,6 +6715,9 @@
       },
       "PassportElementErrorReverseSide": {
         "description": "Represents an issue with the reverse side of a document. The error is considered resolved when the file with reverse side of the document changes.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#passportelementerrorreverseside"
+        },
         "type": "object",
         "properties": {
           "source": {
@@ -6177,6 +6751,9 @@
       },
       "PassportElementErrorSelfie": {
         "description": "Represents an issue with the selfie with a document. The error is considered resolved when the file with the selfie changes.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#passportelementerrorselfie"
+        },
         "type": "object",
         "properties": {
           "source": {
@@ -6212,6 +6789,9 @@
       },
       "PassportElementErrorTranslationFile": {
         "description": "Represents an issue with one of the files that constitute the translation of a document. The error is considered resolved when the file changes.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#passportelementerrortranslationfile"
+        },
         "type": "object",
         "properties": {
           "source": {
@@ -6252,6 +6832,9 @@
       },
       "PassportElementErrorTranslationFiles": {
         "description": "Represents an issue with the translated version of a document. The error is considered resolved when a file with the document translation change.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#passportelementerrortranslationfiles"
+        },
         "type": "object",
         "properties": {
           "source": {
@@ -6295,6 +6878,9 @@
       },
       "PassportElementErrorUnspecified": {
         "description": "Represents an issue in an unspecified place. The error is considered resolved when new data is added.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#passportelementerrorunspecified"
+        },
         "type": "object",
         "properties": {
           "source": {
@@ -6324,6 +6910,9 @@
       },
       "PassportFile": {
         "description": "This object represents a file uploaded to Telegram Passport. Currently all Telegram Passport files are in JPEG format when decrypted and don't exceed 10MB.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#passportfile"
+        },
         "type": "object",
         "properties": {
           "file_id": {
@@ -6352,6 +6941,9 @@
       },
       "PhotoSize": {
         "description": "This object represents one size of a photo or a [file](https://core.telegram.org/bots/api#document) / [sticker](https://core.telegram.org/bots/api#sticker) thumbnail.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#photosize"
+        },
         "type": "object",
         "properties": {
           "file_id": {
@@ -6388,6 +6980,9 @@
       },
       "Poll": {
         "description": "This object contains information about a poll.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#poll"
+        },
         "type": "object",
         "properties": {
           "id": {
@@ -6469,6 +7064,9 @@
       },
       "PollAnswer": {
         "description": "This object represents an answer of a user in a non-anonymous poll.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#pollanswer"
+        },
         "type": "object",
         "properties": {
           "poll_id": {
@@ -6494,6 +7092,9 @@
       },
       "PollOption": {
         "description": "This object contains information about one answer option in a poll.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#polloption"
+        },
         "type": "object",
         "properties": {
           "text": {
@@ -6514,6 +7115,9 @@
       },
       "PreCheckoutQuery": {
         "description": "This object contains information about an incoming pre-checkout query.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#precheckoutquery"
+        },
         "type": "object",
         "properties": {
           "id": {
@@ -6553,6 +7157,9 @@
       },
       "ProximityAlertTriggered": {
         "description": "This object represents the content of a service message, sent whenever a user in the chat triggers a proximity alert set by another user.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#proximityalerttriggered"
+        },
         "type": "object",
         "properties": {
           "traveler": {
@@ -6574,6 +7181,9 @@
       },
       "ReplyKeyboardMarkup": {
         "description": "This object represents a [custom keyboard](https://core.telegram.org/bots#keyboards) with reply options (see [Introduction to bots](https://core.telegram.org/bots#keyboards) for details and examples).",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#replykeyboardmarkup"
+        },
         "type": "object",
         "properties": {
           "keyboard": {
@@ -6611,6 +7221,9 @@
       },
       "ReplyKeyboardRemove": {
         "description": "Upon receiving a message with this object, Telegram clients will remove the current custom keyboard and display the default letter-keyboard. By default, custom keyboards are displayed until a new keyboard is sent by a bot. An exception is made for one-time keyboards that are hidden immediately after the user presses a button (see [ReplyKeyboardMarkup](https://core.telegram.org/bots/api#replykeyboardmarkup)).",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#replykeyboardremove"
+        },
         "type": "object",
         "properties": {
           "remove_keyboard": {
@@ -6628,6 +7241,9 @@
       },
       "ResponseParameters": {
         "description": "Describes why a request was unsuccessful.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#responseparameters"
+        },
         "type": "object",
         "properties": {
           "migrate_to_chat_id": {
@@ -7026,6 +7642,9 @@
       },
       "SentWebAppMessage": {
         "description": "Describes an inline message sent by a [Web App](https://core.telegram.org/bots/webapps) on behalf of a user.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#sentwebappmessage"
+        },
         "type": "object",
         "properties": {
           "inline_message_id": {
@@ -7036,6 +7655,9 @@
       },
       "ShippingAddress": {
         "description": "This object represents a shipping address.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#shippingaddress"
+        },
         "type": "object",
         "properties": {
           "country_code": {
@@ -7074,6 +7696,9 @@
       },
       "ShippingOption": {
         "description": "This object represents one shipping option.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#shippingoption"
+        },
         "type": "object",
         "properties": {
           "id": {
@@ -7100,6 +7725,9 @@
       },
       "ShippingQuery": {
         "description": "This object contains information about an incoming shipping query.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#shippingquery"
+        },
         "type": "object",
         "properties": {
           "id": {
@@ -7126,6 +7754,9 @@
       },
       "Sticker": {
         "description": "This object represents a sticker.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#sticker"
+        },
         "type": "object",
         "properties": {
           "file_id": {
@@ -7189,6 +7820,9 @@
       },
       "StickerSet": {
         "description": "This object represents a sticker set.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#stickerset"
+        },
         "type": "object",
         "properties": {
           "name": {
@@ -7233,6 +7867,9 @@
       },
       "SuccessfulPayment": {
         "description": "This object contains basic information about a successful payment.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#successfulpayment"
+        },
         "type": "object",
         "properties": {
           "currency": {
@@ -7273,6 +7910,9 @@
       },
       "Update": {
         "description": "This [object](https://core.telegram.org/bots/api#available-types) represents an incoming update.At most **one** of the optional parameters can be present in any given update.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#update"
+        },
         "type": "object",
         "properties": {
           "update_id": {
@@ -7328,6 +7968,9 @@
       },
       "User": {
         "description": "This object represents a Telegram user or bot.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#user"
+        },
         "type": "object",
         "properties": {
           "id": {
@@ -7384,6 +8027,9 @@
       },
       "UserProfilePhotos": {
         "description": "This object represent a user's profile pictures.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#userprofilephotos"
+        },
         "type": "object",
         "properties": {
           "total_count": {
@@ -7408,6 +8054,9 @@
       },
       "Venue": {
         "description": "This object represents a venue.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#venue"
+        },
         "type": "object",
         "properties": {
           "location": {
@@ -7446,6 +8095,9 @@
       },
       "Video": {
         "description": "This object represents a video file.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#video"
+        },
         "type": "object",
         "properties": {
           "file_id": {
@@ -7500,6 +8152,9 @@
       },
       "VideoChatEnded": {
         "description": "This object represents a service message about a video chat ended in the chat.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#videochatended"
+        },
         "type": "object",
         "properties": {
           "duration": {
@@ -7515,6 +8170,9 @@
       },
       "VideoChatParticipantsInvited": {
         "description": "This object represents a service message about new members invited to a video chat.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#videochatparticipantsinvited"
+        },
         "type": "object",
         "properties": {
           "users": {
@@ -7531,6 +8189,9 @@
       },
       "VideoChatScheduled": {
         "description": "This object represents a service message about a video chat scheduled in the chat.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#videochatscheduled"
+        },
         "type": "object",
         "properties": {
           "start_date": {
@@ -7544,10 +8205,16 @@
       },
       "VideoChatStarted": {
         "description": "This object represents a service message about a video chat started in the chat. Currently holds no information.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#videochatstarted"
+        },
         "type": "object"
       },
       "VideoNote": {
         "description": "This object represents a [video message](https://telegram.org/blog/video-messages-and-telescope) (available in Telegram apps as of [v.4.0](https://telegram.org/blog/video-messages-and-telescope)).",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#videonote"
+        },
         "type": "object",
         "properties": {
           "file_id": {
@@ -7585,6 +8252,9 @@
       },
       "Voice": {
         "description": "This object represents a voice note.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#voice"
+        },
         "type": "object",
         "properties": {
           "file_id": {
@@ -7618,6 +8288,9 @@
       },
       "WebAppData": {
         "description": "Describes data sent from a [Web App](https://core.telegram.org/bots/webapps) to the bot.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#webappdata"
+        },
         "type": "object",
         "properties": {
           "data": {
@@ -7636,6 +8309,9 @@
       },
       "WebAppInfo": {
         "description": "Describes a [Web App](https://core.telegram.org/bots/webapps).",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#webappinfo"
+        },
         "type": "object",
         "properties": {
           "url": {
@@ -7649,6 +8325,9 @@
       },
       "WebhookInfo": {
         "description": "Describes the current status of a webhook.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#webhookinfo"
+        },
         "type": "object",
         "properties": {
           "url": {
@@ -10628,5 +11307,8 @@
         }
       }
     }
+  },
+  "externalDocs": {
+    "url": "https://core.telegram.org/bots/api"
   }
 }
