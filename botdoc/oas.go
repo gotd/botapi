@@ -155,6 +155,9 @@ func (a API) OAS() (*ogen.Spec, error) {
 
 	for _, d := range a.Types {
 		s := &ogen.Schema{
+			ExternalDocs: &ogen.ExternalDocumentation{
+				URL: "https://core.telegram.org/bots/api#" + strings.ToLower(d.Name),
+			},
 			Description: d.PrettyDescription,
 			Type:        "object",
 		}
@@ -465,6 +468,9 @@ Schemas:
 		item := &ogen.PathItem{
 			Post: &ogen.Operation{
 				Description: m.PrettyDescription,
+				ExternalDocs: &ogen.ExternalDocumentation{
+					URL: "https://core.telegram.org/bots/api#" + strings.ToLower(m.Name),
+				},
 				OperationID: m.Name,
 				RequestBody: reqBody,
 				Responses:   responses,
@@ -479,6 +485,9 @@ Schemas:
 			Description:    "API for Telegram bots",
 			TermsOfService: "https://telegram.org/tos",
 			Version:        a.Version,
+		},
+		ExternalDocs: &ogen.ExternalDocumentation{
+			URL: "https://core.telegram.org/bots/api",
 		},
 		Servers: []ogen.Server{
 			{

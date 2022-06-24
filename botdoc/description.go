@@ -28,10 +28,6 @@ func fixTypos(s string) string {
 	return typosReplacer.Replace(s)
 }
 
-func cleanDescription(s string) string {
-	return strings.TrimSpace(fixTypos(s))
-}
-
 func selDescription(sel *goquery.Selection) string {
 	sel = sel.Clone()
 	sel.Find("em").Each(func(i int, s *goquery.Selection) {
@@ -60,5 +56,5 @@ func selDescription(sel *goquery.Selection) string {
 
 		s.SetText(fmt.Sprintf("[%s](%s)", text, link))
 	})
-	return cleanDescription(sel.Text())
+	return strings.TrimSpace(fixTypos(sel.Text()))
 }
