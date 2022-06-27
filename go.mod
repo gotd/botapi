@@ -6,7 +6,7 @@ require (
 	github.com/PuerkitoBio/goquery v1.8.0
 	github.com/go-chi/chi/v5 v5.0.7
 	github.com/go-faster/errors v0.6.1
-	github.com/go-faster/jx v0.37.0
+	github.com/go-faster/jx v0.38.0
 	github.com/gotd/td v0.60.0
 	github.com/ogen-go/ogen v0.40.0
 	github.com/stretchr/testify v1.7.5
