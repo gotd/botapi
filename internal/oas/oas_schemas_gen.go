@@ -3639,12 +3639,12 @@ type Location struct {
 // org/blog/privacy-discussions-web-bots#meet-seamless-web-bots).
 // Ref: #/components/schemas/LoginUrl
 type LoginUrl struct {
-	// An HTTP URL to be opened with user authorization data added to the query string when the button is
-	// pressed. If the user refuses to provide authorization data, the original URL without information
-	// about the user will be opened. The data added is the same as described in [Receiving authorization
-	// data](https://core.telegram.org/widgets/login#receiving-authorization-data).**NOTE:** You **must**
-	// always check the hash of the received data to verify the authentication and the integrity of the
-	// data as described in [Checking authorization](https://core.telegram.
+	// An HTTPS URL to be opened with user authorization data added to the query string when the button
+	// is pressed. If the user refuses to provide authorization data, the original URL without
+	// information about the user will be opened. The data added is the same as described in [Receiving
+	// authorization data](https://core.telegram.org/widgets/login#receiving-authorization-data).
+	// **NOTE:** You **must** always check the hash of the received data to verify the authentication and
+	// the integrity of the data as described in [Checking authorization](https://core.telegram.
 	// org/widgets/login#checking-authorization).
 	URL string "json:\"url\""
 	// _Optional_. New text of the button in forwarded messages.
