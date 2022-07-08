@@ -31,10 +31,6 @@
   "paths": {
     "/addStickerToSet": {
       "post": {
-        "description": "Use this method to add a new sticker to a set created by the bot. You **must** use exactly one of the fields _png_sticker_, _tgs_sticker_, or _webm_sticker_. Animated stickers can be added to animated sticker sets and only to them. Animated sticker sets can have up to 50 stickers. Static sticker sets can have up to 120 stickers. Returns _True_ on success.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#addstickertoset"
-        },
         "operationId": "addStickerToSet",
         "requestBody": {
           "content": {
@@ -53,15 +49,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to add a new sticker to a set created by the bot. You **must** use exactly one of the fields _png_sticker_, _tgs_sticker_, or _webm_sticker_. Animated stickers can be added to animated sticker sets and only to them. Animated sticker sets can have up to 50 stickers. Static sticker sets can have up to 120 stickers. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#addstickertoset"
         }
       }
     },
     "/answerCallbackQuery": {
       "post": {
-        "description": "Use this method to send answers to callback queries sent from [inline keyboards](https://core.telegram.org/bots#inline-keyboards-and-on-the-fly-updating). The answer will be displayed to the user as a notification at the top of the chat screen or as an alert. On success, _True_ is returned.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#answercallbackquery"
-        },
         "operationId": "answerCallbackQuery",
         "requestBody": {
           "content": {
@@ -80,15 +76,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to send answers to callback queries sent from [inline keyboards](https://core.telegram.org/bots#inline-keyboards-and-on-the-fly-updating). The answer will be displayed to the user as a notification at the top of the chat screen or as an alert. On success, _True_ is returned.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#answercallbackquery"
         }
       }
     },
     "/answerInlineQuery": {
       "post": {
-        "description": "Use this method to send answers to an inline query. On success, _True_ is returned.No more than **50** results per query are allowed.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#answerinlinequery"
-        },
         "operationId": "answerInlineQuery",
         "requestBody": {
           "content": {
@@ -107,15 +103,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to send answers to an inline query. On success, _True_ is returned.No more than **50** results per query are allowed.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#answerinlinequery"
         }
       }
     },
     "/answerPreCheckoutQuery": {
       "post": {
-        "description": "Once the user has confirmed their payment and shipping details, the Bot API sends the final confirmation in the form of an [Update](https://core.telegram.org/bots/api#update) with the field _pre_checkout_query_. Use this method to respond to such pre-checkout queries. On success, _True_ is returned. **Note:** The Bot API must receive an answer within 10 seconds after the pre-checkout query was sent.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#answerprecheckoutquery"
-        },
         "operationId": "answerPreCheckoutQuery",
         "requestBody": {
           "content": {
@@ -134,15 +130,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Once the user has confirmed their payment and shipping details, the Bot API sends the final confirmation in the form of an [Update](https://core.telegram.org/bots/api#update) with the field _pre_checkout_query_. Use this method to respond to such pre-checkout queries. On success, _True_ is returned. **Note:** The Bot API must receive an answer within 10 seconds after the pre-checkout query was sent.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#answerprecheckoutquery"
         }
       }
     },
     "/answerShippingQuery": {
       "post": {
-        "description": "If you sent an invoice requesting a shipping address and the parameter _is_flexible_ was specified, the Bot API will send an [Update](https://core.telegram.org/bots/api#update) with a _shipping_query_ field to the bot. Use this method to reply to shipping queries. On success, _True_ is returned.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#answershippingquery"
-        },
         "operationId": "answerShippingQuery",
         "requestBody": {
           "content": {
@@ -161,15 +157,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "If you sent an invoice requesting a shipping address and the parameter _is_flexible_ was specified, the Bot API will send an [Update](https://core.telegram.org/bots/api#update) with a _shipping_query_ field to the bot. Use this method to reply to shipping queries. On success, _True_ is returned.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#answershippingquery"
         }
       }
     },
     "/answerWebAppQuery": {
       "post": {
-        "description": "Use this method to set the result of an interaction with a [Web App](https://core.telegram.org/bots/webapps) and send a corresponding message on behalf of the user to the chat from which the query originated. On success, a [SentWebAppMessage](https://core.telegram.org/bots/api#sentwebappmessage) object is returned.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#answerwebappquery"
-        },
         "operationId": "answerWebAppQuery",
         "requestBody": {
           "content": {
@@ -188,15 +184,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to set the result of an interaction with a [Web App](https://core.telegram.org/bots/webapps) and send a corresponding message on behalf of the user to the chat from which the query originated. On success, a [SentWebAppMessage](https://core.telegram.org/bots/api#sentwebappmessage) object is returned.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#answerwebappquery"
         }
       }
     },
     "/approveChatJoinRequest": {
       "post": {
-        "description": "Use this method to approve a chat join request. The bot must be an administrator in the chat for this to work and must have the _can_invite_users_ administrator right. Returns _True_ on success.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#approvechatjoinrequest"
-        },
         "operationId": "approveChatJoinRequest",
         "requestBody": {
           "content": {
@@ -215,15 +211,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to approve a chat join request. The bot must be an administrator in the chat for this to work and must have the _can_invite_users_ administrator right. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#approvechatjoinrequest"
         }
       }
     },
     "/banChatMember": {
       "post": {
-        "description": "Use this method to ban a user in a group, a supergroup or a channel. In the case of supergroups and channels, the user will not be able to return to the chat on their own using invite links, etc., unless [unbanned](https://core.telegram.org/bots/api#unbanchatmember) first. The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights. Returns _True_ on success.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#banchatmember"
-        },
         "operationId": "banChatMember",
         "requestBody": {
           "content": {
@@ -242,15 +238,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to ban a user in a group, a supergroup or a channel. In the case of supergroups and channels, the user will not be able to return to the chat on their own using invite links, etc., unless [unbanned](https://core.telegram.org/bots/api#unbanchatmember) first. The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#banchatmember"
         }
       }
     },
     "/banChatSenderChat": {
       "post": {
-        "description": "Use this method to ban a channel chat in a supergroup or a channel. Until the chat is [unbanned](https://core.telegram.org/bots/api#unbanchatsenderchat), the owner of the banned chat won't be able to send messages on behalf of **any of their channels**. The bot must be an administrator in the supergroup or channel for this to work and must have the appropriate administrator rights. Returns _True_ on success.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#banchatsenderchat"
-        },
         "operationId": "banChatSenderChat",
         "requestBody": {
           "content": {
@@ -269,15 +265,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to ban a channel chat in a supergroup or a channel. Until the chat is [unbanned](https://core.telegram.org/bots/api#unbanchatsenderchat), the owner of the banned chat won't be able to send messages on behalf of **any of their channels**. The bot must be an administrator in the supergroup or channel for this to work and must have the appropriate administrator rights. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#banchatsenderchat"
         }
       }
     },
     "/close": {
       "post": {
-        "description": "Use this method to close the bot instance before moving it from one local server to another. You need to delete the webhook before calling this method to ensure that the bot isn't launched again after server restart. The method will return error 429 in the first 10 minutes after the bot is launched. Returns _True_ on success. Requires no parameters.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#close"
-        },
         "operationId": "close",
         "responses": {
           "200": {
@@ -286,15 +282,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to close the bot instance before moving it from one local server to another. You need to delete the webhook before calling this method to ensure that the bot isn't launched again after server restart. The method will return error 429 in the first 10 minutes after the bot is launched. Returns _True_ on success. Requires no parameters.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#close"
         }
       }
     },
     "/copyMessage": {
       "post": {
-        "description": "Use this method to copy messages of any kind. Service messages and invoice messages can't be copied. The method is analogous to the method [forwardMessage](https://core.telegram.org/bots/api#forwardmessage), but the copied message doesn't have a link to the original message. Returns the [MessageId](https://core.telegram.org/bots/api#messageid) of the sent message on success.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#copymessage"
-        },
         "operationId": "copyMessage",
         "requestBody": {
           "content": {
@@ -313,15 +309,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to copy messages of any kind. Service messages and invoice messages can't be copied. The method is analogous to the method [forwardMessage](https://core.telegram.org/bots/api#forwardmessage), but the copied message doesn't have a link to the original message. Returns the [MessageId](https://core.telegram.org/bots/api#messageid) of the sent message on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#copymessage"
         }
       }
     },
     "/createChatInviteLink": {
       "post": {
-        "description": "Use this method to create an additional invite link for a chat. The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights. The link can be revoked using the method [revokeChatInviteLink](https://core.telegram.org/bots/api#revokechatinvitelink). Returns the new invite link as [ChatInviteLink](https://core.telegram.org/bots/api#chatinvitelink) object.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#createchatinvitelink"
-        },
         "operationId": "createChatInviteLink",
         "requestBody": {
           "content": {
@@ -340,15 +336,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to create an additional invite link for a chat. The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights. The link can be revoked using the method [revokeChatInviteLink](https://core.telegram.org/bots/api#revokechatinvitelink). Returns the new invite link as [ChatInviteLink](https://core.telegram.org/bots/api#chatinvitelink) object.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#createchatinvitelink"
         }
       }
     },
     "/createInvoiceLink": {
       "post": {
-        "description": "Use this method to create a link for an invoice. Returns the created invoice link as _String_ on success.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#createinvoicelink"
-        },
         "operationId": "createInvoiceLink",
         "requestBody": {
           "content": {
@@ -367,15 +363,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to create a link for an invoice. Returns the created invoice link as _String_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#createinvoicelink"
         }
       }
     },
     "/createNewStickerSet": {
       "post": {
-        "description": "Use this method to create a new sticker set owned by a user. The bot will be able to edit the sticker set thus created. You **must** use exactly one of the fields _png_sticker_, _tgs_sticker_, or _webm_sticker_. Returns _True_ on success.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#createnewstickerset"
-        },
         "operationId": "createNewStickerSet",
         "requestBody": {
           "content": {
@@ -394,15 +390,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to create a new sticker set owned by a user. The bot will be able to edit the sticker set thus created. You **must** use exactly one of the fields _png_sticker_, _tgs_sticker_, or _webm_sticker_. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#createnewstickerset"
         }
       }
     },
     "/declineChatJoinRequest": {
       "post": {
-        "description": "Use this method to decline a chat join request. The bot must be an administrator in the chat for this to work and must have the _can_invite_users_ administrator right. Returns _True_ on success.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#declinechatjoinrequest"
-        },
         "operationId": "declineChatJoinRequest",
         "requestBody": {
           "content": {
@@ -421,15 +417,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to decline a chat join request. The bot must be an administrator in the chat for this to work and must have the _can_invite_users_ administrator right. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#declinechatjoinrequest"
         }
       }
     },
     "/deleteChatPhoto": {
       "post": {
-        "description": "Use this method to delete a chat photo. Photos can't be changed for private chats. The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights. Returns _True_ on success.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#deletechatphoto"
-        },
         "operationId": "deleteChatPhoto",
         "requestBody": {
           "content": {
@@ -448,15 +444,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to delete a chat photo. Photos can't be changed for private chats. The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#deletechatphoto"
         }
       }
     },
     "/deleteChatStickerSet": {
       "post": {
-        "description": "Use this method to delete a group sticker set from a supergroup. The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights. Use the field _can_set_sticker_set_ optionally returned in [getChat](https://core.telegram.org/bots/api#getchat) requests to check if the bot can use this method. Returns _True_ on success.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#deletechatstickerset"
-        },
         "operationId": "deleteChatStickerSet",
         "requestBody": {
           "content": {
@@ -475,15 +471,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to delete a group sticker set from a supergroup. The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights. Use the field _can_set_sticker_set_ optionally returned in [getChat](https://core.telegram.org/bots/api#getchat) requests to check if the bot can use this method. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#deletechatstickerset"
         }
       }
     },
     "/deleteMessage": {
       "post": {
-        "description": "Use this method to delete a message, including service messages, with the following limitations:- A message can only be deleted if it was sent less than 48 hours ago.- A dice message in a private chat can only be deleted if it was sent more than 24 hours ago.- Bots can delete outgoing messages in private chats, groups, and supergroups.- Bots can delete incoming messages in private chats.- Bots granted _can_post_messages_ permissions can delete outgoing messages in channels.- If the bot is an administrator of a group, it can delete any message there.- If the bot has _can_delete_messages_ permission in a supergroup or a channel, it can delete any message there.Returns _True_ on success.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#deletemessage"
-        },
         "operationId": "deleteMessage",
         "requestBody": {
           "content": {
@@ -502,15 +498,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to delete a message, including service messages, with the following limitations:- A message can only be deleted if it was sent less than 48 hours ago.- A dice message in a private chat can only be deleted if it was sent more than 24 hours ago.- Bots can delete outgoing messages in private chats, groups, and supergroups.- Bots can delete incoming messages in private chats.- Bots granted _can_post_messages_ permissions can delete outgoing messages in channels.- If the bot is an administrator of a group, it can delete any message there.- If the bot has _can_delete_messages_ permission in a supergroup or a channel, it can delete any message there.Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#deletemessage"
         }
       }
     },
     "/deleteMyCommands": {
       "post": {
-        "description": "Use this method to delete the list of the bot's commands for the given scope and user language. After deletion, [higher level commands](https://core.telegram.org/bots/api#determining-list-of-commands) will be shown to affected users. Returns _True_ on success.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#deletemycommands"
-        },
         "operationId": "deleteMyCommands",
         "requestBody": {
           "content": {
@@ -528,15 +524,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to delete the list of the bot's commands for the given scope and user language. After deletion, [higher level commands](https://core.telegram.org/bots/api#determining-list-of-commands) will be shown to affected users. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#deletemycommands"
         }
       }
     },
     "/deleteStickerFromSet": {
       "post": {
-        "description": "Use this method to delete a sticker from a set created by the bot. Returns _True_ on success.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#deletestickerfromset"
-        },
         "operationId": "deleteStickerFromSet",
         "requestBody": {
           "content": {
@@ -555,15 +551,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to delete a sticker from a set created by the bot. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#deletestickerfromset"
         }
       }
     },
     "/deleteWebhook": {
       "post": {
-        "description": "Use this method to remove webhook integration if you decide to switch back to [getUpdates](https://core.telegram.org/bots/api#getupdates). Returns _True_ on success.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#deletewebhook"
-        },
         "operationId": "deleteWebhook",
         "requestBody": {
           "content": {
@@ -581,15 +577,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to remove webhook integration if you decide to switch back to [getUpdates](https://core.telegram.org/bots/api#getupdates). Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#deletewebhook"
         }
       }
     },
     "/editChatInviteLink": {
       "post": {
-        "description": "Use this method to edit a non-primary invite link created by the bot. The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights. Returns the edited invite link as a [ChatInviteLink](https://core.telegram.org/bots/api#chatinvitelink) object.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#editchatinvitelink"
-        },
         "operationId": "editChatInviteLink",
         "requestBody": {
           "content": {
@@ -608,15 +604,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to edit a non-primary invite link created by the bot. The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights. Returns the edited invite link as a [ChatInviteLink](https://core.telegram.org/bots/api#chatinvitelink) object.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#editchatinvitelink"
         }
       }
     },
     "/editMessageCaption": {
       "post": {
-        "description": "Use this method to edit captions of messages. On success, if the edited message is not an inline message, the edited [Message](https://core.telegram.org/bots/api#message) is returned, otherwise _True_ is returned.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#editmessagecaption"
-        },
         "operationId": "editMessageCaption",
         "requestBody": {
           "content": {
@@ -635,15 +631,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to edit captions of messages. On success, if the edited message is not an inline message, the edited [Message](https://core.telegram.org/bots/api#message) is returned, otherwise _True_ is returned.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#editmessagecaption"
         }
       }
     },
     "/editMessageLiveLocation": {
       "post": {
-        "description": "Use this method to edit live location messages. A location can be edited until its _live_period_ expires or editing is explicitly disabled by a call to [stopMessageLiveLocation](https://core.telegram.org/bots/api#stopmessagelivelocation). On success, if the edited message is not an inline message, the edited [Message](https://core.telegram.org/bots/api#message) is returned, otherwise _True_ is returned.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#editmessagelivelocation"
-        },
         "operationId": "editMessageLiveLocation",
         "requestBody": {
           "content": {
@@ -662,15 +658,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to edit live location messages. A location can be edited until its _live_period_ expires or editing is explicitly disabled by a call to [stopMessageLiveLocation](https://core.telegram.org/bots/api#stopmessagelivelocation). On success, if the edited message is not an inline message, the edited [Message](https://core.telegram.org/bots/api#message) is returned, otherwise _True_ is returned.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#editmessagelivelocation"
         }
       }
     },
     "/editMessageMedia": {
       "post": {
-        "description": "Use this method to edit animation, audio, document, photo, or video messages. If a message is part of a message album, then it can be edited only to an audio for audio albums, only to a document for document albums and to a photo or a video otherwise. When an inline message is edited, a new file can't be uploaded; use a previously uploaded file via its file_id or specify a URL. On success, if the edited message is not an inline message, the edited [Message](https://core.telegram.org/bots/api#message) is returned, otherwise _True_ is returned.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#editmessagemedia"
-        },
         "operationId": "editMessageMedia",
         "requestBody": {
           "content": {
@@ -689,15 +685,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to edit animation, audio, document, photo, or video messages. If a message is part of a message album, then it can be edited only to an audio for audio albums, only to a document for document albums and to a photo or a video otherwise. When an inline message is edited, a new file can't be uploaded; use a previously uploaded file via its file_id or specify a URL. On success, if the edited message is not an inline message, the edited [Message](https://core.telegram.org/bots/api#message) is returned, otherwise _True_ is returned.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#editmessagemedia"
         }
       }
     },
     "/editMessageReplyMarkup": {
       "post": {
-        "description": "Use this method to edit only the reply markup of messages. On success, if the edited message is not an inline message, the edited [Message](https://core.telegram.org/bots/api#message) is returned, otherwise _True_ is returned.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#editmessagereplymarkup"
-        },
         "operationId": "editMessageReplyMarkup",
         "requestBody": {
           "content": {
@@ -716,15 +712,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to edit only the reply markup of messages. On success, if the edited message is not an inline message, the edited [Message](https://core.telegram.org/bots/api#message) is returned, otherwise _True_ is returned.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#editmessagereplymarkup"
         }
       }
     },
     "/editMessageText": {
       "post": {
-        "description": "Use this method to edit text and [game](https://core.telegram.org/bots/api#games) messages. On success, if the edited message is not an inline message, the edited [Message](https://core.telegram.org/bots/api#message) is returned, otherwise _True_ is returned.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#editmessagetext"
-        },
         "operationId": "editMessageText",
         "requestBody": {
           "content": {
@@ -743,15 +739,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to edit text and [game](https://core.telegram.org/bots/api#games) messages. On success, if the edited message is not an inline message, the edited [Message](https://core.telegram.org/bots/api#message) is returned, otherwise _True_ is returned.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#editmessagetext"
         }
       }
     },
     "/exportChatInviteLink": {
       "post": {
-        "description": "Use this method to generate a new primary invite link for a chat; any previously generated primary link is revoked. The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights. Returns the new invite link as _String_ on success.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#exportchatinvitelink"
-        },
         "operationId": "exportChatInviteLink",
         "requestBody": {
           "content": {
@@ -770,15 +766,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to generate a new primary invite link for a chat; any previously generated primary link is revoked. The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights. Returns the new invite link as _String_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#exportchatinvitelink"
         }
       }
     },
     "/forwardMessage": {
       "post": {
-        "description": "Use this method to forward messages of any kind. Service messages can't be forwarded. On success, the sent [Message](https://core.telegram.org/bots/api#message) is returned.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#forwardmessage"
-        },
         "operationId": "forwardMessage",
         "requestBody": {
           "content": {
@@ -797,15 +793,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to forward messages of any kind. Service messages can't be forwarded. On success, the sent [Message](https://core.telegram.org/bots/api#message) is returned.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#forwardmessage"
         }
       }
     },
     "/getChat": {
       "post": {
-        "description": "Use this method to get up to date information about the chat (current name of the user for one-on-one conversations, current username of a user, group or channel, etc.). Returns a [Chat](https://core.telegram.org/bots/api#chat) object on success.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#getchat"
-        },
         "operationId": "getChat",
         "requestBody": {
           "content": {
@@ -824,15 +820,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to get up to date information about the chat (current name of the user for one-on-one conversations, current username of a user, group or channel, etc.). Returns a [Chat](https://core.telegram.org/bots/api#chat) object on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#getchat"
         }
       }
     },
     "/getChatAdministrators": {
       "post": {
-        "description": "Use this method to get a list of administrators in a chat. On success, returns an Array of [ChatMember](https://core.telegram.org/bots/api#chatmember) objects that contains information about all chat administrators except other bots. If the chat is a group or a supergroup and no administrators were appointed, only the creator will be returned.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#getchatadministrators"
-        },
         "operationId": "getChatAdministrators",
         "requestBody": {
           "content": {
@@ -851,15 +847,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to get a list of administrators in a chat. On success, returns an Array of [ChatMember](https://core.telegram.org/bots/api#chatmember) objects that contains information about all chat administrators except other bots. If the chat is a group or a supergroup and no administrators were appointed, only the creator will be returned.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#getchatadministrators"
         }
       }
     },
     "/getChatMember": {
       "post": {
-        "description": "Use this method to get information about a member of a chat. Returns a [ChatMember](https://core.telegram.org/bots/api#chatmember) object on success.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#getchatmember"
-        },
         "operationId": "getChatMember",
         "requestBody": {
           "content": {
@@ -878,15 +874,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to get information about a member of a chat. Returns a [ChatMember](https://core.telegram.org/bots/api#chatmember) object on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#getchatmember"
         }
       }
     },
     "/getChatMemberCount": {
       "post": {
-        "description": "Use this method to get the number of members in a chat. Returns _Int_ on success.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#getchatmembercount"
-        },
         "operationId": "getChatMemberCount",
         "requestBody": {
           "content": {
@@ -905,15 +901,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to get the number of members in a chat. Returns _Int_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#getchatmembercount"
         }
       }
     },
     "/getChatMenuButton": {
       "post": {
-        "description": "Use this method to get the current value of the bot's menu button in a private chat, or the default menu button. Returns [MenuButton](https://core.telegram.org/bots/api#menubutton) on success.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#getchatmenubutton"
-        },
         "operationId": "getChatMenuButton",
         "requestBody": {
           "content": {
@@ -931,15 +927,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to get the current value of the bot's menu button in a private chat, or the default menu button. Returns [MenuButton](https://core.telegram.org/bots/api#menubutton) on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#getchatmenubutton"
         }
       }
     },
     "/getFile": {
       "post": {
-        "description": "Use this method to get basic information about a file and prepare it for downloading. For the moment, bots can download files of up to 20MB in size. On success, a [File](https://core.telegram.org/bots/api#file) object is returned. The file can then be downloaded via the link `https://api.telegram.org/file/bot\u003ctoken\u003e/\u003cfile_path\u003e`, where `\u003cfile_path\u003e` is taken from the response. It is guaranteed that the link will be valid for at least 1 hour. When the link expires, a new one can be requested by calling [getFile](https://core.telegram.org/bots/api#getfile) again.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#getfile"
-        },
         "operationId": "getFile",
         "requestBody": {
           "content": {
@@ -958,15 +954,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to get basic information about a file and prepare it for downloading. For the moment, bots can download files of up to 20MB in size. On success, a [File](https://core.telegram.org/bots/api#file) object is returned. The file can then be downloaded via the link `https://api.telegram.org/file/bot\u003ctoken\u003e/\u003cfile_path\u003e`, where `\u003cfile_path\u003e` is taken from the response. It is guaranteed that the link will be valid for at least 1 hour. When the link expires, a new one can be requested by calling [getFile](https://core.telegram.org/bots/api#getfile) again.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#getfile"
         }
       }
     },
     "/getGameHighScores": {
       "post": {
-        "description": "Use this method to get data for high score tables. Will return the score of the specified user and several of their neighbors in a game. On success, returns an _Array_ of [GameHighScore](https://core.telegram.org/bots/api#gamehighscore) objects.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#getgamehighscores"
-        },
         "operationId": "getGameHighScores",
         "requestBody": {
           "content": {
@@ -985,15 +981,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to get data for high score tables. Will return the score of the specified user and several of their neighbors in a game. On success, returns an _Array_ of [GameHighScore](https://core.telegram.org/bots/api#gamehighscore) objects.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#getgamehighscores"
         }
       }
     },
     "/getMe": {
       "post": {
-        "description": "A simple method for testing your bot's authentication token. Requires no parameters. Returns basic information about the bot in form of a [User](https://core.telegram.org/bots/api#user) object.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#getme"
-        },
         "operationId": "getMe",
         "responses": {
           "200": {
@@ -1002,15 +998,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "A simple method for testing your bot's authentication token. Requires no parameters. Returns basic information about the bot in form of a [User](https://core.telegram.org/bots/api#user) object.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#getme"
         }
       }
     },
     "/getMyCommands": {
       "post": {
-        "description": "Use this method to get the current list of the bot's commands for the given scope and user language. Returns Array of [BotCommand](https://core.telegram.org/bots/api#botcommand) on success. If commands aren't set, an empty list is returned.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#getmycommands"
-        },
         "operationId": "getMyCommands",
         "requestBody": {
           "content": {
@@ -1028,15 +1024,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to get the current list of the bot's commands for the given scope and user language. Returns Array of [BotCommand](https://core.telegram.org/bots/api#botcommand) on success. If commands aren't set, an empty list is returned.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#getmycommands"
         }
       }
     },
     "/getMyDefaultAdministratorRights": {
       "post": {
-        "description": "Use this method to get the current default administrator rights of the bot. Returns [ChatAdministratorRights](https://core.telegram.org/bots/api#chatadministratorrights) on success.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#getmydefaultadministratorrights"
-        },
         "operationId": "getMyDefaultAdministratorRights",
         "requestBody": {
           "content": {
@@ -1054,15 +1050,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to get the current default administrator rights of the bot. Returns [ChatAdministratorRights](https://core.telegram.org/bots/api#chatadministratorrights) on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#getmydefaultadministratorrights"
         }
       }
     },
     "/getStickerSet": {
       "post": {
-        "description": "Use this method to get a sticker set. On success, a [StickerSet](https://core.telegram.org/bots/api#stickerset) object is returned.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#getstickerset"
-        },
         "operationId": "getStickerSet",
         "requestBody": {
           "content": {
@@ -1081,15 +1077,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to get a sticker set. On success, a [StickerSet](https://core.telegram.org/bots/api#stickerset) object is returned.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#getstickerset"
         }
       }
     },
     "/getUpdates": {
       "post": {
-        "description": "Use this method to receive incoming updates using long polling ([wiki](https://en.wikipedia.org/wiki/Push_technology#Long_polling)). An Array of [Update](https://core.telegram.org/bots/api#update) objects is returned.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#getupdates"
-        },
         "operationId": "getUpdates",
         "requestBody": {
           "content": {
@@ -1107,15 +1103,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to receive incoming updates using long polling ([wiki](https://en.wikipedia.org/wiki/Push_technology#Long_polling)). An Array of [Update](https://core.telegram.org/bots/api#update) objects is returned.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#getupdates"
         }
       }
     },
     "/getUserProfilePhotos": {
       "post": {
-        "description": "Use this method to get a list of profile pictures for a user. Returns a [UserProfilePhotos](https://core.telegram.org/bots/api#userprofilephotos) object.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#getuserprofilephotos"
-        },
         "operationId": "getUserProfilePhotos",
         "requestBody": {
           "content": {
@@ -1134,15 +1130,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to get a list of profile pictures for a user. Returns a [UserProfilePhotos](https://core.telegram.org/bots/api#userprofilephotos) object.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#getuserprofilephotos"
         }
       }
     },
     "/getWebhookInfo": {
       "post": {
-        "description": "Use this method to get current webhook status. Requires no parameters. On success, returns a [WebhookInfo](https://core.telegram.org/bots/api#webhookinfo) object. If the bot is using [getUpdates](https://core.telegram.org/bots/api#getupdates), will return an object with the _url_ field empty.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#getwebhookinfo"
-        },
         "operationId": "getWebhookInfo",
         "responses": {
           "200": {
@@ -1151,15 +1147,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to get current webhook status. Requires no parameters. On success, returns a [WebhookInfo](https://core.telegram.org/bots/api#webhookinfo) object. If the bot is using [getUpdates](https://core.telegram.org/bots/api#getupdates), will return an object with the _url_ field empty.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#getwebhookinfo"
         }
       }
     },
     "/leaveChat": {
       "post": {
-        "description": "Use this method for your bot to leave a group, supergroup or channel. Returns _True_ on success.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#leavechat"
-        },
         "operationId": "leaveChat",
         "requestBody": {
           "content": {
@@ -1178,15 +1174,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method for your bot to leave a group, supergroup or channel. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#leavechat"
         }
       }
     },
     "/logOut": {
       "post": {
-        "description": "Use this method to log out from the cloud Bot API server before launching the bot locally. You **must** log out the bot before running it locally, otherwise there is no guarantee that the bot will receive updates. After a successful call, you can immediately log in on a local server, but will not be able to log in back to the cloud Bot API server for 10 minutes. Returns _True_ on success. Requires no parameters.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#logout"
-        },
         "operationId": "logOut",
         "responses": {
           "200": {
@@ -1195,15 +1191,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to log out from the cloud Bot API server before launching the bot locally. You **must** log out the bot before running it locally, otherwise there is no guarantee that the bot will receive updates. After a successful call, you can immediately log in on a local server, but will not be able to log in back to the cloud Bot API server for 10 minutes. Returns _True_ on success. Requires no parameters.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#logout"
         }
       }
     },
     "/pinChatMessage": {
       "post": {
-        "description": "Use this method to add a message to the list of pinned messages in a chat. If the chat is not a private chat, the bot must be an administrator in the chat for this to work and must have the 'can_pin_messages' administrator right in a supergroup or 'can_edit_messages' administrator right in a channel. Returns _True_ on success.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#pinchatmessage"
-        },
         "operationId": "pinChatMessage",
         "requestBody": {
           "content": {
@@ -1222,15 +1218,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to add a message to the list of pinned messages in a chat. If the chat is not a private chat, the bot must be an administrator in the chat for this to work and must have the 'can_pin_messages' administrator right in a supergroup or 'can_edit_messages' administrator right in a channel. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#pinchatmessage"
         }
       }
     },
     "/promoteChatMember": {
       "post": {
-        "description": "Use this method to promote or demote a user in a supergroup or a channel. The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights. Pass _False_ for all boolean parameters to demote a user. Returns _True_ on success.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#promotechatmember"
-        },
         "operationId": "promoteChatMember",
         "requestBody": {
           "content": {
@@ -1249,15 +1245,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to promote or demote a user in a supergroup or a channel. The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights. Pass _False_ for all boolean parameters to demote a user. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#promotechatmember"
         }
       }
     },
     "/restrictChatMember": {
       "post": {
-        "description": "Use this method to restrict a user in a supergroup. The bot must be an administrator in the supergroup for this to work and must have the appropriate administrator rights. Pass _True_ for all permissions to lift restrictions from a user. Returns _True_ on success.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#restrictchatmember"
-        },
         "operationId": "restrictChatMember",
         "requestBody": {
           "content": {
@@ -1276,15 +1272,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to restrict a user in a supergroup. The bot must be an administrator in the supergroup for this to work and must have the appropriate administrator rights. Pass _True_ for all permissions to lift restrictions from a user. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#restrictchatmember"
         }
       }
     },
     "/revokeChatInviteLink": {
       "post": {
-        "description": "Use this method to revoke an invite link created by the bot. If the primary link is revoked, a new link is automatically generated. The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights. Returns the revoked invite link as [ChatInviteLink](https://core.telegram.org/bots/api#chatinvitelink) object.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#revokechatinvitelink"
-        },
         "operationId": "revokeChatInviteLink",
         "requestBody": {
           "content": {
@@ -1303,15 +1299,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to revoke an invite link created by the bot. If the primary link is revoked, a new link is automatically generated. The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights. Returns the revoked invite link as [ChatInviteLink](https://core.telegram.org/bots/api#chatinvitelink) object.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#revokechatinvitelink"
         }
       }
     },
     "/sendAnimation": {
       "post": {
-        "description": "Use this method to send animation files (GIF or H.264/MPEG-4 AVC video without sound). On success, the sent [Message](https://core.telegram.org/bots/api#message) is returned. Bots can currently send animation files of up to 50 MB in size, this limit may be changed in the future.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#sendanimation"
-        },
         "operationId": "sendAnimation",
         "requestBody": {
           "content": {
@@ -1330,15 +1326,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to send animation files (GIF or H.264/MPEG-4 AVC video without sound). On success, the sent [Message](https://core.telegram.org/bots/api#message) is returned. Bots can currently send animation files of up to 50 MB in size, this limit may be changed in the future.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#sendanimation"
         }
       }
     },
     "/sendAudio": {
       "post": {
-        "description": "For sending voice messages, use the [sendVoice](https://core.telegram.org/bots/api#sendvoice) method instead.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#sendaudio"
-        },
         "operationId": "sendAudio",
         "requestBody": {
           "content": {
@@ -1357,15 +1353,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "For sending voice messages, use the [sendVoice](https://core.telegram.org/bots/api#sendvoice) method instead.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#sendaudio"
         }
       }
     },
     "/sendChatAction": {
       "post": {
-        "description": "We only recommend using this method when a response from the bot will take a **noticeable** amount of time to arrive.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#sendchataction"
-        },
         "operationId": "sendChatAction",
         "requestBody": {
           "content": {
@@ -1384,15 +1380,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "We only recommend using this method when a response from the bot will take a **noticeable** amount of time to arrive.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#sendchataction"
         }
       }
     },
     "/sendContact": {
       "post": {
-        "description": "Use this method to send phone contacts. On success, the sent [Message](https://core.telegram.org/bots/api#message) is returned.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#sendcontact"
-        },
         "operationId": "sendContact",
         "requestBody": {
           "content": {
@@ -1411,15 +1407,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to send phone contacts. On success, the sent [Message](https://core.telegram.org/bots/api#message) is returned.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#sendcontact"
         }
       }
     },
     "/sendDice": {
       "post": {
-        "description": "Use this method to send an animated emoji that will display a random value. On success, the sent [Message](https://core.telegram.org/bots/api#message) is returned.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#senddice"
-        },
         "operationId": "sendDice",
         "requestBody": {
           "content": {
@@ -1438,15 +1434,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to send an animated emoji that will display a random value. On success, the sent [Message](https://core.telegram.org/bots/api#message) is returned.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#senddice"
         }
       }
     },
     "/sendDocument": {
       "post": {
-        "description": "Use this method to send general files. On success, the sent [Message](https://core.telegram.org/bots/api#message) is returned. Bots can currently send files of any type of up to 50 MB in size, this limit may be changed in the future.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#senddocument"
-        },
         "operationId": "sendDocument",
         "requestBody": {
           "content": {
@@ -1465,15 +1461,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to send general files. On success, the sent [Message](https://core.telegram.org/bots/api#message) is returned. Bots can currently send files of any type of up to 50 MB in size, this limit may be changed in the future.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#senddocument"
         }
       }
     },
     "/sendGame": {
       "post": {
-        "description": "Use this method to send a game. On success, the sent [Message](https://core.telegram.org/bots/api#message) is returned.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#sendgame"
-        },
         "operationId": "sendGame",
         "requestBody": {
           "content": {
@@ -1492,15 +1488,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to send a game. On success, the sent [Message](https://core.telegram.org/bots/api#message) is returned.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#sendgame"
         }
       }
     },
     "/sendInvoice": {
       "post": {
-        "description": "Use this method to send invoices. On success, the sent [Message](https://core.telegram.org/bots/api#message) is returned.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#sendinvoice"
-        },
         "operationId": "sendInvoice",
         "requestBody": {
           "content": {
@@ -1519,15 +1515,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to send invoices. On success, the sent [Message](https://core.telegram.org/bots/api#message) is returned.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#sendinvoice"
         }
       }
     },
     "/sendLocation": {
       "post": {
-        "description": "Use this method to send point on the map. On success, the sent [Message](https://core.telegram.org/bots/api#message) is returned.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#sendlocation"
-        },
         "operationId": "sendLocation",
         "requestBody": {
           "content": {
@@ -1546,15 +1542,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to send point on the map. On success, the sent [Message](https://core.telegram.org/bots/api#message) is returned.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#sendlocation"
         }
       }
     },
     "/sendMediaGroup": {
       "post": {
-        "description": "Use this method to send a group of photos, videos, documents or audios as an album. Documents and audio files can be only grouped in an album with messages of the same type. On success, an array of [Messages](https://core.telegram.org/bots/api#message) that were sent is returned.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#sendmediagroup"
-        },
         "operationId": "sendMediaGroup",
         "requestBody": {
           "content": {
@@ -1573,15 +1569,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to send a group of photos, videos, documents or audios as an album. Documents and audio files can be only grouped in an album with messages of the same type. On success, an array of [Messages](https://core.telegram.org/bots/api#message) that were sent is returned.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#sendmediagroup"
         }
       }
     },
     "/sendMessage": {
       "post": {
-        "description": "Use this method to send text messages. On success, the sent [Message](https://core.telegram.org/bots/api#message) is returned.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#sendmessage"
-        },
         "operationId": "sendMessage",
         "requestBody": {
           "content": {
@@ -1600,15 +1596,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to send text messages. On success, the sent [Message](https://core.telegram.org/bots/api#message) is returned.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#sendmessage"
         }
       }
     },
     "/sendPhoto": {
       "post": {
-        "description": "Use this method to send photos. On success, the sent [Message](https://core.telegram.org/bots/api#message) is returned.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#sendphoto"
-        },
         "operationId": "sendPhoto",
         "requestBody": {
           "content": {
@@ -1627,15 +1623,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to send photos. On success, the sent [Message](https://core.telegram.org/bots/api#message) is returned.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#sendphoto"
         }
       }
     },
     "/sendPoll": {
       "post": {
-        "description": "Use this method to send a native poll. On success, the sent [Message](https://core.telegram.org/bots/api#message) is returned.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#sendpoll"
-        },
         "operationId": "sendPoll",
         "requestBody": {
           "content": {
@@ -1654,15 +1650,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to send a native poll. On success, the sent [Message](https://core.telegram.org/bots/api#message) is returned.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#sendpoll"
         }
       }
     },
     "/sendSticker": {
       "post": {
-        "description": "Use this method to send static .WEBP, [animated](https://telegram.org/blog/animated-stickers) .TGS, or [video](https://telegram.org/blog/video-stickers-better-reactions) .WEBM stickers. On success, the sent [Message](https://core.telegram.org/bots/api#message) is returned.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#sendsticker"
-        },
         "operationId": "sendSticker",
         "requestBody": {
           "content": {
@@ -1681,15 +1677,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to send static .WEBP, [animated](https://telegram.org/blog/animated-stickers) .TGS, or [video](https://telegram.org/blog/video-stickers-better-reactions) .WEBM stickers. On success, the sent [Message](https://core.telegram.org/bots/api#message) is returned.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#sendsticker"
         }
       }
     },
     "/sendVenue": {
       "post": {
-        "description": "Use this method to send information about a venue. On success, the sent [Message](https://core.telegram.org/bots/api#message) is returned.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#sendvenue"
-        },
         "operationId": "sendVenue",
         "requestBody": {
           "content": {
@@ -1708,15 +1704,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to send information about a venue. On success, the sent [Message](https://core.telegram.org/bots/api#message) is returned.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#sendvenue"
         }
       }
     },
     "/sendVideo": {
       "post": {
-        "description": "Use this method to send video files, Telegram clients support MPEG4 videos (other formats may be sent as [Document](https://core.telegram.org/bots/api#document)). On success, the sent [Message](https://core.telegram.org/bots/api#message) is returned. Bots can currently send video files of up to 50 MB in size, this limit may be changed in the future.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#sendvideo"
-        },
         "operationId": "sendVideo",
         "requestBody": {
           "content": {
@@ -1735,15 +1731,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to send video files, Telegram clients support MPEG4 videos (other formats may be sent as [Document](https://core.telegram.org/bots/api#document)). On success, the sent [Message](https://core.telegram.org/bots/api#message) is returned. Bots can currently send video files of up to 50 MB in size, this limit may be changed in the future.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#sendvideo"
         }
       }
     },
     "/sendVideoNote": {
       "post": {
-        "description": "As of [v.4.0](https://telegram.org/blog/video-messages-and-telescope), Telegram clients support rounded square MPEG4 videos of up to 1 minute long. Use this method to send video messages. On success, the sent [Message](https://core.telegram.org/bots/api#message) is returned.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#sendvideonote"
-        },
         "operationId": "sendVideoNote",
         "requestBody": {
           "content": {
@@ -1762,15 +1758,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "As of [v.4.0](https://telegram.org/blog/video-messages-and-telescope), Telegram clients support rounded square MPEG4 videos of up to 1 minute long. Use this method to send video messages. On success, the sent [Message](https://core.telegram.org/bots/api#message) is returned.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#sendvideonote"
         }
       }
     },
     "/sendVoice": {
       "post": {
-        "description": "Use this method to send audio files, if you want Telegram clients to display the file as a playable voice message. For this to work, your audio must be in an .OGG file encoded with OPUS (other formats may be sent as [Audio](https://core.telegram.org/bots/api#audio) or [Document](https://core.telegram.org/bots/api#document)). On success, the sent [Message](https://core.telegram.org/bots/api#message) is returned. Bots can currently send voice messages of up to 50 MB in size, this limit may be changed in the future.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#sendvoice"
-        },
         "operationId": "sendVoice",
         "requestBody": {
           "content": {
@@ -1789,15 +1785,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to send audio files, if you want Telegram clients to display the file as a playable voice message. For this to work, your audio must be in an .OGG file encoded with OPUS (other formats may be sent as [Audio](https://core.telegram.org/bots/api#audio) or [Document](https://core.telegram.org/bots/api#document)). On success, the sent [Message](https://core.telegram.org/bots/api#message) is returned. Bots can currently send voice messages of up to 50 MB in size, this limit may be changed in the future.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#sendvoice"
         }
       }
     },
     "/setChatAdministratorCustomTitle": {
       "post": {
-        "description": "Use this method to set a custom title for an administrator in a supergroup promoted by the bot. Returns _True_ on success.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#setchatadministratorcustomtitle"
-        },
         "operationId": "setChatAdministratorCustomTitle",
         "requestBody": {
           "content": {
@@ -1816,15 +1812,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to set a custom title for an administrator in a supergroup promoted by the bot. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#setchatadministratorcustomtitle"
         }
       }
     },
     "/setChatDescription": {
       "post": {
-        "description": "Use this method to change the description of a group, a supergroup or a channel. The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights. Returns _True_ on success.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#setchatdescription"
-        },
         "operationId": "setChatDescription",
         "requestBody": {
           "content": {
@@ -1843,15 +1839,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to change the description of a group, a supergroup or a channel. The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#setchatdescription"
         }
       }
     },
     "/setChatMenuButton": {
       "post": {
-        "description": "Use this method to change the bot's menu button in a private chat, or the default menu button. Returns _True_ on success.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#setchatmenubutton"
-        },
         "operationId": "setChatMenuButton",
         "requestBody": {
           "content": {
@@ -1869,15 +1865,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to change the bot's menu button in a private chat, or the default menu button. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#setchatmenubutton"
         }
       }
     },
     "/setChatPermissions": {
       "post": {
-        "description": "Use this method to set default chat permissions for all members. The bot must be an administrator in the group or a supergroup for this to work and must have the _can_restrict_members_ administrator rights. Returns _True_ on success.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#setchatpermissions"
-        },
         "operationId": "setChatPermissions",
         "requestBody": {
           "content": {
@@ -1896,15 +1892,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to set default chat permissions for all members. The bot must be an administrator in the group or a supergroup for this to work and must have the _can_restrict_members_ administrator rights. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#setchatpermissions"
         }
       }
     },
     "/setChatPhoto": {
       "post": {
-        "description": "Use this method to set a new profile photo for the chat. Photos can't be changed for private chats. The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights. Returns _True_ on success.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#setchatphoto"
-        },
         "operationId": "setChatPhoto",
         "requestBody": {
           "content": {
@@ -1923,15 +1919,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to set a new profile photo for the chat. Photos can't be changed for private chats. The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#setchatphoto"
         }
       }
     },
     "/setChatStickerSet": {
       "post": {
-        "description": "Use this method to set a new group sticker set for a supergroup. The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights. Use the field _can_set_sticker_set_ optionally returned in [getChat](https://core.telegram.org/bots/api#getchat) requests to check if the bot can use this method. Returns _True_ on success.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#setchatstickerset"
-        },
         "operationId": "setChatStickerSet",
         "requestBody": {
           "content": {
@@ -1950,15 +1946,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to set a new group sticker set for a supergroup. The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights. Use the field _can_set_sticker_set_ optionally returned in [getChat](https://core.telegram.org/bots/api#getchat) requests to check if the bot can use this method. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#setchatstickerset"
         }
       }
     },
     "/setChatTitle": {
       "post": {
-        "description": "Use this method to change the title of a chat. Titles can't be changed for private chats. The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights. Returns _True_ on success.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#setchattitle"
-        },
         "operationId": "setChatTitle",
         "requestBody": {
           "content": {
@@ -1977,15 +1973,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to change the title of a chat. Titles can't be changed for private chats. The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#setchattitle"
         }
       }
     },
     "/setGameScore": {
       "post": {
-        "description": "Use this method to set the score of the specified user in a game message. On success, if the message is not an inline message, the [Message](https://core.telegram.org/bots/api#message) is returned, otherwise _True_ is returned. Returns an error, if the new score is not greater than the user's current score in the chat and _force_ is _False_.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#setgamescore"
-        },
         "operationId": "setGameScore",
         "requestBody": {
           "content": {
@@ -2004,15 +2000,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to set the score of the specified user in a game message. On success, if the message is not an inline message, the [Message](https://core.telegram.org/bots/api#message) is returned, otherwise _True_ is returned. Returns an error, if the new score is not greater than the user's current score in the chat and _force_ is _False_.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#setgamescore"
         }
       }
     },
     "/setMyCommands": {
       "post": {
-        "description": "Use this method to change the list of the bot's commands. See [](https://core.telegram.org/bots#commands)[https://core.telegram.org/bots#commands](https://core.telegram.org/bots#commands) for more details about bot commands. Returns _True_ on success.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#setmycommands"
-        },
         "operationId": "setMyCommands",
         "requestBody": {
           "content": {
@@ -2031,15 +2027,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to change the list of the bot's commands. See [](https://core.telegram.org/bots#commands)[https://core.telegram.org/bots#commands](https://core.telegram.org/bots#commands) for more details about bot commands. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#setmycommands"
         }
       }
     },
     "/setMyDefaultAdministratorRights": {
       "post": {
-        "description": "Use this method to change the default administrator rights requested by the bot when it's added as an administrator to groups or channels. These rights will be suggested to users, but they are are free to modify the list before adding the bot. Returns _True_ on success.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#setmydefaultadministratorrights"
-        },
         "operationId": "setMyDefaultAdministratorRights",
         "requestBody": {
           "content": {
@@ -2057,15 +2053,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to change the default administrator rights requested by the bot when it's added as an administrator to groups or channels. These rights will be suggested to users, but they are are free to modify the list before adding the bot. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#setmydefaultadministratorrights"
         }
       }
     },
     "/setPassportDataErrors": {
       "post": {
-        "description": "Use this if the data submitted by the user doesn't satisfy the standards your service requires for any reason. For example, if a birthday date seems invalid, a submitted document is blurry, a scan shows evidence of tampering, etc. Supply some details in the error message to make sure the user knows how to correct the issues.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#setpassportdataerrors"
-        },
         "operationId": "setPassportDataErrors",
         "requestBody": {
           "content": {
@@ -2084,15 +2080,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this if the data submitted by the user doesn't satisfy the standards your service requires for any reason. For example, if a birthday date seems invalid, a submitted document is blurry, a scan shows evidence of tampering, etc. Supply some details in the error message to make sure the user knows how to correct the issues.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#setpassportdataerrors"
         }
       }
     },
     "/setStickerPositionInSet": {
       "post": {
-        "description": "Use this method to move a sticker in a set created by the bot to a specific position. Returns _True_ on success.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#setstickerpositioninset"
-        },
         "operationId": "setStickerPositionInSet",
         "requestBody": {
           "content": {
@@ -2111,15 +2107,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to move a sticker in a set created by the bot to a specific position. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#setstickerpositioninset"
         }
       }
     },
     "/setStickerSetThumb": {
       "post": {
-        "description": "Use this method to set the thumbnail of a sticker set. Animated thumbnails can be set for animated sticker sets only. Video thumbnails can be set only for video sticker sets only. Returns _True_ on success.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#setstickersetthumb"
-        },
         "operationId": "setStickerSetThumb",
         "requestBody": {
           "content": {
@@ -2138,15 +2134,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to set the thumbnail of a sticker set. Animated thumbnails can be set for animated sticker sets only. Video thumbnails can be set only for video sticker sets only. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#setstickersetthumb"
         }
       }
     },
     "/setWebhook": {
       "post": {
-        "description": "If you'd like to make sure that the webhook was set by you, you can specify secret data in the parameter _secret_token_. If specified, the request will contain a header `X-Telegram-Bot-Api-Secret-Token` with the secret token as content.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#setwebhook"
-        },
         "operationId": "setWebhook",
         "requestBody": {
           "content": {
@@ -2165,15 +2161,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "If you'd like to make sure that the webhook was set by you, you can specify secret data in the parameter _secret_token_. If specified, the request will contain a header `X-Telegram-Bot-Api-Secret-Token` with the secret token as content.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#setwebhook"
         }
       }
     },
     "/stopMessageLiveLocation": {
       "post": {
-        "description": "Use this method to stop updating a live location message before _live_period_ expires. On success, if the message is not an inline message, the edited [Message](https://core.telegram.org/bots/api#message) is returned, otherwise _True_ is returned.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#stopmessagelivelocation"
-        },
         "operationId": "stopMessageLiveLocation",
         "requestBody": {
           "content": {
@@ -2192,15 +2188,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to stop updating a live location message before _live_period_ expires. On success, if the message is not an inline message, the edited [Message](https://core.telegram.org/bots/api#message) is returned, otherwise _True_ is returned.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#stopmessagelivelocation"
         }
       }
     },
     "/stopPoll": {
       "post": {
-        "description": "Use this method to stop a poll which was sent by the bot. On success, the stopped [Poll](https://core.telegram.org/bots/api#poll) is returned.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#stoppoll"
-        },
         "operationId": "stopPoll",
         "requestBody": {
           "content": {
@@ -2219,15 +2215,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to stop a poll which was sent by the bot. On success, the stopped [Poll](https://core.telegram.org/bots/api#poll) is returned.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#stoppoll"
         }
       }
     },
     "/unbanChatMember": {
       "post": {
-        "description": "Use this method to unban a previously banned user in a supergroup or channel. The user will **not** return to the group or channel automatically, but will be able to join via link, etc. The bot must be an administrator for this to work. By default, this method guarantees that after the call the user is not a member of the chat, but will be able to join it. So if the user is a member of the chat they will also be **removed** from the chat. If you don't want this, use the parameter _only_if_banned_. Returns _True_ on success.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#unbanchatmember"
-        },
         "operationId": "unbanChatMember",
         "requestBody": {
           "content": {
@@ -2246,15 +2242,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to unban a previously banned user in a supergroup or channel. The user will **not** return to the group or channel automatically, but will be able to join via link, etc. The bot must be an administrator for this to work. By default, this method guarantees that after the call the user is not a member of the chat, but will be able to join it. So if the user is a member of the chat they will also be **removed** from the chat. If you don't want this, use the parameter _only_if_banned_. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#unbanchatmember"
         }
       }
     },
     "/unbanChatSenderChat": {
       "post": {
-        "description": "Use this method to unban a previously banned channel chat in a supergroup or channel. The bot must be an administrator for this to work and must have the appropriate administrator rights. Returns _True_ on success.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#unbanchatsenderchat"
-        },
         "operationId": "unbanChatSenderChat",
         "requestBody": {
           "content": {
@@ -2273,15 +2269,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to unban a previously banned channel chat in a supergroup or channel. The bot must be an administrator for this to work and must have the appropriate administrator rights. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#unbanchatsenderchat"
         }
       }
     },
     "/unpinAllChatMessages": {
       "post": {
-        "description": "Use this method to clear the list of pinned messages in a chat. If the chat is not a private chat, the bot must be an administrator in the chat for this to work and must have the 'can_pin_messages' administrator right in a supergroup or 'can_edit_messages' administrator right in a channel. Returns _True_ on success.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#unpinallchatmessages"
-        },
         "operationId": "unpinAllChatMessages",
         "requestBody": {
           "content": {
@@ -2300,15 +2296,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to clear the list of pinned messages in a chat. If the chat is not a private chat, the bot must be an administrator in the chat for this to work and must have the 'can_pin_messages' administrator right in a supergroup or 'can_edit_messages' administrator right in a channel. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#unpinallchatmessages"
         }
       }
     },
     "/unpinChatMessage": {
       "post": {
-        "description": "Use this method to remove a message from the list of pinned messages in a chat. If the chat is not a private chat, the bot must be an administrator in the chat for this to work and must have the 'can_pin_messages' administrator right in a supergroup or 'can_edit_messages' administrator right in a channel. Returns _True_ on success.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#unpinchatmessage"
-        },
         "operationId": "unpinChatMessage",
         "requestBody": {
           "content": {
@@ -2327,15 +2323,15 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to remove a message from the list of pinned messages in a chat. If the chat is not a private chat, the bot must be an administrator in the chat for this to work and must have the 'can_pin_messages' administrator right in a supergroup or 'can_edit_messages' administrator right in a channel. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#unpinchatmessage"
         }
       }
     },
     "/uploadStickerFile": {
       "post": {
-        "description": "Use this method to upload a .PNG file with a sticker for later use in _createNewStickerSet_ and _addStickerToSet_ methods (can be used multiple times). Returns the uploaded [File](https://core.telegram.org/bots/api#file) on success.",
-        "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#uploadstickerfile"
-        },
         "operationId": "uploadStickerFile",
         "requestBody": {
           "content": {
@@ -2354,6 +2350,10 @@
           "default": {
             "$ref": "#/components/responses/Error"
           }
+        },
+        "description": "Use this method to upload a .PNG file with a sticker for later use in _createNewStickerSet_ and _addStickerToSet_ methods (can be used multiple times). Returns the uploaded [File](https://core.telegram.org/bots/api#file) on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#uploadstickerfile"
         }
       }
     }
@@ -10118,10 +10118,10 @@
               "discriminator": {
                 "propertyName": "type",
                 "mapping": {
-                  "audio": "InputMediaAudio",
-                  "document": "InputMediaDocument",
                   "photo": "InputMediaPhoto",
-                  "video": "InputMediaVideo"
+                  "video": "InputMediaVideo",
+                  "audio": "InputMediaAudio",
+                  "document": "InputMediaDocument"
                 }
               }
             }

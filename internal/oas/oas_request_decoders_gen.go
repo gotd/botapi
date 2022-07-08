@@ -71,7 +71,6 @@ func (s *Server) decodeAddStickerToSetRequest(r *http.Request, span trace.Span) 
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "validate")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -134,7 +133,6 @@ func (s *Server) decodeAnswerCallbackQueryRequest(r *http.Request, span trace.Sp
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "validate")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -197,7 +195,6 @@ func (s *Server) decodeAnswerInlineQueryRequest(r *http.Request, span trace.Span
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "validate")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -252,7 +249,6 @@ func (s *Server) decodeAnswerPreCheckoutQueryRequest(r *http.Request, span trace
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "decode \"application/json\"")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -315,7 +311,6 @@ func (s *Server) decodeAnswerShippingQueryRequest(r *http.Request, span trace.Sp
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "validate")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -378,7 +373,6 @@ func (s *Server) decodeAnswerWebAppQueryRequest(r *http.Request, span trace.Span
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "validate")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -433,7 +427,6 @@ func (s *Server) decodeApproveChatJoinRequestRequest(r *http.Request, span trace
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "decode \"application/json\"")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -488,7 +481,6 @@ func (s *Server) decodeBanChatMemberRequest(r *http.Request, span trace.Span) (
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "decode \"application/json\"")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -543,7 +535,6 @@ func (s *Server) decodeBanChatSenderChatRequest(r *http.Request, span trace.Span
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "decode \"application/json\"")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -606,7 +597,6 @@ func (s *Server) decodeCopyMessageRequest(r *http.Request, span trace.Span) (
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "validate")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -669,7 +659,6 @@ func (s *Server) decodeCreateChatInviteLinkRequest(r *http.Request, span trace.S
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "validate")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -732,7 +721,6 @@ func (s *Server) decodeCreateInvoiceLinkRequest(r *http.Request, span trace.Span
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "validate")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -795,7 +783,6 @@ func (s *Server) decodeCreateNewStickerSetRequest(r *http.Request, span trace.Sp
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "validate")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -850,7 +837,6 @@ func (s *Server) decodeDeclineChatJoinRequestRequest(r *http.Request, span trace
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "decode \"application/json\"")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -905,7 +891,6 @@ func (s *Server) decodeDeleteChatPhotoRequest(r *http.Request, span trace.Span) 
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "decode \"application/json\"")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -960,7 +945,6 @@ func (s *Server) decodeDeleteChatStickerSetRequest(r *http.Request, span trace.S
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "decode \"application/json\"")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -1015,7 +999,6 @@ func (s *Server) decodeDeleteMessageRequest(r *http.Request, span trace.Span) (
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "decode \"application/json\"")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -1074,7 +1057,6 @@ func (s *Server) decodeDeleteMyCommandsRequest(r *http.Request, span trace.Span)
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "decode \"application/json\"")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -1129,7 +1111,6 @@ func (s *Server) decodeDeleteStickerFromSetRequest(r *http.Request, span trace.S
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "decode \"application/json\"")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -1188,7 +1169,6 @@ func (s *Server) decodeDeleteWebhookRequest(r *http.Request, span trace.Span) (
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "decode \"application/json\"")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -1251,7 +1231,6 @@ func (s *Server) decodeEditChatInviteLinkRequest(r *http.Request, span trace.Spa
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "validate")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -1314,7 +1293,6 @@ func (s *Server) decodeEditMessageCaptionRequest(r *http.Request, span trace.Spa
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "validate")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -1377,7 +1355,6 @@ func (s *Server) decodeEditMessageLiveLocationRequest(r *http.Request, span trac
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "validate")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -1440,7 +1417,6 @@ func (s *Server) decodeEditMessageMediaRequest(r *http.Request, span trace.Span)
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "validate")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -1503,7 +1479,6 @@ func (s *Server) decodeEditMessageReplyMarkupRequest(r *http.Request, span trace
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "validate")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -1566,7 +1541,6 @@ func (s *Server) decodeEditMessageTextRequest(r *http.Request, span trace.Span) 
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "validate")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -1621,7 +1595,6 @@ func (s *Server) decodeExportChatInviteLinkRequest(r *http.Request, span trace.S
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "decode \"application/json\"")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -1676,7 +1649,6 @@ func (s *Server) decodeForwardMessageRequest(r *http.Request, span trace.Span) (
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "decode \"application/json\"")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -1731,7 +1703,6 @@ func (s *Server) decodeGetChatRequest(r *http.Request, span trace.Span) (
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "decode \"application/json\"")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -1786,7 +1757,6 @@ func (s *Server) decodeGetChatAdministratorsRequest(r *http.Request, span trace.
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "decode \"application/json\"")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -1841,7 +1811,6 @@ func (s *Server) decodeGetChatMemberRequest(r *http.Request, span trace.Span) (
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "decode \"application/json\"")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -1896,7 +1865,6 @@ func (s *Server) decodeGetChatMemberCountRequest(r *http.Request, span trace.Spa
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "decode \"application/json\"")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -1955,7 +1923,6 @@ func (s *Server) decodeGetChatMenuButtonRequest(r *http.Request, span trace.Span
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "decode \"application/json\"")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -2010,7 +1977,6 @@ func (s *Server) decodeGetFileRequest(r *http.Request, span trace.Span) (
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "decode \"application/json\"")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -2065,7 +2031,6 @@ func (s *Server) decodeGetGameHighScoresRequest(r *http.Request, span trace.Span
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "decode \"application/json\"")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -2124,7 +2089,6 @@ func (s *Server) decodeGetMyCommandsRequest(r *http.Request, span trace.Span) (
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "decode \"application/json\"")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -2183,7 +2147,6 @@ func (s *Server) decodeGetMyDefaultAdministratorRightsRequest(r *http.Request, s
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "decode \"application/json\"")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -2238,7 +2201,6 @@ func (s *Server) decodeGetStickerSetRequest(r *http.Request, span trace.Span) (
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "decode \"application/json\"")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -2312,7 +2274,6 @@ func (s *Server) decodeGetUpdatesRequest(r *http.Request, span trace.Span) (
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "validate")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -2375,7 +2336,6 @@ func (s *Server) decodeGetUserProfilePhotosRequest(r *http.Request, span trace.S
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "validate")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -2430,7 +2390,6 @@ func (s *Server) decodeLeaveChatRequest(r *http.Request, span trace.Span) (
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "decode \"application/json\"")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -2485,7 +2444,6 @@ func (s *Server) decodePinChatMessageRequest(r *http.Request, span trace.Span) (
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "decode \"application/json\"")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -2540,7 +2498,6 @@ func (s *Server) decodePromoteChatMemberRequest(r *http.Request, span trace.Span
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "decode \"application/json\"")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -2595,7 +2552,6 @@ func (s *Server) decodeRestrictChatMemberRequest(r *http.Request, span trace.Spa
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "decode \"application/json\"")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -2650,7 +2606,6 @@ func (s *Server) decodeRevokeChatInviteLinkRequest(r *http.Request, span trace.S
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "decode \"application/json\"")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -2713,7 +2668,6 @@ func (s *Server) decodeSendAnimationRequest(r *http.Request, span trace.Span) (
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "validate")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -2776,7 +2730,6 @@ func (s *Server) decodeSendAudioRequest(r *http.Request, span trace.Span) (
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "validate")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -2831,7 +2784,6 @@ func (s *Server) decodeSendChatActionRequest(r *http.Request, span trace.Span) (
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "decode \"application/json\"")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -2894,7 +2846,6 @@ func (s *Server) decodeSendContactRequest(r *http.Request, span trace.Span) (
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "validate")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -2957,7 +2908,6 @@ func (s *Server) decodeSendDiceRequest(r *http.Request, span trace.Span) (
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "validate")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -3020,7 +2970,6 @@ func (s *Server) decodeSendDocumentRequest(r *http.Request, span trace.Span) (
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "validate")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -3083,7 +3032,6 @@ func (s *Server) decodeSendGameRequest(r *http.Request, span trace.Span) (
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "validate")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -3146,7 +3094,6 @@ func (s *Server) decodeSendInvoiceRequest(r *http.Request, span trace.Span) (
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "validate")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -3209,7 +3156,6 @@ func (s *Server) decodeSendLocationRequest(r *http.Request, span trace.Span) (
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "validate")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -3272,7 +3218,6 @@ func (s *Server) decodeSendMediaGroupRequest(r *http.Request, span trace.Span) (
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "validate")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -3335,7 +3280,6 @@ func (s *Server) decodeSendMessageRequest(r *http.Request, span trace.Span) (
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "validate")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -3398,7 +3342,6 @@ func (s *Server) decodeSendPhotoRequest(r *http.Request, span trace.Span) (
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "validate")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -3461,7 +3404,6 @@ func (s *Server) decodeSendPollRequest(r *http.Request, span trace.Span) (
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "validate")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -3524,7 +3466,6 @@ func (s *Server) decodeSendStickerRequest(r *http.Request, span trace.Span) (
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "validate")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -3587,7 +3528,6 @@ func (s *Server) decodeSendVenueRequest(r *http.Request, span trace.Span) (
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "validate")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -3650,7 +3590,6 @@ func (s *Server) decodeSendVideoRequest(r *http.Request, span trace.Span) (
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "validate")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -3713,7 +3652,6 @@ func (s *Server) decodeSendVideoNoteRequest(r *http.Request, span trace.Span) (
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "validate")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -3776,7 +3714,6 @@ func (s *Server) decodeSendVoiceRequest(r *http.Request, span trace.Span) (
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "validate")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -3839,7 +3776,6 @@ func (s *Server) decodeSetChatAdministratorCustomTitleRequest(r *http.Request, s
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "validate")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -3902,7 +3838,6 @@ func (s *Server) decodeSetChatDescriptionRequest(r *http.Request, span trace.Spa
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "validate")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -3961,7 +3896,6 @@ func (s *Server) decodeSetChatMenuButtonRequest(r *http.Request, span trace.Span
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "decode \"application/json\"")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -4016,7 +3950,6 @@ func (s *Server) decodeSetChatPermissionsRequest(r *http.Request, span trace.Spa
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "decode \"application/json\"")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -4071,7 +4004,6 @@ func (s *Server) decodeSetChatPhotoRequest(r *http.Request, span trace.Span) (
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "decode \"application/json\"")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -4126,7 +4058,6 @@ func (s *Server) decodeSetChatStickerSetRequest(r *http.Request, span trace.Span
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "decode \"application/json\"")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -4189,7 +4120,6 @@ func (s *Server) decodeSetChatTitleRequest(r *http.Request, span trace.Span) (
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "validate")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -4244,7 +4174,6 @@ func (s *Server) decodeSetGameScoreRequest(r *http.Request, span trace.Span) (
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "decode \"application/json\"")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -4307,7 +4236,6 @@ func (s *Server) decodeSetMyCommandsRequest(r *http.Request, span trace.Span) (
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "validate")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -4366,7 +4294,6 @@ func (s *Server) decodeSetMyDefaultAdministratorRightsRequest(r *http.Request, s
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "decode \"application/json\"")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -4429,7 +4356,6 @@ func (s *Server) decodeSetPassportDataErrorsRequest(r *http.Request, span trace.
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "validate")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -4484,7 +4410,6 @@ func (s *Server) decodeSetStickerPositionInSetRequest(r *http.Request, span trac
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "decode \"application/json\"")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -4539,7 +4464,6 @@ func (s *Server) decodeSetStickerSetThumbRequest(r *http.Request, span trace.Spa
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "decode \"application/json\"")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -4602,7 +4526,6 @@ func (s *Server) decodeSetWebhookRequest(r *http.Request, span trace.Span) (
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "validate")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -4665,7 +4588,6 @@ func (s *Server) decodeStopMessageLiveLocationRequest(r *http.Request, span trac
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "validate")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -4728,7 +4650,6 @@ func (s *Server) decodeStopPollRequest(r *http.Request, span trace.Span) (
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "validate")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -4783,7 +4704,6 @@ func (s *Server) decodeUnbanChatMemberRequest(r *http.Request, span trace.Span) 
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "decode \"application/json\"")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -4838,7 +4758,6 @@ func (s *Server) decodeUnbanChatSenderChatRequest(r *http.Request, span trace.Sp
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "decode \"application/json\"")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -4893,7 +4812,6 @@ func (s *Server) decodeUnpinAllChatMessagesRequest(r *http.Request, span trace.S
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "decode \"application/json\"")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -4948,7 +4866,6 @@ func (s *Server) decodeUnpinChatMessageRequest(r *http.Request, span trace.Span)
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "decode \"application/json\"")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)
@@ -5003,7 +4920,6 @@ func (s *Server) decodeUploadStickerFileRequest(r *http.Request, span trace.Span
 		}(); err != nil {
 			return req, close, errors.Wrap(err, "decode \"application/json\"")
 		}
-
 		return request, close, nil
 	default:
 		return req, close, validate.InvalidContentType(ct)

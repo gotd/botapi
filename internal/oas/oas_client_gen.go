@@ -4,7 +4,6 @@ package oas
 
 import (
 	"context"
-	"io"
 	"net/url"
 	"time"
 
@@ -85,30 +84,13 @@ func (c *Client) AddStickerToSet(ctx context.Context, request AddStickerToSet) (
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeAddStickerToSetRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/addStickerToSet"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeAddStickerToSetRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -160,30 +142,13 @@ func (c *Client) AnswerCallbackQuery(ctx context.Context, request AnswerCallback
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeAnswerCallbackQueryRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/answerCallbackQuery"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeAnswerCallbackQueryRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -233,30 +198,13 @@ func (c *Client) AnswerInlineQuery(ctx context.Context, request AnswerInlineQuer
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeAnswerInlineQueryRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/answerInlineQuery"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeAnswerInlineQueryRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -301,30 +249,13 @@ func (c *Client) AnswerPreCheckoutQuery(ctx context.Context, request AnswerPreCh
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeAnswerPreCheckoutQueryRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/answerPreCheckoutQuery"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeAnswerPreCheckoutQueryRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -376,30 +307,13 @@ func (c *Client) AnswerShippingQuery(ctx context.Context, request AnswerShipping
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeAnswerShippingQueryRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/answerShippingQuery"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeAnswerShippingQueryRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -451,30 +365,13 @@ func (c *Client) AnswerWebAppQuery(ctx context.Context, request AnswerWebAppQuer
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeAnswerWebAppQueryRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/answerWebAppQuery"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeAnswerWebAppQueryRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -516,30 +413,13 @@ func (c *Client) ApproveChatJoinRequest(ctx context.Context, request ApproveChat
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeApproveChatJoinRequestRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/approveChatJoinRequest"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeApproveChatJoinRequestRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -584,30 +464,13 @@ func (c *Client) BanChatMember(ctx context.Context, request BanChatMember) (res 
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeBanChatMemberRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/banChatMember"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeBanChatMemberRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -652,30 +515,13 @@ func (c *Client) BanChatSenderChat(ctx context.Context, request BanChatSenderCha
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeBanChatSenderChatRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/banChatSenderChat"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeBanChatSenderChatRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -775,30 +621,13 @@ func (c *Client) CopyMessage(ctx context.Context, request CopyMessage) (res Resu
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeCopyMessageRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/copyMessage"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeCopyMessageRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -851,30 +680,13 @@ func (c *Client) CreateChatInviteLink(ctx context.Context, request CreateChatInv
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeCreateChatInviteLinkRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/createChatInviteLink"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeCreateChatInviteLinkRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -924,30 +736,13 @@ func (c *Client) CreateInvoiceLink(ctx context.Context, request CreateInvoiceLin
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeCreateInvoiceLinkRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/createInvoiceLink"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeCreateInvoiceLinkRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -998,30 +793,13 @@ func (c *Client) CreateNewStickerSet(ctx context.Context, request CreateNewStick
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeCreateNewStickerSetRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/createNewStickerSet"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeCreateNewStickerSetRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -1063,30 +841,13 @@ func (c *Client) DeclineChatJoinRequest(ctx context.Context, request DeclineChat
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeDeclineChatJoinRequestRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/declineChatJoinRequest"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeDeclineChatJoinRequestRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -1129,30 +890,13 @@ func (c *Client) DeleteChatPhoto(ctx context.Context, request DeleteChatPhoto) (
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeDeleteChatPhotoRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/deleteChatPhoto"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeDeleteChatPhotoRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -1196,30 +940,13 @@ func (c *Client) DeleteChatStickerSet(ctx context.Context, request DeleteChatSti
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeDeleteChatStickerSetRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/deleteChatStickerSet"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeDeleteChatStickerSetRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -1267,30 +994,13 @@ func (c *Client) DeleteMessage(ctx context.Context, request DeleteMessage) (res 
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeDeleteMessageRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/deleteMessage"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeDeleteMessageRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -1334,30 +1044,13 @@ func (c *Client) DeleteMyCommands(ctx context.Context, request OptDeleteMyComman
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeDeleteMyCommandsRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/deleteMyCommands"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeDeleteMyCommandsRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -1398,30 +1091,13 @@ func (c *Client) DeleteStickerFromSet(ctx context.Context, request DeleteSticker
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeDeleteStickerFromSetRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/deleteStickerFromSet"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeDeleteStickerFromSetRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -1463,30 +1139,13 @@ func (c *Client) DeleteWebhook(ctx context.Context, request OptDeleteWebhook) (r
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeDeleteWebhookRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/deleteWebhook"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeDeleteWebhookRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -1538,30 +1197,13 @@ func (c *Client) EditChatInviteLink(ctx context.Context, request EditChatInviteL
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeEditChatInviteLinkRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/editChatInviteLink"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeEditChatInviteLinkRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -1612,30 +1254,13 @@ func (c *Client) EditMessageCaption(ctx context.Context, request EditMessageCapt
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeEditMessageCaptionRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/editMessageCaption"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeEditMessageCaptionRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -1688,30 +1313,13 @@ func (c *Client) EditMessageLiveLocation(ctx context.Context, request EditMessag
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeEditMessageLiveLocationRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/editMessageLiveLocation"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeEditMessageLiveLocationRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -1765,30 +1373,13 @@ func (c *Client) EditMessageMedia(ctx context.Context, request EditMessageMedia)
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeEditMessageMediaRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/editMessageMedia"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeEditMessageMediaRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -1839,30 +1430,13 @@ func (c *Client) EditMessageReplyMarkup(ctx context.Context, request EditMessage
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeEditMessageReplyMarkupRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/editMessageReplyMarkup"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeEditMessageReplyMarkupRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -1913,30 +1487,13 @@ func (c *Client) EditMessageText(ctx context.Context, request EditMessageText) (
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeEditMessageTextRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/editMessageText"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeEditMessageTextRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -1979,30 +1536,13 @@ func (c *Client) ExportChatInviteLink(ctx context.Context, request ExportChatInv
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeExportChatInviteLinkRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/exportChatInviteLink"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeExportChatInviteLinkRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -2044,30 +1584,13 @@ func (c *Client) ForwardMessage(ctx context.Context, request ForwardMessage) (re
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeForwardMessageRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/forwardMessage"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeForwardMessageRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -2110,30 +1633,13 @@ func (c *Client) GetChat(ctx context.Context, request GetChat) (res ResultChat, 
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeGetChatRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/getChat"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeGetChatRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -2177,30 +1683,13 @@ func (c *Client) GetChatAdministrators(ctx context.Context, request GetChatAdmin
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeGetChatAdministratorsRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/getChatAdministrators"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeGetChatAdministratorsRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -2242,30 +1731,13 @@ func (c *Client) GetChatMember(ctx context.Context, request GetChatMember) (res 
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeGetChatMemberRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/getChatMember"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeGetChatMemberRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -2306,30 +1778,13 @@ func (c *Client) GetChatMemberCount(ctx context.Context, request GetChatMemberCo
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeGetChatMemberCountRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/getChatMemberCount"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeGetChatMemberCountRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -2372,30 +1827,13 @@ func (c *Client) GetChatMenuButton(ctx context.Context, request OptGetChatMenuBu
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeGetChatMenuButtonRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/getChatMenuButton"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeGetChatMenuButtonRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -2441,30 +1879,13 @@ func (c *Client) GetFile(ctx context.Context, request GetFile) (res ResultFile, 
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeGetFileRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/getFile"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeGetFileRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -2507,30 +1928,13 @@ func (c *Client) GetGameHighScores(ctx context.Context, request GetGameHighScore
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeGetGameHighScoresRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/getGameHighScores"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeGetGameHighScoresRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -2618,30 +2022,13 @@ func (c *Client) GetMyCommands(ctx context.Context, request OptGetMyCommands) (r
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeGetMyCommandsRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/getMyCommands"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeGetMyCommandsRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -2683,30 +2070,13 @@ func (c *Client) GetMyDefaultAdministratorRights(ctx context.Context, request Op
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeGetMyDefaultAdministratorRightsRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/getMyDefaultAdministratorRights"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeGetMyDefaultAdministratorRightsRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -2748,30 +2118,13 @@ func (c *Client) GetStickerSet(ctx context.Context, request GetStickerSet) (res 
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeGetStickerSetRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/getStickerSet"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeGetStickerSetRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -2829,30 +2182,13 @@ func (c *Client) GetUpdates(ctx context.Context, request OptGetUpdates) (res Res
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeGetUpdatesRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/getUpdates"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeGetUpdatesRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -2902,30 +2238,13 @@ func (c *Client) GetUserProfilePhotos(ctx context.Context, request GetUserProfil
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeGetUserProfilePhotosRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/getUserProfilePhotos"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeGetUserProfilePhotosRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -3013,30 +2332,13 @@ func (c *Client) LeaveChat(ctx context.Context, request LeaveChat) (res Result, 
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeLeaveChatRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/leaveChat"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeLeaveChatRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -3128,30 +2430,13 @@ func (c *Client) PinChatMessage(ctx context.Context, request PinChatMessage) (re
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodePinChatMessageRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/pinChatMessage"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodePinChatMessageRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -3194,30 +2479,13 @@ func (c *Client) PromoteChatMember(ctx context.Context, request PromoteChatMembe
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodePromoteChatMemberRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/promoteChatMember"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodePromoteChatMemberRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -3260,30 +2528,13 @@ func (c *Client) RestrictChatMember(ctx context.Context, request RestrictChatMem
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeRestrictChatMemberRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/restrictChatMember"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeRestrictChatMemberRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -3327,30 +2578,13 @@ func (c *Client) RevokeChatInviteLink(ctx context.Context, request RevokeChatInv
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeRevokeChatInviteLinkRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/revokeChatInviteLink"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeRevokeChatInviteLinkRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -3401,30 +2635,13 @@ func (c *Client) SendAnimation(ctx context.Context, request SendAnimation) (res 
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeSendAnimationRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/sendAnimation"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeSendAnimationRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -3474,30 +2691,13 @@ func (c *Client) SendAudio(ctx context.Context, request SendAudio) (res ResultMe
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeSendAudioRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/sendAudio"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeSendAudioRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -3539,30 +2739,13 @@ func (c *Client) SendChatAction(ctx context.Context, request SendChatAction) (re
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeSendChatActionRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/sendChatAction"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeSendChatActionRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -3612,30 +2795,13 @@ func (c *Client) SendContact(ctx context.Context, request SendContact) (res Resu
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeSendContactRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/sendContact"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeSendContactRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -3685,30 +2851,13 @@ func (c *Client) SendDice(ctx context.Context, request SendDice) (res ResultMess
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeSendDiceRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/sendDice"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeSendDiceRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -3759,30 +2908,13 @@ func (c *Client) SendDocument(ctx context.Context, request SendDocument) (res Re
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeSendDocumentRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/sendDocument"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeSendDocumentRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -3832,30 +2964,13 @@ func (c *Client) SendGame(ctx context.Context, request SendGame) (res ResultMess
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeSendGameRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/sendGame"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeSendGameRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -3905,30 +3020,13 @@ func (c *Client) SendInvoice(ctx context.Context, request SendInvoice) (res Resu
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeSendInvoiceRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/sendInvoice"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeSendInvoiceRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -3978,30 +3076,13 @@ func (c *Client) SendLocation(ctx context.Context, request SendLocation) (res Re
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeSendLocationRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/sendLocation"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeSendLocationRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -4052,30 +3133,13 @@ func (c *Client) SendMediaGroup(ctx context.Context, request SendMediaGroup) (re
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeSendMediaGroupRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/sendMediaGroup"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeSendMediaGroupRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -4125,30 +3189,13 @@ func (c *Client) SendMessage(ctx context.Context, request SendMessage) (res Resu
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeSendMessageRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/sendMessage"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeSendMessageRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -4198,30 +3245,13 @@ func (c *Client) SendPhoto(ctx context.Context, request SendPhoto) (res ResultMe
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeSendPhotoRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/sendPhoto"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeSendPhotoRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -4271,30 +3301,13 @@ func (c *Client) SendPoll(ctx context.Context, request SendPoll) (res ResultMess
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeSendPollRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/sendPoll"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeSendPollRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -4345,30 +3358,13 @@ func (c *Client) SendSticker(ctx context.Context, request SendSticker) (res Resu
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeSendStickerRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/sendSticker"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeSendStickerRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -4418,30 +3414,13 @@ func (c *Client) SendVenue(ctx context.Context, request SendVenue) (res ResultMe
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeSendVenueRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/sendVenue"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeSendVenueRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -4493,30 +3472,13 @@ func (c *Client) SendVideo(ctx context.Context, request SendVideo) (res ResultMe
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeSendVideoRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/sendVideo"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeSendVideoRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -4567,30 +3529,13 @@ func (c *Client) SendVideoNote(ctx context.Context, request SendVideoNote) (res 
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeSendVideoNoteRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/sendVideoNote"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeSendVideoNoteRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -4644,30 +3589,13 @@ func (c *Client) SendVoice(ctx context.Context, request SendVoice) (res ResultMe
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeSendVoiceRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/sendVoice"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeSendVoiceRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -4717,30 +3645,13 @@ func (c *Client) SetChatAdministratorCustomTitle(ctx context.Context, request Se
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeSetChatAdministratorCustomTitleRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/setChatAdministratorCustomTitle"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeSetChatAdministratorCustomTitleRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -4791,30 +3702,13 @@ func (c *Client) SetChatDescription(ctx context.Context, request SetChatDescript
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeSetChatDescriptionRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/setChatDescription"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeSetChatDescriptionRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -4856,30 +3750,13 @@ func (c *Client) SetChatMenuButton(ctx context.Context, request OptSetChatMenuBu
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeSetChatMenuButtonRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/setChatMenuButton"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeSetChatMenuButtonRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -4922,30 +3799,13 @@ func (c *Client) SetChatPermissions(ctx context.Context, request SetChatPermissi
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeSetChatPermissionsRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/setChatPermissions"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeSetChatPermissionsRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -4988,30 +3848,13 @@ func (c *Client) SetChatPhoto(ctx context.Context, request SetChatPhoto) (res Re
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeSetChatPhotoRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/setChatPhoto"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeSetChatPhotoRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -5055,30 +3898,13 @@ func (c *Client) SetChatStickerSet(ctx context.Context, request SetChatStickerSe
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeSetChatStickerSetRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/setChatStickerSet"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeSetChatStickerSetRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -5129,30 +3955,13 @@ func (c *Client) SetChatTitle(ctx context.Context, request SetChatTitle) (res Re
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeSetChatTitleRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/setChatTitle"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeSetChatTitleRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -5196,30 +4005,13 @@ func (c *Client) SetGameScore(ctx context.Context, request SetGameScore) (res Re
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeSetGameScoreRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/setGameScore"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeSetGameScoreRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -5270,30 +4062,13 @@ func (c *Client) SetMyCommands(ctx context.Context, request SetMyCommands) (res 
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeSetMyCommandsRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/setMyCommands"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeSetMyCommandsRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -5336,30 +4111,13 @@ func (c *Client) SetMyDefaultAdministratorRights(ctx context.Context, request Op
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeSetMyDefaultAdministratorRightsRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/setMyDefaultAdministratorRights"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeSetMyDefaultAdministratorRightsRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -5411,30 +4169,13 @@ func (c *Client) SetPassportDataErrors(ctx context.Context, request SetPassportD
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeSetPassportDataErrorsRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/setPassportDataErrors"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeSetPassportDataErrorsRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -5476,30 +4217,13 @@ func (c *Client) SetStickerPositionInSet(ctx context.Context, request SetSticker
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeSetStickerPositionInSetRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/setStickerPositionInSet"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeSetStickerPositionInSetRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -5542,30 +4266,13 @@ func (c *Client) SetStickerSetThumb(ctx context.Context, request SetStickerSetTh
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeSetStickerSetThumbRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/setStickerSetThumb"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeSetStickerSetThumbRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -5616,30 +4323,13 @@ func (c *Client) SetWebhook(ctx context.Context, request SetWebhook) (res Result
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeSetWebhookRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/setWebhook"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeSetWebhookRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -5690,30 +4380,13 @@ func (c *Client) StopMessageLiveLocation(ctx context.Context, request StopMessag
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeStopMessageLiveLocationRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/stopMessageLiveLocation"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeStopMessageLiveLocationRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -5763,30 +4436,13 @@ func (c *Client) StopPoll(ctx context.Context, request StopPoll) (res ResultPoll
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeStopPollRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/stopPoll"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeStopPollRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -5832,30 +4488,13 @@ func (c *Client) UnbanChatMember(ctx context.Context, request UnbanChatMember) (
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeUnbanChatMemberRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/unbanChatMember"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeUnbanChatMemberRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -5898,30 +4537,13 @@ func (c *Client) UnbanChatSenderChat(ctx context.Context, request UnbanChatSende
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeUnbanChatSenderChatRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/unbanChatSenderChat"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeUnbanChatSenderChatRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -5965,30 +4587,13 @@ func (c *Client) UnpinAllChatMessages(ctx context.Context, request UnpinAllChatM
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeUnpinAllChatMessagesRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/unpinAllChatMessages"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeUnpinAllChatMessagesRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -6032,30 +4637,13 @@ func (c *Client) UnpinChatMessage(ctx context.Context, request UnpinChatMessage)
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeUnpinChatMessageRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/unpinChatMessage"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeUnpinChatMessageRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -6098,30 +4686,13 @@ func (c *Client) UploadStickerFile(ctx context.Context, request UploadStickerFil
 		span.End()
 	}()
 	c.requests.Add(ctx, 1, otelAttrs...)
-	var (
-		contentType string
-		reqBody     func() (io.ReadCloser, error)
-	)
-	contentType = "application/json"
-	fn, err := encodeUploadStickerFileRequestJSON(request, span)
-	if err != nil {
-		return res, err
-	}
-	reqBody = fn
-
 	u := uri.Clone(c.serverURL)
 	u.Path += "/uploadStickerFile"
 
-	body, err := reqBody()
-	if err != nil {
-		return res, errors.Wrap(err, "request body")
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeUploadStickerFileRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
-	defer body.Close()
-
-	r := ht.NewRequest(ctx, "POST", u, body)
-	r.GetBody = reqBody
-
-	r.Header.Set("Content-Type", contentType)
 
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {

@@ -4,1277 +4,1066 @@ package oas
 
 import (
 	"bytes"
-	"io"
+	"net/http"
 
 	"github.com/go-faster/jx"
-	"go.opentelemetry.io/otel/trace"
+
+	ht "github.com/ogen-go/ogen/http"
 )
 
-func encodeAddStickerToSetRequestJSON(
+func encodeAddStickerToSetRequest(
 	req AddStickerToSet,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeAnswerCallbackQueryRequestJSON(
+func encodeAnswerCallbackQueryRequest(
 	req AnswerCallbackQuery,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeAnswerInlineQueryRequestJSON(
+func encodeAnswerInlineQueryRequest(
 	req AnswerInlineQuery,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeAnswerPreCheckoutQueryRequestJSON(
+func encodeAnswerPreCheckoutQueryRequest(
 	req AnswerPreCheckoutQuery,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeAnswerShippingQueryRequestJSON(
+func encodeAnswerShippingQueryRequest(
 	req AnswerShippingQuery,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeAnswerWebAppQueryRequestJSON(
+func encodeAnswerWebAppQueryRequest(
 	req AnswerWebAppQuery,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeApproveChatJoinRequestRequestJSON(
+func encodeApproveChatJoinRequestRequest(
 	req ApproveChatJoinRequest,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeBanChatMemberRequestJSON(
+func encodeBanChatMemberRequest(
 	req BanChatMember,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeBanChatSenderChatRequestJSON(
+func encodeBanChatSenderChatRequest(
 	req BanChatSenderChat,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeCopyMessageRequestJSON(
+func encodeCopyMessageRequest(
 	req CopyMessage,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeCreateChatInviteLinkRequestJSON(
+func encodeCreateChatInviteLinkRequest(
 	req CreateChatInviteLink,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeCreateInvoiceLinkRequestJSON(
+func encodeCreateInvoiceLinkRequest(
 	req CreateInvoiceLink,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeCreateNewStickerSetRequestJSON(
+func encodeCreateNewStickerSetRequest(
 	req CreateNewStickerSet,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeDeclineChatJoinRequestRequestJSON(
+func encodeDeclineChatJoinRequestRequest(
 	req DeclineChatJoinRequest,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeDeleteChatPhotoRequestJSON(
+func encodeDeleteChatPhotoRequest(
 	req DeleteChatPhoto,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeDeleteChatStickerSetRequestJSON(
+func encodeDeleteChatStickerSetRequest(
 	req DeleteChatStickerSet,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeDeleteMessageRequestJSON(
+func encodeDeleteMessageRequest(
 	req DeleteMessage,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeDeleteMyCommandsRequestJSON(
+func encodeDeleteMyCommandsRequest(
 	req OptDeleteMyCommands,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
+	if !req.Set {
+		// Keep request with empty body if value is not set.
+		return nil
+	}
 	e := jx.GetEncoder()
-	if req.Set {
-		req.Encode(e)
+	{
+		if req.Set {
+			req.Encode(e)
+		}
 	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeDeleteStickerFromSetRequestJSON(
+func encodeDeleteStickerFromSetRequest(
 	req DeleteStickerFromSet,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeDeleteWebhookRequestJSON(
+func encodeDeleteWebhookRequest(
 	req OptDeleteWebhook,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
+	if !req.Set {
+		// Keep request with empty body if value is not set.
+		return nil
+	}
 	e := jx.GetEncoder()
-	if req.Set {
-		req.Encode(e)
+	{
+		if req.Set {
+			req.Encode(e)
+		}
 	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeEditChatInviteLinkRequestJSON(
+func encodeEditChatInviteLinkRequest(
 	req EditChatInviteLink,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeEditMessageCaptionRequestJSON(
+func encodeEditMessageCaptionRequest(
 	req EditMessageCaption,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeEditMessageLiveLocationRequestJSON(
+func encodeEditMessageLiveLocationRequest(
 	req EditMessageLiveLocation,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeEditMessageMediaRequestJSON(
+func encodeEditMessageMediaRequest(
 	req EditMessageMedia,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeEditMessageReplyMarkupRequestJSON(
+func encodeEditMessageReplyMarkupRequest(
 	req EditMessageReplyMarkup,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeEditMessageTextRequestJSON(
+func encodeEditMessageTextRequest(
 	req EditMessageText,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeExportChatInviteLinkRequestJSON(
+func encodeExportChatInviteLinkRequest(
 	req ExportChatInviteLink,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeForwardMessageRequestJSON(
+func encodeForwardMessageRequest(
 	req ForwardMessage,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeGetChatRequestJSON(
+func encodeGetChatRequest(
 	req GetChat,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeGetChatAdministratorsRequestJSON(
+func encodeGetChatAdministratorsRequest(
 	req GetChatAdministrators,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeGetChatMemberRequestJSON(
+func encodeGetChatMemberRequest(
 	req GetChatMember,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeGetChatMemberCountRequestJSON(
+func encodeGetChatMemberCountRequest(
 	req GetChatMemberCount,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeGetChatMenuButtonRequestJSON(
+func encodeGetChatMenuButtonRequest(
 	req OptGetChatMenuButton,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
+	if !req.Set {
+		// Keep request with empty body if value is not set.
+		return nil
+	}
 	e := jx.GetEncoder()
-	if req.Set {
-		req.Encode(e)
+	{
+		if req.Set {
+			req.Encode(e)
+		}
 	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeGetFileRequestJSON(
+func encodeGetFileRequest(
 	req GetFile,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeGetGameHighScoresRequestJSON(
+func encodeGetGameHighScoresRequest(
 	req GetGameHighScores,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeGetMyCommandsRequestJSON(
+func encodeGetMyCommandsRequest(
 	req OptGetMyCommands,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
+	if !req.Set {
+		// Keep request with empty body if value is not set.
+		return nil
+	}
 	e := jx.GetEncoder()
-	if req.Set {
-		req.Encode(e)
+	{
+		if req.Set {
+			req.Encode(e)
+		}
 	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeGetMyDefaultAdministratorRightsRequestJSON(
+func encodeGetMyDefaultAdministratorRightsRequest(
 	req OptGetMyDefaultAdministratorRights,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
+	if !req.Set {
+		// Keep request with empty body if value is not set.
+		return nil
+	}
 	e := jx.GetEncoder()
-	if req.Set {
-		req.Encode(e)
+	{
+		if req.Set {
+			req.Encode(e)
+		}
 	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeGetStickerSetRequestJSON(
+func encodeGetStickerSetRequest(
 	req GetStickerSet,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeGetUpdatesRequestJSON(
+func encodeGetUpdatesRequest(
 	req OptGetUpdates,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
+	if !req.Set {
+		// Keep request with empty body if value is not set.
+		return nil
+	}
 	e := jx.GetEncoder()
-	if req.Set {
-		req.Encode(e)
+	{
+		if req.Set {
+			req.Encode(e)
+		}
 	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeGetUserProfilePhotosRequestJSON(
+func encodeGetUserProfilePhotosRequest(
 	req GetUserProfilePhotos,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeLeaveChatRequestJSON(
+func encodeLeaveChatRequest(
 	req LeaveChat,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodePinChatMessageRequestJSON(
+func encodePinChatMessageRequest(
 	req PinChatMessage,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodePromoteChatMemberRequestJSON(
+func encodePromoteChatMemberRequest(
 	req PromoteChatMember,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeRestrictChatMemberRequestJSON(
+func encodeRestrictChatMemberRequest(
 	req RestrictChatMember,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeRevokeChatInviteLinkRequestJSON(
+func encodeRevokeChatInviteLinkRequest(
 	req RevokeChatInviteLink,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeSendAnimationRequestJSON(
+func encodeSendAnimationRequest(
 	req SendAnimation,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeSendAudioRequestJSON(
+func encodeSendAudioRequest(
 	req SendAudio,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeSendChatActionRequestJSON(
+func encodeSendChatActionRequest(
 	req SendChatAction,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeSendContactRequestJSON(
+func encodeSendContactRequest(
 	req SendContact,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeSendDiceRequestJSON(
+func encodeSendDiceRequest(
 	req SendDice,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeSendDocumentRequestJSON(
+func encodeSendDocumentRequest(
 	req SendDocument,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeSendGameRequestJSON(
+func encodeSendGameRequest(
 	req SendGame,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeSendInvoiceRequestJSON(
+func encodeSendInvoiceRequest(
 	req SendInvoice,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeSendLocationRequestJSON(
+func encodeSendLocationRequest(
 	req SendLocation,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeSendMediaGroupRequestJSON(
+func encodeSendMediaGroupRequest(
 	req SendMediaGroup,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeSendMessageRequestJSON(
+func encodeSendMessageRequest(
 	req SendMessage,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeSendPhotoRequestJSON(
+func encodeSendPhotoRequest(
 	req SendPhoto,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeSendPollRequestJSON(
+func encodeSendPollRequest(
 	req SendPoll,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeSendStickerRequestJSON(
+func encodeSendStickerRequest(
 	req SendSticker,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeSendVenueRequestJSON(
+func encodeSendVenueRequest(
 	req SendVenue,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeSendVideoRequestJSON(
+func encodeSendVideoRequest(
 	req SendVideo,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeSendVideoNoteRequestJSON(
+func encodeSendVideoNoteRequest(
 	req SendVideoNote,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeSendVoiceRequestJSON(
+func encodeSendVoiceRequest(
 	req SendVoice,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeSetChatAdministratorCustomTitleRequestJSON(
+func encodeSetChatAdministratorCustomTitleRequest(
 	req SetChatAdministratorCustomTitle,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeSetChatDescriptionRequestJSON(
+func encodeSetChatDescriptionRequest(
 	req SetChatDescription,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeSetChatMenuButtonRequestJSON(
+func encodeSetChatMenuButtonRequest(
 	req OptSetChatMenuButton,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
+	if !req.Set {
+		// Keep request with empty body if value is not set.
+		return nil
+	}
 	e := jx.GetEncoder()
-	if req.Set {
-		req.Encode(e)
+	{
+		if req.Set {
+			req.Encode(e)
+		}
 	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeSetChatPermissionsRequestJSON(
+func encodeSetChatPermissionsRequest(
 	req SetChatPermissions,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
-	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
-}
-func encodeSetChatPhotoRequestJSON(
-	req SetChatPhoto,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
-	e := jx.GetEncoder()
-
-	req.Encode(e)
-	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
-}
-func encodeSetChatStickerSetRequestJSON(
-	req SetChatStickerSet,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
-	e := jx.GetEncoder()
-
-	req.Encode(e)
-	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
-}
-func encodeSetChatTitleRequestJSON(
-	req SetChatTitle,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
-	e := jx.GetEncoder()
-
-	req.Encode(e)
-	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
-}
-func encodeSetGameScoreRequestJSON(
-	req SetGameScore,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
-	e := jx.GetEncoder()
-
-	req.Encode(e)
-	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
-}
-func encodeSetMyCommandsRequestJSON(
-	req SetMyCommands,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
-	e := jx.GetEncoder()
-
-	req.Encode(e)
-	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
-}
-func encodeSetMyDefaultAdministratorRightsRequestJSON(
-	req OptSetMyDefaultAdministratorRights,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
-	e := jx.GetEncoder()
-	if req.Set {
+	{
 		req.Encode(e)
 	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeSetPassportDataErrorsRequestJSON(
+func encodeSetChatPhotoRequest(
+	req SetChatPhoto,
+	r *http.Request,
+) error {
+	e := jx.GetEncoder()
+	{
+		req.Encode(e)
+	}
+	encoded := e.Bytes()
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
+}
+func encodeSetChatStickerSetRequest(
+	req SetChatStickerSet,
+	r *http.Request,
+) error {
+	e := jx.GetEncoder()
+	{
+		req.Encode(e)
+	}
+	encoded := e.Bytes()
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
+}
+func encodeSetChatTitleRequest(
+	req SetChatTitle,
+	r *http.Request,
+) error {
+	e := jx.GetEncoder()
+	{
+		req.Encode(e)
+	}
+	encoded := e.Bytes()
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
+}
+func encodeSetGameScoreRequest(
+	req SetGameScore,
+	r *http.Request,
+) error {
+	e := jx.GetEncoder()
+	{
+		req.Encode(e)
+	}
+	encoded := e.Bytes()
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
+}
+func encodeSetMyCommandsRequest(
+	req SetMyCommands,
+	r *http.Request,
+) error {
+	e := jx.GetEncoder()
+	{
+		req.Encode(e)
+	}
+	encoded := e.Bytes()
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
+}
+func encodeSetMyDefaultAdministratorRightsRequest(
+	req OptSetMyDefaultAdministratorRights,
+	r *http.Request,
+) error {
+	if !req.Set {
+		// Keep request with empty body if value is not set.
+		return nil
+	}
+	e := jx.GetEncoder()
+	{
+		if req.Set {
+			req.Encode(e)
+		}
+	}
+	encoded := e.Bytes()
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
+}
+func encodeSetPassportDataErrorsRequest(
 	req SetPassportDataErrors,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeSetStickerPositionInSetRequestJSON(
+func encodeSetStickerPositionInSetRequest(
 	req SetStickerPositionInSet,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeSetStickerSetThumbRequestJSON(
+func encodeSetStickerSetThumbRequest(
 	req SetStickerSetThumb,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeSetWebhookRequestJSON(
+func encodeSetWebhookRequest(
 	req SetWebhook,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeStopMessageLiveLocationRequestJSON(
+func encodeStopMessageLiveLocationRequest(
 	req StopMessageLiveLocation,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeStopPollRequestJSON(
+func encodeStopPollRequest(
 	req StopPoll,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeUnbanChatMemberRequestJSON(
+func encodeUnbanChatMemberRequest(
 	req UnbanChatMember,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeUnbanChatSenderChatRequestJSON(
+func encodeUnbanChatSenderChatRequest(
 	req UnbanChatSenderChat,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeUnpinAllChatMessagesRequestJSON(
+func encodeUnpinAllChatMessagesRequest(
 	req UnpinAllChatMessages,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeUnpinChatMessageRequestJSON(
+func encodeUnpinChatMessageRequest(
 	req UnpinChatMessage,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
-func encodeUploadStickerFileRequestJSON(
+func encodeUploadStickerFileRequest(
 	req UploadStickerFile,
-	span trace.Span,
-) (
-	data func() (io.ReadCloser, error),
-	rerr error,
-) {
+	r *http.Request,
+) error {
 	e := jx.GetEncoder()
-
-	req.Encode(e)
+	{
+		req.Encode(e)
+	}
 	encoded := e.Bytes()
-	return func() (io.ReadCloser, error) {
-		return io.NopCloser(bytes.NewReader(encoded)), nil
-	}, nil
+	ht.SetBody(r, bytes.NewReader(encoded), "application/json")
+	return nil
 }
