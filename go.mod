@@ -7,6 +7,7 @@ require (
 	github.com/go-chi/chi/v5 v5.0.7
 	github.com/go-faster/errors v0.6.1
 	github.com/go-faster/jx v0.38.0
+	github.com/go-json-experiment/json v0.0.0-20220620174529-794765d0bd38
 	github.com/gotd/td v0.60.0
 	github.com/ogen-go/ogen v0.43.1
 	github.com/stretchr/testify v1.8.0
@@ -25,7 +26,6 @@ require (
 	github.com/cenkalti/backoff/v4 v4.1.3 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/go-faster/xor v0.3.0 // indirect
-	github.com/go-json-experiment/json v0.0.0-20220620174529-794765d0bd38 // indirect
 	github.com/go-logr/logr v1.2.3 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-playground/validator/v10 v10.4.1 // indirect
