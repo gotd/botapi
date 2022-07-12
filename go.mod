@@ -9,12 +9,12 @@ require (
 	github.com/go-faster/jx v0.38.0
 	github.com/go-json-experiment/json v0.0.0-20220620174529-794765d0bd38
 	github.com/gotd/td v0.60.0
-	github.com/ogen-go/ogen v0.43.1
+	github.com/ogen-go/ogen v0.43.2
 	github.com/stretchr/testify v1.8.0
 	go.etcd.io/bbolt v1.3.6
-	go.opentelemetry.io/otel v1.7.0
-	go.opentelemetry.io/otel/metric v0.30.0
-	go.opentelemetry.io/otel/trace v1.7.0
+	go.opentelemetry.io/otel v1.8.0
+	go.opentelemetry.io/otel/metric v0.31.0
+	go.opentelemetry.io/otel/trace v1.8.0
 	go.uber.org/multierr v1.8.0
 	go.uber.org/zap v1.21.0
 	golang.org/x/sync v0.0.0-20220601150217-0de741cfad7f
