@@ -58,11 +58,6 @@ linters:
     - unparam
     - varcheck
     - whitespace
-  # Disable until https://github.com/dominikh/go-tools/issues/1270 fix be released.
-  # - staticcheck
-  # - gosimple
-  # - unused
-  # - stylecheck
 
   # Do not enable:
   # - wsl       (too opinionated about newlines)
