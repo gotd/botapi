@@ -20,7 +20,7 @@ func TestBotAPI_RevokeChatInviteLink(t *testing.T) {
 			Peer:    &tg.InputPeerChat{ChatID: testChat().ID},
 			Link:    "aboba",
 		}).ThenResult(&tg.MessagesExportedChatInvite{
-			Invite: tg.ChatInviteExported{
+			Invite: &tg.ChatInviteExported{
 				Revoked: true,
 				Link:    "aboba",
 				AdminID: testUser().ID,

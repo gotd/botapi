@@ -174,7 +174,7 @@ func (b *BotAPI) setDocumentAttachment(ctx context.Context, d *tg.Document, r *o
 				Thumb:        thumb,
 				FileName:     fileName,
 				MimeType:     mimeType,
-				FileSize:     oas.NewOptInt(d.Size),
+				FileSize:     oas.NewOptInt(int(d.Size)),
 			})
 		case *tg.DocumentAttributeSticker:
 			var maskPosition oas.OptMaskPosition
@@ -201,7 +201,7 @@ func (b *BotAPI) setDocumentAttachment(ctx context.Context, d *tg.Document, r *o
 				Emoji:        oas.NewOptString(attr.Alt),
 				SetName:      oas.NewOptString(result.Set.ShortName),
 				MaskPosition: maskPosition,
-				FileSize:     oas.NewOptInt(d.Size),
+				FileSize:     oas.NewOptInt(int(d.Size)),
 			})
 		case *tg.DocumentAttributeVideo:
 			if animated {
@@ -215,7 +215,7 @@ func (b *BotAPI) setDocumentAttachment(ctx context.Context, d *tg.Document, r *o
 					Length:       width,
 					Duration:     duration,
 					Thumb:        thumb,
-					FileSize:     oas.NewOptInt(d.Size),
+					FileSize:     oas.NewOptInt(int(d.Size)),
 				})
 			} else {
 				r.Video.SetTo(oas.Video{
@@ -227,7 +227,7 @@ func (b *BotAPI) setDocumentAttachment(ctx context.Context, d *tg.Document, r *o
 					Thumb:        thumb,
 					FileName:     fileName,
 					MimeType:     mimeType,
-					FileSize:     oas.NewOptInt(d.Size),
+					FileSize:     oas.NewOptInt(int(d.Size)),
 				})
 			}
 		case *tg.DocumentAttributeAudio:
@@ -237,7 +237,7 @@ func (b *BotAPI) setDocumentAttachment(ctx context.Context, d *tg.Document, r *o
 					FileUniqueID: fileUniqueID,
 					Duration:     attr.Duration,
 					MimeType:     mimeType,
-					FileSize:     oas.NewOptInt(d.Size),
+					FileSize:     oas.NewOptInt(int(d.Size)),
 				})
 			} else {
 				r.Audio.SetTo(oas.Audio{
@@ -248,7 +248,7 @@ func (b *BotAPI) setDocumentAttachment(ctx context.Context, d *tg.Document, r *o
 					Title:        optString(attr.GetTitle),
 					FileName:     fileName,
 					MimeType:     mimeType,
-					FileSize:     oas.NewOptInt(d.Size),
+					FileSize:     oas.NewOptInt(int(d.Size)),
 					Thumb:        thumb,
 				})
 			}
@@ -265,7 +265,7 @@ func (b *BotAPI) setDocumentAttachment(ctx context.Context, d *tg.Document, r *o
 			Thumb:        thumb,
 			FileName:     fileName,
 			MimeType:     mimeType,
-			FileSize:     oas.NewOptInt(d.Size),
+			FileSize:     oas.NewOptInt(int(d.Size)),
 		})
 	}
 
