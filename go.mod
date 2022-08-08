@@ -7,7 +7,6 @@ require (
 	github.com/go-chi/chi/v5 v5.0.7
 	github.com/go-faster/errors v0.6.1
 	github.com/go-faster/jx v0.39.0
-	github.com/go-json-experiment/json v0.0.0-20220620174529-794765d0bd38
 	github.com/gotd/td v0.65.0
 	github.com/ogen-go/ogen v0.46.1
 	github.com/stretchr/testify v1.8.0

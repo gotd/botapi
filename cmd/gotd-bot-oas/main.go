@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"flag"
 	"fmt"
 	"net/http"
@@ -11,25 +12,9 @@ import (
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/go-faster/errors"
-	"github.com/go-json-experiment/json"
 
 	"github.com/gotd/botapi/botdoc"
 )
-
-func marshalDeterministic(src interface{}) ([]byte, error) {
-	data, err := json.Marshal(src)
-	if err != nil {
-		return nil, err
-	}
-	val := json.RawValue(data)
-	if err := val.Canonicalize(); err != nil {
-		return nil, errors.Wrap(err, "canonicalize")
-	}
-	if err := val.Indent("", "\t"); err != nil {
-		return nil, errors.Wrap(err, "indent")
-	}
-	return val, nil
-}
 
 func run(ctx context.Context) error {
 	var arg struct {
@@ -65,7 +50,7 @@ func run(ctx context.Context) error {
 		return errors.Wrap(err, "generate")
 	}
 
-	data, err := marshalDeterministic(spec)
+	data, err := json.MarshalIndent(spec, "", "  ")
 	if err != nil {
 		return errors.Wrap(err, "marshal")
 	}
