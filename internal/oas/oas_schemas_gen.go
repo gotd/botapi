@@ -13,9 +13,8 @@ func (s *ErrorStatusCode) Error() string {
 // Input for addStickerToSet.
 // Ref: #/components/schemas/addStickerToSet
 type AddStickerToSet struct {
-	// One or more emoji corresponding to the sticker.
-	Emojis       string          "json:\"emojis\""
-	MaskPosition OptMaskPosition "json:\"mask_position\""
+	// User identifier of sticker set owner.
+	UserID int64 "json:\"user_id\""
 	// Sticker set name.
 	Name string "json:\"name\""
 	// **PNG** image with the sticker, must be up to 512 kilobytes in size, dimensions must not exceed
@@ -29,69 +28,72 @@ type AddStickerToSet struct {
 	// org/stickers#animated-sticker-requirements](https://core.telegram.
 	// org/stickers#animated-sticker-requirements) for technical requirements.
 	TgsSticker OptString "json:\"tgs_sticker\""
-	// User identifier of sticker set owner.
-	UserID int64 "json:\"user_id\""
 	// **WEBM** video with the sticker, uploaded using multipart/form-data. See [](https://core.telegram.
 	// org/stickers#video-sticker-requirements)[https://core.telegram.
 	// org/stickers#video-sticker-requirements](https://core.telegram.
 	// org/stickers#video-sticker-requirements) for technical requirements.
 	WebmSticker OptString "json:\"webm_sticker\""
+	// One or more emoji corresponding to the sticker.
+	Emojis       string          "json:\"emojis\""
+	MaskPosition OptMaskPosition "json:\"mask_position\""
 }
 
 // This object represents an animation file (GIF or H.264/MPEG-4 AVC video without sound).
 // Ref: #/components/schemas/Animation
 type Animation struct {
-	// Duration of the video in seconds as defined by sender.
-	Duration int "json:\"duration\""
 	// Identifier for this file, which can be used to download or reuse the file.
 	FileID string "json:\"file_id\""
+	// Unique identifier for this file, which is supposed to be the same over time and for different bots.
+	//  Can't be used to download or reuse the file.
+	FileUniqueID string "json:\"file_unique_id\""
+	// Video width as defined by sender.
+	Width int "json:\"width\""
+	// Video height as defined by sender.
+	Height int "json:\"height\""
+	// Duration of the video in seconds as defined by sender.
+	Duration int          "json:\"duration\""
+	Thumb    OptPhotoSize "json:\"thumb\""
 	// _Optional_. Original animation filename as defined by sender.
 	FileName OptString "json:\"file_name\""
+	// _Optional_. MIME type of the file as defined by sender.
+	MimeType OptString "json:\"mime_type\""
 	// _Optional_. File size in bytes. It can be bigger than 2^31 and some programming languages may have
 	// difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed
 	// 64-bit integer or double-precision float type are safe for storing this value.
 	FileSize OptInt "json:\"file_size\""
-	// Unique identifier for this file, which is supposed to be the same over time and for different bots.
-	//  Can't be used to download or reuse the file.
-	FileUniqueID string "json:\"file_unique_id\""
-	// Video height as defined by sender.
-	Height int "json:\"height\""
-	// _Optional_. MIME type of the file as defined by sender.
-	MimeType OptString    "json:\"mime_type\""
-	Thumb    OptPhotoSize "json:\"thumb\""
-	// Video width as defined by sender.
-	Width int "json:\"width\""
 }
 
 // Input for answerCallbackQuery.
 // Ref: #/components/schemas/answerCallbackQuery
 type AnswerCallbackQuery struct {
-	// The maximum amount of time in seconds that the result of the callback query may be cached
-	// client-side. Telegram apps will support caching starting in version 3.14. Defaults to 0.
-	CacheTime OptInt "json:\"cache_time\""
 	// Unique identifier for the query to be answered.
 	CallbackQueryID string "json:\"callback_query_id\""
+	// Text of the notification. If not specified, nothing will be shown to the user, 0-200 characters.
+	Text OptString "json:\"text\""
 	// If _True_, an alert will be shown by the client instead of a notification at the top of the chat
 	// screen. Defaults to _false_.
 	ShowAlert OptBool "json:\"show_alert\""
-	// Text of the notification. If not specified, nothing will be shown to the user, 0-200 characters.
-	Text OptString "json:\"text\""
 	// URL that will be opened by the user's client. If you have created a [Game](https://core.telegram.
 	// org/bots/api#game) and accepted the conditions via [@BotFather](https://t.me/botfather), specify
 	// the URL that opens your game - note that this will only work if the query comes from a
 	// [_callback_game_](https://core.telegram.org/bots/api#inlinekeyboardbutton) button.Otherwise, you
 	// may use links like `t.me/your_bot?start=XXXX` that open your bot with a parameter.
 	URL OptString "json:\"url\""
+	// The maximum amount of time in seconds that the result of the callback query may be cached
+	// client-side. Telegram apps will support caching starting in version 3.14. Defaults to 0.
+	CacheTime OptInt "json:\"cache_time\""
 }
 
 // Input for answerInlineQuery.
 // Ref: #/components/schemas/answerInlineQuery
 type AnswerInlineQuery struct {
+	// Unique identifier for the answered query.
+	InlineQueryID string "json:\"inline_query_id\""
+	// A JSON-serialized array of results for the inline query.
+	Results []InlineQueryResult "json:\"results\""
 	// The maximum amount of time in seconds that the result of the inline query may be cached on the
 	// server. Defaults to 300.
 	CacheTime OptInt "json:\"cache_time\""
-	// Unique identifier for the answered query.
-	InlineQueryID string "json:\"inline_query_id\""
 	// Pass _True_, if results may be cached on the server side only for the user that sent the query. By
 	// default, results may be returned to any user who sends the same query.
 	IsPersonal OptBool "json:\"is_personal\""
@@ -99,8 +101,9 @@ type AnswerInlineQuery struct {
 	// results. Pass an empty string if there are no more results or if you don't support pagination.
 	// Offset length can't exceed 64 bytes.
 	NextOffset OptString "json:\"next_offset\""
-	// A JSON-serialized array of results for the inline query.
-	Results []InlineQueryResult "json:\"results\""
+	// If passed, clients will display a button with specified text that switches the user to a private
+	// chat with the bot and sends the bot a start message with the parameter _switch_pm_parameter_.
+	SwitchPmText OptString "json:\"switch_pm_text\""
 	// [Deep-linking](https://core.telegram.org/bots#deep-linking) parameter for the /start message sent
 	// to the bot when user presses the switch button. 1-64 characters, only `A-Z`, `a-z`, `0-9`, `_` and
 	// `-` are allowed._Example:_ An inline bot that sends YouTube videos can ask the user to connect the
@@ -111,48 +114,45 @@ type AnswerInlineQuery struct {
 	// [_switch_inline_](https://core.telegram.org/bots/api#inlinekeyboardmarkup) button so that the user
 	// can easily return to the chat where they wanted to use the bot's inline capabilities.
 	SwitchPmParameter OptString "json:\"switch_pm_parameter\""
-	// If passed, clients will display a button with specified text that switches the user to a private
-	// chat with the bot and sends the bot a start message with the parameter _switch_pm_parameter_.
-	SwitchPmText OptString "json:\"switch_pm_text\""
 }
 
 // Input for answerPreCheckoutQuery.
 // Ref: #/components/schemas/answerPreCheckoutQuery
 type AnswerPreCheckoutQuery struct {
+	// Unique identifier for the query to be answered.
+	PreCheckoutQueryID string "json:\"pre_checkout_query_id\""
+	// Specify _True_ if everything is alright (goods are available, etc.) and the bot is ready to
+	// proceed with the order. Use _False_ if there are any problems.
+	Ok bool "json:\"ok\""
 	// Required if _ok_ is _False_. Error message in human readable form that explains the reason for
 	// failure to proceed with the checkout (e.g. "Sorry, somebody just bought the last of our amazing
 	// black T-shirts while you were busy filling out your payment details. Please choose a different
 	// color or garment!"). Telegram will display this message to the user.
 	ErrorMessage OptString "json:\"error_message\""
-	// Specify _True_ if everything is alright (goods are available, etc.) and the bot is ready to
-	// proceed with the order. Use _False_ if there are any problems.
-	Ok bool "json:\"ok\""
-	// Unique identifier for the query to be answered.
-	PreCheckoutQueryID string "json:\"pre_checkout_query_id\""
 }
 
 // Input for answerShippingQuery.
 // Ref: #/components/schemas/answerShippingQuery
 type AnswerShippingQuery struct {
-	// Required if _ok_ is False. Error message in human readable form that explains why it is impossible
-	// to complete the order (e.g. "Sorry, delivery to your desired address is unavailable'). Telegram
-	// will display this message to the user.
-	ErrorMessage OptString "json:\"error_message\""
+	// Unique identifier for the query to be answered.
+	ShippingQueryID string "json:\"shipping_query_id\""
 	// Specify _True_ if delivery to the specified address is possible and False if there are any
 	// problems (for example, if delivery to the specified address is not possible).
 	Ok bool "json:\"ok\""
 	// Required if _ok_ is _True_. A JSON-serialized array of available shipping options.
 	ShippingOptions []ShippingOption "json:\"shipping_options\""
-	// Unique identifier for the query to be answered.
-	ShippingQueryID string "json:\"shipping_query_id\""
+	// Required if _ok_ is False. Error message in human readable form that explains why it is impossible
+	// to complete the order (e.g. "Sorry, delivery to your desired address is unavailable'). Telegram
+	// will display this message to the user.
+	ErrorMessage OptString "json:\"error_message\""
 }
 
 // Input for answerWebAppQuery.
 // Ref: #/components/schemas/answerWebAppQuery
 type AnswerWebAppQuery struct {
-	Result InlineQueryResult "json:\"result\""
 	// Unique identifier for the query to be answered.
-	WebAppQueryID string "json:\"web_app_query_id\""
+	WebAppQueryID string            "json:\"web_app_query_id\""
+	Result        InlineQueryResult "json:\"result\""
 }
 
 // Input for approveChatJoinRequest.
@@ -166,42 +166,42 @@ type ApproveChatJoinRequest struct {
 // This object represents an audio file to be treated as music by the Telegram clients.
 // Ref: #/components/schemas/Audio
 type Audio struct {
-	// Duration of the audio in seconds as defined by sender.
-	Duration int "json:\"duration\""
 	// Identifier for this file, which can be used to download or reuse the file.
 	FileID string "json:\"file_id\""
-	// _Optional_. Original filename as defined by sender.
-	FileName OptString "json:\"file_name\""
-	// _Optional_. File size in bytes. It can be bigger than 2^31 and some programming languages may have
-	// difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed
-	// 64-bit integer or double-precision float type are safe for storing this value.
-	FileSize OptInt "json:\"file_size\""
 	// Unique identifier for this file, which is supposed to be the same over time and for different bots.
 	//  Can't be used to download or reuse the file.
 	FileUniqueID string "json:\"file_unique_id\""
-	// _Optional_. MIME type of the file as defined by sender.
-	MimeType OptString "json:\"mime_type\""
+	// Duration of the audio in seconds as defined by sender.
+	Duration int "json:\"duration\""
 	// _Optional_. Performer of the audio as defined by sender or by audio tags.
-	Performer OptString    "json:\"performer\""
-	Thumb     OptPhotoSize "json:\"thumb\""
+	Performer OptString "json:\"performer\""
 	// _Optional_. Title of the audio as defined by sender or by audio tags.
 	Title OptString "json:\"title\""
+	// _Optional_. Original filename as defined by sender.
+	FileName OptString "json:\"file_name\""
+	// _Optional_. MIME type of the file as defined by sender.
+	MimeType OptString "json:\"mime_type\""
+	// _Optional_. File size in bytes. It can be bigger than 2^31 and some programming languages may have
+	// difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed
+	// 64-bit integer or double-precision float type are safe for storing this value.
+	FileSize OptInt       "json:\"file_size\""
+	Thumb    OptPhotoSize "json:\"thumb\""
 }
 
 // Input for banChatMember.
 // Ref: #/components/schemas/banChatMember
 type BanChatMember struct {
 	ChatID ID "json:\"chat_id\""
-	// Pass _True_ to delete all messages from the chat for the user that is being removed. If _False_,
-	// the user will be able to see messages in the group that were sent before the user was removed.
-	// Always _True_ for supergroups and channels.
-	RevokeMessages OptBool "json:\"revoke_messages\""
+	// Unique identifier of the target user.
+	UserID int64 "json:\"user_id\""
 	// Date when the user will be unbanned, unix time. If user is banned for more than 366 days or less
 	// than 30 seconds from the current time they are considered to be banned forever. Applied for
 	// supergroups and channels only.
 	UntilDate OptInt "json:\"until_date\""
-	// Unique identifier of the target user.
-	UserID int64 "json:\"user_id\""
+	// Pass _True_ to delete all messages from the chat for the user that is being removed. If _False_,
+	// the user will be able to see messages in the group that were sent before the user was removed.
+	// Always _True_ for supergroups and channels.
+	RevokeMessages OptBool "json:\"revoke_messages\""
 }
 
 // Input for banChatSenderChat.
@@ -472,7 +472,9 @@ type BotCommandScopeChatMember struct {
 }
 
 // Represents the default [scope](https://core.telegram.org/bots/api#botcommandscope) of bot commands.
-//  Default commands are used if no commands with a [narrower scope](https://core.telegram.
+//
+//	Default commands are used if no commands with a [narrower scope](https://core.telegram.
+//
 // org/bots/api#determining-list-of-commands) are specified for the user.
 // Ref: #/components/schemas/BotCommandScopeDefault
 type BotCommandScopeDefault struct{}
@@ -490,141 +492,141 @@ type CallbackGame struct{}
 // the fields _data_ or _game_short_name_ will be present.
 // Ref: #/components/schemas/CallbackQuery
 type CallbackQuery struct {
+	// Unique identifier for this query.
+	ID      string     "json:\"id\""
+	From    User       "json:\"from\""
+	Message OptMessage "json:\"message\""
+	// _Optional_. Identifier of the message sent via the bot in inline mode, that originated the query.
+	InlineMessageID OptString "json:\"inline_message_id\""
 	// Global identifier, uniquely corresponding to the chat to which the message with the callback
 	// button was sent. Useful for high scores in [games](https://core.telegram.org/bots/api#games).
 	ChatInstance string "json:\"chat_instance\""
 	// _Optional_. Data associated with the callback button. Be aware that the message originated the
 	// query can contain no callback buttons with this data.
 	Data OptString "json:\"data\""
-	From User      "json:\"from\""
 	// _Optional_. Short name of a [Game](https://core.telegram.org/bots/api#games) to be returned,
 	// serves as the unique identifier for the game.
 	GameShortName OptString "json:\"game_short_name\""
-	// Unique identifier for this query.
-	ID string "json:\"id\""
-	// _Optional_. Identifier of the message sent via the bot in inline mode, that originated the query.
-	InlineMessageID OptString  "json:\"inline_message_id\""
-	Message         OptMessage "json:\"message\""
 }
 
 // This object represents a chat.
 // Ref: #/components/schemas/Chat
 type Chat struct {
-	AllMembersAreAdministrators OptBool "json:\"all_members_are_administrators\""
-	// _Optional_. Bio of the other party in a private chat. Returned only in [getChat](https://core.
-	// telegram.org/bots/api#getchat).
-	Bio OptString "json:\"bio\""
-	// _Optional_. _True_, if the bot can change the group sticker set. Returned only in
-	// [getChat](https://core.telegram.org/bots/api#getchat).
-	CanSetStickerSet OptBool "json:\"can_set_sticker_set\""
-	// _Optional_. Description, for groups, supergroups and channel chats. Returned only in
-	// [getChat](https://core.telegram.org/bots/api#getchat).
-	Description OptString "json:\"description\""
-	// _Optional_. First name of the other party in a private chat.
-	FirstName OptString "json:\"first_name\""
-	// _Optional_. _True_, if privacy settings of the other party in the private chat allows to use
-	// `tg://user?id=<user_id>` links only in chats with the user. Returned only in
-	// [getChat](https://core.telegram.org/bots/api#getchat).
-	HasPrivateForwards OptBool "json:\"has_private_forwards\""
-	// _Optional_. _True_, if messages from the chat can't be forwarded to other chats. Returned only in
-	// [getChat](https://core.telegram.org/bots/api#getchat).
-	HasProtectedContent OptBool "json:\"has_protected_content\""
 	// Unique identifier for this chat. This number may have more than 32 significant bits and some
 	// programming languages may have difficulty/silent defects in interpreting it. But it has at most 52
 	// significant bits, so a signed 64-bit integer or double-precision float type are safe for storing
 	// this identifier.
 	ID int64 "json:\"id\""
-	// _Optional_. Primary invite link, for groups, supergroups and channel chats. Returned only in
+	// Type of chat, can be either `private`, `group`, `supergroup` or `channel`.
+	Type ChatType "json:\"type\""
+	// _Optional_. Title, for supergroups, channels and group chats.
+	Title OptString "json:\"title\""
+	// _Optional_. Username, for private chats, supergroups and channels if available.
+	Username OptString "json:\"username\""
+	// _Optional_. First name of the other party in a private chat.
+	FirstName OptString "json:\"first_name\""
+	// _Optional_. Last name of the other party in a private chat.
+	LastName OptString    "json:\"last_name\""
+	Photo    OptChatPhoto "json:\"photo\""
+	// _Optional_. Bio of the other party in a private chat. Returned only in [getChat](https://core.
+	// telegram.org/bots/api#getchat).
+	Bio OptString "json:\"bio\""
+	// _Optional_. _True_, if privacy settings of the other party in the private chat allows to use
+	// `tg://user?id=<user_id>` links only in chats with the user. Returned only in
 	// [getChat](https://core.telegram.org/bots/api#getchat).
-	InviteLink OptString "json:\"invite_link\""
-	// _Optional_. _True_, if all users directly joining the supergroup need to be approved by supergroup
-	// administrators. Returned only in [getChat](https://core.telegram.org/bots/api#getchat).
-	JoinByRequest OptBool "json:\"join_by_request\""
+	HasPrivateForwards OptBool "json:\"has_private_forwards\""
 	// _Optional_. _True_, if users need to join the supergroup before they can send messages. Returned
 	// only in [getChat](https://core.telegram.org/bots/api#getchat).
 	JoinToSendMessages OptBool "json:\"join_to_send_messages\""
-	// _Optional_. Last name of the other party in a private chat.
-	LastName OptString "json:\"last_name\""
+	// _Optional_. _True_, if all users directly joining the supergroup need to be approved by supergroup
+	// administrators. Returned only in [getChat](https://core.telegram.org/bots/api#getchat).
+	JoinByRequest OptBool "json:\"join_by_request\""
+	// _Optional_. Description, for groups, supergroups and channel chats. Returned only in
+	// [getChat](https://core.telegram.org/bots/api#getchat).
+	Description OptString "json:\"description\""
+	// _Optional_. Primary invite link, for groups, supergroups and channel chats. Returned only in
+	// [getChat](https://core.telegram.org/bots/api#getchat).
+	InviteLink    OptString          "json:\"invite_link\""
+	PinnedMessage *Message           "json:\"pinned_message\""
+	Permissions   OptChatPermissions "json:\"permissions\""
+	// _Optional_. For supergroups, the minimum allowed delay between consecutive messages sent by each
+	// unprivileged user; in seconds. Returned only in [getChat](https://core.telegram.
+	// org/bots/api#getchat).
+	SlowModeDelay OptInt "json:\"slow_mode_delay\""
+	// _Optional_. The time after which all messages sent to the chat will be automatically deleted; in
+	// seconds. Returned only in [getChat](https://core.telegram.org/bots/api#getchat).
+	MessageAutoDeleteTime OptInt "json:\"message_auto_delete_time\""
+	// _Optional_. _True_, if messages from the chat can't be forwarded to other chats. Returned only in
+	// [getChat](https://core.telegram.org/bots/api#getchat).
+	HasProtectedContent OptBool "json:\"has_protected_content\""
+	// _Optional_. For supergroups, name of group sticker set. Returned only in [getChat](https://core.
+	// telegram.org/bots/api#getchat).
+	StickerSetName OptString "json:\"sticker_set_name\""
+	// _Optional_. _True_, if the bot can change the group sticker set. Returned only in
+	// [getChat](https://core.telegram.org/bots/api#getchat).
+	CanSetStickerSet OptBool "json:\"can_set_sticker_set\""
 	// _Optional_. Unique identifier for the linked chat, i.e. the discussion group identifier for a
 	// channel and vice versa; for supergroups and channel chats. This identifier may be greater than 32
 	// bits and some programming languages may have difficulty/silent defects in interpreting it. But it
 	// is smaller than 52 bits, so a signed 64 bit integer or double-precision float type are safe for
 	// storing this identifier. Returned only in [getChat](https://core.telegram.org/bots/api#getchat).
-	LinkedChatID OptInt64        "json:\"linked_chat_id\""
-	Location     OptChatLocation "json:\"location\""
-	// _Optional_. The time after which all messages sent to the chat will be automatically deleted; in
-	// seconds. Returned only in [getChat](https://core.telegram.org/bots/api#getchat).
-	MessageAutoDeleteTime OptInt             "json:\"message_auto_delete_time\""
-	Permissions           OptChatPermissions "json:\"permissions\""
-	Photo                 OptChatPhoto       "json:\"photo\""
-	PinnedMessage         *Message           "json:\"pinned_message\""
-	// _Optional_. For supergroups, the minimum allowed delay between consecutive messages sent by each
-	// unprivileged user; in seconds. Returned only in [getChat](https://core.telegram.
-	// org/bots/api#getchat).
-	SlowModeDelay OptInt "json:\"slow_mode_delay\""
-	// _Optional_. For supergroups, name of group sticker set. Returned only in [getChat](https://core.
-	// telegram.org/bots/api#getchat).
-	StickerSetName OptString "json:\"sticker_set_name\""
-	// _Optional_. Title, for supergroups, channels and group chats.
-	Title OptString "json:\"title\""
-	// Type of chat, can be either `private`, `group`, `supergroup` or `channel`.
-	Type ChatType "json:\"type\""
-	// _Optional_. Username, for private chats, supergroups and channels if available.
-	Username OptString "json:\"username\""
+	LinkedChatID                OptInt64        "json:\"linked_chat_id\""
+	Location                    OptChatLocation "json:\"location\""
+	AllMembersAreAdministrators OptBool         "json:\"all_members_are_administrators\""
 }
 
 // Represents the rights of an administrator in a chat.
 // Ref: #/components/schemas/ChatAdministratorRights
 type ChatAdministratorRights struct {
-	// _True_, if the user is allowed to change the chat title, photo and other settings.
-	CanChangeInfo bool "json:\"can_change_info\""
-	// _True_, if the administrator can delete messages of other users.
-	CanDeleteMessages bool "json:\"can_delete_messages\""
-	// _Optional_. _True_, if the administrator can edit messages of other users and can pin messages;
-	// channels only.
-	CanEditMessages OptBool "json:\"can_edit_messages\""
-	// _True_, if the user is allowed to invite new users to the chat.
-	CanInviteUsers bool "json:\"can_invite_users\""
+	// _True_, if the user's presence in the chat is hidden.
+	IsAnonymous bool "json:\"is_anonymous\""
 	// _True_, if the administrator can access the chat event log, chat statistics, message statistics in
 	// channels, see channel members, see anonymous administrators in supergroups and ignore slow mode.
 	// Implied by any other administrator privilege.
 	CanManageChat bool "json:\"can_manage_chat\""
+	// _True_, if the administrator can delete messages of other users.
+	CanDeleteMessages bool "json:\"can_delete_messages\""
 	// _True_, if the administrator can manage video chats.
 	CanManageVideoChats bool "json:\"can_manage_video_chats\""
-	// _Optional_. _True_, if the user is allowed to pin messages; groups and supergroups only.
-	CanPinMessages OptBool "json:\"can_pin_messages\""
-	// _Optional_. _True_, if the administrator can post in the channel; channels only.
-	CanPostMessages OptBool "json:\"can_post_messages\""
+	// _True_, if the administrator can restrict, ban or unban chat members.
+	CanRestrictMembers bool "json:\"can_restrict_members\""
 	// _True_, if the administrator can add new administrators with a subset of their own privileges or
 	// demote administrators that he has promoted, directly or indirectly (promoted by administrators
 	// that were appointed by the user).
 	CanPromoteMembers bool "json:\"can_promote_members\""
-	// _True_, if the administrator can restrict, ban or unban chat members.
-	CanRestrictMembers bool "json:\"can_restrict_members\""
-	// _True_, if the user's presence in the chat is hidden.
-	IsAnonymous bool "json:\"is_anonymous\""
+	// _True_, if the user is allowed to change the chat title, photo and other settings.
+	CanChangeInfo bool "json:\"can_change_info\""
+	// _True_, if the user is allowed to invite new users to the chat.
+	CanInviteUsers bool "json:\"can_invite_users\""
+	// _Optional_. _True_, if the administrator can post in the channel; channels only.
+	CanPostMessages OptBool "json:\"can_post_messages\""
+	// _Optional_. _True_, if the administrator can edit messages of other users and can pin messages;
+	// channels only.
+	CanEditMessages OptBool "json:\"can_edit_messages\""
+	// _Optional_. _True_, if the user is allowed to pin messages; groups and supergroups only.
+	CanPinMessages OptBool "json:\"can_pin_messages\""
 }
 
 // Represents an invite link for a chat.
 // Ref: #/components/schemas/ChatInviteLink
 type ChatInviteLink struct {
-	// _True_, if users joining the chat via the link need to be approved by chat administrators.
-	CreatesJoinRequest bool "json:\"creates_join_request\""
-	Creator            User "json:\"creator\""
-	// _Optional_. Point in time (Unix timestamp) when the link will expire or has been expired.
-	ExpireDate OptInt "json:\"expire_date\""
 	// The invite link. If the link was created by another chat administrator, then the second part of
 	// the link will be replaced with `...`.
 	InviteLink string "json:\"invite_link\""
+	Creator    User   "json:\"creator\""
+	// _True_, if users joining the chat via the link need to be approved by chat administrators.
+	CreatesJoinRequest bool "json:\"creates_join_request\""
 	// _True_, if the link is primary.
 	IsPrimary bool "json:\"is_primary\""
 	// _True_, if the link is revoked.
 	IsRevoked bool "json:\"is_revoked\""
+	// _Optional_. Invite link name.
+	Name OptString "json:\"name\""
+	// _Optional_. Point in time (Unix timestamp) when the link will expire or has been expired.
+	ExpireDate OptInt "json:\"expire_date\""
 	// _Optional_. The maximum number of users that can be members of the chat simultaneously after
 	// joining the chat via this invite link; 1-99999.
 	MemberLimit OptInt "json:\"member_limit\""
-	// _Optional_. Invite link name.
-	Name OptString "json:\"name\""
 	// _Optional_. Number of pending join requests created using this link.
 	PendingJoinRequestCount OptInt "json:\"pending_join_request_count\""
 }
@@ -632,21 +634,21 @@ type ChatInviteLink struct {
 // Represents a join request sent to a chat.
 // Ref: #/components/schemas/ChatJoinRequest
 type ChatJoinRequest struct {
-	// _Optional_. Bio of the user.
-	Bio  OptString "json:\"bio\""
-	Chat Chat      "json:\"chat\""
+	Chat Chat "json:\"chat\""
+	From User "json:\"from\""
 	// Date the request was sent in Unix time.
-	Date       int               "json:\"date\""
-	From       User              "json:\"from\""
+	Date int "json:\"date\""
+	// _Optional_. Bio of the user.
+	Bio        OptString         "json:\"bio\""
 	InviteLink OptChatInviteLink "json:\"invite_link\""
 }
 
 // Represents a location to which a chat is connected.
 // Ref: #/components/schemas/ChatLocation
 type ChatLocation struct {
-	// Location address; 1-64 characters, as defined by the chat owner.
-	Address  string   "json:\"address\""
 	Location Location "json:\"location\""
+	// Location address; 1-64 characters, as defined by the chat owner.
+	Address string "json:\"address\""
 }
 
 // This object contains information about one member of a chat. Currently, the following 6 types of
@@ -826,40 +828,40 @@ func NewChatMemberBannedChatMember(v ChatMemberBanned) ChatMember {
 // privileges.
 // Ref: #/components/schemas/ChatMemberAdministrator
 type ChatMemberAdministrator struct {
+	// The member's status in the chat, always `administrator`.
+	Status string "json:\"status\""
+	User   User   "json:\"user\""
 	// _True_, if the bot is allowed to edit administrator privileges of that user.
 	CanBeEdited bool "json:\"can_be_edited\""
-	// _True_, if the user is allowed to change the chat title, photo and other settings.
-	CanChangeInfo bool "json:\"can_change_info\""
-	// _True_, if the administrator can delete messages of other users.
-	CanDeleteMessages bool "json:\"can_delete_messages\""
-	// _Optional_. _True_, if the administrator can edit messages of other users and can pin messages;
-	// channels only.
-	CanEditMessages OptBool "json:\"can_edit_messages\""
-	// _True_, if the user is allowed to invite new users to the chat.
-	CanInviteUsers bool "json:\"can_invite_users\""
+	// _True_, if the user's presence in the chat is hidden.
+	IsAnonymous bool "json:\"is_anonymous\""
 	// _True_, if the administrator can access the chat event log, chat statistics, message statistics in
 	// channels, see channel members, see anonymous administrators in supergroups and ignore slow mode.
 	// Implied by any other administrator privilege.
 	CanManageChat bool "json:\"can_manage_chat\""
+	// _True_, if the administrator can delete messages of other users.
+	CanDeleteMessages bool "json:\"can_delete_messages\""
 	// _True_, if the administrator can manage video chats.
 	CanManageVideoChats bool "json:\"can_manage_video_chats\""
-	// _Optional_. _True_, if the user is allowed to pin messages; groups and supergroups only.
-	CanPinMessages OptBool "json:\"can_pin_messages\""
-	// _Optional_. _True_, if the administrator can post in the channel; channels only.
-	CanPostMessages OptBool "json:\"can_post_messages\""
+	// _True_, if the administrator can restrict, ban or unban chat members.
+	CanRestrictMembers bool "json:\"can_restrict_members\""
 	// _True_, if the administrator can add new administrators with a subset of their own privileges or
 	// demote administrators that he has promoted, directly or indirectly (promoted by administrators
 	// that were appointed by the user).
 	CanPromoteMembers bool "json:\"can_promote_members\""
-	// _True_, if the administrator can restrict, ban or unban chat members.
-	CanRestrictMembers bool "json:\"can_restrict_members\""
+	// _True_, if the user is allowed to change the chat title, photo and other settings.
+	CanChangeInfo bool "json:\"can_change_info\""
+	// _True_, if the user is allowed to invite new users to the chat.
+	CanInviteUsers bool "json:\"can_invite_users\""
+	// _Optional_. _True_, if the administrator can post in the channel; channels only.
+	CanPostMessages OptBool "json:\"can_post_messages\""
+	// _Optional_. _True_, if the administrator can edit messages of other users and can pin messages;
+	// channels only.
+	CanEditMessages OptBool "json:\"can_edit_messages\""
+	// _Optional_. _True_, if the user is allowed to pin messages; groups and supergroups only.
+	CanPinMessages OptBool "json:\"can_pin_messages\""
 	// _Optional_. Custom title for this user.
 	CustomTitle OptString "json:\"custom_title\""
-	// _True_, if the user's presence in the chat is hidden.
-	IsAnonymous bool "json:\"is_anonymous\""
-	// The member's status in the chat, always `administrator`.
-	Status string "json:\"status\""
-	User   User   "json:\"user\""
 }
 
 // Represents a [chat member](https://core.telegram.org/bots/api#chatmember) that was banned in the
@@ -868,10 +870,10 @@ type ChatMemberAdministrator struct {
 type ChatMemberBanned struct {
 	// The member's status in the chat, always `kicked`.
 	Status string "json:\"status\""
+	User   User   "json:\"user\""
 	// Date when restrictions will be lifted for this user; unix time. If 0, then the user is banned
 	// forever.
-	UntilDate int  "json:\"until_date\""
-	User      User "json:\"user\""
+	UntilDate int "json:\"until_date\""
 }
 
 // Represents a [chat member](https://core.telegram.org/bots/api#chatmember) that isn't currently a
@@ -896,61 +898,71 @@ type ChatMemberMember struct {
 // has all administrator privileges.
 // Ref: #/components/schemas/ChatMemberOwner
 type ChatMemberOwner struct {
-	// _Optional_. Custom title for this user.
-	CustomTitle OptString "json:\"custom_title\""
-	// _True_, if the user's presence in the chat is hidden.
-	IsAnonymous bool "json:\"is_anonymous\""
 	// The member's status in the chat, always `creator`.
 	Status string "json:\"status\""
 	User   User   "json:\"user\""
+	// _True_, if the user's presence in the chat is hidden.
+	IsAnonymous bool "json:\"is_anonymous\""
+	// _Optional_. Custom title for this user.
+	CustomTitle OptString "json:\"custom_title\""
 }
 
 // Represents a [chat member](https://core.telegram.org/bots/api#chatmember) that is under certain
 // restrictions in the chat. Supergroups only.
 // Ref: #/components/schemas/ChatMemberRestricted
 type ChatMemberRestricted struct {
-	// _True_, if the user is allowed to add web page previews to their messages.
-	CanAddWebPagePreviews bool "json:\"can_add_web_page_previews\""
+	// The member's status in the chat, always `restricted`.
+	Status string "json:\"status\""
+	User   User   "json:\"user\""
+	// _True_, if the user is a member of the chat at the moment of the request.
+	IsMember bool "json:\"is_member\""
 	// _True_, if the user is allowed to change the chat title, photo and other settings.
 	CanChangeInfo bool "json:\"can_change_info\""
 	// _True_, if the user is allowed to invite new users to the chat.
 	CanInviteUsers bool "json:\"can_invite_users\""
 	// _True_, if the user is allowed to pin messages.
 	CanPinMessages bool "json:\"can_pin_messages\""
+	// _True_, if the user is allowed to send text messages, contacts, locations and venues.
+	CanSendMessages bool "json:\"can_send_messages\""
 	// _True_, if the user is allowed to send audios, documents, photos, videos, video notes and voice
 	// notes.
 	CanSendMediaMessages bool "json:\"can_send_media_messages\""
-	// _True_, if the user is allowed to send text messages, contacts, locations and venues.
-	CanSendMessages bool "json:\"can_send_messages\""
-	// _True_, if the user is allowed to send animations, games, stickers and use inline bots.
-	CanSendOtherMessages bool "json:\"can_send_other_messages\""
 	// _True_, if the user is allowed to send polls.
 	CanSendPolls bool "json:\"can_send_polls\""
-	// _True_, if the user is a member of the chat at the moment of the request.
-	IsMember bool "json:\"is_member\""
-	// The member's status in the chat, always `restricted`.
-	Status string "json:\"status\""
+	// _True_, if the user is allowed to send animations, games, stickers and use inline bots.
+	CanSendOtherMessages bool "json:\"can_send_other_messages\""
+	// _True_, if the user is allowed to add web page previews to their messages.
+	CanAddWebPagePreviews bool "json:\"can_add_web_page_previews\""
 	// Date when restrictions will be lifted for this user; unix time. If 0, then the user is restricted
 	// forever.
-	UntilDate int  "json:\"until_date\""
-	User      User "json:\"user\""
+	UntilDate int "json:\"until_date\""
 }
 
 // This object represents changes in the status of a chat member.
 // Ref: #/components/schemas/ChatMemberUpdated
 type ChatMemberUpdated struct {
 	Chat Chat "json:\"chat\""
+	From User "json:\"from\""
 	// Date the change was done in Unix time.
 	Date          int               "json:\"date\""
-	From          User              "json:\"from\""
-	InviteLink    OptChatInviteLink "json:\"invite_link\""
-	NewChatMember ChatMember        "json:\"new_chat_member\""
 	OldChatMember ChatMember        "json:\"old_chat_member\""
+	NewChatMember ChatMember        "json:\"new_chat_member\""
+	InviteLink    OptChatInviteLink "json:\"invite_link\""
 }
 
 // Describes actions that a non-administrator user is allowed to take in a chat.
 // Ref: #/components/schemas/ChatPermissions
 type ChatPermissions struct {
+	// _Optional_. _True_, if the user is allowed to send text messages, contacts, locations and venues.
+	CanSendMessages OptBool "json:\"can_send_messages\""
+	// _Optional_. _True_, if the user is allowed to send audios, documents, photos, videos, video notes
+	// and voice notes, implies can_send_messages.
+	CanSendMediaMessages OptBool "json:\"can_send_media_messages\""
+	// _Optional_. _True_, if the user is allowed to send polls, implies can_send_messages.
+	CanSendPolls OptBool "json:\"can_send_polls\""
+	// _Optional_. _True_, if the user is allowed to send animations, games, stickers and use inline bots,
+	//  implies can_send_media_messages.
+	CanSendOtherMessages OptBool "json:\"can_send_other_messages\""
 	// _Optional_. _True_, if the user is allowed to add web page previews to their messages, implies
 	// can_send_media_messages.
 	CanAddWebPagePreviews OptBool "json:\"can_add_web_page_previews\""
@@ -961,33 +973,23 @@ type ChatPermissions struct {
 	CanInviteUsers OptBool "json:\"can_invite_users\""
 	// _Optional_. _True_, if the user is allowed to pin messages. Ignored in public supergroups.
 	CanPinMessages OptBool "json:\"can_pin_messages\""
-	// _Optional_. _True_, if the user is allowed to send audios, documents, photos, videos, video notes
-	// and voice notes, implies can_send_messages.
-	CanSendMediaMessages OptBool "json:\"can_send_media_messages\""
-	// _Optional_. _True_, if the user is allowed to send text messages, contacts, locations and venues.
-	CanSendMessages OptBool "json:\"can_send_messages\""
-	// _Optional_. _True_, if the user is allowed to send animations, games, stickers and use inline bots,
-	//  implies can_send_media_messages.
-	CanSendOtherMessages OptBool "json:\"can_send_other_messages\""
-	// _Optional_. _True_, if the user is allowed to send polls, implies can_send_messages.
-	CanSendPolls OptBool "json:\"can_send_polls\""
 }
 
 // This object represents a chat photo.
 // Ref: #/components/schemas/ChatPhoto
 type ChatPhoto struct {
-	// File identifier of big (640x640) chat photo. This file_id can be used only for photo download and
-	// only for as long as the photo is not changed.
-	BigFileID string "json:\"big_file_id\""
-	// Unique file identifier of big (640x640) chat photo, which is supposed to be the same over time and
-	// for different bots. Can't be used to download or reuse the file.
-	BigFileUniqueID string "json:\"big_file_unique_id\""
 	// File identifier of small (160x160) chat photo. This file_id can be used only for photo download
 	// and only for as long as the photo is not changed.
 	SmallFileID string "json:\"small_file_id\""
 	// Unique file identifier of small (160x160) chat photo, which is supposed to be the same over time
 	// and for different bots. Can't be used to download or reuse the file.
 	SmallFileUniqueID string "json:\"small_file_unique_id\""
+	// File identifier of big (640x640) chat photo. This file_id can be used only for photo download and
+	// only for as long as the photo is not changed.
+	BigFileID string "json:\"big_file_id\""
+	// Unique file identifier of big (640x640) chat photo, which is supposed to be the same over time and
+	// for different bots. Can't be used to download or reuse the file.
+	BigFileUniqueID string "json:\"big_file_unique_id\""
 }
 
 // Type of chat, can be either `private`, `group`, `supergroup` or `channel`.
@@ -1004,28 +1006,28 @@ const (
 // that was chosen by the user and sent to their chat partner.
 // Ref: #/components/schemas/ChosenInlineResult
 type ChosenInlineResult struct {
-	From User "json:\"from\""
+	// The unique identifier for the result that was chosen.
+	ResultID string      "json:\"result_id\""
+	From     User        "json:\"from\""
+	Location OptLocation "json:\"location\""
 	// _Optional_. Identifier of the sent inline message. Available only if there is an [inline
 	// keyboard](https://core.telegram.org/bots/api#inlinekeyboardmarkup) attached to the message. Will
 	// be also received in [callback queries](https://core.telegram.org/bots/api#callbackquery) and can
 	// be used to [edit](https://core.telegram.org/bots/api#updating-messages) the message.
-	InlineMessageID OptString   "json:\"inline_message_id\""
-	Location        OptLocation "json:\"location\""
+	InlineMessageID OptString "json:\"inline_message_id\""
 	// The query that was used to obtain the result.
 	Query string "json:\"query\""
-	// The unique identifier for the result that was chosen.
-	ResultID string "json:\"result_id\""
 }
 
 // This object represents a phone contact.
 // Ref: #/components/schemas/Contact
 type Contact struct {
+	// Contact's phone number.
+	PhoneNumber string "json:\"phone_number\""
 	// Contact's first name.
 	FirstName string "json:\"first_name\""
 	// _Optional_. Contact's last name.
 	LastName OptString "json:\"last_name\""
-	// Contact's phone number.
-	PhoneNumber string "json:\"phone_number\""
 	// _Optional_. Contact's user identifier in Telegram. This number may have more than 32 significant
 	// bits and some programming languages may have difficulty/silent defects in interpreting it. But it
 	// has at most 52 significant bits, so a 64-bit integer or double-precision float type are safe for
@@ -1039,117 +1041,116 @@ type Contact struct {
 // Input for copyMessage.
 // Ref: #/components/schemas/copyMessage
 type CopyMessage struct {
-	// Pass _True_, if the message should be sent even if the specified replied-to message is not found.
-	AllowSendingWithoutReply OptBool "json:\"allow_sending_without_reply\""
+	ChatID     ID "json:\"chat_id\""
+	FromChatID ID "json:\"from_chat_id\""
+	// Message identifier in the chat specified in _from_chat_id_.
+	MessageID int "json:\"message_id\""
 	// New caption for media, 0-1024 characters after entities parsing. If not specified, the original
 	// caption is kept.
 	Caption OptString "json:\"caption\""
-	// A JSON-serialized list of special entities that appear in the new caption, which can be specified
-	// instead of _parse_mode_.
-	CaptionEntities []MessageEntity "json:\"caption_entities\""
-	ChatID          ID              "json:\"chat_id\""
-	// Sends the message [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will
-	// receive a notification with no sound.
-	DisableNotification OptBool "json:\"disable_notification\""
-	FromChatID          ID      "json:\"from_chat_id\""
-	// Message identifier in the chat specified in _from_chat_id_.
-	MessageID int "json:\"message_id\""
 	// Mode for parsing entities in the new caption. See [formatting options](https://core.telegram.
 	// org/bots/api#formatting-options) for more details.
 	ParseMode OptString "json:\"parse_mode\""
+	// A JSON-serialized list of special entities that appear in the new caption, which can be specified
+	// instead of _parse_mode_.
+	CaptionEntities []MessageEntity "json:\"caption_entities\""
+	// Sends the message [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will
+	// receive a notification with no sound.
+	DisableNotification OptBool "json:\"disable_notification\""
 	// Protects the contents of the sent message from forwarding and saving.
-	ProtectContent OptBool            "json:\"protect_content\""
-	ReplyMarkup    OptSendReplyMarkup "json:\"reply_markup\""
+	ProtectContent OptBool "json:\"protect_content\""
 	// If the message is a reply, ID of the original message.
 	ReplyToMessageID OptInt "json:\"reply_to_message_id\""
+	// Pass _True_, if the message should be sent even if the specified replied-to message is not found.
+	AllowSendingWithoutReply OptBool            "json:\"allow_sending_without_reply\""
+	ReplyMarkup              OptSendReplyMarkup "json:\"reply_markup\""
 }
 
 // Input for createChatInviteLink.
 // Ref: #/components/schemas/createChatInviteLink
 type CreateChatInviteLink struct {
 	ChatID ID "json:\"chat_id\""
-	// _True_, if users joining the chat via the link need to be approved by chat administrators. If
-	// _True_, _member_limit_ can't be specified.
-	CreatesJoinRequest OptBool "json:\"creates_join_request\""
+	// Invite link name; 0-32 characters.
+	Name OptString "json:\"name\""
 	// Point in time (Unix timestamp) when the link will expire.
 	ExpireDate OptInt "json:\"expire_date\""
 	// The maximum number of users that can be members of the chat simultaneously after joining the chat
 	// via this invite link; 1-99999.
 	MemberLimit OptInt "json:\"member_limit\""
-	// Invite link name; 0-32 characters.
-	Name OptString "json:\"name\""
+	// _True_, if users joining the chat via the link need to be approved by chat administrators. If
+	// _True_, _member_limit_ can't be specified.
+	CreatesJoinRequest OptBool "json:\"creates_join_request\""
 }
 
 // Input for createInvoiceLink.
 // Ref: #/components/schemas/createInvoiceLink
 type CreateInvoiceLink struct {
+	// Product name, 1-32 characters.
+	Title string "json:\"title\""
+	// Product description, 1-255 characters.
+	Description string "json:\"description\""
+	// Bot-defined invoice payload, 1-128 bytes. This will not be displayed to the user, use for your
+	// internal processes.
+	Payload string "json:\"payload\""
+	// Payment provider token, obtained via [BotFather](https://t.me/botfather).
+	ProviderToken string "json:\"provider_token\""
 	// Three-letter ISO 4217 currency code, see [more on currencies](https://core.telegram.
 	// org/bots/payments#supported-currencies).
 	Currency string "json:\"currency\""
-	// Product description, 1-255 characters.
-	Description string "json:\"description\""
-	// Pass _True_, if the final price depends on the shipping method.
-	IsFlexible OptBool "json:\"is_flexible\""
+	// Price breakdown, a JSON-serialized list of components (e.g. product price, tax, discount, delivery
+	// cost, delivery tax, bonus, etc.).
+	Prices []LabeledPrice "json:\"prices\""
 	// The maximum accepted amount for tips in the _smallest units_ of the currency (integer, **not**
 	// float/double). For example, for a maximum tip of `US$ 1.45` pass `max_tip_amount = 145`. See the
 	// _exp_ parameter in [currencies.json](https://core.telegram.org/bots/payments/currencies.json), it
 	// shows the number of digits past the decimal point for each currency (2 for the majority of
 	// currencies). Defaults to 0.
 	MaxTipAmount OptInt "json:\"max_tip_amount\""
-	// Pass _True_, if you require the user's email address to complete the order.
-	NeedEmail OptBool "json:\"need_email\""
-	// Pass _True_, if you require the user's full name to complete the order.
-	NeedName OptBool "json:\"need_name\""
-	// Pass _True_, if you require the user's phone number to complete the order.
-	NeedPhoneNumber OptBool "json:\"need_phone_number\""
-	// Pass _True_, if you require the user's shipping address to complete the order.
-	NeedShippingAddress OptBool "json:\"need_shipping_address\""
-	// Bot-defined invoice payload, 1-128 bytes. This will not be displayed to the user, use for your
-	// internal processes.
-	Payload string "json:\"payload\""
-	// Photo height.
-	PhotoHeight OptInt "json:\"photo_height\""
-	// Photo size in bytes.
-	PhotoSize OptInt "json:\"photo_size\""
-	// URL of the product photo for the invoice. Can be a photo of the goods or a marketing image for a
-	// service.
-	PhotoURL OptString "json:\"photo_url\""
-	// Photo width.
-	PhotoWidth OptInt "json:\"photo_width\""
-	// Price breakdown, a JSON-serialized list of components (e.g. product price, tax, discount, delivery
-	// cost, delivery tax, bonus, etc.).
-	Prices []LabeledPrice "json:\"prices\""
-	// JSON-serialized data about the invoice, which will be shared with the payment provider. A detailed
-	// description of required fields should be provided by the payment provider.
-	ProviderData OptString "json:\"provider_data\""
-	// Payment provider token, obtained via [BotFather](https://t.me/botfather).
-	ProviderToken string "json:\"provider_token\""
-	// Pass _True_, if the user's email address should be sent to the provider.
-	SendEmailToProvider OptBool "json:\"send_email_to_provider\""
-	// Pass _True_, if the user's phone number should be sent to the provider.
-	SendPhoneNumberToProvider OptBool "json:\"send_phone_number_to_provider\""
 	// A JSON-serialized array of suggested amounts of tips in the _smallest units_ of the currency
 	// (integer, **not** float/double). At most 4 suggested tip amounts can be specified. The suggested
 	// tip amounts must be positive, passed in a strictly increased order and must not exceed
 	// _max_tip_amount_.
 	SuggestedTipAmounts []int "json:\"suggested_tip_amounts\""
-	// Product name, 1-32 characters.
-	Title string "json:\"title\""
+	// JSON-serialized data about the invoice, which will be shared with the payment provider. A detailed
+	// description of required fields should be provided by the payment provider.
+	ProviderData OptString "json:\"provider_data\""
+	// URL of the product photo for the invoice. Can be a photo of the goods or a marketing image for a
+	// service.
+	PhotoURL OptString "json:\"photo_url\""
+	// Photo size in bytes.
+	PhotoSize OptInt "json:\"photo_size\""
+	// Photo width.
+	PhotoWidth OptInt "json:\"photo_width\""
+	// Photo height.
+	PhotoHeight OptInt "json:\"photo_height\""
+	// Pass _True_, if you require the user's full name to complete the order.
+	NeedName OptBool "json:\"need_name\""
+	// Pass _True_, if you require the user's phone number to complete the order.
+	NeedPhoneNumber OptBool "json:\"need_phone_number\""
+	// Pass _True_, if you require the user's email address to complete the order.
+	NeedEmail OptBool "json:\"need_email\""
+	// Pass _True_, if you require the user's shipping address to complete the order.
+	NeedShippingAddress OptBool "json:\"need_shipping_address\""
+	// Pass _True_, if the user's phone number should be sent to the provider.
+	SendPhoneNumberToProvider OptBool "json:\"send_phone_number_to_provider\""
+	// Pass _True_, if the user's email address should be sent to the provider.
+	SendEmailToProvider OptBool "json:\"send_email_to_provider\""
+	// Pass _True_, if the final price depends on the shipping method.
+	IsFlexible OptBool "json:\"is_flexible\""
 }
 
 // Input for createNewStickerSet.
 // Ref: #/components/schemas/createNewStickerSet
 type CreateNewStickerSet struct {
-	// Pass _True_, if a set of mask stickers should be created.
-	ContainsMasks OptBool "json:\"contains_masks\""
-	// One or more emoji corresponding to the sticker.
-	Emojis       string          "json:\"emojis\""
-	MaskPosition OptMaskPosition "json:\"mask_position\""
+	// User identifier of created sticker set owner.
+	UserID int64 "json:\"user_id\""
 	// Short name of sticker set, to be used in `t.me/addstickers/` URLs (e.g., _animals_). Can contain
 	// only English letters, digits and underscores. Must begin with a letter, can't contain consecutive
 	// underscores and must end in `"_by_<bot_username>"`. `<bot_username>` is case insensitive. 1-64
 	// characters.
 	Name string "json:\"name\""
+	// Sticker set title, 1-64 characters.
+	Title string "json:\"title\""
 	// **PNG** image with the sticker, must be up to 512 kilobytes in size, dimensions must not exceed
 	// 512px, and either width or height must be exactly 512px. Pass a _file_id_ as a String to send a
 	// file that already exists on the Telegram servers, pass an HTTP URL as a String for Telegram to get
@@ -1161,15 +1162,16 @@ type CreateNewStickerSet struct {
 	// org/stickers#animated-sticker-requirements](https://core.telegram.
 	// org/stickers#animated-sticker-requirements) for technical requirements.
 	TgsSticker OptString "json:\"tgs_sticker\""
-	// Sticker set title, 1-64 characters.
-	Title string "json:\"title\""
-	// User identifier of created sticker set owner.
-	UserID int64 "json:\"user_id\""
 	// **WEBM** video with the sticker, uploaded using multipart/form-data. See [](https://core.telegram.
 	// org/stickers#video-sticker-requirements)[https://core.telegram.
 	// org/stickers#video-sticker-requirements](https://core.telegram.
 	// org/stickers#video-sticker-requirements) for technical requirements.
 	WebmSticker OptString "json:\"webm_sticker\""
+	// One or more emoji corresponding to the sticker.
+	Emojis string "json:\"emojis\""
+	// Pass _True_, if a set of mask stickers should be created.
+	ContainsMasks OptBool         "json:\"contains_masks\""
+	MaskPosition  OptMaskPosition "json:\"mask_position\""
 }
 
 // Input for declineChatJoinRequest.
@@ -1203,10 +1205,10 @@ type DeleteMessage struct {
 // Input for deleteMyCommands.
 // Ref: #/components/schemas/deleteMyCommands
 type DeleteMyCommands struct {
+	Scope OptBotCommandScope "json:\"scope\""
 	// A two-letter ISO 639-1 language code. If empty, commands will be applied to all users from the
 	// given scope, for whose language there are no dedicated commands.
-	LanguageCode OptString          "json:\"language_code\""
-	Scope        OptBotCommandScope "json:\"scope\""
+	LanguageCode OptString "json:\"language_code\""
 }
 
 // Input for deleteStickerFromSet.
@@ -1240,73 +1242,73 @@ type Dice struct {
 type Document struct {
 	// Identifier for this file, which can be used to download or reuse the file.
 	FileID string "json:\"file_id\""
+	// Unique identifier for this file, which is supposed to be the same over time and for different bots.
+	//  Can't be used to download or reuse the file.
+	FileUniqueID string       "json:\"file_unique_id\""
+	Thumb        OptPhotoSize "json:\"thumb\""
 	// _Optional_. Original filename as defined by sender.
 	FileName OptString "json:\"file_name\""
+	// _Optional_. MIME type of the file as defined by sender.
+	MimeType OptString "json:\"mime_type\""
 	// _Optional_. File size in bytes. It can be bigger than 2^31 and some programming languages may have
 	// difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed
 	// 64-bit integer or double-precision float type are safe for storing this value.
 	FileSize OptInt "json:\"file_size\""
-	// Unique identifier for this file, which is supposed to be the same over time and for different bots.
-	//  Can't be used to download or reuse the file.
-	FileUniqueID string "json:\"file_unique_id\""
-	// _Optional_. MIME type of the file as defined by sender.
-	MimeType OptString    "json:\"mime_type\""
-	Thumb    OptPhotoSize "json:\"thumb\""
 }
 
 // Input for editChatInviteLink.
 // Ref: #/components/schemas/editChatInviteLink
 type EditChatInviteLink struct {
 	ChatID ID "json:\"chat_id\""
-	// _True_, if users joining the chat via the link need to be approved by chat administrators. If
-	// _True_, _member_limit_ can't be specified.
-	CreatesJoinRequest OptBool "json:\"creates_join_request\""
-	// Point in time (Unix timestamp) when the link will expire.
-	ExpireDate OptInt "json:\"expire_date\""
 	// The invite link to edit.
 	InviteLink string "json:\"invite_link\""
+	// Invite link name; 0-32 characters.
+	Name OptString "json:\"name\""
+	// Point in time (Unix timestamp) when the link will expire.
+	ExpireDate OptInt "json:\"expire_date\""
 	// The maximum number of users that can be members of the chat simultaneously after joining the chat
 	// via this invite link; 1-99999.
 	MemberLimit OptInt "json:\"member_limit\""
-	// Invite link name; 0-32 characters.
-	Name OptString "json:\"name\""
+	// _True_, if users joining the chat via the link need to be approved by chat administrators. If
+	// _True_, _member_limit_ can't be specified.
+	CreatesJoinRequest OptBool "json:\"creates_join_request\""
 }
 
 // Input for editMessageCaption.
 // Ref: #/components/schemas/editMessageCaption
 type EditMessageCaption struct {
-	// New caption of the message, 0-1024 characters after entities parsing.
-	Caption OptString "json:\"caption\""
-	// A JSON-serialized list of special entities that appear in the caption, which can be specified
-	// instead of _parse_mode_.
-	CaptionEntities []MessageEntity "json:\"caption_entities\""
-	ChatID          OptID           "json:\"chat_id\""
-	// Required if _chat_id_ and _message_id_ are not specified. Identifier of the inline message.
-	InlineMessageID OptString "json:\"inline_message_id\""
+	ChatID OptID "json:\"chat_id\""
 	// Required if _inline_message_id_ is not specified. Identifier of the message to edit.
 	MessageID OptInt "json:\"message_id\""
+	// Required if _chat_id_ and _message_id_ are not specified. Identifier of the inline message.
+	InlineMessageID OptString "json:\"inline_message_id\""
+	// New caption of the message, 0-1024 characters after entities parsing.
+	Caption OptString "json:\"caption\""
 	// Mode for parsing entities in the message caption. See [formatting options](https://core.telegram.
 	// org/bots/api#formatting-options) for more details.
-	ParseMode   OptString               "json:\"parse_mode\""
-	ReplyMarkup OptInlineKeyboardMarkup "json:\"reply_markup\""
+	ParseMode OptString "json:\"parse_mode\""
+	// A JSON-serialized list of special entities that appear in the caption, which can be specified
+	// instead of _parse_mode_.
+	CaptionEntities []MessageEntity         "json:\"caption_entities\""
+	ReplyMarkup     OptInlineKeyboardMarkup "json:\"reply_markup\""
 }
 
 // Input for editMessageLiveLocation.
 // Ref: #/components/schemas/editMessageLiveLocation
 type EditMessageLiveLocation struct {
 	ChatID OptID "json:\"chat_id\""
-	// Direction in which the user is moving, in degrees. Must be between 1 and 360 if specified.
-	Heading OptInt "json:\"heading\""
-	// The radius of uncertainty for the location, measured in meters; 0-1500.
-	HorizontalAccuracy OptFloat64 "json:\"horizontal_accuracy\""
+	// Required if _inline_message_id_ is not specified. Identifier of the message to edit.
+	MessageID OptInt "json:\"message_id\""
 	// Required if _chat_id_ and _message_id_ are not specified. Identifier of the inline message.
 	InlineMessageID OptString "json:\"inline_message_id\""
 	// Latitude of new location.
 	Latitude float64 "json:\"latitude\""
 	// Longitude of new location.
 	Longitude float64 "json:\"longitude\""
-	// Required if _inline_message_id_ is not specified. Identifier of the message to edit.
-	MessageID OptInt "json:\"message_id\""
+	// The radius of uncertainty for the location, measured in meters; 0-1500.
+	HorizontalAccuracy OptFloat64 "json:\"horizontal_accuracy\""
+	// Direction in which the user is moving, in degrees. Must be between 1 and 360 if specified.
+	Heading OptInt "json:\"heading\""
 	// The maximum distance for proximity alerts about approaching another chat member, in meters. Must
 	// be between 1 and 100000 if specified.
 	ProximityAlertRadius OptInt                  "json:\"proximity_alert_radius\""
@@ -1317,44 +1319,44 @@ type EditMessageLiveLocation struct {
 // Ref: #/components/schemas/editMessageMedia
 type EditMessageMedia struct {
 	ChatID OptID "json:\"chat_id\""
-	// Required if _chat_id_ and _message_id_ are not specified. Identifier of the inline message.
-	InlineMessageID OptString  "json:\"inline_message_id\""
-	Media           InputMedia "json:\"media\""
 	// Required if _inline_message_id_ is not specified. Identifier of the message to edit.
-	MessageID   OptInt                  "json:\"message_id\""
-	ReplyMarkup OptInlineKeyboardMarkup "json:\"reply_markup\""
+	MessageID OptInt "json:\"message_id\""
+	// Required if _chat_id_ and _message_id_ are not specified. Identifier of the inline message.
+	InlineMessageID OptString               "json:\"inline_message_id\""
+	Media           InputMedia              "json:\"media\""
+	ReplyMarkup     OptInlineKeyboardMarkup "json:\"reply_markup\""
 }
 
 // Input for editMessageReplyMarkup.
 // Ref: #/components/schemas/editMessageReplyMarkup
 type EditMessageReplyMarkup struct {
 	ChatID OptID "json:\"chat_id\""
-	// Required if _chat_id_ and _message_id_ are not specified. Identifier of the inline message.
-	InlineMessageID OptString "json:\"inline_message_id\""
 	// Required if _inline_message_id_ is not specified. Identifier of the message to edit.
-	MessageID   OptInt                  "json:\"message_id\""
-	ReplyMarkup OptInlineKeyboardMarkup "json:\"reply_markup\""
+	MessageID OptInt "json:\"message_id\""
+	// Required if _chat_id_ and _message_id_ are not specified. Identifier of the inline message.
+	InlineMessageID OptString               "json:\"inline_message_id\""
+	ReplyMarkup     OptInlineKeyboardMarkup "json:\"reply_markup\""
 }
 
 // Input for editMessageText.
 // Ref: #/components/schemas/editMessageText
 type EditMessageText struct {
 	ChatID OptID "json:\"chat_id\""
-	// Disables link previews for links in this message.
-	DisableWebPagePreview OptBool "json:\"disable_web_page_preview\""
+	// Required if _inline_message_id_ is not specified. Identifier of the message to edit.
+	MessageID OptInt "json:\"message_id\""
+	// Required if _chat_id_ and _message_id_ are not specified. Identifier of the inline message.
+	InlineMessageID OptString "json:\"inline_message_id\""
+	// New text of the message, 1-4096 characters after entities parsing.
+	Text string "json:\"text\""
+	// Mode for parsing entities in the message text. See [formatting options](https://core.telegram.
+	// org/bots/api#formatting-options) for more details.
+	ParseMode OptString "json:\"parse_mode\""
 	// A JSON-serialized list of special entities that appear in message text, which can be specified
 	// instead of _parse_mode_.
 	Entities []MessageEntity "json:\"entities\""
-	// Required if _chat_id_ and _message_id_ are not specified. Identifier of the inline message.
-	InlineMessageID OptString "json:\"inline_message_id\""
-	// Required if _inline_message_id_ is not specified. Identifier of the message to edit.
-	MessageID OptInt "json:\"message_id\""
-	// Mode for parsing entities in the message text. See [formatting options](https://core.telegram.
-	// org/bots/api#formatting-options) for more details.
-	ParseMode   OptString               "json:\"parse_mode\""
-	ReplyMarkup OptInlineKeyboardMarkup "json:\"reply_markup\""
-	// New text of the message, 1-4096 characters after entities parsing.
-	Text string "json:\"text\""
+	// Disables link previews for links in this message.
+	DisableWebPagePreview OptBool                 "json:\"disable_web_page_preview\""
+	ReplyMarkup           OptInlineKeyboardMarkup "json:\"reply_markup\""
 }
 
 // Describes data required for decrypting and authenticating [EncryptedPassportElement](https://core.
@@ -1376,24 +1378,25 @@ type EncryptedCredentials struct {
 // Describes documents or other Telegram Passport elements shared with the bot by the user.
 // Ref: #/components/schemas/EncryptedPassportElement
 type EncryptedPassportElement struct {
+	// Element type. One of `personal_details`, `passport`, `driver_license`, `identity_card`,
+	// `internal_passport`, `address`, `utility_bill`, `bank_statement`, `rental_agreement`,
+	// `passport_registration`, `temporary_registration`, `phone_number`, `email`.
+	Type EncryptedPassportElementType "json:\"type\""
 	// _Optional_. Base64-encoded encrypted Telegram Passport element data provided by the user,
 	// available for `personal_details`, `passport`, `driver_license`, `identity_card`,
 	// `internal_passport` and `address` types. Can be decrypted and verified using the accompanying
 	// [EncryptedCredentials](https://core.telegram.org/bots/api#encryptedcredentials).
 	Data OptString "json:\"data\""
+	// _Optional_. User's verified phone number, available only for `phone_number` type.
+	PhoneNumber OptString "json:\"phone_number\""
 	// _Optional_. User's verified email address, available only for `email` type.
 	Email OptString "json:\"email\""
 	// _Optional_. Array of encrypted files with documents provided by the user, available for
 	// `utility_bill`, `bank_statement`, `rental_agreement`, `passport_registration` and
 	// `temporary_registration` types. Files can be decrypted and verified using the accompanying
 	// [EncryptedCredentials](https://core.telegram.org/bots/api#encryptedcredentials).
-	Files     []PassportFile  "json:\"files\""
-	FrontSide OptPassportFile "json:\"front_side\""
-	// Base64-encoded element hash for using in [PassportElementErrorUnspecified](https://core.telegram.
-	// org/bots/api#passportelementerrorunspecified).
-	Hash string "json:\"hash\""
-	// _Optional_. User's verified phone number, available only for `phone_number` type.
-	PhoneNumber OptString       "json:\"phone_number\""
+	Files       []PassportFile  "json:\"files\""
+	FrontSide   OptPassportFile "json:\"front_side\""
 	ReverseSide OptPassportFile "json:\"reverse_side\""
 	Selfie      OptPassportFile "json:\"selfie\""
 	// _Optional_. Array of encrypted files with translated versions of documents provided by the user.
@@ -1402,10 +1405,9 @@ type EncryptedPassportElement struct {
 	// `temporary_registration` types. Files can be decrypted and verified using the accompanying
 	// [EncryptedCredentials](https://core.telegram.org/bots/api#encryptedcredentials).
 	Translation []PassportFile "json:\"translation\""
-	// Element type. One of `personal_details`, `passport`, `driver_license`, `identity_card`,
-	// `internal_passport`, `address`, `utility_bill`, `bank_statement`, `rental_agreement`,
-	// `passport_registration`, `temporary_registration`, `phone_number`, `email`.
-	Type EncryptedPassportElementType "json:\"type\""
+	// Base64-encoded element hash for using in [PassportElementErrorUnspecified](https://core.telegram.
+	// org/bots/api#passportelementerrorunspecified).
+	Hash string "json:\"hash\""
 }
 
 // Element type. One of `personal_details`, `passport`, `driver_license`, `identity_card`,
@@ -1431,9 +1433,9 @@ const (
 
 // Ref: #/components/schemas/Error
 type Error struct {
-	Description string                "json:\"description\""
-	ErrorCode   int                   "json:\"error_code\""
 	Ok          bool                  "json:\"ok\""
+	ErrorCode   int                   "json:\"error_code\""
+	Description string                "json:\"description\""
 	Parameters  OptResponseParameters "json:\"parameters\""
 }
 
@@ -1457,15 +1459,15 @@ type ExportChatInviteLink struct {
 type File struct {
 	// Identifier for this file, which can be used to download or reuse the file.
 	FileID string "json:\"file_id\""
-	// _Optional_. File path. Use `https://api.telegram.org/file/bot<token>/<file_path>` to get the file.
-	FilePath OptString "json:\"file_path\""
+	// Unique identifier for this file, which is supposed to be the same over time and for different bots.
+	//  Can't be used to download or reuse the file.
+	FileUniqueID string "json:\"file_unique_id\""
 	// _Optional_. File size in bytes. It can be bigger than 2^31 and some programming languages may have
 	// difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed
 	// 64-bit integer or double-precision float type are safe for storing this value.
 	FileSize OptInt "json:\"file_size\""
-	// Unique identifier for this file, which is supposed to be the same over time and for different bots.
-	//  Can't be used to download or reuse the file.
-	FileUniqueID string "json:\"file_unique_id\""
+	// _Optional_. File path. Use `https://api.telegram.org/file/bot<token>/<file_path>` to get the file.
+	FilePath OptString "json:\"file_path\""
 }
 
 // Upon receiving a message with this object, Telegram clients will display a reply interface to the
@@ -1490,22 +1492,23 @@ type ForceReply struct {
 // Input for forwardMessage.
 // Ref: #/components/schemas/forwardMessage
 type ForwardMessage struct {
-	ChatID ID "json:\"chat_id\""
+	ChatID     ID "json:\"chat_id\""
+	FromChatID ID "json:\"from_chat_id\""
 	// Sends the message [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will
 	// receive a notification with no sound.
 	DisableNotification OptBool "json:\"disable_notification\""
-	FromChatID          ID      "json:\"from_chat_id\""
-	// Message identifier in the chat specified in _from_chat_id_.
-	MessageID int "json:\"message_id\""
 	// Protects the contents of the forwarded message from forwarding and saving.
 	ProtectContent OptBool "json:\"protect_content\""
+	// Message identifier in the chat specified in _from_chat_id_.
+	MessageID int "json:\"message_id\""
 }
 
 // This object represents a game. Use BotFather to create and edit games, their short names will act
 // as unique identifiers.
 // Ref: #/components/schemas/Game
 type Game struct {
-	Animation OptAnimation "json:\"animation\""
+	// Title of the game.
+	Title string "json:\"title\""
 	// Description of the game.
 	Description string "json:\"description\""
 	// Photo that will be displayed in the game message in chats.
@@ -1517,18 +1520,17 @@ type Game struct {
 	Text OptString "json:\"text\""
 	// _Optional_. Special entities that appear in _text_, such as usernames, URLs, bot commands, etc.
 	TextEntities []MessageEntity "json:\"text_entities\""
-	// Title of the game.
-	Title string "json:\"title\""
+	Animation    OptAnimation    "json:\"animation\""
 }
 
 // This object represents one row of the high scores table for a game.
 // Ref: #/components/schemas/GameHighScore
 type GameHighScore struct {
 	// Position in high score table for the game.
-	Position int "json:\"position\""
+	Position int  "json:\"position\""
+	User     User "json:\"user\""
 	// Score.
-	Score int  "json:\"score\""
-	User  User "json:\"user\""
+	Score int "json:\"score\""
 }
 
 // Input for getChat.
@@ -1575,22 +1577,22 @@ type GetFile struct {
 // Input for getGameHighScores.
 // Ref: #/components/schemas/getGameHighScores
 type GetGameHighScores struct {
-	// Required if _inline_message_id_ is not specified. Unique identifier for the target chat.
-	ChatID OptInt64 "json:\"chat_id\""
-	// Required if _chat_id_ and _message_id_ are not specified. Identifier of the inline message.
-	InlineMessageID OptString "json:\"inline_message_id\""
-	// Required if _inline_message_id_ is not specified. Identifier of the sent message.
-	MessageID OptInt "json:\"message_id\""
 	// Target user id.
 	UserID int64 "json:\"user_id\""
+	// Required if _inline_message_id_ is not specified. Unique identifier for the target chat.
+	ChatID OptInt64 "json:\"chat_id\""
+	// Required if _inline_message_id_ is not specified. Identifier of the sent message.
+	MessageID OptInt "json:\"message_id\""
+	// Required if _chat_id_ and _message_id_ are not specified. Identifier of the inline message.
+	InlineMessageID OptString "json:\"inline_message_id\""
 }
 
 // Input for getMyCommands.
 // Ref: #/components/schemas/getMyCommands
 type GetMyCommands struct {
+	Scope OptBotCommandScope "json:\"scope\""
 	// A two-letter ISO 639-1 language code or an empty string.
-	LanguageCode OptString          "json:\"language_code\""
-	Scope        OptBotCommandScope "json:\"scope\""
+	LanguageCode OptString "json:\"language_code\""
 }
 
 // Input for getMyDefaultAdministratorRights.
@@ -1611,15 +1613,6 @@ type GetStickerSet struct {
 // Input for getUpdates.
 // Ref: #/components/schemas/getUpdates
 type GetUpdates struct {
-	// A JSON-serialized list of the update types you want your bot to receive. For example, specify
-	// [`message`, `edited_channel_post`, `callback_query`] to only receive updates of these types. See
-	// [Update](https://core.telegram.org/bots/api#update) for a complete list of available update types.
-	// Specify an empty list to receive all update types except _chat_member_ (default). If not specified,
-	//  the previous setting will be used.Please note that this parameter doesn't affect updates created
-	// before the call to the getUpdates, so unwanted updates may be received for a short period of time.
-	AllowedUpdates []string "json:\"allowed_updates\""
-	// Limits the number of updates to be retrieved. Values between 1-100 are accepted. Defaults to 100.
-	Limit OptInt "json:\"limit\""
 	// Identifier of the first update to be returned. Must be greater by one than the highest among the
 	// identifiers of previously received updates. By default, updates starting with the earliest
 	// unconfirmed update are returned. An update is considered confirmed as soon as
@@ -1627,20 +1620,29 @@ type GetUpdates struct {
 	// its _update_id_. The negative offset can be specified to retrieve updates starting from _-offset_
 	// update from the end of the updates queue. All previous updates will forgotten.
 	Offset OptInt "json:\"offset\""
+	// Limits the number of updates to be retrieved. Values between 1-100 are accepted. Defaults to 100.
+	Limit OptInt "json:\"limit\""
 	// Timeout in seconds for long polling. Defaults to 0, i.e. usual short polling. Should be positive,
 	// short polling should be used for testing purposes only.
 	Timeout OptInt "json:\"timeout\""
+	// A JSON-serialized list of the update types you want your bot to receive. For example, specify
+	// [`message`, `edited_channel_post`, `callback_query`] to only receive updates of these types. See
+	// [Update](https://core.telegram.org/bots/api#update) for a complete list of available update types.
+	// Specify an empty list to receive all update types except _chat_member_ (default). If not specified,
+	//  the previous setting will be used.Please note that this parameter doesn't affect updates created
+	// before the call to the getUpdates, so unwanted updates may be received for a short period of time.
+	AllowedUpdates []string "json:\"allowed_updates\""
 }
 
 // Input for getUserProfilePhotos.
 // Ref: #/components/schemas/getUserProfilePhotos
 type GetUserProfilePhotos struct {
-	// Limits the number of photos to be retrieved. Values between 1-100 are accepted. Defaults to 100.
-	Limit OptInt "json:\"limit\""
-	// Sequential number of the first photo to be returned. By default, all photos are returned.
-	Offset OptInt "json:\"offset\""
 	// Unique identifier of the target user.
 	UserID int64 "json:\"user_id\""
+	// Sequential number of the first photo to be returned. By default, all photos are returned.
+	Offset OptInt "json:\"offset\""
+	// Limits the number of photos to be retrieved. Values between 1-100 are accepted. Defaults to 100.
+	Limit OptInt "json:\"limit\""
 }
 
 // Ref: #/components/schemas/ID
@@ -1712,15 +1714,17 @@ func NewInt64ID(v int64) ID {
 // optional fields.
 // Ref: #/components/schemas/InlineKeyboardButton
 type InlineKeyboardButton struct {
+	// Label text on the button.
+	Text string "json:\"text\""
+	// _Optional_. HTTP or tg:// URL to be opened when the button is pressed. Links
+	// `tg://user?id=<user_id>` can be used to mention a user by their ID without using a username, if
+	// this is allowed by their privacy settings.
+	URL OptString "json:\"url\""
 	// _Optional_. Data to be sent in a [callback query](https://core.telegram.
 	// org/bots/api#callbackquery) to the bot when button is pressed, 1-64 bytes.
 	CallbackData OptString     "json:\"callback_data\""
-	CallbackGame *CallbackGame "json:\"callback_game\""
+	WebApp       OptWebAppInfo "json:\"web_app\""
 	LoginURL     OptLoginUrl   "json:\"login_url\""
-	// _Optional_. Specify _True_, to send a [Pay button](https://core.telegram.org/bots/api#payments).
-	// **NOTE:** This type of button **must** always be the first button in the first row and can only be
-	// used in invoice messages.
-	Pay OptBool "json:\"pay\""
 	// _Optional_. If set, pressing the button will prompt the user to select one of their chats, open
 	// that chat and insert the bot's username and the specified inline query in the input field. May be
 	// empty, in which case just the bot's username will be inserted.**Note:** This offers an easy way
@@ -1733,14 +1737,12 @@ type InlineKeyboardButton struct {
 	// query in the current chat's input field. May be empty, in which case only the bot's username will
 	// be inserted.This offers a quick way for the user to open your bot in inline mode in the same chat
 	// - good for selecting something from multiple options.
-	SwitchInlineQueryCurrentChat OptString "json:\"switch_inline_query_current_chat\""
-	// Label text on the button.
-	Text string "json:\"text\""
-	// _Optional_. HTTP or tg:// URL to be opened when the button is pressed. Links
-	// `tg://user?id=<user_id>` can be used to mention a user by their ID without using a username, if
-	// this is allowed by their privacy settings.
-	URL    OptString     "json:\"url\""
-	WebApp OptWebAppInfo "json:\"web_app\""
+	SwitchInlineQueryCurrentChat OptString     "json:\"switch_inline_query_current_chat\""
+	CallbackGame                 *CallbackGame "json:\"callback_game\""
+	// _Optional_. Specify _True_, to send a [Pay button](https://core.telegram.org/bots/api#payments).
+	// **NOTE:** This type of button **must** always be the first button in the first row and can only be
+	// used in invoice messages.
+	Pay OptBool "json:\"pay\""
 }
 
 // This object represents an [inline keyboard](https://core.telegram.
@@ -1757,19 +1759,19 @@ type InlineKeyboardMarkup struct {
 // could return some default or trending results.
 // Ref: #/components/schemas/InlineQuery
 type InlineQuery struct {
+	// Unique identifier for this query.
+	ID   string "json:\"id\""
+	From User   "json:\"from\""
+	// Text of the query (up to 256 characters).
+	Query string "json:\"query\""
+	// Offset of the results to be returned, can be controlled by the bot.
+	Offset string "json:\"offset\""
 	// _Optional_. Type of the chat from which the inline query was sent. Can be either `sender` for a
 	// private chat with the inline query sender, `private`, `group`, `supergroup`, or `channel`. The
 	// chat type should be always known for requests sent from official clients and most third-party
 	// clients, unless the request was sent from a secret chat.
 	ChatType OptInlineQueryChatType "json:\"chat_type\""
-	From     User                   "json:\"from\""
-	// Unique identifier for this query.
-	ID       string      "json:\"id\""
-	Location OptLocation "json:\"location\""
-	// Offset of the results to be returned, can be controlled by the bot.
-	Offset string "json:\"offset\""
-	// Text of the query (up to 256 characters).
-	Query string "json:\"query\""
+	Location OptLocation            "json:\"location\""
 }
 
 // _Optional_. Type of the chat from which the inline query was sent. Can be either `sender` for a
@@ -2364,24 +2366,24 @@ func NewInlineQueryResultVoiceInlineQueryResult(v InlineQueryResultVoice) Inline
 // Represents a link to an article or web page.
 // Ref: #/components/schemas/InlineQueryResultArticle
 type InlineQueryResultArticle struct {
-	// _Optional_. Short description of the result.
-	Description OptString "json:\"description\""
-	// _Optional_. Pass _True_, if you don't want the URL to be shown in the message.
-	HideURL OptBool "json:\"hide_url\""
 	// Unique identifier for this result, 1-64 Bytes.
-	ID                  string                  "json:\"id\""
+	ID string "json:\"id\""
+	// Title of the result.
+	Title               string                  "json:\"title\""
 	InputMessageContent InputMessageContent     "json:\"input_message_content\""
 	ReplyMarkup         OptInlineKeyboardMarkup "json:\"reply_markup\""
-	// _Optional_. Thumbnail height.
-	ThumbHeight OptInt "json:\"thumb_height\""
+	// _Optional_. URL of the result.
+	URL OptString "json:\"url\""
+	// _Optional_. Pass _True_, if you don't want the URL to be shown in the message.
+	HideURL OptBool "json:\"hide_url\""
+	// _Optional_. Short description of the result.
+	Description OptString "json:\"description\""
 	// _Optional_. URL of the thumbnail for the result.
 	ThumbURL OptString "json:\"thumb_url\""
 	// _Optional_. Thumbnail width.
 	ThumbWidth OptInt "json:\"thumb_width\""
-	// Title of the result.
-	Title string "json:\"title\""
-	// _Optional_. URL of the result.
-	URL OptString "json:\"url\""
+	// _Optional_. Thumbnail height.
+	ThumbHeight OptInt "json:\"thumb_height\""
 }
 
 // Represents a link to an MP3 audio file. By default, this audio file will be sent by the user.
@@ -2389,26 +2391,26 @@ type InlineQueryResultArticle struct {
 // instead of the audio.
 // Ref: #/components/schemas/InlineQueryResultAudio
 type InlineQueryResultAudio struct {
-	// _Optional_. Audio duration in seconds.
-	AudioDuration OptInt "json:\"audio_duration\""
+	// Unique identifier for this result, 1-64 bytes.
+	ID string "json:\"id\""
 	// A valid URL for the audio file.
 	AudioURL string "json:\"audio_url\""
+	// Title.
+	Title string "json:\"title\""
 	// _Optional_. Caption, 0-1024 characters after entities parsing.
 	Caption OptString "json:\"caption\""
-	// _Optional_. List of special entities that appear in the caption, which can be specified instead of
-	// _parse_mode_.
-	CaptionEntities []MessageEntity "json:\"caption_entities\""
-	// Unique identifier for this result, 1-64 bytes.
-	ID                  string                 "json:\"id\""
-	InputMessageContent OptInputMessageContent "json:\"input_message_content\""
 	// _Optional_. Mode for parsing entities in the audio caption. See [formatting options](https://core.
 	// telegram.org/bots/api#formatting-options) for more details.
 	ParseMode OptString "json:\"parse_mode\""
+	// _Optional_. List of special entities that appear in the caption, which can be specified instead of
+	// _parse_mode_.
+	CaptionEntities []MessageEntity "json:\"caption_entities\""
 	// _Optional_. Performer.
-	Performer   OptString               "json:\"performer\""
-	ReplyMarkup OptInlineKeyboardMarkup "json:\"reply_markup\""
-	// Title.
-	Title string "json:\"title\""
+	Performer OptString "json:\"performer\""
+	// _Optional_. Audio duration in seconds.
+	AudioDuration       OptInt                  "json:\"audio_duration\""
+	ReplyMarkup         OptInlineKeyboardMarkup "json:\"reply_markup\""
+	InputMessageContent OptInputMessageContent  "json:\"input_message_content\""
 }
 
 // Represents a link to an MP3 audio file stored on the Telegram servers. By default, this audio file
@@ -2416,22 +2418,22 @@ type InlineQueryResultAudio struct {
 // with the specified content instead of the audio.
 // Ref: #/components/schemas/InlineQueryResultCachedAudio
 type InlineQueryResultCachedAudio struct {
+	// Type of the result, must be _audio_.
+	Type string "json:\"type\""
+	// Unique identifier for this result, 1-64 bytes.
+	ID string "json:\"id\""
 	// A valid file identifier for the audio file.
 	AudioFileID string "json:\"audio_file_id\""
 	// _Optional_. Caption, 0-1024 characters after entities parsing.
 	Caption OptString "json:\"caption\""
-	// _Optional_. List of special entities that appear in the caption, which can be specified instead of
-	// _parse_mode_.
-	CaptionEntities []MessageEntity "json:\"caption_entities\""
-	// Unique identifier for this result, 1-64 bytes.
-	ID                  string                 "json:\"id\""
-	InputMessageContent OptInputMessageContent "json:\"input_message_content\""
 	// _Optional_. Mode for parsing entities in the audio caption. See [formatting options](https://core.
 	// telegram.org/bots/api#formatting-options) for more details.
-	ParseMode   OptString               "json:\"parse_mode\""
-	ReplyMarkup OptInlineKeyboardMarkup "json:\"reply_markup\""
-	// Type of the result, must be _audio_.
-	Type string "json:\"type\""
+	ParseMode OptString "json:\"parse_mode\""
+	// _Optional_. List of special entities that appear in the caption, which can be specified instead of
+	// _parse_mode_.
+	CaptionEntities     []MessageEntity         "json:\"caption_entities\""
+	ReplyMarkup         OptInlineKeyboardMarkup "json:\"reply_markup\""
+	InputMessageContent OptInputMessageContent  "json:\"input_message_content\""
 }
 
 // Represents a link to a file stored on the Telegram servers. By default, this file will be sent by
@@ -2439,26 +2441,26 @@ type InlineQueryResultCachedAudio struct {
 // message with the specified content instead of the file.
 // Ref: #/components/schemas/InlineQueryResultCachedDocument
 type InlineQueryResultCachedDocument struct {
-	// _Optional_. Caption of the document to be sent, 0-1024 characters after entities parsing.
-	Caption OptString "json:\"caption\""
-	// _Optional_. List of special entities that appear in the caption, which can be specified instead of
-	// _parse_mode_.
-	CaptionEntities []MessageEntity "json:\"caption_entities\""
-	// _Optional_. Short description of the result.
-	Description OptString "json:\"description\""
-	// A valid file identifier for the file.
-	DocumentFileID string "json:\"document_file_id\""
-	// Unique identifier for this result, 1-64 bytes.
-	ID                  string                 "json:\"id\""
-	InputMessageContent OptInputMessageContent "json:\"input_message_content\""
-	// _Optional_. Mode for parsing entities in the document caption. See [formatting
-	// options](https://core.telegram.org/bots/api#formatting-options) for more details.
-	ParseMode   OptString               "json:\"parse_mode\""
-	ReplyMarkup OptInlineKeyboardMarkup "json:\"reply_markup\""
-	// Title for the result.
-	Title string "json:\"title\""
 	// Type of the result, must be _document_.
 	Type string "json:\"type\""
+	// Unique identifier for this result, 1-64 bytes.
+	ID string "json:\"id\""
+	// Title for the result.
+	Title string "json:\"title\""
+	// A valid file identifier for the file.
+	DocumentFileID string "json:\"document_file_id\""
+	// _Optional_. Short description of the result.
+	Description OptString "json:\"description\""
+	// _Optional_. Caption of the document to be sent, 0-1024 characters after entities parsing.
+	Caption OptString "json:\"caption\""
+	// _Optional_. Mode for parsing entities in the document caption. See [formatting
+	// options](https://core.telegram.org/bots/api#formatting-options) for more details.
+	ParseMode OptString "json:\"parse_mode\""
+	// _Optional_. List of special entities that appear in the caption, which can be specified instead of
+	// _parse_mode_.
+	CaptionEntities     []MessageEntity         "json:\"caption_entities\""
+	ReplyMarkup         OptInlineKeyboardMarkup "json:\"reply_markup\""
+	InputMessageContent OptInputMessageContent  "json:\"input_message_content\""
 }
 
 // Represents a link to an animated GIF file stored on the Telegram servers. By default, this
@@ -2466,24 +2468,24 @@ type InlineQueryResultCachedDocument struct {
 // _input_message_content_ to send a message with specified content instead of the animation.
 // Ref: #/components/schemas/InlineQueryResultCachedGif
 type InlineQueryResultCachedGif struct {
-	// _Optional_. Caption of the GIF file to be sent, 0-1024 characters after entities parsing.
-	Caption OptString "json:\"caption\""
-	// _Optional_. List of special entities that appear in the caption, which can be specified instead of
-	// _parse_mode_.
-	CaptionEntities []MessageEntity "json:\"caption_entities\""
-	// A valid file identifier for the GIF file.
-	GIFFileID string "json:\"gif_file_id\""
-	// Unique identifier for this result, 1-64 bytes.
-	ID                  string                 "json:\"id\""
-	InputMessageContent OptInputMessageContent "json:\"input_message_content\""
-	// _Optional_. Mode for parsing entities in the caption. See [formatting options](https://core.
-	// telegram.org/bots/api#formatting-options) for more details.
-	ParseMode   OptString               "json:\"parse_mode\""
-	ReplyMarkup OptInlineKeyboardMarkup "json:\"reply_markup\""
-	// _Optional_. Title for the result.
-	Title OptString "json:\"title\""
 	// Type of the result, must be _gif_.
 	Type string "json:\"type\""
+	// Unique identifier for this result, 1-64 bytes.
+	ID string "json:\"id\""
+	// A valid file identifier for the GIF file.
+	GIFFileID string "json:\"gif_file_id\""
+	// _Optional_. Title for the result.
+	Title OptString "json:\"title\""
+	// _Optional_. Caption of the GIF file to be sent, 0-1024 characters after entities parsing.
+	Caption OptString "json:\"caption\""
+	// _Optional_. Mode for parsing entities in the caption. See [formatting options](https://core.
+	// telegram.org/bots/api#formatting-options) for more details.
+	ParseMode OptString "json:\"parse_mode\""
+	// _Optional_. List of special entities that appear in the caption, which can be specified instead of
+	// _parse_mode_.
+	CaptionEntities     []MessageEntity         "json:\"caption_entities\""
+	ReplyMarkup         OptInlineKeyboardMarkup "json:\"reply_markup\""
+	InputMessageContent OptInputMessageContent  "json:\"input_message_content\""
 }
 
 // Represents a link to a video animation (H.264/MPEG-4 AVC video without sound) stored on the
@@ -2492,24 +2494,24 @@ type InlineQueryResultCachedGif struct {
 // content instead of the animation.
 // Ref: #/components/schemas/InlineQueryResultCachedMpeg4Gif
 type InlineQueryResultCachedMpeg4Gif struct {
-	// _Optional_. Caption of the MPEG-4 file to be sent, 0-1024 characters after entities parsing.
-	Caption OptString "json:\"caption\""
-	// _Optional_. List of special entities that appear in the caption, which can be specified instead of
-	// _parse_mode_.
-	CaptionEntities []MessageEntity "json:\"caption_entities\""
-	// Unique identifier for this result, 1-64 bytes.
-	ID                  string                 "json:\"id\""
-	InputMessageContent OptInputMessageContent "json:\"input_message_content\""
-	// A valid file identifier for the MPEG4 file.
-	Mpeg4FileID string "json:\"mpeg4_file_id\""
-	// _Optional_. Mode for parsing entities in the caption. See [formatting options](https://core.
-	// telegram.org/bots/api#formatting-options) for more details.
-	ParseMode   OptString               "json:\"parse_mode\""
-	ReplyMarkup OptInlineKeyboardMarkup "json:\"reply_markup\""
-	// _Optional_. Title for the result.
-	Title OptString "json:\"title\""
 	// Type of the result, must be _mpeg4_gif_.
 	Type string "json:\"type\""
+	// Unique identifier for this result, 1-64 bytes.
+	ID string "json:\"id\""
+	// A valid file identifier for the MPEG4 file.
+	Mpeg4FileID string "json:\"mpeg4_file_id\""
+	// _Optional_. Title for the result.
+	Title OptString "json:\"title\""
+	// _Optional_. Caption of the MPEG-4 file to be sent, 0-1024 characters after entities parsing.
+	Caption OptString "json:\"caption\""
+	// _Optional_. Mode for parsing entities in the caption. See [formatting options](https://core.
+	// telegram.org/bots/api#formatting-options) for more details.
+	ParseMode OptString "json:\"parse_mode\""
+	// _Optional_. List of special entities that appear in the caption, which can be specified instead of
+	// _parse_mode_.
+	CaptionEntities     []MessageEntity         "json:\"caption_entities\""
+	ReplyMarkup         OptInlineKeyboardMarkup "json:\"reply_markup\""
+	InputMessageContent OptInputMessageContent  "json:\"input_message_content\""
 }
 
 // Represents a link to a photo stored on the Telegram servers. By default, this photo will be sent
@@ -2517,26 +2519,26 @@ type InlineQueryResultCachedMpeg4Gif struct {
 // message with the specified content instead of the photo.
 // Ref: #/components/schemas/InlineQueryResultCachedPhoto
 type InlineQueryResultCachedPhoto struct {
-	// _Optional_. Caption of the photo to be sent, 0-1024 characters after entities parsing.
-	Caption OptString "json:\"caption\""
-	// _Optional_. List of special entities that appear in the caption, which can be specified instead of
-	// _parse_mode_.
-	CaptionEntities []MessageEntity "json:\"caption_entities\""
+	// Type of the result, must be _photo_.
+	Type string "json:\"type\""
+	// Unique identifier for this result, 1-64 bytes.
+	ID string "json:\"id\""
+	// A valid file identifier of the photo.
+	PhotoFileID string "json:\"photo_file_id\""
+	// _Optional_. Title for the result.
+	Title OptString "json:\"title\""
 	// _Optional_. Short description of the result.
 	Description OptString "json:\"description\""
-	// Unique identifier for this result, 1-64 bytes.
-	ID                  string                 "json:\"id\""
-	InputMessageContent OptInputMessageContent "json:\"input_message_content\""
+	// _Optional_. Caption of the photo to be sent, 0-1024 characters after entities parsing.
+	Caption OptString "json:\"caption\""
 	// _Optional_. Mode for parsing entities in the photo caption. See [formatting options](https://core.
 	// telegram.org/bots/api#formatting-options) for more details.
 	ParseMode OptString "json:\"parse_mode\""
-	// A valid file identifier of the photo.
-	PhotoFileID string                  "json:\"photo_file_id\""
-	ReplyMarkup OptInlineKeyboardMarkup "json:\"reply_markup\""
-	// _Optional_. Title for the result.
-	Title OptString "json:\"title\""
-	// Type of the result, must be _photo_.
-	Type string "json:\"type\""
+	// _Optional_. List of special entities that appear in the caption, which can be specified instead of
+	// _parse_mode_.
+	CaptionEntities     []MessageEntity         "json:\"caption_entities\""
+	ReplyMarkup         OptInlineKeyboardMarkup "json:\"reply_markup\""
+	InputMessageContent OptInputMessageContent  "json:\"input_message_content\""
 }
 
 // Represents a link to a sticker stored on the Telegram servers. By default, this sticker will be
@@ -2545,11 +2547,11 @@ type InlineQueryResultCachedPhoto struct {
 // Ref: #/components/schemas/InlineQueryResultCachedSticker
 type InlineQueryResultCachedSticker struct {
 	// Unique identifier for this result, 1-64 bytes.
-	ID                  string                  "json:\"id\""
-	InputMessageContent OptInputMessageContent  "json:\"input_message_content\""
-	ReplyMarkup         OptInlineKeyboardMarkup "json:\"reply_markup\""
+	ID string "json:\"id\""
 	// A valid file identifier of the sticker.
-	StickerFileID string "json:\"sticker_file_id\""
+	StickerFileID       string                  "json:\"sticker_file_id\""
+	ReplyMarkup         OptInlineKeyboardMarkup "json:\"reply_markup\""
+	InputMessageContent OptInputMessageContent  "json:\"input_message_content\""
 }
 
 // Represents a link to a video file stored on the Telegram servers. By default, this video file will
@@ -2557,26 +2559,26 @@ type InlineQueryResultCachedSticker struct {
 // to send a message with the specified content instead of the video.
 // Ref: #/components/schemas/InlineQueryResultCachedVideo
 type InlineQueryResultCachedVideo struct {
-	// _Optional_. Caption of the video to be sent, 0-1024 characters after entities parsing.
-	Caption OptString "json:\"caption\""
-	// _Optional_. List of special entities that appear in the caption, which can be specified instead of
-	// _parse_mode_.
-	CaptionEntities []MessageEntity "json:\"caption_entities\""
-	// _Optional_. Short description of the result.
-	Description OptString "json:\"description\""
-	// Unique identifier for this result, 1-64 bytes.
-	ID                  string                 "json:\"id\""
-	InputMessageContent OptInputMessageContent "json:\"input_message_content\""
-	// _Optional_. Mode for parsing entities in the video caption. See [formatting options](https://core.
-	// telegram.org/bots/api#formatting-options) for more details.
-	ParseMode   OptString               "json:\"parse_mode\""
-	ReplyMarkup OptInlineKeyboardMarkup "json:\"reply_markup\""
-	// Title for the result.
-	Title string "json:\"title\""
 	// Type of the result, must be _video_.
 	Type string "json:\"type\""
+	// Unique identifier for this result, 1-64 bytes.
+	ID string "json:\"id\""
 	// A valid file identifier for the video file.
 	VideoFileID string "json:\"video_file_id\""
+	// Title for the result.
+	Title string "json:\"title\""
+	// _Optional_. Short description of the result.
+	Description OptString "json:\"description\""
+	// _Optional_. Caption of the video to be sent, 0-1024 characters after entities parsing.
+	Caption OptString "json:\"caption\""
+	// _Optional_. Mode for parsing entities in the video caption. See [formatting options](https://core.
+	// telegram.org/bots/api#formatting-options) for more details.
+	ParseMode OptString "json:\"parse_mode\""
+	// _Optional_. List of special entities that appear in the caption, which can be specified instead of
+	// _parse_mode_.
+	CaptionEntities     []MessageEntity         "json:\"caption_entities\""
+	ReplyMarkup         OptInlineKeyboardMarkup "json:\"reply_markup\""
+	InputMessageContent OptInputMessageContent  "json:\"input_message_content\""
 }
 
 // Represents a link to a voice message stored on the Telegram servers. By default, this voice
@@ -2584,24 +2586,24 @@ type InlineQueryResultCachedVideo struct {
 // message with the specified content instead of the voice message.
 // Ref: #/components/schemas/InlineQueryResultCachedVoice
 type InlineQueryResultCachedVoice struct {
-	// _Optional_. Caption, 0-1024 characters after entities parsing.
-	Caption OptString "json:\"caption\""
-	// _Optional_. List of special entities that appear in the caption, which can be specified instead of
-	// _parse_mode_.
-	CaptionEntities []MessageEntity "json:\"caption_entities\""
-	// Unique identifier for this result, 1-64 bytes.
-	ID                  string                 "json:\"id\""
-	InputMessageContent OptInputMessageContent "json:\"input_message_content\""
-	// _Optional_. Mode for parsing entities in the voice message caption. See [formatting
-	// options](https://core.telegram.org/bots/api#formatting-options) for more details.
-	ParseMode   OptString               "json:\"parse_mode\""
-	ReplyMarkup OptInlineKeyboardMarkup "json:\"reply_markup\""
-	// Voice message title.
-	Title string "json:\"title\""
 	// Type of the result, must be _voice_.
 	Type string "json:\"type\""
+	// Unique identifier for this result, 1-64 bytes.
+	ID string "json:\"id\""
 	// A valid file identifier for the voice message.
 	VoiceFileID string "json:\"voice_file_id\""
+	// Voice message title.
+	Title string "json:\"title\""
+	// _Optional_. Caption, 0-1024 characters after entities parsing.
+	Caption OptString "json:\"caption\""
+	// _Optional_. Mode for parsing entities in the voice message caption. See [formatting
+	// options](https://core.telegram.org/bots/api#formatting-options) for more details.
+	ParseMode OptString "json:\"parse_mode\""
+	// _Optional_. List of special entities that appear in the caption, which can be specified instead of
+	// _parse_mode_.
+	CaptionEntities     []MessageEntity         "json:\"caption_entities\""
+	ReplyMarkup         OptInlineKeyboardMarkup "json:\"reply_markup\""
+	InputMessageContent OptInputMessageContent  "json:\"input_message_content\""
 }
 
 // Represents a contact with a phone number. By default, this contact will be sent by the user.
@@ -2609,25 +2611,25 @@ type InlineQueryResultCachedVoice struct {
 // instead of the contact.
 // Ref: #/components/schemas/InlineQueryResultContact
 type InlineQueryResultContact struct {
+	// Unique identifier for this result, 1-64 Bytes.
+	ID string "json:\"id\""
+	// Contact's phone number.
+	PhoneNumber string "json:\"phone_number\""
 	// Contact's first name.
 	FirstName string "json:\"first_name\""
-	// Unique identifier for this result, 1-64 Bytes.
-	ID                  string                 "json:\"id\""
-	InputMessageContent OptInputMessageContent "json:\"input_message_content\""
 	// _Optional_. Contact's last name.
 	LastName OptString "json:\"last_name\""
-	// Contact's phone number.
-	PhoneNumber string                  "json:\"phone_number\""
-	ReplyMarkup OptInlineKeyboardMarkup "json:\"reply_markup\""
-	// _Optional_. Thumbnail height.
-	ThumbHeight OptInt "json:\"thumb_height\""
+	// _Optional_. Additional data about the contact in the form of a [vCard](https://en.wikipedia.
+	// org/wiki/VCard), 0-2048 bytes.
+	Vcard               OptString               "json:\"vcard\""
+	ReplyMarkup         OptInlineKeyboardMarkup "json:\"reply_markup\""
+	InputMessageContent OptInputMessageContent  "json:\"input_message_content\""
 	// _Optional_. URL of the thumbnail for the result.
 	ThumbURL OptString "json:\"thumb_url\""
 	// _Optional_. Thumbnail width.
 	ThumbWidth OptInt "json:\"thumb_width\""
-	// _Optional_. Additional data about the contact in the form of a [vCard](https://en.wikipedia.
-	// org/wiki/VCard), 0-2048 bytes.
-	Vcard OptString "json:\"vcard\""
+	// _Optional_. Thumbnail height.
+	ThumbHeight OptInt "json:\"thumb_height\""
 }
 
 // Represents a link to a file. By default, this file will be sent by the user with an optional
@@ -2636,42 +2638,42 @@ type InlineQueryResultContact struct {
 // method.
 // Ref: #/components/schemas/InlineQueryResultDocument
 type InlineQueryResultDocument struct {
+	// Unique identifier for this result, 1-64 bytes.
+	ID string "json:\"id\""
+	// Title for the result.
+	Title string "json:\"title\""
 	// _Optional_. Caption of the document to be sent, 0-1024 characters after entities parsing.
 	Caption OptString "json:\"caption\""
+	// _Optional_. Mode for parsing entities in the document caption. See [formatting
+	// options](https://core.telegram.org/bots/api#formatting-options) for more details.
+	ParseMode OptString "json:\"parse_mode\""
 	// _Optional_. List of special entities that appear in the caption, which can be specified instead of
 	// _parse_mode_.
 	CaptionEntities []MessageEntity "json:\"caption_entities\""
-	// _Optional_. Short description of the result.
-	Description OptString "json:\"description\""
 	// A valid URL for the file.
 	DocumentURL string "json:\"document_url\""
-	// Unique identifier for this result, 1-64 bytes.
-	ID                  string                 "json:\"id\""
-	InputMessageContent OptInputMessageContent "json:\"input_message_content\""
 	// MIME type of the content of the file, either `application/pdf` or `application/zip`.
 	MimeType string "json:\"mime_type\""
-	// _Optional_. Mode for parsing entities in the document caption. See [formatting
-	// options](https://core.telegram.org/bots/api#formatting-options) for more details.
-	ParseMode   OptString               "json:\"parse_mode\""
-	ReplyMarkup OptInlineKeyboardMarkup "json:\"reply_markup\""
-	// _Optional_. Thumbnail height.
-	ThumbHeight OptInt "json:\"thumb_height\""
+	// _Optional_. Short description of the result.
+	Description         OptString               "json:\"description\""
+	ReplyMarkup         OptInlineKeyboardMarkup "json:\"reply_markup\""
+	InputMessageContent OptInputMessageContent  "json:\"input_message_content\""
 	// _Optional_. URL of the thumbnail (JPEG only) for the file.
 	ThumbURL OptString "json:\"thumb_url\""
 	// _Optional_. Thumbnail width.
 	ThumbWidth OptInt "json:\"thumb_width\""
-	// Title for the result.
-	Title string "json:\"title\""
+	// _Optional_. Thumbnail height.
+	ThumbHeight OptInt "json:\"thumb_height\""
 }
 
 // Represents a [Game](https://core.telegram.org/bots/api#games).
 // Ref: #/components/schemas/InlineQueryResultGame
 type InlineQueryResultGame struct {
-	// Short name of the game.
-	GameShortName string "json:\"game_short_name\""
 	// Unique identifier for this result, 1-64 bytes.
-	ID          string                  "json:\"id\""
-	ReplyMarkup OptInlineKeyboardMarkup "json:\"reply_markup\""
+	ID string "json:\"id\""
+	// Short name of the game.
+	GameShortName string                  "json:\"game_short_name\""
+	ReplyMarkup   OptInlineKeyboardMarkup "json:\"reply_markup\""
 }
 
 // Represents a link to an animated GIF file. By default, this animated GIF file will be sent by the
@@ -2679,33 +2681,33 @@ type InlineQueryResultGame struct {
 // with the specified content instead of the animation.
 // Ref: #/components/schemas/InlineQueryResultGif
 type InlineQueryResultGif struct {
-	// _Optional_. Caption of the GIF file to be sent, 0-1024 characters after entities parsing.
-	Caption OptString "json:\"caption\""
-	// _Optional_. List of special entities that appear in the caption, which can be specified instead of
-	// _parse_mode_.
-	CaptionEntities []MessageEntity "json:\"caption_entities\""
-	// _Optional_. Duration of the GIF in seconds.
-	GIFDuration OptInt "json:\"gif_duration\""
-	// _Optional_. Height of the GIF.
-	GIFHeight OptInt "json:\"gif_height\""
+	// Unique identifier for this result, 1-64 bytes.
+	ID string "json:\"id\""
 	// A valid URL for the GIF file. File size must not exceed 1MB.
 	GIFURL string "json:\"gif_url\""
 	// _Optional_. Width of the GIF.
 	GIFWidth OptInt "json:\"gif_width\""
-	// Unique identifier for this result, 1-64 bytes.
-	ID                  string                 "json:\"id\""
-	InputMessageContent OptInputMessageContent "json:\"input_message_content\""
-	// _Optional_. Mode for parsing entities in the caption. See [formatting options](https://core.
-	// telegram.org/bots/api#formatting-options) for more details.
-	ParseMode   OptString               "json:\"parse_mode\""
-	ReplyMarkup OptInlineKeyboardMarkup "json:\"reply_markup\""
+	// _Optional_. Height of the GIF.
+	GIFHeight OptInt "json:\"gif_height\""
+	// _Optional_. Duration of the GIF in seconds.
+	GIFDuration OptInt "json:\"gif_duration\""
+	// URL of the static (JPEG or GIF) or animated (MPEG4) thumbnail for the result.
+	ThumbURL string "json:\"thumb_url\""
 	// _Optional_. MIME type of the thumbnail, must be one of `image/jpeg`, `image/gif`, or `video/mp4`.
 	// Defaults to `image/jpeg`.
 	ThumbMimeType OptString "json:\"thumb_mime_type\""
-	// URL of the static (JPEG or GIF) or animated (MPEG4) thumbnail for the result.
-	ThumbURL string "json:\"thumb_url\""
 	// _Optional_. Title for the result.
 	Title OptString "json:\"title\""
+	// _Optional_. Caption of the GIF file to be sent, 0-1024 characters after entities parsing.
+	Caption OptString "json:\"caption\""
+	// _Optional_. Mode for parsing entities in the caption. See [formatting options](https://core.
+	// telegram.org/bots/api#formatting-options) for more details.
+	ParseMode OptString "json:\"parse_mode\""
+	// _Optional_. List of special entities that appear in the caption, which can be specified instead of
+	// _parse_mode_.
+	CaptionEntities     []MessageEntity         "json:\"caption_entities\""
+	ReplyMarkup         OptInlineKeyboardMarkup "json:\"reply_markup\""
+	InputMessageContent OptInputMessageContent  "json:\"input_message_content\""
 }
 
 // Represents a location on a map. By default, the location will be sent by the user. Alternatively,
@@ -2713,32 +2715,32 @@ type InlineQueryResultGif struct {
 // location.
 // Ref: #/components/schemas/InlineQueryResultLocation
 type InlineQueryResultLocation struct {
+	// Unique identifier for this result, 1-64 Bytes.
+	ID string "json:\"id\""
+	// Location latitude in degrees.
+	Latitude float64 "json:\"latitude\""
+	// Location longitude in degrees.
+	Longitude float64 "json:\"longitude\""
+	// Location title.
+	Title string "json:\"title\""
+	// _Optional_. The radius of uncertainty for the location, measured in meters; 0-1500.
+	HorizontalAccuracy OptFloat64 "json:\"horizontal_accuracy\""
+	// _Optional_. Period in seconds for which the location can be updated, should be between 60 and 86400.
+	LivePeriod OptInt "json:\"live_period\""
 	// _Optional_. For live locations, a direction in which the user is moving, in degrees. Must be
 	// between 1 and 360 if specified.
 	Heading OptInt "json:\"heading\""
-	// _Optional_. The radius of uncertainty for the location, measured in meters; 0-1500.
-	HorizontalAccuracy OptFloat64 "json:\"horizontal_accuracy\""
-	// Unique identifier for this result, 1-64 Bytes.
-	ID                  string                 "json:\"id\""
-	InputMessageContent OptInputMessageContent "json:\"input_message_content\""
-	// Location latitude in degrees.
-	Latitude float64 "json:\"latitude\""
-	// _Optional_. Period in seconds for which the location can be updated, should be between 60 and 86400.
-	LivePeriod OptInt "json:\"live_period\""
-	// Location longitude in degrees.
-	Longitude float64 "json:\"longitude\""
 	// _Optional_. For live locations, a maximum distance for proximity alerts about approaching another
 	// chat member, in meters. Must be between 1 and 100000 if specified.
 	ProximityAlertRadius OptInt                  "json:\"proximity_alert_radius\""
 	ReplyMarkup          OptInlineKeyboardMarkup "json:\"reply_markup\""
-	// _Optional_. Thumbnail height.
-	ThumbHeight OptInt "json:\"thumb_height\""
+	InputMessageContent  OptInputMessageContent  "json:\"input_message_content\""
 	// _Optional_. URL of the thumbnail for the result.
 	ThumbURL OptString "json:\"thumb_url\""
 	// _Optional_. Thumbnail width.
 	ThumbWidth OptInt "json:\"thumb_width\""
-	// Location title.
-	Title string "json:\"title\""
+	// _Optional_. Thumbnail height.
+	ThumbHeight OptInt "json:\"thumb_height\""
 }
 
 // Represents a link to a video animation (H.264/MPEG-4 AVC video without sound). By default, this
@@ -2746,33 +2748,33 @@ type InlineQueryResultLocation struct {
 // _input_message_content_ to send a message with the specified content instead of the animation.
 // Ref: #/components/schemas/InlineQueryResultMpeg4Gif
 type InlineQueryResultMpeg4Gif struct {
-	// _Optional_. Caption of the MPEG-4 file to be sent, 0-1024 characters after entities parsing.
-	Caption OptString "json:\"caption\""
-	// _Optional_. List of special entities that appear in the caption, which can be specified instead of
-	// _parse_mode_.
-	CaptionEntities []MessageEntity "json:\"caption_entities\""
 	// Unique identifier for this result, 1-64 bytes.
-	ID                  string                 "json:\"id\""
-	InputMessageContent OptInputMessageContent "json:\"input_message_content\""
-	// _Optional_. Video duration in seconds.
-	Mpeg4Duration OptInt "json:\"mpeg4_duration\""
-	// _Optional_. Video height.
-	Mpeg4Height OptInt "json:\"mpeg4_height\""
+	ID string "json:\"id\""
 	// A valid URL for the MPEG4 file. File size must not exceed 1MB.
 	Mpeg4URL string "json:\"mpeg4_url\""
 	// _Optional_. Video width.
 	Mpeg4Width OptInt "json:\"mpeg4_width\""
-	// _Optional_. Mode for parsing entities in the caption. See [formatting options](https://core.
-	// telegram.org/bots/api#formatting-options) for more details.
-	ParseMode   OptString               "json:\"parse_mode\""
-	ReplyMarkup OptInlineKeyboardMarkup "json:\"reply_markup\""
+	// _Optional_. Video height.
+	Mpeg4Height OptInt "json:\"mpeg4_height\""
+	// _Optional_. Video duration in seconds.
+	Mpeg4Duration OptInt "json:\"mpeg4_duration\""
+	// URL of the static (JPEG or GIF) or animated (MPEG4) thumbnail for the result.
+	ThumbURL string "json:\"thumb_url\""
 	// _Optional_. MIME type of the thumbnail, must be one of `image/jpeg`, `image/gif`, or `video/mp4`.
 	// Defaults to `image/jpeg`.
 	ThumbMimeType OptString "json:\"thumb_mime_type\""
-	// URL of the static (JPEG or GIF) or animated (MPEG4) thumbnail for the result.
-	ThumbURL string "json:\"thumb_url\""
 	// _Optional_. Title for the result.
 	Title OptString "json:\"title\""
+	// _Optional_. Caption of the MPEG-4 file to be sent, 0-1024 characters after entities parsing.
+	Caption OptString "json:\"caption\""
+	// _Optional_. Mode for parsing entities in the caption. See [formatting options](https://core.
+	// telegram.org/bots/api#formatting-options) for more details.
+	ParseMode OptString "json:\"parse_mode\""
+	// _Optional_. List of special entities that appear in the caption, which can be specified instead of
+	// _parse_mode_.
+	CaptionEntities     []MessageEntity         "json:\"caption_entities\""
+	ReplyMarkup         OptInlineKeyboardMarkup "json:\"reply_markup\""
+	InputMessageContent OptInputMessageContent  "json:\"input_message_content\""
 }
 
 // Represents a link to a photo. By default, this photo will be sent by the user with optional
@@ -2780,36 +2782,44 @@ type InlineQueryResultMpeg4Gif struct {
 // content instead of the photo.
 // Ref: #/components/schemas/InlineQueryResultPhoto
 type InlineQueryResultPhoto struct {
-	// _Optional_. Caption of the photo to be sent, 0-1024 characters after entities parsing.
-	Caption OptString "json:\"caption\""
-	// _Optional_. List of special entities that appear in the caption, which can be specified instead of
-	// _parse_mode_.
-	CaptionEntities []MessageEntity "json:\"caption_entities\""
+	// Unique identifier for this result, 1-64 bytes.
+	ID string "json:\"id\""
+	// A valid URL of the photo. Photo must be in **JPEG** format. Photo size must not exceed 5MB.
+	PhotoURL string "json:\"photo_url\""
+	// URL of the thumbnail for the photo.
+	ThumbURL string "json:\"thumb_url\""
+	// _Optional_. Width of the photo.
+	PhotoWidth OptInt "json:\"photo_width\""
+	// _Optional_. Height of the photo.
+	PhotoHeight OptInt "json:\"photo_height\""
+	// _Optional_. Title for the result.
+	Title OptString "json:\"title\""
 	// _Optional_. Short description of the result.
 	Description OptString "json:\"description\""
-	// Unique identifier for this result, 1-64 bytes.
-	ID                  string                 "json:\"id\""
-	InputMessageContent OptInputMessageContent "json:\"input_message_content\""
+	// _Optional_. Caption of the photo to be sent, 0-1024 characters after entities parsing.
+	Caption OptString "json:\"caption\""
 	// _Optional_. Mode for parsing entities in the photo caption. See [formatting options](https://core.
 	// telegram.org/bots/api#formatting-options) for more details.
 	ParseMode OptString "json:\"parse_mode\""
-	// _Optional_. Height of the photo.
-	PhotoHeight OptInt "json:\"photo_height\""
-	// A valid URL of the photo. Photo must be in **JPEG** format. Photo size must not exceed 5MB.
-	PhotoURL string "json:\"photo_url\""
-	// _Optional_. Width of the photo.
-	PhotoWidth  OptInt                  "json:\"photo_width\""
-	ReplyMarkup OptInlineKeyboardMarkup "json:\"reply_markup\""
-	// URL of the thumbnail for the photo.
-	ThumbURL string "json:\"thumb_url\""
-	// _Optional_. Title for the result.
-	Title OptString "json:\"title\""
+	// _Optional_. List of special entities that appear in the caption, which can be specified instead of
+	// _parse_mode_.
+	CaptionEntities     []MessageEntity         "json:\"caption_entities\""
+	ReplyMarkup         OptInlineKeyboardMarkup "json:\"reply_markup\""
+	InputMessageContent OptInputMessageContent  "json:\"input_message_content\""
 }
 
 // Represents a venue. By default, the venue will be sent by the user. Alternatively, you can use
 // _input_message_content_ to send a message with the specified content instead of the venue.
 // Ref: #/components/schemas/InlineQueryResultVenue
 type InlineQueryResultVenue struct {
+	// Unique identifier for this result, 1-64 Bytes.
+	ID string "json:\"id\""
+	// Latitude of the venue location in degrees.
+	Latitude float64 "json:\"latitude\""
+	// Longitude of the venue location in degrees.
+	Longitude float64 "json:\"longitude\""
+	// Title of the venue.
+	Title string "json:\"title\""
 	// Address of the venue.
 	Address string "json:\"address\""
 	// _Optional_. Foursquare identifier of the venue if known.
@@ -2821,23 +2831,15 @@ type InlineQueryResultVenue struct {
 	GooglePlaceID OptString "json:\"google_place_id\""
 	// _Optional_. Google Places type of the venue. (See [supported types](https://developers.google.
 	// com/places/web-service/supported_types).).
-	GooglePlaceType OptString "json:\"google_place_type\""
-	// Unique identifier for this result, 1-64 Bytes.
-	ID                  string                 "json:\"id\""
-	InputMessageContent OptInputMessageContent "json:\"input_message_content\""
-	// Latitude of the venue location in degrees.
-	Latitude float64 "json:\"latitude\""
-	// Longitude of the venue location in degrees.
-	Longitude   float64                 "json:\"longitude\""
-	ReplyMarkup OptInlineKeyboardMarkup "json:\"reply_markup\""
-	// _Optional_. Thumbnail height.
-	ThumbHeight OptInt "json:\"thumb_height\""
+	GooglePlaceType     OptString               "json:\"google_place_type\""
+	ReplyMarkup         OptInlineKeyboardMarkup "json:\"reply_markup\""
+	InputMessageContent OptInputMessageContent  "json:\"input_message_content\""
 	// _Optional_. URL of the thumbnail for the result.
 	ThumbURL OptString "json:\"thumb_url\""
 	// _Optional_. Thumbnail width.
 	ThumbWidth OptInt "json:\"thumb_width\""
-	// Title of the venue.
-	Title string "json:\"title\""
+	// _Optional_. Thumbnail height.
+	ThumbHeight OptInt "json:\"thumb_height\""
 }
 
 // Represents a link to a page containing an embedded video player or a video file. By default, this
@@ -2845,34 +2847,34 @@ type InlineQueryResultVenue struct {
 // _input_message_content_ to send a message with the specified content instead of the video.
 // Ref: #/components/schemas/InlineQueryResultVideo
 type InlineQueryResultVideo struct {
-	// _Optional_. Caption of the video to be sent, 0-1024 characters after entities parsing.
-	Caption OptString "json:\"caption\""
-	// _Optional_. List of special entities that appear in the caption, which can be specified instead of
-	// _parse_mode_.
-	CaptionEntities []MessageEntity "json:\"caption_entities\""
-	// _Optional_. Short description of the result.
-	Description OptString "json:\"description\""
 	// Unique identifier for this result, 1-64 bytes.
-	ID                  string                 "json:\"id\""
-	InputMessageContent OptInputMessageContent "json:\"input_message_content\""
+	ID string "json:\"id\""
+	// A valid URL for the embedded video player or video file.
+	VideoURL string "json:\"video_url\""
 	// MIME type of the content of the video URL, `text/html` or `video/mp4`.
 	MimeType string "json:\"mime_type\""
-	// _Optional_. Mode for parsing entities in the video caption. See [formatting options](https://core.
-	// telegram.org/bots/api#formatting-options) for more details.
-	ParseMode   OptString               "json:\"parse_mode\""
-	ReplyMarkup OptInlineKeyboardMarkup "json:\"reply_markup\""
 	// URL of the thumbnail (JPEG only) for the video.
 	ThumbURL string "json:\"thumb_url\""
 	// Title for the result.
 	Title string "json:\"title\""
-	// _Optional_. Video duration in seconds.
-	VideoDuration OptInt "json:\"video_duration\""
-	// _Optional_. Video height.
-	VideoHeight OptInt "json:\"video_height\""
-	// A valid URL for the embedded video player or video file.
-	VideoURL string "json:\"video_url\""
+	// _Optional_. Caption of the video to be sent, 0-1024 characters after entities parsing.
+	Caption OptString "json:\"caption\""
+	// _Optional_. Mode for parsing entities in the video caption. See [formatting options](https://core.
+	// telegram.org/bots/api#formatting-options) for more details.
+	ParseMode OptString "json:\"parse_mode\""
+	// _Optional_. List of special entities that appear in the caption, which can be specified instead of
+	// _parse_mode_.
+	CaptionEntities []MessageEntity "json:\"caption_entities\""
 	// _Optional_. Video width.
 	VideoWidth OptInt "json:\"video_width\""
+	// _Optional_. Video height.
+	VideoHeight OptInt "json:\"video_height\""
+	// _Optional_. Video duration in seconds.
+	VideoDuration OptInt "json:\"video_duration\""
+	// _Optional_. Short description of the result.
+	Description         OptString               "json:\"description\""
+	ReplyMarkup         OptInlineKeyboardMarkup "json:\"reply_markup\""
+	InputMessageContent OptInputMessageContent  "json:\"input_message_content\""
 }
 
 // Represents a link to a voice recording in an .OGG container encoded with OPUS. By default, this
@@ -2880,36 +2882,36 @@ type InlineQueryResultVideo struct {
 // send a message with the specified content instead of the the voice message.
 // Ref: #/components/schemas/InlineQueryResultVoice
 type InlineQueryResultVoice struct {
+	// Unique identifier for this result, 1-64 bytes.
+	ID string "json:\"id\""
+	// A valid URL for the voice recording.
+	VoiceURL string "json:\"voice_url\""
+	// Recording title.
+	Title string "json:\"title\""
 	// _Optional_. Caption, 0-1024 characters after entities parsing.
 	Caption OptString "json:\"caption\""
+	// _Optional_. Mode for parsing entities in the voice message caption. See [formatting
+	// options](https://core.telegram.org/bots/api#formatting-options) for more details.
+	ParseMode OptString "json:\"parse_mode\""
 	// _Optional_. List of special entities that appear in the caption, which can be specified instead of
 	// _parse_mode_.
 	CaptionEntities []MessageEntity "json:\"caption_entities\""
-	// Unique identifier for this result, 1-64 bytes.
-	ID                  string                 "json:\"id\""
-	InputMessageContent OptInputMessageContent "json:\"input_message_content\""
-	// _Optional_. Mode for parsing entities in the voice message caption. See [formatting
-	// options](https://core.telegram.org/bots/api#formatting-options) for more details.
-	ParseMode   OptString               "json:\"parse_mode\""
-	ReplyMarkup OptInlineKeyboardMarkup "json:\"reply_markup\""
-	// Recording title.
-	Title string "json:\"title\""
 	// _Optional_. Recording duration in seconds.
-	VoiceDuration OptInt "json:\"voice_duration\""
-	// A valid URL for the voice recording.
-	VoiceURL string "json:\"voice_url\""
+	VoiceDuration       OptInt                  "json:\"voice_duration\""
+	ReplyMarkup         OptInlineKeyboardMarkup "json:\"reply_markup\""
+	InputMessageContent OptInputMessageContent  "json:\"input_message_content\""
 }
 
 // Represents the [content](https://core.telegram.org/bots/api#inputmessagecontent) of a contact
 // message to be sent as the result of an inline query.
 // Ref: #/components/schemas/InputContactMessageContent
 type InputContactMessageContent struct {
+	// Contact's phone number.
+	PhoneNumber string "json:\"phone_number\""
 	// Contact's first name.
 	FirstName string "json:\"first_name\""
 	// _Optional_. Contact's last name.
 	LastName OptString "json:\"last_name\""
-	// Contact's phone number.
-	PhoneNumber string "json:\"phone_number\""
 	// _Optional_. Additional data about the contact in the form of a [vCard](https://en.wikipedia.
 	// org/wiki/VCard), 0-2048 bytes.
 	Vcard OptString "json:\"vcard\""
@@ -2919,76 +2921,76 @@ type InputContactMessageContent struct {
 // message to be sent as the result of an inline query.
 // Ref: #/components/schemas/InputInvoiceMessageContent
 type InputInvoiceMessageContent struct {
+	// Product name, 1-32 characters.
+	Title string "json:\"title\""
+	// Product description, 1-255 characters.
+	Description string "json:\"description\""
+	// Bot-defined invoice payload, 1-128 bytes. This will not be displayed to the user, use for your
+	// internal processes.
+	Payload string "json:\"payload\""
+	// Payment provider token, obtained via [@BotFather](https://t.me/botfather).
+	ProviderToken string "json:\"provider_token\""
 	// Three-letter ISO 4217 currency code, see [more on currencies](https://core.telegram.
 	// org/bots/payments#supported-currencies).
 	Currency string "json:\"currency\""
-	// Product description, 1-255 characters.
-	Description string "json:\"description\""
-	// _Optional_. Pass _True_, if the final price depends on the shipping method.
-	IsFlexible OptBool "json:\"is_flexible\""
+	// Price breakdown, a JSON-serialized list of components (e.g. product price, tax, discount, delivery
+	// cost, delivery tax, bonus, etc.).
+	Prices []LabeledPrice "json:\"prices\""
 	// _Optional_. The maximum accepted amount for tips in the _smallest units_ of the currency (integer,
 	// **not** float/double). For example, for a maximum tip of `US$ 1.45` pass `max_tip_amount = 145`.
 	// See the _exp_ parameter in [currencies.json](https://core.telegram.org/bots/payments/currencies.
 	// json), it shows the number of digits past the decimal point for each currency (2 for the majority
 	// of currencies). Defaults to 0.
 	MaxTipAmount OptInt "json:\"max_tip_amount\""
-	// _Optional_. Pass _True_, if you require the user's email address to complete the order.
-	NeedEmail OptBool "json:\"need_email\""
-	// _Optional_. Pass _True_, if you require the user's full name to complete the order.
-	NeedName OptBool "json:\"need_name\""
-	// _Optional_. Pass _True_, if you require the user's phone number to complete the order.
-	NeedPhoneNumber OptBool "json:\"need_phone_number\""
-	// _Optional_. Pass _True_, if you require the user's shipping address to complete the order.
-	NeedShippingAddress OptBool "json:\"need_shipping_address\""
-	// Bot-defined invoice payload, 1-128 bytes. This will not be displayed to the user, use for your
-	// internal processes.
-	Payload string "json:\"payload\""
-	// _Optional_. Photo height.
-	PhotoHeight OptInt "json:\"photo_height\""
-	// _Optional_. Photo size in bytes.
-	PhotoSize OptInt "json:\"photo_size\""
-	// _Optional_. URL of the product photo for the invoice. Can be a photo of the goods or a marketing
-	// image for a service.
-	PhotoURL OptString "json:\"photo_url\""
-	// _Optional_. Photo width.
-	PhotoWidth OptInt "json:\"photo_width\""
-	// Price breakdown, a JSON-serialized list of components (e.g. product price, tax, discount, delivery
-	// cost, delivery tax, bonus, etc.).
-	Prices []LabeledPrice "json:\"prices\""
-	// _Optional_. A JSON-serialized object for data about the invoice, which will be shared with the
-	// payment provider. A detailed description of the required fields should be provided by the payment
-	// provider.
-	ProviderData OptString "json:\"provider_data\""
-	// Payment provider token, obtained via [@BotFather](https://t.me/botfather).
-	ProviderToken string "json:\"provider_token\""
-	// _Optional_. Pass _True_, if the user's email address should be sent to provider.
-	SendEmailToProvider OptBool "json:\"send_email_to_provider\""
-	// _Optional_. Pass _True_, if the user's phone number should be sent to provider.
-	SendPhoneNumberToProvider OptBool "json:\"send_phone_number_to_provider\""
 	// _Optional_. A JSON-serialized array of suggested amounts of tip in the _smallest units_ of the
 	// currency (integer, **not** float/double). At most 4 suggested tip amounts can be specified. The
 	// suggested tip amounts must be positive, passed in a strictly increased order and must not exceed
 	// _max_tip_amount_.
 	SuggestedTipAmounts []int64 "json:\"suggested_tip_amounts\""
-	// Product name, 1-32 characters.
-	Title string "json:\"title\""
+	// _Optional_. A JSON-serialized object for data about the invoice, which will be shared with the
+	// payment provider. A detailed description of the required fields should be provided by the payment
+	// provider.
+	ProviderData OptString "json:\"provider_data\""
+	// _Optional_. URL of the product photo for the invoice. Can be a photo of the goods or a marketing
+	// image for a service.
+	PhotoURL OptString "json:\"photo_url\""
+	// _Optional_. Photo size in bytes.
+	PhotoSize OptInt "json:\"photo_size\""
+	// _Optional_. Photo width.
+	PhotoWidth OptInt "json:\"photo_width\""
+	// _Optional_. Photo height.
+	PhotoHeight OptInt "json:\"photo_height\""
+	// _Optional_. Pass _True_, if you require the user's full name to complete the order.
+	NeedName OptBool "json:\"need_name\""
+	// _Optional_. Pass _True_, if you require the user's phone number to complete the order.
+	NeedPhoneNumber OptBool "json:\"need_phone_number\""
+	// _Optional_. Pass _True_, if you require the user's email address to complete the order.
+	NeedEmail OptBool "json:\"need_email\""
+	// _Optional_. Pass _True_, if you require the user's shipping address to complete the order.
+	NeedShippingAddress OptBool "json:\"need_shipping_address\""
+	// _Optional_. Pass _True_, if the user's phone number should be sent to provider.
+	SendPhoneNumberToProvider OptBool "json:\"send_phone_number_to_provider\""
+	// _Optional_. Pass _True_, if the user's email address should be sent to provider.
+	SendEmailToProvider OptBool "json:\"send_email_to_provider\""
+	// _Optional_. Pass _True_, if the final price depends on the shipping method.
+	IsFlexible OptBool "json:\"is_flexible\""
 }
 
 // Represents the [content](https://core.telegram.org/bots/api#inputmessagecontent) of a location
 // message to be sent as the result of an inline query.
 // Ref: #/components/schemas/InputLocationMessageContent
 type InputLocationMessageContent struct {
+	// Latitude of the location in degrees.
+	Latitude float64 "json:\"latitude\""
+	// Longitude of the location in degrees.
+	Longitude float64 "json:\"longitude\""
+	// _Optional_. The radius of uncertainty for the location, measured in meters; 0-1500.
+	HorizontalAccuracy OptFloat64 "json:\"horizontal_accuracy\""
+	// _Optional_. Period in seconds for which the location can be updated, should be between 60 and 86400.
+	LivePeriod OptInt "json:\"live_period\""
 	// _Optional_. For live locations, a direction in which the user is moving, in degrees. Must be
 	// between 1 and 360 if specified.
 	Heading OptInt "json:\"heading\""
-	// _Optional_. The radius of uncertainty for the location, measured in meters; 0-1500.
-	HorizontalAccuracy OptFloat64 "json:\"horizontal_accuracy\""
-	// Latitude of the location in degrees.
-	Latitude float64 "json:\"latitude\""
-	// _Optional_. Period in seconds for which the location can be updated, should be between 60 and 86400.
-	LivePeriod OptInt "json:\"live_period\""
-	// Longitude of the location in degrees.
-	Longitude float64 "json:\"longitude\""
 	// _Optional_. For live locations, a maximum distance for proximity alerts about approaching another
 	// chat member, in meters. Must be between 1 and 100000 if specified.
 	ProximityAlertRadius OptInt "json:\"proximity_alert_radius\""
@@ -3141,24 +3143,12 @@ func NewInputMediaVideoInputMedia(v InputMediaVideo) InputMedia {
 // Represents an animation file (GIF or H.264/MPEG-4 AVC video without sound) to be sent.
 // Ref: #/components/schemas/InputMediaAnimation
 type InputMediaAnimation struct {
-	// _Optional_. Caption of the animation to be sent, 0-1024 characters after entities parsing.
-	Caption OptString "json:\"caption\""
-	// _Optional_. List of special entities that appear in the caption, which can be specified instead of
-	// _parse_mode_.
-	CaptionEntities []MessageEntity "json:\"caption_entities\""
-	// _Optional_. Animation duration in seconds.
-	Duration OptInt "json:\"duration\""
-	// _Optional_. Animation height.
-	Height OptInt "json:\"height\""
 	// File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended),
 	// pass an HTTP URL for Telegram to get a file from the Internet, or pass
 	// `attach://<file_attach_name>` to upload a new one using multipart/form-data under
 	// <file_attach_name> name. [More information on Sending Files](https://core.telegram.
 	// org/bots/api#sending-files).
 	Media string "json:\"media\""
-	// _Optional_. Mode for parsing entities in the animation caption. See [formatting
-	// options](https://core.telegram.org/bots/api#formatting-options) for more details.
-	ParseMode OptString "json:\"parse_mode\""
 	// _Optional_. Thumbnail of the file sent; can be ignored if thumbnail generation for the file is
 	// supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A
 	// thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using
@@ -3167,31 +3157,31 @@ type InputMediaAnimation struct {
 	// <file_attach_name>. [More information on Sending Files](https://core.telegram.
 	// org/bots/api#sending-files).
 	Thumb OptString "json:\"thumb\""
+	// _Optional_. Caption of the animation to be sent, 0-1024 characters after entities parsing.
+	Caption OptString "json:\"caption\""
+	// _Optional_. Mode for parsing entities in the animation caption. See [formatting
+	// options](https://core.telegram.org/bots/api#formatting-options) for more details.
+	ParseMode OptString "json:\"parse_mode\""
+	// _Optional_. List of special entities that appear in the caption, which can be specified instead of
+	// _parse_mode_.
+	CaptionEntities []MessageEntity "json:\"caption_entities\""
 	// _Optional_. Animation width.
 	Width OptInt "json:\"width\""
+	// _Optional_. Animation height.
+	Height OptInt "json:\"height\""
+	// _Optional_. Animation duration in seconds.
+	Duration OptInt "json:\"duration\""
 }
 
 // Represents an audio file to be treated as music to be sent.
 // Ref: #/components/schemas/InputMediaAudio
 type InputMediaAudio struct {
-	// _Optional_. Caption of the audio to be sent, 0-1024 characters after entities parsing.
-	Caption OptString "json:\"caption\""
-	// _Optional_. List of special entities that appear in the caption, which can be specified instead of
-	// _parse_mode_.
-	CaptionEntities []MessageEntity "json:\"caption_entities\""
-	// _Optional_. Duration of the audio in seconds.
-	Duration OptInt "json:\"duration\""
 	// File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended),
 	// pass an HTTP URL for Telegram to get a file from the Internet, or pass
 	// `attach://<file_attach_name>` to upload a new one using multipart/form-data under
 	// <file_attach_name> name. [More information on Sending Files](https://core.telegram.
 	// org/bots/api#sending-files).
 	Media string "json:\"media\""
-	// _Optional_. Mode for parsing entities in the audio caption. See [formatting options](https://core.
-	// telegram.org/bots/api#formatting-options) for more details.
-	ParseMode OptString "json:\"parse_mode\""
-	// _Optional_. Performer of the audio.
-	Performer OptString "json:\"performer\""
 	// _Optional_. Thumbnail of the file sent; can be ignored if thumbnail generation for the file is
 	// supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A
 	// thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using
@@ -3200,6 +3190,18 @@ type InputMediaAudio struct {
 	// <file_attach_name>. [More information on Sending Files](https://core.telegram.
 	// org/bots/api#sending-files).
 	Thumb OptString "json:\"thumb\""
+	// _Optional_. Caption of the audio to be sent, 0-1024 characters after entities parsing.
+	Caption OptString "json:\"caption\""
+	// _Optional_. Mode for parsing entities in the audio caption. See [formatting options](https://core.
+	// telegram.org/bots/api#formatting-options) for more details.
+	ParseMode OptString "json:\"parse_mode\""
+	// _Optional_. List of special entities that appear in the caption, which can be specified instead of
+	// _parse_mode_.
+	CaptionEntities []MessageEntity "json:\"caption_entities\""
+	// _Optional_. Duration of the audio in seconds.
+	Duration OptInt "json:\"duration\""
+	// _Optional_. Performer of the audio.
+	Performer OptString "json:\"performer\""
 	// _Optional_. Title of the audio.
 	Title OptString "json:\"title\""
 }
@@ -3207,75 +3209,61 @@ type InputMediaAudio struct {
 // Represents a general file to be sent.
 // Ref: #/components/schemas/InputMediaDocument
 type InputMediaDocument struct {
+	// File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended),
+	// pass an HTTP URL for Telegram to get a file from the Internet, or pass
+	// `attach://<file_attach_name>` to upload a new one using multipart/form-data under
+	// <file_attach_name> name. [More information on Sending Files](https://core.telegram.
+	// org/bots/api#sending-files).
+	Media string "json:\"media\""
+	// _Optional_. Thumbnail of the file sent; can be ignored if thumbnail generation for the file is
+	// supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A
+	// thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using
+	// multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can
+	// pass `attach://<file_attach_name>` if the thumbnail was uploaded using multipart/form-data under
+	// <file_attach_name>. [More information on Sending Files](https://core.telegram.
+	// org/bots/api#sending-files).
+	Thumb OptString "json:\"thumb\""
 	// _Optional_. Caption of the document to be sent, 0-1024 characters after entities parsing.
 	Caption OptString "json:\"caption\""
+	// _Optional_. Mode for parsing entities in the document caption. See [formatting
+	// options](https://core.telegram.org/bots/api#formatting-options) for more details.
+	ParseMode OptString "json:\"parse_mode\""
 	// _Optional_. List of special entities that appear in the caption, which can be specified instead of
 	// _parse_mode_.
 	CaptionEntities []MessageEntity "json:\"caption_entities\""
 	// _Optional_. Disables automatic server-side content type detection for files uploaded using
 	// multipart/form-data. Always _True_, if the document is sent as part of an album.
 	DisableContentTypeDetection OptBool "json:\"disable_content_type_detection\""
-	// File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended),
-	// pass an HTTP URL for Telegram to get a file from the Internet, or pass
-	// `attach://<file_attach_name>` to upload a new one using multipart/form-data under
-	// <file_attach_name> name. [More information on Sending Files](https://core.telegram.
-	// org/bots/api#sending-files).
-	Media string "json:\"media\""
-	// _Optional_. Mode for parsing entities in the document caption. See [formatting
-	// options](https://core.telegram.org/bots/api#formatting-options) for more details.
-	ParseMode OptString "json:\"parse_mode\""
-	// _Optional_. Thumbnail of the file sent; can be ignored if thumbnail generation for the file is
-	// supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A
-	// thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using
-	// multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can
-	// pass `attach://<file_attach_name>` if the thumbnail was uploaded using multipart/form-data under
-	// <file_attach_name>. [More information on Sending Files](https://core.telegram.
-	// org/bots/api#sending-files).
-	Thumb OptString "json:\"thumb\""
 }
 
 // Represents a photo to be sent.
 // Ref: #/components/schemas/InputMediaPhoto
 type InputMediaPhoto struct {
-	// _Optional_. Caption of the photo to be sent, 0-1024 characters after entities parsing.
-	Caption OptString "json:\"caption\""
-	// _Optional_. List of special entities that appear in the caption, which can be specified instead of
-	// _parse_mode_.
-	CaptionEntities []MessageEntity "json:\"caption_entities\""
 	// File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended),
 	// pass an HTTP URL for Telegram to get a file from the Internet, or pass
 	// `attach://<file_attach_name>` to upload a new one using multipart/form-data under
 	// <file_attach_name> name. [More information on Sending Files](https://core.telegram.
 	// org/bots/api#sending-files).
 	Media string "json:\"media\""
+	// _Optional_. Caption of the photo to be sent, 0-1024 characters after entities parsing.
+	Caption OptString "json:\"caption\""
 	// _Optional_. Mode for parsing entities in the photo caption. See [formatting options](https://core.
 	// telegram.org/bots/api#formatting-options) for more details.
 	ParseMode OptString "json:\"parse_mode\""
+	// _Optional_. List of special entities that appear in the caption, which can be specified instead of
+	// _parse_mode_.
+	CaptionEntities []MessageEntity "json:\"caption_entities\""
 }
 
 // Represents a video to be sent.
 // Ref: #/components/schemas/InputMediaVideo
 type InputMediaVideo struct {
-	// _Optional_. Caption of the video to be sent, 0-1024 characters after entities parsing.
-	Caption OptString "json:\"caption\""
-	// _Optional_. List of special entities that appear in the caption, which can be specified instead of
-	// _parse_mode_.
-	CaptionEntities []MessageEntity "json:\"caption_entities\""
-	// _Optional_. Video duration in seconds.
-	Duration OptInt "json:\"duration\""
-	// _Optional_. Video height.
-	Height OptInt "json:\"height\""
 	// File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended),
 	// pass an HTTP URL for Telegram to get a file from the Internet, or pass
 	// `attach://<file_attach_name>` to upload a new one using multipart/form-data under
 	// <file_attach_name> name. [More information on Sending Files](https://core.telegram.
 	// org/bots/api#sending-files).
 	Media string "json:\"media\""
-	// _Optional_. Mode for parsing entities in the video caption. See [formatting options](https://core.
-	// telegram.org/bots/api#formatting-options) for more details.
-	ParseMode OptString "json:\"parse_mode\""
-	// _Optional_. Pass _True_, if the uploaded video is suitable for streaming.
-	SupportsStreaming OptBool "json:\"supports_streaming\""
 	// _Optional_. Thumbnail of the file sent; can be ignored if thumbnail generation for the file is
 	// supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A
 	// thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using
@@ -3284,8 +3272,22 @@ type InputMediaVideo struct {
 	// <file_attach_name>. [More information on Sending Files](https://core.telegram.
 	// org/bots/api#sending-files).
 	Thumb OptString "json:\"thumb\""
+	// _Optional_. Caption of the video to be sent, 0-1024 characters after entities parsing.
+	Caption OptString "json:\"caption\""
+	// _Optional_. Mode for parsing entities in the video caption. See [formatting options](https://core.
+	// telegram.org/bots/api#formatting-options) for more details.
+	ParseMode OptString "json:\"parse_mode\""
+	// _Optional_. List of special entities that appear in the caption, which can be specified instead of
+	// _parse_mode_.
+	CaptionEntities []MessageEntity "json:\"caption_entities\""
 	// _Optional_. Video width.
 	Width OptInt "json:\"width\""
+	// _Optional_. Video height.
+	Height OptInt "json:\"height\""
+	// _Optional_. Video duration in seconds.
+	Duration OptInt "json:\"duration\""
+	// _Optional_. Pass _True_, if the uploaded video is suitable for streaming.
+	SupportsStreaming OptBool "json:\"supports_streaming\""
 }
 
 // This object represents the content of a message to be sent as a result of an inline query.
@@ -3447,22 +3449,28 @@ func NewInputInvoiceMessageContentInputMessageContent(v InputInvoiceMessageConte
 // to be sent as the result of an inline query.
 // Ref: #/components/schemas/InputTextMessageContent
 type InputTextMessageContent struct {
-	// _Optional_. Disables link previews for links in the sent message.
-	DisableWebPagePreview OptBool "json:\"disable_web_page_preview\""
-	// _Optional_. List of special entities that appear in message text, which can be specified instead
-	// of _parse_mode_.
-	Entities []MessageEntity "json:\"entities\""
 	// Text of the message to be sent, 1-4096 characters.
 	MessageText string "json:\"message_text\""
 	// _Optional_. Mode for parsing entities in the message text. See [formatting options](https://core.
 	// telegram.org/bots/api#formatting-options) for more details.
 	ParseMode OptString "json:\"parse_mode\""
+	// _Optional_. List of special entities that appear in message text, which can be specified instead
+	// of _parse_mode_.
+	Entities []MessageEntity "json:\"entities\""
+	// _Optional_. Disables link previews for links in the sent message.
+	DisableWebPagePreview OptBool "json:\"disable_web_page_preview\""
 }
 
 // Represents the [content](https://core.telegram.org/bots/api#inputmessagecontent) of a venue
 // message to be sent as the result of an inline query.
 // Ref: #/components/schemas/InputVenueMessageContent
 type InputVenueMessageContent struct {
+	// Latitude of the venue in degrees.
+	Latitude float64 "json:\"latitude\""
+	// Longitude of the venue in degrees.
+	Longitude float64 "json:\"longitude\""
+	// Name of the venue.
+	Title string "json:\"title\""
 	// Address of the venue.
 	Address string "json:\"address\""
 	// _Optional_. Foursquare identifier of the venue, if known.
@@ -3475,25 +3483,19 @@ type InputVenueMessageContent struct {
 	// _Optional_. Google Places type of the venue. (See [supported types](https://developers.google.
 	// com/places/web-service/supported_types).).
 	GooglePlaceType OptString "json:\"google_place_type\""
-	// Latitude of the venue in degrees.
-	Latitude float64 "json:\"latitude\""
-	// Longitude of the venue in degrees.
-	Longitude float64 "json:\"longitude\""
-	// Name of the venue.
-	Title string "json:\"title\""
 }
 
 // This object contains basic information about an invoice.
 // Ref: #/components/schemas/Invoice
 type Invoice struct {
-	// Three-letter ISO 4217 [currency](https://core.telegram.org/bots/payments#supported-currencies) code.
-	Currency string "json:\"currency\""
+	// Product name.
+	Title string "json:\"title\""
 	// Product description.
 	Description string "json:\"description\""
 	// Unique bot deep-linking parameter that can be used to generate this invoice.
 	StartParameter string "json:\"start_parameter\""
-	// Product name.
-	Title string "json:\"title\""
+	// Three-letter ISO 4217 [currency](https://core.telegram.org/bots/payments#supported-currencies) code.
+	Currency string "json:\"currency\""
 	// Total price in the _smallest units_ of the currency (integer, **not** float/double). For example,
 	// for a price of `US$ 1.45` pass `amount = 145`. See the _exp_ parameter in [currencies.
 	// json](https://core.telegram.org/bots/payments/currencies.json), it shows the number of digits past
@@ -3573,6 +3575,9 @@ func NewKeyboardButtonObjectKeyboardButton(v KeyboardButtonObject) KeyboardButto
 // _request_contact_, _request_location_, and _request_poll_ are mutually exclusive.
 // Ref: #/components/schemas/KeyboardButtonObject
 type KeyboardButtonObject struct {
+	// Text of the button. If none of the optional fields are used, it will be sent as a message when the
+	// button is pressed.
+	Text string "json:\"text\""
 	// _Optional_. If _True_, the user's phone number will be sent as a contact when the button is
 	// pressed. Available in private chats only.
 	RequestContact OptBool "json:\"request_contact\""
@@ -3580,10 +3585,7 @@ type KeyboardButtonObject struct {
 	// Available in private chats only.
 	RequestLocation OptBool                   "json:\"request_location\""
 	RequestPoll     OptKeyboardButtonPollType "json:\"request_poll\""
-	// Text of the button. If none of the optional fields are used, it will be sent as a message when the
-	// button is pressed.
-	Text   string        "json:\"text\""
-	WebApp OptWebAppInfo "json:\"web_app\""
+	WebApp          OptWebAppInfo             "json:\"web_app\""
 }
 
 // This object represents type of a poll, which is allowed to be created and sent when the
@@ -3599,14 +3601,14 @@ type KeyboardButtonPollType struct {
 // This object represents a portion of the price for goods or services.
 // Ref: #/components/schemas/LabeledPrice
 type LabeledPrice struct {
+	// Portion label.
+	Label string "json:\"label\""
 	// Price of the product in the _smallest units_ of the [currency](https://core.telegram.
 	// org/bots/payments#supported-currencies) (integer, **not** float/double). For example, for a price
 	// of `US$ 1.45` pass `amount = 145`. See the _exp_ parameter in [currencies.json](https://core.
 	// telegram.org/bots/payments/currencies.json), it shows the number of digits past the decimal point
 	// for each currency (2 for the majority of currencies).
 	Amount int "json:\"amount\""
-	// Portion label.
-	Label string "json:\"label\""
 }
 
 // Input for leaveChat.
@@ -3618,18 +3620,18 @@ type LeaveChat struct {
 // This object represents a point on the map.
 // Ref: #/components/schemas/Location
 type Location struct {
-	// _Optional_. The direction in which user is moving, in degrees; 1-360. For active live locations
-	// only.
-	Heading OptInt "json:\"heading\""
-	// _Optional_. The radius of uncertainty for the location, measured in meters; 0-1500.
-	HorizontalAccuracy OptFloat64 "json:\"horizontal_accuracy\""
+	// Longitude as defined by sender.
+	Longitude float64 "json:\"longitude\""
 	// Latitude as defined by sender.
 	Latitude float64 "json:\"latitude\""
+	// _Optional_. The radius of uncertainty for the location, measured in meters; 0-1500.
+	HorizontalAccuracy OptFloat64 "json:\"horizontal_accuracy\""
 	// _Optional_. Time relative to the message sending date, during which the location can be updated;
 	// in seconds. For active live locations only.
 	LivePeriod OptInt "json:\"live_period\""
-	// Longitude as defined by sender.
-	Longitude float64 "json:\"longitude\""
+	// _Optional_. The direction in which user is moving, in degrees; 1-360. For active live locations
+	// only.
+	Heading OptInt "json:\"heading\""
 	// _Optional_. The maximum distance for proximity alerts about approaching another chat member, in
 	// meters. For sent live locations only.
 	ProximityAlertRadius OptInt "json:\"proximity_alert_radius\""
@@ -3639,16 +3641,6 @@ type Location struct {
 // org/blog/privacy-discussions-web-bots#meet-seamless-web-bots).
 // Ref: #/components/schemas/LoginUrl
 type LoginUrl struct {
-	// _Optional_. Username of a bot, which will be used for user authorization. See [Setting up a
-	// bot](https://core.telegram.org/widgets/login#setting-up-a-bot) for more details. If not specified,
-	// the current bot's username will be assumed. The _url_'s domain must be the same as the domain
-	// linked with the bot. See [Linking your domain to the bot](https://core.telegram.
-	// org/widgets/login#linking-your-domain-to-the-bot) for more details.
-	BotUsername OptString "json:\"bot_username\""
-	// _Optional_. New text of the button in forwarded messages.
-	ForwardText OptString "json:\"forward_text\""
-	// _Optional_. Pass _True_ to request the permission for your bot to send messages to the user.
-	RequestWriteAccess OptBool "json:\"request_write_access\""
 	// An HTTPS URL to be opened with user authorization data added to the query string when the button
 	// is pressed. If the user refuses to provide authorization data, the original URL without
 	// information about the user will be opened. The data added is the same as described in [Receiving
@@ -3657,6 +3649,16 @@ type LoginUrl struct {
 	// the integrity of the data as described in [Checking authorization](https://core.telegram.
 	// org/widgets/login#checking-authorization).
 	URL string "json:\"url\""
+	// _Optional_. New text of the button in forwarded messages.
+	ForwardText OptString "json:\"forward_text\""
+	// _Optional_. Username of a bot, which will be used for user authorization. See [Setting up a
+	// bot](https://core.telegram.org/widgets/login#setting-up-a-bot) for more details. If not specified,
+	// the current bot's username will be assumed. The _url_'s domain must be the same as the domain
+	// linked with the bot. See [Linking your domain to the bot](https://core.telegram.
+	// org/widgets/login#linking-your-domain-to-the-bot) for more details.
+	BotUsername OptString "json:\"bot_username\""
+	// _Optional_. Pass _True_ to request the permission for your bot to send messages to the user.
+	RequestWriteAccess OptBool "json:\"request_write_access\""
 }
 
 // This object describes the position on faces where a mask should be placed by default.
@@ -3665,14 +3667,14 @@ type MaskPosition struct {
 	// The part of the face relative to which the mask should be placed. One of `forehead`, `eyes`,
 	// `mouth`, or `chin`.
 	Point string "json:\"point\""
-	// Mask scaling coefficient. For example, 2.0 means double size.
-	Scale float64 "json:\"scale\""
 	// Shift by X-axis measured in widths of the mask scaled to the face size, from left to right. For
 	// example, choosing -1.0 will place mask just to the left of the default mask position.
 	XShift float64 "json:\"x_shift\""
 	// Shift by Y-axis measured in heights of the mask scaled to the face size, from top to bottom. For
 	// example, 1.0 will place the mask just below the default mask position.
 	YShift float64 "json:\"y_shift\""
+	// Mask scaling coefficient. For example, 2.0 means double size.
+	Scale float64 "json:\"scale\""
 }
 
 // This object describes the bot's menu button in a private chat. It should be one of.
@@ -3786,113 +3788,113 @@ type MenuButtonWebApp struct {
 // This object represents a message.
 // Ref: #/components/schemas/Message
 type Message struct {
-	Animation OptAnimation "json:\"animation\""
-	Audio     OptAudio     "json:\"audio\""
+	// Unique message identifier inside this chat.
+	MessageID  int     "json:\"message_id\""
+	From       OptUser "json:\"from\""
+	SenderChat OptChat "json:\"sender_chat\""
+	// Date the message was sent in Unix time.
+	Date            int     "json:\"date\""
+	Chat            Chat    "json:\"chat\""
+	ForwardFrom     OptUser "json:\"forward_from\""
+	ForwardFromChat OptChat "json:\"forward_from_chat\""
+	// _Optional_. For messages forwarded from channels, identifier of the original message in the channel.
+	ForwardFromMessageID OptInt "json:\"forward_from_message_id\""
+	// _Optional_. For forwarded messages that were originally sent in channels or by an anonymous chat
+	// administrator, signature of the message sender if present.
+	ForwardSignature OptString "json:\"forward_signature\""
+	// _Optional_. Sender's name for messages forwarded from users who disallow adding a link to their
+	// account in forwarded messages.
+	ForwardSenderName OptString "json:\"forward_sender_name\""
+	// _Optional_. For forwarded messages, date the original message was sent in Unix time.
+	ForwardDate OptInt "json:\"forward_date\""
+	// _Optional_. _True_, if the message is a channel post that was automatically forwarded to the
+	// connected discussion group.
+	IsAutomaticForward OptBool  "json:\"is_automatic_forward\""
+	ReplyToMessage     *Message "json:\"reply_to_message\""
+	ViaBot             OptUser  "json:\"via_bot\""
+	// _Optional_. Date the message was last edited in Unix time.
+	EditDate OptInt "json:\"edit_date\""
+	// _Optional_. _True_, if the message can't be forwarded.
+	HasProtectedContent OptBool "json:\"has_protected_content\""
+	// _Optional_. The unique identifier of a media message group this message belongs to.
+	MediaGroupID OptString "json:\"media_group_id\""
 	// _Optional_. Signature of the post author for messages in channels, or the custom title of an
 	// anonymous group administrator.
 	AuthorSignature OptString "json:\"author_signature\""
+	// _Optional_. For text messages, the actual UTF-8 text of the message.
+	Text OptString "json:\"text\""
+	// _Optional_. For text messages, special entities like usernames, URLs, bot commands, etc. that
+	// appear in the text.
+	Entities  []MessageEntity "json:\"entities\""
+	Animation OptAnimation    "json:\"animation\""
+	Audio     OptAudio        "json:\"audio\""
+	Document  OptDocument     "json:\"document\""
+	// _Optional_. Message is a photo, available sizes of the photo.
+	Photo     []PhotoSize  "json:\"photo\""
+	Sticker   OptSticker   "json:\"sticker\""
+	Video     OptVideo     "json:\"video\""
+	VideoNote OptVideoNote "json:\"video_note\""
+	Voice     OptVoice     "json:\"voice\""
 	// _Optional_. Caption for the animation, audio, document, photo, video or voice.
 	Caption OptString "json:\"caption\""
 	// _Optional_. For messages with a caption, special entities like usernames, URLs, bot commands, etc.
 	// that appear in the caption.
 	CaptionEntities []MessageEntity "json:\"caption_entities\""
-	// _Optional_. Service message: the channel has been created. This field can't be received in a
-	// message coming through updates, because bot can't be a member of a channel when it is created. It
-	// can only be found in reply_to_message if someone replies to a very first message in a channel.
-	ChannelChatCreated OptBool "json:\"channel_chat_created\""
-	Chat               Chat    "json:\"chat\""
-	// _Optional_. The domain name of the website on which the user has logged in. [More about Telegram
-	// Login](https://core.telegram.org/widgets/login).
-	ConnectedWebsite OptString  "json:\"connected_website\""
-	Contact          OptContact "json:\"contact\""
-	// Date the message was sent in Unix time.
-	Date int "json:\"date\""
-	// _Optional_. Service message: the chat photo was deleted.
-	DeleteChatPhoto OptBool     "json:\"delete_chat_photo\""
-	Dice            OptDice     "json:\"dice\""
-	Document        OptDocument "json:\"document\""
-	// _Optional_. Date the message was last edited in Unix time.
-	EditDate OptInt "json:\"edit_date\""
-	// _Optional_. For text messages, special entities like usernames, URLs, bot commands, etc. that
-	// appear in the text.
-	Entities []MessageEntity "json:\"entities\""
-	// _Optional_. For forwarded messages, date the original message was sent in Unix time.
-	ForwardDate     OptInt  "json:\"forward_date\""
-	ForwardFrom     OptUser "json:\"forward_from\""
-	ForwardFromChat OptChat "json:\"forward_from_chat\""
-	// _Optional_. For messages forwarded from channels, identifier of the original message in the channel.
-	ForwardFromMessageID OptInt "json:\"forward_from_message_id\""
-	// _Optional_. Sender's name for messages forwarded from users who disallow adding a link to their
-	// account in forwarded messages.
-	ForwardSenderName OptString "json:\"forward_sender_name\""
-	// _Optional_. For forwarded messages that were originally sent in channels or by an anonymous chat
-	// administrator, signature of the message sender if present.
-	ForwardSignature OptString "json:\"forward_signature\""
-	From             OptUser   "json:\"from\""
-	Game             OptGame   "json:\"game\""
-	// _Optional_. Service message: the group has been created.
-	GroupChatCreated OptBool "json:\"group_chat_created\""
-	// _Optional_. _True_, if the message can't be forwarded.
-	HasProtectedContent OptBool    "json:\"has_protected_content\""
-	Invoice             OptInvoice "json:\"invoice\""
-	// _Optional_. _True_, if the message is a channel post that was automatically forwarded to the
-	// connected discussion group.
-	IsAutomaticForward  OptBool     "json:\"is_automatic_forward\""
-	LeftChatMember      OptUser     "json:\"left_chat_member\""
-	LeftChatParticipant OptUser     "json:\"left_chat_participant\""
-	Location            OptLocation "json:\"location\""
-	// _Optional_. The unique identifier of a media message group this message belongs to.
-	MediaGroupID                  OptString                        "json:\"media_group_id\""
-	MessageAutoDeleteTimerChanged OptMessageAutoDeleteTimerChanged "json:\"message_auto_delete_timer_changed\""
-	// Unique message identifier inside this chat.
-	MessageID int "json:\"message_id\""
-	// _Optional_. The supergroup has been migrated from a group with the specified identifier. This
-	// number may have more than 32 significant bits and some programming languages may have
-	// difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed
-	// 64-bit integer or double-precision float type are safe for storing this identifier.
-	MigrateFromChatID OptInt64 "json:\"migrate_from_chat_id\""
-	// _Optional_. The group has been migrated to a supergroup with the specified identifier. This number
-	// may have more than 32 significant bits and some programming languages may have difficulty/silent
-	// defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or
-	// double-precision float type are safe for storing this identifier.
-	MigrateToChatID OptInt64 "json:\"migrate_to_chat_id\""
-	NewChatMember   OptUser  "json:\"new_chat_member\""
+	Contact         OptContact      "json:\"contact\""
+	Dice            OptDice         "json:\"dice\""
+	Game            OptGame         "json:\"game\""
+	Poll            OptPoll         "json:\"poll\""
+	Venue           OptVenue        "json:\"venue\""
+	Location        OptLocation     "json:\"location\""
 	// _Optional_. New members that were added to the group or supergroup and information about them (the
 	// bot itself may be one of these members).
-	NewChatMembers     []User  "json:\"new_chat_members\""
-	NewChatParticipant OptUser "json:\"new_chat_participant\""
+	NewChatMembers []User  "json:\"new_chat_members\""
+	LeftChatMember OptUser "json:\"left_chat_member\""
+	// _Optional_. A chat title was changed to this value.
+	NewChatTitle OptString "json:\"new_chat_title\""
 	// _Optional_. A chat photo was change to this value.
 	NewChatPhoto []PhotoSize "json:\"new_chat_photo\""
-	// _Optional_. A chat title was changed to this value.
-	NewChatTitle OptString       "json:\"new_chat_title\""
-	PassportData OptPassportData "json:\"passport_data\""
-	// _Optional_. Message is a photo, available sizes of the photo.
-	Photo                   []PhotoSize                "json:\"photo\""
-	PinnedMessage           *Message                   "json:\"pinned_message\""
-	Poll                    OptPoll                    "json:\"poll\""
-	ProximityAlertTriggered OptProximityAlertTriggered "json:\"proximity_alert_triggered\""
-	ReplyMarkup             OptInlineKeyboardMarkup    "json:\"reply_markup\""
-	ReplyToMessage          *Message                   "json:\"reply_to_message\""
-	SenderChat              OptChat                    "json:\"sender_chat\""
-	Sticker                 OptSticker                 "json:\"sticker\""
-	SuccessfulPayment       OptSuccessfulPayment       "json:\"successful_payment\""
+	// _Optional_. Service message: the chat photo was deleted.
+	DeleteChatPhoto OptBool "json:\"delete_chat_photo\""
+	// _Optional_. Service message: the group has been created.
+	GroupChatCreated OptBool "json:\"group_chat_created\""
 	// _Optional_. Service message: the supergroup has been created. This field can't be received in a
 	// message coming through updates, because bot can't be a member of a supergroup when it is created.
 	// It can only be found in reply_to_message if someone replies to a very first message in a directly
 	// created supergroup.
 	SupergroupChatCreated OptBool "json:\"supergroup_chat_created\""
-	// _Optional_. For text messages, the actual UTF-8 text of the message.
-	Text                         OptString                       "json:\"text\""
-	Venue                        OptVenue                        "json:\"venue\""
-	ViaBot                       OptUser                         "json:\"via_bot\""
-	Video                        OptVideo                        "json:\"video\""
-	VideoChatEnded               OptVideoChatEnded               "json:\"video_chat_ended\""
-	VideoChatParticipantsInvited OptVideoChatParticipantsInvited "json:\"video_chat_participants_invited\""
+	// _Optional_. Service message: the channel has been created. This field can't be received in a
+	// message coming through updates, because bot can't be a member of a channel when it is created. It
+	// can only be found in reply_to_message if someone replies to a very first message in a channel.
+	ChannelChatCreated            OptBool                          "json:\"channel_chat_created\""
+	MessageAutoDeleteTimerChanged OptMessageAutoDeleteTimerChanged "json:\"message_auto_delete_timer_changed\""
+	// _Optional_. The group has been migrated to a supergroup with the specified identifier. This number
+	// may have more than 32 significant bits and some programming languages may have difficulty/silent
+	// defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or
+	// double-precision float type are safe for storing this identifier.
+	MigrateToChatID OptInt64 "json:\"migrate_to_chat_id\""
+	// _Optional_. The supergroup has been migrated from a group with the specified identifier. This
+	// number may have more than 32 significant bits and some programming languages may have
+	// difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed
+	// 64-bit integer or double-precision float type are safe for storing this identifier.
+	MigrateFromChatID OptInt64             "json:\"migrate_from_chat_id\""
+	PinnedMessage     *Message             "json:\"pinned_message\""
+	Invoice           OptInvoice           "json:\"invoice\""
+	SuccessfulPayment OptSuccessfulPayment "json:\"successful_payment\""
+	// _Optional_. The domain name of the website on which the user has logged in. [More about Telegram
+	// Login](https://core.telegram.org/widgets/login).
+	ConnectedWebsite             OptString                       "json:\"connected_website\""
+	PassportData                 OptPassportData                 "json:\"passport_data\""
+	ProximityAlertTriggered      OptProximityAlertTriggered      "json:\"proximity_alert_triggered\""
 	VideoChatScheduled           OptVideoChatScheduled           "json:\"video_chat_scheduled\""
 	VideoChatStarted             *VideoChatStarted               "json:\"video_chat_started\""
-	VideoNote                    OptVideoNote                    "json:\"video_note\""
-	Voice                        OptVoice                        "json:\"voice\""
+	VideoChatEnded               OptVideoChatEnded               "json:\"video_chat_ended\""
+	VideoChatParticipantsInvited OptVideoChatParticipantsInvited "json:\"video_chat_participants_invited\""
 	WebAppData                   OptWebAppData                   "json:\"web_app_data\""
+	ReplyMarkup                  OptInlineKeyboardMarkup         "json:\"reply_markup\""
+	NewChatMember                OptUser                         "json:\"new_chat_member\""
+	NewChatParticipant           OptUser                         "json:\"new_chat_participant\""
+	LeftChatParticipant          OptUser                         "json:\"left_chat_participant\""
 }
 
 // This object represents a service message about a change in auto-delete timer settings.
@@ -3906,12 +3908,6 @@ type MessageAutoDeleteTimerChanged struct {
 // URLs, etc.
 // Ref: #/components/schemas/MessageEntity
 type MessageEntity struct {
-	// _Optional_. For `pre` only, the programming language of the entity text.
-	Language OptString "json:\"language\""
-	// Length of the entity in UTF-16 code units.
-	Length int "json:\"length\""
-	// Offset in UTF-16 code units to the start of the entity.
-	Offset int "json:\"offset\""
 	// Type of the entity. Currently, can be `mention` (`@username`), `hashtag` (`#hashtag`), `cashtag`
 	// (`$USD`), `bot_command` (`/start@jobs_bot`), `url` (`https://telegram.org`), `email`
 	// (`do-not-reply@telegram.org`), `phone_number` (`+1-212-555-0123`), `bold` (**bold text**),
@@ -3920,9 +3916,15 @@ type MessageEntity struct {
 	// clickable text URLs), `text_mention` (for users [without usernames](https://telegram.
 	// org/blog/edit#new-mentions)).
 	Type MessageEntityType "json:\"type\""
+	// Offset in UTF-16 code units to the start of the entity.
+	Offset int "json:\"offset\""
+	// Length of the entity in UTF-16 code units.
+	Length int "json:\"length\""
 	// _Optional_. For `text_link` only, URL that will be opened after user taps on the text.
 	URL  OptString "json:\"url\""
 	User OptUser   "json:\"user\""
+	// _Optional_. For `pre` only, the programming language of the entity text.
+	Language OptString "json:\"language\""
 }
 
 // Type of the entity. Currently, can be `mention` (`@username`), `hashtag` (`#hashtag`), `cashtag`
@@ -7367,22 +7369,22 @@ func (o OptWebhookInfo) Or(d WebhookInfo) WebhookInfo {
 // This object represents information about an order.
 // Ref: #/components/schemas/OrderInfo
 type OrderInfo struct {
-	// _Optional_. User email.
-	Email OptString "json:\"email\""
 	// _Optional_. User name.
 	Name OptString "json:\"name\""
 	// _Optional_. User's phone number.
-	PhoneNumber     OptString          "json:\"phone_number\""
+	PhoneNumber OptString "json:\"phone_number\""
+	// _Optional_. User email.
+	Email           OptString          "json:\"email\""
 	ShippingAddress OptShippingAddress "json:\"shipping_address\""
 }
 
 // Describes Telegram Passport data shared with the bot by the user.
 // Ref: #/components/schemas/PassportData
 type PassportData struct {
-	Credentials EncryptedCredentials "json:\"credentials\""
 	// Array with information about documents and other Telegram Passport elements that was shared with
 	// the bot.
-	Data []EncryptedPassportElement "json:\"data\""
+	Data        []EncryptedPassportElement "json:\"data\""
+	Credentials EncryptedCredentials       "json:\"credentials\""
 }
 
 // This object represents an error in the Telegram Passport element which was submitted that should
@@ -7656,14 +7658,14 @@ func NewPassportElementErrorUnspecifiedPassportElementError(v PassportElementErr
 // considered resolved when the field's value changes.
 // Ref: #/components/schemas/PassportElementErrorDataField
 type PassportElementErrorDataField struct {
-	// Base64-encoded data hash.
-	DataHash string "json:\"data_hash\""
-	// Name of the data field which has the error.
-	FieldName string "json:\"field_name\""
-	// Error message.
-	Message string "json:\"message\""
 	// Error source, must be _data_.
 	Source string "json:\"source\""
+	// Name of the data field which has the error.
+	FieldName string "json:\"field_name\""
+	// Base64-encoded data hash.
+	DataHash string "json:\"data_hash\""
+	// Error message.
+	Message string "json:\"message\""
 }
 
 // The section of the user's Telegram Passport which has the error, one of `personal_details`,
@@ -7683,12 +7685,12 @@ const (
 // document scan changes.
 // Ref: #/components/schemas/PassportElementErrorFile
 type PassportElementErrorFile struct {
+	// Error source, must be _file_.
+	Source string "json:\"source\""
 	// Base64-encoded file hash.
 	FileHash string "json:\"file_hash\""
 	// Error message.
 	Message string "json:\"message\""
-	// Error source, must be _file_.
-	Source string "json:\"source\""
 }
 
 // The section of the user's Telegram Passport which has the issue, one of `utility_bill`,
@@ -7707,12 +7709,12 @@ const (
 // containing the scans changes.
 // Ref: #/components/schemas/PassportElementErrorFiles
 type PassportElementErrorFiles struct {
+	// Error source, must be _files_.
+	Source string "json:\"source\""
 	// List of base64-encoded file hashes.
 	FileHashes []string "json:\"file_hashes\""
 	// Error message.
 	Message string "json:\"message\""
-	// Error source, must be _files_.
-	Source string "json:\"source\""
 }
 
 // The section of the user's Telegram Passport which has the issue, one of `utility_bill`,
@@ -7731,12 +7733,12 @@ const (
 // file with the front side of the document changes.
 // Ref: #/components/schemas/PassportElementErrorFrontSide
 type PassportElementErrorFrontSide struct {
+	// Error source, must be _front_side_.
+	Source string "json:\"source\""
 	// Base64-encoded hash of the file with the front side of the document.
 	FileHash string "json:\"file_hash\""
 	// Error message.
 	Message string "json:\"message\""
-	// Error source, must be _front_side_.
-	Source string "json:\"source\""
 }
 
 // The section of the user's Telegram Passport which has the issue, one of `passport`,
@@ -7754,12 +7756,12 @@ const (
 // file with reverse side of the document changes.
 // Ref: #/components/schemas/PassportElementErrorReverseSide
 type PassportElementErrorReverseSide struct {
+	// Error source, must be _reverse_side_.
+	Source string "json:\"source\""
 	// Base64-encoded hash of the file with the reverse side of the document.
 	FileHash string "json:\"file_hash\""
 	// Error message.
 	Message string "json:\"message\""
-	// Error source, must be _reverse_side_.
-	Source string "json:\"source\""
 }
 
 // The section of the user's Telegram Passport which has the issue, one of `driver_license`,
@@ -7775,12 +7777,12 @@ const (
 // file with the selfie changes.
 // Ref: #/components/schemas/PassportElementErrorSelfie
 type PassportElementErrorSelfie struct {
+	// Error source, must be _selfie_.
+	Source string "json:\"source\""
 	// Base64-encoded hash of the file with the selfie.
 	FileHash string "json:\"file_hash\""
 	// Error message.
 	Message string "json:\"message\""
-	// Error source, must be _selfie_.
-	Source string "json:\"source\""
 }
 
 // The section of the user's Telegram Passport which has the issue, one of `passport`,
@@ -7798,12 +7800,12 @@ const (
 // is considered resolved when the file changes.
 // Ref: #/components/schemas/PassportElementErrorTranslationFile
 type PassportElementErrorTranslationFile struct {
+	// Error source, must be _translation_file_.
+	Source string "json:\"source\""
 	// Base64-encoded file hash.
 	FileHash string "json:\"file_hash\""
 	// Error message.
 	Message string "json:\"message\""
-	// Error source, must be _translation_file_.
-	Source string "json:\"source\""
 }
 
 // Type of element of the user's Telegram Passport which has the issue, one of `passport`,
@@ -7827,12 +7829,12 @@ const (
 // when a file with the document translation change.
 // Ref: #/components/schemas/PassportElementErrorTranslationFiles
 type PassportElementErrorTranslationFiles struct {
+	// Error source, must be _translation_files_.
+	Source string "json:\"source\""
 	// List of base64-encoded file hashes.
 	FileHashes []string "json:\"file_hashes\""
 	// Error message.
 	Message string "json:\"message\""
-	// Error source, must be _translation_files_.
-	Source string "json:\"source\""
 }
 
 // Type of element of the user's Telegram Passport which has the issue, one of `passport`,
@@ -7856,27 +7858,27 @@ const (
 // added.
 // Ref: #/components/schemas/PassportElementErrorUnspecified
 type PassportElementErrorUnspecified struct {
+	// Error source, must be _unspecified_.
+	Source string "json:\"source\""
 	// Base64-encoded element hash.
 	ElementHash string "json:\"element_hash\""
 	// Error message.
 	Message string "json:\"message\""
-	// Error source, must be _unspecified_.
-	Source string "json:\"source\""
 }
 
 // This object represents a file uploaded to Telegram Passport. Currently all Telegram Passport files
 // are in JPEG format when decrypted and don't exceed 10MB.
 // Ref: #/components/schemas/PassportFile
 type PassportFile struct {
-	// Unix time when the file was uploaded.
-	FileDate int "json:\"file_date\""
 	// Identifier for this file, which can be used to download or reuse the file.
 	FileID string "json:\"file_id\""
-	// File size in bytes.
-	FileSize int "json:\"file_size\""
 	// Unique identifier for this file, which is supposed to be the same over time and for different bots.
 	//  Can't be used to download or reuse the file.
 	FileUniqueID string "json:\"file_unique_id\""
+	// File size in bytes.
+	FileSize int "json:\"file_size\""
+	// Unix time when the file was uploaded.
+	FileDate int "json:\"file_date\""
 }
 
 // This object represents one size of a photo or a [file](https://core.telegram.
@@ -7885,35 +7887,47 @@ type PassportFile struct {
 type PhotoSize struct {
 	// Identifier for this file, which can be used to download or reuse the file.
 	FileID string "json:\"file_id\""
-	// _Optional_. File size in bytes.
-	FileSize OptInt "json:\"file_size\""
 	// Unique identifier for this file, which is supposed to be the same over time and for different bots.
 	//  Can't be used to download or reuse the file.
 	FileUniqueID string "json:\"file_unique_id\""
-	// Photo height.
-	Height int "json:\"height\""
 	// Photo width.
 	Width int "json:\"width\""
+	// Photo height.
+	Height int "json:\"height\""
+	// _Optional_. File size in bytes.
+	FileSize OptInt "json:\"file_size\""
 }
 
 // Input for pinChatMessage.
 // Ref: #/components/schemas/pinChatMessage
 type PinChatMessage struct {
 	ChatID ID "json:\"chat_id\""
+	// Identifier of a message to pin.
+	MessageID int "json:\"message_id\""
 	// Pass _True_, if it is not necessary to send a notification to all chat members about the new
 	// pinned message. Notifications are always disabled in channels and private chats.
 	DisableNotification OptBool "json:\"disable_notification\""
-	// Identifier of a message to pin.
-	MessageID int "json:\"message_id\""
 }
 
 // This object contains information about a poll.
 // Ref: #/components/schemas/Poll
 type Poll struct {
+	// Unique poll identifier.
+	ID string "json:\"id\""
+	// Poll question, 1-300 characters.
+	Question string "json:\"question\""
+	// List of poll options.
+	Options []PollOption "json:\"options\""
+	// Total number of users that voted in the poll.
+	TotalVoterCount int "json:\"total_voter_count\""
+	// _True_, if the poll is closed.
+	IsClosed bool "json:\"is_closed\""
+	// _True_, if the poll is anonymous.
+	IsAnonymous bool "json:\"is_anonymous\""
+	// Poll type, currently can be `regular` or `quiz`.
+	Type PollType "json:\"type\""
 	// _True_, if the poll allows multiple answers.
 	AllowsMultipleAnswers bool "json:\"allows_multiple_answers\""
-	// _Optional_. Point in time (Unix timestamp) when the poll will be automatically closed.
-	CloseDate OptInt "json:\"close_date\""
 	// _Optional_. 0-based identifier of the correct answer option. Available only for polls in the quiz
 	// mode, which are closed, or was sent (not forwarded) by the bot or to the private chat with the bot.
 	CorrectOptionID OptInt "json:\"correct_option_id\""
@@ -7923,33 +7937,21 @@ type Poll struct {
 	// _Optional_. Special entities like usernames, URLs, bot commands, etc. that appear in the
 	// _explanation_.
 	ExplanationEntities []MessageEntity "json:\"explanation_entities\""
-	// Unique poll identifier.
-	ID string "json:\"id\""
-	// _True_, if the poll is anonymous.
-	IsAnonymous bool "json:\"is_anonymous\""
-	// _True_, if the poll is closed.
-	IsClosed bool "json:\"is_closed\""
 	// _Optional_. Amount of time in seconds the poll will be active after creation.
 	OpenPeriod OptInt "json:\"open_period\""
-	// List of poll options.
-	Options []PollOption "json:\"options\""
-	// Poll question, 1-300 characters.
-	Question string "json:\"question\""
-	// Total number of users that voted in the poll.
-	TotalVoterCount int "json:\"total_voter_count\""
-	// Poll type, currently can be `regular` or `quiz`.
-	Type PollType "json:\"type\""
+	// _Optional_. Point in time (Unix timestamp) when the poll will be automatically closed.
+	CloseDate OptInt "json:\"close_date\""
 }
 
 // This object represents an answer of a user in a non-anonymous poll.
 // Ref: #/components/schemas/PollAnswer
 type PollAnswer struct {
-	// 0-based identifiers of answer options, chosen by the user. May be empty if the user retracted
-	// their vote.
-	OptionIds []int "json:\"option_ids\""
 	// Unique poll identifier.
 	PollID string "json:\"poll_id\""
 	User   User   "json:\"user\""
+	// 0-based identifiers of answer options, chosen by the user. May be empty if the user retracted
+	// their vote.
+	OptionIds []int "json:\"option_ids\""
 }
 
 // This object contains information about one answer option in a poll.
@@ -7972,66 +7974,66 @@ const (
 // This object contains information about an incoming pre-checkout query.
 // Ref: #/components/schemas/PreCheckoutQuery
 type PreCheckoutQuery struct {
+	// Unique query identifier.
+	ID   string "json:\"id\""
+	From User   "json:\"from\""
 	// Three-letter ISO 4217 [currency](https://core.telegram.org/bots/payments#supported-currencies) code.
 	Currency string "json:\"currency\""
-	From     User   "json:\"from\""
-	// Unique query identifier.
-	ID string "json:\"id\""
-	// Bot specified invoice payload.
-	InvoicePayload string       "json:\"invoice_payload\""
-	OrderInfo      OptOrderInfo "json:\"order_info\""
-	// _Optional_. Identifier of the shipping option chosen by the user.
-	ShippingOptionID OptString "json:\"shipping_option_id\""
 	// Total price in the _smallest units_ of the currency (integer, **not** float/double). For example,
 	// for a price of `US$ 1.45` pass `amount = 145`. See the _exp_ parameter in [currencies.
 	// json](https://core.telegram.org/bots/payments/currencies.json), it shows the number of digits past
 	// the decimal point for each currency (2 for the majority of currencies).
 	TotalAmount int "json:\"total_amount\""
+	// Bot specified invoice payload.
+	InvoicePayload string "json:\"invoice_payload\""
+	// _Optional_. Identifier of the shipping option chosen by the user.
+	ShippingOptionID OptString    "json:\"shipping_option_id\""
+	OrderInfo        OptOrderInfo "json:\"order_info\""
 }
 
 // Input for promoteChatMember.
 // Ref: #/components/schemas/promoteChatMember
 type PromoteChatMember struct {
-	// Pass _True_, if the administrator can change chat title, photo and other settings.
-	CanChangeInfo OptBool "json:\"can_change_info\""
-	// Pass _True_, if the administrator can delete messages of other users.
-	CanDeleteMessages OptBool "json:\"can_delete_messages\""
-	// Pass _True_, if the administrator can edit messages of other users and can pin messages, channels
-	// only.
-	CanEditMessages OptBool "json:\"can_edit_messages\""
-	// Pass _True_, if the administrator can invite new users to the chat.
-	CanInviteUsers OptBool "json:\"can_invite_users\""
+	ChatID ID "json:\"chat_id\""
+	// Unique identifier of the target user.
+	UserID int64 "json:\"user_id\""
+	// Pass _True_, if the administrator's presence in the chat is hidden.
+	IsAnonymous OptBool "json:\"is_anonymous\""
 	// Pass _True_, if the administrator can access the chat event log, chat statistics, message
 	// statistics in channels, see channel members, see anonymous administrators in supergroups and
 	// ignore slow mode. Implied by any other administrator privilege.
 	CanManageChat OptBool "json:\"can_manage_chat\""
-	// Pass _True_, if the administrator can manage video chats.
-	CanManageVideoChats OptBool "json:\"can_manage_video_chats\""
-	// Pass _True_, if the administrator can pin messages, supergroups only.
-	CanPinMessages OptBool "json:\"can_pin_messages\""
 	// Pass _True_, if the administrator can create channel posts, channels only.
 	CanPostMessages OptBool "json:\"can_post_messages\""
+	// Pass _True_, if the administrator can edit messages of other users and can pin messages, channels
+	// only.
+	CanEditMessages OptBool "json:\"can_edit_messages\""
+	// Pass _True_, if the administrator can delete messages of other users.
+	CanDeleteMessages OptBool "json:\"can_delete_messages\""
+	// Pass _True_, if the administrator can manage video chats.
+	CanManageVideoChats OptBool "json:\"can_manage_video_chats\""
+	// Pass _True_, if the administrator can restrict, ban or unban chat members.
+	CanRestrictMembers OptBool "json:\"can_restrict_members\""
 	// Pass _True_, if the administrator can add new administrators with a subset of their own privileges
 	// or demote administrators that he has promoted, directly or indirectly (promoted by administrators
 	// that were appointed by him).
 	CanPromoteMembers OptBool "json:\"can_promote_members\""
-	// Pass _True_, if the administrator can restrict, ban or unban chat members.
-	CanRestrictMembers OptBool "json:\"can_restrict_members\""
-	ChatID             ID      "json:\"chat_id\""
-	// Pass _True_, if the administrator's presence in the chat is hidden.
-	IsAnonymous OptBool "json:\"is_anonymous\""
-	// Unique identifier of the target user.
-	UserID int64 "json:\"user_id\""
+	// Pass _True_, if the administrator can change chat title, photo and other settings.
+	CanChangeInfo OptBool "json:\"can_change_info\""
+	// Pass _True_, if the administrator can invite new users to the chat.
+	CanInviteUsers OptBool "json:\"can_invite_users\""
+	// Pass _True_, if the administrator can pin messages, supergroups only.
+	CanPinMessages OptBool "json:\"can_pin_messages\""
 }
 
 // This object represents the content of a service message, sent whenever a user in the chat triggers
 // a proximity alert set by another user.
 // Ref: #/components/schemas/ProximityAlertTriggered
 type ProximityAlertTriggered struct {
-	// The distance between the users.
-	Distance int  "json:\"distance\""
 	Traveler User "json:\"traveler\""
 	Watcher  User "json:\"watcher\""
+	// The distance between the users.
+	Distance int "json:\"distance\""
 }
 
 // This object represents a [custom keyboard](https://core.telegram.org/bots#keyboards) with reply
@@ -8039,21 +8041,21 @@ type ProximityAlertTriggered struct {
 // examples).
 // Ref: #/components/schemas/ReplyKeyboardMarkup
 type ReplyKeyboardMarkup struct {
-	// _Optional_. The placeholder to be shown in the input field when the keyboard is active; 1-64
-	// characters.
-	InputFieldPlaceholder OptString "json:\"input_field_placeholder\""
 	// Array of button rows, each represented by an Array of [KeyboardButton](https://core.telegram.
 	// org/bots/api#keyboardbutton) objects.
 	Keyboard [][]KeyboardButton "json:\"keyboard\""
+	// _Optional_. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the
+	// keyboard smaller if there are just two rows of buttons). Defaults to _false_, in which case the
+	// custom keyboard is always of the same height as the app's standard keyboard.
+	ResizeKeyboard OptBool "json:\"resize_keyboard\""
 	// _Optional_. Requests clients to hide the keyboard as soon as it's been used. The keyboard will
 	// still be available, but clients will automatically display the usual letter-keyboard in the chat -
 	// the user can press a special button in the input field to see the custom keyboard again. Defaults
 	// to _false_.
 	OneTimeKeyboard OptBool "json:\"one_time_keyboard\""
-	// _Optional_. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the
-	// keyboard smaller if there are just two rows of buttons). Defaults to _false_, in which case the
-	// custom keyboard is always of the same height as the app's standard keyboard.
-	ResizeKeyboard OptBool "json:\"resize_keyboard\""
+	// _Optional_. The placeholder to be shown in the input field when the keyboard is active; 1-64
+	// characters.
+	InputFieldPlaceholder OptString "json:\"input_field_placeholder\""
 	// _Optional_. Use this parameter if you want to show the keyboard to specific users only. Targets:
 	// 1) users that are @mentioned in the _text_ of the [Message](https://core.telegram.
 	// org/bots/api#message) object; 2) if the bot's message is a reply (has _reply_to_message_id_),
@@ -8099,98 +8101,98 @@ type ResponseParameters struct {
 // Input for restrictChatMember.
 // Ref: #/components/schemas/restrictChatMember
 type RestrictChatMember struct {
-	ChatID      ID              "json:\"chat_id\""
+	ChatID ID "json:\"chat_id\""
+	// Unique identifier of the target user.
+	UserID      int64           "json:\"user_id\""
 	Permissions ChatPermissions "json:\"permissions\""
 	// Date when restrictions will be lifted for the user, unix time. If user is restricted for more than
 	// 366 days or less than 30 seconds from the current time, they are considered to be restricted
 	// forever.
 	UntilDate OptInt "json:\"until_date\""
-	// Unique identifier of the target user.
-	UserID int64 "json:\"user_id\""
 }
 
 // Ref: #/components/schemas/Result
 type Result struct {
-	Ok     bool    "json:\"ok\""
 	Result OptBool "json:\"result\""
+	Ok     bool    "json:\"ok\""
 }
 
 // Ref: #/components/schemas/ResultArrayOfBotCommand
 type ResultArrayOfBotCommand struct {
-	Ok     bool         "json:\"ok\""
 	Result []BotCommand "json:\"result\""
+	Ok     bool         "json:\"ok\""
 }
 
 // Ref: #/components/schemas/ResultArrayOfChatMember
 type ResultArrayOfChatMember struct {
-	Ok     bool         "json:\"ok\""
 	Result []ChatMember "json:\"result\""
+	Ok     bool         "json:\"ok\""
 }
 
 // Ref: #/components/schemas/ResultArrayOfGameHighScore
 type ResultArrayOfGameHighScore struct {
-	Ok     bool            "json:\"ok\""
 	Result []GameHighScore "json:\"result\""
+	Ok     bool            "json:\"ok\""
 }
 
 // Ref: #/components/schemas/ResultArrayOfMessage
 type ResultArrayOfMessage struct {
-	Ok     bool      "json:\"ok\""
 	Result []Message "json:\"result\""
+	Ok     bool      "json:\"ok\""
 }
 
 // Ref: #/components/schemas/ResultArrayOfUpdate
 type ResultArrayOfUpdate struct {
-	Ok     bool     "json:\"ok\""
 	Result []Update "json:\"result\""
+	Ok     bool     "json:\"ok\""
 }
 
 // Ref: #/components/schemas/ResultChat
 type ResultChat struct {
-	Ok     bool    "json:\"ok\""
 	Result OptChat "json:\"result\""
+	Ok     bool    "json:\"ok\""
 }
 
 // Ref: #/components/schemas/ResultChatInviteLink
 type ResultChatInviteLink struct {
-	Ok     bool              "json:\"ok\""
 	Result OptChatInviteLink "json:\"result\""
+	Ok     bool              "json:\"ok\""
 }
 
 // Ref: #/components/schemas/ResultChatMember
 type ResultChatMember struct {
-	Ok     bool          "json:\"ok\""
 	Result OptChatMember "json:\"result\""
+	Ok     bool          "json:\"ok\""
 }
 
 // Ref: #/components/schemas/ResultFile
 type ResultFile struct {
-	Ok     bool    "json:\"ok\""
 	Result OptFile "json:\"result\""
+	Ok     bool    "json:\"ok\""
 }
 
 // Ref: #/components/schemas/ResultInt
 type ResultInt struct {
-	Ok     bool   "json:\"ok\""
 	Result OptInt "json:\"result\""
+	Ok     bool   "json:\"ok\""
 }
 
 // Ref: #/components/schemas/ResultMessage
 type ResultMessage struct {
-	Ok     bool       "json:\"ok\""
 	Result OptMessage "json:\"result\""
+	Ok     bool       "json:\"ok\""
 }
 
 // Ref: #/components/schemas/ResultMessageId
 type ResultMessageId struct {
-	Ok     bool         "json:\"ok\""
 	Result OptMessageId "json:\"result\""
+	Ok     bool         "json:\"ok\""
 }
 
 // Ref: #/components/schemas/ResultMessageOrBoolean
 type ResultMessageOrBoolean struct {
-	Ok     bool                            "json:\"ok\""
 	Result OptResultMessageOrBooleanResult "json:\"result\""
+	Ok     bool                            "json:\"ok\""
 }
 
 // ResultMessageOrBooleanResult represents sum type.
@@ -8263,38 +8265,38 @@ func NewBoolResultMessageOrBooleanResult(v bool) ResultMessageOrBooleanResult {
 
 // Ref: #/components/schemas/ResultPoll
 type ResultPoll struct {
-	Ok     bool    "json:\"ok\""
 	Result OptPoll "json:\"result\""
+	Ok     bool    "json:\"ok\""
 }
 
 // Ref: #/components/schemas/ResultStickerSet
 type ResultStickerSet struct {
-	Ok     bool          "json:\"ok\""
 	Result OptStickerSet "json:\"result\""
+	Ok     bool          "json:\"ok\""
 }
 
 // Ref: #/components/schemas/ResultString
 type ResultString struct {
-	Ok     bool      "json:\"ok\""
 	Result OptString "json:\"result\""
+	Ok     bool      "json:\"ok\""
 }
 
 // Ref: #/components/schemas/ResultUser
 type ResultUser struct {
-	Ok     bool    "json:\"ok\""
 	Result OptUser "json:\"result\""
+	Ok     bool    "json:\"ok\""
 }
 
 // Ref: #/components/schemas/ResultUserProfilePhotos
 type ResultUserProfilePhotos struct {
-	Ok     bool                 "json:\"ok\""
 	Result OptUserProfilePhotos "json:\"result\""
+	Ok     bool                 "json:\"ok\""
 }
 
 // Ref: #/components/schemas/ResultWebhookInfo
 type ResultWebhookInfo struct {
-	Ok     bool           "json:\"ok\""
 	Result OptWebhookInfo "json:\"result\""
+	Ok     bool           "json:\"ok\""
 }
 
 // Input for revokeChatInviteLink.
@@ -8308,35 +8310,18 @@ type RevokeChatInviteLink struct {
 // Input for sendAnimation.
 // Ref: #/components/schemas/sendAnimation
 type SendAnimation struct {
-	// Pass _True_, if the message should be sent even if the specified replied-to message is not found.
-	AllowSendingWithoutReply OptBool "json:\"allow_sending_without_reply\""
+	ChatID ID "json:\"chat_id\""
 	// Animation to send. Pass a file_id as String to send an animation that exists on the Telegram
 	// servers (recommended), pass an HTTP URL as a String for Telegram to get an animation from the
 	// Internet, or upload a new animation using multipart/form-data. [More information on Sending
 	// Files](https://core.telegram.org/bots/api#sending-files).
 	Animation string "json:\"animation\""
-	// Animation caption (may also be used when resending animation by _file_id_), 0-1024 characters
-	// after entities parsing.
-	Caption OptString "json:\"caption\""
-	// A JSON-serialized list of special entities that appear in the caption, which can be specified
-	// instead of _parse_mode_.
-	CaptionEntities []MessageEntity "json:\"caption_entities\""
-	ChatID          ID              "json:\"chat_id\""
-	// Sends the message [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will
-	// receive a notification with no sound.
-	DisableNotification OptBool "json:\"disable_notification\""
 	// Duration of sent animation in seconds.
 	Duration OptInt "json:\"duration\""
+	// Animation width.
+	Width OptInt "json:\"width\""
 	// Animation height.
 	Height OptInt "json:\"height\""
-	// Mode for parsing entities in the animation caption. See [formatting options](https://core.telegram.
-	// org/bots/api#formatting-options) for more details.
-	ParseMode OptString "json:\"parse_mode\""
-	// Protects the contents of the sent message from forwarding and saving.
-	ProtectContent OptBool            "json:\"protect_content\""
-	ReplyMarkup    OptSendReplyMarkup "json:\"reply_markup\""
-	// If the message is a reply, ID of the original message.
-	ReplyToMessageID OptInt "json:\"reply_to_message_id\""
 	// Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported
 	// server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's
 	// width and height should not exceed 320. Ignored if the file is not uploaded using
@@ -8345,15 +8330,31 @@ type SendAnimation struct {
 	// <file_attach_name>. [More information on Sending Files](https://core.telegram.
 	// org/bots/api#sending-files).
 	Thumb OptString "json:\"thumb\""
-	// Animation width.
-	Width OptInt "json:\"width\""
+	// Animation caption (may also be used when resending animation by _file_id_), 0-1024 characters
+	// after entities parsing.
+	Caption OptString "json:\"caption\""
+	// Mode for parsing entities in the animation caption. See [formatting options](https://core.telegram.
+	// org/bots/api#formatting-options) for more details.
+	ParseMode OptString "json:\"parse_mode\""
+	// A JSON-serialized list of special entities that appear in the caption, which can be specified
+	// instead of _parse_mode_.
+	CaptionEntities []MessageEntity "json:\"caption_entities\""
+	// Sends the message [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will
+	// receive a notification with no sound.
+	DisableNotification OptBool "json:\"disable_notification\""
+	// Protects the contents of the sent message from forwarding and saving.
+	ProtectContent OptBool "json:\"protect_content\""
+	// If the message is a reply, ID of the original message.
+	ReplyToMessageID OptInt "json:\"reply_to_message_id\""
+	// Pass _True_, if the message should be sent even if the specified replied-to message is not found.
+	AllowSendingWithoutReply OptBool            "json:\"allow_sending_without_reply\""
+	ReplyMarkup              OptSendReplyMarkup "json:\"reply_markup\""
 }
 
 // Input for sendAudio.
 // Ref: #/components/schemas/sendAudio
 type SendAudio struct {
-	// Pass _True_, if the message should be sent even if the specified replied-to message is not found.
-	AllowSendingWithoutReply OptBool "json:\"allow_sending_without_reply\""
+	ChatID ID "json:\"chat_id\""
 	// Audio file to send. Pass a file_id as String to send an audio file that exists on the Telegram
 	// servers (recommended), pass an HTTP URL as a String for Telegram to get an audio file from the
 	// Internet, or upload a new one using multipart/form-data. [More information on Sending
@@ -8361,25 +8362,18 @@ type SendAudio struct {
 	Audio string "json:\"audio\""
 	// Audio caption, 0-1024 characters after entities parsing.
 	Caption OptString "json:\"caption\""
-	// A JSON-serialized list of special entities that appear in the caption, which can be specified
-	// instead of _parse_mode_.
-	CaptionEntities []MessageEntity "json:\"caption_entities\""
-	ChatID          ID              "json:\"chat_id\""
-	// Sends the message [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will
-	// receive a notification with no sound.
-	DisableNotification OptBool "json:\"disable_notification\""
-	// Duration of the audio in seconds.
-	Duration OptInt "json:\"duration\""
 	// Mode for parsing entities in the audio caption. See [formatting options](https://core.telegram.
 	// org/bots/api#formatting-options) for more details.
 	ParseMode OptString "json:\"parse_mode\""
+	// A JSON-serialized list of special entities that appear in the caption, which can be specified
+	// instead of _parse_mode_.
+	CaptionEntities []MessageEntity "json:\"caption_entities\""
+	// Duration of the audio in seconds.
+	Duration OptInt "json:\"duration\""
 	// Performer.
 	Performer OptString "json:\"performer\""
-	// Protects the contents of the sent message from forwarding and saving.
-	ProtectContent OptBool            "json:\"protect_content\""
-	ReplyMarkup    OptSendReplyMarkup "json:\"reply_markup\""
-	// If the message is a reply, ID of the original message.
-	ReplyToMessageID OptInt "json:\"reply_to_message_id\""
+	// Track name.
+	Title OptString "json:\"title\""
 	// Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported
 	// server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's
 	// width and height should not exceed 320. Ignored if the file is not uploaded using
@@ -8388,13 +8382,22 @@ type SendAudio struct {
 	// <file_attach_name>. [More information on Sending Files](https://core.telegram.
 	// org/bots/api#sending-files).
 	Thumb OptString "json:\"thumb\""
-	// Track name.
-	Title OptString "json:\"title\""
+	// Sends the message [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will
+	// receive a notification with no sound.
+	DisableNotification OptBool "json:\"disable_notification\""
+	// Protects the contents of the sent message from forwarding and saving.
+	ProtectContent OptBool "json:\"protect_content\""
+	// If the message is a reply, ID of the original message.
+	ReplyToMessageID OptInt "json:\"reply_to_message_id\""
+	// Pass _True_, if the message should be sent even if the specified replied-to message is not found.
+	AllowSendingWithoutReply OptBool            "json:\"allow_sending_without_reply\""
+	ReplyMarkup              OptSendReplyMarkup "json:\"reply_markup\""
 }
 
 // Input for sendChatAction.
 // Ref: #/components/schemas/sendChatAction
 type SendChatAction struct {
+	ChatID ID "json:\"chat_id\""
 	// Type of action to broadcast. Choose one, depending on what the user is about to receive: _typing_
 	// for [text messages](https://core.telegram.org/bots/api#sendmessage), _upload_photo_ for
 	// [photos](https://core.telegram.org/bots/api#sendphoto), _record_video_ or _upload_video_ for
@@ -8405,84 +8408,62 @@ type SendChatAction struct {
 	// data](https://core.telegram.org/bots/api#sendlocation), _record_video_note_ or _upload_video_note_
 	// for [video notes](https://core.telegram.org/bots/api#sendvideonote).
 	Action string "json:\"action\""
-	ChatID ID     "json:\"chat_id\""
 }
 
 // Input for sendContact.
 // Ref: #/components/schemas/sendContact
 type SendContact struct {
-	// Pass _True_, if the message should be sent even if the specified replied-to message is not found.
-	AllowSendingWithoutReply OptBool "json:\"allow_sending_without_reply\""
-	ChatID                   ID      "json:\"chat_id\""
-	// Sends the message [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will
-	// receive a notification with no sound.
-	DisableNotification OptBool "json:\"disable_notification\""
+	ChatID ID "json:\"chat_id\""
+	// Contact's phone number.
+	PhoneNumber string "json:\"phone_number\""
 	// Contact's first name.
 	FirstName string "json:\"first_name\""
 	// Contact's last name.
 	LastName OptString "json:\"last_name\""
-	// Contact's phone number.
-	PhoneNumber string "json:\"phone_number\""
-	// Protects the contents of the sent message from forwarding and saving.
-	ProtectContent OptBool            "json:\"protect_content\""
-	ReplyMarkup    OptSendReplyMarkup "json:\"reply_markup\""
-	// If the message is a reply, ID of the original message.
-	ReplyToMessageID OptInt "json:\"reply_to_message_id\""
 	// Additional data about the contact in the form of a [vCard](https://en.wikipedia.org/wiki/VCard),
 	// 0-2048 bytes.
 	Vcard OptString "json:\"vcard\""
+	// Sends the message [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will
+	// receive a notification with no sound.
+	DisableNotification OptBool "json:\"disable_notification\""
+	// Protects the contents of the sent message from forwarding and saving.
+	ProtectContent OptBool "json:\"protect_content\""
+	// If the message is a reply, ID of the original message.
+	ReplyToMessageID OptInt "json:\"reply_to_message_id\""
+	// Pass _True_, if the message should be sent even if the specified replied-to message is not found.
+	AllowSendingWithoutReply OptBool            "json:\"allow_sending_without_reply\""
+	ReplyMarkup              OptSendReplyMarkup "json:\"reply_markup\""
 }
 
 // Input for sendDice.
 // Ref: #/components/schemas/sendDice
 type SendDice struct {
-	// Pass _True_, if the message should be sent even if the specified replied-to message is not found.
-	AllowSendingWithoutReply OptBool "json:\"allow_sending_without_reply\""
-	ChatID                   ID      "json:\"chat_id\""
-	// Sends the message [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will
-	// receive a notification with no sound.
-	DisableNotification OptBool "json:\"disable_notification\""
+	ChatID ID "json:\"chat_id\""
 	// Emoji on which the dice throw animation is based. Currently, must be one of `🎲`, `🎯`, `🏀`,
 	//  `⚽`, `🎳`, or `🎰`. Dice can have values 1-6 for `🎲`, `🎯` and `🎳`, values 1-5 for
 	// `🏀` and `⚽`, and values 1-64 for `🎰`. Defaults to `🎲`.
 	Emoji OptString "json:\"emoji\""
+	// Sends the message [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will
+	// receive a notification with no sound.
+	DisableNotification OptBool "json:\"disable_notification\""
 	// Protects the contents of the sent message from forwarding.
-	ProtectContent OptBool            "json:\"protect_content\""
-	ReplyMarkup    OptSendReplyMarkup "json:\"reply_markup\""
+	ProtectContent OptBool "json:\"protect_content\""
 	// If the message is a reply, ID of the original message.
 	ReplyToMessageID OptInt "json:\"reply_to_message_id\""
+	// Pass _True_, if the message should be sent even if the specified replied-to message is not found.
+	AllowSendingWithoutReply OptBool            "json:\"allow_sending_without_reply\""
+	ReplyMarkup              OptSendReplyMarkup "json:\"reply_markup\""
 }
 
 // Input for sendDocument.
 // Ref: #/components/schemas/sendDocument
 type SendDocument struct {
-	// Pass _True_, if the message should be sent even if the specified replied-to message is not found.
-	AllowSendingWithoutReply OptBool "json:\"allow_sending_without_reply\""
-	// Document caption (may also be used when resending documents by _file_id_), 0-1024 characters after
-	// entities parsing.
-	Caption OptString "json:\"caption\""
-	// A JSON-serialized list of special entities that appear in the caption, which can be specified
-	// instead of _parse_mode_.
-	CaptionEntities []MessageEntity "json:\"caption_entities\""
-	ChatID          ID              "json:\"chat_id\""
-	// Disables automatic server-side content type detection for files uploaded using multipart/form-data.
-	DisableContentTypeDetection OptBool "json:\"disable_content_type_detection\""
-	// Sends the message [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will
-	// receive a notification with no sound.
-	DisableNotification OptBool "json:\"disable_notification\""
+	ChatID ID "json:\"chat_id\""
 	// File to send. Pass a file_id as String to send a file that exists on the Telegram servers
 	// (recommended), pass an HTTP URL as a String for Telegram to get a file from the Internet, or
 	// upload a new one using multipart/form-data. [More information on Sending Files](https://core.
 	// telegram.org/bots/api#sending-files).
 	Document string "json:\"document\""
-	// Mode for parsing entities in the document caption. See [formatting options](https://core.telegram.
-	// org/bots/api#formatting-options) for more details.
-	ParseMode OptString "json:\"parse_mode\""
-	// Protects the contents of the sent message from forwarding and saving.
-	ProtectContent OptBool            "json:\"protect_content\""
-	ReplyMarkup    OptSendReplyMarkup "json:\"reply_markup\""
-	// If the message is a reply, ID of the original message.
-	ReplyToMessageID OptInt "json:\"reply_to_message_id\""
 	// Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported
 	// server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's
 	// width and height should not exceed 320. Ignored if the file is not uploaded using
@@ -8491,147 +8472,168 @@ type SendDocument struct {
 	// <file_attach_name>. [More information on Sending Files](https://core.telegram.
 	// org/bots/api#sending-files).
 	Thumb OptString "json:\"thumb\""
+	// Document caption (may also be used when resending documents by _file_id_), 0-1024 characters after
+	// entities parsing.
+	Caption OptString "json:\"caption\""
+	// Mode for parsing entities in the document caption. See [formatting options](https://core.telegram.
+	// org/bots/api#formatting-options) for more details.
+	ParseMode OptString "json:\"parse_mode\""
+	// A JSON-serialized list of special entities that appear in the caption, which can be specified
+	// instead of _parse_mode_.
+	CaptionEntities []MessageEntity "json:\"caption_entities\""
+	// Disables automatic server-side content type detection for files uploaded using multipart/form-data.
+	DisableContentTypeDetection OptBool "json:\"disable_content_type_detection\""
+	// Sends the message [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will
+	// receive a notification with no sound.
+	DisableNotification OptBool "json:\"disable_notification\""
+	// Protects the contents of the sent message from forwarding and saving.
+	ProtectContent OptBool "json:\"protect_content\""
+	// If the message is a reply, ID of the original message.
+	ReplyToMessageID OptInt "json:\"reply_to_message_id\""
+	// Pass _True_, if the message should be sent even if the specified replied-to message is not found.
+	AllowSendingWithoutReply OptBool            "json:\"allow_sending_without_reply\""
+	ReplyMarkup              OptSendReplyMarkup "json:\"reply_markup\""
 }
 
 // Input for sendGame.
 // Ref: #/components/schemas/sendGame
 type SendGame struct {
-	// Pass _True_, if the message should be sent even if the specified replied-to message is not found.
-	AllowSendingWithoutReply OptBool "json:\"allow_sending_without_reply\""
 	// Unique identifier for the target chat.
 	ChatID int64 "json:\"chat_id\""
-	// Sends the message [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will
-	// receive a notification with no sound.
-	DisableNotification OptBool "json:\"disable_notification\""
 	// Short name of the game, serves as the unique identifier for the game. Set up your games via
 	// [@BotFather](https://t.me/botfather).
 	GameShortName string "json:\"game_short_name\""
+	// Sends the message [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will
+	// receive a notification with no sound.
+	DisableNotification OptBool "json:\"disable_notification\""
 	// Protects the contents of the sent message from forwarding and saving.
-	ProtectContent OptBool                 "json:\"protect_content\""
-	ReplyMarkup    OptInlineKeyboardMarkup "json:\"reply_markup\""
+	ProtectContent OptBool "json:\"protect_content\""
 	// If the message is a reply, ID of the original message.
 	ReplyToMessageID OptInt "json:\"reply_to_message_id\""
+	// Pass _True_, if the message should be sent even if the specified replied-to message is not found.
+	AllowSendingWithoutReply OptBool                 "json:\"allow_sending_without_reply\""
+	ReplyMarkup              OptInlineKeyboardMarkup "json:\"reply_markup\""
 }
 
 // Input for sendInvoice.
 // Ref: #/components/schemas/sendInvoice
 type SendInvoice struct {
-	// Pass _True_, if the message should be sent even if the specified replied-to message is not found.
-	AllowSendingWithoutReply OptBool "json:\"allow_sending_without_reply\""
-	ChatID                   ID      "json:\"chat_id\""
+	ChatID ID "json:\"chat_id\""
+	// Product name, 1-32 characters.
+	Title string "json:\"title\""
+	// Product description, 1-255 characters.
+	Description string "json:\"description\""
+	// Bot-defined invoice payload, 1-128 bytes. This will not be displayed to the user, use for your
+	// internal processes.
+	Payload string "json:\"payload\""
+	// Payment provider token, obtained via [@BotFather](https://t.me/botfather).
+	ProviderToken string "json:\"provider_token\""
 	// Three-letter ISO 4217 currency code, see [more on currencies](https://core.telegram.
 	// org/bots/payments#supported-currencies).
 	Currency string "json:\"currency\""
-	// Product description, 1-255 characters.
-	Description string "json:\"description\""
-	// Sends the message [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will
-	// receive a notification with no sound.
-	DisableNotification OptBool "json:\"disable_notification\""
-	// Pass _True_, if the final price depends on the shipping method.
-	IsFlexible OptBool "json:\"is_flexible\""
+	// Price breakdown, a JSON-serialized list of components (e.g. product price, tax, discount, delivery
+	// cost, delivery tax, bonus, etc.).
+	Prices []LabeledPrice "json:\"prices\""
 	// The maximum accepted amount for tips in the _smallest units_ of the currency (integer, **not**
 	// float/double). For example, for a maximum tip of `US$ 1.45` pass `max_tip_amount = 145`. See the
 	// _exp_ parameter in [currencies.json](https://core.telegram.org/bots/payments/currencies.json), it
 	// shows the number of digits past the decimal point for each currency (2 for the majority of
 	// currencies). Defaults to 0.
 	MaxTipAmount OptInt "json:\"max_tip_amount\""
-	// Pass _True_, if you require the user's email address to complete the order.
-	NeedEmail OptBool "json:\"need_email\""
-	// Pass _True_, if you require the user's full name to complete the order.
-	NeedName OptBool "json:\"need_name\""
-	// Pass _True_, if you require the user's phone number to complete the order.
-	NeedPhoneNumber OptBool "json:\"need_phone_number\""
-	// Pass _True_, if you require the user's shipping address to complete the order.
-	NeedShippingAddress OptBool "json:\"need_shipping_address\""
-	// Bot-defined invoice payload, 1-128 bytes. This will not be displayed to the user, use for your
-	// internal processes.
-	Payload string "json:\"payload\""
-	// Photo height.
-	PhotoHeight OptInt "json:\"photo_height\""
-	// Photo size in bytes.
-	PhotoSize OptInt "json:\"photo_size\""
-	// URL of the product photo for the invoice. Can be a photo of the goods or a marketing image for a
-	// service. People like it better when they see what they are paying for.
-	PhotoURL OptString "json:\"photo_url\""
-	// Photo width.
-	PhotoWidth OptInt "json:\"photo_width\""
-	// Price breakdown, a JSON-serialized list of components (e.g. product price, tax, discount, delivery
-	// cost, delivery tax, bonus, etc.).
-	Prices []LabeledPrice "json:\"prices\""
-	// Protects the contents of the sent message from forwarding and saving.
-	ProtectContent OptBool "json:\"protect_content\""
-	// JSON-serialized data about the invoice, which will be shared with the payment provider. A detailed
-	// description of required fields should be provided by the payment provider.
-	ProviderData OptString "json:\"provider_data\""
-	// Payment provider token, obtained via [@BotFather](https://t.me/botfather).
-	ProviderToken string                  "json:\"provider_token\""
-	ReplyMarkup   OptInlineKeyboardMarkup "json:\"reply_markup\""
-	// If the message is a reply, ID of the original message.
-	ReplyToMessageID OptInt "json:\"reply_to_message_id\""
-	// Pass _True_, if the user's email address should be sent to provider.
-	SendEmailToProvider OptBool "json:\"send_email_to_provider\""
-	// Pass _True_, if the user's phone number should be sent to provider.
-	SendPhoneNumberToProvider OptBool "json:\"send_phone_number_to_provider\""
-	// Unique deep-linking parameter. If left empty, **forwarded copies** of the sent message will have a
-	// _Pay_ button, allowing multiple users to pay directly from the forwarded message, using the same
-	// invoice. If non-empty, forwarded copies of the sent message will have a _URL_ button with a deep
-	// link to the bot (instead of a _Pay_ button), with the value used as the start parameter.
-	StartParameter OptString "json:\"start_parameter\""
 	// A JSON-serialized array of suggested amounts of tips in the _smallest units_ of the currency
 	// (integer, **not** float/double). At most 4 suggested tip amounts can be specified. The suggested
 	// tip amounts must be positive, passed in a strictly increased order and must not exceed
 	// _max_tip_amount_.
 	SuggestedTipAmounts []int64 "json:\"suggested_tip_amounts\""
-	// Product name, 1-32 characters.
-	Title string "json:\"title\""
+	// Unique deep-linking parameter. If left empty, **forwarded copies** of the sent message will have a
+	// _Pay_ button, allowing multiple users to pay directly from the forwarded message, using the same
+	// invoice. If non-empty, forwarded copies of the sent message will have a _URL_ button with a deep
+	// link to the bot (instead of a _Pay_ button), with the value used as the start parameter.
+	StartParameter OptString "json:\"start_parameter\""
+	// JSON-serialized data about the invoice, which will be shared with the payment provider. A detailed
+	// description of required fields should be provided by the payment provider.
+	ProviderData OptString "json:\"provider_data\""
+	// URL of the product photo for the invoice. Can be a photo of the goods or a marketing image for a
+	// service. People like it better when they see what they are paying for.
+	PhotoURL OptString "json:\"photo_url\""
+	// Photo size in bytes.
+	PhotoSize OptInt "json:\"photo_size\""
+	// Photo width.
+	PhotoWidth OptInt "json:\"photo_width\""
+	// Photo height.
+	PhotoHeight OptInt "json:\"photo_height\""
+	// Pass _True_, if you require the user's full name to complete the order.
+	NeedName OptBool "json:\"need_name\""
+	// Pass _True_, if you require the user's phone number to complete the order.
+	NeedPhoneNumber OptBool "json:\"need_phone_number\""
+	// Pass _True_, if you require the user's email address to complete the order.
+	NeedEmail OptBool "json:\"need_email\""
+	// Pass _True_, if you require the user's shipping address to complete the order.
+	NeedShippingAddress OptBool "json:\"need_shipping_address\""
+	// Pass _True_, if the user's phone number should be sent to provider.
+	SendPhoneNumberToProvider OptBool "json:\"send_phone_number_to_provider\""
+	// Pass _True_, if the user's email address should be sent to provider.
+	SendEmailToProvider OptBool "json:\"send_email_to_provider\""
+	// Pass _True_, if the final price depends on the shipping method.
+	IsFlexible OptBool "json:\"is_flexible\""
+	// Sends the message [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will
+	// receive a notification with no sound.
+	DisableNotification OptBool "json:\"disable_notification\""
+	// Protects the contents of the sent message from forwarding and saving.
+	ProtectContent OptBool "json:\"protect_content\""
+	// If the message is a reply, ID of the original message.
+	ReplyToMessageID OptInt "json:\"reply_to_message_id\""
+	// Pass _True_, if the message should be sent even if the specified replied-to message is not found.
+	AllowSendingWithoutReply OptBool                 "json:\"allow_sending_without_reply\""
+	ReplyMarkup              OptInlineKeyboardMarkup "json:\"reply_markup\""
 }
 
 // Input for sendLocation.
 // Ref: #/components/schemas/sendLocation
 type SendLocation struct {
-	// Pass _True_, if the message should be sent even if the specified replied-to message is not found.
-	AllowSendingWithoutReply OptBool "json:\"allow_sending_without_reply\""
-	ChatID                   ID      "json:\"chat_id\""
-	// Sends the message [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will
-	// receive a notification with no sound.
-	DisableNotification OptBool "json:\"disable_notification\""
-	// For live locations, a direction in which the user is moving, in degrees. Must be between 1 and 360
-	// if specified.
-	Heading OptInt "json:\"heading\""
-	// The radius of uncertainty for the location, measured in meters; 0-1500.
-	HorizontalAccuracy OptFloat64 "json:\"horizontal_accuracy\""
+	ChatID ID "json:\"chat_id\""
 	// Latitude of the location.
 	Latitude float64 "json:\"latitude\""
+	// Longitude of the location.
+	Longitude float64 "json:\"longitude\""
+	// The radius of uncertainty for the location, measured in meters; 0-1500.
+	HorizontalAccuracy OptFloat64 "json:\"horizontal_accuracy\""
 	// Period in seconds for which the location will be updated (see [Live Locations](https://telegram.
 	// org/blog/live-locations), should be between 60 and 86400.
 	LivePeriod OptInt "json:\"live_period\""
-	// Longitude of the location.
-	Longitude float64 "json:\"longitude\""
-	// Protects the contents of the sent message from forwarding and saving.
-	ProtectContent OptBool "json:\"protect_content\""
+	// For live locations, a direction in which the user is moving, in degrees. Must be between 1 and 360
+	// if specified.
+	Heading OptInt "json:\"heading\""
 	// For live locations, a maximum distance for proximity alerts about approaching another chat member,
 	// in meters. Must be between 1 and 100000 if specified.
-	ProximityAlertRadius OptInt             "json:\"proximity_alert_radius\""
-	ReplyMarkup          OptSendReplyMarkup "json:\"reply_markup\""
+	ProximityAlertRadius OptInt "json:\"proximity_alert_radius\""
+	// Sends the message [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will
+	// receive a notification with no sound.
+	DisableNotification OptBool "json:\"disable_notification\""
+	// Protects the contents of the sent message from forwarding and saving.
+	ProtectContent OptBool "json:\"protect_content\""
 	// If the message is a reply, ID of the original message.
 	ReplyToMessageID OptInt "json:\"reply_to_message_id\""
+	// Pass _True_, if the message should be sent even if the specified replied-to message is not found.
+	AllowSendingWithoutReply OptBool            "json:\"allow_sending_without_reply\""
+	ReplyMarkup              OptSendReplyMarkup "json:\"reply_markup\""
 }
 
 // Input for sendMediaGroup.
 // Ref: #/components/schemas/sendMediaGroup
 type SendMediaGroup struct {
-	// Pass _True_, if the message should be sent even if the specified replied-to message is not found.
-	AllowSendingWithoutReply OptBool "json:\"allow_sending_without_reply\""
-	ChatID                   ID      "json:\"chat_id\""
+	ChatID ID "json:\"chat_id\""
+	// A JSON-serialized array describing messages to be sent, must include 2-10 items.
+	Media []SendMediaGroupMediaItem "json:\"media\""
 	// Sends messages [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will
 	// receive a notification with no sound.
 	DisableNotification OptBool "json:\"disable_notification\""
-	// A JSON-serialized array describing messages to be sent, must include 2-10 items.
-	Media []SendMediaGroupMediaItem "json:\"media\""
 	// Protects the contents of the sent messages from forwarding and saving.
 	ProtectContent OptBool "json:\"protect_content\""
 	// If the messages are a reply, ID of the original message.
 	ReplyToMessageID OptInt "json:\"reply_to_message_id\""
+	// Pass _True_, if the message should be sent even if the specified replied-to message is not found.
+	AllowSendingWithoutReply OptBool "json:\"allow_sending_without_reply\""
 }
 
 // SendMediaGroupMediaItem represents sum type.
@@ -8761,103 +8763,103 @@ func NewInputMediaVideoSendMediaGroupMediaItem(v InputMediaVideo) SendMediaGroup
 // Input for sendMessage.
 // Ref: #/components/schemas/sendMessage
 type SendMessage struct {
-	// Pass _True_, if the message should be sent even if the specified replied-to message is not found.
-	AllowSendingWithoutReply OptBool "json:\"allow_sending_without_reply\""
-	ChatID                   ID      "json:\"chat_id\""
-	// Sends the message [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will
-	// receive a notification with no sound.
-	DisableNotification OptBool "json:\"disable_notification\""
-	// Disables link previews for links in this message.
-	DisableWebPagePreview OptBool "json:\"disable_web_page_preview\""
-	// A JSON-serialized list of special entities that appear in message text, which can be specified
-	// instead of _parse_mode_.
-	Entities []MessageEntity "json:\"entities\""
+	ChatID ID "json:\"chat_id\""
+	// Text of the message to be sent, 1-4096 characters after entities parsing.
+	Text string "json:\"text\""
 	// Mode for parsing entities in the message text. See [formatting options](https://core.telegram.
 	// org/bots/api#formatting-options) for more details.
 	ParseMode OptString "json:\"parse_mode\""
+	// A JSON-serialized list of special entities that appear in message text, which can be specified
+	// instead of _parse_mode_.
+	Entities []MessageEntity "json:\"entities\""
+	// Disables link previews for links in this message.
+	DisableWebPagePreview OptBool "json:\"disable_web_page_preview\""
+	// Sends the message [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will
+	// receive a notification with no sound.
+	DisableNotification OptBool "json:\"disable_notification\""
 	// Protects the contents of the sent message from forwarding and saving.
-	ProtectContent OptBool            "json:\"protect_content\""
-	ReplyMarkup    OptSendReplyMarkup "json:\"reply_markup\""
+	ProtectContent OptBool "json:\"protect_content\""
 	// If the message is a reply, ID of the original message.
 	ReplyToMessageID OptInt "json:\"reply_to_message_id\""
-	// Text of the message to be sent, 1-4096 characters after entities parsing.
-	Text string "json:\"text\""
+	// Pass _True_, if the message should be sent even if the specified replied-to message is not found.
+	AllowSendingWithoutReply OptBool            "json:\"allow_sending_without_reply\""
+	ReplyMarkup              OptSendReplyMarkup "json:\"reply_markup\""
 }
 
 // Input for sendPhoto.
 // Ref: #/components/schemas/sendPhoto
 type SendPhoto struct {
-	// Pass _True_, if the message should be sent even if the specified replied-to message is not found.
-	AllowSendingWithoutReply OptBool "json:\"allow_sending_without_reply\""
-	// Photo caption (may also be used when resending photos by _file_id_), 0-1024 characters after
-	// entities parsing.
-	Caption OptString "json:\"caption\""
-	// A JSON-serialized list of special entities that appear in the caption, which can be specified
-	// instead of _parse_mode_.
-	CaptionEntities []MessageEntity "json:\"caption_entities\""
-	ChatID          ID              "json:\"chat_id\""
-	// Sends the message [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will
-	// receive a notification with no sound.
-	DisableNotification OptBool "json:\"disable_notification\""
-	// Mode for parsing entities in the photo caption. See [formatting options](https://core.telegram.
-	// org/bots/api#formatting-options) for more details.
-	ParseMode OptString "json:\"parse_mode\""
+	ChatID ID "json:\"chat_id\""
 	// Photo to send. Pass a file_id as String to send a photo that exists on the Telegram servers
 	// (recommended), pass an HTTP URL as a String for Telegram to get a photo from the Internet, or
 	// upload a new photo using multipart/form-data. The photo must be at most 10 MB in size. The photo's
 	// width and height must not exceed 10000 in total. Width and height ratio must be at most 20. [More
 	// information on Sending Files](https://core.telegram.org/bots/api#sending-files).
 	Photo string "json:\"photo\""
+	// Photo caption (may also be used when resending photos by _file_id_), 0-1024 characters after
+	// entities parsing.
+	Caption OptString "json:\"caption\""
+	// Mode for parsing entities in the photo caption. See [formatting options](https://core.telegram.
+	// org/bots/api#formatting-options) for more details.
+	ParseMode OptString "json:\"parse_mode\""
+	// A JSON-serialized list of special entities that appear in the caption, which can be specified
+	// instead of _parse_mode_.
+	CaptionEntities []MessageEntity "json:\"caption_entities\""
+	// Sends the message [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will
+	// receive a notification with no sound.
+	DisableNotification OptBool "json:\"disable_notification\""
 	// Protects the contents of the sent message from forwarding and saving.
-	ProtectContent OptBool            "json:\"protect_content\""
-	ReplyMarkup    OptSendReplyMarkup "json:\"reply_markup\""
+	ProtectContent OptBool "json:\"protect_content\""
 	// If the message is a reply, ID of the original message.
 	ReplyToMessageID OptInt "json:\"reply_to_message_id\""
+	// Pass _True_, if the message should be sent even if the specified replied-to message is not found.
+	AllowSendingWithoutReply OptBool            "json:\"allow_sending_without_reply\""
+	ReplyMarkup              OptSendReplyMarkup "json:\"reply_markup\""
 }
 
 // Input for sendPoll.
 // Ref: #/components/schemas/sendPoll
 type SendPoll struct {
-	// Pass _True_, if the message should be sent even if the specified replied-to message is not found.
-	AllowSendingWithoutReply OptBool "json:\"allow_sending_without_reply\""
+	ChatID ID "json:\"chat_id\""
+	// Poll question, 1-300 characters.
+	Question string "json:\"question\""
+	// A JSON-serialized list of answer options, 2-10 strings 1-100 characters each.
+	Options []string "json:\"options\""
+	// _True_, if the poll needs to be anonymous, defaults to _True_.
+	IsAnonymous OptBool "json:\"is_anonymous\""
+	// Poll type, `quiz` or `regular`, defaults to `regular`.
+	Type OptString "json:\"type\""
 	// _True_, if the poll allows multiple answers, ignored for polls in quiz mode, defaults to _False_.
 	AllowsMultipleAnswers OptBool "json:\"allows_multiple_answers\""
-	ChatID                ID      "json:\"chat_id\""
-	// Point in time (Unix timestamp) when the poll will be automatically closed. Must be at least 5 and
-	// no more than 600 seconds in the future. Can't be used together with _open_period_.
-	CloseDate OptInt "json:\"close_date\""
 	// 0-based identifier of the correct answer option, required for polls in quiz mode.
 	CorrectOptionID OptInt "json:\"correct_option_id\""
-	// Sends the message [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will
-	// receive a notification with no sound.
-	DisableNotification OptBool "json:\"disable_notification\""
 	// Text that is shown when a user chooses an incorrect answer or taps on the lamp icon in a
 	// quiz-style poll, 0-200 characters with at most 2 line feeds after entities parsing.
 	Explanation OptString "json:\"explanation\""
-	// A JSON-serialized list of special entities that appear in the poll explanation, which can be
-	// specified instead of _parse_mode_.
-	ExplanationEntities []MessageEntity "json:\"explanation_entities\""
 	// Mode for parsing entities in the explanation. See [formatting options](https://core.telegram.
 	// org/bots/api#formatting-options) for more details.
 	ExplanationParseMode OptString "json:\"explanation_parse_mode\""
-	// _True_, if the poll needs to be anonymous, defaults to _True_.
-	IsAnonymous OptBool "json:\"is_anonymous\""
-	// Pass _True_, if the poll needs to be immediately closed. This can be useful for poll preview.
-	IsClosed OptBool "json:\"is_closed\""
+	// A JSON-serialized list of special entities that appear in the poll explanation, which can be
+	// specified instead of _parse_mode_.
+	ExplanationEntities []MessageEntity "json:\"explanation_entities\""
 	// Amount of time in seconds the poll will be active after creation, 5-600. Can't be used together
 	// with _close_date_.
 	OpenPeriod OptInt "json:\"open_period\""
-	// A JSON-serialized list of answer options, 2-10 strings 1-100 characters each.
-	Options []string "json:\"options\""
+	// Point in time (Unix timestamp) when the poll will be automatically closed. Must be at least 5 and
+	// no more than 600 seconds in the future. Can't be used together with _open_period_.
+	CloseDate OptInt "json:\"close_date\""
+	// Pass _True_, if the poll needs to be immediately closed. This can be useful for poll preview.
+	IsClosed OptBool "json:\"is_closed\""
+	// Sends the message [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will
+	// receive a notification with no sound.
+	DisableNotification OptBool "json:\"disable_notification\""
 	// Protects the contents of the sent message from forwarding and saving.
 	ProtectContent OptBool "json:\"protect_content\""
-	// Poll question, 1-300 characters.
-	Question    string             "json:\"question\""
-	ReplyMarkup OptSendReplyMarkup "json:\"reply_markup\""
 	// If the message is a reply, ID of the original message.
 	ReplyToMessageID OptInt "json:\"reply_to_message_id\""
-	// Poll type, `quiz` or `regular`, defaults to `regular`.
-	Type OptString "json:\"type\""
+	// Pass _True_, if the message should be sent even if the specified replied-to message is not found.
+	AllowSendingWithoutReply OptBool            "json:\"allow_sending_without_reply\""
+	ReplyMarkup              OptSendReplyMarkup "json:\"reply_markup\""
 }
 
 // Ref: #/components/schemas/SendReplyMarkup
@@ -8986,35 +8988,36 @@ func NewForceReplySendReplyMarkup(v ForceReply) SendReplyMarkup {
 // Input for sendSticker.
 // Ref: #/components/schemas/sendSticker
 type SendSticker struct {
-	// Pass _True_, if the message should be sent even if the specified replied-to message is not found.
-	AllowSendingWithoutReply OptBool "json:\"allow_sending_without_reply\""
-	ChatID                   ID      "json:\"chat_id\""
-	// Sends the message [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will
-	// receive a notification with no sound.
-	DisableNotification OptBool "json:\"disable_notification\""
-	// Protects the contents of the sent message from forwarding and saving.
-	ProtectContent OptBool            "json:\"protect_content\""
-	ReplyMarkup    OptSendReplyMarkup "json:\"reply_markup\""
-	// If the message is a reply, ID of the original message.
-	ReplyToMessageID OptInt "json:\"reply_to_message_id\""
+	ChatID ID "json:\"chat_id\""
 	// Sticker to send. Pass a file_id as String to send a file that exists on the Telegram servers
 	// (recommended), pass an HTTP URL as a String for Telegram to get a .WEBP file from the Internet, or
 	// upload a new one using multipart/form-data. [More information on Sending Files](https://core.
 	// telegram.org/bots/api#sending-files).
 	Sticker string "json:\"sticker\""
+	// Sends the message [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will
+	// receive a notification with no sound.
+	DisableNotification OptBool "json:\"disable_notification\""
+	// Protects the contents of the sent message from forwarding and saving.
+	ProtectContent OptBool "json:\"protect_content\""
+	// If the message is a reply, ID of the original message.
+	ReplyToMessageID OptInt "json:\"reply_to_message_id\""
+	// Pass _True_, if the message should be sent even if the specified replied-to message is not found.
+	AllowSendingWithoutReply OptBool            "json:\"allow_sending_without_reply\""
+	ReplyMarkup              OptSendReplyMarkup "json:\"reply_markup\""
 }
 
 // Input for sendVenue.
 // Ref: #/components/schemas/sendVenue
 type SendVenue struct {
+	ChatID ID "json:\"chat_id\""
+	// Latitude of the venue.
+	Latitude float64 "json:\"latitude\""
+	// Longitude of the venue.
+	Longitude float64 "json:\"longitude\""
+	// Name of the venue.
+	Title string "json:\"title\""
 	// Address of the venue.
 	Address string "json:\"address\""
-	// Pass _True_, if the message should be sent even if the specified replied-to message is not found.
-	AllowSendingWithoutReply OptBool "json:\"allow_sending_without_reply\""
-	ChatID                   ID      "json:\"chat_id\""
-	// Sends the message [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will
-	// receive a notification with no sound.
-	DisableNotification OptBool "json:\"disable_notification\""
 	// Foursquare identifier of the venue.
 	FoursquareID OptString "json:\"foursquare_id\""
 	// Foursquare type of the venue, if known. (For example, `arts_entertainment/default`,
@@ -9025,83 +9028,33 @@ type SendVenue struct {
 	// Google Places type of the venue. (See [supported types](https://developers.google.
 	// com/places/web-service/supported_types).).
 	GooglePlaceType OptString "json:\"google_place_type\""
-	// Latitude of the venue.
-	Latitude float64 "json:\"latitude\""
-	// Longitude of the venue.
-	Longitude float64 "json:\"longitude\""
+	// Sends the message [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will
+	// receive a notification with no sound.
+	DisableNotification OptBool "json:\"disable_notification\""
 	// Protects the contents of the sent message from forwarding and saving.
-	ProtectContent OptBool            "json:\"protect_content\""
-	ReplyMarkup    OptSendReplyMarkup "json:\"reply_markup\""
+	ProtectContent OptBool "json:\"protect_content\""
 	// If the message is a reply, ID of the original message.
 	ReplyToMessageID OptInt "json:\"reply_to_message_id\""
-	// Name of the venue.
-	Title string "json:\"title\""
+	// Pass _True_, if the message should be sent even if the specified replied-to message is not found.
+	AllowSendingWithoutReply OptBool            "json:\"allow_sending_without_reply\""
+	ReplyMarkup              OptSendReplyMarkup "json:\"reply_markup\""
 }
 
 // Input for sendVideo.
 // Ref: #/components/schemas/sendVideo
 type SendVideo struct {
-	// Pass _True_, if the message should be sent even if the specified replied-to message is not found.
-	AllowSendingWithoutReply OptBool "json:\"allow_sending_without_reply\""
-	// Video caption (may also be used when resending videos by _file_id_), 0-1024 characters after
-	// entities parsing.
-	Caption OptString "json:\"caption\""
-	// A JSON-serialized list of special entities that appear in the caption, which can be specified
-	// instead of _parse_mode_.
-	CaptionEntities []MessageEntity "json:\"caption_entities\""
-	ChatID          ID              "json:\"chat_id\""
-	// Sends the message [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will
-	// receive a notification with no sound.
-	DisableNotification OptBool "json:\"disable_notification\""
-	// Duration of sent video in seconds.
-	Duration OptInt "json:\"duration\""
-	// Video height.
-	Height OptInt "json:\"height\""
-	// Mode for parsing entities in the video caption. See [formatting options](https://core.telegram.
-	// org/bots/api#formatting-options) for more details.
-	ParseMode OptString "json:\"parse_mode\""
-	// Protects the contents of the sent message from forwarding and saving.
-	ProtectContent OptBool            "json:\"protect_content\""
-	ReplyMarkup    OptSendReplyMarkup "json:\"reply_markup\""
-	// If the message is a reply, ID of the original message.
-	ReplyToMessageID OptInt "json:\"reply_to_message_id\""
-	// Pass _True_, if the uploaded video is suitable for streaming.
-	SupportsStreaming OptBool "json:\"supports_streaming\""
-	// Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported
-	// server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's
-	// width and height should not exceed 320. Ignored if the file is not uploaded using
-	// multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can
-	// pass `attach://<file_attach_name>` if the thumbnail was uploaded using multipart/form-data under
-	// <file_attach_name>. [More information on Sending Files](https://core.telegram.
-	// org/bots/api#sending-files).
-	Thumb OptString "json:\"thumb\""
+	ChatID ID "json:\"chat_id\""
 	// Video to send. Pass a file_id as String to send a video that exists on the Telegram servers
 	// (recommended), pass an HTTP URL as a String for Telegram to get a video from the Internet, or
 	// upload a new video using multipart/form-data. [More information on Sending Files](https://core.
 	// telegram.org/bots/api#sending-files).
 	Video string "json:\"video\""
-	// Video width.
-	Width OptInt "json:\"width\""
-}
-
-// Input for sendVideoNote.
-// Ref: #/components/schemas/sendVideoNote
-type SendVideoNote struct {
-	// Pass _True_, if the message should be sent even if the specified replied-to message is not found.
-	AllowSendingWithoutReply OptBool "json:\"allow_sending_without_reply\""
-	ChatID                   ID      "json:\"chat_id\""
-	// Sends the message [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will
-	// receive a notification with no sound.
-	DisableNotification OptBool "json:\"disable_notification\""
 	// Duration of sent video in seconds.
 	Duration OptInt "json:\"duration\""
-	// Video width and height, i.e. diameter of the video message.
-	Length OptInt "json:\"length\""
-	// Protects the contents of the sent message from forwarding and saving.
-	ProtectContent OptBool            "json:\"protect_content\""
-	ReplyMarkup    OptSendReplyMarkup "json:\"reply_markup\""
-	// If the message is a reply, ID of the original message.
-	ReplyToMessageID OptInt "json:\"reply_to_message_id\""
+	// Video width.
+	Width OptInt "json:\"width\""
+	// Video height.
+	Height OptInt "json:\"height\""
 	// Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported
 	// server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's
 	// width and height should not exceed 320. Ignored if the file is not uploaded using
@@ -9110,52 +9063,101 @@ type SendVideoNote struct {
 	// <file_attach_name>. [More information on Sending Files](https://core.telegram.
 	// org/bots/api#sending-files).
 	Thumb OptString "json:\"thumb\""
+	// Video caption (may also be used when resending videos by _file_id_), 0-1024 characters after
+	// entities parsing.
+	Caption OptString "json:\"caption\""
+	// Mode for parsing entities in the video caption. See [formatting options](https://core.telegram.
+	// org/bots/api#formatting-options) for more details.
+	ParseMode OptString "json:\"parse_mode\""
+	// A JSON-serialized list of special entities that appear in the caption, which can be specified
+	// instead of _parse_mode_.
+	CaptionEntities []MessageEntity "json:\"caption_entities\""
+	// Pass _True_, if the uploaded video is suitable for streaming.
+	SupportsStreaming OptBool "json:\"supports_streaming\""
+	// Sends the message [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will
+	// receive a notification with no sound.
+	DisableNotification OptBool "json:\"disable_notification\""
+	// Protects the contents of the sent message from forwarding and saving.
+	ProtectContent OptBool "json:\"protect_content\""
+	// If the message is a reply, ID of the original message.
+	ReplyToMessageID OptInt "json:\"reply_to_message_id\""
+	// Pass _True_, if the message should be sent even if the specified replied-to message is not found.
+	AllowSendingWithoutReply OptBool            "json:\"allow_sending_without_reply\""
+	ReplyMarkup              OptSendReplyMarkup "json:\"reply_markup\""
+}
+
+// Input for sendVideoNote.
+// Ref: #/components/schemas/sendVideoNote
+type SendVideoNote struct {
+	ChatID ID "json:\"chat_id\""
 	// Video note to send. Pass a file_id as String to send a video note that exists on the Telegram
 	// servers (recommended) or upload a new video using multipart/form-data. [More information on
 	// Sending Files](https://core.telegram.org/bots/api#sending-files). Sending video notes by a URL is
 	// currently unsupported.
 	VideoNote string "json:\"video_note\""
+	// Duration of sent video in seconds.
+	Duration OptInt "json:\"duration\""
+	// Video width and height, i.e. diameter of the video message.
+	Length OptInt "json:\"length\""
+	// Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported
+	// server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's
+	// width and height should not exceed 320. Ignored if the file is not uploaded using
+	// multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can
+	// pass `attach://<file_attach_name>` if the thumbnail was uploaded using multipart/form-data under
+	// <file_attach_name>. [More information on Sending Files](https://core.telegram.
+	// org/bots/api#sending-files).
+	Thumb OptString "json:\"thumb\""
+	// Sends the message [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will
+	// receive a notification with no sound.
+	DisableNotification OptBool "json:\"disable_notification\""
+	// Protects the contents of the sent message from forwarding and saving.
+	ProtectContent OptBool "json:\"protect_content\""
+	// If the message is a reply, ID of the original message.
+	ReplyToMessageID OptInt "json:\"reply_to_message_id\""
+	// Pass _True_, if the message should be sent even if the specified replied-to message is not found.
+	AllowSendingWithoutReply OptBool            "json:\"allow_sending_without_reply\""
+	ReplyMarkup              OptSendReplyMarkup "json:\"reply_markup\""
 }
 
 // Input for sendVoice.
 // Ref: #/components/schemas/sendVoice
 type SendVoice struct {
-	// Pass _True_, if the message should be sent even if the specified replied-to message is not found.
-	AllowSendingWithoutReply OptBool "json:\"allow_sending_without_reply\""
-	// Voice message caption, 0-1024 characters after entities parsing.
-	Caption OptString "json:\"caption\""
-	// A JSON-serialized list of special entities that appear in the caption, which can be specified
-	// instead of _parse_mode_.
-	CaptionEntities []MessageEntity "json:\"caption_entities\""
-	ChatID          ID              "json:\"chat_id\""
-	// Sends the message [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will
-	// receive a notification with no sound.
-	DisableNotification OptBool "json:\"disable_notification\""
-	// Duration of the voice message in seconds.
-	Duration OptInt "json:\"duration\""
-	// Mode for parsing entities in the voice message caption. See [formatting options](https://core.
-	// telegram.org/bots/api#formatting-options) for more details.
-	ParseMode OptString "json:\"parse_mode\""
-	// Protects the contents of the sent message from forwarding and saving.
-	ProtectContent OptBool            "json:\"protect_content\""
-	ReplyMarkup    OptSendReplyMarkup "json:\"reply_markup\""
-	// If the message is a reply, ID of the original message.
-	ReplyToMessageID OptInt "json:\"reply_to_message_id\""
+	ChatID ID "json:\"chat_id\""
 	// Audio file to send. Pass a file_id as String to send a file that exists on the Telegram servers
 	// (recommended), pass an HTTP URL as a String for Telegram to get a file from the Internet, or
 	// upload a new one using multipart/form-data. [More information on Sending Files](https://core.
 	// telegram.org/bots/api#sending-files).
 	Voice string "json:\"voice\""
+	// Voice message caption, 0-1024 characters after entities parsing.
+	Caption OptString "json:\"caption\""
+	// Mode for parsing entities in the voice message caption. See [formatting options](https://core.
+	// telegram.org/bots/api#formatting-options) for more details.
+	ParseMode OptString "json:\"parse_mode\""
+	// A JSON-serialized list of special entities that appear in the caption, which can be specified
+	// instead of _parse_mode_.
+	CaptionEntities []MessageEntity "json:\"caption_entities\""
+	// Duration of the voice message in seconds.
+	Duration OptInt "json:\"duration\""
+	// Sends the message [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will
+	// receive a notification with no sound.
+	DisableNotification OptBool "json:\"disable_notification\""
+	// Protects the contents of the sent message from forwarding and saving.
+	ProtectContent OptBool "json:\"protect_content\""
+	// If the message is a reply, ID of the original message.
+	ReplyToMessageID OptInt "json:\"reply_to_message_id\""
+	// Pass _True_, if the message should be sent even if the specified replied-to message is not found.
+	AllowSendingWithoutReply OptBool            "json:\"allow_sending_without_reply\""
+	ReplyMarkup              OptSendReplyMarkup "json:\"reply_markup\""
 }
 
 // Input for setChatAdministratorCustomTitle.
 // Ref: #/components/schemas/setChatAdministratorCustomTitle
 type SetChatAdministratorCustomTitle struct {
 	ChatID ID "json:\"chat_id\""
-	// New custom title for the administrator; 0-16 characters, emoji are not allowed.
-	CustomTitle string "json:\"custom_title\""
 	// Unique identifier of the target user.
 	UserID int64 "json:\"user_id\""
+	// New custom title for the administrator; 0-16 characters, emoji are not allowed.
+	CustomTitle string "json:\"custom_title\""
 }
 
 // Input for setChatDescription.
@@ -9209,22 +9211,22 @@ type SetChatTitle struct {
 // Input for setGameScore.
 // Ref: #/components/schemas/setGameScore
 type SetGameScore struct {
-	// Required if _inline_message_id_ is not specified. Unique identifier for the target chat.
-	ChatID OptInt64 "json:\"chat_id\""
-	// Pass _True_, if the game message should not be automatically edited to include the current
-	// scoreboard.
-	DisableEditMessage OptBool "json:\"disable_edit_message\""
+	// User identifier.
+	UserID int64 "json:\"user_id\""
+	// New score, must be non-negative.
+	Score int "json:\"score\""
 	// Pass _True_, if the high score is allowed to decrease. This can be useful when fixing mistakes or
 	// banning cheaters.
 	Force OptBool "json:\"force\""
-	// Required if _chat_id_ and _message_id_ are not specified. Identifier of the inline message.
-	InlineMessageID OptString "json:\"inline_message_id\""
+	// Pass _True_, if the game message should not be automatically edited to include the current
+	// scoreboard.
+	DisableEditMessage OptBool "json:\"disable_edit_message\""
+	// Required if _inline_message_id_ is not specified. Unique identifier for the target chat.
+	ChatID OptInt64 "json:\"chat_id\""
 	// Required if _inline_message_id_ is not specified. Identifier of the sent message.
 	MessageID OptInt "json:\"message_id\""
-	// New score, must be non-negative.
-	Score int "json:\"score\""
-	// User identifier.
-	UserID int64 "json:\"user_id\""
+	// Required if _chat_id_ and _message_id_ are not specified. Identifier of the inline message.
+	InlineMessageID OptString "json:\"inline_message_id\""
 }
 
 // Input for setMyCommands.
@@ -9232,38 +9234,38 @@ type SetGameScore struct {
 type SetMyCommands struct {
 	// A JSON-serialized list of bot commands to be set as the list of the bot's commands. At most 100
 	// commands can be specified.
-	Commands []BotCommand "json:\"commands\""
+	Commands []BotCommand       "json:\"commands\""
+	Scope    OptBotCommandScope "json:\"scope\""
 	// A two-letter ISO 639-1 language code. If empty, commands will be applied to all users from the
 	// given scope, for whose language there are no dedicated commands.
-	LanguageCode OptString          "json:\"language_code\""
-	Scope        OptBotCommandScope "json:\"scope\""
+	LanguageCode OptString "json:\"language_code\""
 }
 
 // Input for setMyDefaultAdministratorRights.
 // Ref: #/components/schemas/setMyDefaultAdministratorRights
 type SetMyDefaultAdministratorRights struct {
+	Rights OptChatAdministratorRights "json:\"rights\""
 	// Pass _True_ to change the default administrator rights of the bot in channels. Otherwise, the
 	// default administrator rights of the bot for groups and supergroups will be changed.
-	ForChannels OptBool                    "json:\"for_channels\""
-	Rights      OptChatAdministratorRights "json:\"rights\""
+	ForChannels OptBool "json:\"for_channels\""
 }
 
 // Input for setPassportDataErrors.
 // Ref: #/components/schemas/setPassportDataErrors
 type SetPassportDataErrors struct {
-	// A JSON-serialized array describing the errors.
-	Errors []PassportElementError "json:\"errors\""
 	// User identifier.
 	UserID int64 "json:\"user_id\""
+	// A JSON-serialized array describing the errors.
+	Errors []PassportElementError "json:\"errors\""
 }
 
 // Input for setStickerPositionInSet.
 // Ref: #/components/schemas/setStickerPositionInSet
 type SetStickerPositionInSet struct {
-	// New sticker position in the set, zero-based.
-	Position int "json:\"position\""
 	// File identifier of the sticker.
 	Sticker string "json:\"sticker\""
+	// New sticker position in the set, zero-based.
+	Position int "json:\"position\""
 }
 
 // Input for setStickerSetThumb.
@@ -9271,6 +9273,8 @@ type SetStickerPositionInSet struct {
 type SetStickerSetThumb struct {
 	// Sticker set name.
 	Name string "json:\"name\""
+	// User identifier of the sticker set owner.
+	UserID int64 "json:\"user_id\""
 	// A **PNG** image with the thumbnail, must be up to 128 kilobytes in size and have width and height
 	// exactly 100px, or a **TGS** animation with the thumbnail up to 32 kilobytes in size; see
 	// [](https://core.telegram.org/stickers#animated-sticker-requirements)[https://core.telegram.
@@ -9285,25 +9289,16 @@ type SetStickerSetThumb struct {
 	// multipart/form-data. [More information on Sending Files](https://core.telegram.
 	// org/bots/api#sending-files). Animated sticker set thumbnails can't be uploaded via HTTP URL.
 	Thumb OptString "json:\"thumb\""
-	// User identifier of the sticker set owner.
-	UserID int64 "json:\"user_id\""
 }
 
 // Input for setWebhook.
 // Ref: #/components/schemas/setWebhook
 type SetWebhook struct {
-	// A JSON-serialized list of the update types you want your bot to receive. For example, specify
-	// [`message`, `edited_channel_post`, `callback_query`] to only receive updates of these types. See
-	// [Update](https://core.telegram.org/bots/api#update) for a complete list of available update types.
-	// Specify an empty list to receive all update types except _chat_member_ (default). If not specified,
-	//  the previous setting will be used.Please note that this parameter doesn't affect updates created
-	// before the call to the setWebhook, so unwanted updates may be received for a short period of time.
-	AllowedUpdates []string "json:\"allowed_updates\""
+	// HTTPS URL to send updates to. Use an empty string to remove webhook integration.
+	URL string "json:\"url\""
 	// Upload your public key certificate so that the root certificate in use can be checked. See our
 	// [self-signed guide](https://core.telegram.org/bots/self-signed) for details.
 	Certificate OptString "json:\"certificate\""
-	// Pass _True_ to drop all pending updates.
-	DropPendingUpdates OptBool "json:\"drop_pending_updates\""
 	// The fixed IP address which will be used to send webhook requests instead of the IP address
 	// resolved through DNS.
 	IPAddress OptString "json:\"ip_address\""
@@ -9311,29 +9306,36 @@ type SetWebhook struct {
 	// 1-100. Defaults to _40_. Use lower values to limit the load on your bot's server, and higher
 	// values to increase your bot's throughput.
 	MaxConnections OptInt "json:\"max_connections\""
+	// A JSON-serialized list of the update types you want your bot to receive. For example, specify
+	// [`message`, `edited_channel_post`, `callback_query`] to only receive updates of these types. See
+	// [Update](https://core.telegram.org/bots/api#update) for a complete list of available update types.
+	// Specify an empty list to receive all update types except _chat_member_ (default). If not specified,
+	//  the previous setting will be used.Please note that this parameter doesn't affect updates created
+	// before the call to the setWebhook, so unwanted updates may be received for a short period of time.
+	AllowedUpdates []string "json:\"allowed_updates\""
+	// Pass _True_ to drop all pending updates.
+	DropPendingUpdates OptBool "json:\"drop_pending_updates\""
 	// A secret token to be sent in a header `X-Telegram-Bot-Api-Secret-Token` in every webhook request,
 	// 1-256 characters. Only characters `A-Z`, `a-z`, `0-9`, `_` and `-` are allowed. The header is
 	// useful to ensure that the request comes from a webhook set by you.
 	SecretToken OptString "json:\"secret_token\""
-	// HTTPS URL to send updates to. Use an empty string to remove webhook integration.
-	URL string "json:\"url\""
 }
 
 // This object represents a shipping address.
 // Ref: #/components/schemas/ShippingAddress
 type ShippingAddress struct {
-	// City.
-	City string "json:\"city\""
 	// Two-letter ISO 3166-1 alpha-2 country code.
 	CountryCode string "json:\"country_code\""
-	// Address post code.
-	PostCode string "json:\"post_code\""
 	// State, if applicable.
 	State string "json:\"state\""
+	// City.
+	City string "json:\"city\""
 	// First line for the address.
 	StreetLine1 string "json:\"street_line1\""
 	// Second line for the address.
 	StreetLine2 string "json:\"street_line2\""
+	// Address post code.
+	PostCode string "json:\"post_code\""
 }
 
 // This object represents one shipping option.
@@ -9341,18 +9343,18 @@ type ShippingAddress struct {
 type ShippingOption struct {
 	// Shipping option identifier.
 	ID string "json:\"id\""
-	// List of price portions.
-	Prices []LabeledPrice "json:\"prices\""
 	// Option title.
 	Title string "json:\"title\""
+	// List of price portions.
+	Prices []LabeledPrice "json:\"prices\""
 }
 
 // This object contains information about an incoming shipping query.
 // Ref: #/components/schemas/ShippingQuery
 type ShippingQuery struct {
-	From User "json:\"from\""
 	// Unique query identifier.
-	ID string "json:\"id\""
+	ID   string "json:\"id\""
+	From User   "json:\"from\""
 	// Bot specified invoice payload.
 	InvoicePayload  string          "json:\"invoice_payload\""
 	ShippingAddress ShippingAddress "json:\"shipping_address\""
@@ -9361,61 +9363,61 @@ type ShippingQuery struct {
 // This object represents a sticker.
 // Ref: #/components/schemas/Sticker
 type Sticker struct {
-	// _Optional_. Emoji associated with the sticker.
-	Emoji OptString "json:\"emoji\""
 	// Identifier for this file, which can be used to download or reuse the file.
 	FileID string "json:\"file_id\""
-	// _Optional_. File size in bytes.
-	FileSize OptInt "json:\"file_size\""
 	// Unique identifier for this file, which is supposed to be the same over time and for different bots.
 	//  Can't be used to download or reuse the file.
 	FileUniqueID string "json:\"file_unique_id\""
+	// Sticker width.
+	Width int "json:\"width\""
 	// Sticker height.
 	Height int "json:\"height\""
 	// _True_, if the sticker is [animated](https://telegram.org/blog/animated-stickers).
 	IsAnimated bool "json:\"is_animated\""
 	// _True_, if the sticker is a [video sticker](https://telegram.
 	// org/blog/video-stickers-better-reactions).
-	IsVideo          bool            "json:\"is_video\""
-	MaskPosition     OptMaskPosition "json:\"mask_position\""
-	PremiumAnimation OptFile         "json:\"premium_animation\""
-	// _Optional_. Name of the sticker set to which the sticker belongs.
-	SetName OptString    "json:\"set_name\""
+	IsVideo bool         "json:\"is_video\""
 	Thumb   OptPhotoSize "json:\"thumb\""
-	// Sticker width.
-	Width int "json:\"width\""
+	// _Optional_. Emoji associated with the sticker.
+	Emoji OptString "json:\"emoji\""
+	// _Optional_. Name of the sticker set to which the sticker belongs.
+	SetName          OptString       "json:\"set_name\""
+	PremiumAnimation OptFile         "json:\"premium_animation\""
+	MaskPosition     OptMaskPosition "json:\"mask_position\""
+	// _Optional_. File size in bytes.
+	FileSize OptInt "json:\"file_size\""
 }
 
 // This object represents a sticker set.
 // Ref: #/components/schemas/StickerSet
 type StickerSet struct {
-	// _True_, if the sticker set contains masks.
-	ContainsMasks bool "json:\"contains_masks\""
+	// Sticker set name.
+	Name string "json:\"name\""
+	// Sticker set title.
+	Title string "json:\"title\""
 	// _True_, if the sticker set contains [animated stickers](https://telegram.
 	// org/blog/animated-stickers).
 	IsAnimated bool "json:\"is_animated\""
 	// _True_, if the sticker set contains [video stickers](https://telegram.
 	// org/blog/video-stickers-better-reactions).
 	IsVideo bool "json:\"is_video\""
-	// Sticker set name.
-	Name string "json:\"name\""
+	// _True_, if the sticker set contains masks.
+	ContainsMasks bool "json:\"contains_masks\""
 	// List of all set stickers.
 	Stickers []Sticker    "json:\"stickers\""
 	Thumb    OptPhotoSize "json:\"thumb\""
-	// Sticker set title.
-	Title string "json:\"title\""
 }
 
 // Input for stopMessageLiveLocation.
 // Ref: #/components/schemas/stopMessageLiveLocation
 type StopMessageLiveLocation struct {
 	ChatID OptID "json:\"chat_id\""
-	// Required if _chat_id_ and _message_id_ are not specified. Identifier of the inline message.
-	InlineMessageID OptString "json:\"inline_message_id\""
 	// Required if _inline_message_id_ is not specified. Identifier of the message with live location to
 	// stop.
-	MessageID   OptInt                  "json:\"message_id\""
-	ReplyMarkup OptInlineKeyboardMarkup "json:\"reply_markup\""
+	MessageID OptInt "json:\"message_id\""
+	// Required if _chat_id_ and _message_id_ are not specified. Identifier of the inline message.
+	InlineMessageID OptString               "json:\"inline_message_id\""
+	ReplyMarkup     OptInlineKeyboardMarkup "json:\"reply_markup\""
 }
 
 // Input for stopPoll.
@@ -9432,30 +9434,30 @@ type StopPoll struct {
 type SuccessfulPayment struct {
 	// Three-letter ISO 4217 [currency](https://core.telegram.org/bots/payments#supported-currencies) code.
 	Currency string "json:\"currency\""
-	// Bot specified invoice payload.
-	InvoicePayload string       "json:\"invoice_payload\""
-	OrderInfo      OptOrderInfo "json:\"order_info\""
-	// Provider payment identifier.
-	ProviderPaymentChargeID string "json:\"provider_payment_charge_id\""
-	// _Optional_. Identifier of the shipping option chosen by the user.
-	ShippingOptionID OptString "json:\"shipping_option_id\""
-	// Telegram payment identifier.
-	TelegramPaymentChargeID string "json:\"telegram_payment_charge_id\""
 	// Total price in the _smallest units_ of the currency (integer, **not** float/double). For example,
 	// for a price of `US$ 1.45` pass `amount = 145`. See the _exp_ parameter in [currencies.
 	// json](https://core.telegram.org/bots/payments/currencies.json), it shows the number of digits past
 	// the decimal point for each currency (2 for the majority of currencies).
 	TotalAmount int "json:\"total_amount\""
+	// Bot specified invoice payload.
+	InvoicePayload string "json:\"invoice_payload\""
+	// _Optional_. Identifier of the shipping option chosen by the user.
+	ShippingOptionID OptString    "json:\"shipping_option_id\""
+	OrderInfo        OptOrderInfo "json:\"order_info\""
+	// Telegram payment identifier.
+	TelegramPaymentChargeID string "json:\"telegram_payment_charge_id\""
+	// Provider payment identifier.
+	ProviderPaymentChargeID string "json:\"provider_payment_charge_id\""
 }
 
 // Input for unbanChatMember.
 // Ref: #/components/schemas/unbanChatMember
 type UnbanChatMember struct {
 	ChatID ID "json:\"chat_id\""
-	// Do nothing if the user is not banned.
-	OnlyIfBanned OptBool "json:\"only_if_banned\""
 	// Unique identifier of the target user.
 	UserID int64 "json:\"user_id\""
+	// Do nothing if the user is not banned.
+	OnlyIfBanned OptBool "json:\"only_if_banned\""
 }
 
 // Input for unbanChatSenderChat.
@@ -9485,42 +9487,60 @@ type UnpinChatMessage struct {
 // most **one** of the optional parameters can be present in any given update.
 // Ref: #/components/schemas/Update
 type Update struct {
-	CallbackQuery      OptCallbackQuery      "json:\"callback_query\""
-	ChannelPost        OptMessage            "json:\"channel_post\""
-	ChatJoinRequest    OptChatJoinRequest    "json:\"chat_join_request\""
-	ChatMember         OptChatMemberUpdated  "json:\"chat_member\""
-	ChosenInlineResult OptChosenInlineResult "json:\"chosen_inline_result\""
-	EditedChannelPost  OptMessage            "json:\"edited_channel_post\""
-	EditedMessage      OptMessage            "json:\"edited_message\""
-	InlineQuery        OptInlineQuery        "json:\"inline_query\""
-	Message            OptMessage            "json:\"message\""
-	MyChatMember       OptChatMemberUpdated  "json:\"my_chat_member\""
-	Poll               OptPoll               "json:\"poll\""
-	PollAnswer         OptPollAnswer         "json:\"poll_answer\""
-	PreCheckoutQuery   OptPreCheckoutQuery   "json:\"pre_checkout_query\""
-	ShippingQuery      OptShippingQuery      "json:\"shipping_query\""
 	// The update's unique identifier. Update identifiers start from a certain positive number and
 	// increase sequentially. This ID becomes especially handy if you're using [webhooks](https://core.
 	// telegram.org/bots/api#setwebhook), since it allows you to ignore repeated updates or to restore
 	// the correct update sequence, should they get out of order. If there are no new updates for at
 	// least a week, then identifier of the next update will be chosen randomly instead of sequentially.
-	UpdateID int "json:\"update_id\""
+	UpdateID           int                   "json:\"update_id\""
+	Message            OptMessage            "json:\"message\""
+	EditedMessage      OptMessage            "json:\"edited_message\""
+	ChannelPost        OptMessage            "json:\"channel_post\""
+	EditedChannelPost  OptMessage            "json:\"edited_channel_post\""
+	InlineQuery        OptInlineQuery        "json:\"inline_query\""
+	ChosenInlineResult OptChosenInlineResult "json:\"chosen_inline_result\""
+	CallbackQuery      OptCallbackQuery      "json:\"callback_query\""
+	ShippingQuery      OptShippingQuery      "json:\"shipping_query\""
+	PreCheckoutQuery   OptPreCheckoutQuery   "json:\"pre_checkout_query\""
+	Poll               OptPoll               "json:\"poll\""
+	PollAnswer         OptPollAnswer         "json:\"poll_answer\""
+	MyChatMember       OptChatMemberUpdated  "json:\"my_chat_member\""
+	ChatMember         OptChatMemberUpdated  "json:\"chat_member\""
+	ChatJoinRequest    OptChatJoinRequest    "json:\"chat_join_request\""
 }
 
 // Input for uploadStickerFile.
 // Ref: #/components/schemas/uploadStickerFile
 type UploadStickerFile struct {
+	// User identifier of sticker file owner.
+	UserID int64 "json:\"user_id\""
 	// **PNG** image with the sticker, must be up to 512 kilobytes in size, dimensions must not exceed
 	// 512px, and either width or height must be exactly 512px. [More information on Sending
 	// Files](https://core.telegram.org/bots/api#sending-files).
 	PNGSticker string "json:\"png_sticker\""
-	// User identifier of sticker file owner.
-	UserID int64 "json:\"user_id\""
 }
 
 // This object represents a Telegram user or bot.
 // Ref: #/components/schemas/User
 type User struct {
+	// Unique identifier for this user or bot. This number may have more than 32 significant bits and
+	// some programming languages may have difficulty/silent defects in interpreting it. But it has at
+	// most 52 significant bits, so a 64-bit integer or double-precision float type are safe for storing
+	// this identifier.
+	ID int64 "json:\"id\""
+	// _True_, if this user is a bot.
+	IsBot bool "json:\"is_bot\""
+	// User's or bot's first name.
+	FirstName string "json:\"first_name\""
+	// _Optional_. User's or bot's last name.
+	LastName OptString "json:\"last_name\""
+	// _Optional_. User's or bot's username.
+	Username OptString "json:\"username\""
+	// _Optional_. [IETF language tag](https://en.wikipedia.org/wiki/IETF_language_tag) of the user's
+	// language.
+	LanguageCode OptString "json:\"language_code\""
+	// _Optional_. _True_, if this user is a Telegram Premium user.
+	IsPremium OptBool "json:\"is_premium\""
 	// _Optional_. _True_, if this user added the bot to the attachment menu.
 	AddedToAttachmentMenu OptBool "json:\"added_to_attachment_menu\""
 	// _Optional_. _True_, if the bot can be invited to groups. Returned only in [getMe](https://core.
@@ -9529,41 +9549,26 @@ type User struct {
 	// _Optional_. _True_, if [privacy mode](https://core.telegram.org/bots#privacy-mode) is disabled for
 	// the bot. Returned only in [getMe](https://core.telegram.org/bots/api#getme).
 	CanReadAllGroupMessages OptBool "json:\"can_read_all_group_messages\""
-	// User's or bot's first name.
-	FirstName string "json:\"first_name\""
-	// Unique identifier for this user or bot. This number may have more than 32 significant bits and
-	// some programming languages may have difficulty/silent defects in interpreting it. But it has at
-	// most 52 significant bits, so a 64-bit integer or double-precision float type are safe for storing
-	// this identifier.
-	ID int64 "json:\"id\""
-	// _True_, if this user is a bot.
-	IsBot bool "json:\"is_bot\""
-	// _Optional_. _True_, if this user is a Telegram Premium user.
-	IsPremium OptBool "json:\"is_premium\""
-	// _Optional_. [IETF language tag](https://en.wikipedia.org/wiki/IETF_language_tag) of the user's
-	// language.
-	LanguageCode OptString "json:\"language_code\""
-	// _Optional_. User's or bot's last name.
-	LastName OptString "json:\"last_name\""
 	// _Optional_. _True_, if the bot supports inline queries. Returned only in [getMe](https://core.
 	// telegram.org/bots/api#getme).
 	SupportsInlineQueries OptBool "json:\"supports_inline_queries\""
-	// _Optional_. User's or bot's username.
-	Username OptString "json:\"username\""
 }
 
 // This object represent a user's profile pictures.
 // Ref: #/components/schemas/UserProfilePhotos
 type UserProfilePhotos struct {
-	// Requested profile pictures (in up to 4 sizes each).
-	Photos [][]PhotoSize "json:\"photos\""
 	// Total number of profile pictures the target user has.
 	TotalCount int "json:\"total_count\""
+	// Requested profile pictures (in up to 4 sizes each).
+	Photos [][]PhotoSize "json:\"photos\""
 }
 
 // This object represents a venue.
 // Ref: #/components/schemas/Venue
 type Venue struct {
+	Location Location "json:\"location\""
+	// Name of the venue.
+	Title string "json:\"title\""
 	// Address of the venue.
 	Address string "json:\"address\""
 	// _Optional_. Foursquare identifier of the venue.
@@ -9576,34 +9581,31 @@ type Venue struct {
 	// _Optional_. Google Places type of the venue. (See [supported types](https://developers.google.
 	// com/places/web-service/supported_types).).
 	GooglePlaceType OptString "json:\"google_place_type\""
-	Location        Location  "json:\"location\""
-	// Name of the venue.
-	Title string "json:\"title\""
 }
 
 // This object represents a video file.
 // Ref: #/components/schemas/Video
 type Video struct {
-	// Duration of the video in seconds as defined by sender.
-	Duration int "json:\"duration\""
 	// Identifier for this file, which can be used to download or reuse the file.
 	FileID string "json:\"file_id\""
+	// Unique identifier for this file, which is supposed to be the same over time and for different bots.
+	//  Can't be used to download or reuse the file.
+	FileUniqueID string "json:\"file_unique_id\""
+	// Video width as defined by sender.
+	Width int "json:\"width\""
+	// Video height as defined by sender.
+	Height int "json:\"height\""
+	// Duration of the video in seconds as defined by sender.
+	Duration int          "json:\"duration\""
+	Thumb    OptPhotoSize "json:\"thumb\""
 	// _Optional_. Original filename as defined by sender.
 	FileName OptString "json:\"file_name\""
+	// _Optional_. MIME type of the file as defined by sender.
+	MimeType OptString "json:\"mime_type\""
 	// _Optional_. File size in bytes. It can be bigger than 2^31 and some programming languages may have
 	// difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed
 	// 64-bit integer or double-precision float type are safe for storing this value.
 	FileSize OptInt "json:\"file_size\""
-	// Unique identifier for this file, which is supposed to be the same over time and for different bots.
-	//  Can't be used to download or reuse the file.
-	FileUniqueID string "json:\"file_unique_id\""
-	// Video height as defined by sender.
-	Height int "json:\"height\""
-	// _Optional_. MIME type of the file as defined by sender.
-	MimeType OptString    "json:\"mime_type\""
-	Thumb    OptPhotoSize "json:\"thumb\""
-	// Video width as defined by sender.
-	Width int "json:\"width\""
 }
 
 // This object represents a service message about a video chat ended in the chat.
@@ -9637,46 +9639,46 @@ type VideoChatStarted struct{}
 // (available in Telegram apps as of [v.4.0](https://telegram.org/blog/video-messages-and-telescope)).
 // Ref: #/components/schemas/VideoNote
 type VideoNote struct {
-	// Duration of the video in seconds as defined by sender.
-	Duration int "json:\"duration\""
 	// Identifier for this file, which can be used to download or reuse the file.
 	FileID string "json:\"file_id\""
-	// _Optional_. File size in bytes.
-	FileSize OptInt "json:\"file_size\""
 	// Unique identifier for this file, which is supposed to be the same over time and for different bots.
 	//  Can't be used to download or reuse the file.
 	FileUniqueID string "json:\"file_unique_id\""
 	// Video width and height (diameter of the video message) as defined by sender.
-	Length int          "json:\"length\""
-	Thumb  OptPhotoSize "json:\"thumb\""
+	Length int "json:\"length\""
+	// Duration of the video in seconds as defined by sender.
+	Duration int          "json:\"duration\""
+	Thumb    OptPhotoSize "json:\"thumb\""
+	// _Optional_. File size in bytes.
+	FileSize OptInt "json:\"file_size\""
 }
 
 // This object represents a voice note.
 // Ref: #/components/schemas/Voice
 type Voice struct {
-	// Duration of the audio in seconds as defined by sender.
-	Duration int "json:\"duration\""
 	// Identifier for this file, which can be used to download or reuse the file.
 	FileID string "json:\"file_id\""
+	// Unique identifier for this file, which is supposed to be the same over time and for different bots.
+	//  Can't be used to download or reuse the file.
+	FileUniqueID string "json:\"file_unique_id\""
+	// Duration of the audio in seconds as defined by sender.
+	Duration int "json:\"duration\""
+	// _Optional_. MIME type of the file as defined by sender.
+	MimeType OptString "json:\"mime_type\""
 	// _Optional_. File size in bytes. It can be bigger than 2^31 and some programming languages may have
 	// difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed
 	// 64-bit integer or double-precision float type are safe for storing this value.
 	FileSize OptInt "json:\"file_size\""
-	// Unique identifier for this file, which is supposed to be the same over time and for different bots.
-	//  Can't be used to download or reuse the file.
-	FileUniqueID string "json:\"file_unique_id\""
-	// _Optional_. MIME type of the file as defined by sender.
-	MimeType OptString "json:\"mime_type\""
 }
 
 // Describes data sent from a [Web App](https://core.telegram.org/bots/webapps) to the bot.
 // Ref: #/components/schemas/WebAppData
 type WebAppData struct {
+	// The data. Be aware that a bad client can send arbitrary data in this field.
+	Data string "json:\"data\""
 	// Text of the _web_app_ keyboard button from which the Web App was opened. Be aware that a bad
 	// client can send arbitrary data in this field.
 	ButtonText string "json:\"button_text\""
-	// The data. Be aware that a bad client can send arbitrary data in this field.
-	Data string "json:\"data\""
 }
 
 // Describes a [Web App](https://core.telegram.org/bots/webapps).
@@ -9690,11 +9692,12 @@ type WebAppInfo struct {
 // Describes the current status of a webhook.
 // Ref: #/components/schemas/WebhookInfo
 type WebhookInfo struct {
-	// _Optional_. A list of update types the bot is subscribed to. Defaults to all update types except
-	// _chat_member_.
-	AllowedUpdates []string "json:\"allowed_updates\""
+	// Webhook URL, may be empty if webhook is not set up.
+	URL string "json:\"url\""
 	// _True_, if a custom certificate was provided for webhook certificate checks.
 	HasCustomCertificate bool "json:\"has_custom_certificate\""
+	// Number of updates awaiting delivery.
+	PendingUpdateCount int "json:\"pending_update_count\""
 	// _Optional_. Currently used webhook IP address.
 	IPAddress OptString "json:\"ip_address\""
 	// _Optional_. Unix time for the most recent error that happened when trying to deliver an update via
@@ -9709,8 +9712,7 @@ type WebhookInfo struct {
 	// _Optional_. The maximum allowed number of simultaneous HTTPS connections to the webhook for update
 	// delivery.
 	MaxConnections OptInt "json:\"max_connections\""
-	// Number of updates awaiting delivery.
-	PendingUpdateCount int "json:\"pending_update_count\""
-	// Webhook URL, may be empty if webhook is not set up.
-	URL string "json:\"url\""
+	// _Optional_. A list of update types the bot is subscribed to. Defaults to all update types except
+	// _chat_member_.
+	AllowedUpdates []string "json:\"allowed_updates\""
 }

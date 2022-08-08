@@ -63,7 +63,9 @@ func (UnimplementedHandler) AnswerPreCheckoutQuery(ctx context.Context, req Answ
 // AnswerShippingQuery implements answerShippingQuery operation.
 //
 // If you sent an invoice requesting a shipping address and the parameter _is_flexible_ was specified,
-//  the Bot API will send an [Update](https://core.telegram.org/bots/api#update) with a
+//
+//	the Bot API will send an [Update](https://core.telegram.org/bots/api#update) with a
+//
 // _shipping_query_ field to the bot. Use this method to reply to shipping queries. On success,
 // _True_ is returned.
 //
@@ -708,7 +710,9 @@ func (UnimplementedHandler) SendPoll(ctx context.Context, req SendPoll) (r Resul
 // SendSticker implements sendSticker operation.
 //
 // Use this method to send static .WEBP, [animated](https://telegram.org/blog/animated-stickers) .TGS,
-//  or [video](https://telegram.org/blog/video-stickers-better-reactions) .WEBM stickers. On success,
+//
+//	or [video](https://telegram.org/blog/video-stickers-better-reactions) .WEBM stickers. On success,
+//
 // the sent [Message](https://core.telegram.org/bots/api#message) is returned.
 //
 // POST /sendSticker
@@ -808,7 +812,9 @@ func (UnimplementedHandler) SetChatPermissions(ctx context.Context, req SetChatP
 // SetChatPhoto implements setChatPhoto operation.
 //
 // Use this method to set a new profile photo for the chat. Photos can't be changed for private chats.
-//  The bot must be an administrator in the chat for this to work and must have the appropriate
+//
+//	The bot must be an administrator in the chat for this to work and must have the appropriate
+//
 // administrator rights. Returns _True_ on success.
 //
 // POST /setChatPhoto

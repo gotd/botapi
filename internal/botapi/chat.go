@@ -138,7 +138,12 @@ func (b *BotAPI) GetChat(ctx context.Context, req oas.GetChat) (oas.ResultChat, 
 		chat.Photo = b.setChatPhoto(id, 0, p.Raw().Photo)
 		chat.Description = oas.NewOptString(full.GetAbout())
 		if invite, ok := full.GetExportedInvite(); ok {
-			chat.InviteLink.SetTo(invite.Link)
+			switch invite := invite.(type) {
+			case *tg.ChatInviteExported:
+				chat.InviteLink.SetTo(invite.Link)
+			case *tg.ChatInvitePublicJoinRequests:
+				// TODO: handle?
+			}
 		}
 		// TODO(tdakkota): resolve pinned.
 		if v, ok := p.DefaultBannedRights(); ok {
@@ -155,7 +160,12 @@ func (b *BotAPI) GetChat(ctx context.Context, req oas.GetChat) (oas.ResultChat, 
 		chat.Photo = b.setChatPhoto(id, raw.AccessHash, raw.Photo)
 		chat.Description = oas.NewOptString(full.GetAbout())
 		if invite, ok := full.GetExportedInvite(); ok {
-			chat.InviteLink.SetTo(invite.Link)
+			switch invite := invite.(type) {
+			case *tg.ChatInviteExported:
+				chat.InviteLink.SetTo(invite.Link)
+			case *tg.ChatInvitePublicJoinRequests:
+				// TODO: handle?
+			}
 		}
 		// TODO(tdakkota): resolve pinned.
 		if v, ok := p.DefaultBannedRights(); ok {

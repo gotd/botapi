@@ -3,7 +3,6 @@
 package oas
 
 import (
-	"context"
 	"net/http"
 	"time"
 
@@ -21,34 +20,54 @@ import (
 //
 // POST /addStickerToSet
 func (s *Server) handleAddStickerToSetRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("addStickerToSet"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "AddStickerToSet",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "AddStickerToSet",
+			ID:   "addStickerToSet",
+		}
+	)
 	request, close, err := s.decodeAddStickerToSetRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "AddStickerToSet",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.AddStickerToSet(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -63,47 +82,64 @@ func (s *Server) handleAddStickerToSetRequest(args [0]string, w http.ResponseWri
 	}
 
 	if err := encodeAddStickerToSetResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleAnswerCallbackQueryRequest handles answerCallbackQuery operation.
 //
 // POST /answerCallbackQuery
 func (s *Server) handleAnswerCallbackQueryRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("answerCallbackQuery"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "AnswerCallbackQuery",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "AnswerCallbackQuery",
+			ID:   "answerCallbackQuery",
+		}
+	)
 	request, close, err := s.decodeAnswerCallbackQueryRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "AnswerCallbackQuery",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.AnswerCallbackQuery(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -118,47 +154,64 @@ func (s *Server) handleAnswerCallbackQueryRequest(args [0]string, w http.Respons
 	}
 
 	if err := encodeAnswerCallbackQueryResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleAnswerInlineQueryRequest handles answerInlineQuery operation.
 //
 // POST /answerInlineQuery
 func (s *Server) handleAnswerInlineQueryRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("answerInlineQuery"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "AnswerInlineQuery",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "AnswerInlineQuery",
+			ID:   "answerInlineQuery",
+		}
+	)
 	request, close, err := s.decodeAnswerInlineQueryRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "AnswerInlineQuery",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.AnswerInlineQuery(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -173,47 +226,64 @@ func (s *Server) handleAnswerInlineQueryRequest(args [0]string, w http.ResponseW
 	}
 
 	if err := encodeAnswerInlineQueryResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleAnswerPreCheckoutQueryRequest handles answerPreCheckoutQuery operation.
 //
 // POST /answerPreCheckoutQuery
 func (s *Server) handleAnswerPreCheckoutQueryRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("answerPreCheckoutQuery"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "AnswerPreCheckoutQuery",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "AnswerPreCheckoutQuery",
+			ID:   "answerPreCheckoutQuery",
+		}
+	)
 	request, close, err := s.decodeAnswerPreCheckoutQueryRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "AnswerPreCheckoutQuery",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.AnswerPreCheckoutQuery(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -228,47 +298,64 @@ func (s *Server) handleAnswerPreCheckoutQueryRequest(args [0]string, w http.Resp
 	}
 
 	if err := encodeAnswerPreCheckoutQueryResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleAnswerShippingQueryRequest handles answerShippingQuery operation.
 //
 // POST /answerShippingQuery
 func (s *Server) handleAnswerShippingQueryRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("answerShippingQuery"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "AnswerShippingQuery",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "AnswerShippingQuery",
+			ID:   "answerShippingQuery",
+		}
+	)
 	request, close, err := s.decodeAnswerShippingQueryRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "AnswerShippingQuery",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.AnswerShippingQuery(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -283,47 +370,64 @@ func (s *Server) handleAnswerShippingQueryRequest(args [0]string, w http.Respons
 	}
 
 	if err := encodeAnswerShippingQueryResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleAnswerWebAppQueryRequest handles answerWebAppQuery operation.
 //
 // POST /answerWebAppQuery
 func (s *Server) handleAnswerWebAppQueryRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("answerWebAppQuery"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "AnswerWebAppQuery",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "AnswerWebAppQuery",
+			ID:   "answerWebAppQuery",
+		}
+	)
 	request, close, err := s.decodeAnswerWebAppQueryRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "AnswerWebAppQuery",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.AnswerWebAppQuery(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -338,47 +442,64 @@ func (s *Server) handleAnswerWebAppQueryRequest(args [0]string, w http.ResponseW
 	}
 
 	if err := encodeAnswerWebAppQueryResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleApproveChatJoinRequestRequest handles approveChatJoinRequest operation.
 //
 // POST /approveChatJoinRequest
 func (s *Server) handleApproveChatJoinRequestRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("approveChatJoinRequest"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "ApproveChatJoinRequest",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "ApproveChatJoinRequest",
+			ID:   "approveChatJoinRequest",
+		}
+	)
 	request, close, err := s.decodeApproveChatJoinRequestRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "ApproveChatJoinRequest",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.ApproveChatJoinRequest(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -393,47 +514,64 @@ func (s *Server) handleApproveChatJoinRequestRequest(args [0]string, w http.Resp
 	}
 
 	if err := encodeApproveChatJoinRequestResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleBanChatMemberRequest handles banChatMember operation.
 //
 // POST /banChatMember
 func (s *Server) handleBanChatMemberRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("banChatMember"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "BanChatMember",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "BanChatMember",
+			ID:   "banChatMember",
+		}
+	)
 	request, close, err := s.decodeBanChatMemberRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "BanChatMember",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.BanChatMember(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -448,47 +586,64 @@ func (s *Server) handleBanChatMemberRequest(args [0]string, w http.ResponseWrite
 	}
 
 	if err := encodeBanChatMemberResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleBanChatSenderChatRequest handles banChatSenderChat operation.
 //
 // POST /banChatSenderChat
 func (s *Server) handleBanChatSenderChatRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("banChatSenderChat"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "BanChatSenderChat",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "BanChatSenderChat",
+			ID:   "banChatSenderChat",
+		}
+	)
 	request, close, err := s.decodeBanChatSenderChatRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "BanChatSenderChat",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.BanChatSenderChat(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -503,37 +658,49 @@ func (s *Server) handleBanChatSenderChatRequest(args [0]string, w http.ResponseW
 	}
 
 	if err := encodeBanChatSenderChatResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleCloseRequest handles close operation.
 //
 // POST /close
 func (s *Server) handleCloseRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("close"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "Close",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err error
+	)
 
 	response, err := s.h.Close(ctx)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -548,47 +715,64 @@ func (s *Server) handleCloseRequest(args [0]string, w http.ResponseWriter, r *ht
 	}
 
 	if err := encodeCloseResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleCopyMessageRequest handles copyMessage operation.
 //
 // POST /copyMessage
 func (s *Server) handleCopyMessageRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("copyMessage"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "CopyMessage",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "CopyMessage",
+			ID:   "copyMessage",
+		}
+	)
 	request, close, err := s.decodeCopyMessageRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "CopyMessage",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.CopyMessage(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -603,47 +787,64 @@ func (s *Server) handleCopyMessageRequest(args [0]string, w http.ResponseWriter,
 	}
 
 	if err := encodeCopyMessageResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleCreateChatInviteLinkRequest handles createChatInviteLink operation.
 //
 // POST /createChatInviteLink
 func (s *Server) handleCreateChatInviteLinkRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("createChatInviteLink"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "CreateChatInviteLink",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "CreateChatInviteLink",
+			ID:   "createChatInviteLink",
+		}
+	)
 	request, close, err := s.decodeCreateChatInviteLinkRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "CreateChatInviteLink",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.CreateChatInviteLink(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -658,47 +859,64 @@ func (s *Server) handleCreateChatInviteLinkRequest(args [0]string, w http.Respon
 	}
 
 	if err := encodeCreateChatInviteLinkResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleCreateInvoiceLinkRequest handles createInvoiceLink operation.
 //
 // POST /createInvoiceLink
 func (s *Server) handleCreateInvoiceLinkRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("createInvoiceLink"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "CreateInvoiceLink",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "CreateInvoiceLink",
+			ID:   "createInvoiceLink",
+		}
+	)
 	request, close, err := s.decodeCreateInvoiceLinkRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "CreateInvoiceLink",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.CreateInvoiceLink(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -713,47 +931,64 @@ func (s *Server) handleCreateInvoiceLinkRequest(args [0]string, w http.ResponseW
 	}
 
 	if err := encodeCreateInvoiceLinkResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleCreateNewStickerSetRequest handles createNewStickerSet operation.
 //
 // POST /createNewStickerSet
 func (s *Server) handleCreateNewStickerSetRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("createNewStickerSet"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "CreateNewStickerSet",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "CreateNewStickerSet",
+			ID:   "createNewStickerSet",
+		}
+	)
 	request, close, err := s.decodeCreateNewStickerSetRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "CreateNewStickerSet",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.CreateNewStickerSet(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -768,47 +1003,64 @@ func (s *Server) handleCreateNewStickerSetRequest(args [0]string, w http.Respons
 	}
 
 	if err := encodeCreateNewStickerSetResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleDeclineChatJoinRequestRequest handles declineChatJoinRequest operation.
 //
 // POST /declineChatJoinRequest
 func (s *Server) handleDeclineChatJoinRequestRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("declineChatJoinRequest"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "DeclineChatJoinRequest",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "DeclineChatJoinRequest",
+			ID:   "declineChatJoinRequest",
+		}
+	)
 	request, close, err := s.decodeDeclineChatJoinRequestRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "DeclineChatJoinRequest",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.DeclineChatJoinRequest(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -823,47 +1075,64 @@ func (s *Server) handleDeclineChatJoinRequestRequest(args [0]string, w http.Resp
 	}
 
 	if err := encodeDeclineChatJoinRequestResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleDeleteChatPhotoRequest handles deleteChatPhoto operation.
 //
 // POST /deleteChatPhoto
 func (s *Server) handleDeleteChatPhotoRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("deleteChatPhoto"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "DeleteChatPhoto",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "DeleteChatPhoto",
+			ID:   "deleteChatPhoto",
+		}
+	)
 	request, close, err := s.decodeDeleteChatPhotoRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "DeleteChatPhoto",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.DeleteChatPhoto(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -878,47 +1147,64 @@ func (s *Server) handleDeleteChatPhotoRequest(args [0]string, w http.ResponseWri
 	}
 
 	if err := encodeDeleteChatPhotoResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleDeleteChatStickerSetRequest handles deleteChatStickerSet operation.
 //
 // POST /deleteChatStickerSet
 func (s *Server) handleDeleteChatStickerSetRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("deleteChatStickerSet"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "DeleteChatStickerSet",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "DeleteChatStickerSet",
+			ID:   "deleteChatStickerSet",
+		}
+	)
 	request, close, err := s.decodeDeleteChatStickerSetRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "DeleteChatStickerSet",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.DeleteChatStickerSet(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -933,47 +1219,64 @@ func (s *Server) handleDeleteChatStickerSetRequest(args [0]string, w http.Respon
 	}
 
 	if err := encodeDeleteChatStickerSetResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleDeleteMessageRequest handles deleteMessage operation.
 //
 // POST /deleteMessage
 func (s *Server) handleDeleteMessageRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("deleteMessage"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "DeleteMessage",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "DeleteMessage",
+			ID:   "deleteMessage",
+		}
+	)
 	request, close, err := s.decodeDeleteMessageRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "DeleteMessage",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.DeleteMessage(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -988,47 +1291,64 @@ func (s *Server) handleDeleteMessageRequest(args [0]string, w http.ResponseWrite
 	}
 
 	if err := encodeDeleteMessageResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleDeleteMyCommandsRequest handles deleteMyCommands operation.
 //
 // POST /deleteMyCommands
 func (s *Server) handleDeleteMyCommandsRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("deleteMyCommands"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "DeleteMyCommands",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "DeleteMyCommands",
+			ID:   "deleteMyCommands",
+		}
+	)
 	request, close, err := s.decodeDeleteMyCommandsRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "DeleteMyCommands",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.DeleteMyCommands(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -1043,47 +1363,64 @@ func (s *Server) handleDeleteMyCommandsRequest(args [0]string, w http.ResponseWr
 	}
 
 	if err := encodeDeleteMyCommandsResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleDeleteStickerFromSetRequest handles deleteStickerFromSet operation.
 //
 // POST /deleteStickerFromSet
 func (s *Server) handleDeleteStickerFromSetRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("deleteStickerFromSet"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "DeleteStickerFromSet",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "DeleteStickerFromSet",
+			ID:   "deleteStickerFromSet",
+		}
+	)
 	request, close, err := s.decodeDeleteStickerFromSetRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "DeleteStickerFromSet",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.DeleteStickerFromSet(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -1098,47 +1435,64 @@ func (s *Server) handleDeleteStickerFromSetRequest(args [0]string, w http.Respon
 	}
 
 	if err := encodeDeleteStickerFromSetResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleDeleteWebhookRequest handles deleteWebhook operation.
 //
 // POST /deleteWebhook
 func (s *Server) handleDeleteWebhookRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("deleteWebhook"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "DeleteWebhook",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "DeleteWebhook",
+			ID:   "deleteWebhook",
+		}
+	)
 	request, close, err := s.decodeDeleteWebhookRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "DeleteWebhook",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.DeleteWebhook(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -1153,47 +1507,64 @@ func (s *Server) handleDeleteWebhookRequest(args [0]string, w http.ResponseWrite
 	}
 
 	if err := encodeDeleteWebhookResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleEditChatInviteLinkRequest handles editChatInviteLink operation.
 //
 // POST /editChatInviteLink
 func (s *Server) handleEditChatInviteLinkRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("editChatInviteLink"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "EditChatInviteLink",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "EditChatInviteLink",
+			ID:   "editChatInviteLink",
+		}
+	)
 	request, close, err := s.decodeEditChatInviteLinkRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "EditChatInviteLink",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.EditChatInviteLink(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -1208,47 +1579,64 @@ func (s *Server) handleEditChatInviteLinkRequest(args [0]string, w http.Response
 	}
 
 	if err := encodeEditChatInviteLinkResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleEditMessageCaptionRequest handles editMessageCaption operation.
 //
 // POST /editMessageCaption
 func (s *Server) handleEditMessageCaptionRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("editMessageCaption"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "EditMessageCaption",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "EditMessageCaption",
+			ID:   "editMessageCaption",
+		}
+	)
 	request, close, err := s.decodeEditMessageCaptionRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "EditMessageCaption",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.EditMessageCaption(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -1263,47 +1651,64 @@ func (s *Server) handleEditMessageCaptionRequest(args [0]string, w http.Response
 	}
 
 	if err := encodeEditMessageCaptionResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleEditMessageLiveLocationRequest handles editMessageLiveLocation operation.
 //
 // POST /editMessageLiveLocation
 func (s *Server) handleEditMessageLiveLocationRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("editMessageLiveLocation"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "EditMessageLiveLocation",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "EditMessageLiveLocation",
+			ID:   "editMessageLiveLocation",
+		}
+	)
 	request, close, err := s.decodeEditMessageLiveLocationRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "EditMessageLiveLocation",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.EditMessageLiveLocation(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -1318,47 +1723,64 @@ func (s *Server) handleEditMessageLiveLocationRequest(args [0]string, w http.Res
 	}
 
 	if err := encodeEditMessageLiveLocationResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleEditMessageMediaRequest handles editMessageMedia operation.
 //
 // POST /editMessageMedia
 func (s *Server) handleEditMessageMediaRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("editMessageMedia"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "EditMessageMedia",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "EditMessageMedia",
+			ID:   "editMessageMedia",
+		}
+	)
 	request, close, err := s.decodeEditMessageMediaRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "EditMessageMedia",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.EditMessageMedia(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -1373,47 +1795,64 @@ func (s *Server) handleEditMessageMediaRequest(args [0]string, w http.ResponseWr
 	}
 
 	if err := encodeEditMessageMediaResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleEditMessageReplyMarkupRequest handles editMessageReplyMarkup operation.
 //
 // POST /editMessageReplyMarkup
 func (s *Server) handleEditMessageReplyMarkupRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("editMessageReplyMarkup"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "EditMessageReplyMarkup",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "EditMessageReplyMarkup",
+			ID:   "editMessageReplyMarkup",
+		}
+	)
 	request, close, err := s.decodeEditMessageReplyMarkupRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "EditMessageReplyMarkup",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.EditMessageReplyMarkup(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -1428,47 +1867,64 @@ func (s *Server) handleEditMessageReplyMarkupRequest(args [0]string, w http.Resp
 	}
 
 	if err := encodeEditMessageReplyMarkupResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleEditMessageTextRequest handles editMessageText operation.
 //
 // POST /editMessageText
 func (s *Server) handleEditMessageTextRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("editMessageText"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "EditMessageText",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "EditMessageText",
+			ID:   "editMessageText",
+		}
+	)
 	request, close, err := s.decodeEditMessageTextRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "EditMessageText",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.EditMessageText(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -1483,47 +1939,64 @@ func (s *Server) handleEditMessageTextRequest(args [0]string, w http.ResponseWri
 	}
 
 	if err := encodeEditMessageTextResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleExportChatInviteLinkRequest handles exportChatInviteLink operation.
 //
 // POST /exportChatInviteLink
 func (s *Server) handleExportChatInviteLinkRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("exportChatInviteLink"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "ExportChatInviteLink",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "ExportChatInviteLink",
+			ID:   "exportChatInviteLink",
+		}
+	)
 	request, close, err := s.decodeExportChatInviteLinkRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "ExportChatInviteLink",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.ExportChatInviteLink(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -1538,47 +2011,64 @@ func (s *Server) handleExportChatInviteLinkRequest(args [0]string, w http.Respon
 	}
 
 	if err := encodeExportChatInviteLinkResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleForwardMessageRequest handles forwardMessage operation.
 //
 // POST /forwardMessage
 func (s *Server) handleForwardMessageRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("forwardMessage"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "ForwardMessage",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "ForwardMessage",
+			ID:   "forwardMessage",
+		}
+	)
 	request, close, err := s.decodeForwardMessageRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "ForwardMessage",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.ForwardMessage(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -1593,47 +2083,64 @@ func (s *Server) handleForwardMessageRequest(args [0]string, w http.ResponseWrit
 	}
 
 	if err := encodeForwardMessageResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleGetChatRequest handles getChat operation.
 //
 // POST /getChat
 func (s *Server) handleGetChatRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getChat"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "GetChat",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "GetChat",
+			ID:   "getChat",
+		}
+	)
 	request, close, err := s.decodeGetChatRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "GetChat",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.GetChat(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -1648,47 +2155,64 @@ func (s *Server) handleGetChatRequest(args [0]string, w http.ResponseWriter, r *
 	}
 
 	if err := encodeGetChatResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleGetChatAdministratorsRequest handles getChatAdministrators operation.
 //
 // POST /getChatAdministrators
 func (s *Server) handleGetChatAdministratorsRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getChatAdministrators"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "GetChatAdministrators",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "GetChatAdministrators",
+			ID:   "getChatAdministrators",
+		}
+	)
 	request, close, err := s.decodeGetChatAdministratorsRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "GetChatAdministrators",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.GetChatAdministrators(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -1703,47 +2227,64 @@ func (s *Server) handleGetChatAdministratorsRequest(args [0]string, w http.Respo
 	}
 
 	if err := encodeGetChatAdministratorsResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleGetChatMemberRequest handles getChatMember operation.
 //
 // POST /getChatMember
 func (s *Server) handleGetChatMemberRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getChatMember"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "GetChatMember",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "GetChatMember",
+			ID:   "getChatMember",
+		}
+	)
 	request, close, err := s.decodeGetChatMemberRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "GetChatMember",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.GetChatMember(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -1758,47 +2299,64 @@ func (s *Server) handleGetChatMemberRequest(args [0]string, w http.ResponseWrite
 	}
 
 	if err := encodeGetChatMemberResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleGetChatMemberCountRequest handles getChatMemberCount operation.
 //
 // POST /getChatMemberCount
 func (s *Server) handleGetChatMemberCountRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getChatMemberCount"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "GetChatMemberCount",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "GetChatMemberCount",
+			ID:   "getChatMemberCount",
+		}
+	)
 	request, close, err := s.decodeGetChatMemberCountRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "GetChatMemberCount",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.GetChatMemberCount(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -1813,47 +2371,64 @@ func (s *Server) handleGetChatMemberCountRequest(args [0]string, w http.Response
 	}
 
 	if err := encodeGetChatMemberCountResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleGetChatMenuButtonRequest handles getChatMenuButton operation.
 //
 // POST /getChatMenuButton
 func (s *Server) handleGetChatMenuButtonRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getChatMenuButton"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "GetChatMenuButton",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "GetChatMenuButton",
+			ID:   "getChatMenuButton",
+		}
+	)
 	request, close, err := s.decodeGetChatMenuButtonRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "GetChatMenuButton",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.GetChatMenuButton(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -1868,47 +2443,64 @@ func (s *Server) handleGetChatMenuButtonRequest(args [0]string, w http.ResponseW
 	}
 
 	if err := encodeGetChatMenuButtonResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleGetFileRequest handles getFile operation.
 //
 // POST /getFile
 func (s *Server) handleGetFileRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getFile"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "GetFile",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "GetFile",
+			ID:   "getFile",
+		}
+	)
 	request, close, err := s.decodeGetFileRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "GetFile",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.GetFile(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -1923,47 +2515,64 @@ func (s *Server) handleGetFileRequest(args [0]string, w http.ResponseWriter, r *
 	}
 
 	if err := encodeGetFileResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleGetGameHighScoresRequest handles getGameHighScores operation.
 //
 // POST /getGameHighScores
 func (s *Server) handleGetGameHighScoresRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getGameHighScores"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "GetGameHighScores",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "GetGameHighScores",
+			ID:   "getGameHighScores",
+		}
+	)
 	request, close, err := s.decodeGetGameHighScoresRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "GetGameHighScores",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.GetGameHighScores(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -1978,37 +2587,49 @@ func (s *Server) handleGetGameHighScoresRequest(args [0]string, w http.ResponseW
 	}
 
 	if err := encodeGetGameHighScoresResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleGetMeRequest handles getMe operation.
 //
 // POST /getMe
 func (s *Server) handleGetMeRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getMe"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "GetMe",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err error
+	)
 
 	response, err := s.h.GetMe(ctx)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -2023,47 +2644,64 @@ func (s *Server) handleGetMeRequest(args [0]string, w http.ResponseWriter, r *ht
 	}
 
 	if err := encodeGetMeResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleGetMyCommandsRequest handles getMyCommands operation.
 //
 // POST /getMyCommands
 func (s *Server) handleGetMyCommandsRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getMyCommands"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "GetMyCommands",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "GetMyCommands",
+			ID:   "getMyCommands",
+		}
+	)
 	request, close, err := s.decodeGetMyCommandsRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "GetMyCommands",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.GetMyCommands(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -2078,47 +2716,64 @@ func (s *Server) handleGetMyCommandsRequest(args [0]string, w http.ResponseWrite
 	}
 
 	if err := encodeGetMyCommandsResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleGetMyDefaultAdministratorRightsRequest handles getMyDefaultAdministratorRights operation.
 //
 // POST /getMyDefaultAdministratorRights
 func (s *Server) handleGetMyDefaultAdministratorRightsRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getMyDefaultAdministratorRights"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "GetMyDefaultAdministratorRights",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "GetMyDefaultAdministratorRights",
+			ID:   "getMyDefaultAdministratorRights",
+		}
+	)
 	request, close, err := s.decodeGetMyDefaultAdministratorRightsRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "GetMyDefaultAdministratorRights",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.GetMyDefaultAdministratorRights(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -2133,47 +2788,64 @@ func (s *Server) handleGetMyDefaultAdministratorRightsRequest(args [0]string, w 
 	}
 
 	if err := encodeGetMyDefaultAdministratorRightsResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleGetStickerSetRequest handles getStickerSet operation.
 //
 // POST /getStickerSet
 func (s *Server) handleGetStickerSetRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getStickerSet"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "GetStickerSet",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "GetStickerSet",
+			ID:   "getStickerSet",
+		}
+	)
 	request, close, err := s.decodeGetStickerSetRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "GetStickerSet",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.GetStickerSet(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -2188,47 +2860,64 @@ func (s *Server) handleGetStickerSetRequest(args [0]string, w http.ResponseWrite
 	}
 
 	if err := encodeGetStickerSetResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleGetUpdatesRequest handles getUpdates operation.
 //
 // POST /getUpdates
 func (s *Server) handleGetUpdatesRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getUpdates"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "GetUpdates",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "GetUpdates",
+			ID:   "getUpdates",
+		}
+	)
 	request, close, err := s.decodeGetUpdatesRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "GetUpdates",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.GetUpdates(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -2243,47 +2932,64 @@ func (s *Server) handleGetUpdatesRequest(args [0]string, w http.ResponseWriter, 
 	}
 
 	if err := encodeGetUpdatesResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleGetUserProfilePhotosRequest handles getUserProfilePhotos operation.
 //
 // POST /getUserProfilePhotos
 func (s *Server) handleGetUserProfilePhotosRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getUserProfilePhotos"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "GetUserProfilePhotos",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "GetUserProfilePhotos",
+			ID:   "getUserProfilePhotos",
+		}
+	)
 	request, close, err := s.decodeGetUserProfilePhotosRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "GetUserProfilePhotos",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.GetUserProfilePhotos(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -2298,37 +3004,49 @@ func (s *Server) handleGetUserProfilePhotosRequest(args [0]string, w http.Respon
 	}
 
 	if err := encodeGetUserProfilePhotosResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleGetWebhookInfoRequest handles getWebhookInfo operation.
 //
 // POST /getWebhookInfo
 func (s *Server) handleGetWebhookInfoRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getWebhookInfo"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "GetWebhookInfo",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err error
+	)
 
 	response, err := s.h.GetWebhookInfo(ctx)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -2343,47 +3061,64 @@ func (s *Server) handleGetWebhookInfoRequest(args [0]string, w http.ResponseWrit
 	}
 
 	if err := encodeGetWebhookInfoResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleLeaveChatRequest handles leaveChat operation.
 //
 // POST /leaveChat
 func (s *Server) handleLeaveChatRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("leaveChat"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "LeaveChat",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "LeaveChat",
+			ID:   "leaveChat",
+		}
+	)
 	request, close, err := s.decodeLeaveChatRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "LeaveChat",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.LeaveChat(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -2398,37 +3133,49 @@ func (s *Server) handleLeaveChatRequest(args [0]string, w http.ResponseWriter, r
 	}
 
 	if err := encodeLeaveChatResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleLogOutRequest handles logOut operation.
 //
 // POST /logOut
 func (s *Server) handleLogOutRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("logOut"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "LogOut",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err error
+	)
 
 	response, err := s.h.LogOut(ctx)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -2443,47 +3190,64 @@ func (s *Server) handleLogOutRequest(args [0]string, w http.ResponseWriter, r *h
 	}
 
 	if err := encodeLogOutResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandlePinChatMessageRequest handles pinChatMessage operation.
 //
 // POST /pinChatMessage
 func (s *Server) handlePinChatMessageRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("pinChatMessage"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "PinChatMessage",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "PinChatMessage",
+			ID:   "pinChatMessage",
+		}
+	)
 	request, close, err := s.decodePinChatMessageRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "PinChatMessage",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.PinChatMessage(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -2498,47 +3262,64 @@ func (s *Server) handlePinChatMessageRequest(args [0]string, w http.ResponseWrit
 	}
 
 	if err := encodePinChatMessageResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandlePromoteChatMemberRequest handles promoteChatMember operation.
 //
 // POST /promoteChatMember
 func (s *Server) handlePromoteChatMemberRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("promoteChatMember"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "PromoteChatMember",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "PromoteChatMember",
+			ID:   "promoteChatMember",
+		}
+	)
 	request, close, err := s.decodePromoteChatMemberRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "PromoteChatMember",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.PromoteChatMember(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -2553,47 +3334,64 @@ func (s *Server) handlePromoteChatMemberRequest(args [0]string, w http.ResponseW
 	}
 
 	if err := encodePromoteChatMemberResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleRestrictChatMemberRequest handles restrictChatMember operation.
 //
 // POST /restrictChatMember
 func (s *Server) handleRestrictChatMemberRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("restrictChatMember"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "RestrictChatMember",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "RestrictChatMember",
+			ID:   "restrictChatMember",
+		}
+	)
 	request, close, err := s.decodeRestrictChatMemberRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "RestrictChatMember",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.RestrictChatMember(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -2608,47 +3406,64 @@ func (s *Server) handleRestrictChatMemberRequest(args [0]string, w http.Response
 	}
 
 	if err := encodeRestrictChatMemberResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleRevokeChatInviteLinkRequest handles revokeChatInviteLink operation.
 //
 // POST /revokeChatInviteLink
 func (s *Server) handleRevokeChatInviteLinkRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("revokeChatInviteLink"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "RevokeChatInviteLink",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "RevokeChatInviteLink",
+			ID:   "revokeChatInviteLink",
+		}
+	)
 	request, close, err := s.decodeRevokeChatInviteLinkRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "RevokeChatInviteLink",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.RevokeChatInviteLink(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -2663,47 +3478,64 @@ func (s *Server) handleRevokeChatInviteLinkRequest(args [0]string, w http.Respon
 	}
 
 	if err := encodeRevokeChatInviteLinkResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleSendAnimationRequest handles sendAnimation operation.
 //
 // POST /sendAnimation
 func (s *Server) handleSendAnimationRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendAnimation"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "SendAnimation",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "SendAnimation",
+			ID:   "sendAnimation",
+		}
+	)
 	request, close, err := s.decodeSendAnimationRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "SendAnimation",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.SendAnimation(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -2718,47 +3550,64 @@ func (s *Server) handleSendAnimationRequest(args [0]string, w http.ResponseWrite
 	}
 
 	if err := encodeSendAnimationResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleSendAudioRequest handles sendAudio operation.
 //
 // POST /sendAudio
 func (s *Server) handleSendAudioRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendAudio"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "SendAudio",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "SendAudio",
+			ID:   "sendAudio",
+		}
+	)
 	request, close, err := s.decodeSendAudioRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "SendAudio",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.SendAudio(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -2773,47 +3622,64 @@ func (s *Server) handleSendAudioRequest(args [0]string, w http.ResponseWriter, r
 	}
 
 	if err := encodeSendAudioResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleSendChatActionRequest handles sendChatAction operation.
 //
 // POST /sendChatAction
 func (s *Server) handleSendChatActionRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendChatAction"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "SendChatAction",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "SendChatAction",
+			ID:   "sendChatAction",
+		}
+	)
 	request, close, err := s.decodeSendChatActionRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "SendChatAction",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.SendChatAction(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -2828,47 +3694,64 @@ func (s *Server) handleSendChatActionRequest(args [0]string, w http.ResponseWrit
 	}
 
 	if err := encodeSendChatActionResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleSendContactRequest handles sendContact operation.
 //
 // POST /sendContact
 func (s *Server) handleSendContactRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendContact"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "SendContact",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "SendContact",
+			ID:   "sendContact",
+		}
+	)
 	request, close, err := s.decodeSendContactRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "SendContact",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.SendContact(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -2883,47 +3766,64 @@ func (s *Server) handleSendContactRequest(args [0]string, w http.ResponseWriter,
 	}
 
 	if err := encodeSendContactResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleSendDiceRequest handles sendDice operation.
 //
 // POST /sendDice
 func (s *Server) handleSendDiceRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendDice"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "SendDice",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "SendDice",
+			ID:   "sendDice",
+		}
+	)
 	request, close, err := s.decodeSendDiceRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "SendDice",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.SendDice(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -2938,47 +3838,64 @@ func (s *Server) handleSendDiceRequest(args [0]string, w http.ResponseWriter, r 
 	}
 
 	if err := encodeSendDiceResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleSendDocumentRequest handles sendDocument operation.
 //
 // POST /sendDocument
 func (s *Server) handleSendDocumentRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendDocument"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "SendDocument",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "SendDocument",
+			ID:   "sendDocument",
+		}
+	)
 	request, close, err := s.decodeSendDocumentRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "SendDocument",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.SendDocument(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -2993,47 +3910,64 @@ func (s *Server) handleSendDocumentRequest(args [0]string, w http.ResponseWriter
 	}
 
 	if err := encodeSendDocumentResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleSendGameRequest handles sendGame operation.
 //
 // POST /sendGame
 func (s *Server) handleSendGameRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendGame"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "SendGame",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "SendGame",
+			ID:   "sendGame",
+		}
+	)
 	request, close, err := s.decodeSendGameRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "SendGame",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.SendGame(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -3048,47 +3982,64 @@ func (s *Server) handleSendGameRequest(args [0]string, w http.ResponseWriter, r 
 	}
 
 	if err := encodeSendGameResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleSendInvoiceRequest handles sendInvoice operation.
 //
 // POST /sendInvoice
 func (s *Server) handleSendInvoiceRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendInvoice"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "SendInvoice",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "SendInvoice",
+			ID:   "sendInvoice",
+		}
+	)
 	request, close, err := s.decodeSendInvoiceRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "SendInvoice",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.SendInvoice(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -3103,47 +4054,64 @@ func (s *Server) handleSendInvoiceRequest(args [0]string, w http.ResponseWriter,
 	}
 
 	if err := encodeSendInvoiceResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleSendLocationRequest handles sendLocation operation.
 //
 // POST /sendLocation
 func (s *Server) handleSendLocationRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendLocation"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "SendLocation",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "SendLocation",
+			ID:   "sendLocation",
+		}
+	)
 	request, close, err := s.decodeSendLocationRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "SendLocation",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.SendLocation(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -3158,47 +4126,64 @@ func (s *Server) handleSendLocationRequest(args [0]string, w http.ResponseWriter
 	}
 
 	if err := encodeSendLocationResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleSendMediaGroupRequest handles sendMediaGroup operation.
 //
 // POST /sendMediaGroup
 func (s *Server) handleSendMediaGroupRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendMediaGroup"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "SendMediaGroup",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "SendMediaGroup",
+			ID:   "sendMediaGroup",
+		}
+	)
 	request, close, err := s.decodeSendMediaGroupRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "SendMediaGroup",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.SendMediaGroup(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -3213,47 +4198,64 @@ func (s *Server) handleSendMediaGroupRequest(args [0]string, w http.ResponseWrit
 	}
 
 	if err := encodeSendMediaGroupResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleSendMessageRequest handles sendMessage operation.
 //
 // POST /sendMessage
 func (s *Server) handleSendMessageRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendMessage"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "SendMessage",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "SendMessage",
+			ID:   "sendMessage",
+		}
+	)
 	request, close, err := s.decodeSendMessageRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "SendMessage",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.SendMessage(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -3268,47 +4270,64 @@ func (s *Server) handleSendMessageRequest(args [0]string, w http.ResponseWriter,
 	}
 
 	if err := encodeSendMessageResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleSendPhotoRequest handles sendPhoto operation.
 //
 // POST /sendPhoto
 func (s *Server) handleSendPhotoRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendPhoto"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "SendPhoto",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "SendPhoto",
+			ID:   "sendPhoto",
+		}
+	)
 	request, close, err := s.decodeSendPhotoRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "SendPhoto",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.SendPhoto(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -3323,47 +4342,64 @@ func (s *Server) handleSendPhotoRequest(args [0]string, w http.ResponseWriter, r
 	}
 
 	if err := encodeSendPhotoResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleSendPollRequest handles sendPoll operation.
 //
 // POST /sendPoll
 func (s *Server) handleSendPollRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendPoll"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "SendPoll",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "SendPoll",
+			ID:   "sendPoll",
+		}
+	)
 	request, close, err := s.decodeSendPollRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "SendPoll",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.SendPoll(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -3378,47 +4414,64 @@ func (s *Server) handleSendPollRequest(args [0]string, w http.ResponseWriter, r 
 	}
 
 	if err := encodeSendPollResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleSendStickerRequest handles sendSticker operation.
 //
 // POST /sendSticker
 func (s *Server) handleSendStickerRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendSticker"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "SendSticker",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "SendSticker",
+			ID:   "sendSticker",
+		}
+	)
 	request, close, err := s.decodeSendStickerRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "SendSticker",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.SendSticker(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -3433,47 +4486,64 @@ func (s *Server) handleSendStickerRequest(args [0]string, w http.ResponseWriter,
 	}
 
 	if err := encodeSendStickerResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleSendVenueRequest handles sendVenue operation.
 //
 // POST /sendVenue
 func (s *Server) handleSendVenueRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendVenue"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "SendVenue",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "SendVenue",
+			ID:   "sendVenue",
+		}
+	)
 	request, close, err := s.decodeSendVenueRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "SendVenue",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.SendVenue(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -3488,47 +4558,64 @@ func (s *Server) handleSendVenueRequest(args [0]string, w http.ResponseWriter, r
 	}
 
 	if err := encodeSendVenueResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleSendVideoRequest handles sendVideo operation.
 //
 // POST /sendVideo
 func (s *Server) handleSendVideoRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendVideo"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "SendVideo",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "SendVideo",
+			ID:   "sendVideo",
+		}
+	)
 	request, close, err := s.decodeSendVideoRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "SendVideo",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.SendVideo(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -3543,47 +4630,64 @@ func (s *Server) handleSendVideoRequest(args [0]string, w http.ResponseWriter, r
 	}
 
 	if err := encodeSendVideoResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleSendVideoNoteRequest handles sendVideoNote operation.
 //
 // POST /sendVideoNote
 func (s *Server) handleSendVideoNoteRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendVideoNote"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "SendVideoNote",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "SendVideoNote",
+			ID:   "sendVideoNote",
+		}
+	)
 	request, close, err := s.decodeSendVideoNoteRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "SendVideoNote",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.SendVideoNote(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -3598,47 +4702,64 @@ func (s *Server) handleSendVideoNoteRequest(args [0]string, w http.ResponseWrite
 	}
 
 	if err := encodeSendVideoNoteResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleSendVoiceRequest handles sendVoice operation.
 //
 // POST /sendVoice
 func (s *Server) handleSendVoiceRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendVoice"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "SendVoice",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "SendVoice",
+			ID:   "sendVoice",
+		}
+	)
 	request, close, err := s.decodeSendVoiceRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "SendVoice",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.SendVoice(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -3653,47 +4774,64 @@ func (s *Server) handleSendVoiceRequest(args [0]string, w http.ResponseWriter, r
 	}
 
 	if err := encodeSendVoiceResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleSetChatAdministratorCustomTitleRequest handles setChatAdministratorCustomTitle operation.
 //
 // POST /setChatAdministratorCustomTitle
 func (s *Server) handleSetChatAdministratorCustomTitleRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setChatAdministratorCustomTitle"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "SetChatAdministratorCustomTitle",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "SetChatAdministratorCustomTitle",
+			ID:   "setChatAdministratorCustomTitle",
+		}
+	)
 	request, close, err := s.decodeSetChatAdministratorCustomTitleRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "SetChatAdministratorCustomTitle",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.SetChatAdministratorCustomTitle(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -3708,47 +4846,64 @@ func (s *Server) handleSetChatAdministratorCustomTitleRequest(args [0]string, w 
 	}
 
 	if err := encodeSetChatAdministratorCustomTitleResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleSetChatDescriptionRequest handles setChatDescription operation.
 //
 // POST /setChatDescription
 func (s *Server) handleSetChatDescriptionRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setChatDescription"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "SetChatDescription",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "SetChatDescription",
+			ID:   "setChatDescription",
+		}
+	)
 	request, close, err := s.decodeSetChatDescriptionRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "SetChatDescription",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.SetChatDescription(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -3763,47 +4918,64 @@ func (s *Server) handleSetChatDescriptionRequest(args [0]string, w http.Response
 	}
 
 	if err := encodeSetChatDescriptionResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleSetChatMenuButtonRequest handles setChatMenuButton operation.
 //
 // POST /setChatMenuButton
 func (s *Server) handleSetChatMenuButtonRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setChatMenuButton"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "SetChatMenuButton",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "SetChatMenuButton",
+			ID:   "setChatMenuButton",
+		}
+	)
 	request, close, err := s.decodeSetChatMenuButtonRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "SetChatMenuButton",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.SetChatMenuButton(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -3818,47 +4990,64 @@ func (s *Server) handleSetChatMenuButtonRequest(args [0]string, w http.ResponseW
 	}
 
 	if err := encodeSetChatMenuButtonResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleSetChatPermissionsRequest handles setChatPermissions operation.
 //
 // POST /setChatPermissions
 func (s *Server) handleSetChatPermissionsRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setChatPermissions"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "SetChatPermissions",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "SetChatPermissions",
+			ID:   "setChatPermissions",
+		}
+	)
 	request, close, err := s.decodeSetChatPermissionsRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "SetChatPermissions",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.SetChatPermissions(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -3873,47 +5062,64 @@ func (s *Server) handleSetChatPermissionsRequest(args [0]string, w http.Response
 	}
 
 	if err := encodeSetChatPermissionsResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleSetChatPhotoRequest handles setChatPhoto operation.
 //
 // POST /setChatPhoto
 func (s *Server) handleSetChatPhotoRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setChatPhoto"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "SetChatPhoto",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "SetChatPhoto",
+			ID:   "setChatPhoto",
+		}
+	)
 	request, close, err := s.decodeSetChatPhotoRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "SetChatPhoto",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.SetChatPhoto(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -3928,47 +5134,64 @@ func (s *Server) handleSetChatPhotoRequest(args [0]string, w http.ResponseWriter
 	}
 
 	if err := encodeSetChatPhotoResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleSetChatStickerSetRequest handles setChatStickerSet operation.
 //
 // POST /setChatStickerSet
 func (s *Server) handleSetChatStickerSetRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setChatStickerSet"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "SetChatStickerSet",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "SetChatStickerSet",
+			ID:   "setChatStickerSet",
+		}
+	)
 	request, close, err := s.decodeSetChatStickerSetRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "SetChatStickerSet",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.SetChatStickerSet(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -3983,47 +5206,64 @@ func (s *Server) handleSetChatStickerSetRequest(args [0]string, w http.ResponseW
 	}
 
 	if err := encodeSetChatStickerSetResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleSetChatTitleRequest handles setChatTitle operation.
 //
 // POST /setChatTitle
 func (s *Server) handleSetChatTitleRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setChatTitle"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "SetChatTitle",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "SetChatTitle",
+			ID:   "setChatTitle",
+		}
+	)
 	request, close, err := s.decodeSetChatTitleRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "SetChatTitle",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.SetChatTitle(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -4038,47 +5278,64 @@ func (s *Server) handleSetChatTitleRequest(args [0]string, w http.ResponseWriter
 	}
 
 	if err := encodeSetChatTitleResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleSetGameScoreRequest handles setGameScore operation.
 //
 // POST /setGameScore
 func (s *Server) handleSetGameScoreRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setGameScore"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "SetGameScore",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "SetGameScore",
+			ID:   "setGameScore",
+		}
+	)
 	request, close, err := s.decodeSetGameScoreRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "SetGameScore",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.SetGameScore(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -4093,47 +5350,64 @@ func (s *Server) handleSetGameScoreRequest(args [0]string, w http.ResponseWriter
 	}
 
 	if err := encodeSetGameScoreResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleSetMyCommandsRequest handles setMyCommands operation.
 //
 // POST /setMyCommands
 func (s *Server) handleSetMyCommandsRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setMyCommands"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "SetMyCommands",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "SetMyCommands",
+			ID:   "setMyCommands",
+		}
+	)
 	request, close, err := s.decodeSetMyCommandsRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "SetMyCommands",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.SetMyCommands(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -4148,47 +5422,64 @@ func (s *Server) handleSetMyCommandsRequest(args [0]string, w http.ResponseWrite
 	}
 
 	if err := encodeSetMyCommandsResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleSetMyDefaultAdministratorRightsRequest handles setMyDefaultAdministratorRights operation.
 //
 // POST /setMyDefaultAdministratorRights
 func (s *Server) handleSetMyDefaultAdministratorRightsRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setMyDefaultAdministratorRights"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "SetMyDefaultAdministratorRights",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "SetMyDefaultAdministratorRights",
+			ID:   "setMyDefaultAdministratorRights",
+		}
+	)
 	request, close, err := s.decodeSetMyDefaultAdministratorRightsRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "SetMyDefaultAdministratorRights",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.SetMyDefaultAdministratorRights(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -4203,47 +5494,64 @@ func (s *Server) handleSetMyDefaultAdministratorRightsRequest(args [0]string, w 
 	}
 
 	if err := encodeSetMyDefaultAdministratorRightsResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleSetPassportDataErrorsRequest handles setPassportDataErrors operation.
 //
 // POST /setPassportDataErrors
 func (s *Server) handleSetPassportDataErrorsRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setPassportDataErrors"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "SetPassportDataErrors",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "SetPassportDataErrors",
+			ID:   "setPassportDataErrors",
+		}
+	)
 	request, close, err := s.decodeSetPassportDataErrorsRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "SetPassportDataErrors",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.SetPassportDataErrors(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -4258,47 +5566,64 @@ func (s *Server) handleSetPassportDataErrorsRequest(args [0]string, w http.Respo
 	}
 
 	if err := encodeSetPassportDataErrorsResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleSetStickerPositionInSetRequest handles setStickerPositionInSet operation.
 //
 // POST /setStickerPositionInSet
 func (s *Server) handleSetStickerPositionInSetRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setStickerPositionInSet"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "SetStickerPositionInSet",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "SetStickerPositionInSet",
+			ID:   "setStickerPositionInSet",
+		}
+	)
 	request, close, err := s.decodeSetStickerPositionInSetRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "SetStickerPositionInSet",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.SetStickerPositionInSet(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -4313,47 +5638,64 @@ func (s *Server) handleSetStickerPositionInSetRequest(args [0]string, w http.Res
 	}
 
 	if err := encodeSetStickerPositionInSetResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleSetStickerSetThumbRequest handles setStickerSetThumb operation.
 //
 // POST /setStickerSetThumb
 func (s *Server) handleSetStickerSetThumbRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setStickerSetThumb"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "SetStickerSetThumb",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "SetStickerSetThumb",
+			ID:   "setStickerSetThumb",
+		}
+	)
 	request, close, err := s.decodeSetStickerSetThumbRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "SetStickerSetThumb",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.SetStickerSetThumb(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -4368,47 +5710,64 @@ func (s *Server) handleSetStickerSetThumbRequest(args [0]string, w http.Response
 	}
 
 	if err := encodeSetStickerSetThumbResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleSetWebhookRequest handles setWebhook operation.
 //
 // POST /setWebhook
 func (s *Server) handleSetWebhookRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setWebhook"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "SetWebhook",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "SetWebhook",
+			ID:   "setWebhook",
+		}
+	)
 	request, close, err := s.decodeSetWebhookRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "SetWebhook",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.SetWebhook(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -4423,47 +5782,64 @@ func (s *Server) handleSetWebhookRequest(args [0]string, w http.ResponseWriter, 
 	}
 
 	if err := encodeSetWebhookResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleStopMessageLiveLocationRequest handles stopMessageLiveLocation operation.
 //
 // POST /stopMessageLiveLocation
 func (s *Server) handleStopMessageLiveLocationRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("stopMessageLiveLocation"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "StopMessageLiveLocation",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "StopMessageLiveLocation",
+			ID:   "stopMessageLiveLocation",
+		}
+	)
 	request, close, err := s.decodeStopMessageLiveLocationRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "StopMessageLiveLocation",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.StopMessageLiveLocation(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -4478,47 +5854,64 @@ func (s *Server) handleStopMessageLiveLocationRequest(args [0]string, w http.Res
 	}
 
 	if err := encodeStopMessageLiveLocationResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleStopPollRequest handles stopPoll operation.
 //
 // POST /stopPoll
 func (s *Server) handleStopPollRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("stopPoll"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "StopPoll",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "StopPoll",
+			ID:   "stopPoll",
+		}
+	)
 	request, close, err := s.decodeStopPollRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "StopPoll",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.StopPoll(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -4533,47 +5926,64 @@ func (s *Server) handleStopPollRequest(args [0]string, w http.ResponseWriter, r 
 	}
 
 	if err := encodeStopPollResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleUnbanChatMemberRequest handles unbanChatMember operation.
 //
 // POST /unbanChatMember
 func (s *Server) handleUnbanChatMemberRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("unbanChatMember"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "UnbanChatMember",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "UnbanChatMember",
+			ID:   "unbanChatMember",
+		}
+	)
 	request, close, err := s.decodeUnbanChatMemberRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "UnbanChatMember",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.UnbanChatMember(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -4588,47 +5998,64 @@ func (s *Server) handleUnbanChatMemberRequest(args [0]string, w http.ResponseWri
 	}
 
 	if err := encodeUnbanChatMemberResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleUnbanChatSenderChatRequest handles unbanChatSenderChat operation.
 //
 // POST /unbanChatSenderChat
 func (s *Server) handleUnbanChatSenderChatRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("unbanChatSenderChat"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "UnbanChatSenderChat",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "UnbanChatSenderChat",
+			ID:   "unbanChatSenderChat",
+		}
+	)
 	request, close, err := s.decodeUnbanChatSenderChatRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "UnbanChatSenderChat",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.UnbanChatSenderChat(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -4643,47 +6070,64 @@ func (s *Server) handleUnbanChatSenderChatRequest(args [0]string, w http.Respons
 	}
 
 	if err := encodeUnbanChatSenderChatResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleUnpinAllChatMessagesRequest handles unpinAllChatMessages operation.
 //
 // POST /unpinAllChatMessages
 func (s *Server) handleUnpinAllChatMessagesRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("unpinAllChatMessages"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "UnpinAllChatMessages",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "UnpinAllChatMessages",
+			ID:   "unpinAllChatMessages",
+		}
+	)
 	request, close, err := s.decodeUnpinAllChatMessagesRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "UnpinAllChatMessages",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.UnpinAllChatMessages(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -4698,47 +6142,64 @@ func (s *Server) handleUnpinAllChatMessagesRequest(args [0]string, w http.Respon
 	}
 
 	if err := encodeUnpinAllChatMessagesResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleUnpinChatMessageRequest handles unpinChatMessage operation.
 //
 // POST /unpinChatMessage
 func (s *Server) handleUnpinChatMessageRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("unpinChatMessage"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "UnpinChatMessage",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "UnpinChatMessage",
+			ID:   "unpinChatMessage",
+		}
+	)
 	request, close, err := s.decodeUnpinChatMessageRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "UnpinChatMessage",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.UnpinChatMessage(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -4753,47 +6214,64 @@ func (s *Server) handleUnpinChatMessageRequest(args [0]string, w http.ResponseWr
 	}
 
 	if err := encodeUnpinChatMessageResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
 }
 
 // HandleUploadStickerFileRequest handles uploadStickerFile operation.
 //
 // POST /uploadStickerFile
 func (s *Server) handleUploadStickerFileRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
-	startTime := time.Now()
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("uploadStickerFile"),
 	}
+
+	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "UploadStickerFile",
 		trace.WithAttributes(otelAttrs...),
 		trace.WithSpanKind(trace.SpanKindServer),
 	)
-	s.requests.Add(ctx, 1, otelAttrs...)
 	defer span.End()
 
-	var err error
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "UploadStickerFile",
+			ID:   "uploadStickerFile",
+		}
+	)
 	request, close, err := s.decodeUploadStickerFileRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			Operation: "UploadStickerFile",
-			Err:       err,
+			OperationContext: opErrContext,
+			Err:              err,
 		}
-		s.badRequest(ctx, w, r, span, otelAttrs, err)
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
 	defer close()
 
 	response, err := s.h.UploadStickerFile(ctx, request)
 	if err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Internal")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("Internal", err)
 		var errRes *ErrorStatusCode
 		if errors.As(err, &errRes) {
 			encodeErrorResponse(*errRes, w, span)
@@ -4808,25 +6286,8 @@ func (s *Server) handleUploadStickerFileRequest(args [0]string, w http.ResponseW
 	}
 
 	if err := encodeUploadStickerFileResponse(response, w, span); err != nil {
-		span.RecordError(err)
-		span.SetStatus(codes.Error, "Response")
-		s.errors.Add(ctx, 1, otelAttrs...)
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
-	elapsedDuration := time.Since(startTime)
-	s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
-}
-
-func (s *Server) badRequest(
-	ctx context.Context,
-	w http.ResponseWriter,
-	r *http.Request,
-	span trace.Span,
-	otelAttrs []attribute.KeyValue,
-	err error,
-) {
-	span.RecordError(err)
-	span.SetStatus(codes.Error, "BadRequest")
-	s.errors.Add(ctx, 1, otelAttrs...)
-	s.cfg.ErrorHandler(ctx, w, r, err)
 }
