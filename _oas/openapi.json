@@ -2378,19 +2378,19 @@
           "width": {
             "description": "Video width as defined by sender",
             "type": "integer",
-            "minimum": "MA==",
+            "minimum": 0,
             "exclusiveMinimum": true
           },
           "height": {
             "description": "Video height as defined by sender",
             "type": "integer",
-            "minimum": "MA==",
+            "minimum": 0,
             "exclusiveMinimum": true
           },
           "duration": {
             "description": "Duration of the video in seconds as defined by sender",
             "type": "integer",
-            "minimum": "MA==",
+            "minimum": 0,
             "exclusiveMinimum": true
           },
           "thumb": {
@@ -2435,7 +2435,7 @@
           "duration": {
             "description": "Duration of the audio in seconds as defined by sender",
             "type": "integer",
-            "minimum": "MA==",
+            "minimum": 0,
             "exclusiveMinimum": true
           },
           "performer": {
@@ -2926,8 +2926,8 @@
           "member_limit": {
             "description": "_Optional_. The maximum number of users that can be members of the chat simultaneously after joining the chat via this invite link; 1-99999",
             "type": "integer",
-            "maximum": "OTk5OTk=",
-            "minimum": "MQ=="
+            "maximum": 99999,
+            "minimum": 1
           },
           "pending_join_request_count": {
             "description": "_Optional_. Number of pending join requests created using this link",
@@ -3998,13 +3998,13 @@
           "thumb_width": {
             "description": "_Optional_. Thumbnail width",
             "type": "integer",
-            "minimum": "MA==",
+            "minimum": 0,
             "exclusiveMinimum": true
           },
           "thumb_height": {
             "description": "_Optional_. Thumbnail height",
             "type": "integer",
-            "minimum": "MA==",
+            "minimum": 0,
             "exclusiveMinimum": true
           }
         },
@@ -4064,7 +4064,7 @@
           "audio_duration": {
             "description": "_Optional_. Audio duration in seconds",
             "type": "integer",
-            "minimum": "MA==",
+            "minimum": 0,
             "exclusiveMinimum": true
           },
           "reply_markup": {
@@ -4558,13 +4558,13 @@
           "thumb_width": {
             "description": "_Optional_. Thumbnail width",
             "type": "integer",
-            "minimum": "MA==",
+            "minimum": 0,
             "exclusiveMinimum": true
           },
           "thumb_height": {
             "description": "_Optional_. Thumbnail height",
             "type": "integer",
-            "minimum": "MA==",
+            "minimum": 0,
             "exclusiveMinimum": true
           }
         },
@@ -4638,13 +4638,13 @@
           "thumb_width": {
             "description": "_Optional_. Thumbnail width",
             "type": "integer",
-            "minimum": "MA==",
+            "minimum": 0,
             "exclusiveMinimum": true
           },
           "thumb_height": {
             "description": "_Optional_. Thumbnail height",
             "type": "integer",
-            "minimum": "MA==",
+            "minimum": 0,
             "exclusiveMinimum": true
           }
         },
@@ -4713,19 +4713,19 @@
           "gif_width": {
             "description": "_Optional_. Width of the GIF",
             "type": "integer",
-            "minimum": "MA==",
+            "minimum": 0,
             "exclusiveMinimum": true
           },
           "gif_height": {
             "description": "_Optional_. Height of the GIF",
             "type": "integer",
-            "minimum": "MA==",
+            "minimum": 0,
             "exclusiveMinimum": true
           },
           "gif_duration": {
             "description": "_Optional_. Duration of the GIF in seconds",
             "type": "integer",
-            "minimum": "MA==",
+            "minimum": 0,
             "exclusiveMinimum": true
           },
           "thumb_url": {
@@ -4805,20 +4805,20 @@
           "live_period": {
             "description": "_Optional_. Period in seconds for which the location can be updated, should be between 60 and 86400",
             "type": "integer",
-            "maximum": "ODY0MDA=",
-            "minimum": "NjA="
+            "maximum": 86400,
+            "minimum": 60
           },
           "heading": {
             "description": "_Optional_. For live locations, a direction in which the user is moving, in degrees. Must be between 1 and 360 if specified",
             "type": "integer",
-            "maximum": "MzYw",
-            "minimum": "MQ=="
+            "maximum": 360,
+            "minimum": 1
           },
           "proximity_alert_radius": {
             "description": "_Optional_. For live locations, a maximum distance for proximity alerts about approaching another chat member, in meters. Must be between 1 and 100000 if specified",
             "type": "integer",
-            "maximum": "MTAwMDAw",
-            "minimum": "MQ=="
+            "maximum": 100000,
+            "minimum": 1
           },
           "reply_markup": {
             "$ref": "#/components/schemas/InlineKeyboardMarkup"
@@ -4833,13 +4833,13 @@
           "thumb_width": {
             "description": "_Optional_. Thumbnail width",
             "type": "integer",
-            "minimum": "MA==",
+            "minimum": 0,
             "exclusiveMinimum": true
           },
           "thumb_height": {
             "description": "_Optional_. Thumbnail height",
             "type": "integer",
-            "minimum": "MA==",
+            "minimum": 0,
             "exclusiveMinimum": true
           }
         },
@@ -4876,19 +4876,19 @@
           "mpeg4_width": {
             "description": "_Optional_. Video width",
             "type": "integer",
-            "minimum": "MA==",
+            "minimum": 0,
             "exclusiveMinimum": true
           },
           "mpeg4_height": {
             "description": "_Optional_. Video height",
             "type": "integer",
-            "minimum": "MA==",
+            "minimum": 0,
             "exclusiveMinimum": true
           },
           "mpeg4_duration": {
             "description": "_Optional_. Video duration in seconds",
             "type": "integer",
-            "minimum": "MA==",
+            "minimum": 0,
             "exclusiveMinimum": true
           },
           "thumb_url": {
@@ -4962,13 +4962,13 @@
           "photo_width": {
             "description": "_Optional_. Width of the photo",
             "type": "integer",
-            "minimum": "MA==",
+            "minimum": 0,
             "exclusiveMinimum": true
           },
           "photo_height": {
             "description": "_Optional_. Height of the photo",
             "type": "integer",
-            "minimum": "MA==",
+            "minimum": 0,
             "exclusiveMinimum": true
           },
           "title": {
@@ -5070,13 +5070,13 @@
           "thumb_width": {
             "description": "_Optional_. Thumbnail width",
             "type": "integer",
-            "minimum": "MA==",
+            "minimum": 0,
             "exclusiveMinimum": true
           },
           "thumb_height": {
             "description": "_Optional_. Thumbnail height",
             "type": "integer",
-            "minimum": "MA==",
+            "minimum": 0,
             "exclusiveMinimum": true
           }
         },
@@ -5142,19 +5142,19 @@
           "video_width": {
             "description": "_Optional_. Video width",
             "type": "integer",
-            "minimum": "MA==",
+            "minimum": 0,
             "exclusiveMinimum": true
           },
           "video_height": {
             "description": "_Optional_. Video height",
             "type": "integer",
-            "minimum": "MA==",
+            "minimum": 0,
             "exclusiveMinimum": true
           },
           "video_duration": {
             "description": "_Optional_. Video duration in seconds",
             "type": "integer",
-            "minimum": "MA==",
+            "minimum": 0,
             "exclusiveMinimum": true
           },
           "description": {
@@ -5222,7 +5222,7 @@
           "voice_duration": {
             "description": "_Optional_. Recording duration in seconds",
             "type": "integer",
-            "minimum": "MA==",
+            "minimum": 0,
             "exclusiveMinimum": true
           },
           "reply_markup": {
@@ -5336,13 +5336,13 @@
           "photo_width": {
             "description": "_Optional_. Photo width",
             "type": "integer",
-            "minimum": "MA==",
+            "minimum": 0,
             "exclusiveMinimum": true
           },
           "photo_height": {
             "description": "_Optional_. Photo height",
             "type": "integer",
-            "minimum": "MA==",
+            "minimum": 0,
             "exclusiveMinimum": true
           },
           "need_name": {
@@ -5405,20 +5405,20 @@
           "live_period": {
             "description": "_Optional_. Period in seconds for which the location can be updated, should be between 60 and 86400",
             "type": "integer",
-            "maximum": "ODY0MDA=",
-            "minimum": "NjA="
+            "maximum": 86400,
+            "minimum": 60
           },
           "heading": {
             "description": "_Optional_. For live locations, a direction in which the user is moving, in degrees. Must be between 1 and 360 if specified",
             "type": "integer",
-            "maximum": "MzYw",
-            "minimum": "MQ=="
+            "maximum": 360,
+            "minimum": 1
           },
           "proximity_alert_radius": {
             "description": "_Optional_. For live locations, a maximum distance for proximity alerts about approaching another chat member, in meters. Must be between 1 and 100000 if specified",
             "type": "integer",
-            "maximum": "MTAwMDAw",
-            "minimum": "MQ=="
+            "maximum": 100000,
+            "minimum": 1
           }
         },
         "required": [
@@ -5498,19 +5498,19 @@
           "width": {
             "description": "_Optional_. Animation width",
             "type": "integer",
-            "minimum": "MA==",
+            "minimum": 0,
             "exclusiveMinimum": true
           },
           "height": {
             "description": "_Optional_. Animation height",
             "type": "integer",
-            "minimum": "MA==",
+            "minimum": 0,
             "exclusiveMinimum": true
           },
           "duration": {
             "description": "_Optional_. Animation duration in seconds",
             "type": "integer",
-            "minimum": "MA==",
+            "minimum": 0,
             "exclusiveMinimum": true
           }
         },
@@ -5558,7 +5558,7 @@
           "duration": {
             "description": "_Optional_. Duration of the audio in seconds",
             "type": "integer",
-            "minimum": "MA==",
+            "minimum": 0,
             "exclusiveMinimum": true
           },
           "performer": {
@@ -5698,19 +5698,19 @@
           "width": {
             "description": "_Optional_. Video width",
             "type": "integer",
-            "minimum": "MA==",
+            "minimum": 0,
             "exclusiveMinimum": true
           },
           "height": {
             "description": "_Optional_. Video height",
             "type": "integer",
-            "minimum": "MA==",
+            "minimum": 0,
             "exclusiveMinimum": true
           },
           "duration": {
             "description": "_Optional_. Video duration in seconds",
             "type": "integer",
-            "minimum": "MA==",
+            "minimum": 0,
             "exclusiveMinimum": true
           },
           "supports_streaming": {
@@ -5965,8 +5965,8 @@
           "heading": {
             "description": "_Optional_. The direction in which user is moving, in degrees; 1-360. For active live locations only",
             "type": "integer",
-            "maximum": "MzYw",
-            "minimum": "MQ=="
+            "maximum": 360,
+            "minimum": 1
           },
           "proximity_alert_radius": {
             "description": "_Optional_. The maximum distance for proximity alerts about approaching another chat member, in meters. For sent live locations only",
@@ -6957,13 +6957,13 @@
           "width": {
             "description": "Photo width",
             "type": "integer",
-            "minimum": "MA==",
+            "minimum": 0,
             "exclusiveMinimum": true
           },
           "height": {
             "description": "Photo height",
             "type": "integer",
-            "minimum": "MA==",
+            "minimum": 0,
             "exclusiveMinimum": true
           },
           "file_size": {
@@ -7770,13 +7770,13 @@
           "width": {
             "description": "Sticker width",
             "type": "integer",
-            "minimum": "MA==",
+            "minimum": 0,
             "exclusiveMinimum": true
           },
           "height": {
             "description": "Sticker height",
             "type": "integer",
-            "minimum": "MA==",
+            "minimum": 0,
             "exclusiveMinimum": true
           },
           "is_animated": {
@@ -8111,19 +8111,19 @@
           "width": {
             "description": "Video width as defined by sender",
             "type": "integer",
-            "minimum": "MA==",
+            "minimum": 0,
             "exclusiveMinimum": true
           },
           "height": {
             "description": "Video height as defined by sender",
             "type": "integer",
-            "minimum": "MA==",
+            "minimum": 0,
             "exclusiveMinimum": true
           },
           "duration": {
             "description": "Duration of the video in seconds as defined by sender",
             "type": "integer",
-            "minimum": "MA==",
+            "minimum": 0,
             "exclusiveMinimum": true
           },
           "thumb": {
@@ -8160,7 +8160,7 @@
           "duration": {
             "description": "Video chat duration in seconds",
             "type": "integer",
-            "minimum": "MA==",
+            "minimum": 0,
             "exclusiveMinimum": true
           }
         },
@@ -8232,7 +8232,7 @@
           "duration": {
             "description": "Duration of the video in seconds as defined by sender",
             "type": "integer",
-            "minimum": "MA==",
+            "minimum": 0,
             "exclusiveMinimum": true
           },
           "thumb": {
@@ -8268,7 +8268,7 @@
           "duration": {
             "description": "Duration of the audio in seconds as defined by sender",
             "type": "integer",
-            "minimum": "MA==",
+            "minimum": 0,
             "exclusiveMinimum": true
           },
           "mime_type": {
@@ -8693,8 +8693,8 @@
           "member_limit": {
             "description": "The maximum number of users that can be members of the chat simultaneously after joining the chat via this invite link; 1-99999",
             "type": "integer",
-            "maximum": "OTk5OTk=",
-            "minimum": "MQ=="
+            "maximum": 99999,
+            "minimum": 1
           },
           "creates_join_request": {
             "description": "_True_, if users joining the chat via the link need to be approved by chat administrators. If _True_, _member_limit_ can't be specified",
@@ -8768,13 +8768,13 @@
           "photo_width": {
             "description": "Photo width",
             "type": "integer",
-            "minimum": "MA==",
+            "minimum": 0,
             "exclusiveMinimum": true
           },
           "photo_height": {
             "description": "Photo height",
             "type": "integer",
-            "minimum": "MA==",
+            "minimum": 0,
             "exclusiveMinimum": true
           },
           "need_name": {
@@ -8985,8 +8985,8 @@
           "member_limit": {
             "description": "The maximum number of users that can be members of the chat simultaneously after joining the chat via this invite link; 1-99999",
             "type": "integer",
-            "maximum": "OTk5OTk=",
-            "minimum": "MQ=="
+            "maximum": 99999,
+            "minimum": 1
           },
           "creates_join_request": {
             "description": "_True_, if users joining the chat via the link need to be approved by chat administrators. If _True_, _member_limit_ can't be specified",
@@ -9064,14 +9064,14 @@
           "heading": {
             "description": "Direction in which the user is moving, in degrees. Must be between 1 and 360 if specified",
             "type": "integer",
-            "maximum": "MzYw",
-            "minimum": "MQ=="
+            "maximum": 360,
+            "minimum": 1
           },
           "proximity_alert_radius": {
             "description": "The maximum distance for proximity alerts about approaching another chat member, in meters. Must be between 1 and 100000 if specified",
             "type": "integer",
-            "maximum": "MTAwMDAw",
-            "minimum": "MQ=="
+            "maximum": 100000,
+            "minimum": 1
           },
           "reply_markup": {
             "$ref": "#/components/schemas/InlineKeyboardMarkup"
@@ -9366,8 +9366,8 @@
           "limit": {
             "description": "Limits the number of updates to be retrieved. Values between 1-100 are accepted. Defaults to 100",
             "type": "integer",
-            "maximum": "MTAw",
-            "minimum": "MQ=="
+            "maximum": 100,
+            "minimum": 1
           },
           "timeout": {
             "description": "Timeout in seconds for long polling. Defaults to 0, i.e. usual short polling. Should be positive, short polling should be used for testing purposes only",
@@ -9399,8 +9399,8 @@
           "limit": {
             "description": "Limits the number of photos to be retrieved. Values between 1-100 are accepted. Defaults to 100",
             "type": "integer",
-            "maximum": "MTAw",
-            "minimum": "MQ=="
+            "maximum": 100,
+            "minimum": 1
           }
         },
         "required": [
@@ -9559,19 +9559,19 @@
           "duration": {
             "description": "Duration of sent animation in seconds",
             "type": "integer",
-            "minimum": "MA==",
+            "minimum": 0,
             "exclusiveMinimum": true
           },
           "width": {
             "description": "Animation width",
             "type": "integer",
-            "minimum": "MA==",
+            "minimum": 0,
             "exclusiveMinimum": true
           },
           "height": {
             "description": "Animation height",
             "type": "integer",
-            "minimum": "MA==",
+            "minimum": 0,
             "exclusiveMinimum": true
           },
           "thumb": {
@@ -9649,7 +9649,7 @@
           "duration": {
             "description": "Duration of the audio in seconds",
             "type": "integer",
-            "minimum": "MA==",
+            "minimum": 0,
             "exclusiveMinimum": true
           },
           "performer": {
@@ -9960,13 +9960,13 @@
           "photo_width": {
             "description": "Photo width",
             "type": "integer",
-            "minimum": "MA==",
+            "minimum": 0,
             "exclusiveMinimum": true
           },
           "photo_height": {
             "description": "Photo height",
             "type": "integer",
-            "minimum": "MA==",
+            "minimum": 0,
             "exclusiveMinimum": true
           },
           "need_name": {
@@ -10049,20 +10049,20 @@
           "live_period": {
             "description": "Period in seconds for which the location will be updated (see [Live Locations](https://telegram.org/blog/live-locations), should be between 60 and 86400",
             "type": "integer",
-            "maximum": "ODY0MDA=",
-            "minimum": "NjA="
+            "maximum": 86400,
+            "minimum": 60
           },
           "heading": {
             "description": "For live locations, a direction in which the user is moving, in degrees. Must be between 1 and 360 if specified",
             "type": "integer",
-            "maximum": "MzYw",
-            "minimum": "MQ=="
+            "maximum": 360,
+            "minimum": 1
           },
           "proximity_alert_radius": {
             "description": "For live locations, a maximum distance for proximity alerts about approaching another chat member, in meters. Must be between 1 and 100000 if specified",
             "type": "integer",
-            "maximum": "MTAwMDAw",
-            "minimum": "MQ=="
+            "maximum": 100000,
+            "minimum": 1
           },
           "disable_notification": {
             "description": "Sends the message [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will receive a notification with no sound",
@@ -10460,19 +10460,19 @@
           "duration": {
             "description": "Duration of sent video in seconds",
             "type": "integer",
-            "minimum": "MA==",
+            "minimum": 0,
             "exclusiveMinimum": true
           },
           "width": {
             "description": "Video width",
             "type": "integer",
-            "minimum": "MA==",
+            "minimum": 0,
             "exclusiveMinimum": true
           },
           "height": {
             "description": "Video height",
             "type": "integer",
-            "minimum": "MA==",
+            "minimum": 0,
             "exclusiveMinimum": true
           },
           "thumb": {
@@ -10538,7 +10538,7 @@
           "duration": {
             "description": "Duration of sent video in seconds",
             "type": "integer",
-            "minimum": "MA==",
+            "minimum": 0,
             "exclusiveMinimum": true
           },
           "length": {
@@ -10604,7 +10604,7 @@
           "duration": {
             "description": "Duration of the voice message in seconds",
             "type": "integer",
-            "minimum": "MA==",
+            "minimum": 0,
             "exclusiveMinimum": true
           },
           "disable_notification": {
