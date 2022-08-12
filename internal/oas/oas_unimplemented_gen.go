@@ -137,10 +137,11 @@ func (UnimplementedHandler) Close(ctx context.Context) (r Result, _ error) {
 // CopyMessage implements copyMessage operation.
 //
 // Use this method to copy messages of any kind. Service messages and invoice messages can't be
-// copied. The method is analogous to the method [forwardMessage](https://core.telegram.
-// org/bots/api#forwardmessage), but the copied message doesn't have a link to the original message.
-// Returns the [MessageId](https://core.telegram.org/bots/api#messageid) of the sent message on
-// success.
+// copied. A quiz [poll](https://core.telegram.org/bots/api#poll) can be copied only if the value of
+// the field _correct_option_id_ is known to the bot. The method is analogous to the method
+// [forwardMessage](https://core.telegram.org/bots/api#forwardmessage), but the copied message
+// doesn't have a link to the original message. Returns the [MessageId](https://core.telegram.
+// org/bots/api#messageid) of the sent message on success.
 //
 // POST /copyMessage
 func (UnimplementedHandler) CopyMessage(ctx context.Context, req CopyMessage) (r ResultMessageId, _ error) {
@@ -367,10 +368,8 @@ func (UnimplementedHandler) GetChat(ctx context.Context, req GetChat) (r ResultC
 
 // GetChatAdministrators implements getChatAdministrators operation.
 //
-// Use this method to get a list of administrators in a chat. On success, returns an Array of
-// [ChatMember](https://core.telegram.org/bots/api#chatmember) objects that contains information
-// about all chat administrators except other bots. If the chat is a group or a supergroup and no
-// administrators were appointed, only the creator will be returned.
+// Use this method to get a list of administrators in a chat, which aren't bots. Returns an Array of
+// [ChatMember](https://core.telegram.org/bots/api#chatmember) objects.
 //
 // POST /getChatAdministrators
 func (UnimplementedHandler) GetChatAdministrators(ctx context.Context, req GetChatAdministrators) (r ResultArrayOfChatMember, _ error) {
@@ -407,6 +406,16 @@ func (UnimplementedHandler) GetChatMenuButton(ctx context.Context, req OptGetCha
 	return r, ht.ErrNotImplemented
 }
 
+// GetCustomEmojiStickers implements getCustomEmojiStickers operation.
+//
+// Use this method to get information about custom emoji stickers by their identifiers. Returns an
+// Array of [Sticker](https://core.telegram.org/bots/api#sticker) objects.
+//
+// POST /getCustomEmojiStickers
+func (UnimplementedHandler) GetCustomEmojiStickers(ctx context.Context, req GetCustomEmojiStickers) (r ResultArrayOfSticker, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
 // GetFile implements getFile operation.
 //
 // Use this method to get basic information about a file and prepare it for downloading. For the
@@ -424,8 +433,8 @@ func (UnimplementedHandler) GetFile(ctx context.Context, req GetFile) (r ResultF
 // GetGameHighScores implements getGameHighScores operation.
 //
 // Use this method to get data for high score tables. Will return the score of the specified user and
-// several of their neighbors in a game. On success, returns an _Array_ of
-// [GameHighScore](https://core.telegram.org/bots/api#gamehighscore) objects.
+// several of their neighbors in a game. Returns an Array of [GameHighScore](https://core.telegram.
+// org/bots/api#gamehighscore) objects.
 //
 // POST /getGameHighScores
 func (UnimplementedHandler) GetGameHighScores(ctx context.Context, req GetGameHighScores) (r ResultArrayOfGameHighScore, _ error) {
@@ -445,7 +454,7 @@ func (UnimplementedHandler) GetMe(ctx context.Context) (r ResultUser, _ error) {
 // GetMyCommands implements getMyCommands operation.
 //
 // Use this method to get the current list of the bot's commands for the given scope and user
-// language. Returns Array of [BotCommand](https://core.telegram.org/bots/api#botcommand) on success.
+// language. Returns an Array of [BotCommand](https://core.telegram.org/bots/api#botcommand) objects.
 // If commands aren't set, an empty list is returned.
 //
 // POST /getMyCommands
@@ -476,8 +485,8 @@ func (UnimplementedHandler) GetStickerSet(ctx context.Context, req GetStickerSet
 // GetUpdates implements getUpdates operation.
 //
 // Use this method to receive incoming updates using long polling ([wiki](https://en.wikipedia.
-// org/wiki/Push_technology#Long_polling)). An Array of [Update](https://core.telegram.
-// org/bots/api#update) objects is returned.
+// org/wiki/Push_technology#Long_polling)). Returns an Array of [Update](https://core.telegram.
+// org/bots/api#update) objects.
 //
 // POST /getUpdates
 func (UnimplementedHandler) GetUpdates(ctx context.Context, req OptGetUpdates) (r ResultArrayOfUpdate, _ error) {

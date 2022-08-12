@@ -203,6 +203,14 @@ func (s *ResultArrayOfMessage) setDefaults() {
 }
 
 // setDefaults set default value of fields.
+func (s *ResultArrayOfSticker) setDefaults() {
+	{
+		val := bool(true)
+		s.Ok = val
+	}
+}
+
+// setDefaults set default value of fields.
 func (s *ResultArrayOfUpdate) setDefaults() {
 	{
 		val := bool(true)

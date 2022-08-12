@@ -104,10 +104,11 @@ type Handler interface {
 	// CopyMessage implements copyMessage operation.
 	//
 	// Use this method to copy messages of any kind. Service messages and invoice messages can't be
-	// copied. The method is analogous to the method [forwardMessage](https://core.telegram.
-	// org/bots/api#forwardmessage), but the copied message doesn't have a link to the original message.
-	// Returns the [MessageId](https://core.telegram.org/bots/api#messageid) of the sent message on
-	// success.
+	// copied. A quiz [poll](https://core.telegram.org/bots/api#poll) can be copied only if the value of
+	// the field _correct_option_id_ is known to the bot. The method is analogous to the method
+	// [forwardMessage](https://core.telegram.org/bots/api#forwardmessage), but the copied message
+	// doesn't have a link to the original message. Returns the [MessageId](https://core.telegram.
+	// org/bots/api#messageid) of the sent message on success.
 	//
 	// POST /copyMessage
 	CopyMessage(ctx context.Context, req CopyMessage) (ResultMessageId, error)
@@ -274,10 +275,8 @@ type Handler interface {
 	GetChat(ctx context.Context, req GetChat) (ResultChat, error)
 	// GetChatAdministrators implements getChatAdministrators operation.
 	//
-	// Use this method to get a list of administrators in a chat. On success, returns an Array of
-	// [ChatMember](https://core.telegram.org/bots/api#chatmember) objects that contains information
-	// about all chat administrators except other bots. If the chat is a group or a supergroup and no
-	// administrators were appointed, only the creator will be returned.
+	// Use this method to get a list of administrators in a chat, which aren't bots. Returns an Array of
+	// [ChatMember](https://core.telegram.org/bots/api#chatmember) objects.
 	//
 	// POST /getChatAdministrators
 	GetChatAdministrators(ctx context.Context, req GetChatAdministrators) (ResultArrayOfChatMember, error)
@@ -302,6 +301,13 @@ type Handler interface {
 	//
 	// POST /getChatMenuButton
 	GetChatMenuButton(ctx context.Context, req OptGetChatMenuButton) (Result, error)
+	// GetCustomEmojiStickers implements getCustomEmojiStickers operation.
+	//
+	// Use this method to get information about custom emoji stickers by their identifiers. Returns an
+	// Array of [Sticker](https://core.telegram.org/bots/api#sticker) objects.
+	//
+	// POST /getCustomEmojiStickers
+	GetCustomEmojiStickers(ctx context.Context, req GetCustomEmojiStickers) (ResultArrayOfSticker, error)
 	// GetFile implements getFile operation.
 	//
 	// Use this method to get basic information about a file and prepare it for downloading. For the
@@ -316,8 +322,8 @@ type Handler interface {
 	// GetGameHighScores implements getGameHighScores operation.
 	//
 	// Use this method to get data for high score tables. Will return the score of the specified user and
-	// several of their neighbors in a game. On success, returns an _Array_ of
-	// [GameHighScore](https://core.telegram.org/bots/api#gamehighscore) objects.
+	// several of their neighbors in a game. Returns an Array of [GameHighScore](https://core.telegram.
+	// org/bots/api#gamehighscore) objects.
 	//
 	// POST /getGameHighScores
 	GetGameHighScores(ctx context.Context, req GetGameHighScores) (ResultArrayOfGameHighScore, error)
@@ -331,7 +337,7 @@ type Handler interface {
 	// GetMyCommands implements getMyCommands operation.
 	//
 	// Use this method to get the current list of the bot's commands for the given scope and user
-	// language. Returns Array of [BotCommand](https://core.telegram.org/bots/api#botcommand) on success.
+	// language. Returns an Array of [BotCommand](https://core.telegram.org/bots/api#botcommand) objects.
 	// If commands aren't set, an empty list is returned.
 	//
 	// POST /getMyCommands
@@ -353,8 +359,8 @@ type Handler interface {
 	// GetUpdates implements getUpdates operation.
 	//
 	// Use this method to receive incoming updates using long polling ([wiki](https://en.wikipedia.
-	// org/wiki/Push_technology#Long_polling)). An Array of [Update](https://core.telegram.
-	// org/bots/api#update) objects is returned.
+	// org/wiki/Push_technology#Long_polling)). Returns an Array of [Update](https://core.telegram.
+	// org/bots/api#update) objects.
 	//
 	// POST /getUpdates
 	GetUpdates(ctx context.Context, req OptGetUpdates) (ResultArrayOfUpdate, error)

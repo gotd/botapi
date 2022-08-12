@@ -2897,6 +2897,12 @@ func (s Chat) encodeFields(e *jx.Encoder) {
 		}
 	}
 	{
+		if s.HasRestrictedVoiceAndVideoMessages.Set {
+			e.FieldStart("has_restricted_voice_and_video_messages")
+			s.HasRestrictedVoiceAndVideoMessages.Encode(e)
+		}
+	}
+	{
 		if s.JoinToSendMessages.Set {
 			e.FieldStart("join_to_send_messages")
 			s.JoinToSendMessages.Encode(e)
@@ -2982,7 +2988,7 @@ func (s Chat) encodeFields(e *jx.Encoder) {
 	}
 }
 
-var jsonFieldsNameOfChat = [23]string{
+var jsonFieldsNameOfChat = [24]string{
 	0:  "id",
 	1:  "type",
 	2:  "title",
@@ -2992,20 +2998,21 @@ var jsonFieldsNameOfChat = [23]string{
 	6:  "photo",
 	7:  "bio",
 	8:  "has_private_forwards",
-	9:  "join_to_send_messages",
-	10: "join_by_request",
-	11: "description",
-	12: "invite_link",
-	13: "pinned_message",
-	14: "permissions",
-	15: "slow_mode_delay",
-	16: "message_auto_delete_time",
-	17: "has_protected_content",
-	18: "sticker_set_name",
-	19: "can_set_sticker_set",
-	20: "linked_chat_id",
-	21: "location",
-	22: "all_members_are_administrators",
+	9:  "has_restricted_voice_and_video_messages",
+	10: "join_to_send_messages",
+	11: "join_by_request",
+	12: "description",
+	13: "invite_link",
+	14: "pinned_message",
+	15: "permissions",
+	16: "slow_mode_delay",
+	17: "message_auto_delete_time",
+	18: "has_protected_content",
+	19: "sticker_set_name",
+	20: "can_set_sticker_set",
+	21: "linked_chat_id",
+	22: "location",
+	23: "all_members_are_administrators",
 }
 
 // Decode decodes Chat from json.
@@ -3108,6 +3115,16 @@ func (s *Chat) Decode(d *jx.Decoder) error {
 				return nil
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"has_private_forwards\"")
+			}
+		case "has_restricted_voice_and_video_messages":
+			if err := func() error {
+				s.HasRestrictedVoiceAndVideoMessages.Reset()
+				if err := s.HasRestrictedVoiceAndVideoMessages.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"has_restricted_voice_and_video_messages\"")
 			}
 		case "join_to_send_messages":
 			if err := func() error {
@@ -7198,15 +7215,15 @@ func (s CreateNewStickerSet) encodeFields(e *jx.Encoder) {
 		}
 	}
 	{
+		if s.StickerType.Set {
+			e.FieldStart("sticker_type")
+			s.StickerType.Encode(e)
+		}
+	}
+	{
 
 		e.FieldStart("emojis")
 		e.Str(s.Emojis)
-	}
-	{
-		if s.ContainsMasks.Set {
-			e.FieldStart("contains_masks")
-			s.ContainsMasks.Encode(e)
-		}
 	}
 	{
 		if s.MaskPosition.Set {
@@ -7223,8 +7240,8 @@ var jsonFieldsNameOfCreateNewStickerSet = [9]string{
 	3: "png_sticker",
 	4: "tgs_sticker",
 	5: "webm_sticker",
-	6: "emojis",
-	7: "contains_masks",
+	6: "sticker_type",
+	7: "emojis",
 	8: "mask_position",
 }
 
@@ -7303,8 +7320,18 @@ func (s *CreateNewStickerSet) Decode(d *jx.Decoder) error {
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"webm_sticker\"")
 			}
+		case "sticker_type":
+			if err := func() error {
+				s.StickerType.Reset()
+				if err := s.StickerType.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"sticker_type\"")
+			}
 		case "emojis":
-			requiredBitSet[0] |= 1 << 6
+			requiredBitSet[0] |= 1 << 7
 			if err := func() error {
 				v, err := d.Str()
 				s.Emojis = string(v)
@@ -7314,16 +7341,6 @@ func (s *CreateNewStickerSet) Decode(d *jx.Decoder) error {
 				return nil
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"emojis\"")
-			}
-		case "contains_masks":
-			if err := func() error {
-				s.ContainsMasks.Reset()
-				if err := s.ContainsMasks.Decode(d); err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"contains_masks\"")
 			}
 		case "mask_position":
 			if err := func() error {
@@ -7345,7 +7362,7 @@ func (s *CreateNewStickerSet) Decode(d *jx.Decoder) error {
 	// Validate required fields.
 	var failures []validate.FieldError
 	for i, mask := range [2]uint8{
-		0b01000111,
+		0b10000111,
 		0b00000000,
 	} {
 		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
@@ -11391,6 +11408,115 @@ func (s GetChatMenuButton) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
 func (s *GetChatMenuButton) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode implements json.Marshaler.
+func (s GetCustomEmojiStickers) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	s.encodeFields(e)
+	e.ObjEnd()
+}
+
+// encodeFields encodes fields.
+func (s GetCustomEmojiStickers) encodeFields(e *jx.Encoder) {
+	{
+
+		e.FieldStart("custom_emoji_ids")
+		e.ArrStart()
+		for _, elem := range s.CustomEmojiIds {
+			e.Str(elem)
+		}
+		e.ArrEnd()
+	}
+}
+
+var jsonFieldsNameOfGetCustomEmojiStickers = [1]string{
+	0: "custom_emoji_ids",
+}
+
+// Decode decodes GetCustomEmojiStickers from json.
+func (s *GetCustomEmojiStickers) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode GetCustomEmojiStickers to nil")
+	}
+	var requiredBitSet [1]uint8
+
+	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "custom_emoji_ids":
+			requiredBitSet[0] |= 1 << 0
+			if err := func() error {
+				s.CustomEmojiIds = make([]string, 0)
+				if err := d.Arr(func(d *jx.Decoder) error {
+					var elem string
+					v, err := d.Str()
+					elem = string(v)
+					if err != nil {
+						return err
+					}
+					s.CustomEmojiIds = append(s.CustomEmojiIds, elem)
+					return nil
+				}); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"custom_emoji_ids\"")
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	}); err != nil {
+		return errors.Wrap(err, "decode GetCustomEmojiStickers")
+	}
+	// Validate required fields.
+	var failures []validate.FieldError
+	for i, mask := range [1]uint8{
+		0b00000001,
+	} {
+		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
+			// Mask only required fields and check equality to mask using XOR.
+			//
+			// If XOR result is not zero, result is not equal to expected, so some fields are missed.
+			// Bits of fields which would be set are actually bits of missed fields.
+			missed := bits.OnesCount8(result)
+			for bitN := 0; bitN < missed; bitN++ {
+				bitIdx := bits.TrailingZeros8(result)
+				fieldIdx := i*8 + bitIdx
+				var name string
+				if fieldIdx < len(jsonFieldsNameOfGetCustomEmojiStickers) {
+					name = jsonFieldsNameOfGetCustomEmojiStickers[fieldIdx]
+				} else {
+					name = strconv.Itoa(fieldIdx)
+				}
+				failures = append(failures, validate.FieldError{
+					Name:  name,
+					Error: validate.ErrFieldRequired,
+				})
+				// Reset bit.
+				result &^= 1 << bitIdx
+			}
+		}
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s GetCustomEmojiStickers) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *GetCustomEmojiStickers) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
@@ -23794,15 +23920,22 @@ func (s MessageEntity) encodeFields(e *jx.Encoder) {
 			s.Language.Encode(e)
 		}
 	}
+	{
+		if s.CustomEmojiID.Set {
+			e.FieldStart("custom_emoji_id")
+			s.CustomEmojiID.Encode(e)
+		}
+	}
 }
 
-var jsonFieldsNameOfMessageEntity = [6]string{
+var jsonFieldsNameOfMessageEntity = [7]string{
 	0: "type",
 	1: "offset",
 	2: "length",
 	3: "url",
 	4: "user",
 	5: "language",
+	6: "custom_emoji_id",
 }
 
 // Decode decodes MessageEntity from json.
@@ -23878,6 +24011,16 @@ func (s *MessageEntity) Decode(d *jx.Decoder) error {
 				return nil
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"language\"")
+			}
+		case "custom_emoji_id":
+			if err := func() error {
+				s.CustomEmojiID.Reset()
+				if err := s.CustomEmojiID.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"custom_emoji_id\"")
 			}
 		default:
 			return d.Skip()
@@ -23983,6 +24126,8 @@ func (s *MessageEntityType) Decode(d *jx.Decoder) error {
 		*s = MessageEntityTypeTextLink
 	case MessageEntityTypeTextMention:
 		*s = MessageEntityTypeTextMention
+	case MessageEntityTypeCustomEmoji:
+		*s = MessageEntityTypeCustomEmoji
 	default:
 		*s = MessageEntityType(v)
 	}
@@ -31064,6 +31209,132 @@ func (s ResultArrayOfMessage) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
 func (s *ResultArrayOfMessage) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode implements json.Marshaler.
+func (s ResultArrayOfSticker) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	s.encodeFields(e)
+	e.ObjEnd()
+}
+
+// encodeFields encodes fields.
+func (s ResultArrayOfSticker) encodeFields(e *jx.Encoder) {
+	{
+		if s.Result != nil {
+			e.FieldStart("result")
+			e.ArrStart()
+			for _, elem := range s.Result {
+				elem.Encode(e)
+			}
+			e.ArrEnd()
+		}
+	}
+	{
+
+		e.FieldStart("ok")
+		e.Bool(s.Ok)
+	}
+}
+
+var jsonFieldsNameOfResultArrayOfSticker = [2]string{
+	0: "result",
+	1: "ok",
+}
+
+// Decode decodes ResultArrayOfSticker from json.
+func (s *ResultArrayOfSticker) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode ResultArrayOfSticker to nil")
+	}
+	var requiredBitSet [1]uint8
+	s.setDefaults()
+
+	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "result":
+			if err := func() error {
+				s.Result = make([]Sticker, 0)
+				if err := d.Arr(func(d *jx.Decoder) error {
+					var elem Sticker
+					if err := elem.Decode(d); err != nil {
+						return err
+					}
+					s.Result = append(s.Result, elem)
+					return nil
+				}); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"result\"")
+			}
+		case "ok":
+			requiredBitSet[0] |= 1 << 1
+			if err := func() error {
+				v, err := d.Bool()
+				s.Ok = bool(v)
+				if err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"ok\"")
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	}); err != nil {
+		return errors.Wrap(err, "decode ResultArrayOfSticker")
+	}
+	// Validate required fields.
+	var failures []validate.FieldError
+	for i, mask := range [1]uint8{
+		0b00000010,
+	} {
+		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
+			// Mask only required fields and check equality to mask using XOR.
+			//
+			// If XOR result is not zero, result is not equal to expected, so some fields are missed.
+			// Bits of fields which would be set are actually bits of missed fields.
+			missed := bits.OnesCount8(result)
+			for bitN := 0; bitN < missed; bitN++ {
+				bitIdx := bits.TrailingZeros8(result)
+				fieldIdx := i*8 + bitIdx
+				var name string
+				if fieldIdx < len(jsonFieldsNameOfResultArrayOfSticker) {
+					name = jsonFieldsNameOfResultArrayOfSticker[fieldIdx]
+				} else {
+					name = strconv.Itoa(fieldIdx)
+				}
+				failures = append(failures, validate.FieldError{
+					Name:  name,
+					Error: validate.ErrFieldRequired,
+				})
+				// Reset bit.
+				result &^= 1 << bitIdx
+			}
+		}
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s ResultArrayOfSticker) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *ResultArrayOfSticker) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
@@ -40561,6 +40832,11 @@ func (s Sticker) encodeFields(e *jx.Encoder) {
 	}
 	{
 
+		e.FieldStart("type")
+		s.Type.Encode(e)
+	}
+	{
+
 		e.FieldStart("width")
 		e.Int(s.Width)
 	}
@@ -40610,6 +40886,12 @@ func (s Sticker) encodeFields(e *jx.Encoder) {
 		}
 	}
 	{
+		if s.CustomEmojiID.Set {
+			e.FieldStart("custom_emoji_id")
+			s.CustomEmojiID.Encode(e)
+		}
+	}
+	{
 		if s.FileSize.Set {
 			e.FieldStart("file_size")
 			s.FileSize.Encode(e)
@@ -40617,19 +40899,21 @@ func (s Sticker) encodeFields(e *jx.Encoder) {
 	}
 }
 
-var jsonFieldsNameOfSticker = [12]string{
+var jsonFieldsNameOfSticker = [14]string{
 	0:  "file_id",
 	1:  "file_unique_id",
-	2:  "width",
-	3:  "height",
-	4:  "is_animated",
-	5:  "is_video",
-	6:  "thumb",
-	7:  "emoji",
-	8:  "set_name",
-	9:  "premium_animation",
-	10: "mask_position",
-	11: "file_size",
+	2:  "type",
+	3:  "width",
+	4:  "height",
+	5:  "is_animated",
+	6:  "is_video",
+	7:  "thumb",
+	8:  "emoji",
+	9:  "set_name",
+	10: "premium_animation",
+	11: "mask_position",
+	12: "custom_emoji_id",
+	13: "file_size",
 }
 
 // Decode decodes Sticker from json.
@@ -40665,8 +40949,18 @@ func (s *Sticker) Decode(d *jx.Decoder) error {
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"file_unique_id\"")
 			}
-		case "width":
+		case "type":
 			requiredBitSet[0] |= 1 << 2
+			if err := func() error {
+				if err := s.Type.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"type\"")
+			}
+		case "width":
+			requiredBitSet[0] |= 1 << 3
 			if err := func() error {
 				v, err := d.Int()
 				s.Width = int(v)
@@ -40678,7 +40972,7 @@ func (s *Sticker) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"width\"")
 			}
 		case "height":
-			requiredBitSet[0] |= 1 << 3
+			requiredBitSet[0] |= 1 << 4
 			if err := func() error {
 				v, err := d.Int()
 				s.Height = int(v)
@@ -40690,7 +40984,7 @@ func (s *Sticker) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"height\"")
 			}
 		case "is_animated":
-			requiredBitSet[0] |= 1 << 4
+			requiredBitSet[0] |= 1 << 5
 			if err := func() error {
 				v, err := d.Bool()
 				s.IsAnimated = bool(v)
@@ -40702,7 +40996,7 @@ func (s *Sticker) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"is_animated\"")
 			}
 		case "is_video":
-			requiredBitSet[0] |= 1 << 5
+			requiredBitSet[0] |= 1 << 6
 			if err := func() error {
 				v, err := d.Bool()
 				s.IsVideo = bool(v)
@@ -40763,6 +41057,16 @@ func (s *Sticker) Decode(d *jx.Decoder) error {
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"mask_position\"")
 			}
+		case "custom_emoji_id":
+			if err := func() error {
+				s.CustomEmojiID.Reset()
+				if err := s.CustomEmojiID.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"custom_emoji_id\"")
+			}
 		case "file_size":
 			if err := func() error {
 				s.FileSize.Reset()
@@ -40783,7 +41087,7 @@ func (s *Sticker) Decode(d *jx.Decoder) error {
 	// Validate required fields.
 	var failures []validate.FieldError
 	for i, mask := range [2]uint8{
-		0b00111111,
+		0b01111111,
 		0b00000000,
 	} {
 		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
@@ -40851,6 +41155,11 @@ func (s StickerSet) encodeFields(e *jx.Encoder) {
 	}
 	{
 
+		e.FieldStart("sticker_type")
+		e.Str(s.StickerType)
+	}
+	{
+
 		e.FieldStart("is_animated")
 		e.Bool(s.IsAnimated)
 	}
@@ -40858,11 +41167,6 @@ func (s StickerSet) encodeFields(e *jx.Encoder) {
 
 		e.FieldStart("is_video")
 		e.Bool(s.IsVideo)
-	}
-	{
-
-		e.FieldStart("contains_masks")
-		e.Bool(s.ContainsMasks)
 	}
 	{
 
@@ -40884,9 +41188,9 @@ func (s StickerSet) encodeFields(e *jx.Encoder) {
 var jsonFieldsNameOfStickerSet = [7]string{
 	0: "name",
 	1: "title",
-	2: "is_animated",
-	3: "is_video",
-	4: "contains_masks",
+	2: "sticker_type",
+	3: "is_animated",
+	4: "is_video",
 	5: "stickers",
 	6: "thumb",
 }
@@ -40924,8 +41228,20 @@ func (s *StickerSet) Decode(d *jx.Decoder) error {
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"title\"")
 			}
-		case "is_animated":
+		case "sticker_type":
 			requiredBitSet[0] |= 1 << 2
+			if err := func() error {
+				v, err := d.Str()
+				s.StickerType = string(v)
+				if err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"sticker_type\"")
+			}
+		case "is_animated":
+			requiredBitSet[0] |= 1 << 3
 			if err := func() error {
 				v, err := d.Bool()
 				s.IsAnimated = bool(v)
@@ -40937,7 +41253,7 @@ func (s *StickerSet) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"is_animated\"")
 			}
 		case "is_video":
-			requiredBitSet[0] |= 1 << 3
+			requiredBitSet[0] |= 1 << 4
 			if err := func() error {
 				v, err := d.Bool()
 				s.IsVideo = bool(v)
@@ -40947,18 +41263,6 @@ func (s *StickerSet) Decode(d *jx.Decoder) error {
 				return nil
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"is_video\"")
-			}
-		case "contains_masks":
-			requiredBitSet[0] |= 1 << 4
-			if err := func() error {
-				v, err := d.Bool()
-				s.ContainsMasks = bool(v)
-				if err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"contains_masks\"")
 			}
 		case "stickers":
 			requiredBitSet[0] |= 1 << 5
@@ -41040,6 +41344,48 @@ func (s StickerSet) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
 func (s *StickerSet) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes StickerType as json.
+func (s StickerType) Encode(e *jx.Encoder) {
+	e.Str(string(s))
+}
+
+// Decode decodes StickerType from json.
+func (s *StickerType) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode StickerType to nil")
+	}
+	v, err := d.StrBytes()
+	if err != nil {
+		return err
+	}
+	// Try to use constant string.
+	switch StickerType(v) {
+	case StickerTypeRegular:
+		*s = StickerTypeRegular
+	case StickerTypeMask:
+		*s = StickerTypeMask
+	case StickerTypeCustomEmoji:
+		*s = StickerTypeCustomEmoji
+	default:
+		*s = StickerType(v)
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s StickerType) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *StickerType) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
