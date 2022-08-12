@@ -749,10 +749,11 @@ func (c *Client) Close(ctx context.Context) (res Result, err error) {
 // CopyMessage invokes copyMessage operation.
 //
 // Use this method to copy messages of any kind. Service messages and invoice messages can't be
-// copied. The method is analogous to the method [forwardMessage](https://core.telegram.
-// org/bots/api#forwardmessage), but the copied message doesn't have a link to the original message.
-// Returns the [MessageId](https://core.telegram.org/bots/api#messageid) of the sent message on
-// success.
+// copied. A quiz [poll](https://core.telegram.org/bots/api#poll) can be copied only if the value of
+// the field _correct_option_id_ is known to the bot. The method is analogous to the method
+// [forwardMessage](https://core.telegram.org/bots/api#forwardmessage), but the copied message
+// doesn't have a link to the original message. Returns the [MessageId](https://core.telegram.
+// org/bots/api#messageid) of the sent message on success.
 //
 // POST /copyMessage
 func (c *Client) CopyMessage(ctx context.Context, request CopyMessage) (res ResultMessageId, err error) {
@@ -2139,10 +2140,8 @@ func (c *Client) GetChat(ctx context.Context, request GetChat) (res ResultChat, 
 
 // GetChatAdministrators invokes getChatAdministrators operation.
 //
-// Use this method to get a list of administrators in a chat. On success, returns an Array of
-// [ChatMember](https://core.telegram.org/bots/api#chatmember) objects that contains information
-// about all chat administrators except other bots. If the chat is a group or a supergroup and no
-// administrators were appointed, only the creator will be returned.
+// Use this method to get a list of administrators in a chat, which aren't bots. Returns an Array of
+// [ChatMember](https://core.telegram.org/bots/api#chatmember) objects.
 //
 // POST /getChatAdministrators
 func (c *Client) GetChatAdministrators(ctx context.Context, request GetChatAdministrators) (res ResultArrayOfChatMember, err error) {
@@ -2395,6 +2394,78 @@ func (c *Client) GetChatMenuButton(ctx context.Context, request OptGetChatMenuBu
 	return result, nil
 }
 
+// GetCustomEmojiStickers invokes getCustomEmojiStickers operation.
+//
+// Use this method to get information about custom emoji stickers by their identifiers. Returns an
+// Array of [Sticker](https://core.telegram.org/bots/api#sticker) objects.
+//
+// POST /getCustomEmojiStickers
+func (c *Client) GetCustomEmojiStickers(ctx context.Context, request GetCustomEmojiStickers) (res ResultArrayOfSticker, err error) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("getCustomEmojiStickers"),
+	}
+	// Validate request before sending.
+	if err := func() error {
+		if err := request.Validate(); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return res, errors.Wrap(err, "validate")
+	}
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, otelAttrs...)
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, "GetCustomEmojiStickers",
+		trace.WithAttributes(otelAttrs...),
+		trace.WithSpanKind(trace.SpanKindClient),
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, otelAttrs...)
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.serverURL)
+	u.Path += "/getCustomEmojiStickers"
+
+	stage = "EncodeRequest"
+	r := ht.NewRequest(ctx, "POST", u, nil)
+	if err := encodeGetCustomEmojiStickersRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeGetCustomEmojiStickersResponse(resp, span)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
 // GetFile invokes getFile operation.
 //
 // Use this method to get basic information about a file and prepare it for downloading. For the
@@ -2466,8 +2537,8 @@ func (c *Client) GetFile(ctx context.Context, request GetFile) (res ResultFile, 
 // GetGameHighScores invokes getGameHighScores operation.
 //
 // Use this method to get data for high score tables. Will return the score of the specified user and
-// several of their neighbors in a game. On success, returns an _Array_ of
-// [GameHighScore](https://core.telegram.org/bots/api#gamehighscore) objects.
+// several of their neighbors in a game. Returns an Array of [GameHighScore](https://core.telegram.
+// org/bots/api#gamehighscore) objects.
 //
 // POST /getGameHighScores
 func (c *Client) GetGameHighScores(ctx context.Context, request GetGameHighScores) (res ResultArrayOfGameHighScore, err error) {
@@ -2591,7 +2662,7 @@ func (c *Client) GetMe(ctx context.Context) (res ResultUser, err error) {
 // GetMyCommands invokes getMyCommands operation.
 //
 // Use this method to get the current list of the bot's commands for the given scope and user
-// language. Returns Array of [BotCommand](https://core.telegram.org/bots/api#botcommand) on success.
+// language. Returns an Array of [BotCommand](https://core.telegram.org/bots/api#botcommand) objects.
 // If commands aren't set, an empty list is returned.
 //
 // POST /getMyCommands
@@ -2784,8 +2855,8 @@ func (c *Client) GetStickerSet(ctx context.Context, request GetStickerSet) (res 
 // GetUpdates invokes getUpdates operation.
 //
 // Use this method to receive incoming updates using long polling ([wiki](https://en.wikipedia.
-// org/wiki/Push_technology#Long_polling)). An Array of [Update](https://core.telegram.
-// org/bots/api#update) objects is returned.
+// org/wiki/Push_technology#Long_polling)). Returns an Array of [Update](https://core.telegram.
+// org/bots/api#update) objects.
 //
 // POST /getUpdates
 func (c *Client) GetUpdates(ctx context.Context, request OptGetUpdates) (res ResultArrayOfUpdate, err error) {

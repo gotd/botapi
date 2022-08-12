@@ -94,7 +94,7 @@ type AnswerInlineQuery struct {
 	// The maximum amount of time in seconds that the result of the inline query may be cached on the
 	// server. Defaults to 300.
 	CacheTime OptInt "json:\"cache_time\""
-	// Pass _True_, if results may be cached on the server side only for the user that sent the query. By
+	// Pass _True_ if results may be cached on the server side only for the user that sent the query. By
 	// default, results may be returned to any user who sends the same query.
 	IsPersonal OptBool "json:\"is_personal\""
 	// Pass the offset that a client should send in the next query with the same text to receive more
@@ -136,14 +136,14 @@ type AnswerPreCheckoutQuery struct {
 type AnswerShippingQuery struct {
 	// Unique identifier for the query to be answered.
 	ShippingQueryID string "json:\"shipping_query_id\""
-	// Specify _True_ if delivery to the specified address is possible and False if there are any
-	// problems (for example, if delivery to the specified address is not possible).
+	// Pass _True_ if delivery to the specified address is possible and _False_ if there are any problems
+	// (for example, if delivery to the specified address is not possible).
 	Ok bool "json:\"ok\""
 	// Required if _ok_ is _True_. A JSON-serialized array of available shipping options.
 	ShippingOptions []ShippingOption "json:\"shipping_options\""
-	// Required if _ok_ is False. Error message in human readable form that explains why it is impossible
-	// to complete the order (e.g. "Sorry, delivery to your desired address is unavailable'). Telegram
-	// will display this message to the user.
+	// Required if _ok_ is _False_. Error message in human readable form that explains why it is
+	// impossible to complete the order (e.g. "Sorry, delivery to your desired address is unavailable').
+	// Telegram will display this message to the user.
 	ErrorMessage OptString "json:\"error_message\""
 }
 
@@ -535,6 +535,10 @@ type Chat struct {
 	// `tg://user?id=<user_id>` links only in chats with the user. Returned only in
 	// [getChat](https://core.telegram.org/bots/api#getchat).
 	HasPrivateForwards OptBool "json:\"has_private_forwards\""
+	// _Optional_. _True_, if the privacy settings of the other party restrict sending voice and video
+	// note messages in the private chat. Returned only in [getChat](https://core.telegram.
+	// org/bots/api#getchat).
+	HasRestrictedVoiceAndVideoMessages OptBool "json:\"has_restricted_voice_and_video_messages\""
 	// _Optional_. _True_, if users need to join the supergroup before they can send messages. Returned
 	// only in [getChat](https://core.telegram.org/bots/api#getchat).
 	JoinToSendMessages OptBool "json:\"join_to_send_messages\""
@@ -1061,7 +1065,7 @@ type CopyMessage struct {
 	ProtectContent OptBool "json:\"protect_content\""
 	// If the message is a reply, ID of the original message.
 	ReplyToMessageID OptInt "json:\"reply_to_message_id\""
-	// Pass _True_, if the message should be sent even if the specified replied-to message is not found.
+	// Pass _True_ if the message should be sent even if the specified replied-to message is not found.
 	AllowSendingWithoutReply OptBool            "json:\"allow_sending_without_reply\""
 	ReplyMarkup              OptSendReplyMarkup "json:\"reply_markup\""
 }
@@ -1123,19 +1127,19 @@ type CreateInvoiceLink struct {
 	PhotoWidth OptInt "json:\"photo_width\""
 	// Photo height.
 	PhotoHeight OptInt "json:\"photo_height\""
-	// Pass _True_, if you require the user's full name to complete the order.
+	// Pass _True_ if you require the user's full name to complete the order.
 	NeedName OptBool "json:\"need_name\""
-	// Pass _True_, if you require the user's phone number to complete the order.
+	// Pass _True_ if you require the user's phone number to complete the order.
 	NeedPhoneNumber OptBool "json:\"need_phone_number\""
-	// Pass _True_, if you require the user's email address to complete the order.
+	// Pass _True_ if you require the user's email address to complete the order.
 	NeedEmail OptBool "json:\"need_email\""
-	// Pass _True_, if you require the user's shipping address to complete the order.
+	// Pass _True_ if you require the user's shipping address to complete the order.
 	NeedShippingAddress OptBool "json:\"need_shipping_address\""
-	// Pass _True_, if the user's phone number should be sent to the provider.
+	// Pass _True_ if the user's phone number should be sent to the provider.
 	SendPhoneNumberToProvider OptBool "json:\"send_phone_number_to_provider\""
-	// Pass _True_, if the user's email address should be sent to the provider.
+	// Pass _True_ if the user's email address should be sent to the provider.
 	SendEmailToProvider OptBool "json:\"send_email_to_provider\""
-	// Pass _True_, if the final price depends on the shipping method.
+	// Pass _True_ if the final price depends on the shipping method.
 	IsFlexible OptBool "json:\"is_flexible\""
 }
 
@@ -1167,11 +1171,12 @@ type CreateNewStickerSet struct {
 	// org/stickers#video-sticker-requirements](https://core.telegram.
 	// org/stickers#video-sticker-requirements) for technical requirements.
 	WebmSticker OptString "json:\"webm_sticker\""
+	// Type of stickers in the set, pass `regular` or `mask`. Custom emoji sticker sets can't be created
+	// via the Bot API at the moment. By default, a regular sticker set is created.
+	StickerType OptString "json:\"sticker_type\""
 	// One or more emoji corresponding to the sticker.
-	Emojis string "json:\"emojis\""
-	// Pass _True_, if a set of mask stickers should be created.
-	ContainsMasks OptBool         "json:\"contains_masks\""
-	MaskPosition  OptMaskPosition "json:\"mask_position\""
+	Emojis       string          "json:\"emojis\""
+	MaskPosition OptMaskPosition "json:\"mask_position\""
 }
 
 // Input for declineChatJoinRequest.
@@ -1565,6 +1570,13 @@ type GetChatMenuButton struct {
 	// Unique identifier for the target private chat. If not specified, default bot's menu button will be
 	// returned.
 	ChatID OptInt64 "json:\"chat_id\""
+}
+
+// Input for getCustomEmojiStickers.
+// Ref: #/components/schemas/getCustomEmojiStickers
+type GetCustomEmojiStickers struct {
+	// List of custom emoji identifiers. At most 200 custom emoji identifiers can be specified.
+	CustomEmojiIds []string "json:\"custom_emoji_ids\""
 }
 
 // Input for getFile.
@@ -2374,7 +2386,7 @@ type InlineQueryResultArticle struct {
 	ReplyMarkup         OptInlineKeyboardMarkup "json:\"reply_markup\""
 	// _Optional_. URL of the result.
 	URL OptString "json:\"url\""
-	// _Optional_. Pass _True_, if you don't want the URL to be shown in the message.
+	// _Optional_. Pass _True_ if you don't want the URL to be shown in the message.
 	HideURL OptBool "json:\"hide_url\""
 	// _Optional_. Short description of the result.
 	Description OptString "json:\"description\""
@@ -2960,19 +2972,19 @@ type InputInvoiceMessageContent struct {
 	PhotoWidth OptInt "json:\"photo_width\""
 	// _Optional_. Photo height.
 	PhotoHeight OptInt "json:\"photo_height\""
-	// _Optional_. Pass _True_, if you require the user's full name to complete the order.
+	// _Optional_. Pass _True_ if you require the user's full name to complete the order.
 	NeedName OptBool "json:\"need_name\""
-	// _Optional_. Pass _True_, if you require the user's phone number to complete the order.
+	// _Optional_. Pass _True_ if you require the user's phone number to complete the order.
 	NeedPhoneNumber OptBool "json:\"need_phone_number\""
-	// _Optional_. Pass _True_, if you require the user's email address to complete the order.
+	// _Optional_. Pass _True_ if you require the user's email address to complete the order.
 	NeedEmail OptBool "json:\"need_email\""
-	// _Optional_. Pass _True_, if you require the user's shipping address to complete the order.
+	// _Optional_. Pass _True_ if you require the user's shipping address to complete the order.
 	NeedShippingAddress OptBool "json:\"need_shipping_address\""
-	// _Optional_. Pass _True_, if the user's phone number should be sent to provider.
+	// _Optional_. Pass _True_ if the user's phone number should be sent to provider.
 	SendPhoneNumberToProvider OptBool "json:\"send_phone_number_to_provider\""
-	// _Optional_. Pass _True_, if the user's email address should be sent to provider.
+	// _Optional_. Pass _True_ if the user's email address should be sent to provider.
 	SendEmailToProvider OptBool "json:\"send_email_to_provider\""
-	// _Optional_. Pass _True_, if the final price depends on the shipping method.
+	// _Optional_. Pass _True_ if the final price depends on the shipping method.
 	IsFlexible OptBool "json:\"is_flexible\""
 }
 
@@ -3286,7 +3298,7 @@ type InputMediaVideo struct {
 	Height OptInt "json:\"height\""
 	// _Optional_. Video duration in seconds.
 	Duration OptInt "json:\"duration\""
-	// _Optional_. Pass _True_, if the uploaded video is suitable for streaming.
+	// _Optional_. Pass _True_ if the uploaded video is suitable for streaming.
 	SupportsStreaming OptBool "json:\"supports_streaming\""
 }
 
@@ -3914,7 +3926,7 @@ type MessageEntity struct {
 	// `italic` (_italic text_), `underline` (underlined text), `strikethrough` (strikethrough text),
 	// `spoiler` (spoiler message), `code` (monowidth string), `pre` (monowidth block), `text_link` (for
 	// clickable text URLs), `text_mention` (for users [without usernames](https://telegram.
-	// org/blog/edit#new-mentions)).
+	// org/blog/edit#new-mentions)), `custom_emoji` (for inline custom emoji stickers).
 	Type MessageEntityType "json:\"type\""
 	// Offset in UTF-16 code units to the start of the entity.
 	Offset int "json:\"offset\""
@@ -3925,6 +3937,10 @@ type MessageEntity struct {
 	User OptUser   "json:\"user\""
 	// _Optional_. For `pre` only, the programming language of the entity text.
 	Language OptString "json:\"language\""
+	// _Optional_. For `custom_emoji` only, unique identifier of the custom emoji. Use
+	// [getCustomEmojiStickers](https://core.telegram.org/bots/api#getcustomemojistickers) to get full
+	// information about the sticker.
+	CustomEmojiID OptString "json:\"custom_emoji_id\""
 }
 
 // Type of the entity. Currently, can be `mention` (`@username`), `hashtag` (`#hashtag`), `cashtag`
@@ -3933,7 +3949,7 @@ type MessageEntity struct {
 // `italic` (_italic text_), `underline` (underlined text), `strikethrough` (strikethrough text),
 // `spoiler` (spoiler message), `code` (monowidth string), `pre` (monowidth block), `text_link` (for
 // clickable text URLs), `text_mention` (for users [without usernames](https://telegram.
-// org/blog/edit#new-mentions)).
+// org/blog/edit#new-mentions)), `custom_emoji` (for inline custom emoji stickers).
 type MessageEntityType string
 
 const (
@@ -3953,6 +3969,7 @@ const (
 	MessageEntityTypePre           MessageEntityType = "pre"
 	MessageEntityTypeTextLink      MessageEntityType = "text_link"
 	MessageEntityTypeTextMention   MessageEntityType = "text_mention"
+	MessageEntityTypeCustomEmoji   MessageEntityType = "custom_emoji"
 )
 
 // This object represents a unique message identifier.
@@ -7904,8 +7921,8 @@ type PinChatMessage struct {
 	ChatID ID "json:\"chat_id\""
 	// Identifier of a message to pin.
 	MessageID int "json:\"message_id\""
-	// Pass _True_, if it is not necessary to send a notification to all chat members about the new
-	// pinned message. Notifications are always disabled in channels and private chats.
+	// Pass _True_ if it is not necessary to send a notification to all chat members about the new pinned
+	// message. Notifications are always disabled in channels and private chats.
 	DisableNotification OptBool "json:\"disable_notification\""
 }
 
@@ -7997,32 +8014,32 @@ type PromoteChatMember struct {
 	ChatID ID "json:\"chat_id\""
 	// Unique identifier of the target user.
 	UserID int64 "json:\"user_id\""
-	// Pass _True_, if the administrator's presence in the chat is hidden.
+	// Pass _True_ if the administrator's presence in the chat is hidden.
 	IsAnonymous OptBool "json:\"is_anonymous\""
-	// Pass _True_, if the administrator can access the chat event log, chat statistics, message
+	// Pass _True_ if the administrator can access the chat event log, chat statistics, message
 	// statistics in channels, see channel members, see anonymous administrators in supergroups and
 	// ignore slow mode. Implied by any other administrator privilege.
 	CanManageChat OptBool "json:\"can_manage_chat\""
-	// Pass _True_, if the administrator can create channel posts, channels only.
+	// Pass _True_ if the administrator can create channel posts, channels only.
 	CanPostMessages OptBool "json:\"can_post_messages\""
-	// Pass _True_, if the administrator can edit messages of other users and can pin messages, channels
+	// Pass _True_ if the administrator can edit messages of other users and can pin messages, channels
 	// only.
 	CanEditMessages OptBool "json:\"can_edit_messages\""
-	// Pass _True_, if the administrator can delete messages of other users.
+	// Pass _True_ if the administrator can delete messages of other users.
 	CanDeleteMessages OptBool "json:\"can_delete_messages\""
-	// Pass _True_, if the administrator can manage video chats.
+	// Pass _True_ if the administrator can manage video chats.
 	CanManageVideoChats OptBool "json:\"can_manage_video_chats\""
-	// Pass _True_, if the administrator can restrict, ban or unban chat members.
+	// Pass _True_ if the administrator can restrict, ban or unban chat members.
 	CanRestrictMembers OptBool "json:\"can_restrict_members\""
-	// Pass _True_, if the administrator can add new administrators with a subset of their own privileges
+	// Pass _True_ if the administrator can add new administrators with a subset of their own privileges
 	// or demote administrators that he has promoted, directly or indirectly (promoted by administrators
 	// that were appointed by him).
 	CanPromoteMembers OptBool "json:\"can_promote_members\""
-	// Pass _True_, if the administrator can change chat title, photo and other settings.
+	// Pass _True_ if the administrator can change chat title, photo and other settings.
 	CanChangeInfo OptBool "json:\"can_change_info\""
-	// Pass _True_, if the administrator can invite new users to the chat.
+	// Pass _True_ if the administrator can invite new users to the chat.
 	CanInviteUsers OptBool "json:\"can_invite_users\""
-	// Pass _True_, if the administrator can pin messages, supergroups only.
+	// Pass _True_ if the administrator can pin messages, supergroups only.
 	CanPinMessages OptBool "json:\"can_pin_messages\""
 }
 
@@ -8138,6 +8155,12 @@ type ResultArrayOfGameHighScore struct {
 // Ref: #/components/schemas/ResultArrayOfMessage
 type ResultArrayOfMessage struct {
 	Result []Message "json:\"result\""
+	Ok     bool      "json:\"ok\""
+}
+
+// Ref: #/components/schemas/ResultArrayOfSticker
+type ResultArrayOfSticker struct {
+	Result []Sticker "json:\"result\""
 	Ok     bool      "json:\"ok\""
 }
 
@@ -8346,7 +8369,7 @@ type SendAnimation struct {
 	ProtectContent OptBool "json:\"protect_content\""
 	// If the message is a reply, ID of the original message.
 	ReplyToMessageID OptInt "json:\"reply_to_message_id\""
-	// Pass _True_, if the message should be sent even if the specified replied-to message is not found.
+	// Pass _True_ if the message should be sent even if the specified replied-to message is not found.
 	AllowSendingWithoutReply OptBool            "json:\"allow_sending_without_reply\""
 	ReplyMarkup              OptSendReplyMarkup "json:\"reply_markup\""
 }
@@ -8389,7 +8412,7 @@ type SendAudio struct {
 	ProtectContent OptBool "json:\"protect_content\""
 	// If the message is a reply, ID of the original message.
 	ReplyToMessageID OptInt "json:\"reply_to_message_id\""
-	// Pass _True_, if the message should be sent even if the specified replied-to message is not found.
+	// Pass _True_ if the message should be sent even if the specified replied-to message is not found.
 	AllowSendingWithoutReply OptBool            "json:\"allow_sending_without_reply\""
 	ReplyMarkup              OptSendReplyMarkup "json:\"reply_markup\""
 }
@@ -8430,7 +8453,7 @@ type SendContact struct {
 	ProtectContent OptBool "json:\"protect_content\""
 	// If the message is a reply, ID of the original message.
 	ReplyToMessageID OptInt "json:\"reply_to_message_id\""
-	// Pass _True_, if the message should be sent even if the specified replied-to message is not found.
+	// Pass _True_ if the message should be sent even if the specified replied-to message is not found.
 	AllowSendingWithoutReply OptBool            "json:\"allow_sending_without_reply\""
 	ReplyMarkup              OptSendReplyMarkup "json:\"reply_markup\""
 }
@@ -8450,7 +8473,7 @@ type SendDice struct {
 	ProtectContent OptBool "json:\"protect_content\""
 	// If the message is a reply, ID of the original message.
 	ReplyToMessageID OptInt "json:\"reply_to_message_id\""
-	// Pass _True_, if the message should be sent even if the specified replied-to message is not found.
+	// Pass _True_ if the message should be sent even if the specified replied-to message is not found.
 	AllowSendingWithoutReply OptBool            "json:\"allow_sending_without_reply\""
 	ReplyMarkup              OptSendReplyMarkup "json:\"reply_markup\""
 }
@@ -8490,7 +8513,7 @@ type SendDocument struct {
 	ProtectContent OptBool "json:\"protect_content\""
 	// If the message is a reply, ID of the original message.
 	ReplyToMessageID OptInt "json:\"reply_to_message_id\""
-	// Pass _True_, if the message should be sent even if the specified replied-to message is not found.
+	// Pass _True_ if the message should be sent even if the specified replied-to message is not found.
 	AllowSendingWithoutReply OptBool            "json:\"allow_sending_without_reply\""
 	ReplyMarkup              OptSendReplyMarkup "json:\"reply_markup\""
 }
@@ -8510,7 +8533,7 @@ type SendGame struct {
 	ProtectContent OptBool "json:\"protect_content\""
 	// If the message is a reply, ID of the original message.
 	ReplyToMessageID OptInt "json:\"reply_to_message_id\""
-	// Pass _True_, if the message should be sent even if the specified replied-to message is not found.
+	// Pass _True_ if the message should be sent even if the specified replied-to message is not found.
 	AllowSendingWithoutReply OptBool                 "json:\"allow_sending_without_reply\""
 	ReplyMarkup              OptInlineKeyboardMarkup "json:\"reply_markup\""
 }
@@ -8562,19 +8585,19 @@ type SendInvoice struct {
 	PhotoWidth OptInt "json:\"photo_width\""
 	// Photo height.
 	PhotoHeight OptInt "json:\"photo_height\""
-	// Pass _True_, if you require the user's full name to complete the order.
+	// Pass _True_ if you require the user's full name to complete the order.
 	NeedName OptBool "json:\"need_name\""
-	// Pass _True_, if you require the user's phone number to complete the order.
+	// Pass _True_ if you require the user's phone number to complete the order.
 	NeedPhoneNumber OptBool "json:\"need_phone_number\""
-	// Pass _True_, if you require the user's email address to complete the order.
+	// Pass _True_ if you require the user's email address to complete the order.
 	NeedEmail OptBool "json:\"need_email\""
-	// Pass _True_, if you require the user's shipping address to complete the order.
+	// Pass _True_ if you require the user's shipping address to complete the order.
 	NeedShippingAddress OptBool "json:\"need_shipping_address\""
-	// Pass _True_, if the user's phone number should be sent to provider.
+	// Pass _True_ if the user's phone number should be sent to provider.
 	SendPhoneNumberToProvider OptBool "json:\"send_phone_number_to_provider\""
-	// Pass _True_, if the user's email address should be sent to provider.
+	// Pass _True_ if the user's email address should be sent to provider.
 	SendEmailToProvider OptBool "json:\"send_email_to_provider\""
-	// Pass _True_, if the final price depends on the shipping method.
+	// Pass _True_ if the final price depends on the shipping method.
 	IsFlexible OptBool "json:\"is_flexible\""
 	// Sends the message [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will
 	// receive a notification with no sound.
@@ -8583,7 +8606,7 @@ type SendInvoice struct {
 	ProtectContent OptBool "json:\"protect_content\""
 	// If the message is a reply, ID of the original message.
 	ReplyToMessageID OptInt "json:\"reply_to_message_id\""
-	// Pass _True_, if the message should be sent even if the specified replied-to message is not found.
+	// Pass _True_ if the message should be sent even if the specified replied-to message is not found.
 	AllowSendingWithoutReply OptBool                 "json:\"allow_sending_without_reply\""
 	ReplyMarkup              OptInlineKeyboardMarkup "json:\"reply_markup\""
 }
@@ -8614,7 +8637,7 @@ type SendLocation struct {
 	ProtectContent OptBool "json:\"protect_content\""
 	// If the message is a reply, ID of the original message.
 	ReplyToMessageID OptInt "json:\"reply_to_message_id\""
-	// Pass _True_, if the message should be sent even if the specified replied-to message is not found.
+	// Pass _True_ if the message should be sent even if the specified replied-to message is not found.
 	AllowSendingWithoutReply OptBool            "json:\"allow_sending_without_reply\""
 	ReplyMarkup              OptSendReplyMarkup "json:\"reply_markup\""
 }
@@ -8632,7 +8655,7 @@ type SendMediaGroup struct {
 	ProtectContent OptBool "json:\"protect_content\""
 	// If the messages are a reply, ID of the original message.
 	ReplyToMessageID OptInt "json:\"reply_to_message_id\""
-	// Pass _True_, if the message should be sent even if the specified replied-to message is not found.
+	// Pass _True_ if the message should be sent even if the specified replied-to message is not found.
 	AllowSendingWithoutReply OptBool "json:\"allow_sending_without_reply\""
 }
 
@@ -8781,7 +8804,7 @@ type SendMessage struct {
 	ProtectContent OptBool "json:\"protect_content\""
 	// If the message is a reply, ID of the original message.
 	ReplyToMessageID OptInt "json:\"reply_to_message_id\""
-	// Pass _True_, if the message should be sent even if the specified replied-to message is not found.
+	// Pass _True_ if the message should be sent even if the specified replied-to message is not found.
 	AllowSendingWithoutReply OptBool            "json:\"allow_sending_without_reply\""
 	ReplyMarkup              OptSendReplyMarkup "json:\"reply_markup\""
 }
@@ -8812,7 +8835,7 @@ type SendPhoto struct {
 	ProtectContent OptBool "json:\"protect_content\""
 	// If the message is a reply, ID of the original message.
 	ReplyToMessageID OptInt "json:\"reply_to_message_id\""
-	// Pass _True_, if the message should be sent even if the specified replied-to message is not found.
+	// Pass _True_ if the message should be sent even if the specified replied-to message is not found.
 	AllowSendingWithoutReply OptBool            "json:\"allow_sending_without_reply\""
 	ReplyMarkup              OptSendReplyMarkup "json:\"reply_markup\""
 }
@@ -8848,7 +8871,7 @@ type SendPoll struct {
 	// Point in time (Unix timestamp) when the poll will be automatically closed. Must be at least 5 and
 	// no more than 600 seconds in the future. Can't be used together with _open_period_.
 	CloseDate OptInt "json:\"close_date\""
-	// Pass _True_, if the poll needs to be immediately closed. This can be useful for poll preview.
+	// Pass _True_ if the poll needs to be immediately closed. This can be useful for poll preview.
 	IsClosed OptBool "json:\"is_closed\""
 	// Sends the message [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will
 	// receive a notification with no sound.
@@ -8857,7 +8880,7 @@ type SendPoll struct {
 	ProtectContent OptBool "json:\"protect_content\""
 	// If the message is a reply, ID of the original message.
 	ReplyToMessageID OptInt "json:\"reply_to_message_id\""
-	// Pass _True_, if the message should be sent even if the specified replied-to message is not found.
+	// Pass _True_ if the message should be sent even if the specified replied-to message is not found.
 	AllowSendingWithoutReply OptBool            "json:\"allow_sending_without_reply\""
 	ReplyMarkup              OptSendReplyMarkup "json:\"reply_markup\""
 }
@@ -9001,7 +9024,7 @@ type SendSticker struct {
 	ProtectContent OptBool "json:\"protect_content\""
 	// If the message is a reply, ID of the original message.
 	ReplyToMessageID OptInt "json:\"reply_to_message_id\""
-	// Pass _True_, if the message should be sent even if the specified replied-to message is not found.
+	// Pass _True_ if the message should be sent even if the specified replied-to message is not found.
 	AllowSendingWithoutReply OptBool            "json:\"allow_sending_without_reply\""
 	ReplyMarkup              OptSendReplyMarkup "json:\"reply_markup\""
 }
@@ -9035,7 +9058,7 @@ type SendVenue struct {
 	ProtectContent OptBool "json:\"protect_content\""
 	// If the message is a reply, ID of the original message.
 	ReplyToMessageID OptInt "json:\"reply_to_message_id\""
-	// Pass _True_, if the message should be sent even if the specified replied-to message is not found.
+	// Pass _True_ if the message should be sent even if the specified replied-to message is not found.
 	AllowSendingWithoutReply OptBool            "json:\"allow_sending_without_reply\""
 	ReplyMarkup              OptSendReplyMarkup "json:\"reply_markup\""
 }
@@ -9072,7 +9095,7 @@ type SendVideo struct {
 	// A JSON-serialized list of special entities that appear in the caption, which can be specified
 	// instead of _parse_mode_.
 	CaptionEntities []MessageEntity "json:\"caption_entities\""
-	// Pass _True_, if the uploaded video is suitable for streaming.
+	// Pass _True_ if the uploaded video is suitable for streaming.
 	SupportsStreaming OptBool "json:\"supports_streaming\""
 	// Sends the message [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will
 	// receive a notification with no sound.
@@ -9081,7 +9104,7 @@ type SendVideo struct {
 	ProtectContent OptBool "json:\"protect_content\""
 	// If the message is a reply, ID of the original message.
 	ReplyToMessageID OptInt "json:\"reply_to_message_id\""
-	// Pass _True_, if the message should be sent even if the specified replied-to message is not found.
+	// Pass _True_ if the message should be sent even if the specified replied-to message is not found.
 	AllowSendingWithoutReply OptBool            "json:\"allow_sending_without_reply\""
 	ReplyMarkup              OptSendReplyMarkup "json:\"reply_markup\""
 }
@@ -9114,7 +9137,7 @@ type SendVideoNote struct {
 	ProtectContent OptBool "json:\"protect_content\""
 	// If the message is a reply, ID of the original message.
 	ReplyToMessageID OptInt "json:\"reply_to_message_id\""
-	// Pass _True_, if the message should be sent even if the specified replied-to message is not found.
+	// Pass _True_ if the message should be sent even if the specified replied-to message is not found.
 	AllowSendingWithoutReply OptBool            "json:\"allow_sending_without_reply\""
 	ReplyMarkup              OptSendReplyMarkup "json:\"reply_markup\""
 }
@@ -9145,7 +9168,7 @@ type SendVoice struct {
 	ProtectContent OptBool "json:\"protect_content\""
 	// If the message is a reply, ID of the original message.
 	ReplyToMessageID OptInt "json:\"reply_to_message_id\""
-	// Pass _True_, if the message should be sent even if the specified replied-to message is not found.
+	// Pass _True_ if the message should be sent even if the specified replied-to message is not found.
 	AllowSendingWithoutReply OptBool            "json:\"allow_sending_without_reply\""
 	ReplyMarkup              OptSendReplyMarkup "json:\"reply_markup\""
 }
@@ -9215,10 +9238,10 @@ type SetGameScore struct {
 	UserID int64 "json:\"user_id\""
 	// New score, must be non-negative.
 	Score int "json:\"score\""
-	// Pass _True_, if the high score is allowed to decrease. This can be useful when fixing mistakes or
+	// Pass _True_ if the high score is allowed to decrease. This can be useful when fixing mistakes or
 	// banning cheaters.
 	Force OptBool "json:\"force\""
-	// Pass _True_, if the game message should not be automatically edited to include the current
+	// Pass _True_ if the game message should not be automatically edited to include the current
 	// scoreboard.
 	DisableEditMessage OptBool "json:\"disable_edit_message\""
 	// Required if _inline_message_id_ is not specified. Unique identifier for the target chat.
@@ -9368,6 +9391,9 @@ type Sticker struct {
 	// Unique identifier for this file, which is supposed to be the same over time and for different bots.
 	//  Can't be used to download or reuse the file.
 	FileUniqueID string "json:\"file_unique_id\""
+	// Type of the sticker, currently one of `regular`, `mask`, `custom_emoji`. The type of the sticker
+	// is independent from its format, which is determined by the fields _is_animated_ and _is_video_.
+	Type StickerType "json:\"type\""
 	// Sticker width.
 	Width int "json:\"width\""
 	// Sticker height.
@@ -9384,6 +9410,8 @@ type Sticker struct {
 	SetName          OptString       "json:\"set_name\""
 	PremiumAnimation OptFile         "json:\"premium_animation\""
 	MaskPosition     OptMaskPosition "json:\"mask_position\""
+	// _Optional_. For custom emoji stickers, unique identifier of the custom emoji.
+	CustomEmojiID OptString "json:\"custom_emoji_id\""
 	// _Optional_. File size in bytes.
 	FileSize OptInt "json:\"file_size\""
 }
@@ -9395,18 +9423,28 @@ type StickerSet struct {
 	Name string "json:\"name\""
 	// Sticker set title.
 	Title string "json:\"title\""
+	// Type of stickers in the set, currently one of `regular`, `mask`, `custom_emoji`.
+	StickerType string "json:\"sticker_type\""
 	// _True_, if the sticker set contains [animated stickers](https://telegram.
 	// org/blog/animated-stickers).
 	IsAnimated bool "json:\"is_animated\""
 	// _True_, if the sticker set contains [video stickers](https://telegram.
 	// org/blog/video-stickers-better-reactions).
 	IsVideo bool "json:\"is_video\""
-	// _True_, if the sticker set contains masks.
-	ContainsMasks bool "json:\"contains_masks\""
 	// List of all set stickers.
 	Stickers []Sticker    "json:\"stickers\""
 	Thumb    OptPhotoSize "json:\"thumb\""
 }
+
+// Type of the sticker, currently one of `regular`, `mask`, `custom_emoji`. The type of the sticker
+// is independent from its format, which is determined by the fields _is_animated_ and _is_video_.
+type StickerType string
+
+const (
+	StickerTypeRegular     StickerType = "regular"
+	StickerTypeMask        StickerType = "mask"
+	StickerTypeCustomEmoji StickerType = "custom_emoji"
+)
 
 // Input for stopMessageLiveLocation.
 // Ref: #/components/schemas/stopMessageLiveLocation

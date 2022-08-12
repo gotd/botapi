@@ -718,92 +718,37 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 					break
 				}
 				switch elem[0] {
-				case 'C': // Prefix: "Chat"
-					if l := len("Chat"); len(elem) >= l && elem[0:l] == "Chat" {
+				case 'C': // Prefix: "C"
+					if l := len("C"); len(elem) >= l && elem[0:l] == "C" {
 						elem = elem[l:]
 					} else {
 						break
 					}
 
 					if len(elem) == 0 {
-						switch r.Method {
-						case "POST":
-							s.handleGetChatRequest([0]string{}, w, r)
-						default:
-							s.notAllowed(w, r, "POST")
-						}
-
-						return
+						break
 					}
 					switch elem[0] {
-					case 'A': // Prefix: "Administrators"
-						if l := len("Administrators"); len(elem) >= l && elem[0:l] == "Administrators" {
+					case 'h': // Prefix: "hat"
+						if l := len("hat"); len(elem) >= l && elem[0:l] == "hat" {
 							elem = elem[l:]
 						} else {
 							break
 						}
 
 						if len(elem) == 0 {
-							// Leaf node.
 							switch r.Method {
 							case "POST":
-								s.handleGetChatAdministratorsRequest([0]string{}, w, r)
+								s.handleGetChatRequest([0]string{}, w, r)
 							default:
 								s.notAllowed(w, r, "POST")
 							}
 
 							return
 						}
-					case 'M': // Prefix: "Me"
-						if l := len("Me"); len(elem) >= l && elem[0:l] == "Me" {
-							elem = elem[l:]
-						} else {
-							break
-						}
-
-						if len(elem) == 0 {
-							break
-						}
 						switch elem[0] {
-						case 'm': // Prefix: "mber"
-							if l := len("mber"); len(elem) >= l && elem[0:l] == "mber" {
-								elem = elem[l:]
-							} else {
-								break
-							}
-
-							if len(elem) == 0 {
-								switch r.Method {
-								case "POST":
-									s.handleGetChatMemberRequest([0]string{}, w, r)
-								default:
-									s.notAllowed(w, r, "POST")
-								}
-
-								return
-							}
-							switch elem[0] {
-							case 'C': // Prefix: "Count"
-								if l := len("Count"); len(elem) >= l && elem[0:l] == "Count" {
-									elem = elem[l:]
-								} else {
-									break
-								}
-
-								if len(elem) == 0 {
-									// Leaf node.
-									switch r.Method {
-									case "POST":
-										s.handleGetChatMemberCountRequest([0]string{}, w, r)
-									default:
-										s.notAllowed(w, r, "POST")
-									}
-
-									return
-								}
-							}
-						case 'n': // Prefix: "nuButton"
-							if l := len("nuButton"); len(elem) >= l && elem[0:l] == "nuButton" {
+						case 'A': // Prefix: "Administrators"
+							if l := len("Administrators"); len(elem) >= l && elem[0:l] == "Administrators" {
 								elem = elem[l:]
 							} else {
 								break
@@ -813,13 +758,98 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 								// Leaf node.
 								switch r.Method {
 								case "POST":
-									s.handleGetChatMenuButtonRequest([0]string{}, w, r)
+									s.handleGetChatAdministratorsRequest([0]string{}, w, r)
 								default:
 									s.notAllowed(w, r, "POST")
 								}
 
 								return
 							}
+						case 'M': // Prefix: "Me"
+							if l := len("Me"); len(elem) >= l && elem[0:l] == "Me" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							if len(elem) == 0 {
+								break
+							}
+							switch elem[0] {
+							case 'm': // Prefix: "mber"
+								if l := len("mber"); len(elem) >= l && elem[0:l] == "mber" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									switch r.Method {
+									case "POST":
+										s.handleGetChatMemberRequest([0]string{}, w, r)
+									default:
+										s.notAllowed(w, r, "POST")
+									}
+
+									return
+								}
+								switch elem[0] {
+								case 'C': // Prefix: "Count"
+									if l := len("Count"); len(elem) >= l && elem[0:l] == "Count" {
+										elem = elem[l:]
+									} else {
+										break
+									}
+
+									if len(elem) == 0 {
+										// Leaf node.
+										switch r.Method {
+										case "POST":
+											s.handleGetChatMemberCountRequest([0]string{}, w, r)
+										default:
+											s.notAllowed(w, r, "POST")
+										}
+
+										return
+									}
+								}
+							case 'n': // Prefix: "nuButton"
+								if l := len("nuButton"); len(elem) >= l && elem[0:l] == "nuButton" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									// Leaf node.
+									switch r.Method {
+									case "POST":
+										s.handleGetChatMenuButtonRequest([0]string{}, w, r)
+									default:
+										s.notAllowed(w, r, "POST")
+									}
+
+									return
+								}
+							}
+						}
+					case 'u': // Prefix: "ustomEmojiStickers"
+						if l := len("ustomEmojiStickers"); len(elem) >= l && elem[0:l] == "ustomEmojiStickers" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							// Leaf node.
+							switch r.Method {
+							case "POST":
+								s.handleGetCustomEmojiStickersRequest([0]string{}, w, r)
+							default:
+								s.notAllowed(w, r, "POST")
+							}
+
+							return
 						}
 					}
 				case 'F': // Prefix: "File"
@@ -2891,28 +2921,19 @@ func (s *Server) FindRoute(method, path string) (r Route, _ bool) {
 					break
 				}
 				switch elem[0] {
-				case 'C': // Prefix: "Chat"
-					if l := len("Chat"); len(elem) >= l && elem[0:l] == "Chat" {
+				case 'C': // Prefix: "C"
+					if l := len("C"); len(elem) >= l && elem[0:l] == "C" {
 						elem = elem[l:]
 					} else {
 						break
 					}
 
 					if len(elem) == 0 {
-						switch method {
-						case "POST":
-							r.name = "GetChat"
-							r.operationID = "getChat"
-							r.args = args
-							r.count = 0
-							return r, true
-						default:
-							return
-						}
+						break
 					}
 					switch elem[0] {
-					case 'A': // Prefix: "Administrators"
-						if l := len("Administrators"); len(elem) >= l && elem[0:l] == "Administrators" {
+					case 'h': // Prefix: "hat"
+						if l := len("hat"); len(elem) >= l && elem[0:l] == "hat" {
 							elem = elem[l:]
 						} else {
 							break
@@ -2921,9 +2942,8 @@ func (s *Server) FindRoute(method, path string) (r Route, _ bool) {
 						if len(elem) == 0 {
 							switch method {
 							case "POST":
-								// Leaf: GetChatAdministrators
-								r.name = "GetChatAdministrators"
-								r.operationID = "getChatAdministrators"
+								r.name = "GetChat"
+								r.operationID = "getChat"
 								r.args = args
 								r.count = 0
 								return r, true
@@ -2931,19 +2951,9 @@ func (s *Server) FindRoute(method, path string) (r Route, _ bool) {
 								return
 							}
 						}
-					case 'M': // Prefix: "Me"
-						if l := len("Me"); len(elem) >= l && elem[0:l] == "Me" {
-							elem = elem[l:]
-						} else {
-							break
-						}
-
-						if len(elem) == 0 {
-							break
-						}
 						switch elem[0] {
-						case 'm': // Prefix: "mber"
-							if l := len("mber"); len(elem) >= l && elem[0:l] == "mber" {
+						case 'A': // Prefix: "Administrators"
+							if l := len("Administrators"); len(elem) >= l && elem[0:l] == "Administrators" {
 								elem = elem[l:]
 							} else {
 								break
@@ -2952,8 +2962,9 @@ func (s *Server) FindRoute(method, path string) (r Route, _ bool) {
 							if len(elem) == 0 {
 								switch method {
 								case "POST":
-									r.name = "GetChatMember"
-									r.operationID = "getChatMember"
+									// Leaf: GetChatAdministrators
+									r.name = "GetChatAdministrators"
+									r.operationID = "getChatAdministrators"
 									r.args = args
 									r.count = 0
 									return r, true
@@ -2961,9 +2972,19 @@ func (s *Server) FindRoute(method, path string) (r Route, _ bool) {
 									return
 								}
 							}
+						case 'M': // Prefix: "Me"
+							if l := len("Me"); len(elem) >= l && elem[0:l] == "Me" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							if len(elem) == 0 {
+								break
+							}
 							switch elem[0] {
-							case 'C': // Prefix: "Count"
-								if l := len("Count"); len(elem) >= l && elem[0:l] == "Count" {
+							case 'm': // Prefix: "mber"
+								if l := len("mber"); len(elem) >= l && elem[0:l] == "mber" {
 									elem = elem[l:]
 								} else {
 									break
@@ -2972,9 +2993,50 @@ func (s *Server) FindRoute(method, path string) (r Route, _ bool) {
 								if len(elem) == 0 {
 									switch method {
 									case "POST":
-										// Leaf: GetChatMemberCount
-										r.name = "GetChatMemberCount"
-										r.operationID = "getChatMemberCount"
+										r.name = "GetChatMember"
+										r.operationID = "getChatMember"
+										r.args = args
+										r.count = 0
+										return r, true
+									default:
+										return
+									}
+								}
+								switch elem[0] {
+								case 'C': // Prefix: "Count"
+									if l := len("Count"); len(elem) >= l && elem[0:l] == "Count" {
+										elem = elem[l:]
+									} else {
+										break
+									}
+
+									if len(elem) == 0 {
+										switch method {
+										case "POST":
+											// Leaf: GetChatMemberCount
+											r.name = "GetChatMemberCount"
+											r.operationID = "getChatMemberCount"
+											r.args = args
+											r.count = 0
+											return r, true
+										default:
+											return
+										}
+									}
+								}
+							case 'n': // Prefix: "nuButton"
+								if l := len("nuButton"); len(elem) >= l && elem[0:l] == "nuButton" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									switch method {
+									case "POST":
+										// Leaf: GetChatMenuButton
+										r.name = "GetChatMenuButton"
+										r.operationID = "getChatMenuButton"
 										r.args = args
 										r.count = 0
 										return r, true
@@ -2983,25 +3045,25 @@ func (s *Server) FindRoute(method, path string) (r Route, _ bool) {
 									}
 								}
 							}
-						case 'n': // Prefix: "nuButton"
-							if l := len("nuButton"); len(elem) >= l && elem[0:l] == "nuButton" {
-								elem = elem[l:]
-							} else {
-								break
-							}
+						}
+					case 'u': // Prefix: "ustomEmojiStickers"
+						if l := len("ustomEmojiStickers"); len(elem) >= l && elem[0:l] == "ustomEmojiStickers" {
+							elem = elem[l:]
+						} else {
+							break
+						}
 
-							if len(elem) == 0 {
-								switch method {
-								case "POST":
-									// Leaf: GetChatMenuButton
-									r.name = "GetChatMenuButton"
-									r.operationID = "getChatMenuButton"
-									r.args = args
-									r.count = 0
-									return r, true
-								default:
-									return
-								}
+						if len(elem) == 0 {
+							switch method {
+							case "POST":
+								// Leaf: GetCustomEmojiStickers
+								r.name = "GetCustomEmojiStickers"
+								r.operationID = "getCustomEmojiStickers"
+								r.args = args
+								r.count = 0
+								return r, true
+							default:
+								return
 							}
 						}
 					}

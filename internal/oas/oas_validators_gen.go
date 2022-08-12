@@ -1541,6 +1541,24 @@ func (s Game) Validate() error {
 	}
 	return nil
 }
+func (s GetCustomEmojiStickers) Validate() error {
+	var failures []validate.FieldError
+	if err := func() error {
+		if s.CustomEmojiIds == nil {
+			return errors.New("nil is invalid value")
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "custom_emoji_ids",
+			Error: err,
+		})
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+	return nil
+}
 func (s GetUpdates) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
@@ -6044,6 +6062,8 @@ func (s MessageEntityType) Validate() error {
 		return nil
 	case "text_mention":
 		return nil
+	case "custom_emoji":
+		return nil
 	default:
 		return errors.Errorf("invalid value: %v", s)
 	}
@@ -6598,6 +6618,38 @@ func (s ResultArrayOfBotCommand) Validate() error {
 	return nil
 }
 func (s ResultArrayOfMessage) Validate() error {
+	var failures []validate.FieldError
+	if err := func() error {
+		var failures []validate.FieldError
+		for i, elem := range s.Result {
+			if err := func() error {
+				if err := elem.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				failures = append(failures, validate.FieldError{
+					Name:  fmt.Sprintf("[%d]", i),
+					Error: err,
+				})
+			}
+		}
+		if len(failures) > 0 {
+			return &validate.Error{Fields: failures}
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "result",
+			Error: err,
+		})
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+	return nil
+}
+func (s ResultArrayOfSticker) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
 		var failures []validate.FieldError
@@ -8510,6 +8562,17 @@ func (s ShippingOption) Validate() error {
 func (s Sticker) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
+		if err := s.Type.Validate(); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "type",
+			Error: err,
+		})
+	}
+	if err := func() error {
 		if err := (validate.Int{
 			MinSet:        true,
 			Min:           0,
@@ -8642,6 +8705,18 @@ func (s StickerSet) Validate() error {
 		return &validate.Error{Fields: failures}
 	}
 	return nil
+}
+func (s StickerType) Validate() error {
+	switch s {
+	case "regular":
+		return nil
+	case "mask":
+		return nil
+	case "custom_emoji":
+		return nil
+	default:
+		return errors.Errorf("invalid value: %v", s)
+	}
 }
 func (s StopMessageLiveLocation) Validate() error {
 	var failures []validate.FieldError
