@@ -25,6 +25,7 @@ var (
 		"UserProfilePhotos",
 		"ChatMember",
 		"ChatInviteLink",
+		"Sticker",
 	}
 
 	isIDLikeName = createMatcher([]string{
