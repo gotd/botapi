@@ -7,7 +7,7 @@ require (
 	github.com/go-chi/chi/v5 v5.0.7
 	github.com/go-faster/errors v0.6.1
 	github.com/go-faster/jx v0.39.0
-	github.com/gotd/td v0.66.0
+	github.com/gotd/td v0.68.0
 	github.com/ogen-go/ogen v0.46.2
 	github.com/stretchr/testify v1.8.0
 	go.etcd.io/bbolt v1.3.6
@@ -38,9 +38,9 @@ require (
 	github.com/mattn/go-isatty v0.0.14 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/segmentio/asm v1.2.0 // indirect
-	go.uber.org/atomic v1.9.0 // indirect
+	go.uber.org/atomic v1.10.0 // indirect
 	golang.org/x/crypto v0.0.0-20220126234351-aa10faf2a1f8 // indirect
-	golang.org/x/net v0.0.0-20220722155237-a158d28d115b // indirect
+	golang.org/x/net v0.0.0-20220812174116-3211cb980234 // indirect
 	golang.org/x/sys v0.0.0-20220804214406-8e32c043e418 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	nhooyr.io/websocket v1.8.7 // indirect
