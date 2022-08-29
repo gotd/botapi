@@ -1,3 +1,4 @@
+// Binary gotd-bot-oas generates OpenAPI Specification for Telegram Bot API.
 package main
 
 import (

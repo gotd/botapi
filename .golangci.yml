@@ -34,7 +34,6 @@ linters-settings:
 linters:
   disable-all: true
   enable:
-    - deadcode
     - depguard
     - dogsled
     # False positive: botapi has a lot of similar unimplemented methods
@@ -52,11 +51,9 @@ linters:
     - lll
     - misspell
     - nakedret
-    - structcheck
     - typecheck
     - unconvert
     - unparam
-    - varcheck
     - whitespace
 
   # Do not enable:
