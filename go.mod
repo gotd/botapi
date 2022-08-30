@@ -8,7 +8,7 @@ require (
 	github.com/go-faster/errors v0.6.1
 	github.com/go-faster/jx v0.39.0
 	github.com/gotd/td v0.68.1
-	github.com/ogen-go/ogen v0.46.2
+	github.com/ogen-go/ogen v0.47.0
 	github.com/stretchr/testify v1.8.0
 	go.etcd.io/bbolt v1.3.6
 	go.opentelemetry.io/otel v1.9.0
@@ -16,7 +16,7 @@ require (
 	go.opentelemetry.io/otel/trace v1.9.0
 	go.uber.org/multierr v1.8.0
 	go.uber.org/zap v1.23.0
-	golang.org/x/sync v0.0.0-20220722155255-886fb9371eb4
+	golang.org/x/sync v0.0.0-20220819030929-7fc1605a5dde
 )
 
 require (
@@ -26,7 +26,7 @@ require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/fatih/color v1.13.0 // indirect
 	github.com/go-faster/xor v0.3.0 // indirect
-	github.com/go-faster/yamlx v0.3.2 // indirect
+	github.com/go-faster/yamlx v0.3.5 // indirect
 	github.com/go-logr/logr v1.2.3 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-playground/validator/v10 v10.4.1 // indirect
@@ -40,7 +40,7 @@ require (
 	github.com/segmentio/asm v1.2.0 // indirect
 	go.uber.org/atomic v1.10.0 // indirect
 	golang.org/x/crypto v0.0.0-20220126234351-aa10faf2a1f8 // indirect
-	golang.org/x/net v0.0.0-20220812174116-3211cb980234 // indirect
+	golang.org/x/net v0.0.0-20220822230855-b0a4917ee28c // indirect
 	golang.org/x/sys v0.0.0-20220804214406-8e32c043e418 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	nhooyr.io/websocket v1.8.7 // indirect
