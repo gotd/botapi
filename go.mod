@@ -7,7 +7,7 @@ require (
 	github.com/go-chi/chi/v5 v5.0.7
 	github.com/go-faster/errors v0.6.1
 	github.com/go-faster/jx v0.39.0
-	github.com/gotd/td v0.68.0
+	github.com/gotd/td v0.68.1
 	github.com/ogen-go/ogen v0.46.2
 	github.com/stretchr/testify v1.8.0
 	go.etcd.io/bbolt v1.3.6
