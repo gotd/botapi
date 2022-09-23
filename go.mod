@@ -8,12 +8,12 @@ require (
 	github.com/go-faster/errors v0.6.1
 	github.com/go-faster/jx v0.39.0
 	github.com/gotd/td v0.68.1
-	github.com/ogen-go/ogen v0.48.2
+	github.com/ogen-go/ogen v0.49.0
 	github.com/stretchr/testify v1.8.0
 	go.etcd.io/bbolt v1.3.6
-	go.opentelemetry.io/otel v1.9.0
-	go.opentelemetry.io/otel/metric v0.31.0
-	go.opentelemetry.io/otel/trace v1.9.0
+	go.opentelemetry.io/otel v1.10.0
+	go.opentelemetry.io/otel/metric v0.32.0
+	go.opentelemetry.io/otel/trace v1.10.0
 	go.uber.org/multierr v1.8.0
 	go.uber.org/zap v1.23.0
 	golang.org/x/sync v0.0.0-20220819030929-7fc1605a5dde
@@ -26,7 +26,7 @@ require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/fatih/color v1.13.0 // indirect
 	github.com/go-faster/xor v0.3.0 // indirect
-	github.com/go-faster/yamlx v0.3.5 // indirect
+	github.com/go-faster/yamlx v0.3.6 // indirect
 	github.com/go-logr/logr v1.2.3 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-playground/validator/v10 v10.4.1 // indirect
