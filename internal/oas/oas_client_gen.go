@@ -129,9 +129,8 @@ func (c *Client) AddStickerToSet(ctx context.Context, request AddStickerToSet) (
 // AnswerCallbackQuery invokes answerCallbackQuery operation.
 //
 // Use this method to send answers to callback queries sent from [inline keyboards](https://core.
-// telegram.org/bots#inline-keyboards-and-on-the-fly-updating). The answer will be displayed to the
-// user as a notification at the top of the chat screen or as an alert. On success, _True_ is
-// returned.
+// telegram.org/bots/features#inline-keyboards). The answer will be displayed to the user as a
+// notification at the top of the chat screen or as an alert. On success, _True_ is returned.
 //
 // POST /answerCallbackQuery
 func (c *Client) AnswerCallbackQuery(ctx context.Context, request AnswerCallbackQuery) (res Result, err error) {
@@ -5531,9 +5530,8 @@ func (c *Client) SetGameScore(ctx context.Context, request SetGameScore) (res Re
 
 // SetMyCommands invokes setMyCommands operation.
 //
-// Use this method to change the list of the bot's commands. See [](https://core.telegram.
-// org/bots#commands)[https://core.telegram.org/bots#commands](https://core.telegram.
-// org/bots#commands) for more details about bot commands. Returns _True_ on success.
+// Use this method to change the list of the bot's commands. See [this manual](https://core.telegram.
+// org/bots/features#commands) for more details about bot commands. Returns _True_ on success.
 //
 // POST /setMyCommands
 func (c *Client) SetMyCommands(ctx context.Context, request SetMyCommands) (res Result, err error) {

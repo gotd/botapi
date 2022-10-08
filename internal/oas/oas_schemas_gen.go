@@ -104,13 +104,13 @@ type AnswerInlineQuery struct {
 	// If passed, clients will display a button with specified text that switches the user to a private
 	// chat with the bot and sends the bot a start message with the parameter _switch_pm_parameter_.
 	SwitchPmText OptString "json:\"switch_pm_text\""
-	// [Deep-linking](https://core.telegram.org/bots#deep-linking) parameter for the /start message sent
-	// to the bot when user presses the switch button. 1-64 characters, only `A-Z`, `a-z`, `0-9`, `_` and
-	// `-` are allowed._Example:_ An inline bot that sends YouTube videos can ask the user to connect the
-	// bot to their YouTube account to adapt search results accordingly. To do this, it displays a
-	// 'Connect your YouTube account' button above the results, or even before showing any. The user
-	// presses the button, switches to a private chat with the bot and, in doing so, passes a start
-	// parameter that instructs the bot to return an OAuth link. Once done, the bot can offer a
+	// [Deep-linking](https://core.telegram.org/bots/features#deep-linking) parameter for the /start
+	// message sent to the bot when user presses the switch button. 1-64 characters, only `A-Z`, `a-z`,
+	// `0-9`, `_` and `-` are allowed._Example:_ An inline bot that sends YouTube videos can ask the user
+	// to connect the bot to their YouTube account to adapt search results accordingly. To do this, it
+	// displays a 'Connect your YouTube account' button above the results, or even before showing any.
+	// The user presses the button, switches to a private chat with the bot and, in doing so, passes a
+	// start parameter that instructs the bot to return an OAuth link. Once done, the bot can offer a
 	// [_switch_inline_](https://core.telegram.org/bots/api#inlinekeyboardmarkup) button so that the user
 	// can easily return to the chat where they wanted to use the bot's inline capabilities.
 	SwitchPmParameter OptString "json:\"switch_pm_parameter\""
@@ -485,11 +485,11 @@ type BotCommandScopeDefault struct{}
 type CallbackGame struct{}
 
 // This object represents an incoming callback query from a callback button in an [inline
-// keyboard](https://core.telegram.org/bots#inline-keyboards-and-on-the-fly-updating). If the button
-// that originated the query was attached to a message sent by the bot, the field _message_ will be
-// present. If the button was attached to a message sent via the bot (in [inline mode](https://core.
-// telegram.org/bots/api#inline-mode)), the field _inline_message_id_ will be present. Exactly one of
-// the fields _data_ or _game_short_name_ will be present.
+// keyboard](https://core.telegram.org/bots/features#inline-keyboards). If the button that originated
+// the query was attached to a message sent by the bot, the field _message_ will be present. If the
+// button was attached to a message sent via the bot (in [inline mode](https://core.telegram.
+// org/bots/api#inline-mode)), the field _inline_message_id_ will be present. Exactly one of the
+// fields _data_ or _game_short_name_ will be present.
 // Ref: #/components/schemas/CallbackQuery
 type CallbackQuery struct {
 	// Unique identifier for this query.
@@ -1478,7 +1478,7 @@ type File struct {
 // Upon receiving a message with this object, Telegram clients will display a reply interface to the
 // user (act as if the user has selected the bot's message and tapped 'Reply'). This can be extremely
 // useful if you want to create user-friendly step-by-step interfaces without having to sacrifice
-// [privacy mode](https://core.telegram.org/bots#privacy-mode).
+// [privacy mode](https://core.telegram.org/bots/features#privacy-mode).
 // Ref: #/components/schemas/ForceReply
 type ForceReply struct {
 	// Shows reply interface to the user, as if they manually selected the bot's message and tapped
@@ -1758,8 +1758,7 @@ type InlineKeyboardButton struct {
 }
 
 // This object represents an [inline keyboard](https://core.telegram.
-// org/bots#inline-keyboards-and-on-the-fly-updating) that appears right next to the message it
-// belongs to.
+// org/bots/features#inline-keyboards) that appears right next to the message it belongs to.
 // Ref: #/components/schemas/InlineKeyboardMarkup
 type InlineKeyboardMarkup struct {
 	// Array of button rows, each represented by an Array of [InlineKeyboardButton](https://core.telegram.
@@ -8053,9 +8052,9 @@ type ProximityAlertTriggered struct {
 	Distance int "json:\"distance\""
 }
 
-// This object represents a [custom keyboard](https://core.telegram.org/bots#keyboards) with reply
-// options (see [Introduction to bots](https://core.telegram.org/bots#keyboards) for details and
-// examples).
+// This object represents a [custom keyboard](https://core.telegram.org/bots/features#keyboards) with
+// reply options (see [Introduction to bots](https://core.telegram.org/bots/features#keyboards) for
+// details and examples).
 // Ref: #/components/schemas/ReplyKeyboardMarkup
 type ReplyKeyboardMarkup struct {
 	// Array of button rows, each represented by an Array of [KeyboardButton](https://core.telegram.
@@ -9584,8 +9583,8 @@ type User struct {
 	// _Optional_. _True_, if the bot can be invited to groups. Returned only in [getMe](https://core.
 	// telegram.org/bots/api#getme).
 	CanJoinGroups OptBool "json:\"can_join_groups\""
-	// _Optional_. _True_, if [privacy mode](https://core.telegram.org/bots#privacy-mode) is disabled for
-	// the bot. Returned only in [getMe](https://core.telegram.org/bots/api#getme).
+	// _Optional_. _True_, if [privacy mode](https://core.telegram.org/bots/features#privacy-mode) is
+	// disabled for the bot. Returned only in [getMe](https://core.telegram.org/bots/api#getme).
 	CanReadAllGroupMessages OptBool "json:\"can_read_all_group_messages\""
 	// _Optional_. _True_, if the bot supports inline queries. Returned only in [getMe](https://core.
 	// telegram.org/bots/api#getme).
