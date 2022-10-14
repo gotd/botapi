@@ -24,9 +24,8 @@ type Handler interface {
 	// AnswerCallbackQuery implements answerCallbackQuery operation.
 	//
 	// Use this method to send answers to callback queries sent from [inline keyboards](https://core.
-	// telegram.org/bots#inline-keyboards-and-on-the-fly-updating). The answer will be displayed to the
-	// user as a notification at the top of the chat screen or as an alert. On success, _True_ is
-	// returned.
+	// telegram.org/bots/features#inline-keyboards). The answer will be displayed to the user as a
+	// notification at the top of the chat screen or as an alert. On success, _True_ is returned.
 	//
 	// POST /answerCallbackQuery
 	AnswerCallbackQuery(ctx context.Context, req AnswerCallbackQuery) (Result, error)
@@ -633,9 +632,8 @@ type Handler interface {
 	SetGameScore(ctx context.Context, req SetGameScore) (Result, error)
 	// SetMyCommands implements setMyCommands operation.
 	//
-	// Use this method to change the list of the bot's commands. See [](https://core.telegram.
-	// org/bots#commands)[https://core.telegram.org/bots#commands](https://core.telegram.
-	// org/bots#commands) for more details about bot commands. Returns _True_ on success.
+	// Use this method to change the list of the bot's commands. See [this manual](https://core.telegram.
+	// org/bots/features#commands) for more details about bot commands. Returns _True_ on success.
 	//
 	// POST /setMyCommands
 	SetMyCommands(ctx context.Context, req SetMyCommands) (Result, error)
