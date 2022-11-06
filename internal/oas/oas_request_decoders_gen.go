@@ -559,6 +559,62 @@ func (s *Server) decodeBanChatSenderChatRequest(r *http.Request, span trace.Span
 	}
 }
 
+func (s *Server) decodeCloseForumTopicRequest(r *http.Request, span trace.Span) (
+	req CloseForumTopic,
+	close func() error,
+	rerr error,
+) {
+	var closers []func() error
+	close = func() error {
+		var merr error
+		// Close in reverse order, to match defer behavior.
+		for i := len(closers) - 1; i >= 0; i-- {
+			c := closers[i]
+			merr = multierr.Append(merr, c())
+		}
+		return merr
+	}
+	defer func() {
+		if rerr != nil {
+			rerr = multierr.Append(rerr, close())
+		}
+	}()
+
+	ct, _, err := mime.ParseMediaType(r.Header.Get("Content-Type"))
+	if err != nil {
+		return req, close, errors.Wrap(err, "parse media type")
+	}
+	switch {
+	case ct == "application/json":
+		if r.ContentLength == 0 {
+			return req, close, validate.ErrBodyRequired
+		}
+
+		var request CloseForumTopic
+		buf, err := io.ReadAll(r.Body)
+		if err != nil {
+			return req, close, err
+		}
+
+		if len(buf) == 0 {
+			return req, close, validate.ErrBodyRequired
+		}
+
+		d := jx.DecodeBytes(buf)
+		if err := func() error {
+			if err := request.Decode(d); err != nil {
+				return err
+			}
+			return nil
+		}(); err != nil {
+			return req, close, errors.Wrap(err, "decode \"application/json\"")
+		}
+		return request, close, nil
+	default:
+		return req, close, validate.InvalidContentType(ct)
+	}
+}
+
 func (s *Server) decodeCopyMessageRequest(r *http.Request, span trace.Span) (
 	req CopyMessage,
 	close func() error,
@@ -655,6 +711,70 @@ func (s *Server) decodeCreateChatInviteLinkRequest(r *http.Request, span trace.S
 		}
 
 		var request CreateChatInviteLink
+		buf, err := io.ReadAll(r.Body)
+		if err != nil {
+			return req, close, err
+		}
+
+		if len(buf) == 0 {
+			return req, close, validate.ErrBodyRequired
+		}
+
+		d := jx.DecodeBytes(buf)
+		if err := func() error {
+			if err := request.Decode(d); err != nil {
+				return err
+			}
+			return nil
+		}(); err != nil {
+			return req, close, errors.Wrap(err, "decode \"application/json\"")
+		}
+		if err := func() error {
+			if err := request.Validate(); err != nil {
+				return err
+			}
+			return nil
+		}(); err != nil {
+			return req, close, errors.Wrap(err, "validate")
+		}
+		return request, close, nil
+	default:
+		return req, close, validate.InvalidContentType(ct)
+	}
+}
+
+func (s *Server) decodeCreateForumTopicRequest(r *http.Request, span trace.Span) (
+	req CreateForumTopic,
+	close func() error,
+	rerr error,
+) {
+	var closers []func() error
+	close = func() error {
+		var merr error
+		// Close in reverse order, to match defer behavior.
+		for i := len(closers) - 1; i >= 0; i-- {
+			c := closers[i]
+			merr = multierr.Append(merr, c())
+		}
+		return merr
+	}
+	defer func() {
+		if rerr != nil {
+			rerr = multierr.Append(rerr, close())
+		}
+	}()
+
+	ct, _, err := mime.ParseMediaType(r.Header.Get("Content-Type"))
+	if err != nil {
+		return req, close, errors.Wrap(err, "parse media type")
+	}
+	switch {
+	case ct == "application/json":
+		if r.ContentLength == 0 {
+			return req, close, validate.ErrBodyRequired
+		}
+
+		var request CreateForumTopic
 		buf, err := io.ReadAll(r.Body)
 		if err != nil {
 			return req, close, err
@@ -983,6 +1103,62 @@ func (s *Server) decodeDeleteChatStickerSetRequest(r *http.Request, span trace.S
 	}
 }
 
+func (s *Server) decodeDeleteForumTopicRequest(r *http.Request, span trace.Span) (
+	req DeleteForumTopic,
+	close func() error,
+	rerr error,
+) {
+	var closers []func() error
+	close = func() error {
+		var merr error
+		// Close in reverse order, to match defer behavior.
+		for i := len(closers) - 1; i >= 0; i-- {
+			c := closers[i]
+			merr = multierr.Append(merr, c())
+		}
+		return merr
+	}
+	defer func() {
+		if rerr != nil {
+			rerr = multierr.Append(rerr, close())
+		}
+	}()
+
+	ct, _, err := mime.ParseMediaType(r.Header.Get("Content-Type"))
+	if err != nil {
+		return req, close, errors.Wrap(err, "parse media type")
+	}
+	switch {
+	case ct == "application/json":
+		if r.ContentLength == 0 {
+			return req, close, validate.ErrBodyRequired
+		}
+
+		var request DeleteForumTopic
+		buf, err := io.ReadAll(r.Body)
+		if err != nil {
+			return req, close, err
+		}
+
+		if len(buf) == 0 {
+			return req, close, validate.ErrBodyRequired
+		}
+
+		d := jx.DecodeBytes(buf)
+		if err := func() error {
+			if err := request.Decode(d); err != nil {
+				return err
+			}
+			return nil
+		}(); err != nil {
+			return req, close, errors.Wrap(err, "decode \"application/json\"")
+		}
+		return request, close, nil
+	default:
+		return req, close, validate.InvalidContentType(ct)
+	}
+}
+
 func (s *Server) decodeDeleteMessageRequest(r *http.Request, span trace.Span) (
 	req DeleteMessage,
 	close func() error,
@@ -1247,6 +1423,70 @@ func (s *Server) decodeEditChatInviteLinkRequest(r *http.Request, span trace.Spa
 		}
 
 		var request EditChatInviteLink
+		buf, err := io.ReadAll(r.Body)
+		if err != nil {
+			return req, close, err
+		}
+
+		if len(buf) == 0 {
+			return req, close, validate.ErrBodyRequired
+		}
+
+		d := jx.DecodeBytes(buf)
+		if err := func() error {
+			if err := request.Decode(d); err != nil {
+				return err
+			}
+			return nil
+		}(); err != nil {
+			return req, close, errors.Wrap(err, "decode \"application/json\"")
+		}
+		if err := func() error {
+			if err := request.Validate(); err != nil {
+				return err
+			}
+			return nil
+		}(); err != nil {
+			return req, close, errors.Wrap(err, "validate")
+		}
+		return request, close, nil
+	default:
+		return req, close, validate.InvalidContentType(ct)
+	}
+}
+
+func (s *Server) decodeEditForumTopicRequest(r *http.Request, span trace.Span) (
+	req EditForumTopic,
+	close func() error,
+	rerr error,
+) {
+	var closers []func() error
+	close = func() error {
+		var merr error
+		// Close in reverse order, to match defer behavior.
+		for i := len(closers) - 1; i >= 0; i-- {
+			c := closers[i]
+			merr = multierr.Append(merr, c())
+		}
+		return merr
+	}
+	defer func() {
+		if rerr != nil {
+			rerr = multierr.Append(rerr, close())
+		}
+	}()
+
+	ct, _, err := mime.ParseMediaType(r.Header.Get("Content-Type"))
+	if err != nil {
+		return req, close, errors.Wrap(err, "parse media type")
+	}
+	switch {
+	case ct == "application/json":
+		if r.ContentLength == 0 {
+			return req, close, validate.ErrBodyRequired
+		}
+
+		var request EditForumTopic
 		buf, err := io.ReadAll(r.Body)
 		if err != nil {
 			return req, close, err
@@ -2630,6 +2870,62 @@ func (s *Server) decodePromoteChatMemberRequest(r *http.Request, span trace.Span
 		}
 
 		var request PromoteChatMember
+		buf, err := io.ReadAll(r.Body)
+		if err != nil {
+			return req, close, err
+		}
+
+		if len(buf) == 0 {
+			return req, close, validate.ErrBodyRequired
+		}
+
+		d := jx.DecodeBytes(buf)
+		if err := func() error {
+			if err := request.Decode(d); err != nil {
+				return err
+			}
+			return nil
+		}(); err != nil {
+			return req, close, errors.Wrap(err, "decode \"application/json\"")
+		}
+		return request, close, nil
+	default:
+		return req, close, validate.InvalidContentType(ct)
+	}
+}
+
+func (s *Server) decodeReopenForumTopicRequest(r *http.Request, span trace.Span) (
+	req ReopenForumTopic,
+	close func() error,
+	rerr error,
+) {
+	var closers []func() error
+	close = func() error {
+		var merr error
+		// Close in reverse order, to match defer behavior.
+		for i := len(closers) - 1; i >= 0; i-- {
+			c := closers[i]
+			merr = multierr.Append(merr, c())
+		}
+		return merr
+	}
+	defer func() {
+		if rerr != nil {
+			rerr = multierr.Append(rerr, close())
+		}
+	}()
+
+	ct, _, err := mime.ParseMediaType(r.Header.Get("Content-Type"))
+	if err != nil {
+		return req, close, errors.Wrap(err, "parse media type")
+	}
+	switch {
+	case ct == "application/json":
+		if r.ContentLength == 0 {
+			return req, close, validate.ErrBodyRequired
+		}
+
+		var request ReopenForumTopic
 		buf, err := io.ReadAll(r.Body)
 		if err != nil {
 			return req, close, err
@@ -5022,6 +5318,62 @@ func (s *Server) decodeUnpinAllChatMessagesRequest(r *http.Request, span trace.S
 		}
 
 		var request UnpinAllChatMessages
+		buf, err := io.ReadAll(r.Body)
+		if err != nil {
+			return req, close, err
+		}
+
+		if len(buf) == 0 {
+			return req, close, validate.ErrBodyRequired
+		}
+
+		d := jx.DecodeBytes(buf)
+		if err := func() error {
+			if err := request.Decode(d); err != nil {
+				return err
+			}
+			return nil
+		}(); err != nil {
+			return req, close, errors.Wrap(err, "decode \"application/json\"")
+		}
+		return request, close, nil
+	default:
+		return req, close, validate.InvalidContentType(ct)
+	}
+}
+
+func (s *Server) decodeUnpinAllForumTopicMessagesRequest(r *http.Request, span trace.Span) (
+	req UnpinAllForumTopicMessages,
+	close func() error,
+	rerr error,
+) {
+	var closers []func() error
+	close = func() error {
+		var merr error
+		// Close in reverse order, to match defer behavior.
+		for i := len(closers) - 1; i >= 0; i-- {
+			c := closers[i]
+			merr = multierr.Append(merr, c())
+		}
+		return merr
+	}
+	defer func() {
+		if rerr != nil {
+			rerr = multierr.Append(rerr, close())
+		}
+	}()
+
+	ct, _, err := mime.ParseMediaType(r.Header.Get("Content-Type"))
+	if err != nil {
+		return req, close, errors.Wrap(err, "parse media type")
+	}
+	switch {
+	case ct == "application/json":
+		if r.ContentLength == 0 {
+			return req, close, validate.ErrBodyRequired
+		}
+
+		var request UnpinAllForumTopicMessages
 		buf, err := io.ReadAll(r.Body)
 		if err != nil {
 			return req, close, err

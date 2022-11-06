@@ -752,6 +752,32 @@ func (s CreateChatInviteLink) Validate() error {
 	}
 	return nil
 }
+func (s CreateForumTopic) Validate() error {
+	var failures []validate.FieldError
+	if err := func() error {
+		if err := (validate.String{
+			MinLength:    1,
+			MinLengthSet: true,
+			MaxLength:    128,
+			MaxLengthSet: true,
+			Email:        false,
+			Hostname:     false,
+			Regex:        nil,
+		}).Validate(string(s.Name)); err != nil {
+			return errors.Wrap(err, "string")
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "name",
+			Error: err,
+		})
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+	return nil
+}
 func (s CreateInvoiceLink) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
@@ -1021,6 +1047,32 @@ func (s EditChatInviteLink) Validate() error {
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
 			Name:  "member_limit",
+			Error: err,
+		})
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+	return nil
+}
+func (s EditForumTopic) Validate() error {
+	var failures []validate.FieldError
+	if err := func() error {
+		if err := (validate.String{
+			MinLength:    1,
+			MinLengthSet: true,
+			MaxLength:    128,
+			MaxLengthSet: true,
+			Email:        false,
+			Hostname:     false,
+			Regex:        nil,
+		}).Validate(string(s.Name)); err != nil {
+			return errors.Wrap(err, "string")
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "name",
 			Error: err,
 		})
 	}
@@ -8418,7 +8470,7 @@ func (s SetChatTitle) Validate() error {
 		if err := (validate.String{
 			MinLength:    1,
 			MinLengthSet: true,
-			MaxLength:    255,
+			MaxLength:    128,
 			MaxLengthSet: true,
 			Email:        false,
 			Hostname:     false,

@@ -747,6 +747,81 @@ func (s *Server) handleCloseRequest(args [0]string, w http.ResponseWriter, r *ht
 	}
 }
 
+// HandleCloseForumTopicRequest handles closeForumTopic operation.
+//
+// POST /closeForumTopic
+func (s *Server) handleCloseForumTopicRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("closeForumTopic"),
+	}
+
+	// Start a span for this request.
+	ctx, span := s.cfg.Tracer.Start(r.Context(), "CloseForumTopic",
+		trace.WithAttributes(otelAttrs...),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "CloseForumTopic",
+			ID:   "closeForumTopic",
+		}
+	)
+	request, close, err := s.decodeCloseForumTopicRequest(r, span)
+	if err != nil {
+		err = &ogenerrors.DecodeRequestError{
+			OperationContext: opErrContext,
+			Err:              err,
+		}
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+	defer func() {
+		if err := close(); err != nil {
+			recordError("CloseRequest", err)
+		}
+	}()
+
+	response, err := s.h.CloseForumTopic(ctx, request)
+	if err != nil {
+		recordError("Internal", err)
+		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
+			encodeErrorResponse(*errRes, w, span)
+			return
+		}
+		if errors.Is(err, ht.ErrNotImplemented) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+			return
+		}
+		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		return
+	}
+
+	if err := encodeCloseForumTopicResponse(response, w, span); err != nil {
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+}
+
 // HandleCopyMessageRequest handles copyMessage operation.
 //
 // POST /copyMessage
@@ -891,6 +966,81 @@ func (s *Server) handleCreateChatInviteLinkRequest(args [0]string, w http.Respon
 	}
 
 	if err := encodeCreateChatInviteLinkResponse(response, w, span); err != nil {
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+}
+
+// HandleCreateForumTopicRequest handles createForumTopic operation.
+//
+// POST /createForumTopic
+func (s *Server) handleCreateForumTopicRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("createForumTopic"),
+	}
+
+	// Start a span for this request.
+	ctx, span := s.cfg.Tracer.Start(r.Context(), "CreateForumTopic",
+		trace.WithAttributes(otelAttrs...),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "CreateForumTopic",
+			ID:   "createForumTopic",
+		}
+	)
+	request, close, err := s.decodeCreateForumTopicRequest(r, span)
+	if err != nil {
+		err = &ogenerrors.DecodeRequestError{
+			OperationContext: opErrContext,
+			Err:              err,
+		}
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+	defer func() {
+		if err := close(); err != nil {
+			recordError("CloseRequest", err)
+		}
+	}()
+
+	response, err := s.h.CreateForumTopic(ctx, request)
+	if err != nil {
+		recordError("Internal", err)
+		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
+			encodeErrorResponse(*errRes, w, span)
+			return
+		}
+		if errors.Is(err, ht.ErrNotImplemented) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+			return
+		}
+		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		return
+	}
+
+	if err := encodeCreateForumTopicResponse(response, w, span); err != nil {
 		recordError("EncodeResponse", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
@@ -1272,6 +1422,81 @@ func (s *Server) handleDeleteChatStickerSetRequest(args [0]string, w http.Respon
 	}
 }
 
+// HandleDeleteForumTopicRequest handles deleteForumTopic operation.
+//
+// POST /deleteForumTopic
+func (s *Server) handleDeleteForumTopicRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("deleteForumTopic"),
+	}
+
+	// Start a span for this request.
+	ctx, span := s.cfg.Tracer.Start(r.Context(), "DeleteForumTopic",
+		trace.WithAttributes(otelAttrs...),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "DeleteForumTopic",
+			ID:   "deleteForumTopic",
+		}
+	)
+	request, close, err := s.decodeDeleteForumTopicRequest(r, span)
+	if err != nil {
+		err = &ogenerrors.DecodeRequestError{
+			OperationContext: opErrContext,
+			Err:              err,
+		}
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+	defer func() {
+		if err := close(); err != nil {
+			recordError("CloseRequest", err)
+		}
+	}()
+
+	response, err := s.h.DeleteForumTopic(ctx, request)
+	if err != nil {
+		recordError("Internal", err)
+		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
+			encodeErrorResponse(*errRes, w, span)
+			return
+		}
+		if errors.Is(err, ht.ErrNotImplemented) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+			return
+		}
+		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		return
+	}
+
+	if err := encodeDeleteForumTopicResponse(response, w, span); err != nil {
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+}
+
 // HandleDeleteMessageRequest handles deleteMessage operation.
 //
 // POST /deleteMessage
@@ -1641,6 +1866,81 @@ func (s *Server) handleEditChatInviteLinkRequest(args [0]string, w http.Response
 	}
 
 	if err := encodeEditChatInviteLinkResponse(response, w, span); err != nil {
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+}
+
+// HandleEditForumTopicRequest handles editForumTopic operation.
+//
+// POST /editForumTopic
+func (s *Server) handleEditForumTopicRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("editForumTopic"),
+	}
+
+	// Start a span for this request.
+	ctx, span := s.cfg.Tracer.Start(r.Context(), "EditForumTopic",
+		trace.WithAttributes(otelAttrs...),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "EditForumTopic",
+			ID:   "editForumTopic",
+		}
+	)
+	request, close, err := s.decodeEditForumTopicRequest(r, span)
+	if err != nil {
+		err = &ogenerrors.DecodeRequestError{
+			OperationContext: opErrContext,
+			Err:              err,
+		}
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+	defer func() {
+		if err := close(); err != nil {
+			recordError("CloseRequest", err)
+		}
+	}()
+
+	response, err := s.h.EditForumTopic(ctx, request)
+	if err != nil {
+		recordError("Internal", err)
+		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
+			encodeErrorResponse(*errRes, w, span)
+			return
+		}
+		if errors.Is(err, ht.ErrNotImplemented) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+			return
+		}
+		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		return
+	}
+
+	if err := encodeEditForumTopicResponse(response, w, span); err != nil {
 		recordError("EncodeResponse", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
@@ -2697,6 +2997,62 @@ func (s *Server) handleGetFileRequest(args [0]string, w http.ResponseWriter, r *
 	}
 }
 
+// HandleGetForumTopicIconStickersRequest handles getForumTopicIconStickers operation.
+//
+// POST /getForumTopicIconStickers
+func (s *Server) handleGetForumTopicIconStickersRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("getForumTopicIconStickers"),
+	}
+
+	// Start a span for this request.
+	ctx, span := s.cfg.Tracer.Start(r.Context(), "GetForumTopicIconStickers",
+		trace.WithAttributes(otelAttrs...),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err error
+	)
+
+	response, err := s.h.GetForumTopicIconStickers(ctx)
+	if err != nil {
+		recordError("Internal", err)
+		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
+			encodeErrorResponse(*errRes, w, span)
+			return
+		}
+		if errors.Is(err, ht.ErrNotImplemented) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+			return
+		}
+		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		return
+	}
+
+	if err := encodeGetForumTopicIconStickersResponse(response, w, span); err != nil {
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+}
+
 // HandleGetGameHighScoresRequest handles getGameHighScores operation.
 //
 // POST /getGameHighScores
@@ -3534,6 +3890,81 @@ func (s *Server) handlePromoteChatMemberRequest(args [0]string, w http.ResponseW
 	}
 
 	if err := encodePromoteChatMemberResponse(response, w, span); err != nil {
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+}
+
+// HandleReopenForumTopicRequest handles reopenForumTopic operation.
+//
+// POST /reopenForumTopic
+func (s *Server) handleReopenForumTopicRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("reopenForumTopic"),
+	}
+
+	// Start a span for this request.
+	ctx, span := s.cfg.Tracer.Start(r.Context(), "ReopenForumTopic",
+		trace.WithAttributes(otelAttrs...),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "ReopenForumTopic",
+			ID:   "reopenForumTopic",
+		}
+	)
+	request, close, err := s.decodeReopenForumTopicRequest(r, span)
+	if err != nil {
+		err = &ogenerrors.DecodeRequestError{
+			OperationContext: opErrContext,
+			Err:              err,
+		}
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+	defer func() {
+		if err := close(); err != nil {
+			recordError("CloseRequest", err)
+		}
+	}()
+
+	response, err := s.h.ReopenForumTopic(ctx, request)
+	if err != nil {
+		recordError("Internal", err)
+		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
+			encodeErrorResponse(*errRes, w, span)
+			return
+		}
+		if errors.Is(err, ht.ErrNotImplemented) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+			return
+		}
+		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		return
+	}
+
+	if err := encodeReopenForumTopicResponse(response, w, span); err != nil {
 		recordError("EncodeResponse", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
@@ -6459,6 +6890,81 @@ func (s *Server) handleUnpinAllChatMessagesRequest(args [0]string, w http.Respon
 	}
 
 	if err := encodeUnpinAllChatMessagesResponse(response, w, span); err != nil {
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+}
+
+// HandleUnpinAllForumTopicMessagesRequest handles unpinAllForumTopicMessages operation.
+//
+// POST /unpinAllForumTopicMessages
+func (s *Server) handleUnpinAllForumTopicMessagesRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("unpinAllForumTopicMessages"),
+	}
+
+	// Start a span for this request.
+	ctx, span := s.cfg.Tracer.Start(r.Context(), "UnpinAllForumTopicMessages",
+		trace.WithAttributes(otelAttrs...),
+		trace.WithSpanKind(trace.SpanKindServer),
+	)
+	defer span.End()
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "UnpinAllForumTopicMessages",
+			ID:   "unpinAllForumTopicMessages",
+		}
+	)
+	request, close, err := s.decodeUnpinAllForumTopicMessagesRequest(r, span)
+	if err != nil {
+		err = &ogenerrors.DecodeRequestError{
+			OperationContext: opErrContext,
+			Err:              err,
+		}
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+	defer func() {
+		if err := close(); err != nil {
+			recordError("CloseRequest", err)
+		}
+	}()
+
+	response, err := s.h.UnpinAllForumTopicMessages(ctx, request)
+	if err != nil {
+		recordError("Internal", err)
+		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
+			encodeErrorResponse(*errRes, w, span)
+			return
+		}
+		if errors.Is(err, ht.ErrNotImplemented) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+			return
+		}
+		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		return
+	}
+
+	if err := encodeUnpinAllForumTopicMessagesResponse(response, w, span); err != nil {
 		recordError("EncodeResponse", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
