@@ -3,6 +3,7 @@
 package oas
 
 import (
+	"context"
 	"net/http"
 	"time"
 
@@ -12,11 +13,17 @@ import (
 	"go.opentelemetry.io/otel/trace"
 
 	ht "github.com/ogen-go/ogen/http"
+	"github.com/ogen-go/ogen/middleware"
 	"github.com/ogen-go/ogen/ogenerrors"
 	"github.com/ogen-go/ogen/otelogen"
 )
 
-// HandleAddStickerToSetRequest handles addStickerToSet operation.
+// handleAddStickerToSetRequest handles addStickerToSet operation.
+//
+// Use this method to add a new sticker to a set created by the bot. You **must** use exactly one of
+// the fields _png_sticker_, _tgs_sticker_, or _webm_sticker_. Animated stickers can be added to
+// animated sticker sets and only to them. Animated sticker sets can have up to 50 stickers. Static
+// sticker sets can have up to 120 stickers. Returns _True_ on success.
 //
 // POST /addStickerToSet
 func (s *Server) handleAddStickerToSetRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -27,7 +34,7 @@ func (s *Server) handleAddStickerToSetRequest(args [0]string, w http.ResponseWri
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "AddStickerToSet",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -53,7 +60,7 @@ func (s *Server) handleAddStickerToSetRequest(args [0]string, w http.ResponseWri
 			ID:   "addStickerToSet",
 		}
 	)
-	request, close, err := s.decodeAddStickerToSetRequest(r, span)
+	request, close, err := s.decodeAddStickerToSetRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -69,7 +76,37 @@ func (s *Server) handleAddStickerToSetRequest(args [0]string, w http.ResponseWri
 		}
 	}()
 
-	response, err := s.h.AddStickerToSet(ctx, request)
+	var response Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "AddStickerToSet",
+			OperationID:   "addStickerToSet",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = AddStickerToSet
+			Params   = struct{}
+			Response = Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.AddStickerToSet(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.AddStickerToSet(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -91,7 +128,11 @@ func (s *Server) handleAddStickerToSetRequest(args [0]string, w http.ResponseWri
 	}
 }
 
-// HandleAnswerCallbackQueryRequest handles answerCallbackQuery operation.
+// handleAnswerCallbackQueryRequest handles answerCallbackQuery operation.
+//
+// Use this method to send answers to callback queries sent from [inline keyboards](https://core.
+// telegram.org/bots/features#inline-keyboards). The answer will be displayed to the user as a
+// notification at the top of the chat screen or as an alert. On success, _True_ is returned.
 //
 // POST /answerCallbackQuery
 func (s *Server) handleAnswerCallbackQueryRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -102,7 +143,7 @@ func (s *Server) handleAnswerCallbackQueryRequest(args [0]string, w http.Respons
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "AnswerCallbackQuery",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -128,7 +169,7 @@ func (s *Server) handleAnswerCallbackQueryRequest(args [0]string, w http.Respons
 			ID:   "answerCallbackQuery",
 		}
 	)
-	request, close, err := s.decodeAnswerCallbackQueryRequest(r, span)
+	request, close, err := s.decodeAnswerCallbackQueryRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -144,7 +185,37 @@ func (s *Server) handleAnswerCallbackQueryRequest(args [0]string, w http.Respons
 		}
 	}()
 
-	response, err := s.h.AnswerCallbackQuery(ctx, request)
+	var response Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "AnswerCallbackQuery",
+			OperationID:   "answerCallbackQuery",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = AnswerCallbackQuery
+			Params   = struct{}
+			Response = Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.AnswerCallbackQuery(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.AnswerCallbackQuery(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -166,7 +237,10 @@ func (s *Server) handleAnswerCallbackQueryRequest(args [0]string, w http.Respons
 	}
 }
 
-// HandleAnswerInlineQueryRequest handles answerInlineQuery operation.
+// handleAnswerInlineQueryRequest handles answerInlineQuery operation.
+//
+// Use this method to send answers to an inline query. On success, _True_ is returned.No more than
+// **50** results per query are allowed.
 //
 // POST /answerInlineQuery
 func (s *Server) handleAnswerInlineQueryRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -177,7 +251,7 @@ func (s *Server) handleAnswerInlineQueryRequest(args [0]string, w http.ResponseW
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "AnswerInlineQuery",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -203,7 +277,7 @@ func (s *Server) handleAnswerInlineQueryRequest(args [0]string, w http.ResponseW
 			ID:   "answerInlineQuery",
 		}
 	)
-	request, close, err := s.decodeAnswerInlineQueryRequest(r, span)
+	request, close, err := s.decodeAnswerInlineQueryRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -219,7 +293,37 @@ func (s *Server) handleAnswerInlineQueryRequest(args [0]string, w http.ResponseW
 		}
 	}()
 
-	response, err := s.h.AnswerInlineQuery(ctx, request)
+	var response Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "AnswerInlineQuery",
+			OperationID:   "answerInlineQuery",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = AnswerInlineQuery
+			Params   = struct{}
+			Response = Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.AnswerInlineQuery(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.AnswerInlineQuery(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -241,7 +345,13 @@ func (s *Server) handleAnswerInlineQueryRequest(args [0]string, w http.ResponseW
 	}
 }
 
-// HandleAnswerPreCheckoutQueryRequest handles answerPreCheckoutQuery operation.
+// handleAnswerPreCheckoutQueryRequest handles answerPreCheckoutQuery operation.
+//
+// Once the user has confirmed their payment and shipping details, the Bot API sends the final
+// confirmation in the form of an [Update](https://core.telegram.org/bots/api#update) with the field
+// _pre_checkout_query_. Use this method to respond to such pre-checkout queries. On success, _True_
+// is returned. **Note:** The Bot API must receive an answer within 10 seconds after the pre-checkout
+// query was sent.
 //
 // POST /answerPreCheckoutQuery
 func (s *Server) handleAnswerPreCheckoutQueryRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -252,7 +362,7 @@ func (s *Server) handleAnswerPreCheckoutQueryRequest(args [0]string, w http.Resp
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "AnswerPreCheckoutQuery",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -278,7 +388,7 @@ func (s *Server) handleAnswerPreCheckoutQueryRequest(args [0]string, w http.Resp
 			ID:   "answerPreCheckoutQuery",
 		}
 	)
-	request, close, err := s.decodeAnswerPreCheckoutQueryRequest(r, span)
+	request, close, err := s.decodeAnswerPreCheckoutQueryRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -294,7 +404,37 @@ func (s *Server) handleAnswerPreCheckoutQueryRequest(args [0]string, w http.Resp
 		}
 	}()
 
-	response, err := s.h.AnswerPreCheckoutQuery(ctx, request)
+	var response Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "AnswerPreCheckoutQuery",
+			OperationID:   "answerPreCheckoutQuery",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = AnswerPreCheckoutQuery
+			Params   = struct{}
+			Response = Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.AnswerPreCheckoutQuery(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.AnswerPreCheckoutQuery(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -316,7 +456,14 @@ func (s *Server) handleAnswerPreCheckoutQueryRequest(args [0]string, w http.Resp
 	}
 }
 
-// HandleAnswerShippingQueryRequest handles answerShippingQuery operation.
+// handleAnswerShippingQueryRequest handles answerShippingQuery operation.
+//
+// If you sent an invoice requesting a shipping address and the parameter _is_flexible_ was specified,
+//
+//	the Bot API will send an [Update](https://core.telegram.org/bots/api#update) with a
+//
+// _shipping_query_ field to the bot. Use this method to reply to shipping queries. On success,
+// _True_ is returned.
 //
 // POST /answerShippingQuery
 func (s *Server) handleAnswerShippingQueryRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -327,7 +474,7 @@ func (s *Server) handleAnswerShippingQueryRequest(args [0]string, w http.Respons
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "AnswerShippingQuery",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -353,7 +500,7 @@ func (s *Server) handleAnswerShippingQueryRequest(args [0]string, w http.Respons
 			ID:   "answerShippingQuery",
 		}
 	)
-	request, close, err := s.decodeAnswerShippingQueryRequest(r, span)
+	request, close, err := s.decodeAnswerShippingQueryRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -369,7 +516,37 @@ func (s *Server) handleAnswerShippingQueryRequest(args [0]string, w http.Respons
 		}
 	}()
 
-	response, err := s.h.AnswerShippingQuery(ctx, request)
+	var response Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "AnswerShippingQuery",
+			OperationID:   "answerShippingQuery",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = AnswerShippingQuery
+			Params   = struct{}
+			Response = Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.AnswerShippingQuery(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.AnswerShippingQuery(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -391,7 +568,12 @@ func (s *Server) handleAnswerShippingQueryRequest(args [0]string, w http.Respons
 	}
 }
 
-// HandleAnswerWebAppQueryRequest handles answerWebAppQuery operation.
+// handleAnswerWebAppQueryRequest handles answerWebAppQuery operation.
+//
+// Use this method to set the result of an interaction with a [Web App](https://core.telegram.
+// org/bots/webapps) and send a corresponding message on behalf of the user to the chat from which
+// the query originated. On success, a [SentWebAppMessage](https://core.telegram.
+// org/bots/api#sentwebappmessage) object is returned.
 //
 // POST /answerWebAppQuery
 func (s *Server) handleAnswerWebAppQueryRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -402,7 +584,7 @@ func (s *Server) handleAnswerWebAppQueryRequest(args [0]string, w http.ResponseW
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "AnswerWebAppQuery",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -428,7 +610,7 @@ func (s *Server) handleAnswerWebAppQueryRequest(args [0]string, w http.ResponseW
 			ID:   "answerWebAppQuery",
 		}
 	)
-	request, close, err := s.decodeAnswerWebAppQueryRequest(r, span)
+	request, close, err := s.decodeAnswerWebAppQueryRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -444,7 +626,37 @@ func (s *Server) handleAnswerWebAppQueryRequest(args [0]string, w http.ResponseW
 		}
 	}()
 
-	response, err := s.h.AnswerWebAppQuery(ctx, request)
+	var response Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "AnswerWebAppQuery",
+			OperationID:   "answerWebAppQuery",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = AnswerWebAppQuery
+			Params   = struct{}
+			Response = Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.AnswerWebAppQuery(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.AnswerWebAppQuery(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -466,7 +678,10 @@ func (s *Server) handleAnswerWebAppQueryRequest(args [0]string, w http.ResponseW
 	}
 }
 
-// HandleApproveChatJoinRequestRequest handles approveChatJoinRequest operation.
+// handleApproveChatJoinRequestRequest handles approveChatJoinRequest operation.
+//
+// Use this method to approve a chat join request. The bot must be an administrator in the chat for
+// this to work and must have the _can_invite_users_ administrator right. Returns _True_ on success.
 //
 // POST /approveChatJoinRequest
 func (s *Server) handleApproveChatJoinRequestRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -477,7 +692,7 @@ func (s *Server) handleApproveChatJoinRequestRequest(args [0]string, w http.Resp
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "ApproveChatJoinRequest",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -503,7 +718,7 @@ func (s *Server) handleApproveChatJoinRequestRequest(args [0]string, w http.Resp
 			ID:   "approveChatJoinRequest",
 		}
 	)
-	request, close, err := s.decodeApproveChatJoinRequestRequest(r, span)
+	request, close, err := s.decodeApproveChatJoinRequestRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -519,7 +734,37 @@ func (s *Server) handleApproveChatJoinRequestRequest(args [0]string, w http.Resp
 		}
 	}()
 
-	response, err := s.h.ApproveChatJoinRequest(ctx, request)
+	var response Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "ApproveChatJoinRequest",
+			OperationID:   "approveChatJoinRequest",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = ApproveChatJoinRequest
+			Params   = struct{}
+			Response = Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.ApproveChatJoinRequest(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.ApproveChatJoinRequest(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -541,7 +786,13 @@ func (s *Server) handleApproveChatJoinRequestRequest(args [0]string, w http.Resp
 	}
 }
 
-// HandleBanChatMemberRequest handles banChatMember operation.
+// handleBanChatMemberRequest handles banChatMember operation.
+//
+// Use this method to ban a user in a group, a supergroup or a channel. In the case of supergroups
+// and channels, the user will not be able to return to the chat on their own using invite links, etc.
+// , unless [unbanned](https://core.telegram.org/bots/api#unbanchatmember) first. The bot must be an
+// administrator in the chat for this to work and must have the appropriate administrator rights.
+// Returns _True_ on success.
 //
 // POST /banChatMember
 func (s *Server) handleBanChatMemberRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -552,7 +803,7 @@ func (s *Server) handleBanChatMemberRequest(args [0]string, w http.ResponseWrite
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "BanChatMember",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -578,7 +829,7 @@ func (s *Server) handleBanChatMemberRequest(args [0]string, w http.ResponseWrite
 			ID:   "banChatMember",
 		}
 	)
-	request, close, err := s.decodeBanChatMemberRequest(r, span)
+	request, close, err := s.decodeBanChatMemberRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -594,7 +845,37 @@ func (s *Server) handleBanChatMemberRequest(args [0]string, w http.ResponseWrite
 		}
 	}()
 
-	response, err := s.h.BanChatMember(ctx, request)
+	var response Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "BanChatMember",
+			OperationID:   "banChatMember",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = BanChatMember
+			Params   = struct{}
+			Response = Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.BanChatMember(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.BanChatMember(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -616,7 +897,13 @@ func (s *Server) handleBanChatMemberRequest(args [0]string, w http.ResponseWrite
 	}
 }
 
-// HandleBanChatSenderChatRequest handles banChatSenderChat operation.
+// handleBanChatSenderChatRequest handles banChatSenderChat operation.
+//
+// Use this method to ban a channel chat in a supergroup or a channel. Until the chat is
+// [unbanned](https://core.telegram.org/bots/api#unbanchatsenderchat), the owner of the banned chat
+// won't be able to send messages on behalf of **any of their channels**. The bot must be an
+// administrator in the supergroup or channel for this to work and must have the appropriate
+// administrator rights. Returns _True_ on success.
 //
 // POST /banChatSenderChat
 func (s *Server) handleBanChatSenderChatRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -627,7 +914,7 @@ func (s *Server) handleBanChatSenderChatRequest(args [0]string, w http.ResponseW
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "BanChatSenderChat",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -653,7 +940,7 @@ func (s *Server) handleBanChatSenderChatRequest(args [0]string, w http.ResponseW
 			ID:   "banChatSenderChat",
 		}
 	)
-	request, close, err := s.decodeBanChatSenderChatRequest(r, span)
+	request, close, err := s.decodeBanChatSenderChatRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -669,7 +956,37 @@ func (s *Server) handleBanChatSenderChatRequest(args [0]string, w http.ResponseW
 		}
 	}()
 
-	response, err := s.h.BanChatSenderChat(ctx, request)
+	var response Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "BanChatSenderChat",
+			OperationID:   "banChatSenderChat",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = BanChatSenderChat
+			Params   = struct{}
+			Response = Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.BanChatSenderChat(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.BanChatSenderChat(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -691,7 +1008,12 @@ func (s *Server) handleBanChatSenderChatRequest(args [0]string, w http.ResponseW
 	}
 }
 
-// HandleCloseRequest handles close operation.
+// handleCloseRequest handles close operation.
+//
+// Use this method to close the bot instance before moving it from one local server to another. You
+// need to delete the webhook before calling this method to ensure that the bot isn't launched again
+// after server restart. The method will return error 429 in the first 10 minutes after the bot is
+// launched. Returns _True_ on success. Requires no parameters.
 //
 // POST /close
 func (s *Server) handleCloseRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -702,7 +1024,7 @@ func (s *Server) handleCloseRequest(args [0]string, w http.ResponseWriter, r *ht
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "Close",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -725,7 +1047,37 @@ func (s *Server) handleCloseRequest(args [0]string, w http.ResponseWriter, r *ht
 		err error
 	)
 
-	response, err := s.h.Close(ctx)
+	var response Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "Close",
+			OperationID:   "close",
+			Body:          nil,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = struct{}
+			Params   = struct{}
+			Response = Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.Close(ctx)
+			},
+		)
+	} else {
+		response, err = s.h.Close(ctx)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -747,7 +1099,11 @@ func (s *Server) handleCloseRequest(args [0]string, w http.ResponseWriter, r *ht
 	}
 }
 
-// HandleCloseForumTopicRequest handles closeForumTopic operation.
+// handleCloseForumTopicRequest handles closeForumTopic operation.
+//
+// Use this method to close an open topic in a forum supergroup chat. The bot must be an
+// administrator in the chat for this to work and must have the _can_manage_topics_ administrator
+// rights, unless it is the creator of the topic. Returns _True_ on success.
 //
 // POST /closeForumTopic
 func (s *Server) handleCloseForumTopicRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -758,7 +1114,7 @@ func (s *Server) handleCloseForumTopicRequest(args [0]string, w http.ResponseWri
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "CloseForumTopic",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -784,7 +1140,7 @@ func (s *Server) handleCloseForumTopicRequest(args [0]string, w http.ResponseWri
 			ID:   "closeForumTopic",
 		}
 	)
-	request, close, err := s.decodeCloseForumTopicRequest(r, span)
+	request, close, err := s.decodeCloseForumTopicRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -800,7 +1156,37 @@ func (s *Server) handleCloseForumTopicRequest(args [0]string, w http.ResponseWri
 		}
 	}()
 
-	response, err := s.h.CloseForumTopic(ctx, request)
+	var response Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "CloseForumTopic",
+			OperationID:   "closeForumTopic",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = CloseForumTopic
+			Params   = struct{}
+			Response = Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.CloseForumTopic(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.CloseForumTopic(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -822,7 +1208,14 @@ func (s *Server) handleCloseForumTopicRequest(args [0]string, w http.ResponseWri
 	}
 }
 
-// HandleCopyMessageRequest handles copyMessage operation.
+// handleCopyMessageRequest handles copyMessage operation.
+//
+// Use this method to copy messages of any kind. Service messages and invoice messages can't be
+// copied. A quiz [poll](https://core.telegram.org/bots/api#poll) can be copied only if the value of
+// the field _correct_option_id_ is known to the bot. The method is analogous to the method
+// [forwardMessage](https://core.telegram.org/bots/api#forwardmessage), but the copied message
+// doesn't have a link to the original message. Returns the [MessageId](https://core.telegram.
+// org/bots/api#messageid) of the sent message on success.
 //
 // POST /copyMessage
 func (s *Server) handleCopyMessageRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -833,7 +1226,7 @@ func (s *Server) handleCopyMessageRequest(args [0]string, w http.ResponseWriter,
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "CopyMessage",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -859,7 +1252,7 @@ func (s *Server) handleCopyMessageRequest(args [0]string, w http.ResponseWriter,
 			ID:   "copyMessage",
 		}
 	)
-	request, close, err := s.decodeCopyMessageRequest(r, span)
+	request, close, err := s.decodeCopyMessageRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -875,7 +1268,37 @@ func (s *Server) handleCopyMessageRequest(args [0]string, w http.ResponseWriter,
 		}
 	}()
 
-	response, err := s.h.CopyMessage(ctx, request)
+	var response ResultMessageId
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "CopyMessage",
+			OperationID:   "copyMessage",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = CopyMessage
+			Params   = struct{}
+			Response = ResultMessageId
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.CopyMessage(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.CopyMessage(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -897,7 +1320,13 @@ func (s *Server) handleCopyMessageRequest(args [0]string, w http.ResponseWriter,
 	}
 }
 
-// HandleCreateChatInviteLinkRequest handles createChatInviteLink operation.
+// handleCreateChatInviteLinkRequest handles createChatInviteLink operation.
+//
+// Use this method to create an additional invite link for a chat. The bot must be an administrator
+// in the chat for this to work and must have the appropriate administrator rights. The link can be
+// revoked using the method [revokeChatInviteLink](https://core.telegram.
+// org/bots/api#revokechatinvitelink). Returns the new invite link as [ChatInviteLink](https://core.
+// telegram.org/bots/api#chatinvitelink) object.
 //
 // POST /createChatInviteLink
 func (s *Server) handleCreateChatInviteLinkRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -908,7 +1337,7 @@ func (s *Server) handleCreateChatInviteLinkRequest(args [0]string, w http.Respon
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "CreateChatInviteLink",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -934,7 +1363,7 @@ func (s *Server) handleCreateChatInviteLinkRequest(args [0]string, w http.Respon
 			ID:   "createChatInviteLink",
 		}
 	)
-	request, close, err := s.decodeCreateChatInviteLinkRequest(r, span)
+	request, close, err := s.decodeCreateChatInviteLinkRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -950,7 +1379,37 @@ func (s *Server) handleCreateChatInviteLinkRequest(args [0]string, w http.Respon
 		}
 	}()
 
-	response, err := s.h.CreateChatInviteLink(ctx, request)
+	var response ResultChatInviteLink
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "CreateChatInviteLink",
+			OperationID:   "createChatInviteLink",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = CreateChatInviteLink
+			Params   = struct{}
+			Response = ResultChatInviteLink
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.CreateChatInviteLink(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.CreateChatInviteLink(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -972,7 +1431,12 @@ func (s *Server) handleCreateChatInviteLinkRequest(args [0]string, w http.Respon
 	}
 }
 
-// HandleCreateForumTopicRequest handles createForumTopic operation.
+// handleCreateForumTopicRequest handles createForumTopic operation.
+//
+// Use this method to create a topic in a forum supergroup chat. The bot must be an administrator in
+// the chat for this to work and must have the _can_manage_topics_ administrator rights. Returns
+// information about the created topic as a [ForumTopic](https://core.telegram.
+// org/bots/api#forumtopic) object.
 //
 // POST /createForumTopic
 func (s *Server) handleCreateForumTopicRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -983,7 +1447,7 @@ func (s *Server) handleCreateForumTopicRequest(args [0]string, w http.ResponseWr
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "CreateForumTopic",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -1009,7 +1473,7 @@ func (s *Server) handleCreateForumTopicRequest(args [0]string, w http.ResponseWr
 			ID:   "createForumTopic",
 		}
 	)
-	request, close, err := s.decodeCreateForumTopicRequest(r, span)
+	request, close, err := s.decodeCreateForumTopicRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -1025,7 +1489,37 @@ func (s *Server) handleCreateForumTopicRequest(args [0]string, w http.ResponseWr
 		}
 	}()
 
-	response, err := s.h.CreateForumTopic(ctx, request)
+	var response Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "CreateForumTopic",
+			OperationID:   "createForumTopic",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = CreateForumTopic
+			Params   = struct{}
+			Response = Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.CreateForumTopic(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.CreateForumTopic(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -1047,7 +1541,10 @@ func (s *Server) handleCreateForumTopicRequest(args [0]string, w http.ResponseWr
 	}
 }
 
-// HandleCreateInvoiceLinkRequest handles createInvoiceLink operation.
+// handleCreateInvoiceLinkRequest handles createInvoiceLink operation.
+//
+// Use this method to create a link for an invoice. Returns the created invoice link as _String_ on
+// success.
 //
 // POST /createInvoiceLink
 func (s *Server) handleCreateInvoiceLinkRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -1058,7 +1555,7 @@ func (s *Server) handleCreateInvoiceLinkRequest(args [0]string, w http.ResponseW
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "CreateInvoiceLink",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -1084,7 +1581,7 @@ func (s *Server) handleCreateInvoiceLinkRequest(args [0]string, w http.ResponseW
 			ID:   "createInvoiceLink",
 		}
 	)
-	request, close, err := s.decodeCreateInvoiceLinkRequest(r, span)
+	request, close, err := s.decodeCreateInvoiceLinkRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -1100,7 +1597,37 @@ func (s *Server) handleCreateInvoiceLinkRequest(args [0]string, w http.ResponseW
 		}
 	}()
 
-	response, err := s.h.CreateInvoiceLink(ctx, request)
+	var response ResultString
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "CreateInvoiceLink",
+			OperationID:   "createInvoiceLink",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = CreateInvoiceLink
+			Params   = struct{}
+			Response = ResultString
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.CreateInvoiceLink(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.CreateInvoiceLink(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -1122,7 +1649,11 @@ func (s *Server) handleCreateInvoiceLinkRequest(args [0]string, w http.ResponseW
 	}
 }
 
-// HandleCreateNewStickerSetRequest handles createNewStickerSet operation.
+// handleCreateNewStickerSetRequest handles createNewStickerSet operation.
+//
+// Use this method to create a new sticker set owned by a user. The bot will be able to edit the
+// sticker set thus created. You **must** use exactly one of the fields _png_sticker_, _tgs_sticker_,
+// or _webm_sticker_. Returns _True_ on success.
 //
 // POST /createNewStickerSet
 func (s *Server) handleCreateNewStickerSetRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -1133,7 +1664,7 @@ func (s *Server) handleCreateNewStickerSetRequest(args [0]string, w http.Respons
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "CreateNewStickerSet",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -1159,7 +1690,7 @@ func (s *Server) handleCreateNewStickerSetRequest(args [0]string, w http.Respons
 			ID:   "createNewStickerSet",
 		}
 	)
-	request, close, err := s.decodeCreateNewStickerSetRequest(r, span)
+	request, close, err := s.decodeCreateNewStickerSetRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -1175,7 +1706,37 @@ func (s *Server) handleCreateNewStickerSetRequest(args [0]string, w http.Respons
 		}
 	}()
 
-	response, err := s.h.CreateNewStickerSet(ctx, request)
+	var response Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "CreateNewStickerSet",
+			OperationID:   "createNewStickerSet",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = CreateNewStickerSet
+			Params   = struct{}
+			Response = Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.CreateNewStickerSet(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.CreateNewStickerSet(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -1197,7 +1758,10 @@ func (s *Server) handleCreateNewStickerSetRequest(args [0]string, w http.Respons
 	}
 }
 
-// HandleDeclineChatJoinRequestRequest handles declineChatJoinRequest operation.
+// handleDeclineChatJoinRequestRequest handles declineChatJoinRequest operation.
+//
+// Use this method to decline a chat join request. The bot must be an administrator in the chat for
+// this to work and must have the _can_invite_users_ administrator right. Returns _True_ on success.
 //
 // POST /declineChatJoinRequest
 func (s *Server) handleDeclineChatJoinRequestRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -1208,7 +1772,7 @@ func (s *Server) handleDeclineChatJoinRequestRequest(args [0]string, w http.Resp
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "DeclineChatJoinRequest",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -1234,7 +1798,7 @@ func (s *Server) handleDeclineChatJoinRequestRequest(args [0]string, w http.Resp
 			ID:   "declineChatJoinRequest",
 		}
 	)
-	request, close, err := s.decodeDeclineChatJoinRequestRequest(r, span)
+	request, close, err := s.decodeDeclineChatJoinRequestRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -1250,7 +1814,37 @@ func (s *Server) handleDeclineChatJoinRequestRequest(args [0]string, w http.Resp
 		}
 	}()
 
-	response, err := s.h.DeclineChatJoinRequest(ctx, request)
+	var response Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "DeclineChatJoinRequest",
+			OperationID:   "declineChatJoinRequest",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = DeclineChatJoinRequest
+			Params   = struct{}
+			Response = Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.DeclineChatJoinRequest(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.DeclineChatJoinRequest(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -1272,7 +1866,11 @@ func (s *Server) handleDeclineChatJoinRequestRequest(args [0]string, w http.Resp
 	}
 }
 
-// HandleDeleteChatPhotoRequest handles deleteChatPhoto operation.
+// handleDeleteChatPhotoRequest handles deleteChatPhoto operation.
+//
+// Use this method to delete a chat photo. Photos can't be changed for private chats. The bot must be
+// an administrator in the chat for this to work and must have the appropriate administrator rights.
+// Returns _True_ on success.
 //
 // POST /deleteChatPhoto
 func (s *Server) handleDeleteChatPhotoRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -1283,7 +1881,7 @@ func (s *Server) handleDeleteChatPhotoRequest(args [0]string, w http.ResponseWri
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "DeleteChatPhoto",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -1309,7 +1907,7 @@ func (s *Server) handleDeleteChatPhotoRequest(args [0]string, w http.ResponseWri
 			ID:   "deleteChatPhoto",
 		}
 	)
-	request, close, err := s.decodeDeleteChatPhotoRequest(r, span)
+	request, close, err := s.decodeDeleteChatPhotoRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -1325,7 +1923,37 @@ func (s *Server) handleDeleteChatPhotoRequest(args [0]string, w http.ResponseWri
 		}
 	}()
 
-	response, err := s.h.DeleteChatPhoto(ctx, request)
+	var response Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "DeleteChatPhoto",
+			OperationID:   "deleteChatPhoto",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = DeleteChatPhoto
+			Params   = struct{}
+			Response = Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.DeleteChatPhoto(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.DeleteChatPhoto(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -1347,7 +1975,12 @@ func (s *Server) handleDeleteChatPhotoRequest(args [0]string, w http.ResponseWri
 	}
 }
 
-// HandleDeleteChatStickerSetRequest handles deleteChatStickerSet operation.
+// handleDeleteChatStickerSetRequest handles deleteChatStickerSet operation.
+//
+// Use this method to delete a group sticker set from a supergroup. The bot must be an administrator
+// in the chat for this to work and must have the appropriate administrator rights. Use the field
+// _can_set_sticker_set_ optionally returned in [getChat](https://core.telegram.org/bots/api#getchat)
+// requests to check if the bot can use this method. Returns _True_ on success.
 //
 // POST /deleteChatStickerSet
 func (s *Server) handleDeleteChatStickerSetRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -1358,7 +1991,7 @@ func (s *Server) handleDeleteChatStickerSetRequest(args [0]string, w http.Respon
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "DeleteChatStickerSet",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -1384,7 +2017,7 @@ func (s *Server) handleDeleteChatStickerSetRequest(args [0]string, w http.Respon
 			ID:   "deleteChatStickerSet",
 		}
 	)
-	request, close, err := s.decodeDeleteChatStickerSetRequest(r, span)
+	request, close, err := s.decodeDeleteChatStickerSetRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -1400,7 +2033,37 @@ func (s *Server) handleDeleteChatStickerSetRequest(args [0]string, w http.Respon
 		}
 	}()
 
-	response, err := s.h.DeleteChatStickerSet(ctx, request)
+	var response Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "DeleteChatStickerSet",
+			OperationID:   "deleteChatStickerSet",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = DeleteChatStickerSet
+			Params   = struct{}
+			Response = Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.DeleteChatStickerSet(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.DeleteChatStickerSet(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -1422,7 +2085,11 @@ func (s *Server) handleDeleteChatStickerSetRequest(args [0]string, w http.Respon
 	}
 }
 
-// HandleDeleteForumTopicRequest handles deleteForumTopic operation.
+// handleDeleteForumTopicRequest handles deleteForumTopic operation.
+//
+// Use this method to delete a forum topic along with all its messages in a forum supergroup chat.
+// The bot must be an administrator in the chat for this to work and must have the
+// _can_delete_messages_ administrator rights. Returns _True_ on success.
 //
 // POST /deleteForumTopic
 func (s *Server) handleDeleteForumTopicRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -1433,7 +2100,7 @@ func (s *Server) handleDeleteForumTopicRequest(args [0]string, w http.ResponseWr
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "DeleteForumTopic",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -1459,7 +2126,7 @@ func (s *Server) handleDeleteForumTopicRequest(args [0]string, w http.ResponseWr
 			ID:   "deleteForumTopic",
 		}
 	)
-	request, close, err := s.decodeDeleteForumTopicRequest(r, span)
+	request, close, err := s.decodeDeleteForumTopicRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -1475,7 +2142,37 @@ func (s *Server) handleDeleteForumTopicRequest(args [0]string, w http.ResponseWr
 		}
 	}()
 
-	response, err := s.h.DeleteForumTopic(ctx, request)
+	var response Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "DeleteForumTopic",
+			OperationID:   "deleteForumTopic",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = DeleteForumTopic
+			Params   = struct{}
+			Response = Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.DeleteForumTopic(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.DeleteForumTopic(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -1497,7 +2194,17 @@ func (s *Server) handleDeleteForumTopicRequest(args [0]string, w http.ResponseWr
 	}
 }
 
-// HandleDeleteMessageRequest handles deleteMessage operation.
+// handleDeleteMessageRequest handles deleteMessage operation.
+//
+// Use this method to delete a message, including service messages, with the following limitations:-
+// A message can only be deleted if it was sent less than 48 hours ago.- Service messages about a
+// supergroup, channel, or forum topic creation can't be deleted.- A dice message in a private chat
+// can only be deleted if it was sent more than 24 hours ago.- Bots can delete outgoing messages in
+// private chats, groups, and supergroups.- Bots can delete incoming messages in private chats.- Bots
+// granted _can_post_messages_ permissions can delete outgoing messages in channels.- If the bot is
+// an administrator of a group, it can delete any message there.- If the bot has
+// _can_delete_messages_ permission in a supergroup or a channel, it can delete any message there.
+// Returns _True_ on success.
 //
 // POST /deleteMessage
 func (s *Server) handleDeleteMessageRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -1508,7 +2215,7 @@ func (s *Server) handleDeleteMessageRequest(args [0]string, w http.ResponseWrite
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "DeleteMessage",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -1534,7 +2241,7 @@ func (s *Server) handleDeleteMessageRequest(args [0]string, w http.ResponseWrite
 			ID:   "deleteMessage",
 		}
 	)
-	request, close, err := s.decodeDeleteMessageRequest(r, span)
+	request, close, err := s.decodeDeleteMessageRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -1550,7 +2257,37 @@ func (s *Server) handleDeleteMessageRequest(args [0]string, w http.ResponseWrite
 		}
 	}()
 
-	response, err := s.h.DeleteMessage(ctx, request)
+	var response Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "DeleteMessage",
+			OperationID:   "deleteMessage",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = DeleteMessage
+			Params   = struct{}
+			Response = Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.DeleteMessage(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.DeleteMessage(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -1572,7 +2309,12 @@ func (s *Server) handleDeleteMessageRequest(args [0]string, w http.ResponseWrite
 	}
 }
 
-// HandleDeleteMyCommandsRequest handles deleteMyCommands operation.
+// handleDeleteMyCommandsRequest handles deleteMyCommands operation.
+//
+// Use this method to delete the list of the bot's commands for the given scope and user language.
+// After deletion, [higher level commands](https://core.telegram.
+// org/bots/api#determining-list-of-commands) will be shown to affected users. Returns _True_ on
+// success.
 //
 // POST /deleteMyCommands
 func (s *Server) handleDeleteMyCommandsRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -1583,7 +2325,7 @@ func (s *Server) handleDeleteMyCommandsRequest(args [0]string, w http.ResponseWr
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "DeleteMyCommands",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -1609,7 +2351,7 @@ func (s *Server) handleDeleteMyCommandsRequest(args [0]string, w http.ResponseWr
 			ID:   "deleteMyCommands",
 		}
 	)
-	request, close, err := s.decodeDeleteMyCommandsRequest(r, span)
+	request, close, err := s.decodeDeleteMyCommandsRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -1625,7 +2367,37 @@ func (s *Server) handleDeleteMyCommandsRequest(args [0]string, w http.ResponseWr
 		}
 	}()
 
-	response, err := s.h.DeleteMyCommands(ctx, request)
+	var response Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "DeleteMyCommands",
+			OperationID:   "deleteMyCommands",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = OptDeleteMyCommands
+			Params   = struct{}
+			Response = Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.DeleteMyCommands(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.DeleteMyCommands(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -1647,7 +2419,9 @@ func (s *Server) handleDeleteMyCommandsRequest(args [0]string, w http.ResponseWr
 	}
 }
 
-// HandleDeleteStickerFromSetRequest handles deleteStickerFromSet operation.
+// handleDeleteStickerFromSetRequest handles deleteStickerFromSet operation.
+//
+// Use this method to delete a sticker from a set created by the bot. Returns _True_ on success.
 //
 // POST /deleteStickerFromSet
 func (s *Server) handleDeleteStickerFromSetRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -1658,7 +2432,7 @@ func (s *Server) handleDeleteStickerFromSetRequest(args [0]string, w http.Respon
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "DeleteStickerFromSet",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -1684,7 +2458,7 @@ func (s *Server) handleDeleteStickerFromSetRequest(args [0]string, w http.Respon
 			ID:   "deleteStickerFromSet",
 		}
 	)
-	request, close, err := s.decodeDeleteStickerFromSetRequest(r, span)
+	request, close, err := s.decodeDeleteStickerFromSetRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -1700,7 +2474,37 @@ func (s *Server) handleDeleteStickerFromSetRequest(args [0]string, w http.Respon
 		}
 	}()
 
-	response, err := s.h.DeleteStickerFromSet(ctx, request)
+	var response Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "DeleteStickerFromSet",
+			OperationID:   "deleteStickerFromSet",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = DeleteStickerFromSet
+			Params   = struct{}
+			Response = Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.DeleteStickerFromSet(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.DeleteStickerFromSet(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -1722,7 +2526,10 @@ func (s *Server) handleDeleteStickerFromSetRequest(args [0]string, w http.Respon
 	}
 }
 
-// HandleDeleteWebhookRequest handles deleteWebhook operation.
+// handleDeleteWebhookRequest handles deleteWebhook operation.
+//
+// Use this method to remove webhook integration if you decide to switch back to
+// [getUpdates](https://core.telegram.org/bots/api#getupdates). Returns _True_ on success.
 //
 // POST /deleteWebhook
 func (s *Server) handleDeleteWebhookRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -1733,7 +2540,7 @@ func (s *Server) handleDeleteWebhookRequest(args [0]string, w http.ResponseWrite
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "DeleteWebhook",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -1759,7 +2566,7 @@ func (s *Server) handleDeleteWebhookRequest(args [0]string, w http.ResponseWrite
 			ID:   "deleteWebhook",
 		}
 	)
-	request, close, err := s.decodeDeleteWebhookRequest(r, span)
+	request, close, err := s.decodeDeleteWebhookRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -1775,7 +2582,37 @@ func (s *Server) handleDeleteWebhookRequest(args [0]string, w http.ResponseWrite
 		}
 	}()
 
-	response, err := s.h.DeleteWebhook(ctx, request)
+	var response Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "DeleteWebhook",
+			OperationID:   "deleteWebhook",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = OptDeleteWebhook
+			Params   = struct{}
+			Response = Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.DeleteWebhook(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.DeleteWebhook(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -1797,7 +2634,12 @@ func (s *Server) handleDeleteWebhookRequest(args [0]string, w http.ResponseWrite
 	}
 }
 
-// HandleEditChatInviteLinkRequest handles editChatInviteLink operation.
+// handleEditChatInviteLinkRequest handles editChatInviteLink operation.
+//
+// Use this method to edit a non-primary invite link created by the bot. The bot must be an
+// administrator in the chat for this to work and must have the appropriate administrator rights.
+// Returns the edited invite link as a [ChatInviteLink](https://core.telegram.
+// org/bots/api#chatinvitelink) object.
 //
 // POST /editChatInviteLink
 func (s *Server) handleEditChatInviteLinkRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -1808,7 +2650,7 @@ func (s *Server) handleEditChatInviteLinkRequest(args [0]string, w http.Response
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "EditChatInviteLink",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -1834,7 +2676,7 @@ func (s *Server) handleEditChatInviteLinkRequest(args [0]string, w http.Response
 			ID:   "editChatInviteLink",
 		}
 	)
-	request, close, err := s.decodeEditChatInviteLinkRequest(r, span)
+	request, close, err := s.decodeEditChatInviteLinkRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -1850,7 +2692,37 @@ func (s *Server) handleEditChatInviteLinkRequest(args [0]string, w http.Response
 		}
 	}()
 
-	response, err := s.h.EditChatInviteLink(ctx, request)
+	var response ResultChatInviteLink
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "EditChatInviteLink",
+			OperationID:   "editChatInviteLink",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = EditChatInviteLink
+			Params   = struct{}
+			Response = ResultChatInviteLink
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.EditChatInviteLink(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.EditChatInviteLink(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -1872,7 +2744,11 @@ func (s *Server) handleEditChatInviteLinkRequest(args [0]string, w http.Response
 	}
 }
 
-// HandleEditForumTopicRequest handles editForumTopic operation.
+// handleEditForumTopicRequest handles editForumTopic operation.
+//
+// Use this method to edit name and icon of a topic in a forum supergroup chat. The bot must be an
+// administrator in the chat for this to work and must have _can_manage_topics_ administrator rights,
+// unless it is the creator of the topic. Returns _True_ on success.
 //
 // POST /editForumTopic
 func (s *Server) handleEditForumTopicRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -1883,7 +2759,7 @@ func (s *Server) handleEditForumTopicRequest(args [0]string, w http.ResponseWrit
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "EditForumTopic",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -1909,7 +2785,7 @@ func (s *Server) handleEditForumTopicRequest(args [0]string, w http.ResponseWrit
 			ID:   "editForumTopic",
 		}
 	)
-	request, close, err := s.decodeEditForumTopicRequest(r, span)
+	request, close, err := s.decodeEditForumTopicRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -1925,7 +2801,37 @@ func (s *Server) handleEditForumTopicRequest(args [0]string, w http.ResponseWrit
 		}
 	}()
 
-	response, err := s.h.EditForumTopic(ctx, request)
+	var response Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "EditForumTopic",
+			OperationID:   "editForumTopic",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = EditForumTopic
+			Params   = struct{}
+			Response = Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.EditForumTopic(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.EditForumTopic(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -1947,7 +2853,11 @@ func (s *Server) handleEditForumTopicRequest(args [0]string, w http.ResponseWrit
 	}
 }
 
-// HandleEditMessageCaptionRequest handles editMessageCaption operation.
+// handleEditMessageCaptionRequest handles editMessageCaption operation.
+//
+// Use this method to edit captions of messages. On success, if the edited message is not an inline
+// message, the edited [Message](https://core.telegram.org/bots/api#message) is returned, otherwise
+// _True_ is returned.
 //
 // POST /editMessageCaption
 func (s *Server) handleEditMessageCaptionRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -1958,7 +2868,7 @@ func (s *Server) handleEditMessageCaptionRequest(args [0]string, w http.Response
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "EditMessageCaption",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -1984,7 +2894,7 @@ func (s *Server) handleEditMessageCaptionRequest(args [0]string, w http.Response
 			ID:   "editMessageCaption",
 		}
 	)
-	request, close, err := s.decodeEditMessageCaptionRequest(r, span)
+	request, close, err := s.decodeEditMessageCaptionRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -2000,7 +2910,37 @@ func (s *Server) handleEditMessageCaptionRequest(args [0]string, w http.Response
 		}
 	}()
 
-	response, err := s.h.EditMessageCaption(ctx, request)
+	var response ResultMessageOrBoolean
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "EditMessageCaption",
+			OperationID:   "editMessageCaption",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = EditMessageCaption
+			Params   = struct{}
+			Response = ResultMessageOrBoolean
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.EditMessageCaption(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.EditMessageCaption(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -2022,7 +2962,13 @@ func (s *Server) handleEditMessageCaptionRequest(args [0]string, w http.Response
 	}
 }
 
-// HandleEditMessageLiveLocationRequest handles editMessageLiveLocation operation.
+// handleEditMessageLiveLocationRequest handles editMessageLiveLocation operation.
+//
+// Use this method to edit live location messages. A location can be edited until its _live_period_
+// expires or editing is explicitly disabled by a call to [stopMessageLiveLocation](https://core.
+// telegram.org/bots/api#stopmessagelivelocation). On success, if the edited message is not an inline
+// message, the edited [Message](https://core.telegram.org/bots/api#message) is returned, otherwise
+// _True_ is returned.
 //
 // POST /editMessageLiveLocation
 func (s *Server) handleEditMessageLiveLocationRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -2033,7 +2979,7 @@ func (s *Server) handleEditMessageLiveLocationRequest(args [0]string, w http.Res
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "EditMessageLiveLocation",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -2059,7 +3005,7 @@ func (s *Server) handleEditMessageLiveLocationRequest(args [0]string, w http.Res
 			ID:   "editMessageLiveLocation",
 		}
 	)
-	request, close, err := s.decodeEditMessageLiveLocationRequest(r, span)
+	request, close, err := s.decodeEditMessageLiveLocationRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -2075,7 +3021,37 @@ func (s *Server) handleEditMessageLiveLocationRequest(args [0]string, w http.Res
 		}
 	}()
 
-	response, err := s.h.EditMessageLiveLocation(ctx, request)
+	var response ResultMessageOrBoolean
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "EditMessageLiveLocation",
+			OperationID:   "editMessageLiveLocation",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = EditMessageLiveLocation
+			Params   = struct{}
+			Response = ResultMessageOrBoolean
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.EditMessageLiveLocation(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.EditMessageLiveLocation(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -2097,7 +3073,14 @@ func (s *Server) handleEditMessageLiveLocationRequest(args [0]string, w http.Res
 	}
 }
 
-// HandleEditMessageMediaRequest handles editMessageMedia operation.
+// handleEditMessageMediaRequest handles editMessageMedia operation.
+//
+// Use this method to edit animation, audio, document, photo, or video messages. If a message is part
+// of a message album, then it can be edited only to an audio for audio albums, only to a document
+// for document albums and to a photo or a video otherwise. When an inline message is edited, a new
+// file can't be uploaded; use a previously uploaded file via its file_id or specify a URL. On
+// success, if the edited message is not an inline message, the edited [Message](https://core.
+// telegram.org/bots/api#message) is returned, otherwise _True_ is returned.
 //
 // POST /editMessageMedia
 func (s *Server) handleEditMessageMediaRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -2108,7 +3091,7 @@ func (s *Server) handleEditMessageMediaRequest(args [0]string, w http.ResponseWr
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "EditMessageMedia",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -2134,7 +3117,7 @@ func (s *Server) handleEditMessageMediaRequest(args [0]string, w http.ResponseWr
 			ID:   "editMessageMedia",
 		}
 	)
-	request, close, err := s.decodeEditMessageMediaRequest(r, span)
+	request, close, err := s.decodeEditMessageMediaRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -2150,7 +3133,37 @@ func (s *Server) handleEditMessageMediaRequest(args [0]string, w http.ResponseWr
 		}
 	}()
 
-	response, err := s.h.EditMessageMedia(ctx, request)
+	var response ResultMessageOrBoolean
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "EditMessageMedia",
+			OperationID:   "editMessageMedia",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = EditMessageMedia
+			Params   = struct{}
+			Response = ResultMessageOrBoolean
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.EditMessageMedia(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.EditMessageMedia(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -2172,7 +3185,11 @@ func (s *Server) handleEditMessageMediaRequest(args [0]string, w http.ResponseWr
 	}
 }
 
-// HandleEditMessageReplyMarkupRequest handles editMessageReplyMarkup operation.
+// handleEditMessageReplyMarkupRequest handles editMessageReplyMarkup operation.
+//
+// Use this method to edit only the reply markup of messages. On success, if the edited message is
+// not an inline message, the edited [Message](https://core.telegram.org/bots/api#message) is
+// returned, otherwise _True_ is returned.
 //
 // POST /editMessageReplyMarkup
 func (s *Server) handleEditMessageReplyMarkupRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -2183,7 +3200,7 @@ func (s *Server) handleEditMessageReplyMarkupRequest(args [0]string, w http.Resp
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "EditMessageReplyMarkup",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -2209,7 +3226,7 @@ func (s *Server) handleEditMessageReplyMarkupRequest(args [0]string, w http.Resp
 			ID:   "editMessageReplyMarkup",
 		}
 	)
-	request, close, err := s.decodeEditMessageReplyMarkupRequest(r, span)
+	request, close, err := s.decodeEditMessageReplyMarkupRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -2225,7 +3242,37 @@ func (s *Server) handleEditMessageReplyMarkupRequest(args [0]string, w http.Resp
 		}
 	}()
 
-	response, err := s.h.EditMessageReplyMarkup(ctx, request)
+	var response ResultMessageOrBoolean
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "EditMessageReplyMarkup",
+			OperationID:   "editMessageReplyMarkup",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = EditMessageReplyMarkup
+			Params   = struct{}
+			Response = ResultMessageOrBoolean
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.EditMessageReplyMarkup(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.EditMessageReplyMarkup(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -2247,7 +3294,11 @@ func (s *Server) handleEditMessageReplyMarkupRequest(args [0]string, w http.Resp
 	}
 }
 
-// HandleEditMessageTextRequest handles editMessageText operation.
+// handleEditMessageTextRequest handles editMessageText operation.
+//
+// Use this method to edit text and [game](https://core.telegram.org/bots/api#games) messages. On
+// success, if the edited message is not an inline message, the edited [Message](https://core.
+// telegram.org/bots/api#message) is returned, otherwise _True_ is returned.
 //
 // POST /editMessageText
 func (s *Server) handleEditMessageTextRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -2258,7 +3309,7 @@ func (s *Server) handleEditMessageTextRequest(args [0]string, w http.ResponseWri
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "EditMessageText",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -2284,7 +3335,7 @@ func (s *Server) handleEditMessageTextRequest(args [0]string, w http.ResponseWri
 			ID:   "editMessageText",
 		}
 	)
-	request, close, err := s.decodeEditMessageTextRequest(r, span)
+	request, close, err := s.decodeEditMessageTextRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -2300,7 +3351,37 @@ func (s *Server) handleEditMessageTextRequest(args [0]string, w http.ResponseWri
 		}
 	}()
 
-	response, err := s.h.EditMessageText(ctx, request)
+	var response ResultMessageOrBoolean
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "EditMessageText",
+			OperationID:   "editMessageText",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = EditMessageText
+			Params   = struct{}
+			Response = ResultMessageOrBoolean
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.EditMessageText(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.EditMessageText(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -2322,7 +3403,11 @@ func (s *Server) handleEditMessageTextRequest(args [0]string, w http.ResponseWri
 	}
 }
 
-// HandleExportChatInviteLinkRequest handles exportChatInviteLink operation.
+// handleExportChatInviteLinkRequest handles exportChatInviteLink operation.
+//
+// Use this method to generate a new primary invite link for a chat; any previously generated primary
+// link is revoked. The bot must be an administrator in the chat for this to work and must have the
+// appropriate administrator rights. Returns the new invite link as _String_ on success.
 //
 // POST /exportChatInviteLink
 func (s *Server) handleExportChatInviteLinkRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -2333,7 +3418,7 @@ func (s *Server) handleExportChatInviteLinkRequest(args [0]string, w http.Respon
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "ExportChatInviteLink",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -2359,7 +3444,7 @@ func (s *Server) handleExportChatInviteLinkRequest(args [0]string, w http.Respon
 			ID:   "exportChatInviteLink",
 		}
 	)
-	request, close, err := s.decodeExportChatInviteLinkRequest(r, span)
+	request, close, err := s.decodeExportChatInviteLinkRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -2375,7 +3460,37 @@ func (s *Server) handleExportChatInviteLinkRequest(args [0]string, w http.Respon
 		}
 	}()
 
-	response, err := s.h.ExportChatInviteLink(ctx, request)
+	var response ResultString
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "ExportChatInviteLink",
+			OperationID:   "exportChatInviteLink",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = ExportChatInviteLink
+			Params   = struct{}
+			Response = ResultString
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.ExportChatInviteLink(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.ExportChatInviteLink(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -2397,7 +3512,10 @@ func (s *Server) handleExportChatInviteLinkRequest(args [0]string, w http.Respon
 	}
 }
 
-// HandleForwardMessageRequest handles forwardMessage operation.
+// handleForwardMessageRequest handles forwardMessage operation.
+//
+// Use this method to forward messages of any kind. Service messages can't be forwarded. On success,
+// the sent [Message](https://core.telegram.org/bots/api#message) is returned.
 //
 // POST /forwardMessage
 func (s *Server) handleForwardMessageRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -2408,7 +3526,7 @@ func (s *Server) handleForwardMessageRequest(args [0]string, w http.ResponseWrit
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "ForwardMessage",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -2434,7 +3552,7 @@ func (s *Server) handleForwardMessageRequest(args [0]string, w http.ResponseWrit
 			ID:   "forwardMessage",
 		}
 	)
-	request, close, err := s.decodeForwardMessageRequest(r, span)
+	request, close, err := s.decodeForwardMessageRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -2450,7 +3568,37 @@ func (s *Server) handleForwardMessageRequest(args [0]string, w http.ResponseWrit
 		}
 	}()
 
-	response, err := s.h.ForwardMessage(ctx, request)
+	var response ResultMessage
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "ForwardMessage",
+			OperationID:   "forwardMessage",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = ForwardMessage
+			Params   = struct{}
+			Response = ResultMessage
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.ForwardMessage(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.ForwardMessage(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -2472,7 +3620,11 @@ func (s *Server) handleForwardMessageRequest(args [0]string, w http.ResponseWrit
 	}
 }
 
-// HandleGetChatRequest handles getChat operation.
+// handleGetChatRequest handles getChat operation.
+//
+// Use this method to get up to date information about the chat (current name of the user for
+// one-on-one conversations, current username of a user, group or channel, etc.). Returns a
+// [Chat](https://core.telegram.org/bots/api#chat) object on success.
 //
 // POST /getChat
 func (s *Server) handleGetChatRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -2483,7 +3635,7 @@ func (s *Server) handleGetChatRequest(args [0]string, w http.ResponseWriter, r *
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "GetChat",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -2509,7 +3661,7 @@ func (s *Server) handleGetChatRequest(args [0]string, w http.ResponseWriter, r *
 			ID:   "getChat",
 		}
 	)
-	request, close, err := s.decodeGetChatRequest(r, span)
+	request, close, err := s.decodeGetChatRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -2525,7 +3677,37 @@ func (s *Server) handleGetChatRequest(args [0]string, w http.ResponseWriter, r *
 		}
 	}()
 
-	response, err := s.h.GetChat(ctx, request)
+	var response ResultChat
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "GetChat",
+			OperationID:   "getChat",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = GetChat
+			Params   = struct{}
+			Response = ResultChat
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.GetChat(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.GetChat(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -2547,7 +3729,10 @@ func (s *Server) handleGetChatRequest(args [0]string, w http.ResponseWriter, r *
 	}
 }
 
-// HandleGetChatAdministratorsRequest handles getChatAdministrators operation.
+// handleGetChatAdministratorsRequest handles getChatAdministrators operation.
+//
+// Use this method to get a list of administrators in a chat, which aren't bots. Returns an Array of
+// [ChatMember](https://core.telegram.org/bots/api#chatmember) objects.
 //
 // POST /getChatAdministrators
 func (s *Server) handleGetChatAdministratorsRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -2558,7 +3743,7 @@ func (s *Server) handleGetChatAdministratorsRequest(args [0]string, w http.Respo
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "GetChatAdministrators",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -2584,7 +3769,7 @@ func (s *Server) handleGetChatAdministratorsRequest(args [0]string, w http.Respo
 			ID:   "getChatAdministrators",
 		}
 	)
-	request, close, err := s.decodeGetChatAdministratorsRequest(r, span)
+	request, close, err := s.decodeGetChatAdministratorsRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -2600,7 +3785,37 @@ func (s *Server) handleGetChatAdministratorsRequest(args [0]string, w http.Respo
 		}
 	}()
 
-	response, err := s.h.GetChatAdministrators(ctx, request)
+	var response ResultArrayOfChatMember
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "GetChatAdministrators",
+			OperationID:   "getChatAdministrators",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = GetChatAdministrators
+			Params   = struct{}
+			Response = ResultArrayOfChatMember
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.GetChatAdministrators(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.GetChatAdministrators(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -2622,7 +3837,10 @@ func (s *Server) handleGetChatAdministratorsRequest(args [0]string, w http.Respo
 	}
 }
 
-// HandleGetChatMemberRequest handles getChatMember operation.
+// handleGetChatMemberRequest handles getChatMember operation.
+//
+// Use this method to get information about a member of a chat. Returns a [ChatMember](https://core.
+// telegram.org/bots/api#chatmember) object on success.
 //
 // POST /getChatMember
 func (s *Server) handleGetChatMemberRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -2633,7 +3851,7 @@ func (s *Server) handleGetChatMemberRequest(args [0]string, w http.ResponseWrite
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "GetChatMember",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -2659,7 +3877,7 @@ func (s *Server) handleGetChatMemberRequest(args [0]string, w http.ResponseWrite
 			ID:   "getChatMember",
 		}
 	)
-	request, close, err := s.decodeGetChatMemberRequest(r, span)
+	request, close, err := s.decodeGetChatMemberRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -2675,7 +3893,37 @@ func (s *Server) handleGetChatMemberRequest(args [0]string, w http.ResponseWrite
 		}
 	}()
 
-	response, err := s.h.GetChatMember(ctx, request)
+	var response ResultChatMember
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "GetChatMember",
+			OperationID:   "getChatMember",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = GetChatMember
+			Params   = struct{}
+			Response = ResultChatMember
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.GetChatMember(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.GetChatMember(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -2697,7 +3945,9 @@ func (s *Server) handleGetChatMemberRequest(args [0]string, w http.ResponseWrite
 	}
 }
 
-// HandleGetChatMemberCountRequest handles getChatMemberCount operation.
+// handleGetChatMemberCountRequest handles getChatMemberCount operation.
+//
+// Use this method to get the number of members in a chat. Returns _Int_ on success.
 //
 // POST /getChatMemberCount
 func (s *Server) handleGetChatMemberCountRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -2708,7 +3958,7 @@ func (s *Server) handleGetChatMemberCountRequest(args [0]string, w http.Response
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "GetChatMemberCount",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -2734,7 +3984,7 @@ func (s *Server) handleGetChatMemberCountRequest(args [0]string, w http.Response
 			ID:   "getChatMemberCount",
 		}
 	)
-	request, close, err := s.decodeGetChatMemberCountRequest(r, span)
+	request, close, err := s.decodeGetChatMemberCountRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -2750,7 +4000,37 @@ func (s *Server) handleGetChatMemberCountRequest(args [0]string, w http.Response
 		}
 	}()
 
-	response, err := s.h.GetChatMemberCount(ctx, request)
+	var response ResultInt
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "GetChatMemberCount",
+			OperationID:   "getChatMemberCount",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = GetChatMemberCount
+			Params   = struct{}
+			Response = ResultInt
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.GetChatMemberCount(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.GetChatMemberCount(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -2772,7 +4052,11 @@ func (s *Server) handleGetChatMemberCountRequest(args [0]string, w http.Response
 	}
 }
 
-// HandleGetChatMenuButtonRequest handles getChatMenuButton operation.
+// handleGetChatMenuButtonRequest handles getChatMenuButton operation.
+//
+// Use this method to get the current value of the bot's menu button in a private chat, or the
+// default menu button. Returns [MenuButton](https://core.telegram.org/bots/api#menubutton) on
+// success.
 //
 // POST /getChatMenuButton
 func (s *Server) handleGetChatMenuButtonRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -2783,7 +4067,7 @@ func (s *Server) handleGetChatMenuButtonRequest(args [0]string, w http.ResponseW
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "GetChatMenuButton",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -2809,7 +4093,7 @@ func (s *Server) handleGetChatMenuButtonRequest(args [0]string, w http.ResponseW
 			ID:   "getChatMenuButton",
 		}
 	)
-	request, close, err := s.decodeGetChatMenuButtonRequest(r, span)
+	request, close, err := s.decodeGetChatMenuButtonRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -2825,7 +4109,37 @@ func (s *Server) handleGetChatMenuButtonRequest(args [0]string, w http.ResponseW
 		}
 	}()
 
-	response, err := s.h.GetChatMenuButton(ctx, request)
+	var response Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "GetChatMenuButton",
+			OperationID:   "getChatMenuButton",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = OptGetChatMenuButton
+			Params   = struct{}
+			Response = Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.GetChatMenuButton(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.GetChatMenuButton(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -2847,7 +4161,10 @@ func (s *Server) handleGetChatMenuButtonRequest(args [0]string, w http.ResponseW
 	}
 }
 
-// HandleGetCustomEmojiStickersRequest handles getCustomEmojiStickers operation.
+// handleGetCustomEmojiStickersRequest handles getCustomEmojiStickers operation.
+//
+// Use this method to get information about custom emoji stickers by their identifiers. Returns an
+// Array of [Sticker](https://core.telegram.org/bots/api#sticker) objects.
 //
 // POST /getCustomEmojiStickers
 func (s *Server) handleGetCustomEmojiStickersRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -2858,7 +4175,7 @@ func (s *Server) handleGetCustomEmojiStickersRequest(args [0]string, w http.Resp
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "GetCustomEmojiStickers",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -2884,7 +4201,7 @@ func (s *Server) handleGetCustomEmojiStickersRequest(args [0]string, w http.Resp
 			ID:   "getCustomEmojiStickers",
 		}
 	)
-	request, close, err := s.decodeGetCustomEmojiStickersRequest(r, span)
+	request, close, err := s.decodeGetCustomEmojiStickersRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -2900,7 +4217,37 @@ func (s *Server) handleGetCustomEmojiStickersRequest(args [0]string, w http.Resp
 		}
 	}()
 
-	response, err := s.h.GetCustomEmojiStickers(ctx, request)
+	var response ResultArrayOfSticker
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "GetCustomEmojiStickers",
+			OperationID:   "getCustomEmojiStickers",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = GetCustomEmojiStickers
+			Params   = struct{}
+			Response = ResultArrayOfSticker
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.GetCustomEmojiStickers(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.GetCustomEmojiStickers(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -2922,7 +4269,14 @@ func (s *Server) handleGetCustomEmojiStickersRequest(args [0]string, w http.Resp
 	}
 }
 
-// HandleGetFileRequest handles getFile operation.
+// handleGetFileRequest handles getFile operation.
+//
+// Use this method to get basic information about a file and prepare it for downloading. For the
+// moment, bots can download files of up to 20MB in size. On success, a [File](https://core.telegram.
+// org/bots/api#file) object is returned. The file can then be downloaded via the link `https://api.
+// telegram.org/file/bot<token>/<file_path>`, where `<file_path>` is taken from the response. It is
+// guaranteed that the link will be valid for at least 1 hour. When the link expires, a new one can
+// be requested by calling [getFile](https://core.telegram.org/bots/api#getfile) again.
 //
 // POST /getFile
 func (s *Server) handleGetFileRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -2933,7 +4287,7 @@ func (s *Server) handleGetFileRequest(args [0]string, w http.ResponseWriter, r *
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "GetFile",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -2959,7 +4313,7 @@ func (s *Server) handleGetFileRequest(args [0]string, w http.ResponseWriter, r *
 			ID:   "getFile",
 		}
 	)
-	request, close, err := s.decodeGetFileRequest(r, span)
+	request, close, err := s.decodeGetFileRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -2975,7 +4329,37 @@ func (s *Server) handleGetFileRequest(args [0]string, w http.ResponseWriter, r *
 		}
 	}()
 
-	response, err := s.h.GetFile(ctx, request)
+	var response ResultFile
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "GetFile",
+			OperationID:   "getFile",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = GetFile
+			Params   = struct{}
+			Response = ResultFile
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.GetFile(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.GetFile(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -2997,7 +4381,11 @@ func (s *Server) handleGetFileRequest(args [0]string, w http.ResponseWriter, r *
 	}
 }
 
-// HandleGetForumTopicIconStickersRequest handles getForumTopicIconStickers operation.
+// handleGetForumTopicIconStickersRequest handles getForumTopicIconStickers operation.
+//
+// Use this method to get custom emoji stickers, which can be used as a forum topic icon by any user.
+// Requires no parameters. Returns an Array of [Sticker](https://core.telegram.org/bots/api#sticker)
+// objects.
 //
 // POST /getForumTopicIconStickers
 func (s *Server) handleGetForumTopicIconStickersRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -3008,7 +4396,7 @@ func (s *Server) handleGetForumTopicIconStickersRequest(args [0]string, w http.R
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "GetForumTopicIconStickers",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -3031,7 +4419,37 @@ func (s *Server) handleGetForumTopicIconStickersRequest(args [0]string, w http.R
 		err error
 	)
 
-	response, err := s.h.GetForumTopicIconStickers(ctx)
+	var response ResultArrayOfSticker
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "GetForumTopicIconStickers",
+			OperationID:   "getForumTopicIconStickers",
+			Body:          nil,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = struct{}
+			Params   = struct{}
+			Response = ResultArrayOfSticker
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.GetForumTopicIconStickers(ctx)
+			},
+		)
+	} else {
+		response, err = s.h.GetForumTopicIconStickers(ctx)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -3053,7 +4471,11 @@ func (s *Server) handleGetForumTopicIconStickersRequest(args [0]string, w http.R
 	}
 }
 
-// HandleGetGameHighScoresRequest handles getGameHighScores operation.
+// handleGetGameHighScoresRequest handles getGameHighScores operation.
+//
+// Use this method to get data for high score tables. Will return the score of the specified user and
+// several of their neighbors in a game. Returns an Array of [GameHighScore](https://core.telegram.
+// org/bots/api#gamehighscore) objects.
 //
 // POST /getGameHighScores
 func (s *Server) handleGetGameHighScoresRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -3064,7 +4486,7 @@ func (s *Server) handleGetGameHighScoresRequest(args [0]string, w http.ResponseW
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "GetGameHighScores",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -3090,7 +4512,7 @@ func (s *Server) handleGetGameHighScoresRequest(args [0]string, w http.ResponseW
 			ID:   "getGameHighScores",
 		}
 	)
-	request, close, err := s.decodeGetGameHighScoresRequest(r, span)
+	request, close, err := s.decodeGetGameHighScoresRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -3106,7 +4528,37 @@ func (s *Server) handleGetGameHighScoresRequest(args [0]string, w http.ResponseW
 		}
 	}()
 
-	response, err := s.h.GetGameHighScores(ctx, request)
+	var response ResultArrayOfGameHighScore
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "GetGameHighScores",
+			OperationID:   "getGameHighScores",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = GetGameHighScores
+			Params   = struct{}
+			Response = ResultArrayOfGameHighScore
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.GetGameHighScores(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.GetGameHighScores(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -3128,7 +4580,10 @@ func (s *Server) handleGetGameHighScoresRequest(args [0]string, w http.ResponseW
 	}
 }
 
-// HandleGetMeRequest handles getMe operation.
+// handleGetMeRequest handles getMe operation.
+//
+// A simple method for testing your bot's authentication token. Requires no parameters. Returns basic
+// information about the bot in form of a [User](https://core.telegram.org/bots/api#user) object.
 //
 // POST /getMe
 func (s *Server) handleGetMeRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -3139,7 +4594,7 @@ func (s *Server) handleGetMeRequest(args [0]string, w http.ResponseWriter, r *ht
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "GetMe",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -3162,7 +4617,37 @@ func (s *Server) handleGetMeRequest(args [0]string, w http.ResponseWriter, r *ht
 		err error
 	)
 
-	response, err := s.h.GetMe(ctx)
+	var response ResultUser
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "GetMe",
+			OperationID:   "getMe",
+			Body:          nil,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = struct{}
+			Params   = struct{}
+			Response = ResultUser
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.GetMe(ctx)
+			},
+		)
+	} else {
+		response, err = s.h.GetMe(ctx)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -3184,7 +4669,11 @@ func (s *Server) handleGetMeRequest(args [0]string, w http.ResponseWriter, r *ht
 	}
 }
 
-// HandleGetMyCommandsRequest handles getMyCommands operation.
+// handleGetMyCommandsRequest handles getMyCommands operation.
+//
+// Use this method to get the current list of the bot's commands for the given scope and user
+// language. Returns an Array of [BotCommand](https://core.telegram.org/bots/api#botcommand) objects.
+// If commands aren't set, an empty list is returned.
 //
 // POST /getMyCommands
 func (s *Server) handleGetMyCommandsRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -3195,7 +4684,7 @@ func (s *Server) handleGetMyCommandsRequest(args [0]string, w http.ResponseWrite
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "GetMyCommands",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -3221,7 +4710,7 @@ func (s *Server) handleGetMyCommandsRequest(args [0]string, w http.ResponseWrite
 			ID:   "getMyCommands",
 		}
 	)
-	request, close, err := s.decodeGetMyCommandsRequest(r, span)
+	request, close, err := s.decodeGetMyCommandsRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -3237,7 +4726,37 @@ func (s *Server) handleGetMyCommandsRequest(args [0]string, w http.ResponseWrite
 		}
 	}()
 
-	response, err := s.h.GetMyCommands(ctx, request)
+	var response ResultArrayOfBotCommand
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "GetMyCommands",
+			OperationID:   "getMyCommands",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = OptGetMyCommands
+			Params   = struct{}
+			Response = ResultArrayOfBotCommand
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.GetMyCommands(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.GetMyCommands(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -3259,7 +4778,10 @@ func (s *Server) handleGetMyCommandsRequest(args [0]string, w http.ResponseWrite
 	}
 }
 
-// HandleGetMyDefaultAdministratorRightsRequest handles getMyDefaultAdministratorRights operation.
+// handleGetMyDefaultAdministratorRightsRequest handles getMyDefaultAdministratorRights operation.
+//
+// Use this method to get the current default administrator rights of the bot. Returns
+// [ChatAdministratorRights](https://core.telegram.org/bots/api#chatadministratorrights) on success.
 //
 // POST /getMyDefaultAdministratorRights
 func (s *Server) handleGetMyDefaultAdministratorRightsRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -3270,7 +4792,7 @@ func (s *Server) handleGetMyDefaultAdministratorRightsRequest(args [0]string, w 
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "GetMyDefaultAdministratorRights",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -3296,7 +4818,7 @@ func (s *Server) handleGetMyDefaultAdministratorRightsRequest(args [0]string, w 
 			ID:   "getMyDefaultAdministratorRights",
 		}
 	)
-	request, close, err := s.decodeGetMyDefaultAdministratorRightsRequest(r, span)
+	request, close, err := s.decodeGetMyDefaultAdministratorRightsRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -3312,7 +4834,37 @@ func (s *Server) handleGetMyDefaultAdministratorRightsRequest(args [0]string, w 
 		}
 	}()
 
-	response, err := s.h.GetMyDefaultAdministratorRights(ctx, request)
+	var response Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "GetMyDefaultAdministratorRights",
+			OperationID:   "getMyDefaultAdministratorRights",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = OptGetMyDefaultAdministratorRights
+			Params   = struct{}
+			Response = Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.GetMyDefaultAdministratorRights(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.GetMyDefaultAdministratorRights(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -3334,7 +4886,10 @@ func (s *Server) handleGetMyDefaultAdministratorRightsRequest(args [0]string, w 
 	}
 }
 
-// HandleGetStickerSetRequest handles getStickerSet operation.
+// handleGetStickerSetRequest handles getStickerSet operation.
+//
+// Use this method to get a sticker set. On success, a [StickerSet](https://core.telegram.
+// org/bots/api#stickerset) object is returned.
 //
 // POST /getStickerSet
 func (s *Server) handleGetStickerSetRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -3345,7 +4900,7 @@ func (s *Server) handleGetStickerSetRequest(args [0]string, w http.ResponseWrite
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "GetStickerSet",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -3371,7 +4926,7 @@ func (s *Server) handleGetStickerSetRequest(args [0]string, w http.ResponseWrite
 			ID:   "getStickerSet",
 		}
 	)
-	request, close, err := s.decodeGetStickerSetRequest(r, span)
+	request, close, err := s.decodeGetStickerSetRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -3387,7 +4942,37 @@ func (s *Server) handleGetStickerSetRequest(args [0]string, w http.ResponseWrite
 		}
 	}()
 
-	response, err := s.h.GetStickerSet(ctx, request)
+	var response ResultStickerSet
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "GetStickerSet",
+			OperationID:   "getStickerSet",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = GetStickerSet
+			Params   = struct{}
+			Response = ResultStickerSet
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.GetStickerSet(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.GetStickerSet(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -3409,7 +4994,11 @@ func (s *Server) handleGetStickerSetRequest(args [0]string, w http.ResponseWrite
 	}
 }
 
-// HandleGetUpdatesRequest handles getUpdates operation.
+// handleGetUpdatesRequest handles getUpdates operation.
+//
+// Use this method to receive incoming updates using long polling ([wiki](https://en.wikipedia.
+// org/wiki/Push_technology#Long_polling)). Returns an Array of [Update](https://core.telegram.
+// org/bots/api#update) objects.
 //
 // POST /getUpdates
 func (s *Server) handleGetUpdatesRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -3420,7 +5009,7 @@ func (s *Server) handleGetUpdatesRequest(args [0]string, w http.ResponseWriter, 
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "GetUpdates",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -3446,7 +5035,7 @@ func (s *Server) handleGetUpdatesRequest(args [0]string, w http.ResponseWriter, 
 			ID:   "getUpdates",
 		}
 	)
-	request, close, err := s.decodeGetUpdatesRequest(r, span)
+	request, close, err := s.decodeGetUpdatesRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -3462,7 +5051,37 @@ func (s *Server) handleGetUpdatesRequest(args [0]string, w http.ResponseWriter, 
 		}
 	}()
 
-	response, err := s.h.GetUpdates(ctx, request)
+	var response ResultArrayOfUpdate
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "GetUpdates",
+			OperationID:   "getUpdates",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = OptGetUpdates
+			Params   = struct{}
+			Response = ResultArrayOfUpdate
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.GetUpdates(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.GetUpdates(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -3484,7 +5103,10 @@ func (s *Server) handleGetUpdatesRequest(args [0]string, w http.ResponseWriter, 
 	}
 }
 
-// HandleGetUserProfilePhotosRequest handles getUserProfilePhotos operation.
+// handleGetUserProfilePhotosRequest handles getUserProfilePhotos operation.
+//
+// Use this method to get a list of profile pictures for a user. Returns a
+// [UserProfilePhotos](https://core.telegram.org/bots/api#userprofilephotos) object.
 //
 // POST /getUserProfilePhotos
 func (s *Server) handleGetUserProfilePhotosRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -3495,7 +5117,7 @@ func (s *Server) handleGetUserProfilePhotosRequest(args [0]string, w http.Respon
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "GetUserProfilePhotos",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -3521,7 +5143,7 @@ func (s *Server) handleGetUserProfilePhotosRequest(args [0]string, w http.Respon
 			ID:   "getUserProfilePhotos",
 		}
 	)
-	request, close, err := s.decodeGetUserProfilePhotosRequest(r, span)
+	request, close, err := s.decodeGetUserProfilePhotosRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -3537,7 +5159,37 @@ func (s *Server) handleGetUserProfilePhotosRequest(args [0]string, w http.Respon
 		}
 	}()
 
-	response, err := s.h.GetUserProfilePhotos(ctx, request)
+	var response ResultUserProfilePhotos
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "GetUserProfilePhotos",
+			OperationID:   "getUserProfilePhotos",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = GetUserProfilePhotos
+			Params   = struct{}
+			Response = ResultUserProfilePhotos
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.GetUserProfilePhotos(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.GetUserProfilePhotos(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -3559,7 +5211,12 @@ func (s *Server) handleGetUserProfilePhotosRequest(args [0]string, w http.Respon
 	}
 }
 
-// HandleGetWebhookInfoRequest handles getWebhookInfo operation.
+// handleGetWebhookInfoRequest handles getWebhookInfo operation.
+//
+// Use this method to get current webhook status. Requires no parameters. On success, returns a
+// [WebhookInfo](https://core.telegram.org/bots/api#webhookinfo) object. If the bot is using
+// [getUpdates](https://core.telegram.org/bots/api#getupdates), will return an object with the _url_
+// field empty.
 //
 // POST /getWebhookInfo
 func (s *Server) handleGetWebhookInfoRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -3570,7 +5227,7 @@ func (s *Server) handleGetWebhookInfoRequest(args [0]string, w http.ResponseWrit
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "GetWebhookInfo",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -3593,7 +5250,37 @@ func (s *Server) handleGetWebhookInfoRequest(args [0]string, w http.ResponseWrit
 		err error
 	)
 
-	response, err := s.h.GetWebhookInfo(ctx)
+	var response ResultWebhookInfo
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "GetWebhookInfo",
+			OperationID:   "getWebhookInfo",
+			Body:          nil,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = struct{}
+			Params   = struct{}
+			Response = ResultWebhookInfo
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.GetWebhookInfo(ctx)
+			},
+		)
+	} else {
+		response, err = s.h.GetWebhookInfo(ctx)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -3615,7 +5302,9 @@ func (s *Server) handleGetWebhookInfoRequest(args [0]string, w http.ResponseWrit
 	}
 }
 
-// HandleLeaveChatRequest handles leaveChat operation.
+// handleLeaveChatRequest handles leaveChat operation.
+//
+// Use this method for your bot to leave a group, supergroup or channel. Returns _True_ on success.
 //
 // POST /leaveChat
 func (s *Server) handleLeaveChatRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -3626,7 +5315,7 @@ func (s *Server) handleLeaveChatRequest(args [0]string, w http.ResponseWriter, r
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "LeaveChat",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -3652,7 +5341,7 @@ func (s *Server) handleLeaveChatRequest(args [0]string, w http.ResponseWriter, r
 			ID:   "leaveChat",
 		}
 	)
-	request, close, err := s.decodeLeaveChatRequest(r, span)
+	request, close, err := s.decodeLeaveChatRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -3668,7 +5357,37 @@ func (s *Server) handleLeaveChatRequest(args [0]string, w http.ResponseWriter, r
 		}
 	}()
 
-	response, err := s.h.LeaveChat(ctx, request)
+	var response Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "LeaveChat",
+			OperationID:   "leaveChat",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = LeaveChat
+			Params   = struct{}
+			Response = Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.LeaveChat(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.LeaveChat(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -3690,7 +5409,13 @@ func (s *Server) handleLeaveChatRequest(args [0]string, w http.ResponseWriter, r
 	}
 }
 
-// HandleLogOutRequest handles logOut operation.
+// handleLogOutRequest handles logOut operation.
+//
+// Use this method to log out from the cloud Bot API server before launching the bot locally. You
+// **must** log out the bot before running it locally, otherwise there is no guarantee that the bot
+// will receive updates. After a successful call, you can immediately log in on a local server, but
+// will not be able to log in back to the cloud Bot API server for 10 minutes. Returns _True_ on
+// success. Requires no parameters.
 //
 // POST /logOut
 func (s *Server) handleLogOutRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -3701,7 +5426,7 @@ func (s *Server) handleLogOutRequest(args [0]string, w http.ResponseWriter, r *h
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "LogOut",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -3724,7 +5449,37 @@ func (s *Server) handleLogOutRequest(args [0]string, w http.ResponseWriter, r *h
 		err error
 	)
 
-	response, err := s.h.LogOut(ctx)
+	var response Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "LogOut",
+			OperationID:   "logOut",
+			Body:          nil,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = struct{}
+			Params   = struct{}
+			Response = Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.LogOut(ctx)
+			},
+		)
+	} else {
+		response, err = s.h.LogOut(ctx)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -3746,7 +5501,12 @@ func (s *Server) handleLogOutRequest(args [0]string, w http.ResponseWriter, r *h
 	}
 }
 
-// HandlePinChatMessageRequest handles pinChatMessage operation.
+// handlePinChatMessageRequest handles pinChatMessage operation.
+//
+// Use this method to add a message to the list of pinned messages in a chat. If the chat is not a
+// private chat, the bot must be an administrator in the chat for this to work and must have the
+// 'can_pin_messages' administrator right in a supergroup or 'can_edit_messages' administrator right
+// in a channel. Returns _True_ on success.
 //
 // POST /pinChatMessage
 func (s *Server) handlePinChatMessageRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -3757,7 +5517,7 @@ func (s *Server) handlePinChatMessageRequest(args [0]string, w http.ResponseWrit
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "PinChatMessage",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -3783,7 +5543,7 @@ func (s *Server) handlePinChatMessageRequest(args [0]string, w http.ResponseWrit
 			ID:   "pinChatMessage",
 		}
 	)
-	request, close, err := s.decodePinChatMessageRequest(r, span)
+	request, close, err := s.decodePinChatMessageRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -3799,7 +5559,37 @@ func (s *Server) handlePinChatMessageRequest(args [0]string, w http.ResponseWrit
 		}
 	}()
 
-	response, err := s.h.PinChatMessage(ctx, request)
+	var response Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "PinChatMessage",
+			OperationID:   "pinChatMessage",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = PinChatMessage
+			Params   = struct{}
+			Response = Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.PinChatMessage(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.PinChatMessage(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -3821,7 +5611,11 @@ func (s *Server) handlePinChatMessageRequest(args [0]string, w http.ResponseWrit
 	}
 }
 
-// HandlePromoteChatMemberRequest handles promoteChatMember operation.
+// handlePromoteChatMemberRequest handles promoteChatMember operation.
+//
+// Use this method to promote or demote a user in a supergroup or a channel. The bot must be an
+// administrator in the chat for this to work and must have the appropriate administrator rights.
+// Pass _False_ for all boolean parameters to demote a user. Returns _True_ on success.
 //
 // POST /promoteChatMember
 func (s *Server) handlePromoteChatMemberRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -3832,7 +5626,7 @@ func (s *Server) handlePromoteChatMemberRequest(args [0]string, w http.ResponseW
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "PromoteChatMember",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -3858,7 +5652,7 @@ func (s *Server) handlePromoteChatMemberRequest(args [0]string, w http.ResponseW
 			ID:   "promoteChatMember",
 		}
 	)
-	request, close, err := s.decodePromoteChatMemberRequest(r, span)
+	request, close, err := s.decodePromoteChatMemberRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -3874,7 +5668,37 @@ func (s *Server) handlePromoteChatMemberRequest(args [0]string, w http.ResponseW
 		}
 	}()
 
-	response, err := s.h.PromoteChatMember(ctx, request)
+	var response Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "PromoteChatMember",
+			OperationID:   "promoteChatMember",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = PromoteChatMember
+			Params   = struct{}
+			Response = Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.PromoteChatMember(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.PromoteChatMember(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -3896,7 +5720,11 @@ func (s *Server) handlePromoteChatMemberRequest(args [0]string, w http.ResponseW
 	}
 }
 
-// HandleReopenForumTopicRequest handles reopenForumTopic operation.
+// handleReopenForumTopicRequest handles reopenForumTopic operation.
+//
+// Use this method to reopen a closed topic in a forum supergroup chat. The bot must be an
+// administrator in the chat for this to work and must have the _can_manage_topics_ administrator
+// rights, unless it is the creator of the topic. Returns _True_ on success.
 //
 // POST /reopenForumTopic
 func (s *Server) handleReopenForumTopicRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -3907,7 +5735,7 @@ func (s *Server) handleReopenForumTopicRequest(args [0]string, w http.ResponseWr
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "ReopenForumTopic",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -3933,7 +5761,7 @@ func (s *Server) handleReopenForumTopicRequest(args [0]string, w http.ResponseWr
 			ID:   "reopenForumTopic",
 		}
 	)
-	request, close, err := s.decodeReopenForumTopicRequest(r, span)
+	request, close, err := s.decodeReopenForumTopicRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -3949,7 +5777,37 @@ func (s *Server) handleReopenForumTopicRequest(args [0]string, w http.ResponseWr
 		}
 	}()
 
-	response, err := s.h.ReopenForumTopic(ctx, request)
+	var response Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "ReopenForumTopic",
+			OperationID:   "reopenForumTopic",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = ReopenForumTopic
+			Params   = struct{}
+			Response = Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.ReopenForumTopic(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.ReopenForumTopic(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -3971,7 +5829,11 @@ func (s *Server) handleReopenForumTopicRequest(args [0]string, w http.ResponseWr
 	}
 }
 
-// HandleRestrictChatMemberRequest handles restrictChatMember operation.
+// handleRestrictChatMemberRequest handles restrictChatMember operation.
+//
+// Use this method to restrict a user in a supergroup. The bot must be an administrator in the
+// supergroup for this to work and must have the appropriate administrator rights. Pass _True_ for
+// all permissions to lift restrictions from a user. Returns _True_ on success.
 //
 // POST /restrictChatMember
 func (s *Server) handleRestrictChatMemberRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -3982,7 +5844,7 @@ func (s *Server) handleRestrictChatMemberRequest(args [0]string, w http.Response
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "RestrictChatMember",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -4008,7 +5870,7 @@ func (s *Server) handleRestrictChatMemberRequest(args [0]string, w http.Response
 			ID:   "restrictChatMember",
 		}
 	)
-	request, close, err := s.decodeRestrictChatMemberRequest(r, span)
+	request, close, err := s.decodeRestrictChatMemberRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -4024,7 +5886,37 @@ func (s *Server) handleRestrictChatMemberRequest(args [0]string, w http.Response
 		}
 	}()
 
-	response, err := s.h.RestrictChatMember(ctx, request)
+	var response Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "RestrictChatMember",
+			OperationID:   "restrictChatMember",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = RestrictChatMember
+			Params   = struct{}
+			Response = Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.RestrictChatMember(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.RestrictChatMember(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -4046,7 +5938,12 @@ func (s *Server) handleRestrictChatMemberRequest(args [0]string, w http.Response
 	}
 }
 
-// HandleRevokeChatInviteLinkRequest handles revokeChatInviteLink operation.
+// handleRevokeChatInviteLinkRequest handles revokeChatInviteLink operation.
+//
+// Use this method to revoke an invite link created by the bot. If the primary link is revoked, a new
+// link is automatically generated. The bot must be an administrator in the chat for this to work and
+// must have the appropriate administrator rights. Returns the revoked invite link as
+// [ChatInviteLink](https://core.telegram.org/bots/api#chatinvitelink) object.
 //
 // POST /revokeChatInviteLink
 func (s *Server) handleRevokeChatInviteLinkRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -4057,7 +5954,7 @@ func (s *Server) handleRevokeChatInviteLinkRequest(args [0]string, w http.Respon
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "RevokeChatInviteLink",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -4083,7 +5980,7 @@ func (s *Server) handleRevokeChatInviteLinkRequest(args [0]string, w http.Respon
 			ID:   "revokeChatInviteLink",
 		}
 	)
-	request, close, err := s.decodeRevokeChatInviteLinkRequest(r, span)
+	request, close, err := s.decodeRevokeChatInviteLinkRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -4099,7 +5996,37 @@ func (s *Server) handleRevokeChatInviteLinkRequest(args [0]string, w http.Respon
 		}
 	}()
 
-	response, err := s.h.RevokeChatInviteLink(ctx, request)
+	var response ResultChatInviteLink
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "RevokeChatInviteLink",
+			OperationID:   "revokeChatInviteLink",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = RevokeChatInviteLink
+			Params   = struct{}
+			Response = ResultChatInviteLink
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.RevokeChatInviteLink(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.RevokeChatInviteLink(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -4121,7 +6048,11 @@ func (s *Server) handleRevokeChatInviteLinkRequest(args [0]string, w http.Respon
 	}
 }
 
-// HandleSendAnimationRequest handles sendAnimation operation.
+// handleSendAnimationRequest handles sendAnimation operation.
+//
+// Use this method to send animation files (GIF or H.264/MPEG-4 AVC video without sound). On success,
+// the sent [Message](https://core.telegram.org/bots/api#message) is returned. Bots can currently
+// send animation files of up to 50 MB in size, this limit may be changed in the future.
 //
 // POST /sendAnimation
 func (s *Server) handleSendAnimationRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -4132,7 +6063,7 @@ func (s *Server) handleSendAnimationRequest(args [0]string, w http.ResponseWrite
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "SendAnimation",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -4158,7 +6089,7 @@ func (s *Server) handleSendAnimationRequest(args [0]string, w http.ResponseWrite
 			ID:   "sendAnimation",
 		}
 	)
-	request, close, err := s.decodeSendAnimationRequest(r, span)
+	request, close, err := s.decodeSendAnimationRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -4174,7 +6105,37 @@ func (s *Server) handleSendAnimationRequest(args [0]string, w http.ResponseWrite
 		}
 	}()
 
-	response, err := s.h.SendAnimation(ctx, request)
+	var response ResultMessage
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "SendAnimation",
+			OperationID:   "sendAnimation",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = SendAnimation
+			Params   = struct{}
+			Response = ResultMessage
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.SendAnimation(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.SendAnimation(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -4196,7 +6157,10 @@ func (s *Server) handleSendAnimationRequest(args [0]string, w http.ResponseWrite
 	}
 }
 
-// HandleSendAudioRequest handles sendAudio operation.
+// handleSendAudioRequest handles sendAudio operation.
+//
+// For sending voice messages, use the [sendVoice](https://core.telegram.org/bots/api#sendvoice)
+// method instead.
 //
 // POST /sendAudio
 func (s *Server) handleSendAudioRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -4207,7 +6171,7 @@ func (s *Server) handleSendAudioRequest(args [0]string, w http.ResponseWriter, r
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "SendAudio",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -4233,7 +6197,7 @@ func (s *Server) handleSendAudioRequest(args [0]string, w http.ResponseWriter, r
 			ID:   "sendAudio",
 		}
 	)
-	request, close, err := s.decodeSendAudioRequest(r, span)
+	request, close, err := s.decodeSendAudioRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -4249,7 +6213,37 @@ func (s *Server) handleSendAudioRequest(args [0]string, w http.ResponseWriter, r
 		}
 	}()
 
-	response, err := s.h.SendAudio(ctx, request)
+	var response ResultMessage
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "SendAudio",
+			OperationID:   "sendAudio",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = SendAudio
+			Params   = struct{}
+			Response = ResultMessage
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.SendAudio(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.SendAudio(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -4271,7 +6265,10 @@ func (s *Server) handleSendAudioRequest(args [0]string, w http.ResponseWriter, r
 	}
 }
 
-// HandleSendChatActionRequest handles sendChatAction operation.
+// handleSendChatActionRequest handles sendChatAction operation.
+//
+// We only recommend using this method when a response from the bot will take a **noticeable** amount
+// of time to arrive.
 //
 // POST /sendChatAction
 func (s *Server) handleSendChatActionRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -4282,7 +6279,7 @@ func (s *Server) handleSendChatActionRequest(args [0]string, w http.ResponseWrit
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "SendChatAction",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -4308,7 +6305,7 @@ func (s *Server) handleSendChatActionRequest(args [0]string, w http.ResponseWrit
 			ID:   "sendChatAction",
 		}
 	)
-	request, close, err := s.decodeSendChatActionRequest(r, span)
+	request, close, err := s.decodeSendChatActionRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -4324,7 +6321,37 @@ func (s *Server) handleSendChatActionRequest(args [0]string, w http.ResponseWrit
 		}
 	}()
 
-	response, err := s.h.SendChatAction(ctx, request)
+	var response Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "SendChatAction",
+			OperationID:   "sendChatAction",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = SendChatAction
+			Params   = struct{}
+			Response = Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.SendChatAction(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.SendChatAction(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -4346,7 +6373,10 @@ func (s *Server) handleSendChatActionRequest(args [0]string, w http.ResponseWrit
 	}
 }
 
-// HandleSendContactRequest handles sendContact operation.
+// handleSendContactRequest handles sendContact operation.
+//
+// Use this method to send phone contacts. On success, the sent [Message](https://core.telegram.
+// org/bots/api#message) is returned.
 //
 // POST /sendContact
 func (s *Server) handleSendContactRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -4357,7 +6387,7 @@ func (s *Server) handleSendContactRequest(args [0]string, w http.ResponseWriter,
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "SendContact",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -4383,7 +6413,7 @@ func (s *Server) handleSendContactRequest(args [0]string, w http.ResponseWriter,
 			ID:   "sendContact",
 		}
 	)
-	request, close, err := s.decodeSendContactRequest(r, span)
+	request, close, err := s.decodeSendContactRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -4399,7 +6429,37 @@ func (s *Server) handleSendContactRequest(args [0]string, w http.ResponseWriter,
 		}
 	}()
 
-	response, err := s.h.SendContact(ctx, request)
+	var response ResultMessage
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "SendContact",
+			OperationID:   "sendContact",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = SendContact
+			Params   = struct{}
+			Response = ResultMessage
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.SendContact(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.SendContact(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -4421,7 +6481,10 @@ func (s *Server) handleSendContactRequest(args [0]string, w http.ResponseWriter,
 	}
 }
 
-// HandleSendDiceRequest handles sendDice operation.
+// handleSendDiceRequest handles sendDice operation.
+//
+// Use this method to send an animated emoji that will display a random value. On success, the sent
+// [Message](https://core.telegram.org/bots/api#message) is returned.
 //
 // POST /sendDice
 func (s *Server) handleSendDiceRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -4432,7 +6495,7 @@ func (s *Server) handleSendDiceRequest(args [0]string, w http.ResponseWriter, r 
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "SendDice",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -4458,7 +6521,7 @@ func (s *Server) handleSendDiceRequest(args [0]string, w http.ResponseWriter, r 
 			ID:   "sendDice",
 		}
 	)
-	request, close, err := s.decodeSendDiceRequest(r, span)
+	request, close, err := s.decodeSendDiceRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -4474,7 +6537,37 @@ func (s *Server) handleSendDiceRequest(args [0]string, w http.ResponseWriter, r 
 		}
 	}()
 
-	response, err := s.h.SendDice(ctx, request)
+	var response ResultMessage
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "SendDice",
+			OperationID:   "sendDice",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = SendDice
+			Params   = struct{}
+			Response = ResultMessage
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.SendDice(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.SendDice(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -4496,7 +6589,11 @@ func (s *Server) handleSendDiceRequest(args [0]string, w http.ResponseWriter, r 
 	}
 }
 
-// HandleSendDocumentRequest handles sendDocument operation.
+// handleSendDocumentRequest handles sendDocument operation.
+//
+// Use this method to send general files. On success, the sent [Message](https://core.telegram.
+// org/bots/api#message) is returned. Bots can currently send files of any type of up to 50 MB in
+// size, this limit may be changed in the future.
 //
 // POST /sendDocument
 func (s *Server) handleSendDocumentRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -4507,7 +6604,7 @@ func (s *Server) handleSendDocumentRequest(args [0]string, w http.ResponseWriter
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "SendDocument",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -4533,7 +6630,7 @@ func (s *Server) handleSendDocumentRequest(args [0]string, w http.ResponseWriter
 			ID:   "sendDocument",
 		}
 	)
-	request, close, err := s.decodeSendDocumentRequest(r, span)
+	request, close, err := s.decodeSendDocumentRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -4549,7 +6646,37 @@ func (s *Server) handleSendDocumentRequest(args [0]string, w http.ResponseWriter
 		}
 	}()
 
-	response, err := s.h.SendDocument(ctx, request)
+	var response ResultMessage
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "SendDocument",
+			OperationID:   "sendDocument",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = SendDocument
+			Params   = struct{}
+			Response = ResultMessage
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.SendDocument(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.SendDocument(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -4571,7 +6698,10 @@ func (s *Server) handleSendDocumentRequest(args [0]string, w http.ResponseWriter
 	}
 }
 
-// HandleSendGameRequest handles sendGame operation.
+// handleSendGameRequest handles sendGame operation.
+//
+// Use this method to send a game. On success, the sent [Message](https://core.telegram.
+// org/bots/api#message) is returned.
 //
 // POST /sendGame
 func (s *Server) handleSendGameRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -4582,7 +6712,7 @@ func (s *Server) handleSendGameRequest(args [0]string, w http.ResponseWriter, r 
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "SendGame",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -4608,7 +6738,7 @@ func (s *Server) handleSendGameRequest(args [0]string, w http.ResponseWriter, r 
 			ID:   "sendGame",
 		}
 	)
-	request, close, err := s.decodeSendGameRequest(r, span)
+	request, close, err := s.decodeSendGameRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -4624,7 +6754,37 @@ func (s *Server) handleSendGameRequest(args [0]string, w http.ResponseWriter, r 
 		}
 	}()
 
-	response, err := s.h.SendGame(ctx, request)
+	var response ResultMessage
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "SendGame",
+			OperationID:   "sendGame",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = SendGame
+			Params   = struct{}
+			Response = ResultMessage
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.SendGame(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.SendGame(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -4646,7 +6806,10 @@ func (s *Server) handleSendGameRequest(args [0]string, w http.ResponseWriter, r 
 	}
 }
 
-// HandleSendInvoiceRequest handles sendInvoice operation.
+// handleSendInvoiceRequest handles sendInvoice operation.
+//
+// Use this method to send invoices. On success, the sent [Message](https://core.telegram.
+// org/bots/api#message) is returned.
 //
 // POST /sendInvoice
 func (s *Server) handleSendInvoiceRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -4657,7 +6820,7 @@ func (s *Server) handleSendInvoiceRequest(args [0]string, w http.ResponseWriter,
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "SendInvoice",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -4683,7 +6846,7 @@ func (s *Server) handleSendInvoiceRequest(args [0]string, w http.ResponseWriter,
 			ID:   "sendInvoice",
 		}
 	)
-	request, close, err := s.decodeSendInvoiceRequest(r, span)
+	request, close, err := s.decodeSendInvoiceRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -4699,7 +6862,37 @@ func (s *Server) handleSendInvoiceRequest(args [0]string, w http.ResponseWriter,
 		}
 	}()
 
-	response, err := s.h.SendInvoice(ctx, request)
+	var response ResultMessage
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "SendInvoice",
+			OperationID:   "sendInvoice",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = SendInvoice
+			Params   = struct{}
+			Response = ResultMessage
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.SendInvoice(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.SendInvoice(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -4721,7 +6914,10 @@ func (s *Server) handleSendInvoiceRequest(args [0]string, w http.ResponseWriter,
 	}
 }
 
-// HandleSendLocationRequest handles sendLocation operation.
+// handleSendLocationRequest handles sendLocation operation.
+//
+// Use this method to send point on the map. On success, the sent [Message](https://core.telegram.
+// org/bots/api#message) is returned.
 //
 // POST /sendLocation
 func (s *Server) handleSendLocationRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -4732,7 +6928,7 @@ func (s *Server) handleSendLocationRequest(args [0]string, w http.ResponseWriter
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "SendLocation",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -4758,7 +6954,7 @@ func (s *Server) handleSendLocationRequest(args [0]string, w http.ResponseWriter
 			ID:   "sendLocation",
 		}
 	)
-	request, close, err := s.decodeSendLocationRequest(r, span)
+	request, close, err := s.decodeSendLocationRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -4774,7 +6970,37 @@ func (s *Server) handleSendLocationRequest(args [0]string, w http.ResponseWriter
 		}
 	}()
 
-	response, err := s.h.SendLocation(ctx, request)
+	var response ResultMessage
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "SendLocation",
+			OperationID:   "sendLocation",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = SendLocation
+			Params   = struct{}
+			Response = ResultMessage
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.SendLocation(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.SendLocation(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -4796,7 +7022,11 @@ func (s *Server) handleSendLocationRequest(args [0]string, w http.ResponseWriter
 	}
 }
 
-// HandleSendMediaGroupRequest handles sendMediaGroup operation.
+// handleSendMediaGroupRequest handles sendMediaGroup operation.
+//
+// Use this method to send a group of photos, videos, documents or audios as an album. Documents and
+// audio files can be only grouped in an album with messages of the same type. On success, an array
+// of [Messages](https://core.telegram.org/bots/api#message) that were sent is returned.
 //
 // POST /sendMediaGroup
 func (s *Server) handleSendMediaGroupRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -4807,7 +7037,7 @@ func (s *Server) handleSendMediaGroupRequest(args [0]string, w http.ResponseWrit
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "SendMediaGroup",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -4833,7 +7063,7 @@ func (s *Server) handleSendMediaGroupRequest(args [0]string, w http.ResponseWrit
 			ID:   "sendMediaGroup",
 		}
 	)
-	request, close, err := s.decodeSendMediaGroupRequest(r, span)
+	request, close, err := s.decodeSendMediaGroupRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -4849,7 +7079,37 @@ func (s *Server) handleSendMediaGroupRequest(args [0]string, w http.ResponseWrit
 		}
 	}()
 
-	response, err := s.h.SendMediaGroup(ctx, request)
+	var response ResultArrayOfMessage
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "SendMediaGroup",
+			OperationID:   "sendMediaGroup",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = SendMediaGroup
+			Params   = struct{}
+			Response = ResultArrayOfMessage
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.SendMediaGroup(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.SendMediaGroup(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -4871,7 +7131,10 @@ func (s *Server) handleSendMediaGroupRequest(args [0]string, w http.ResponseWrit
 	}
 }
 
-// HandleSendMessageRequest handles sendMessage operation.
+// handleSendMessageRequest handles sendMessage operation.
+//
+// Use this method to send text messages. On success, the sent [Message](https://core.telegram.
+// org/bots/api#message) is returned.
 //
 // POST /sendMessage
 func (s *Server) handleSendMessageRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -4882,7 +7145,7 @@ func (s *Server) handleSendMessageRequest(args [0]string, w http.ResponseWriter,
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "SendMessage",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -4908,7 +7171,7 @@ func (s *Server) handleSendMessageRequest(args [0]string, w http.ResponseWriter,
 			ID:   "sendMessage",
 		}
 	)
-	request, close, err := s.decodeSendMessageRequest(r, span)
+	request, close, err := s.decodeSendMessageRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -4924,7 +7187,37 @@ func (s *Server) handleSendMessageRequest(args [0]string, w http.ResponseWriter,
 		}
 	}()
 
-	response, err := s.h.SendMessage(ctx, request)
+	var response ResultMessage
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "SendMessage",
+			OperationID:   "sendMessage",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = SendMessage
+			Params   = struct{}
+			Response = ResultMessage
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.SendMessage(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.SendMessage(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -4946,7 +7239,10 @@ func (s *Server) handleSendMessageRequest(args [0]string, w http.ResponseWriter,
 	}
 }
 
-// HandleSendPhotoRequest handles sendPhoto operation.
+// handleSendPhotoRequest handles sendPhoto operation.
+//
+// Use this method to send photos. On success, the sent [Message](https://core.telegram.
+// org/bots/api#message) is returned.
 //
 // POST /sendPhoto
 func (s *Server) handleSendPhotoRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -4957,7 +7253,7 @@ func (s *Server) handleSendPhotoRequest(args [0]string, w http.ResponseWriter, r
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "SendPhoto",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -4983,7 +7279,7 @@ func (s *Server) handleSendPhotoRequest(args [0]string, w http.ResponseWriter, r
 			ID:   "sendPhoto",
 		}
 	)
-	request, close, err := s.decodeSendPhotoRequest(r, span)
+	request, close, err := s.decodeSendPhotoRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -4999,7 +7295,37 @@ func (s *Server) handleSendPhotoRequest(args [0]string, w http.ResponseWriter, r
 		}
 	}()
 
-	response, err := s.h.SendPhoto(ctx, request)
+	var response ResultMessage
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "SendPhoto",
+			OperationID:   "sendPhoto",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = SendPhoto
+			Params   = struct{}
+			Response = ResultMessage
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.SendPhoto(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.SendPhoto(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -5021,7 +7347,10 @@ func (s *Server) handleSendPhotoRequest(args [0]string, w http.ResponseWriter, r
 	}
 }
 
-// HandleSendPollRequest handles sendPoll operation.
+// handleSendPollRequest handles sendPoll operation.
+//
+// Use this method to send a native poll. On success, the sent [Message](https://core.telegram.
+// org/bots/api#message) is returned.
 //
 // POST /sendPoll
 func (s *Server) handleSendPollRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -5032,7 +7361,7 @@ func (s *Server) handleSendPollRequest(args [0]string, w http.ResponseWriter, r 
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "SendPoll",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -5058,7 +7387,7 @@ func (s *Server) handleSendPollRequest(args [0]string, w http.ResponseWriter, r 
 			ID:   "sendPoll",
 		}
 	)
-	request, close, err := s.decodeSendPollRequest(r, span)
+	request, close, err := s.decodeSendPollRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -5074,7 +7403,37 @@ func (s *Server) handleSendPollRequest(args [0]string, w http.ResponseWriter, r 
 		}
 	}()
 
-	response, err := s.h.SendPoll(ctx, request)
+	var response ResultMessage
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "SendPoll",
+			OperationID:   "sendPoll",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = SendPoll
+			Params   = struct{}
+			Response = ResultMessage
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.SendPoll(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.SendPoll(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -5096,7 +7455,13 @@ func (s *Server) handleSendPollRequest(args [0]string, w http.ResponseWriter, r 
 	}
 }
 
-// HandleSendStickerRequest handles sendSticker operation.
+// handleSendStickerRequest handles sendSticker operation.
+//
+// Use this method to send static .WEBP, [animated](https://telegram.org/blog/animated-stickers) .TGS,
+//
+//	or [video](https://telegram.org/blog/video-stickers-better-reactions) .WEBM stickers. On success,
+//
+// the sent [Message](https://core.telegram.org/bots/api#message) is returned.
 //
 // POST /sendSticker
 func (s *Server) handleSendStickerRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -5107,7 +7472,7 @@ func (s *Server) handleSendStickerRequest(args [0]string, w http.ResponseWriter,
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "SendSticker",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -5133,7 +7498,7 @@ func (s *Server) handleSendStickerRequest(args [0]string, w http.ResponseWriter,
 			ID:   "sendSticker",
 		}
 	)
-	request, close, err := s.decodeSendStickerRequest(r, span)
+	request, close, err := s.decodeSendStickerRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -5149,7 +7514,37 @@ func (s *Server) handleSendStickerRequest(args [0]string, w http.ResponseWriter,
 		}
 	}()
 
-	response, err := s.h.SendSticker(ctx, request)
+	var response ResultMessage
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "SendSticker",
+			OperationID:   "sendSticker",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = SendSticker
+			Params   = struct{}
+			Response = ResultMessage
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.SendSticker(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.SendSticker(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -5171,7 +7566,10 @@ func (s *Server) handleSendStickerRequest(args [0]string, w http.ResponseWriter,
 	}
 }
 
-// HandleSendVenueRequest handles sendVenue operation.
+// handleSendVenueRequest handles sendVenue operation.
+//
+// Use this method to send information about a venue. On success, the sent [Message](https://core.
+// telegram.org/bots/api#message) is returned.
 //
 // POST /sendVenue
 func (s *Server) handleSendVenueRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -5182,7 +7580,7 @@ func (s *Server) handleSendVenueRequest(args [0]string, w http.ResponseWriter, r
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "SendVenue",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -5208,7 +7606,7 @@ func (s *Server) handleSendVenueRequest(args [0]string, w http.ResponseWriter, r
 			ID:   "sendVenue",
 		}
 	)
-	request, close, err := s.decodeSendVenueRequest(r, span)
+	request, close, err := s.decodeSendVenueRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -5224,7 +7622,37 @@ func (s *Server) handleSendVenueRequest(args [0]string, w http.ResponseWriter, r
 		}
 	}()
 
-	response, err := s.h.SendVenue(ctx, request)
+	var response ResultMessage
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "SendVenue",
+			OperationID:   "sendVenue",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = SendVenue
+			Params   = struct{}
+			Response = ResultMessage
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.SendVenue(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.SendVenue(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -5246,7 +7674,12 @@ func (s *Server) handleSendVenueRequest(args [0]string, w http.ResponseWriter, r
 	}
 }
 
-// HandleSendVideoRequest handles sendVideo operation.
+// handleSendVideoRequest handles sendVideo operation.
+//
+// Use this method to send video files, Telegram clients support MPEG4 videos (other formats may be
+// sent as [Document](https://core.telegram.org/bots/api#document)). On success, the sent
+// [Message](https://core.telegram.org/bots/api#message) is returned. Bots can currently send video
+// files of up to 50 MB in size, this limit may be changed in the future.
 //
 // POST /sendVideo
 func (s *Server) handleSendVideoRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -5257,7 +7690,7 @@ func (s *Server) handleSendVideoRequest(args [0]string, w http.ResponseWriter, r
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "SendVideo",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -5283,7 +7716,7 @@ func (s *Server) handleSendVideoRequest(args [0]string, w http.ResponseWriter, r
 			ID:   "sendVideo",
 		}
 	)
-	request, close, err := s.decodeSendVideoRequest(r, span)
+	request, close, err := s.decodeSendVideoRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -5299,7 +7732,37 @@ func (s *Server) handleSendVideoRequest(args [0]string, w http.ResponseWriter, r
 		}
 	}()
 
-	response, err := s.h.SendVideo(ctx, request)
+	var response ResultMessage
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "SendVideo",
+			OperationID:   "sendVideo",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = SendVideo
+			Params   = struct{}
+			Response = ResultMessage
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.SendVideo(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.SendVideo(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -5321,7 +7784,11 @@ func (s *Server) handleSendVideoRequest(args [0]string, w http.ResponseWriter, r
 	}
 }
 
-// HandleSendVideoNoteRequest handles sendVideoNote operation.
+// handleSendVideoNoteRequest handles sendVideoNote operation.
+//
+// As of [v.4.0](https://telegram.org/blog/video-messages-and-telescope), Telegram clients support
+// rounded square MPEG4 videos of up to 1 minute long. Use this method to send video messages. On
+// success, the sent [Message](https://core.telegram.org/bots/api#message) is returned.
 //
 // POST /sendVideoNote
 func (s *Server) handleSendVideoNoteRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -5332,7 +7799,7 @@ func (s *Server) handleSendVideoNoteRequest(args [0]string, w http.ResponseWrite
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "SendVideoNote",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -5358,7 +7825,7 @@ func (s *Server) handleSendVideoNoteRequest(args [0]string, w http.ResponseWrite
 			ID:   "sendVideoNote",
 		}
 	)
-	request, close, err := s.decodeSendVideoNoteRequest(r, span)
+	request, close, err := s.decodeSendVideoNoteRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -5374,7 +7841,37 @@ func (s *Server) handleSendVideoNoteRequest(args [0]string, w http.ResponseWrite
 		}
 	}()
 
-	response, err := s.h.SendVideoNote(ctx, request)
+	var response ResultMessage
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "SendVideoNote",
+			OperationID:   "sendVideoNote",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = SendVideoNote
+			Params   = struct{}
+			Response = ResultMessage
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.SendVideoNote(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.SendVideoNote(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -5396,7 +7893,14 @@ func (s *Server) handleSendVideoNoteRequest(args [0]string, w http.ResponseWrite
 	}
 }
 
-// HandleSendVoiceRequest handles sendVoice operation.
+// handleSendVoiceRequest handles sendVoice operation.
+//
+// Use this method to send audio files, if you want Telegram clients to display the file as a
+// playable voice message. For this to work, your audio must be in an .OGG file encoded with OPUS
+// (other formats may be sent as [Audio](https://core.telegram.org/bots/api#audio) or
+// [Document](https://core.telegram.org/bots/api#document)). On success, the sent
+// [Message](https://core.telegram.org/bots/api#message) is returned. Bots can currently send voice
+// messages of up to 50 MB in size, this limit may be changed in the future.
 //
 // POST /sendVoice
 func (s *Server) handleSendVoiceRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -5407,7 +7911,7 @@ func (s *Server) handleSendVoiceRequest(args [0]string, w http.ResponseWriter, r
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "SendVoice",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -5433,7 +7937,7 @@ func (s *Server) handleSendVoiceRequest(args [0]string, w http.ResponseWriter, r
 			ID:   "sendVoice",
 		}
 	)
-	request, close, err := s.decodeSendVoiceRequest(r, span)
+	request, close, err := s.decodeSendVoiceRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -5449,7 +7953,37 @@ func (s *Server) handleSendVoiceRequest(args [0]string, w http.ResponseWriter, r
 		}
 	}()
 
-	response, err := s.h.SendVoice(ctx, request)
+	var response ResultMessage
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "SendVoice",
+			OperationID:   "sendVoice",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = SendVoice
+			Params   = struct{}
+			Response = ResultMessage
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.SendVoice(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.SendVoice(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -5471,7 +8005,10 @@ func (s *Server) handleSendVoiceRequest(args [0]string, w http.ResponseWriter, r
 	}
 }
 
-// HandleSetChatAdministratorCustomTitleRequest handles setChatAdministratorCustomTitle operation.
+// handleSetChatAdministratorCustomTitleRequest handles setChatAdministratorCustomTitle operation.
+//
+// Use this method to set a custom title for an administrator in a supergroup promoted by the bot.
+// Returns _True_ on success.
 //
 // POST /setChatAdministratorCustomTitle
 func (s *Server) handleSetChatAdministratorCustomTitleRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -5482,7 +8019,7 @@ func (s *Server) handleSetChatAdministratorCustomTitleRequest(args [0]string, w 
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "SetChatAdministratorCustomTitle",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -5508,7 +8045,7 @@ func (s *Server) handleSetChatAdministratorCustomTitleRequest(args [0]string, w 
 			ID:   "setChatAdministratorCustomTitle",
 		}
 	)
-	request, close, err := s.decodeSetChatAdministratorCustomTitleRequest(r, span)
+	request, close, err := s.decodeSetChatAdministratorCustomTitleRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -5524,7 +8061,37 @@ func (s *Server) handleSetChatAdministratorCustomTitleRequest(args [0]string, w 
 		}
 	}()
 
-	response, err := s.h.SetChatAdministratorCustomTitle(ctx, request)
+	var response Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "SetChatAdministratorCustomTitle",
+			OperationID:   "setChatAdministratorCustomTitle",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = SetChatAdministratorCustomTitle
+			Params   = struct{}
+			Response = Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.SetChatAdministratorCustomTitle(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.SetChatAdministratorCustomTitle(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -5546,7 +8113,11 @@ func (s *Server) handleSetChatAdministratorCustomTitleRequest(args [0]string, w 
 	}
 }
 
-// HandleSetChatDescriptionRequest handles setChatDescription operation.
+// handleSetChatDescriptionRequest handles setChatDescription operation.
+//
+// Use this method to change the description of a group, a supergroup or a channel. The bot must be
+// an administrator in the chat for this to work and must have the appropriate administrator rights.
+// Returns _True_ on success.
 //
 // POST /setChatDescription
 func (s *Server) handleSetChatDescriptionRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -5557,7 +8128,7 @@ func (s *Server) handleSetChatDescriptionRequest(args [0]string, w http.Response
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "SetChatDescription",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -5583,7 +8154,7 @@ func (s *Server) handleSetChatDescriptionRequest(args [0]string, w http.Response
 			ID:   "setChatDescription",
 		}
 	)
-	request, close, err := s.decodeSetChatDescriptionRequest(r, span)
+	request, close, err := s.decodeSetChatDescriptionRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -5599,7 +8170,37 @@ func (s *Server) handleSetChatDescriptionRequest(args [0]string, w http.Response
 		}
 	}()
 
-	response, err := s.h.SetChatDescription(ctx, request)
+	var response Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "SetChatDescription",
+			OperationID:   "setChatDescription",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = SetChatDescription
+			Params   = struct{}
+			Response = Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.SetChatDescription(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.SetChatDescription(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -5621,7 +8222,10 @@ func (s *Server) handleSetChatDescriptionRequest(args [0]string, w http.Response
 	}
 }
 
-// HandleSetChatMenuButtonRequest handles setChatMenuButton operation.
+// handleSetChatMenuButtonRequest handles setChatMenuButton operation.
+//
+// Use this method to change the bot's menu button in a private chat, or the default menu button.
+// Returns _True_ on success.
 //
 // POST /setChatMenuButton
 func (s *Server) handleSetChatMenuButtonRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -5632,7 +8236,7 @@ func (s *Server) handleSetChatMenuButtonRequest(args [0]string, w http.ResponseW
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "SetChatMenuButton",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -5658,7 +8262,7 @@ func (s *Server) handleSetChatMenuButtonRequest(args [0]string, w http.ResponseW
 			ID:   "setChatMenuButton",
 		}
 	)
-	request, close, err := s.decodeSetChatMenuButtonRequest(r, span)
+	request, close, err := s.decodeSetChatMenuButtonRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -5674,7 +8278,37 @@ func (s *Server) handleSetChatMenuButtonRequest(args [0]string, w http.ResponseW
 		}
 	}()
 
-	response, err := s.h.SetChatMenuButton(ctx, request)
+	var response Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "SetChatMenuButton",
+			OperationID:   "setChatMenuButton",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = OptSetChatMenuButton
+			Params   = struct{}
+			Response = Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.SetChatMenuButton(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.SetChatMenuButton(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -5696,7 +8330,11 @@ func (s *Server) handleSetChatMenuButtonRequest(args [0]string, w http.ResponseW
 	}
 }
 
-// HandleSetChatPermissionsRequest handles setChatPermissions operation.
+// handleSetChatPermissionsRequest handles setChatPermissions operation.
+//
+// Use this method to set default chat permissions for all members. The bot must be an administrator
+// in the group or a supergroup for this to work and must have the _can_restrict_members_
+// administrator rights. Returns _True_ on success.
 //
 // POST /setChatPermissions
 func (s *Server) handleSetChatPermissionsRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -5707,7 +8345,7 @@ func (s *Server) handleSetChatPermissionsRequest(args [0]string, w http.Response
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "SetChatPermissions",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -5733,7 +8371,7 @@ func (s *Server) handleSetChatPermissionsRequest(args [0]string, w http.Response
 			ID:   "setChatPermissions",
 		}
 	)
-	request, close, err := s.decodeSetChatPermissionsRequest(r, span)
+	request, close, err := s.decodeSetChatPermissionsRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -5749,7 +8387,37 @@ func (s *Server) handleSetChatPermissionsRequest(args [0]string, w http.Response
 		}
 	}()
 
-	response, err := s.h.SetChatPermissions(ctx, request)
+	var response Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "SetChatPermissions",
+			OperationID:   "setChatPermissions",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = SetChatPermissions
+			Params   = struct{}
+			Response = Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.SetChatPermissions(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.SetChatPermissions(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -5771,7 +8439,13 @@ func (s *Server) handleSetChatPermissionsRequest(args [0]string, w http.Response
 	}
 }
 
-// HandleSetChatPhotoRequest handles setChatPhoto operation.
+// handleSetChatPhotoRequest handles setChatPhoto operation.
+//
+// Use this method to set a new profile photo for the chat. Photos can't be changed for private chats.
+//
+//	The bot must be an administrator in the chat for this to work and must have the appropriate
+//
+// administrator rights. Returns _True_ on success.
 //
 // POST /setChatPhoto
 func (s *Server) handleSetChatPhotoRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -5782,7 +8456,7 @@ func (s *Server) handleSetChatPhotoRequest(args [0]string, w http.ResponseWriter
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "SetChatPhoto",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -5808,7 +8482,7 @@ func (s *Server) handleSetChatPhotoRequest(args [0]string, w http.ResponseWriter
 			ID:   "setChatPhoto",
 		}
 	)
-	request, close, err := s.decodeSetChatPhotoRequest(r, span)
+	request, close, err := s.decodeSetChatPhotoRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -5824,7 +8498,37 @@ func (s *Server) handleSetChatPhotoRequest(args [0]string, w http.ResponseWriter
 		}
 	}()
 
-	response, err := s.h.SetChatPhoto(ctx, request)
+	var response Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "SetChatPhoto",
+			OperationID:   "setChatPhoto",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = SetChatPhoto
+			Params   = struct{}
+			Response = Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.SetChatPhoto(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.SetChatPhoto(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -5846,7 +8550,12 @@ func (s *Server) handleSetChatPhotoRequest(args [0]string, w http.ResponseWriter
 	}
 }
 
-// HandleSetChatStickerSetRequest handles setChatStickerSet operation.
+// handleSetChatStickerSetRequest handles setChatStickerSet operation.
+//
+// Use this method to set a new group sticker set for a supergroup. The bot must be an administrator
+// in the chat for this to work and must have the appropriate administrator rights. Use the field
+// _can_set_sticker_set_ optionally returned in [getChat](https://core.telegram.org/bots/api#getchat)
+// requests to check if the bot can use this method. Returns _True_ on success.
 //
 // POST /setChatStickerSet
 func (s *Server) handleSetChatStickerSetRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -5857,7 +8566,7 @@ func (s *Server) handleSetChatStickerSetRequest(args [0]string, w http.ResponseW
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "SetChatStickerSet",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -5883,7 +8592,7 @@ func (s *Server) handleSetChatStickerSetRequest(args [0]string, w http.ResponseW
 			ID:   "setChatStickerSet",
 		}
 	)
-	request, close, err := s.decodeSetChatStickerSetRequest(r, span)
+	request, close, err := s.decodeSetChatStickerSetRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -5899,7 +8608,37 @@ func (s *Server) handleSetChatStickerSetRequest(args [0]string, w http.ResponseW
 		}
 	}()
 
-	response, err := s.h.SetChatStickerSet(ctx, request)
+	var response Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "SetChatStickerSet",
+			OperationID:   "setChatStickerSet",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = SetChatStickerSet
+			Params   = struct{}
+			Response = Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.SetChatStickerSet(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.SetChatStickerSet(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -5921,7 +8660,11 @@ func (s *Server) handleSetChatStickerSetRequest(args [0]string, w http.ResponseW
 	}
 }
 
-// HandleSetChatTitleRequest handles setChatTitle operation.
+// handleSetChatTitleRequest handles setChatTitle operation.
+//
+// Use this method to change the title of a chat. Titles can't be changed for private chats. The bot
+// must be an administrator in the chat for this to work and must have the appropriate administrator
+// rights. Returns _True_ on success.
 //
 // POST /setChatTitle
 func (s *Server) handleSetChatTitleRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -5932,7 +8675,7 @@ func (s *Server) handleSetChatTitleRequest(args [0]string, w http.ResponseWriter
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "SetChatTitle",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -5958,7 +8701,7 @@ func (s *Server) handleSetChatTitleRequest(args [0]string, w http.ResponseWriter
 			ID:   "setChatTitle",
 		}
 	)
-	request, close, err := s.decodeSetChatTitleRequest(r, span)
+	request, close, err := s.decodeSetChatTitleRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -5974,7 +8717,37 @@ func (s *Server) handleSetChatTitleRequest(args [0]string, w http.ResponseWriter
 		}
 	}()
 
-	response, err := s.h.SetChatTitle(ctx, request)
+	var response Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "SetChatTitle",
+			OperationID:   "setChatTitle",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = SetChatTitle
+			Params   = struct{}
+			Response = Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.SetChatTitle(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.SetChatTitle(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -5996,7 +8769,12 @@ func (s *Server) handleSetChatTitleRequest(args [0]string, w http.ResponseWriter
 	}
 }
 
-// HandleSetGameScoreRequest handles setGameScore operation.
+// handleSetGameScoreRequest handles setGameScore operation.
+//
+// Use this method to set the score of the specified user in a game message. On success, if the
+// message is not an inline message, the [Message](https://core.telegram.org/bots/api#message) is
+// returned, otherwise _True_ is returned. Returns an error, if the new score is not greater than the
+// user's current score in the chat and _force_ is _False_.
 //
 // POST /setGameScore
 func (s *Server) handleSetGameScoreRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -6007,7 +8785,7 @@ func (s *Server) handleSetGameScoreRequest(args [0]string, w http.ResponseWriter
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "SetGameScore",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -6033,7 +8811,7 @@ func (s *Server) handleSetGameScoreRequest(args [0]string, w http.ResponseWriter
 			ID:   "setGameScore",
 		}
 	)
-	request, close, err := s.decodeSetGameScoreRequest(r, span)
+	request, close, err := s.decodeSetGameScoreRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -6049,7 +8827,37 @@ func (s *Server) handleSetGameScoreRequest(args [0]string, w http.ResponseWriter
 		}
 	}()
 
-	response, err := s.h.SetGameScore(ctx, request)
+	var response Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "SetGameScore",
+			OperationID:   "setGameScore",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = SetGameScore
+			Params   = struct{}
+			Response = Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.SetGameScore(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.SetGameScore(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -6071,7 +8879,10 @@ func (s *Server) handleSetGameScoreRequest(args [0]string, w http.ResponseWriter
 	}
 }
 
-// HandleSetMyCommandsRequest handles setMyCommands operation.
+// handleSetMyCommandsRequest handles setMyCommands operation.
+//
+// Use this method to change the list of the bot's commands. See [this manual](https://core.telegram.
+// org/bots/features#commands) for more details about bot commands. Returns _True_ on success.
 //
 // POST /setMyCommands
 func (s *Server) handleSetMyCommandsRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -6082,7 +8893,7 @@ func (s *Server) handleSetMyCommandsRequest(args [0]string, w http.ResponseWrite
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "SetMyCommands",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -6108,7 +8919,7 @@ func (s *Server) handleSetMyCommandsRequest(args [0]string, w http.ResponseWrite
 			ID:   "setMyCommands",
 		}
 	)
-	request, close, err := s.decodeSetMyCommandsRequest(r, span)
+	request, close, err := s.decodeSetMyCommandsRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -6124,7 +8935,37 @@ func (s *Server) handleSetMyCommandsRequest(args [0]string, w http.ResponseWrite
 		}
 	}()
 
-	response, err := s.h.SetMyCommands(ctx, request)
+	var response Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "SetMyCommands",
+			OperationID:   "setMyCommands",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = SetMyCommands
+			Params   = struct{}
+			Response = Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.SetMyCommands(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.SetMyCommands(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -6146,7 +8987,11 @@ func (s *Server) handleSetMyCommandsRequest(args [0]string, w http.ResponseWrite
 	}
 }
 
-// HandleSetMyDefaultAdministratorRightsRequest handles setMyDefaultAdministratorRights operation.
+// handleSetMyDefaultAdministratorRightsRequest handles setMyDefaultAdministratorRights operation.
+//
+// Use this method to change the default administrator rights requested by the bot when it's added as
+// an administrator to groups or channels. These rights will be suggested to users, but they are are
+// free to modify the list before adding the bot. Returns _True_ on success.
 //
 // POST /setMyDefaultAdministratorRights
 func (s *Server) handleSetMyDefaultAdministratorRightsRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -6157,7 +9002,7 @@ func (s *Server) handleSetMyDefaultAdministratorRightsRequest(args [0]string, w 
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "SetMyDefaultAdministratorRights",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -6183,7 +9028,7 @@ func (s *Server) handleSetMyDefaultAdministratorRightsRequest(args [0]string, w 
 			ID:   "setMyDefaultAdministratorRights",
 		}
 	)
-	request, close, err := s.decodeSetMyDefaultAdministratorRightsRequest(r, span)
+	request, close, err := s.decodeSetMyDefaultAdministratorRightsRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -6199,7 +9044,37 @@ func (s *Server) handleSetMyDefaultAdministratorRightsRequest(args [0]string, w 
 		}
 	}()
 
-	response, err := s.h.SetMyDefaultAdministratorRights(ctx, request)
+	var response Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "SetMyDefaultAdministratorRights",
+			OperationID:   "setMyDefaultAdministratorRights",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = OptSetMyDefaultAdministratorRights
+			Params   = struct{}
+			Response = Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.SetMyDefaultAdministratorRights(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.SetMyDefaultAdministratorRights(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -6221,7 +9096,12 @@ func (s *Server) handleSetMyDefaultAdministratorRightsRequest(args [0]string, w 
 	}
 }
 
-// HandleSetPassportDataErrorsRequest handles setPassportDataErrors operation.
+// handleSetPassportDataErrorsRequest handles setPassportDataErrors operation.
+//
+// Use this if the data submitted by the user doesn't satisfy the standards your service requires for
+// any reason. For example, if a birthday date seems invalid, a submitted document is blurry, a scan
+// shows evidence of tampering, etc. Supply some details in the error message to make sure the user
+// knows how to correct the issues.
 //
 // POST /setPassportDataErrors
 func (s *Server) handleSetPassportDataErrorsRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -6232,7 +9112,7 @@ func (s *Server) handleSetPassportDataErrorsRequest(args [0]string, w http.Respo
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "SetPassportDataErrors",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -6258,7 +9138,7 @@ func (s *Server) handleSetPassportDataErrorsRequest(args [0]string, w http.Respo
 			ID:   "setPassportDataErrors",
 		}
 	)
-	request, close, err := s.decodeSetPassportDataErrorsRequest(r, span)
+	request, close, err := s.decodeSetPassportDataErrorsRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -6274,7 +9154,37 @@ func (s *Server) handleSetPassportDataErrorsRequest(args [0]string, w http.Respo
 		}
 	}()
 
-	response, err := s.h.SetPassportDataErrors(ctx, request)
+	var response Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "SetPassportDataErrors",
+			OperationID:   "setPassportDataErrors",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = SetPassportDataErrors
+			Params   = struct{}
+			Response = Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.SetPassportDataErrors(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.SetPassportDataErrors(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -6296,7 +9206,10 @@ func (s *Server) handleSetPassportDataErrorsRequest(args [0]string, w http.Respo
 	}
 }
 
-// HandleSetStickerPositionInSetRequest handles setStickerPositionInSet operation.
+// handleSetStickerPositionInSetRequest handles setStickerPositionInSet operation.
+//
+// Use this method to move a sticker in a set created by the bot to a specific position. Returns
+// _True_ on success.
 //
 // POST /setStickerPositionInSet
 func (s *Server) handleSetStickerPositionInSetRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -6307,7 +9220,7 @@ func (s *Server) handleSetStickerPositionInSetRequest(args [0]string, w http.Res
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "SetStickerPositionInSet",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -6333,7 +9246,7 @@ func (s *Server) handleSetStickerPositionInSetRequest(args [0]string, w http.Res
 			ID:   "setStickerPositionInSet",
 		}
 	)
-	request, close, err := s.decodeSetStickerPositionInSetRequest(r, span)
+	request, close, err := s.decodeSetStickerPositionInSetRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -6349,7 +9262,37 @@ func (s *Server) handleSetStickerPositionInSetRequest(args [0]string, w http.Res
 		}
 	}()
 
-	response, err := s.h.SetStickerPositionInSet(ctx, request)
+	var response Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "SetStickerPositionInSet",
+			OperationID:   "setStickerPositionInSet",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = SetStickerPositionInSet
+			Params   = struct{}
+			Response = Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.SetStickerPositionInSet(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.SetStickerPositionInSet(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -6371,7 +9314,11 @@ func (s *Server) handleSetStickerPositionInSetRequest(args [0]string, w http.Res
 	}
 }
 
-// HandleSetStickerSetThumbRequest handles setStickerSetThumb operation.
+// handleSetStickerSetThumbRequest handles setStickerSetThumb operation.
+//
+// Use this method to set the thumbnail of a sticker set. Animated thumbnails can be set for animated
+// sticker sets only. Video thumbnails can be set only for video sticker sets only. Returns _True_ on
+// success.
 //
 // POST /setStickerSetThumb
 func (s *Server) handleSetStickerSetThumbRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -6382,7 +9329,7 @@ func (s *Server) handleSetStickerSetThumbRequest(args [0]string, w http.Response
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "SetStickerSetThumb",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -6408,7 +9355,7 @@ func (s *Server) handleSetStickerSetThumbRequest(args [0]string, w http.Response
 			ID:   "setStickerSetThumb",
 		}
 	)
-	request, close, err := s.decodeSetStickerSetThumbRequest(r, span)
+	request, close, err := s.decodeSetStickerSetThumbRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -6424,7 +9371,37 @@ func (s *Server) handleSetStickerSetThumbRequest(args [0]string, w http.Response
 		}
 	}()
 
-	response, err := s.h.SetStickerSetThumb(ctx, request)
+	var response Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "SetStickerSetThumb",
+			OperationID:   "setStickerSetThumb",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = SetStickerSetThumb
+			Params   = struct{}
+			Response = Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.SetStickerSetThumb(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.SetStickerSetThumb(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -6446,7 +9423,11 @@ func (s *Server) handleSetStickerSetThumbRequest(args [0]string, w http.Response
 	}
 }
 
-// HandleSetWebhookRequest handles setWebhook operation.
+// handleSetWebhookRequest handles setWebhook operation.
+//
+// If you'd like to make sure that the webhook was set by you, you can specify secret data in the
+// parameter _secret_token_. If specified, the request will contain a header
+// `X-Telegram-Bot-Api-Secret-Token` with the secret token as content.
 //
 // POST /setWebhook
 func (s *Server) handleSetWebhookRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -6457,7 +9438,7 @@ func (s *Server) handleSetWebhookRequest(args [0]string, w http.ResponseWriter, 
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "SetWebhook",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -6483,7 +9464,7 @@ func (s *Server) handleSetWebhookRequest(args [0]string, w http.ResponseWriter, 
 			ID:   "setWebhook",
 		}
 	)
-	request, close, err := s.decodeSetWebhookRequest(r, span)
+	request, close, err := s.decodeSetWebhookRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -6499,7 +9480,37 @@ func (s *Server) handleSetWebhookRequest(args [0]string, w http.ResponseWriter, 
 		}
 	}()
 
-	response, err := s.h.SetWebhook(ctx, request)
+	var response Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "SetWebhook",
+			OperationID:   "setWebhook",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = SetWebhook
+			Params   = struct{}
+			Response = Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.SetWebhook(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.SetWebhook(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -6521,7 +9532,11 @@ func (s *Server) handleSetWebhookRequest(args [0]string, w http.ResponseWriter, 
 	}
 }
 
-// HandleStopMessageLiveLocationRequest handles stopMessageLiveLocation operation.
+// handleStopMessageLiveLocationRequest handles stopMessageLiveLocation operation.
+//
+// Use this method to stop updating a live location message before _live_period_ expires. On success,
+// if the message is not an inline message, the edited [Message](https://core.telegram.
+// org/bots/api#message) is returned, otherwise _True_ is returned.
 //
 // POST /stopMessageLiveLocation
 func (s *Server) handleStopMessageLiveLocationRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -6532,7 +9547,7 @@ func (s *Server) handleStopMessageLiveLocationRequest(args [0]string, w http.Res
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "StopMessageLiveLocation",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -6558,7 +9573,7 @@ func (s *Server) handleStopMessageLiveLocationRequest(args [0]string, w http.Res
 			ID:   "stopMessageLiveLocation",
 		}
 	)
-	request, close, err := s.decodeStopMessageLiveLocationRequest(r, span)
+	request, close, err := s.decodeStopMessageLiveLocationRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -6574,7 +9589,37 @@ func (s *Server) handleStopMessageLiveLocationRequest(args [0]string, w http.Res
 		}
 	}()
 
-	response, err := s.h.StopMessageLiveLocation(ctx, request)
+	var response ResultMessageOrBoolean
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "StopMessageLiveLocation",
+			OperationID:   "stopMessageLiveLocation",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = StopMessageLiveLocation
+			Params   = struct{}
+			Response = ResultMessageOrBoolean
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.StopMessageLiveLocation(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.StopMessageLiveLocation(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -6596,7 +9641,10 @@ func (s *Server) handleStopMessageLiveLocationRequest(args [0]string, w http.Res
 	}
 }
 
-// HandleStopPollRequest handles stopPoll operation.
+// handleStopPollRequest handles stopPoll operation.
+//
+// Use this method to stop a poll which was sent by the bot. On success, the stopped
+// [Poll](https://core.telegram.org/bots/api#poll) is returned.
 //
 // POST /stopPoll
 func (s *Server) handleStopPollRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -6607,7 +9655,7 @@ func (s *Server) handleStopPollRequest(args [0]string, w http.ResponseWriter, r 
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "StopPoll",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -6633,7 +9681,7 @@ func (s *Server) handleStopPollRequest(args [0]string, w http.ResponseWriter, r 
 			ID:   "stopPoll",
 		}
 	)
-	request, close, err := s.decodeStopPollRequest(r, span)
+	request, close, err := s.decodeStopPollRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -6649,7 +9697,37 @@ func (s *Server) handleStopPollRequest(args [0]string, w http.ResponseWriter, r 
 		}
 	}()
 
-	response, err := s.h.StopPoll(ctx, request)
+	var response ResultPoll
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "StopPoll",
+			OperationID:   "stopPoll",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = StopPoll
+			Params   = struct{}
+			Response = ResultPoll
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.StopPoll(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.StopPoll(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -6671,7 +9749,14 @@ func (s *Server) handleStopPollRequest(args [0]string, w http.ResponseWriter, r 
 	}
 }
 
-// HandleUnbanChatMemberRequest handles unbanChatMember operation.
+// handleUnbanChatMemberRequest handles unbanChatMember operation.
+//
+// Use this method to unban a previously banned user in a supergroup or channel. The user will
+// **not** return to the group or channel automatically, but will be able to join via link, etc. The
+// bot must be an administrator for this to work. By default, this method guarantees that after the
+// call the user is not a member of the chat, but will be able to join it. So if the user is a member
+// of the chat they will also be **removed** from the chat. If you don't want this, use the parameter
+// _only_if_banned_. Returns _True_ on success.
 //
 // POST /unbanChatMember
 func (s *Server) handleUnbanChatMemberRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -6682,7 +9767,7 @@ func (s *Server) handleUnbanChatMemberRequest(args [0]string, w http.ResponseWri
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "UnbanChatMember",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -6708,7 +9793,7 @@ func (s *Server) handleUnbanChatMemberRequest(args [0]string, w http.ResponseWri
 			ID:   "unbanChatMember",
 		}
 	)
-	request, close, err := s.decodeUnbanChatMemberRequest(r, span)
+	request, close, err := s.decodeUnbanChatMemberRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -6724,7 +9809,37 @@ func (s *Server) handleUnbanChatMemberRequest(args [0]string, w http.ResponseWri
 		}
 	}()
 
-	response, err := s.h.UnbanChatMember(ctx, request)
+	var response Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "UnbanChatMember",
+			OperationID:   "unbanChatMember",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = UnbanChatMember
+			Params   = struct{}
+			Response = Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.UnbanChatMember(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.UnbanChatMember(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -6746,7 +9861,11 @@ func (s *Server) handleUnbanChatMemberRequest(args [0]string, w http.ResponseWri
 	}
 }
 
-// HandleUnbanChatSenderChatRequest handles unbanChatSenderChat operation.
+// handleUnbanChatSenderChatRequest handles unbanChatSenderChat operation.
+//
+// Use this method to unban a previously banned channel chat in a supergroup or channel. The bot must
+// be an administrator for this to work and must have the appropriate administrator rights. Returns
+// _True_ on success.
 //
 // POST /unbanChatSenderChat
 func (s *Server) handleUnbanChatSenderChatRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -6757,7 +9876,7 @@ func (s *Server) handleUnbanChatSenderChatRequest(args [0]string, w http.Respons
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "UnbanChatSenderChat",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -6783,7 +9902,7 @@ func (s *Server) handleUnbanChatSenderChatRequest(args [0]string, w http.Respons
 			ID:   "unbanChatSenderChat",
 		}
 	)
-	request, close, err := s.decodeUnbanChatSenderChatRequest(r, span)
+	request, close, err := s.decodeUnbanChatSenderChatRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -6799,7 +9918,37 @@ func (s *Server) handleUnbanChatSenderChatRequest(args [0]string, w http.Respons
 		}
 	}()
 
-	response, err := s.h.UnbanChatSenderChat(ctx, request)
+	var response Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "UnbanChatSenderChat",
+			OperationID:   "unbanChatSenderChat",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = UnbanChatSenderChat
+			Params   = struct{}
+			Response = Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.UnbanChatSenderChat(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.UnbanChatSenderChat(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -6821,7 +9970,12 @@ func (s *Server) handleUnbanChatSenderChatRequest(args [0]string, w http.Respons
 	}
 }
 
-// HandleUnpinAllChatMessagesRequest handles unpinAllChatMessages operation.
+// handleUnpinAllChatMessagesRequest handles unpinAllChatMessages operation.
+//
+// Use this method to clear the list of pinned messages in a chat. If the chat is not a private chat,
+// the bot must be an administrator in the chat for this to work and must have the 'can_pin_messages'
+// administrator right in a supergroup or 'can_edit_messages' administrator right in a channel.
+// Returns _True_ on success.
 //
 // POST /unpinAllChatMessages
 func (s *Server) handleUnpinAllChatMessagesRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -6832,7 +9986,7 @@ func (s *Server) handleUnpinAllChatMessagesRequest(args [0]string, w http.Respon
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "UnpinAllChatMessages",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -6858,7 +10012,7 @@ func (s *Server) handleUnpinAllChatMessagesRequest(args [0]string, w http.Respon
 			ID:   "unpinAllChatMessages",
 		}
 	)
-	request, close, err := s.decodeUnpinAllChatMessagesRequest(r, span)
+	request, close, err := s.decodeUnpinAllChatMessagesRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -6874,7 +10028,37 @@ func (s *Server) handleUnpinAllChatMessagesRequest(args [0]string, w http.Respon
 		}
 	}()
 
-	response, err := s.h.UnpinAllChatMessages(ctx, request)
+	var response Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "UnpinAllChatMessages",
+			OperationID:   "unpinAllChatMessages",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = UnpinAllChatMessages
+			Params   = struct{}
+			Response = Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.UnpinAllChatMessages(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.UnpinAllChatMessages(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -6896,7 +10080,11 @@ func (s *Server) handleUnpinAllChatMessagesRequest(args [0]string, w http.Respon
 	}
 }
 
-// HandleUnpinAllForumTopicMessagesRequest handles unpinAllForumTopicMessages operation.
+// handleUnpinAllForumTopicMessagesRequest handles unpinAllForumTopicMessages operation.
+//
+// Use this method to clear the list of pinned messages in a forum topic. The bot must be an
+// administrator in the chat for this to work and must have the _can_pin_messages_ administrator
+// right in the supergroup. Returns _True_ on success.
 //
 // POST /unpinAllForumTopicMessages
 func (s *Server) handleUnpinAllForumTopicMessagesRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -6907,7 +10095,7 @@ func (s *Server) handleUnpinAllForumTopicMessagesRequest(args [0]string, w http.
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "UnpinAllForumTopicMessages",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -6933,7 +10121,7 @@ func (s *Server) handleUnpinAllForumTopicMessagesRequest(args [0]string, w http.
 			ID:   "unpinAllForumTopicMessages",
 		}
 	)
-	request, close, err := s.decodeUnpinAllForumTopicMessagesRequest(r, span)
+	request, close, err := s.decodeUnpinAllForumTopicMessagesRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -6949,7 +10137,37 @@ func (s *Server) handleUnpinAllForumTopicMessagesRequest(args [0]string, w http.
 		}
 	}()
 
-	response, err := s.h.UnpinAllForumTopicMessages(ctx, request)
+	var response Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "UnpinAllForumTopicMessages",
+			OperationID:   "unpinAllForumTopicMessages",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = UnpinAllForumTopicMessages
+			Params   = struct{}
+			Response = Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.UnpinAllForumTopicMessages(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.UnpinAllForumTopicMessages(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -6971,7 +10189,12 @@ func (s *Server) handleUnpinAllForumTopicMessagesRequest(args [0]string, w http.
 	}
 }
 
-// HandleUnpinChatMessageRequest handles unpinChatMessage operation.
+// handleUnpinChatMessageRequest handles unpinChatMessage operation.
+//
+// Use this method to remove a message from the list of pinned messages in a chat. If the chat is not
+// a private chat, the bot must be an administrator in the chat for this to work and must have the
+// 'can_pin_messages' administrator right in a supergroup or 'can_edit_messages' administrator right
+// in a channel. Returns _True_ on success.
 //
 // POST /unpinChatMessage
 func (s *Server) handleUnpinChatMessageRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -6982,7 +10205,7 @@ func (s *Server) handleUnpinChatMessageRequest(args [0]string, w http.ResponseWr
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "UnpinChatMessage",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -7008,7 +10231,7 @@ func (s *Server) handleUnpinChatMessageRequest(args [0]string, w http.ResponseWr
 			ID:   "unpinChatMessage",
 		}
 	)
-	request, close, err := s.decodeUnpinChatMessageRequest(r, span)
+	request, close, err := s.decodeUnpinChatMessageRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -7024,7 +10247,37 @@ func (s *Server) handleUnpinChatMessageRequest(args [0]string, w http.ResponseWr
 		}
 	}()
 
-	response, err := s.h.UnpinChatMessage(ctx, request)
+	var response Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "UnpinChatMessage",
+			OperationID:   "unpinChatMessage",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = UnpinChatMessage
+			Params   = struct{}
+			Response = Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.UnpinChatMessage(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.UnpinChatMessage(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -7046,7 +10299,11 @@ func (s *Server) handleUnpinChatMessageRequest(args [0]string, w http.ResponseWr
 	}
 }
 
-// HandleUploadStickerFileRequest handles uploadStickerFile operation.
+// handleUploadStickerFileRequest handles uploadStickerFile operation.
+//
+// Use this method to upload a .PNG file with a sticker for later use in _createNewStickerSet_ and
+// _addStickerToSet_ methods (can be used multiple times). Returns the uploaded [File](https://core.
+// telegram.org/bots/api#file) on success.
 //
 // POST /uploadStickerFile
 func (s *Server) handleUploadStickerFileRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -7057,7 +10314,7 @@ func (s *Server) handleUploadStickerFileRequest(args [0]string, w http.ResponseW
 	// Start a span for this request.
 	ctx, span := s.cfg.Tracer.Start(r.Context(), "UploadStickerFile",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindServer),
+		serverSpanKind,
 	)
 	defer span.End()
 
@@ -7083,7 +10340,7 @@ func (s *Server) handleUploadStickerFileRequest(args [0]string, w http.ResponseW
 			ID:   "uploadStickerFile",
 		}
 	)
-	request, close, err := s.decodeUploadStickerFileRequest(r, span)
+	request, close, err := s.decodeUploadStickerFileRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -7099,7 +10356,37 @@ func (s *Server) handleUploadStickerFileRequest(args [0]string, w http.ResponseW
 		}
 	}()
 
-	response, err := s.h.UploadStickerFile(ctx, request)
+	var response ResultFile
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "UploadStickerFile",
+			OperationID:   "uploadStickerFile",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = UploadStickerFile
+			Params   = struct{}
+			Response = ResultFile
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.UploadStickerFile(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.UploadStickerFile(ctx, request)
+	}
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {

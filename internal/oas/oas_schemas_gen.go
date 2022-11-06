@@ -14,96 +14,306 @@ func (s *ErrorStatusCode) Error() string {
 // Ref: #/components/schemas/addStickerToSet
 type AddStickerToSet struct {
 	// User identifier of sticker set owner.
-	UserID int64 "json:\"user_id\""
+	UserID int64 `json:"user_id"`
 	// Sticker set name.
-	Name string "json:\"name\""
+	Name string `json:"name"`
 	// **PNG** image with the sticker, must be up to 512 kilobytes in size, dimensions must not exceed
 	// 512px, and either width or height must be exactly 512px. Pass a _file_id_ as a String to send a
 	// file that already exists on the Telegram servers, pass an HTTP URL as a String for Telegram to get
 	// a file from the Internet, or upload a new one using multipart/form-data. [More information on
 	// Sending Files](https://core.telegram.org/bots/api#sending-files).
-	PNGSticker OptString "json:\"png_sticker\""
+	PNGSticker OptString `json:"png_sticker"`
 	// **TGS** animation with the sticker, uploaded using multipart/form-data. See [](https://core.
 	// telegram.org/stickers#animated-sticker-requirements)[https://core.telegram.
 	// org/stickers#animated-sticker-requirements](https://core.telegram.
 	// org/stickers#animated-sticker-requirements) for technical requirements.
-	TgsSticker OptString "json:\"tgs_sticker\""
+	TgsSticker OptString `json:"tgs_sticker"`
 	// **WEBM** video with the sticker, uploaded using multipart/form-data. See [](https://core.telegram.
 	// org/stickers#video-sticker-requirements)[https://core.telegram.
 	// org/stickers#video-sticker-requirements](https://core.telegram.
 	// org/stickers#video-sticker-requirements) for technical requirements.
-	WebmSticker OptString "json:\"webm_sticker\""
+	WebmSticker OptString `json:"webm_sticker"`
 	// One or more emoji corresponding to the sticker.
-	Emojis       string          "json:\"emojis\""
-	MaskPosition OptMaskPosition "json:\"mask_position\""
+	Emojis       string          `json:"emojis"`
+	MaskPosition OptMaskPosition `json:"mask_position"`
+}
+
+// GetUserID returns the value of UserID.
+func (s AddStickerToSet) GetUserID() int64 {
+	return s.UserID
+}
+
+// GetName returns the value of Name.
+func (s AddStickerToSet) GetName() string {
+	return s.Name
+}
+
+// GetPNGSticker returns the value of PNGSticker.
+func (s AddStickerToSet) GetPNGSticker() OptString {
+	return s.PNGSticker
+}
+
+// GetTgsSticker returns the value of TgsSticker.
+func (s AddStickerToSet) GetTgsSticker() OptString {
+	return s.TgsSticker
+}
+
+// GetWebmSticker returns the value of WebmSticker.
+func (s AddStickerToSet) GetWebmSticker() OptString {
+	return s.WebmSticker
+}
+
+// GetEmojis returns the value of Emojis.
+func (s AddStickerToSet) GetEmojis() string {
+	return s.Emojis
+}
+
+// GetMaskPosition returns the value of MaskPosition.
+func (s AddStickerToSet) GetMaskPosition() OptMaskPosition {
+	return s.MaskPosition
+}
+
+// SetUserID sets the value of UserID.
+func (s *AddStickerToSet) SetUserID(val int64) {
+	s.UserID = val
+}
+
+// SetName sets the value of Name.
+func (s *AddStickerToSet) SetName(val string) {
+	s.Name = val
+}
+
+// SetPNGSticker sets the value of PNGSticker.
+func (s *AddStickerToSet) SetPNGSticker(val OptString) {
+	s.PNGSticker = val
+}
+
+// SetTgsSticker sets the value of TgsSticker.
+func (s *AddStickerToSet) SetTgsSticker(val OptString) {
+	s.TgsSticker = val
+}
+
+// SetWebmSticker sets the value of WebmSticker.
+func (s *AddStickerToSet) SetWebmSticker(val OptString) {
+	s.WebmSticker = val
+}
+
+// SetEmojis sets the value of Emojis.
+func (s *AddStickerToSet) SetEmojis(val string) {
+	s.Emojis = val
+}
+
+// SetMaskPosition sets the value of MaskPosition.
+func (s *AddStickerToSet) SetMaskPosition(val OptMaskPosition) {
+	s.MaskPosition = val
 }
 
 // This object represents an animation file (GIF or H.264/MPEG-4 AVC video without sound).
 // Ref: #/components/schemas/Animation
 type Animation struct {
 	// Identifier for this file, which can be used to download or reuse the file.
-	FileID string "json:\"file_id\""
+	FileID string `json:"file_id"`
 	// Unique identifier for this file, which is supposed to be the same over time and for different bots.
 	//  Can't be used to download or reuse the file.
-	FileUniqueID string "json:\"file_unique_id\""
+	FileUniqueID string `json:"file_unique_id"`
 	// Video width as defined by sender.
-	Width int "json:\"width\""
+	Width int `json:"width"`
 	// Video height as defined by sender.
-	Height int "json:\"height\""
+	Height int `json:"height"`
 	// Duration of the video in seconds as defined by sender.
-	Duration int          "json:\"duration\""
-	Thumb    OptPhotoSize "json:\"thumb\""
+	Duration int          `json:"duration"`
+	Thumb    OptPhotoSize `json:"thumb"`
 	// _Optional_. Original animation filename as defined by sender.
-	FileName OptString "json:\"file_name\""
+	FileName OptString `json:"file_name"`
 	// _Optional_. MIME type of the file as defined by sender.
-	MimeType OptString "json:\"mime_type\""
+	MimeType OptString `json:"mime_type"`
 	// _Optional_. File size in bytes. It can be bigger than 2^31 and some programming languages may have
 	// difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed
 	// 64-bit integer or double-precision float type are safe for storing this value.
-	FileSize OptInt "json:\"file_size\""
+	FileSize OptInt `json:"file_size"`
+}
+
+// GetFileID returns the value of FileID.
+func (s Animation) GetFileID() string {
+	return s.FileID
+}
+
+// GetFileUniqueID returns the value of FileUniqueID.
+func (s Animation) GetFileUniqueID() string {
+	return s.FileUniqueID
+}
+
+// GetWidth returns the value of Width.
+func (s Animation) GetWidth() int {
+	return s.Width
+}
+
+// GetHeight returns the value of Height.
+func (s Animation) GetHeight() int {
+	return s.Height
+}
+
+// GetDuration returns the value of Duration.
+func (s Animation) GetDuration() int {
+	return s.Duration
+}
+
+// GetThumb returns the value of Thumb.
+func (s Animation) GetThumb() OptPhotoSize {
+	return s.Thumb
+}
+
+// GetFileName returns the value of FileName.
+func (s Animation) GetFileName() OptString {
+	return s.FileName
+}
+
+// GetMimeType returns the value of MimeType.
+func (s Animation) GetMimeType() OptString {
+	return s.MimeType
+}
+
+// GetFileSize returns the value of FileSize.
+func (s Animation) GetFileSize() OptInt {
+	return s.FileSize
+}
+
+// SetFileID sets the value of FileID.
+func (s *Animation) SetFileID(val string) {
+	s.FileID = val
+}
+
+// SetFileUniqueID sets the value of FileUniqueID.
+func (s *Animation) SetFileUniqueID(val string) {
+	s.FileUniqueID = val
+}
+
+// SetWidth sets the value of Width.
+func (s *Animation) SetWidth(val int) {
+	s.Width = val
+}
+
+// SetHeight sets the value of Height.
+func (s *Animation) SetHeight(val int) {
+	s.Height = val
+}
+
+// SetDuration sets the value of Duration.
+func (s *Animation) SetDuration(val int) {
+	s.Duration = val
+}
+
+// SetThumb sets the value of Thumb.
+func (s *Animation) SetThumb(val OptPhotoSize) {
+	s.Thumb = val
+}
+
+// SetFileName sets the value of FileName.
+func (s *Animation) SetFileName(val OptString) {
+	s.FileName = val
+}
+
+// SetMimeType sets the value of MimeType.
+func (s *Animation) SetMimeType(val OptString) {
+	s.MimeType = val
+}
+
+// SetFileSize sets the value of FileSize.
+func (s *Animation) SetFileSize(val OptInt) {
+	s.FileSize = val
 }
 
 // Input for answerCallbackQuery.
 // Ref: #/components/schemas/answerCallbackQuery
 type AnswerCallbackQuery struct {
 	// Unique identifier for the query to be answered.
-	CallbackQueryID string "json:\"callback_query_id\""
+	CallbackQueryID string `json:"callback_query_id"`
 	// Text of the notification. If not specified, nothing will be shown to the user, 0-200 characters.
-	Text OptString "json:\"text\""
+	Text OptString `json:"text"`
 	// If _True_, an alert will be shown by the client instead of a notification at the top of the chat
 	// screen. Defaults to _false_.
-	ShowAlert OptBool "json:\"show_alert\""
+	ShowAlert OptBool `json:"show_alert"`
 	// URL that will be opened by the user's client. If you have created a [Game](https://core.telegram.
 	// org/bots/api#game) and accepted the conditions via [@BotFather](https://t.me/botfather), specify
 	// the URL that opens your game - note that this will only work if the query comes from a
 	// [_callback_game_](https://core.telegram.org/bots/api#inlinekeyboardbutton) button.Otherwise, you
 	// may use links like `t.me/your_bot?start=XXXX` that open your bot with a parameter.
-	URL OptString "json:\"url\""
+	URL OptString `json:"url"`
 	// The maximum amount of time in seconds that the result of the callback query may be cached
 	// client-side. Telegram apps will support caching starting in version 3.14. Defaults to 0.
-	CacheTime OptInt "json:\"cache_time\""
+	CacheTime OptInt `json:"cache_time"`
+}
+
+// GetCallbackQueryID returns the value of CallbackQueryID.
+func (s AnswerCallbackQuery) GetCallbackQueryID() string {
+	return s.CallbackQueryID
+}
+
+// GetText returns the value of Text.
+func (s AnswerCallbackQuery) GetText() OptString {
+	return s.Text
+}
+
+// GetShowAlert returns the value of ShowAlert.
+func (s AnswerCallbackQuery) GetShowAlert() OptBool {
+	return s.ShowAlert
+}
+
+// GetURL returns the value of URL.
+func (s AnswerCallbackQuery) GetURL() OptString {
+	return s.URL
+}
+
+// GetCacheTime returns the value of CacheTime.
+func (s AnswerCallbackQuery) GetCacheTime() OptInt {
+	return s.CacheTime
+}
+
+// SetCallbackQueryID sets the value of CallbackQueryID.
+func (s *AnswerCallbackQuery) SetCallbackQueryID(val string) {
+	s.CallbackQueryID = val
+}
+
+// SetText sets the value of Text.
+func (s *AnswerCallbackQuery) SetText(val OptString) {
+	s.Text = val
+}
+
+// SetShowAlert sets the value of ShowAlert.
+func (s *AnswerCallbackQuery) SetShowAlert(val OptBool) {
+	s.ShowAlert = val
+}
+
+// SetURL sets the value of URL.
+func (s *AnswerCallbackQuery) SetURL(val OptString) {
+	s.URL = val
+}
+
+// SetCacheTime sets the value of CacheTime.
+func (s *AnswerCallbackQuery) SetCacheTime(val OptInt) {
+	s.CacheTime = val
 }
 
 // Input for answerInlineQuery.
 // Ref: #/components/schemas/answerInlineQuery
 type AnswerInlineQuery struct {
 	// Unique identifier for the answered query.
-	InlineQueryID string "json:\"inline_query_id\""
+	InlineQueryID string `json:"inline_query_id"`
 	// A JSON-serialized array of results for the inline query.
-	Results []InlineQueryResult "json:\"results\""
+	Results []InlineQueryResult `json:"results"`
 	// The maximum amount of time in seconds that the result of the inline query may be cached on the
 	// server. Defaults to 300.
-	CacheTime OptInt "json:\"cache_time\""
+	CacheTime OptInt `json:"cache_time"`
 	// Pass _True_ if results may be cached on the server side only for the user that sent the query. By
 	// default, results may be returned to any user who sends the same query.
-	IsPersonal OptBool "json:\"is_personal\""
+	IsPersonal OptBool `json:"is_personal"`
 	// Pass the offset that a client should send in the next query with the same text to receive more
 	// results. Pass an empty string if there are no more results or if you don't support pagination.
 	// Offset length can't exceed 64 bytes.
-	NextOffset OptString "json:\"next_offset\""
+	NextOffset OptString `json:"next_offset"`
 	// If passed, clients will display a button with specified text that switches the user to a private
 	// chat with the bot and sends the bot a start message with the parameter _switch_pm_parameter_.
-	SwitchPmText OptString "json:\"switch_pm_text\""
+	SwitchPmText OptString `json:"switch_pm_text"`
 	// [Deep-linking](https://core.telegram.org/bots/features#deep-linking) parameter for the /start
 	// message sent to the bot when user presses the switch button. 1-64 characters, only `A-Z`, `a-z`,
 	// `0-9`, `_` and `-` are allowed._Example:_ An inline bot that sends YouTube videos can ask the user
@@ -113,103 +323,433 @@ type AnswerInlineQuery struct {
 	// start parameter that instructs the bot to return an OAuth link. Once done, the bot can offer a
 	// [_switch_inline_](https://core.telegram.org/bots/api#inlinekeyboardmarkup) button so that the user
 	// can easily return to the chat where they wanted to use the bot's inline capabilities.
-	SwitchPmParameter OptString "json:\"switch_pm_parameter\""
+	SwitchPmParameter OptString `json:"switch_pm_parameter"`
+}
+
+// GetInlineQueryID returns the value of InlineQueryID.
+func (s AnswerInlineQuery) GetInlineQueryID() string {
+	return s.InlineQueryID
+}
+
+// GetResults returns the value of Results.
+func (s AnswerInlineQuery) GetResults() []InlineQueryResult {
+	return s.Results
+}
+
+// GetCacheTime returns the value of CacheTime.
+func (s AnswerInlineQuery) GetCacheTime() OptInt {
+	return s.CacheTime
+}
+
+// GetIsPersonal returns the value of IsPersonal.
+func (s AnswerInlineQuery) GetIsPersonal() OptBool {
+	return s.IsPersonal
+}
+
+// GetNextOffset returns the value of NextOffset.
+func (s AnswerInlineQuery) GetNextOffset() OptString {
+	return s.NextOffset
+}
+
+// GetSwitchPmText returns the value of SwitchPmText.
+func (s AnswerInlineQuery) GetSwitchPmText() OptString {
+	return s.SwitchPmText
+}
+
+// GetSwitchPmParameter returns the value of SwitchPmParameter.
+func (s AnswerInlineQuery) GetSwitchPmParameter() OptString {
+	return s.SwitchPmParameter
+}
+
+// SetInlineQueryID sets the value of InlineQueryID.
+func (s *AnswerInlineQuery) SetInlineQueryID(val string) {
+	s.InlineQueryID = val
+}
+
+// SetResults sets the value of Results.
+func (s *AnswerInlineQuery) SetResults(val []InlineQueryResult) {
+	s.Results = val
+}
+
+// SetCacheTime sets the value of CacheTime.
+func (s *AnswerInlineQuery) SetCacheTime(val OptInt) {
+	s.CacheTime = val
+}
+
+// SetIsPersonal sets the value of IsPersonal.
+func (s *AnswerInlineQuery) SetIsPersonal(val OptBool) {
+	s.IsPersonal = val
+}
+
+// SetNextOffset sets the value of NextOffset.
+func (s *AnswerInlineQuery) SetNextOffset(val OptString) {
+	s.NextOffset = val
+}
+
+// SetSwitchPmText sets the value of SwitchPmText.
+func (s *AnswerInlineQuery) SetSwitchPmText(val OptString) {
+	s.SwitchPmText = val
+}
+
+// SetSwitchPmParameter sets the value of SwitchPmParameter.
+func (s *AnswerInlineQuery) SetSwitchPmParameter(val OptString) {
+	s.SwitchPmParameter = val
 }
 
 // Input for answerPreCheckoutQuery.
 // Ref: #/components/schemas/answerPreCheckoutQuery
 type AnswerPreCheckoutQuery struct {
 	// Unique identifier for the query to be answered.
-	PreCheckoutQueryID string "json:\"pre_checkout_query_id\""
+	PreCheckoutQueryID string `json:"pre_checkout_query_id"`
 	// Specify _True_ if everything is alright (goods are available, etc.) and the bot is ready to
 	// proceed with the order. Use _False_ if there are any problems.
-	Ok bool "json:\"ok\""
+	Ok bool `json:"ok"`
 	// Required if _ok_ is _False_. Error message in human readable form that explains the reason for
 	// failure to proceed with the checkout (e.g. "Sorry, somebody just bought the last of our amazing
 	// black T-shirts while you were busy filling out your payment details. Please choose a different
 	// color or garment!"). Telegram will display this message to the user.
-	ErrorMessage OptString "json:\"error_message\""
+	ErrorMessage OptString `json:"error_message"`
+}
+
+// GetPreCheckoutQueryID returns the value of PreCheckoutQueryID.
+func (s AnswerPreCheckoutQuery) GetPreCheckoutQueryID() string {
+	return s.PreCheckoutQueryID
+}
+
+// GetOk returns the value of Ok.
+func (s AnswerPreCheckoutQuery) GetOk() bool {
+	return s.Ok
+}
+
+// GetErrorMessage returns the value of ErrorMessage.
+func (s AnswerPreCheckoutQuery) GetErrorMessage() OptString {
+	return s.ErrorMessage
+}
+
+// SetPreCheckoutQueryID sets the value of PreCheckoutQueryID.
+func (s *AnswerPreCheckoutQuery) SetPreCheckoutQueryID(val string) {
+	s.PreCheckoutQueryID = val
+}
+
+// SetOk sets the value of Ok.
+func (s *AnswerPreCheckoutQuery) SetOk(val bool) {
+	s.Ok = val
+}
+
+// SetErrorMessage sets the value of ErrorMessage.
+func (s *AnswerPreCheckoutQuery) SetErrorMessage(val OptString) {
+	s.ErrorMessage = val
 }
 
 // Input for answerShippingQuery.
 // Ref: #/components/schemas/answerShippingQuery
 type AnswerShippingQuery struct {
 	// Unique identifier for the query to be answered.
-	ShippingQueryID string "json:\"shipping_query_id\""
+	ShippingQueryID string `json:"shipping_query_id"`
 	// Pass _True_ if delivery to the specified address is possible and _False_ if there are any problems
 	// (for example, if delivery to the specified address is not possible).
-	Ok bool "json:\"ok\""
+	Ok bool `json:"ok"`
 	// Required if _ok_ is _True_. A JSON-serialized array of available shipping options.
-	ShippingOptions []ShippingOption "json:\"shipping_options\""
+	ShippingOptions []ShippingOption `json:"shipping_options"`
 	// Required if _ok_ is _False_. Error message in human readable form that explains why it is
 	// impossible to complete the order (e.g. "Sorry, delivery to your desired address is unavailable').
 	// Telegram will display this message to the user.
-	ErrorMessage OptString "json:\"error_message\""
+	ErrorMessage OptString `json:"error_message"`
+}
+
+// GetShippingQueryID returns the value of ShippingQueryID.
+func (s AnswerShippingQuery) GetShippingQueryID() string {
+	return s.ShippingQueryID
+}
+
+// GetOk returns the value of Ok.
+func (s AnswerShippingQuery) GetOk() bool {
+	return s.Ok
+}
+
+// GetShippingOptions returns the value of ShippingOptions.
+func (s AnswerShippingQuery) GetShippingOptions() []ShippingOption {
+	return s.ShippingOptions
+}
+
+// GetErrorMessage returns the value of ErrorMessage.
+func (s AnswerShippingQuery) GetErrorMessage() OptString {
+	return s.ErrorMessage
+}
+
+// SetShippingQueryID sets the value of ShippingQueryID.
+func (s *AnswerShippingQuery) SetShippingQueryID(val string) {
+	s.ShippingQueryID = val
+}
+
+// SetOk sets the value of Ok.
+func (s *AnswerShippingQuery) SetOk(val bool) {
+	s.Ok = val
+}
+
+// SetShippingOptions sets the value of ShippingOptions.
+func (s *AnswerShippingQuery) SetShippingOptions(val []ShippingOption) {
+	s.ShippingOptions = val
+}
+
+// SetErrorMessage sets the value of ErrorMessage.
+func (s *AnswerShippingQuery) SetErrorMessage(val OptString) {
+	s.ErrorMessage = val
 }
 
 // Input for answerWebAppQuery.
 // Ref: #/components/schemas/answerWebAppQuery
 type AnswerWebAppQuery struct {
 	// Unique identifier for the query to be answered.
-	WebAppQueryID string            "json:\"web_app_query_id\""
-	Result        InlineQueryResult "json:\"result\""
+	WebAppQueryID string            `json:"web_app_query_id"`
+	Result        InlineQueryResult `json:"result"`
+}
+
+// GetWebAppQueryID returns the value of WebAppQueryID.
+func (s AnswerWebAppQuery) GetWebAppQueryID() string {
+	return s.WebAppQueryID
+}
+
+// GetResult returns the value of Result.
+func (s AnswerWebAppQuery) GetResult() InlineQueryResult {
+	return s.Result
+}
+
+// SetWebAppQueryID sets the value of WebAppQueryID.
+func (s *AnswerWebAppQuery) SetWebAppQueryID(val string) {
+	s.WebAppQueryID = val
+}
+
+// SetResult sets the value of Result.
+func (s *AnswerWebAppQuery) SetResult(val InlineQueryResult) {
+	s.Result = val
 }
 
 // Input for approveChatJoinRequest.
 // Ref: #/components/schemas/approveChatJoinRequest
 type ApproveChatJoinRequest struct {
-	ChatID ID "json:\"chat_id\""
+	ChatID ID `json:"chat_id"`
 	// Unique identifier of the target user.
-	UserID int64 "json:\"user_id\""
+	UserID int64 `json:"user_id"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s ApproveChatJoinRequest) GetChatID() ID {
+	return s.ChatID
+}
+
+// GetUserID returns the value of UserID.
+func (s ApproveChatJoinRequest) GetUserID() int64 {
+	return s.UserID
+}
+
+// SetChatID sets the value of ChatID.
+func (s *ApproveChatJoinRequest) SetChatID(val ID) {
+	s.ChatID = val
+}
+
+// SetUserID sets the value of UserID.
+func (s *ApproveChatJoinRequest) SetUserID(val int64) {
+	s.UserID = val
 }
 
 // This object represents an audio file to be treated as music by the Telegram clients.
 // Ref: #/components/schemas/Audio
 type Audio struct {
 	// Identifier for this file, which can be used to download or reuse the file.
-	FileID string "json:\"file_id\""
+	FileID string `json:"file_id"`
 	// Unique identifier for this file, which is supposed to be the same over time and for different bots.
 	//  Can't be used to download or reuse the file.
-	FileUniqueID string "json:\"file_unique_id\""
+	FileUniqueID string `json:"file_unique_id"`
 	// Duration of the audio in seconds as defined by sender.
-	Duration int "json:\"duration\""
+	Duration int `json:"duration"`
 	// _Optional_. Performer of the audio as defined by sender or by audio tags.
-	Performer OptString "json:\"performer\""
+	Performer OptString `json:"performer"`
 	// _Optional_. Title of the audio as defined by sender or by audio tags.
-	Title OptString "json:\"title\""
+	Title OptString `json:"title"`
 	// _Optional_. Original filename as defined by sender.
-	FileName OptString "json:\"file_name\""
+	FileName OptString `json:"file_name"`
 	// _Optional_. MIME type of the file as defined by sender.
-	MimeType OptString "json:\"mime_type\""
+	MimeType OptString `json:"mime_type"`
 	// _Optional_. File size in bytes. It can be bigger than 2^31 and some programming languages may have
 	// difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed
 	// 64-bit integer or double-precision float type are safe for storing this value.
-	FileSize OptInt       "json:\"file_size\""
-	Thumb    OptPhotoSize "json:\"thumb\""
+	FileSize OptInt       `json:"file_size"`
+	Thumb    OptPhotoSize `json:"thumb"`
+}
+
+// GetFileID returns the value of FileID.
+func (s Audio) GetFileID() string {
+	return s.FileID
+}
+
+// GetFileUniqueID returns the value of FileUniqueID.
+func (s Audio) GetFileUniqueID() string {
+	return s.FileUniqueID
+}
+
+// GetDuration returns the value of Duration.
+func (s Audio) GetDuration() int {
+	return s.Duration
+}
+
+// GetPerformer returns the value of Performer.
+func (s Audio) GetPerformer() OptString {
+	return s.Performer
+}
+
+// GetTitle returns the value of Title.
+func (s Audio) GetTitle() OptString {
+	return s.Title
+}
+
+// GetFileName returns the value of FileName.
+func (s Audio) GetFileName() OptString {
+	return s.FileName
+}
+
+// GetMimeType returns the value of MimeType.
+func (s Audio) GetMimeType() OptString {
+	return s.MimeType
+}
+
+// GetFileSize returns the value of FileSize.
+func (s Audio) GetFileSize() OptInt {
+	return s.FileSize
+}
+
+// GetThumb returns the value of Thumb.
+func (s Audio) GetThumb() OptPhotoSize {
+	return s.Thumb
+}
+
+// SetFileID sets the value of FileID.
+func (s *Audio) SetFileID(val string) {
+	s.FileID = val
+}
+
+// SetFileUniqueID sets the value of FileUniqueID.
+func (s *Audio) SetFileUniqueID(val string) {
+	s.FileUniqueID = val
+}
+
+// SetDuration sets the value of Duration.
+func (s *Audio) SetDuration(val int) {
+	s.Duration = val
+}
+
+// SetPerformer sets the value of Performer.
+func (s *Audio) SetPerformer(val OptString) {
+	s.Performer = val
+}
+
+// SetTitle sets the value of Title.
+func (s *Audio) SetTitle(val OptString) {
+	s.Title = val
+}
+
+// SetFileName sets the value of FileName.
+func (s *Audio) SetFileName(val OptString) {
+	s.FileName = val
+}
+
+// SetMimeType sets the value of MimeType.
+func (s *Audio) SetMimeType(val OptString) {
+	s.MimeType = val
+}
+
+// SetFileSize sets the value of FileSize.
+func (s *Audio) SetFileSize(val OptInt) {
+	s.FileSize = val
+}
+
+// SetThumb sets the value of Thumb.
+func (s *Audio) SetThumb(val OptPhotoSize) {
+	s.Thumb = val
 }
 
 // Input for banChatMember.
 // Ref: #/components/schemas/banChatMember
 type BanChatMember struct {
-	ChatID ID "json:\"chat_id\""
+	ChatID ID `json:"chat_id"`
 	// Unique identifier of the target user.
-	UserID int64 "json:\"user_id\""
+	UserID int64 `json:"user_id"`
 	// Date when the user will be unbanned, unix time. If user is banned for more than 366 days or less
 	// than 30 seconds from the current time they are considered to be banned forever. Applied for
 	// supergroups and channels only.
-	UntilDate OptInt "json:\"until_date\""
+	UntilDate OptInt `json:"until_date"`
 	// Pass _True_ to delete all messages from the chat for the user that is being removed. If _False_,
 	// the user will be able to see messages in the group that were sent before the user was removed.
 	// Always _True_ for supergroups and channels.
-	RevokeMessages OptBool "json:\"revoke_messages\""
+	RevokeMessages OptBool `json:"revoke_messages"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s BanChatMember) GetChatID() ID {
+	return s.ChatID
+}
+
+// GetUserID returns the value of UserID.
+func (s BanChatMember) GetUserID() int64 {
+	return s.UserID
+}
+
+// GetUntilDate returns the value of UntilDate.
+func (s BanChatMember) GetUntilDate() OptInt {
+	return s.UntilDate
+}
+
+// GetRevokeMessages returns the value of RevokeMessages.
+func (s BanChatMember) GetRevokeMessages() OptBool {
+	return s.RevokeMessages
+}
+
+// SetChatID sets the value of ChatID.
+func (s *BanChatMember) SetChatID(val ID) {
+	s.ChatID = val
+}
+
+// SetUserID sets the value of UserID.
+func (s *BanChatMember) SetUserID(val int64) {
+	s.UserID = val
+}
+
+// SetUntilDate sets the value of UntilDate.
+func (s *BanChatMember) SetUntilDate(val OptInt) {
+	s.UntilDate = val
+}
+
+// SetRevokeMessages sets the value of RevokeMessages.
+func (s *BanChatMember) SetRevokeMessages(val OptBool) {
+	s.RevokeMessages = val
 }
 
 // Input for banChatSenderChat.
 // Ref: #/components/schemas/banChatSenderChat
 type BanChatSenderChat struct {
-	ChatID ID "json:\"chat_id\""
+	ChatID ID `json:"chat_id"`
 	// Unique identifier of the target sender chat.
-	SenderChatID int64 "json:\"sender_chat_id\""
+	SenderChatID int64 `json:"sender_chat_id"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s BanChatSenderChat) GetChatID() ID {
+	return s.ChatID
+}
+
+// GetSenderChatID returns the value of SenderChatID.
+func (s BanChatSenderChat) GetSenderChatID() int64 {
+	return s.SenderChatID
+}
+
+// SetChatID sets the value of ChatID.
+func (s *BanChatSenderChat) SetChatID(val ID) {
+	s.ChatID = val
+}
+
+// SetSenderChatID sets the value of SenderChatID.
+func (s *BanChatSenderChat) SetSenderChatID(val int64) {
+	s.SenderChatID = val
 }
 
 // This object represents a bot command.
@@ -217,9 +757,29 @@ type BanChatSenderChat struct {
 type BotCommand struct {
 	// Text of the command; 1-32 characters. Can contain only lowercase English letters, digits and
 	// underscores.
-	Command string "json:\"command\""
+	Command string `json:"command"`
 	// Description of the command; 1-256 characters.
-	Description string "json:\"description\""
+	Description string `json:"description"`
+}
+
+// GetCommand returns the value of Command.
+func (s BotCommand) GetCommand() string {
+	return s.Command
+}
+
+// GetDescription returns the value of Description.
+func (s BotCommand) GetDescription() string {
+	return s.Description
+}
+
+// SetCommand sets the value of Command.
+func (s *BotCommand) SetCommand(val string) {
+	s.Command = val
+}
+
+// SetDescription sets the value of Description.
+func (s *BotCommand) SetDescription(val string) {
+	s.Description = val
 }
 
 // This object represents the scope to which bot commands are applied. Currently, the following 7
@@ -452,23 +1012,63 @@ type BotCommandScopeAllPrivateChats struct{}
 // covering a specific chat.
 // Ref: #/components/schemas/BotCommandScopeChat
 type BotCommandScopeChat struct {
-	ChatID ID "json:\"chat_id\""
+	ChatID ID `json:"chat_id"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s BotCommandScopeChat) GetChatID() ID {
+	return s.ChatID
+}
+
+// SetChatID sets the value of ChatID.
+func (s *BotCommandScopeChat) SetChatID(val ID) {
+	s.ChatID = val
 }
 
 // Represents the [scope](https://core.telegram.org/bots/api#botcommandscope) of bot commands,
 // covering all administrators of a specific group or supergroup chat.
 // Ref: #/components/schemas/BotCommandScopeChatAdministrators
 type BotCommandScopeChatAdministrators struct {
-	ChatID ID "json:\"chat_id\""
+	ChatID ID `json:"chat_id"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s BotCommandScopeChatAdministrators) GetChatID() ID {
+	return s.ChatID
+}
+
+// SetChatID sets the value of ChatID.
+func (s *BotCommandScopeChatAdministrators) SetChatID(val ID) {
+	s.ChatID = val
 }
 
 // Represents the [scope](https://core.telegram.org/bots/api#botcommandscope) of bot commands,
 // covering a specific member of a group or supergroup chat.
 // Ref: #/components/schemas/BotCommandScopeChatMember
 type BotCommandScopeChatMember struct {
-	ChatID ID "json:\"chat_id\""
+	ChatID ID `json:"chat_id"`
 	// Unique identifier of the target user.
-	UserID int64 "json:\"user_id\""
+	UserID int64 `json:"user_id"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s BotCommandScopeChatMember) GetChatID() ID {
+	return s.ChatID
+}
+
+// GetUserID returns the value of UserID.
+func (s BotCommandScopeChatMember) GetUserID() int64 {
+	return s.UserID
+}
+
+// SetChatID sets the value of ChatID.
+func (s *BotCommandScopeChatMember) SetChatID(val ID) {
+	s.ChatID = val
+}
+
+// SetUserID sets the value of UserID.
+func (s *BotCommandScopeChatMember) SetUserID(val int64) {
+	s.UserID = val
 }
 
 // Represents the default [scope](https://core.telegram.org/bots/api#botcommandscope) of bot commands.
@@ -493,20 +1093,90 @@ type CallbackGame struct{}
 // Ref: #/components/schemas/CallbackQuery
 type CallbackQuery struct {
 	// Unique identifier for this query.
-	ID      string     "json:\"id\""
-	From    User       "json:\"from\""
-	Message OptMessage "json:\"message\""
+	ID      string     `json:"id"`
+	From    User       `json:"from"`
+	Message OptMessage `json:"message"`
 	// _Optional_. Identifier of the message sent via the bot in inline mode, that originated the query.
-	InlineMessageID OptString "json:\"inline_message_id\""
+	InlineMessageID OptString `json:"inline_message_id"`
 	// Global identifier, uniquely corresponding to the chat to which the message with the callback
 	// button was sent. Useful for high scores in [games](https://core.telegram.org/bots/api#games).
-	ChatInstance string "json:\"chat_instance\""
+	ChatInstance string `json:"chat_instance"`
 	// _Optional_. Data associated with the callback button. Be aware that the message originated the
 	// query can contain no callback buttons with this data.
-	Data OptString "json:\"data\""
+	Data OptString `json:"data"`
 	// _Optional_. Short name of a [Game](https://core.telegram.org/bots/api#games) to be returned,
 	// serves as the unique identifier for the game.
-	GameShortName OptString "json:\"game_short_name\""
+	GameShortName OptString `json:"game_short_name"`
+}
+
+// GetID returns the value of ID.
+func (s CallbackQuery) GetID() string {
+	return s.ID
+}
+
+// GetFrom returns the value of From.
+func (s CallbackQuery) GetFrom() User {
+	return s.From
+}
+
+// GetMessage returns the value of Message.
+func (s CallbackQuery) GetMessage() OptMessage {
+	return s.Message
+}
+
+// GetInlineMessageID returns the value of InlineMessageID.
+func (s CallbackQuery) GetInlineMessageID() OptString {
+	return s.InlineMessageID
+}
+
+// GetChatInstance returns the value of ChatInstance.
+func (s CallbackQuery) GetChatInstance() string {
+	return s.ChatInstance
+}
+
+// GetData returns the value of Data.
+func (s CallbackQuery) GetData() OptString {
+	return s.Data
+}
+
+// GetGameShortName returns the value of GameShortName.
+func (s CallbackQuery) GetGameShortName() OptString {
+	return s.GameShortName
+}
+
+// SetID sets the value of ID.
+func (s *CallbackQuery) SetID(val string) {
+	s.ID = val
+}
+
+// SetFrom sets the value of From.
+func (s *CallbackQuery) SetFrom(val User) {
+	s.From = val
+}
+
+// SetMessage sets the value of Message.
+func (s *CallbackQuery) SetMessage(val OptMessage) {
+	s.Message = val
+}
+
+// SetInlineMessageID sets the value of InlineMessageID.
+func (s *CallbackQuery) SetInlineMessageID(val OptString) {
+	s.InlineMessageID = val
+}
+
+// SetChatInstance sets the value of ChatInstance.
+func (s *CallbackQuery) SetChatInstance(val string) {
+	s.ChatInstance = val
+}
+
+// SetData sets the value of Data.
+func (s *CallbackQuery) SetData(val OptString) {
+	s.Data = val
+}
+
+// SetGameShortName sets the value of GameShortName.
+func (s *CallbackQuery) SetGameShortName(val OptString) {
+	s.GameShortName = val
 }
 
 // This object represents a chat.
@@ -516,112 +1186,502 @@ type Chat struct {
 	// programming languages may have difficulty/silent defects in interpreting it. But it has at most 52
 	// significant bits, so a signed 64-bit integer or double-precision float type are safe for storing
 	// this identifier.
-	ID int64 "json:\"id\""
+	ID int64 `json:"id"`
 	// Type of chat, can be either `private`, `group`, `supergroup` or `channel`.
-	Type ChatType "json:\"type\""
+	Type ChatType `json:"type"`
 	// _Optional_. Title, for supergroups, channels and group chats.
-	Title OptString "json:\"title\""
+	Title OptString `json:"title"`
 	// _Optional_. Username, for private chats, supergroups and channels if available.
-	Username OptString "json:\"username\""
+	Username OptString `json:"username"`
 	// _Optional_. First name of the other party in a private chat.
-	FirstName OptString "json:\"first_name\""
+	FirstName OptString `json:"first_name"`
 	// _Optional_. Last name of the other party in a private chat.
-	LastName OptString "json:\"last_name\""
+	LastName OptString `json:"last_name"`
 	// _Optional_. _True_, if the supergroup chat is a forum (has [topics](https://telegram.
 	// org/blog/topics-in-groups-collectible-usernames#topics-in-groups) enabled).
-	IsForum OptBool      "json:\"is_forum\""
-	Photo   OptChatPhoto "json:\"photo\""
+	IsForum OptBool      `json:"is_forum"`
+	Photo   OptChatPhoto `json:"photo"`
 	// _Optional_. If non-empty, the list of all [active chat usernames](https://telegram.
 	// org/blog/topics-in-groups-collectible-usernames#collectible-usernames); for private chats,
 	// supergroups and channels. Returned only in [getChat](https://core.telegram.org/bots/api#getchat).
-	ActiveUsernames []string "json:\"active_usernames\""
+	ActiveUsernames []string `json:"active_usernames"`
 	// _Optional_. Custom emoji identifier of emoji status of the other party in a private chat. Returned
 	// only in [getChat](https://core.telegram.org/bots/api#getchat).
-	EmojiStatusCustomEmojiID OptString "json:\"emoji_status_custom_emoji_id\""
+	EmojiStatusCustomEmojiID OptString `json:"emoji_status_custom_emoji_id"`
 	// _Optional_. Bio of the other party in a private chat. Returned only in [getChat](https://core.
 	// telegram.org/bots/api#getchat).
-	Bio OptString "json:\"bio\""
+	Bio OptString `json:"bio"`
 	// _Optional_. _True_, if privacy settings of the other party in the private chat allows to use
 	// `tg://user?id=<user_id>` links only in chats with the user. Returned only in
 	// [getChat](https://core.telegram.org/bots/api#getchat).
-	HasPrivateForwards OptBool "json:\"has_private_forwards\""
+	HasPrivateForwards OptBool `json:"has_private_forwards"`
 	// _Optional_. _True_, if the privacy settings of the other party restrict sending voice and video
 	// note messages in the private chat. Returned only in [getChat](https://core.telegram.
 	// org/bots/api#getchat).
-	HasRestrictedVoiceAndVideoMessages OptBool "json:\"has_restricted_voice_and_video_messages\""
+	HasRestrictedVoiceAndVideoMessages OptBool `json:"has_restricted_voice_and_video_messages"`
 	// _Optional_. _True_, if users need to join the supergroup before they can send messages. Returned
 	// only in [getChat](https://core.telegram.org/bots/api#getchat).
-	JoinToSendMessages OptBool "json:\"join_to_send_messages\""
+	JoinToSendMessages OptBool `json:"join_to_send_messages"`
 	// _Optional_. _True_, if all users directly joining the supergroup need to be approved by supergroup
 	// administrators. Returned only in [getChat](https://core.telegram.org/bots/api#getchat).
-	JoinByRequest OptBool "json:\"join_by_request\""
+	JoinByRequest OptBool `json:"join_by_request"`
 	// _Optional_. Description, for groups, supergroups and channel chats. Returned only in
 	// [getChat](https://core.telegram.org/bots/api#getchat).
-	Description OptString "json:\"description\""
+	Description OptString `json:"description"`
 	// _Optional_. Primary invite link, for groups, supergroups and channel chats. Returned only in
 	// [getChat](https://core.telegram.org/bots/api#getchat).
-	InviteLink    OptString          "json:\"invite_link\""
-	PinnedMessage *Message           "json:\"pinned_message\""
-	Permissions   OptChatPermissions "json:\"permissions\""
+	InviteLink    OptString          `json:"invite_link"`
+	PinnedMessage *Message           `json:"pinned_message"`
+	Permissions   OptChatPermissions `json:"permissions"`
 	// _Optional_. For supergroups, the minimum allowed delay between consecutive messages sent by each
 	// unprivileged user; in seconds. Returned only in [getChat](https://core.telegram.
 	// org/bots/api#getchat).
-	SlowModeDelay OptInt "json:\"slow_mode_delay\""
+	SlowModeDelay OptInt `json:"slow_mode_delay"`
 	// _Optional_. The time after which all messages sent to the chat will be automatically deleted; in
 	// seconds. Returned only in [getChat](https://core.telegram.org/bots/api#getchat).
-	MessageAutoDeleteTime OptInt "json:\"message_auto_delete_time\""
+	MessageAutoDeleteTime OptInt `json:"message_auto_delete_time"`
 	// _Optional_. _True_, if messages from the chat can't be forwarded to other chats. Returned only in
 	// [getChat](https://core.telegram.org/bots/api#getchat).
-	HasProtectedContent OptBool "json:\"has_protected_content\""
+	HasProtectedContent OptBool `json:"has_protected_content"`
 	// _Optional_. For supergroups, name of group sticker set. Returned only in [getChat](https://core.
 	// telegram.org/bots/api#getchat).
-	StickerSetName OptString "json:\"sticker_set_name\""
+	StickerSetName OptString `json:"sticker_set_name"`
 	// _Optional_. _True_, if the bot can change the group sticker set. Returned only in
 	// [getChat](https://core.telegram.org/bots/api#getchat).
-	CanSetStickerSet OptBool "json:\"can_set_sticker_set\""
+	CanSetStickerSet OptBool `json:"can_set_sticker_set"`
 	// _Optional_. Unique identifier for the linked chat, i.e. the discussion group identifier for a
 	// channel and vice versa; for supergroups and channel chats. This identifier may be greater than 32
 	// bits and some programming languages may have difficulty/silent defects in interpreting it. But it
 	// is smaller than 52 bits, so a signed 64 bit integer or double-precision float type are safe for
 	// storing this identifier. Returned only in [getChat](https://core.telegram.org/bots/api#getchat).
-	LinkedChatID                OptInt64        "json:\"linked_chat_id\""
-	Location                    OptChatLocation "json:\"location\""
-	AllMembersAreAdministrators OptBool         "json:\"all_members_are_administrators\""
+	LinkedChatID                OptInt64        `json:"linked_chat_id"`
+	Location                    OptChatLocation `json:"location"`
+	AllMembersAreAdministrators OptBool         `json:"all_members_are_administrators"`
+}
+
+// GetID returns the value of ID.
+func (s Chat) GetID() int64 {
+	return s.ID
+}
+
+// GetType returns the value of Type.
+func (s Chat) GetType() ChatType {
+	return s.Type
+}
+
+// GetTitle returns the value of Title.
+func (s Chat) GetTitle() OptString {
+	return s.Title
+}
+
+// GetUsername returns the value of Username.
+func (s Chat) GetUsername() OptString {
+	return s.Username
+}
+
+// GetFirstName returns the value of FirstName.
+func (s Chat) GetFirstName() OptString {
+	return s.FirstName
+}
+
+// GetLastName returns the value of LastName.
+func (s Chat) GetLastName() OptString {
+	return s.LastName
+}
+
+// GetIsForum returns the value of IsForum.
+func (s Chat) GetIsForum() OptBool {
+	return s.IsForum
+}
+
+// GetPhoto returns the value of Photo.
+func (s Chat) GetPhoto() OptChatPhoto {
+	return s.Photo
+}
+
+// GetActiveUsernames returns the value of ActiveUsernames.
+func (s Chat) GetActiveUsernames() []string {
+	return s.ActiveUsernames
+}
+
+// GetEmojiStatusCustomEmojiID returns the value of EmojiStatusCustomEmojiID.
+func (s Chat) GetEmojiStatusCustomEmojiID() OptString {
+	return s.EmojiStatusCustomEmojiID
+}
+
+// GetBio returns the value of Bio.
+func (s Chat) GetBio() OptString {
+	return s.Bio
+}
+
+// GetHasPrivateForwards returns the value of HasPrivateForwards.
+func (s Chat) GetHasPrivateForwards() OptBool {
+	return s.HasPrivateForwards
+}
+
+// GetHasRestrictedVoiceAndVideoMessages returns the value of HasRestrictedVoiceAndVideoMessages.
+func (s Chat) GetHasRestrictedVoiceAndVideoMessages() OptBool {
+	return s.HasRestrictedVoiceAndVideoMessages
+}
+
+// GetJoinToSendMessages returns the value of JoinToSendMessages.
+func (s Chat) GetJoinToSendMessages() OptBool {
+	return s.JoinToSendMessages
+}
+
+// GetJoinByRequest returns the value of JoinByRequest.
+func (s Chat) GetJoinByRequest() OptBool {
+	return s.JoinByRequest
+}
+
+// GetDescription returns the value of Description.
+func (s Chat) GetDescription() OptString {
+	return s.Description
+}
+
+// GetInviteLink returns the value of InviteLink.
+func (s Chat) GetInviteLink() OptString {
+	return s.InviteLink
+}
+
+// GetPinnedMessage returns the value of PinnedMessage.
+func (s Chat) GetPinnedMessage() *Message {
+	return s.PinnedMessage
+}
+
+// GetPermissions returns the value of Permissions.
+func (s Chat) GetPermissions() OptChatPermissions {
+	return s.Permissions
+}
+
+// GetSlowModeDelay returns the value of SlowModeDelay.
+func (s Chat) GetSlowModeDelay() OptInt {
+	return s.SlowModeDelay
+}
+
+// GetMessageAutoDeleteTime returns the value of MessageAutoDeleteTime.
+func (s Chat) GetMessageAutoDeleteTime() OptInt {
+	return s.MessageAutoDeleteTime
+}
+
+// GetHasProtectedContent returns the value of HasProtectedContent.
+func (s Chat) GetHasProtectedContent() OptBool {
+	return s.HasProtectedContent
+}
+
+// GetStickerSetName returns the value of StickerSetName.
+func (s Chat) GetStickerSetName() OptString {
+	return s.StickerSetName
+}
+
+// GetCanSetStickerSet returns the value of CanSetStickerSet.
+func (s Chat) GetCanSetStickerSet() OptBool {
+	return s.CanSetStickerSet
+}
+
+// GetLinkedChatID returns the value of LinkedChatID.
+func (s Chat) GetLinkedChatID() OptInt64 {
+	return s.LinkedChatID
+}
+
+// GetLocation returns the value of Location.
+func (s Chat) GetLocation() OptChatLocation {
+	return s.Location
+}
+
+// GetAllMembersAreAdministrators returns the value of AllMembersAreAdministrators.
+func (s Chat) GetAllMembersAreAdministrators() OptBool {
+	return s.AllMembersAreAdministrators
+}
+
+// SetID sets the value of ID.
+func (s *Chat) SetID(val int64) {
+	s.ID = val
+}
+
+// SetType sets the value of Type.
+func (s *Chat) SetType(val ChatType) {
+	s.Type = val
+}
+
+// SetTitle sets the value of Title.
+func (s *Chat) SetTitle(val OptString) {
+	s.Title = val
+}
+
+// SetUsername sets the value of Username.
+func (s *Chat) SetUsername(val OptString) {
+	s.Username = val
+}
+
+// SetFirstName sets the value of FirstName.
+func (s *Chat) SetFirstName(val OptString) {
+	s.FirstName = val
+}
+
+// SetLastName sets the value of LastName.
+func (s *Chat) SetLastName(val OptString) {
+	s.LastName = val
+}
+
+// SetIsForum sets the value of IsForum.
+func (s *Chat) SetIsForum(val OptBool) {
+	s.IsForum = val
+}
+
+// SetPhoto sets the value of Photo.
+func (s *Chat) SetPhoto(val OptChatPhoto) {
+	s.Photo = val
+}
+
+// SetActiveUsernames sets the value of ActiveUsernames.
+func (s *Chat) SetActiveUsernames(val []string) {
+	s.ActiveUsernames = val
+}
+
+// SetEmojiStatusCustomEmojiID sets the value of EmojiStatusCustomEmojiID.
+func (s *Chat) SetEmojiStatusCustomEmojiID(val OptString) {
+	s.EmojiStatusCustomEmojiID = val
+}
+
+// SetBio sets the value of Bio.
+func (s *Chat) SetBio(val OptString) {
+	s.Bio = val
+}
+
+// SetHasPrivateForwards sets the value of HasPrivateForwards.
+func (s *Chat) SetHasPrivateForwards(val OptBool) {
+	s.HasPrivateForwards = val
+}
+
+// SetHasRestrictedVoiceAndVideoMessages sets the value of HasRestrictedVoiceAndVideoMessages.
+func (s *Chat) SetHasRestrictedVoiceAndVideoMessages(val OptBool) {
+	s.HasRestrictedVoiceAndVideoMessages = val
+}
+
+// SetJoinToSendMessages sets the value of JoinToSendMessages.
+func (s *Chat) SetJoinToSendMessages(val OptBool) {
+	s.JoinToSendMessages = val
+}
+
+// SetJoinByRequest sets the value of JoinByRequest.
+func (s *Chat) SetJoinByRequest(val OptBool) {
+	s.JoinByRequest = val
+}
+
+// SetDescription sets the value of Description.
+func (s *Chat) SetDescription(val OptString) {
+	s.Description = val
+}
+
+// SetInviteLink sets the value of InviteLink.
+func (s *Chat) SetInviteLink(val OptString) {
+	s.InviteLink = val
+}
+
+// SetPinnedMessage sets the value of PinnedMessage.
+func (s *Chat) SetPinnedMessage(val *Message) {
+	s.PinnedMessage = val
+}
+
+// SetPermissions sets the value of Permissions.
+func (s *Chat) SetPermissions(val OptChatPermissions) {
+	s.Permissions = val
+}
+
+// SetSlowModeDelay sets the value of SlowModeDelay.
+func (s *Chat) SetSlowModeDelay(val OptInt) {
+	s.SlowModeDelay = val
+}
+
+// SetMessageAutoDeleteTime sets the value of MessageAutoDeleteTime.
+func (s *Chat) SetMessageAutoDeleteTime(val OptInt) {
+	s.MessageAutoDeleteTime = val
+}
+
+// SetHasProtectedContent sets the value of HasProtectedContent.
+func (s *Chat) SetHasProtectedContent(val OptBool) {
+	s.HasProtectedContent = val
+}
+
+// SetStickerSetName sets the value of StickerSetName.
+func (s *Chat) SetStickerSetName(val OptString) {
+	s.StickerSetName = val
+}
+
+// SetCanSetStickerSet sets the value of CanSetStickerSet.
+func (s *Chat) SetCanSetStickerSet(val OptBool) {
+	s.CanSetStickerSet = val
+}
+
+// SetLinkedChatID sets the value of LinkedChatID.
+func (s *Chat) SetLinkedChatID(val OptInt64) {
+	s.LinkedChatID = val
+}
+
+// SetLocation sets the value of Location.
+func (s *Chat) SetLocation(val OptChatLocation) {
+	s.Location = val
+}
+
+// SetAllMembersAreAdministrators sets the value of AllMembersAreAdministrators.
+func (s *Chat) SetAllMembersAreAdministrators(val OptBool) {
+	s.AllMembersAreAdministrators = val
 }
 
 // Represents the rights of an administrator in a chat.
 // Ref: #/components/schemas/ChatAdministratorRights
 type ChatAdministratorRights struct {
 	// _True_, if the user's presence in the chat is hidden.
-	IsAnonymous bool "json:\"is_anonymous\""
+	IsAnonymous bool `json:"is_anonymous"`
 	// _True_, if the administrator can access the chat event log, chat statistics, message statistics in
 	// channels, see channel members, see anonymous administrators in supergroups and ignore slow mode.
 	// Implied by any other administrator privilege.
-	CanManageChat bool "json:\"can_manage_chat\""
+	CanManageChat bool `json:"can_manage_chat"`
 	// _True_, if the administrator can delete messages of other users.
-	CanDeleteMessages bool "json:\"can_delete_messages\""
+	CanDeleteMessages bool `json:"can_delete_messages"`
 	// _True_, if the administrator can manage video chats.
-	CanManageVideoChats bool "json:\"can_manage_video_chats\""
+	CanManageVideoChats bool `json:"can_manage_video_chats"`
 	// _True_, if the administrator can restrict, ban or unban chat members.
-	CanRestrictMembers bool "json:\"can_restrict_members\""
+	CanRestrictMembers bool `json:"can_restrict_members"`
 	// _True_, if the administrator can add new administrators with a subset of their own privileges or
 	// demote administrators that he has promoted, directly or indirectly (promoted by administrators
 	// that were appointed by the user).
-	CanPromoteMembers bool "json:\"can_promote_members\""
+	CanPromoteMembers bool `json:"can_promote_members"`
 	// _True_, if the user is allowed to change the chat title, photo and other settings.
-	CanChangeInfo bool "json:\"can_change_info\""
+	CanChangeInfo bool `json:"can_change_info"`
 	// _True_, if the user is allowed to invite new users to the chat.
-	CanInviteUsers bool "json:\"can_invite_users\""
+	CanInviteUsers bool `json:"can_invite_users"`
 	// _Optional_. _True_, if the administrator can post in the channel; channels only.
-	CanPostMessages OptBool "json:\"can_post_messages\""
+	CanPostMessages OptBool `json:"can_post_messages"`
 	// _Optional_. _True_, if the administrator can edit messages of other users and can pin messages;
 	// channels only.
-	CanEditMessages OptBool "json:\"can_edit_messages\""
+	CanEditMessages OptBool `json:"can_edit_messages"`
 	// _Optional_. _True_, if the user is allowed to pin messages; groups and supergroups only.
-	CanPinMessages OptBool "json:\"can_pin_messages\""
+	CanPinMessages OptBool `json:"can_pin_messages"`
 	// _Optional_. _True_, if the user is allowed to create, rename, close, and reopen forum topics;
 	// supergroups only.
-	CanManageTopics OptBool "json:\"can_manage_topics\""
+	CanManageTopics OptBool `json:"can_manage_topics"`
+}
+
+// GetIsAnonymous returns the value of IsAnonymous.
+func (s ChatAdministratorRights) GetIsAnonymous() bool {
+	return s.IsAnonymous
+}
+
+// GetCanManageChat returns the value of CanManageChat.
+func (s ChatAdministratorRights) GetCanManageChat() bool {
+	return s.CanManageChat
+}
+
+// GetCanDeleteMessages returns the value of CanDeleteMessages.
+func (s ChatAdministratorRights) GetCanDeleteMessages() bool {
+	return s.CanDeleteMessages
+}
+
+// GetCanManageVideoChats returns the value of CanManageVideoChats.
+func (s ChatAdministratorRights) GetCanManageVideoChats() bool {
+	return s.CanManageVideoChats
+}
+
+// GetCanRestrictMembers returns the value of CanRestrictMembers.
+func (s ChatAdministratorRights) GetCanRestrictMembers() bool {
+	return s.CanRestrictMembers
+}
+
+// GetCanPromoteMembers returns the value of CanPromoteMembers.
+func (s ChatAdministratorRights) GetCanPromoteMembers() bool {
+	return s.CanPromoteMembers
+}
+
+// GetCanChangeInfo returns the value of CanChangeInfo.
+func (s ChatAdministratorRights) GetCanChangeInfo() bool {
+	return s.CanChangeInfo
+}
+
+// GetCanInviteUsers returns the value of CanInviteUsers.
+func (s ChatAdministratorRights) GetCanInviteUsers() bool {
+	return s.CanInviteUsers
+}
+
+// GetCanPostMessages returns the value of CanPostMessages.
+func (s ChatAdministratorRights) GetCanPostMessages() OptBool {
+	return s.CanPostMessages
+}
+
+// GetCanEditMessages returns the value of CanEditMessages.
+func (s ChatAdministratorRights) GetCanEditMessages() OptBool {
+	return s.CanEditMessages
+}
+
+// GetCanPinMessages returns the value of CanPinMessages.
+func (s ChatAdministratorRights) GetCanPinMessages() OptBool {
+	return s.CanPinMessages
+}
+
+// GetCanManageTopics returns the value of CanManageTopics.
+func (s ChatAdministratorRights) GetCanManageTopics() OptBool {
+	return s.CanManageTopics
+}
+
+// SetIsAnonymous sets the value of IsAnonymous.
+func (s *ChatAdministratorRights) SetIsAnonymous(val bool) {
+	s.IsAnonymous = val
+}
+
+// SetCanManageChat sets the value of CanManageChat.
+func (s *ChatAdministratorRights) SetCanManageChat(val bool) {
+	s.CanManageChat = val
+}
+
+// SetCanDeleteMessages sets the value of CanDeleteMessages.
+func (s *ChatAdministratorRights) SetCanDeleteMessages(val bool) {
+	s.CanDeleteMessages = val
+}
+
+// SetCanManageVideoChats sets the value of CanManageVideoChats.
+func (s *ChatAdministratorRights) SetCanManageVideoChats(val bool) {
+	s.CanManageVideoChats = val
+}
+
+// SetCanRestrictMembers sets the value of CanRestrictMembers.
+func (s *ChatAdministratorRights) SetCanRestrictMembers(val bool) {
+	s.CanRestrictMembers = val
+}
+
+// SetCanPromoteMembers sets the value of CanPromoteMembers.
+func (s *ChatAdministratorRights) SetCanPromoteMembers(val bool) {
+	s.CanPromoteMembers = val
+}
+
+// SetCanChangeInfo sets the value of CanChangeInfo.
+func (s *ChatAdministratorRights) SetCanChangeInfo(val bool) {
+	s.CanChangeInfo = val
+}
+
+// SetCanInviteUsers sets the value of CanInviteUsers.
+func (s *ChatAdministratorRights) SetCanInviteUsers(val bool) {
+	s.CanInviteUsers = val
+}
+
+// SetCanPostMessages sets the value of CanPostMessages.
+func (s *ChatAdministratorRights) SetCanPostMessages(val OptBool) {
+	s.CanPostMessages = val
+}
+
+// SetCanEditMessages sets the value of CanEditMessages.
+func (s *ChatAdministratorRights) SetCanEditMessages(val OptBool) {
+	s.CanEditMessages = val
+}
+
+// SetCanPinMessages sets the value of CanPinMessages.
+func (s *ChatAdministratorRights) SetCanPinMessages(val OptBool) {
+	s.CanPinMessages = val
+}
+
+// SetCanManageTopics sets the value of CanManageTopics.
+func (s *ChatAdministratorRights) SetCanManageTopics(val OptBool) {
+	s.CanManageTopics = val
 }
 
 // Represents an invite link for a chat.
@@ -629,43 +1689,203 @@ type ChatAdministratorRights struct {
 type ChatInviteLink struct {
 	// The invite link. If the link was created by another chat administrator, then the second part of
 	// the link will be replaced with `...`.
-	InviteLink string "json:\"invite_link\""
-	Creator    User   "json:\"creator\""
+	InviteLink string `json:"invite_link"`
+	Creator    User   `json:"creator"`
 	// _True_, if users joining the chat via the link need to be approved by chat administrators.
-	CreatesJoinRequest bool "json:\"creates_join_request\""
+	CreatesJoinRequest bool `json:"creates_join_request"`
 	// _True_, if the link is primary.
-	IsPrimary bool "json:\"is_primary\""
+	IsPrimary bool `json:"is_primary"`
 	// _True_, if the link is revoked.
-	IsRevoked bool "json:\"is_revoked\""
+	IsRevoked bool `json:"is_revoked"`
 	// _Optional_. Invite link name.
-	Name OptString "json:\"name\""
+	Name OptString `json:"name"`
 	// _Optional_. Point in time (Unix timestamp) when the link will expire or has been expired.
-	ExpireDate OptInt "json:\"expire_date\""
+	ExpireDate OptInt `json:"expire_date"`
 	// _Optional_. The maximum number of users that can be members of the chat simultaneously after
 	// joining the chat via this invite link; 1-99999.
-	MemberLimit OptInt "json:\"member_limit\""
+	MemberLimit OptInt `json:"member_limit"`
 	// _Optional_. Number of pending join requests created using this link.
-	PendingJoinRequestCount OptInt "json:\"pending_join_request_count\""
+	PendingJoinRequestCount OptInt `json:"pending_join_request_count"`
+}
+
+// GetInviteLink returns the value of InviteLink.
+func (s ChatInviteLink) GetInviteLink() string {
+	return s.InviteLink
+}
+
+// GetCreator returns the value of Creator.
+func (s ChatInviteLink) GetCreator() User {
+	return s.Creator
+}
+
+// GetCreatesJoinRequest returns the value of CreatesJoinRequest.
+func (s ChatInviteLink) GetCreatesJoinRequest() bool {
+	return s.CreatesJoinRequest
+}
+
+// GetIsPrimary returns the value of IsPrimary.
+func (s ChatInviteLink) GetIsPrimary() bool {
+	return s.IsPrimary
+}
+
+// GetIsRevoked returns the value of IsRevoked.
+func (s ChatInviteLink) GetIsRevoked() bool {
+	return s.IsRevoked
+}
+
+// GetName returns the value of Name.
+func (s ChatInviteLink) GetName() OptString {
+	return s.Name
+}
+
+// GetExpireDate returns the value of ExpireDate.
+func (s ChatInviteLink) GetExpireDate() OptInt {
+	return s.ExpireDate
+}
+
+// GetMemberLimit returns the value of MemberLimit.
+func (s ChatInviteLink) GetMemberLimit() OptInt {
+	return s.MemberLimit
+}
+
+// GetPendingJoinRequestCount returns the value of PendingJoinRequestCount.
+func (s ChatInviteLink) GetPendingJoinRequestCount() OptInt {
+	return s.PendingJoinRequestCount
+}
+
+// SetInviteLink sets the value of InviteLink.
+func (s *ChatInviteLink) SetInviteLink(val string) {
+	s.InviteLink = val
+}
+
+// SetCreator sets the value of Creator.
+func (s *ChatInviteLink) SetCreator(val User) {
+	s.Creator = val
+}
+
+// SetCreatesJoinRequest sets the value of CreatesJoinRequest.
+func (s *ChatInviteLink) SetCreatesJoinRequest(val bool) {
+	s.CreatesJoinRequest = val
+}
+
+// SetIsPrimary sets the value of IsPrimary.
+func (s *ChatInviteLink) SetIsPrimary(val bool) {
+	s.IsPrimary = val
+}
+
+// SetIsRevoked sets the value of IsRevoked.
+func (s *ChatInviteLink) SetIsRevoked(val bool) {
+	s.IsRevoked = val
+}
+
+// SetName sets the value of Name.
+func (s *ChatInviteLink) SetName(val OptString) {
+	s.Name = val
+}
+
+// SetExpireDate sets the value of ExpireDate.
+func (s *ChatInviteLink) SetExpireDate(val OptInt) {
+	s.ExpireDate = val
+}
+
+// SetMemberLimit sets the value of MemberLimit.
+func (s *ChatInviteLink) SetMemberLimit(val OptInt) {
+	s.MemberLimit = val
+}
+
+// SetPendingJoinRequestCount sets the value of PendingJoinRequestCount.
+func (s *ChatInviteLink) SetPendingJoinRequestCount(val OptInt) {
+	s.PendingJoinRequestCount = val
 }
 
 // Represents a join request sent to a chat.
 // Ref: #/components/schemas/ChatJoinRequest
 type ChatJoinRequest struct {
-	Chat Chat "json:\"chat\""
-	From User "json:\"from\""
+	Chat Chat `json:"chat"`
+	From User `json:"from"`
 	// Date the request was sent in Unix time.
-	Date int "json:\"date\""
+	Date int `json:"date"`
 	// _Optional_. Bio of the user.
-	Bio        OptString         "json:\"bio\""
-	InviteLink OptChatInviteLink "json:\"invite_link\""
+	Bio        OptString         `json:"bio"`
+	InviteLink OptChatInviteLink `json:"invite_link"`
+}
+
+// GetChat returns the value of Chat.
+func (s ChatJoinRequest) GetChat() Chat {
+	return s.Chat
+}
+
+// GetFrom returns the value of From.
+func (s ChatJoinRequest) GetFrom() User {
+	return s.From
+}
+
+// GetDate returns the value of Date.
+func (s ChatJoinRequest) GetDate() int {
+	return s.Date
+}
+
+// GetBio returns the value of Bio.
+func (s ChatJoinRequest) GetBio() OptString {
+	return s.Bio
+}
+
+// GetInviteLink returns the value of InviteLink.
+func (s ChatJoinRequest) GetInviteLink() OptChatInviteLink {
+	return s.InviteLink
+}
+
+// SetChat sets the value of Chat.
+func (s *ChatJoinRequest) SetChat(val Chat) {
+	s.Chat = val
+}
+
+// SetFrom sets the value of From.
+func (s *ChatJoinRequest) SetFrom(val User) {
+	s.From = val
+}
+
+// SetDate sets the value of Date.
+func (s *ChatJoinRequest) SetDate(val int) {
+	s.Date = val
+}
+
+// SetBio sets the value of Bio.
+func (s *ChatJoinRequest) SetBio(val OptString) {
+	s.Bio = val
+}
+
+// SetInviteLink sets the value of InviteLink.
+func (s *ChatJoinRequest) SetInviteLink(val OptChatInviteLink) {
+	s.InviteLink = val
 }
 
 // Represents a location to which a chat is connected.
 // Ref: #/components/schemas/ChatLocation
 type ChatLocation struct {
-	Location Location "json:\"location\""
+	Location Location `json:"location"`
 	// Location address; 1-64 characters, as defined by the chat owner.
-	Address string "json:\"address\""
+	Address string `json:"address"`
+}
+
+// GetLocation returns the value of Location.
+func (s ChatLocation) GetLocation() Location {
+	return s.Location
+}
+
+// GetAddress returns the value of Address.
+func (s ChatLocation) GetAddress() string {
+	return s.Address
+}
+
+// SetLocation sets the value of Location.
+func (s *ChatLocation) SetLocation(val Location) {
+	s.Location = val
+}
+
+// SetAddress sets the value of Address.
+func (s *ChatLocation) SetAddress(val string) {
+	s.Address = val
 }
 
 // This object contains information about one member of a chat. Currently, the following 6 types of
@@ -846,42 +2066,202 @@ func NewChatMemberBannedChatMember(v ChatMemberBanned) ChatMember {
 // Ref: #/components/schemas/ChatMemberAdministrator
 type ChatMemberAdministrator struct {
 	// The member's status in the chat, always `administrator`.
-	Status string "json:\"status\""
-	User   User   "json:\"user\""
+	Status string `json:"status"`
+	User   User   `json:"user"`
 	// _True_, if the bot is allowed to edit administrator privileges of that user.
-	CanBeEdited bool "json:\"can_be_edited\""
+	CanBeEdited bool `json:"can_be_edited"`
 	// _True_, if the user's presence in the chat is hidden.
-	IsAnonymous bool "json:\"is_anonymous\""
+	IsAnonymous bool `json:"is_anonymous"`
 	// _True_, if the administrator can access the chat event log, chat statistics, message statistics in
 	// channels, see channel members, see anonymous administrators in supergroups and ignore slow mode.
 	// Implied by any other administrator privilege.
-	CanManageChat bool "json:\"can_manage_chat\""
+	CanManageChat bool `json:"can_manage_chat"`
 	// _True_, if the administrator can delete messages of other users.
-	CanDeleteMessages bool "json:\"can_delete_messages\""
+	CanDeleteMessages bool `json:"can_delete_messages"`
 	// _True_, if the administrator can manage video chats.
-	CanManageVideoChats bool "json:\"can_manage_video_chats\""
+	CanManageVideoChats bool `json:"can_manage_video_chats"`
 	// _True_, if the administrator can restrict, ban or unban chat members.
-	CanRestrictMembers bool "json:\"can_restrict_members\""
+	CanRestrictMembers bool `json:"can_restrict_members"`
 	// _True_, if the administrator can add new administrators with a subset of their own privileges or
 	// demote administrators that he has promoted, directly or indirectly (promoted by administrators
 	// that were appointed by the user).
-	CanPromoteMembers bool "json:\"can_promote_members\""
+	CanPromoteMembers bool `json:"can_promote_members"`
 	// _True_, if the user is allowed to change the chat title, photo and other settings.
-	CanChangeInfo bool "json:\"can_change_info\""
+	CanChangeInfo bool `json:"can_change_info"`
 	// _True_, if the user is allowed to invite new users to the chat.
-	CanInviteUsers bool "json:\"can_invite_users\""
+	CanInviteUsers bool `json:"can_invite_users"`
 	// _Optional_. _True_, if the administrator can post in the channel; channels only.
-	CanPostMessages OptBool "json:\"can_post_messages\""
+	CanPostMessages OptBool `json:"can_post_messages"`
 	// _Optional_. _True_, if the administrator can edit messages of other users and can pin messages;
 	// channels only.
-	CanEditMessages OptBool "json:\"can_edit_messages\""
+	CanEditMessages OptBool `json:"can_edit_messages"`
 	// _Optional_. _True_, if the user is allowed to pin messages; groups and supergroups only.
-	CanPinMessages OptBool "json:\"can_pin_messages\""
+	CanPinMessages OptBool `json:"can_pin_messages"`
 	// _Optional_. _True_, if the user is allowed to create, rename, close, and reopen forum topics;
 	// supergroups only.
-	CanManageTopics OptBool "json:\"can_manage_topics\""
+	CanManageTopics OptBool `json:"can_manage_topics"`
 	// _Optional_. Custom title for this user.
-	CustomTitle OptString "json:\"custom_title\""
+	CustomTitle OptString `json:"custom_title"`
+}
+
+// GetStatus returns the value of Status.
+func (s ChatMemberAdministrator) GetStatus() string {
+	return s.Status
+}
+
+// GetUser returns the value of User.
+func (s ChatMemberAdministrator) GetUser() User {
+	return s.User
+}
+
+// GetCanBeEdited returns the value of CanBeEdited.
+func (s ChatMemberAdministrator) GetCanBeEdited() bool {
+	return s.CanBeEdited
+}
+
+// GetIsAnonymous returns the value of IsAnonymous.
+func (s ChatMemberAdministrator) GetIsAnonymous() bool {
+	return s.IsAnonymous
+}
+
+// GetCanManageChat returns the value of CanManageChat.
+func (s ChatMemberAdministrator) GetCanManageChat() bool {
+	return s.CanManageChat
+}
+
+// GetCanDeleteMessages returns the value of CanDeleteMessages.
+func (s ChatMemberAdministrator) GetCanDeleteMessages() bool {
+	return s.CanDeleteMessages
+}
+
+// GetCanManageVideoChats returns the value of CanManageVideoChats.
+func (s ChatMemberAdministrator) GetCanManageVideoChats() bool {
+	return s.CanManageVideoChats
+}
+
+// GetCanRestrictMembers returns the value of CanRestrictMembers.
+func (s ChatMemberAdministrator) GetCanRestrictMembers() bool {
+	return s.CanRestrictMembers
+}
+
+// GetCanPromoteMembers returns the value of CanPromoteMembers.
+func (s ChatMemberAdministrator) GetCanPromoteMembers() bool {
+	return s.CanPromoteMembers
+}
+
+// GetCanChangeInfo returns the value of CanChangeInfo.
+func (s ChatMemberAdministrator) GetCanChangeInfo() bool {
+	return s.CanChangeInfo
+}
+
+// GetCanInviteUsers returns the value of CanInviteUsers.
+func (s ChatMemberAdministrator) GetCanInviteUsers() bool {
+	return s.CanInviteUsers
+}
+
+// GetCanPostMessages returns the value of CanPostMessages.
+func (s ChatMemberAdministrator) GetCanPostMessages() OptBool {
+	return s.CanPostMessages
+}
+
+// GetCanEditMessages returns the value of CanEditMessages.
+func (s ChatMemberAdministrator) GetCanEditMessages() OptBool {
+	return s.CanEditMessages
+}
+
+// GetCanPinMessages returns the value of CanPinMessages.
+func (s ChatMemberAdministrator) GetCanPinMessages() OptBool {
+	return s.CanPinMessages
+}
+
+// GetCanManageTopics returns the value of CanManageTopics.
+func (s ChatMemberAdministrator) GetCanManageTopics() OptBool {
+	return s.CanManageTopics
+}
+
+// GetCustomTitle returns the value of CustomTitle.
+func (s ChatMemberAdministrator) GetCustomTitle() OptString {
+	return s.CustomTitle
+}
+
+// SetStatus sets the value of Status.
+func (s *ChatMemberAdministrator) SetStatus(val string) {
+	s.Status = val
+}
+
+// SetUser sets the value of User.
+func (s *ChatMemberAdministrator) SetUser(val User) {
+	s.User = val
+}
+
+// SetCanBeEdited sets the value of CanBeEdited.
+func (s *ChatMemberAdministrator) SetCanBeEdited(val bool) {
+	s.CanBeEdited = val
+}
+
+// SetIsAnonymous sets the value of IsAnonymous.
+func (s *ChatMemberAdministrator) SetIsAnonymous(val bool) {
+	s.IsAnonymous = val
+}
+
+// SetCanManageChat sets the value of CanManageChat.
+func (s *ChatMemberAdministrator) SetCanManageChat(val bool) {
+	s.CanManageChat = val
+}
+
+// SetCanDeleteMessages sets the value of CanDeleteMessages.
+func (s *ChatMemberAdministrator) SetCanDeleteMessages(val bool) {
+	s.CanDeleteMessages = val
+}
+
+// SetCanManageVideoChats sets the value of CanManageVideoChats.
+func (s *ChatMemberAdministrator) SetCanManageVideoChats(val bool) {
+	s.CanManageVideoChats = val
+}
+
+// SetCanRestrictMembers sets the value of CanRestrictMembers.
+func (s *ChatMemberAdministrator) SetCanRestrictMembers(val bool) {
+	s.CanRestrictMembers = val
+}
+
+// SetCanPromoteMembers sets the value of CanPromoteMembers.
+func (s *ChatMemberAdministrator) SetCanPromoteMembers(val bool) {
+	s.CanPromoteMembers = val
+}
+
+// SetCanChangeInfo sets the value of CanChangeInfo.
+func (s *ChatMemberAdministrator) SetCanChangeInfo(val bool) {
+	s.CanChangeInfo = val
+}
+
+// SetCanInviteUsers sets the value of CanInviteUsers.
+func (s *ChatMemberAdministrator) SetCanInviteUsers(val bool) {
+	s.CanInviteUsers = val
+}
+
+// SetCanPostMessages sets the value of CanPostMessages.
+func (s *ChatMemberAdministrator) SetCanPostMessages(val OptBool) {
+	s.CanPostMessages = val
+}
+
+// SetCanEditMessages sets the value of CanEditMessages.
+func (s *ChatMemberAdministrator) SetCanEditMessages(val OptBool) {
+	s.CanEditMessages = val
+}
+
+// SetCanPinMessages sets the value of CanPinMessages.
+func (s *ChatMemberAdministrator) SetCanPinMessages(val OptBool) {
+	s.CanPinMessages = val
+}
+
+// SetCanManageTopics sets the value of CanManageTopics.
+func (s *ChatMemberAdministrator) SetCanManageTopics(val OptBool) {
+	s.CanManageTopics = val
+}
+
+// SetCustomTitle sets the value of CustomTitle.
+func (s *ChatMemberAdministrator) SetCustomTitle(val OptString) {
+	s.CustomTitle = val
 }
 
 // Represents a [chat member](https://core.telegram.org/bots/api#chatmember) that was banned in the
@@ -889,11 +2269,41 @@ type ChatMemberAdministrator struct {
 // Ref: #/components/schemas/ChatMemberBanned
 type ChatMemberBanned struct {
 	// The member's status in the chat, always `kicked`.
-	Status string "json:\"status\""
-	User   User   "json:\"user\""
+	Status string `json:"status"`
+	User   User   `json:"user"`
 	// Date when restrictions will be lifted for this user; unix time. If 0, then the user is banned
 	// forever.
-	UntilDate int "json:\"until_date\""
+	UntilDate int `json:"until_date"`
+}
+
+// GetStatus returns the value of Status.
+func (s ChatMemberBanned) GetStatus() string {
+	return s.Status
+}
+
+// GetUser returns the value of User.
+func (s ChatMemberBanned) GetUser() User {
+	return s.User
+}
+
+// GetUntilDate returns the value of UntilDate.
+func (s ChatMemberBanned) GetUntilDate() int {
+	return s.UntilDate
+}
+
+// SetStatus sets the value of Status.
+func (s *ChatMemberBanned) SetStatus(val string) {
+	s.Status = val
+}
+
+// SetUser sets the value of User.
+func (s *ChatMemberBanned) SetUser(val User) {
+	s.User = val
+}
+
+// SetUntilDate sets the value of UntilDate.
+func (s *ChatMemberBanned) SetUntilDate(val int) {
+	s.UntilDate = val
 }
 
 // Represents a [chat member](https://core.telegram.org/bots/api#chatmember) that isn't currently a
@@ -901,8 +2311,28 @@ type ChatMemberBanned struct {
 // Ref: #/components/schemas/ChatMemberLeft
 type ChatMemberLeft struct {
 	// The member's status in the chat, always `left`.
-	Status string "json:\"status\""
-	User   User   "json:\"user\""
+	Status string `json:"status"`
+	User   User   `json:"user"`
+}
+
+// GetStatus returns the value of Status.
+func (s ChatMemberLeft) GetStatus() string {
+	return s.Status
+}
+
+// GetUser returns the value of User.
+func (s ChatMemberLeft) GetUser() User {
+	return s.User
+}
+
+// SetStatus sets the value of Status.
+func (s *ChatMemberLeft) SetStatus(val string) {
+	s.Status = val
+}
+
+// SetUser sets the value of User.
+func (s *ChatMemberLeft) SetUser(val User) {
+	s.User = val
 }
 
 // Represents a [chat member](https://core.telegram.org/bots/api#chatmember) that has no additional
@@ -910,8 +2340,28 @@ type ChatMemberLeft struct {
 // Ref: #/components/schemas/ChatMemberMember
 type ChatMemberMember struct {
 	// The member's status in the chat, always `member`.
-	Status string "json:\"status\""
-	User   User   "json:\"user\""
+	Status string `json:"status"`
+	User   User   `json:"user"`
+}
+
+// GetStatus returns the value of Status.
+func (s ChatMemberMember) GetStatus() string {
+	return s.Status
+}
+
+// GetUser returns the value of User.
+func (s ChatMemberMember) GetUser() User {
+	return s.User
+}
+
+// SetStatus sets the value of Status.
+func (s *ChatMemberMember) SetStatus(val string) {
+	s.Status = val
+}
+
+// SetUser sets the value of User.
+func (s *ChatMemberMember) SetUser(val User) {
+	s.User = val
 }
 
 // Represents a [chat member](https://core.telegram.org/bots/api#chatmember) that owns the chat and
@@ -919,12 +2369,52 @@ type ChatMemberMember struct {
 // Ref: #/components/schemas/ChatMemberOwner
 type ChatMemberOwner struct {
 	// The member's status in the chat, always `creator`.
-	Status string "json:\"status\""
-	User   User   "json:\"user\""
+	Status string `json:"status"`
+	User   User   `json:"user"`
 	// _True_, if the user's presence in the chat is hidden.
-	IsAnonymous bool "json:\"is_anonymous\""
+	IsAnonymous bool `json:"is_anonymous"`
 	// _Optional_. Custom title for this user.
-	CustomTitle OptString "json:\"custom_title\""
+	CustomTitle OptString `json:"custom_title"`
+}
+
+// GetStatus returns the value of Status.
+func (s ChatMemberOwner) GetStatus() string {
+	return s.Status
+}
+
+// GetUser returns the value of User.
+func (s ChatMemberOwner) GetUser() User {
+	return s.User
+}
+
+// GetIsAnonymous returns the value of IsAnonymous.
+func (s ChatMemberOwner) GetIsAnonymous() bool {
+	return s.IsAnonymous
+}
+
+// GetCustomTitle returns the value of CustomTitle.
+func (s ChatMemberOwner) GetCustomTitle() OptString {
+	return s.CustomTitle
+}
+
+// SetStatus sets the value of Status.
+func (s *ChatMemberOwner) SetStatus(val string) {
+	s.Status = val
+}
+
+// SetUser sets the value of User.
+func (s *ChatMemberOwner) SetUser(val User) {
+	s.User = val
+}
+
+// SetIsAnonymous sets the value of IsAnonymous.
+func (s *ChatMemberOwner) SetIsAnonymous(val bool) {
+	s.IsAnonymous = val
+}
+
+// SetCustomTitle sets the value of CustomTitle.
+func (s *ChatMemberOwner) SetCustomTitle(val OptString) {
+	s.CustomTitle = val
 }
 
 // Represents a [chat member](https://core.telegram.org/bots/api#chatmember) that is under certain
@@ -932,72 +2422,352 @@ type ChatMemberOwner struct {
 // Ref: #/components/schemas/ChatMemberRestricted
 type ChatMemberRestricted struct {
 	// The member's status in the chat, always `restricted`.
-	Status string "json:\"status\""
-	User   User   "json:\"user\""
+	Status string `json:"status"`
+	User   User   `json:"user"`
 	// _True_, if the user is a member of the chat at the moment of the request.
-	IsMember bool "json:\"is_member\""
+	IsMember bool `json:"is_member"`
 	// _True_, if the user is allowed to change the chat title, photo and other settings.
-	CanChangeInfo bool "json:\"can_change_info\""
+	CanChangeInfo bool `json:"can_change_info"`
 	// _True_, if the user is allowed to invite new users to the chat.
-	CanInviteUsers bool "json:\"can_invite_users\""
+	CanInviteUsers bool `json:"can_invite_users"`
 	// _True_, if the user is allowed to pin messages.
-	CanPinMessages bool "json:\"can_pin_messages\""
+	CanPinMessages bool `json:"can_pin_messages"`
 	// _True_, if the user is allowed to create forum topics.
-	CanManageTopics bool "json:\"can_manage_topics\""
+	CanManageTopics bool `json:"can_manage_topics"`
 	// _True_, if the user is allowed to send text messages, contacts, locations and venues.
-	CanSendMessages bool "json:\"can_send_messages\""
+	CanSendMessages bool `json:"can_send_messages"`
 	// _True_, if the user is allowed to send audios, documents, photos, videos, video notes and voice
 	// notes.
-	CanSendMediaMessages bool "json:\"can_send_media_messages\""
+	CanSendMediaMessages bool `json:"can_send_media_messages"`
 	// _True_, if the user is allowed to send polls.
-	CanSendPolls bool "json:\"can_send_polls\""
+	CanSendPolls bool `json:"can_send_polls"`
 	// _True_, if the user is allowed to send animations, games, stickers and use inline bots.
-	CanSendOtherMessages bool "json:\"can_send_other_messages\""
+	CanSendOtherMessages bool `json:"can_send_other_messages"`
 	// _True_, if the user is allowed to add web page previews to their messages.
-	CanAddWebPagePreviews bool "json:\"can_add_web_page_previews\""
+	CanAddWebPagePreviews bool `json:"can_add_web_page_previews"`
 	// Date when restrictions will be lifted for this user; unix time. If 0, then the user is restricted
 	// forever.
-	UntilDate int "json:\"until_date\""
+	UntilDate int `json:"until_date"`
+}
+
+// GetStatus returns the value of Status.
+func (s ChatMemberRestricted) GetStatus() string {
+	return s.Status
+}
+
+// GetUser returns the value of User.
+func (s ChatMemberRestricted) GetUser() User {
+	return s.User
+}
+
+// GetIsMember returns the value of IsMember.
+func (s ChatMemberRestricted) GetIsMember() bool {
+	return s.IsMember
+}
+
+// GetCanChangeInfo returns the value of CanChangeInfo.
+func (s ChatMemberRestricted) GetCanChangeInfo() bool {
+	return s.CanChangeInfo
+}
+
+// GetCanInviteUsers returns the value of CanInviteUsers.
+func (s ChatMemberRestricted) GetCanInviteUsers() bool {
+	return s.CanInviteUsers
+}
+
+// GetCanPinMessages returns the value of CanPinMessages.
+func (s ChatMemberRestricted) GetCanPinMessages() bool {
+	return s.CanPinMessages
+}
+
+// GetCanManageTopics returns the value of CanManageTopics.
+func (s ChatMemberRestricted) GetCanManageTopics() bool {
+	return s.CanManageTopics
+}
+
+// GetCanSendMessages returns the value of CanSendMessages.
+func (s ChatMemberRestricted) GetCanSendMessages() bool {
+	return s.CanSendMessages
+}
+
+// GetCanSendMediaMessages returns the value of CanSendMediaMessages.
+func (s ChatMemberRestricted) GetCanSendMediaMessages() bool {
+	return s.CanSendMediaMessages
+}
+
+// GetCanSendPolls returns the value of CanSendPolls.
+func (s ChatMemberRestricted) GetCanSendPolls() bool {
+	return s.CanSendPolls
+}
+
+// GetCanSendOtherMessages returns the value of CanSendOtherMessages.
+func (s ChatMemberRestricted) GetCanSendOtherMessages() bool {
+	return s.CanSendOtherMessages
+}
+
+// GetCanAddWebPagePreviews returns the value of CanAddWebPagePreviews.
+func (s ChatMemberRestricted) GetCanAddWebPagePreviews() bool {
+	return s.CanAddWebPagePreviews
+}
+
+// GetUntilDate returns the value of UntilDate.
+func (s ChatMemberRestricted) GetUntilDate() int {
+	return s.UntilDate
+}
+
+// SetStatus sets the value of Status.
+func (s *ChatMemberRestricted) SetStatus(val string) {
+	s.Status = val
+}
+
+// SetUser sets the value of User.
+func (s *ChatMemberRestricted) SetUser(val User) {
+	s.User = val
+}
+
+// SetIsMember sets the value of IsMember.
+func (s *ChatMemberRestricted) SetIsMember(val bool) {
+	s.IsMember = val
+}
+
+// SetCanChangeInfo sets the value of CanChangeInfo.
+func (s *ChatMemberRestricted) SetCanChangeInfo(val bool) {
+	s.CanChangeInfo = val
+}
+
+// SetCanInviteUsers sets the value of CanInviteUsers.
+func (s *ChatMemberRestricted) SetCanInviteUsers(val bool) {
+	s.CanInviteUsers = val
+}
+
+// SetCanPinMessages sets the value of CanPinMessages.
+func (s *ChatMemberRestricted) SetCanPinMessages(val bool) {
+	s.CanPinMessages = val
+}
+
+// SetCanManageTopics sets the value of CanManageTopics.
+func (s *ChatMemberRestricted) SetCanManageTopics(val bool) {
+	s.CanManageTopics = val
+}
+
+// SetCanSendMessages sets the value of CanSendMessages.
+func (s *ChatMemberRestricted) SetCanSendMessages(val bool) {
+	s.CanSendMessages = val
+}
+
+// SetCanSendMediaMessages sets the value of CanSendMediaMessages.
+func (s *ChatMemberRestricted) SetCanSendMediaMessages(val bool) {
+	s.CanSendMediaMessages = val
+}
+
+// SetCanSendPolls sets the value of CanSendPolls.
+func (s *ChatMemberRestricted) SetCanSendPolls(val bool) {
+	s.CanSendPolls = val
+}
+
+// SetCanSendOtherMessages sets the value of CanSendOtherMessages.
+func (s *ChatMemberRestricted) SetCanSendOtherMessages(val bool) {
+	s.CanSendOtherMessages = val
+}
+
+// SetCanAddWebPagePreviews sets the value of CanAddWebPagePreviews.
+func (s *ChatMemberRestricted) SetCanAddWebPagePreviews(val bool) {
+	s.CanAddWebPagePreviews = val
+}
+
+// SetUntilDate sets the value of UntilDate.
+func (s *ChatMemberRestricted) SetUntilDate(val int) {
+	s.UntilDate = val
 }
 
 // This object represents changes in the status of a chat member.
 // Ref: #/components/schemas/ChatMemberUpdated
 type ChatMemberUpdated struct {
-	Chat Chat "json:\"chat\""
-	From User "json:\"from\""
+	Chat Chat `json:"chat"`
+	From User `json:"from"`
 	// Date the change was done in Unix time.
-	Date          int               "json:\"date\""
-	OldChatMember ChatMember        "json:\"old_chat_member\""
-	NewChatMember ChatMember        "json:\"new_chat_member\""
-	InviteLink    OptChatInviteLink "json:\"invite_link\""
+	Date          int               `json:"date"`
+	OldChatMember ChatMember        `json:"old_chat_member"`
+	NewChatMember ChatMember        `json:"new_chat_member"`
+	InviteLink    OptChatInviteLink `json:"invite_link"`
+}
+
+// GetChat returns the value of Chat.
+func (s ChatMemberUpdated) GetChat() Chat {
+	return s.Chat
+}
+
+// GetFrom returns the value of From.
+func (s ChatMemberUpdated) GetFrom() User {
+	return s.From
+}
+
+// GetDate returns the value of Date.
+func (s ChatMemberUpdated) GetDate() int {
+	return s.Date
+}
+
+// GetOldChatMember returns the value of OldChatMember.
+func (s ChatMemberUpdated) GetOldChatMember() ChatMember {
+	return s.OldChatMember
+}
+
+// GetNewChatMember returns the value of NewChatMember.
+func (s ChatMemberUpdated) GetNewChatMember() ChatMember {
+	return s.NewChatMember
+}
+
+// GetInviteLink returns the value of InviteLink.
+func (s ChatMemberUpdated) GetInviteLink() OptChatInviteLink {
+	return s.InviteLink
+}
+
+// SetChat sets the value of Chat.
+func (s *ChatMemberUpdated) SetChat(val Chat) {
+	s.Chat = val
+}
+
+// SetFrom sets the value of From.
+func (s *ChatMemberUpdated) SetFrom(val User) {
+	s.From = val
+}
+
+// SetDate sets the value of Date.
+func (s *ChatMemberUpdated) SetDate(val int) {
+	s.Date = val
+}
+
+// SetOldChatMember sets the value of OldChatMember.
+func (s *ChatMemberUpdated) SetOldChatMember(val ChatMember) {
+	s.OldChatMember = val
+}
+
+// SetNewChatMember sets the value of NewChatMember.
+func (s *ChatMemberUpdated) SetNewChatMember(val ChatMember) {
+	s.NewChatMember = val
+}
+
+// SetInviteLink sets the value of InviteLink.
+func (s *ChatMemberUpdated) SetInviteLink(val OptChatInviteLink) {
+	s.InviteLink = val
 }
 
 // Describes actions that a non-administrator user is allowed to take in a chat.
 // Ref: #/components/schemas/ChatPermissions
 type ChatPermissions struct {
 	// _Optional_. _True_, if the user is allowed to send text messages, contacts, locations and venues.
-	CanSendMessages OptBool "json:\"can_send_messages\""
+	CanSendMessages OptBool `json:"can_send_messages"`
 	// _Optional_. _True_, if the user is allowed to send audios, documents, photos, videos, video notes
 	// and voice notes, implies can_send_messages.
-	CanSendMediaMessages OptBool "json:\"can_send_media_messages\""
+	CanSendMediaMessages OptBool `json:"can_send_media_messages"`
 	// _Optional_. _True_, if the user is allowed to send polls, implies can_send_messages.
-	CanSendPolls OptBool "json:\"can_send_polls\""
+	CanSendPolls OptBool `json:"can_send_polls"`
 	// _Optional_. _True_, if the user is allowed to send animations, games, stickers and use inline bots,
 	//  implies can_send_media_messages.
-	CanSendOtherMessages OptBool "json:\"can_send_other_messages\""
+	CanSendOtherMessages OptBool `json:"can_send_other_messages"`
 	// _Optional_. _True_, if the user is allowed to add web page previews to their messages, implies
 	// can_send_media_messages.
-	CanAddWebPagePreviews OptBool "json:\"can_add_web_page_previews\""
+	CanAddWebPagePreviews OptBool `json:"can_add_web_page_previews"`
 	// _Optional_. _True_, if the user is allowed to change the chat title, photo and other settings.
 	// Ignored in public supergroups.
-	CanChangeInfo OptBool "json:\"can_change_info\""
+	CanChangeInfo OptBool `json:"can_change_info"`
 	// _Optional_. _True_, if the user is allowed to invite new users to the chat.
-	CanInviteUsers OptBool "json:\"can_invite_users\""
+	CanInviteUsers OptBool `json:"can_invite_users"`
 	// _Optional_. _True_, if the user is allowed to pin messages. Ignored in public supergroups.
-	CanPinMessages OptBool "json:\"can_pin_messages\""
+	CanPinMessages OptBool `json:"can_pin_messages"`
 	// _Optional_. _True_, if the user is allowed to create forum topics. If omitted defaults to the
 	// value of can_pin_messages.
-	CanManageTopics OptBool "json:\"can_manage_topics\""
+	CanManageTopics OptBool `json:"can_manage_topics"`
+}
+
+// GetCanSendMessages returns the value of CanSendMessages.
+func (s ChatPermissions) GetCanSendMessages() OptBool {
+	return s.CanSendMessages
+}
+
+// GetCanSendMediaMessages returns the value of CanSendMediaMessages.
+func (s ChatPermissions) GetCanSendMediaMessages() OptBool {
+	return s.CanSendMediaMessages
+}
+
+// GetCanSendPolls returns the value of CanSendPolls.
+func (s ChatPermissions) GetCanSendPolls() OptBool {
+	return s.CanSendPolls
+}
+
+// GetCanSendOtherMessages returns the value of CanSendOtherMessages.
+func (s ChatPermissions) GetCanSendOtherMessages() OptBool {
+	return s.CanSendOtherMessages
+}
+
+// GetCanAddWebPagePreviews returns the value of CanAddWebPagePreviews.
+func (s ChatPermissions) GetCanAddWebPagePreviews() OptBool {
+	return s.CanAddWebPagePreviews
+}
+
+// GetCanChangeInfo returns the value of CanChangeInfo.
+func (s ChatPermissions) GetCanChangeInfo() OptBool {
+	return s.CanChangeInfo
+}
+
+// GetCanInviteUsers returns the value of CanInviteUsers.
+func (s ChatPermissions) GetCanInviteUsers() OptBool {
+	return s.CanInviteUsers
+}
+
+// GetCanPinMessages returns the value of CanPinMessages.
+func (s ChatPermissions) GetCanPinMessages() OptBool {
+	return s.CanPinMessages
+}
+
+// GetCanManageTopics returns the value of CanManageTopics.
+func (s ChatPermissions) GetCanManageTopics() OptBool {
+	return s.CanManageTopics
+}
+
+// SetCanSendMessages sets the value of CanSendMessages.
+func (s *ChatPermissions) SetCanSendMessages(val OptBool) {
+	s.CanSendMessages = val
+}
+
+// SetCanSendMediaMessages sets the value of CanSendMediaMessages.
+func (s *ChatPermissions) SetCanSendMediaMessages(val OptBool) {
+	s.CanSendMediaMessages = val
+}
+
+// SetCanSendPolls sets the value of CanSendPolls.
+func (s *ChatPermissions) SetCanSendPolls(val OptBool) {
+	s.CanSendPolls = val
+}
+
+// SetCanSendOtherMessages sets the value of CanSendOtherMessages.
+func (s *ChatPermissions) SetCanSendOtherMessages(val OptBool) {
+	s.CanSendOtherMessages = val
+}
+
+// SetCanAddWebPagePreviews sets the value of CanAddWebPagePreviews.
+func (s *ChatPermissions) SetCanAddWebPagePreviews(val OptBool) {
+	s.CanAddWebPagePreviews = val
+}
+
+// SetCanChangeInfo sets the value of CanChangeInfo.
+func (s *ChatPermissions) SetCanChangeInfo(val OptBool) {
+	s.CanChangeInfo = val
+}
+
+// SetCanInviteUsers sets the value of CanInviteUsers.
+func (s *ChatPermissions) SetCanInviteUsers(val OptBool) {
+	s.CanInviteUsers = val
+}
+
+// SetCanPinMessages sets the value of CanPinMessages.
+func (s *ChatPermissions) SetCanPinMessages(val OptBool) {
+	s.CanPinMessages = val
+}
+
+// SetCanManageTopics sets the value of CanManageTopics.
+func (s *ChatPermissions) SetCanManageTopics(val OptBool) {
+	s.CanManageTopics = val
 }
 
 // This object represents a chat photo.
@@ -1005,16 +2775,56 @@ type ChatPermissions struct {
 type ChatPhoto struct {
 	// File identifier of small (160x160) chat photo. This file_id can be used only for photo download
 	// and only for as long as the photo is not changed.
-	SmallFileID string "json:\"small_file_id\""
+	SmallFileID string `json:"small_file_id"`
 	// Unique file identifier of small (160x160) chat photo, which is supposed to be the same over time
 	// and for different bots. Can't be used to download or reuse the file.
-	SmallFileUniqueID string "json:\"small_file_unique_id\""
+	SmallFileUniqueID string `json:"small_file_unique_id"`
 	// File identifier of big (640x640) chat photo. This file_id can be used only for photo download and
 	// only for as long as the photo is not changed.
-	BigFileID string "json:\"big_file_id\""
+	BigFileID string `json:"big_file_id"`
 	// Unique file identifier of big (640x640) chat photo, which is supposed to be the same over time and
 	// for different bots. Can't be used to download or reuse the file.
-	BigFileUniqueID string "json:\"big_file_unique_id\""
+	BigFileUniqueID string `json:"big_file_unique_id"`
+}
+
+// GetSmallFileID returns the value of SmallFileID.
+func (s ChatPhoto) GetSmallFileID() string {
+	return s.SmallFileID
+}
+
+// GetSmallFileUniqueID returns the value of SmallFileUniqueID.
+func (s ChatPhoto) GetSmallFileUniqueID() string {
+	return s.SmallFileUniqueID
+}
+
+// GetBigFileID returns the value of BigFileID.
+func (s ChatPhoto) GetBigFileID() string {
+	return s.BigFileID
+}
+
+// GetBigFileUniqueID returns the value of BigFileUniqueID.
+func (s ChatPhoto) GetBigFileUniqueID() string {
+	return s.BigFileUniqueID
+}
+
+// SetSmallFileID sets the value of SmallFileID.
+func (s *ChatPhoto) SetSmallFileID(val string) {
+	s.SmallFileID = val
+}
+
+// SetSmallFileUniqueID sets the value of SmallFileUniqueID.
+func (s *ChatPhoto) SetSmallFileUniqueID(val string) {
+	s.SmallFileUniqueID = val
+}
+
+// SetBigFileID sets the value of BigFileID.
+func (s *ChatPhoto) SetBigFileID(val string) {
+	s.BigFileID = val
+}
+
+// SetBigFileUniqueID sets the value of BigFileUniqueID.
+func (s *ChatPhoto) SetBigFileUniqueID(val string) {
+	s.BigFileUniqueID = val
 }
 
 // Type of chat, can be either `private`, `group`, `supergroup` or `channel`.
@@ -1032,266 +2842,1026 @@ const (
 // Ref: #/components/schemas/ChosenInlineResult
 type ChosenInlineResult struct {
 	// The unique identifier for the result that was chosen.
-	ResultID string      "json:\"result_id\""
-	From     User        "json:\"from\""
-	Location OptLocation "json:\"location\""
+	ResultID string      `json:"result_id"`
+	From     User        `json:"from"`
+	Location OptLocation `json:"location"`
 	// _Optional_. Identifier of the sent inline message. Available only if there is an [inline
 	// keyboard](https://core.telegram.org/bots/api#inlinekeyboardmarkup) attached to the message. Will
 	// be also received in [callback queries](https://core.telegram.org/bots/api#callbackquery) and can
 	// be used to [edit](https://core.telegram.org/bots/api#updating-messages) the message.
-	InlineMessageID OptString "json:\"inline_message_id\""
+	InlineMessageID OptString `json:"inline_message_id"`
 	// The query that was used to obtain the result.
-	Query string "json:\"query\""
+	Query string `json:"query"`
+}
+
+// GetResultID returns the value of ResultID.
+func (s ChosenInlineResult) GetResultID() string {
+	return s.ResultID
+}
+
+// GetFrom returns the value of From.
+func (s ChosenInlineResult) GetFrom() User {
+	return s.From
+}
+
+// GetLocation returns the value of Location.
+func (s ChosenInlineResult) GetLocation() OptLocation {
+	return s.Location
+}
+
+// GetInlineMessageID returns the value of InlineMessageID.
+func (s ChosenInlineResult) GetInlineMessageID() OptString {
+	return s.InlineMessageID
+}
+
+// GetQuery returns the value of Query.
+func (s ChosenInlineResult) GetQuery() string {
+	return s.Query
+}
+
+// SetResultID sets the value of ResultID.
+func (s *ChosenInlineResult) SetResultID(val string) {
+	s.ResultID = val
+}
+
+// SetFrom sets the value of From.
+func (s *ChosenInlineResult) SetFrom(val User) {
+	s.From = val
+}
+
+// SetLocation sets the value of Location.
+func (s *ChosenInlineResult) SetLocation(val OptLocation) {
+	s.Location = val
+}
+
+// SetInlineMessageID sets the value of InlineMessageID.
+func (s *ChosenInlineResult) SetInlineMessageID(val OptString) {
+	s.InlineMessageID = val
+}
+
+// SetQuery sets the value of Query.
+func (s *ChosenInlineResult) SetQuery(val string) {
+	s.Query = val
 }
 
 // Input for closeForumTopic.
 // Ref: #/components/schemas/closeForumTopic
 type CloseForumTopic struct {
-	ChatID ID "json:\"chat_id\""
+	ChatID ID `json:"chat_id"`
 	// Unique identifier for the target message thread of the forum topic.
-	MessageThreadID int "json:\"message_thread_id\""
+	MessageThreadID int `json:"message_thread_id"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s CloseForumTopic) GetChatID() ID {
+	return s.ChatID
+}
+
+// GetMessageThreadID returns the value of MessageThreadID.
+func (s CloseForumTopic) GetMessageThreadID() int {
+	return s.MessageThreadID
+}
+
+// SetChatID sets the value of ChatID.
+func (s *CloseForumTopic) SetChatID(val ID) {
+	s.ChatID = val
+}
+
+// SetMessageThreadID sets the value of MessageThreadID.
+func (s *CloseForumTopic) SetMessageThreadID(val int) {
+	s.MessageThreadID = val
 }
 
 // This object represents a phone contact.
 // Ref: #/components/schemas/Contact
 type Contact struct {
 	// Contact's phone number.
-	PhoneNumber string "json:\"phone_number\""
+	PhoneNumber string `json:"phone_number"`
 	// Contact's first name.
-	FirstName string "json:\"first_name\""
+	FirstName string `json:"first_name"`
 	// _Optional_. Contact's last name.
-	LastName OptString "json:\"last_name\""
+	LastName OptString `json:"last_name"`
 	// _Optional_. Contact's user identifier in Telegram. This number may have more than 32 significant
 	// bits and some programming languages may have difficulty/silent defects in interpreting it. But it
 	// has at most 52 significant bits, so a 64-bit integer or double-precision float type are safe for
 	// storing this identifier.
-	UserID OptInt64 "json:\"user_id\""
+	UserID OptInt64 `json:"user_id"`
 	// _Optional_. Additional data about the contact in the form of a [vCard](https://en.wikipedia.
 	// org/wiki/VCard).
-	Vcard OptString "json:\"vcard\""
+	Vcard OptString `json:"vcard"`
+}
+
+// GetPhoneNumber returns the value of PhoneNumber.
+func (s Contact) GetPhoneNumber() string {
+	return s.PhoneNumber
+}
+
+// GetFirstName returns the value of FirstName.
+func (s Contact) GetFirstName() string {
+	return s.FirstName
+}
+
+// GetLastName returns the value of LastName.
+func (s Contact) GetLastName() OptString {
+	return s.LastName
+}
+
+// GetUserID returns the value of UserID.
+func (s Contact) GetUserID() OptInt64 {
+	return s.UserID
+}
+
+// GetVcard returns the value of Vcard.
+func (s Contact) GetVcard() OptString {
+	return s.Vcard
+}
+
+// SetPhoneNumber sets the value of PhoneNumber.
+func (s *Contact) SetPhoneNumber(val string) {
+	s.PhoneNumber = val
+}
+
+// SetFirstName sets the value of FirstName.
+func (s *Contact) SetFirstName(val string) {
+	s.FirstName = val
+}
+
+// SetLastName sets the value of LastName.
+func (s *Contact) SetLastName(val OptString) {
+	s.LastName = val
+}
+
+// SetUserID sets the value of UserID.
+func (s *Contact) SetUserID(val OptInt64) {
+	s.UserID = val
+}
+
+// SetVcard sets the value of Vcard.
+func (s *Contact) SetVcard(val OptString) {
+	s.Vcard = val
 }
 
 // Input for copyMessage.
 // Ref: #/components/schemas/copyMessage
 type CopyMessage struct {
-	ChatID ID "json:\"chat_id\""
+	ChatID ID `json:"chat_id"`
 	// Unique identifier for the target message thread (topic) of the forum; for forum supergroups only.
-	MessageThreadID OptInt "json:\"message_thread_id\""
-	FromChatID      ID     "json:\"from_chat_id\""
+	MessageThreadID OptInt `json:"message_thread_id"`
+	FromChatID      ID     `json:"from_chat_id"`
 	// Message identifier in the chat specified in _from_chat_id_.
-	MessageID int "json:\"message_id\""
+	MessageID int `json:"message_id"`
 	// New caption for media, 0-1024 characters after entities parsing. If not specified, the original
 	// caption is kept.
-	Caption OptString "json:\"caption\""
+	Caption OptString `json:"caption"`
 	// Mode for parsing entities in the new caption. See [formatting options](https://core.telegram.
 	// org/bots/api#formatting-options) for more details.
-	ParseMode OptString "json:\"parse_mode\""
+	ParseMode OptString `json:"parse_mode"`
 	// A JSON-serialized list of special entities that appear in the new caption, which can be specified
 	// instead of _parse_mode_.
-	CaptionEntities []MessageEntity "json:\"caption_entities\""
+	CaptionEntities []MessageEntity `json:"caption_entities"`
 	// Sends the message [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will
 	// receive a notification with no sound.
-	DisableNotification OptBool "json:\"disable_notification\""
+	DisableNotification OptBool `json:"disable_notification"`
 	// Protects the contents of the sent message from forwarding and saving.
-	ProtectContent OptBool "json:\"protect_content\""
+	ProtectContent OptBool `json:"protect_content"`
 	// If the message is a reply, ID of the original message.
-	ReplyToMessageID OptInt "json:\"reply_to_message_id\""
+	ReplyToMessageID OptInt `json:"reply_to_message_id"`
 	// Pass _True_ if the message should be sent even if the specified replied-to message is not found.
-	AllowSendingWithoutReply OptBool            "json:\"allow_sending_without_reply\""
-	ReplyMarkup              OptSendReplyMarkup "json:\"reply_markup\""
+	AllowSendingWithoutReply OptBool            `json:"allow_sending_without_reply"`
+	ReplyMarkup              OptSendReplyMarkup `json:"reply_markup"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s CopyMessage) GetChatID() ID {
+	return s.ChatID
+}
+
+// GetMessageThreadID returns the value of MessageThreadID.
+func (s CopyMessage) GetMessageThreadID() OptInt {
+	return s.MessageThreadID
+}
+
+// GetFromChatID returns the value of FromChatID.
+func (s CopyMessage) GetFromChatID() ID {
+	return s.FromChatID
+}
+
+// GetMessageID returns the value of MessageID.
+func (s CopyMessage) GetMessageID() int {
+	return s.MessageID
+}
+
+// GetCaption returns the value of Caption.
+func (s CopyMessage) GetCaption() OptString {
+	return s.Caption
+}
+
+// GetParseMode returns the value of ParseMode.
+func (s CopyMessage) GetParseMode() OptString {
+	return s.ParseMode
+}
+
+// GetCaptionEntities returns the value of CaptionEntities.
+func (s CopyMessage) GetCaptionEntities() []MessageEntity {
+	return s.CaptionEntities
+}
+
+// GetDisableNotification returns the value of DisableNotification.
+func (s CopyMessage) GetDisableNotification() OptBool {
+	return s.DisableNotification
+}
+
+// GetProtectContent returns the value of ProtectContent.
+func (s CopyMessage) GetProtectContent() OptBool {
+	return s.ProtectContent
+}
+
+// GetReplyToMessageID returns the value of ReplyToMessageID.
+func (s CopyMessage) GetReplyToMessageID() OptInt {
+	return s.ReplyToMessageID
+}
+
+// GetAllowSendingWithoutReply returns the value of AllowSendingWithoutReply.
+func (s CopyMessage) GetAllowSendingWithoutReply() OptBool {
+	return s.AllowSendingWithoutReply
+}
+
+// GetReplyMarkup returns the value of ReplyMarkup.
+func (s CopyMessage) GetReplyMarkup() OptSendReplyMarkup {
+	return s.ReplyMarkup
+}
+
+// SetChatID sets the value of ChatID.
+func (s *CopyMessage) SetChatID(val ID) {
+	s.ChatID = val
+}
+
+// SetMessageThreadID sets the value of MessageThreadID.
+func (s *CopyMessage) SetMessageThreadID(val OptInt) {
+	s.MessageThreadID = val
+}
+
+// SetFromChatID sets the value of FromChatID.
+func (s *CopyMessage) SetFromChatID(val ID) {
+	s.FromChatID = val
+}
+
+// SetMessageID sets the value of MessageID.
+func (s *CopyMessage) SetMessageID(val int) {
+	s.MessageID = val
+}
+
+// SetCaption sets the value of Caption.
+func (s *CopyMessage) SetCaption(val OptString) {
+	s.Caption = val
+}
+
+// SetParseMode sets the value of ParseMode.
+func (s *CopyMessage) SetParseMode(val OptString) {
+	s.ParseMode = val
+}
+
+// SetCaptionEntities sets the value of CaptionEntities.
+func (s *CopyMessage) SetCaptionEntities(val []MessageEntity) {
+	s.CaptionEntities = val
+}
+
+// SetDisableNotification sets the value of DisableNotification.
+func (s *CopyMessage) SetDisableNotification(val OptBool) {
+	s.DisableNotification = val
+}
+
+// SetProtectContent sets the value of ProtectContent.
+func (s *CopyMessage) SetProtectContent(val OptBool) {
+	s.ProtectContent = val
+}
+
+// SetReplyToMessageID sets the value of ReplyToMessageID.
+func (s *CopyMessage) SetReplyToMessageID(val OptInt) {
+	s.ReplyToMessageID = val
+}
+
+// SetAllowSendingWithoutReply sets the value of AllowSendingWithoutReply.
+func (s *CopyMessage) SetAllowSendingWithoutReply(val OptBool) {
+	s.AllowSendingWithoutReply = val
+}
+
+// SetReplyMarkup sets the value of ReplyMarkup.
+func (s *CopyMessage) SetReplyMarkup(val OptSendReplyMarkup) {
+	s.ReplyMarkup = val
 }
 
 // Input for createChatInviteLink.
 // Ref: #/components/schemas/createChatInviteLink
 type CreateChatInviteLink struct {
-	ChatID ID "json:\"chat_id\""
+	ChatID ID `json:"chat_id"`
 	// Invite link name; 0-32 characters.
-	Name OptString "json:\"name\""
+	Name OptString `json:"name"`
 	// Point in time (Unix timestamp) when the link will expire.
-	ExpireDate OptInt "json:\"expire_date\""
+	ExpireDate OptInt `json:"expire_date"`
 	// The maximum number of users that can be members of the chat simultaneously after joining the chat
 	// via this invite link; 1-99999.
-	MemberLimit OptInt "json:\"member_limit\""
+	MemberLimit OptInt `json:"member_limit"`
 	// _True_, if users joining the chat via the link need to be approved by chat administrators. If
 	// _True_, _member_limit_ can't be specified.
-	CreatesJoinRequest OptBool "json:\"creates_join_request\""
+	CreatesJoinRequest OptBool `json:"creates_join_request"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s CreateChatInviteLink) GetChatID() ID {
+	return s.ChatID
+}
+
+// GetName returns the value of Name.
+func (s CreateChatInviteLink) GetName() OptString {
+	return s.Name
+}
+
+// GetExpireDate returns the value of ExpireDate.
+func (s CreateChatInviteLink) GetExpireDate() OptInt {
+	return s.ExpireDate
+}
+
+// GetMemberLimit returns the value of MemberLimit.
+func (s CreateChatInviteLink) GetMemberLimit() OptInt {
+	return s.MemberLimit
+}
+
+// GetCreatesJoinRequest returns the value of CreatesJoinRequest.
+func (s CreateChatInviteLink) GetCreatesJoinRequest() OptBool {
+	return s.CreatesJoinRequest
+}
+
+// SetChatID sets the value of ChatID.
+func (s *CreateChatInviteLink) SetChatID(val ID) {
+	s.ChatID = val
+}
+
+// SetName sets the value of Name.
+func (s *CreateChatInviteLink) SetName(val OptString) {
+	s.Name = val
+}
+
+// SetExpireDate sets the value of ExpireDate.
+func (s *CreateChatInviteLink) SetExpireDate(val OptInt) {
+	s.ExpireDate = val
+}
+
+// SetMemberLimit sets the value of MemberLimit.
+func (s *CreateChatInviteLink) SetMemberLimit(val OptInt) {
+	s.MemberLimit = val
+}
+
+// SetCreatesJoinRequest sets the value of CreatesJoinRequest.
+func (s *CreateChatInviteLink) SetCreatesJoinRequest(val OptBool) {
+	s.CreatesJoinRequest = val
 }
 
 // Input for createForumTopic.
 // Ref: #/components/schemas/createForumTopic
 type CreateForumTopic struct {
-	ChatID ID "json:\"chat_id\""
+	ChatID ID `json:"chat_id"`
 	// Topic name, 1-128 characters.
-	Name string "json:\"name\""
+	Name string `json:"name"`
 	// Color of the topic icon in RGB format. Currently, must be one of 0x6FB9F0, 0xFFD67E, 0xCB86DB,
 	// 0x8EEE98, 0xFF93B2, or 0xFB6F5F.
-	IconColor OptInt "json:\"icon_color\""
+	IconColor OptInt `json:"icon_color"`
 	// Unique identifier of the custom emoji shown as the topic icon. Use
 	// [getForumTopicIconStickers](https://core.telegram.org/bots/api#getforumtopiciconstickers) to get
 	// all allowed custom emoji identifiers.
-	IconCustomEmojiID OptString "json:\"icon_custom_emoji_id\""
+	IconCustomEmojiID OptString `json:"icon_custom_emoji_id"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s CreateForumTopic) GetChatID() ID {
+	return s.ChatID
+}
+
+// GetName returns the value of Name.
+func (s CreateForumTopic) GetName() string {
+	return s.Name
+}
+
+// GetIconColor returns the value of IconColor.
+func (s CreateForumTopic) GetIconColor() OptInt {
+	return s.IconColor
+}
+
+// GetIconCustomEmojiID returns the value of IconCustomEmojiID.
+func (s CreateForumTopic) GetIconCustomEmojiID() OptString {
+	return s.IconCustomEmojiID
+}
+
+// SetChatID sets the value of ChatID.
+func (s *CreateForumTopic) SetChatID(val ID) {
+	s.ChatID = val
+}
+
+// SetName sets the value of Name.
+func (s *CreateForumTopic) SetName(val string) {
+	s.Name = val
+}
+
+// SetIconColor sets the value of IconColor.
+func (s *CreateForumTopic) SetIconColor(val OptInt) {
+	s.IconColor = val
+}
+
+// SetIconCustomEmojiID sets the value of IconCustomEmojiID.
+func (s *CreateForumTopic) SetIconCustomEmojiID(val OptString) {
+	s.IconCustomEmojiID = val
 }
 
 // Input for createInvoiceLink.
 // Ref: #/components/schemas/createInvoiceLink
 type CreateInvoiceLink struct {
 	// Product name, 1-32 characters.
-	Title string "json:\"title\""
+	Title string `json:"title"`
 	// Product description, 1-255 characters.
-	Description string "json:\"description\""
+	Description string `json:"description"`
 	// Bot-defined invoice payload, 1-128 bytes. This will not be displayed to the user, use for your
 	// internal processes.
-	Payload string "json:\"payload\""
+	Payload string `json:"payload"`
 	// Payment provider token, obtained via [BotFather](https://t.me/botfather).
-	ProviderToken string "json:\"provider_token\""
+	ProviderToken string `json:"provider_token"`
 	// Three-letter ISO 4217 currency code, see [more on currencies](https://core.telegram.
 	// org/bots/payments#supported-currencies).
-	Currency string "json:\"currency\""
+	Currency string `json:"currency"`
 	// Price breakdown, a JSON-serialized list of components (e.g. product price, tax, discount, delivery
 	// cost, delivery tax, bonus, etc.).
-	Prices []LabeledPrice "json:\"prices\""
+	Prices []LabeledPrice `json:"prices"`
 	// The maximum accepted amount for tips in the _smallest units_ of the currency (integer, **not**
 	// float/double). For example, for a maximum tip of `US$ 1.45` pass `max_tip_amount = 145`. See the
 	// _exp_ parameter in [currencies.json](https://core.telegram.org/bots/payments/currencies.json), it
 	// shows the number of digits past the decimal point for each currency (2 for the majority of
 	// currencies). Defaults to 0.
-	MaxTipAmount OptInt "json:\"max_tip_amount\""
+	MaxTipAmount OptInt `json:"max_tip_amount"`
 	// A JSON-serialized array of suggested amounts of tips in the _smallest units_ of the currency
 	// (integer, **not** float/double). At most 4 suggested tip amounts can be specified. The suggested
 	// tip amounts must be positive, passed in a strictly increased order and must not exceed
 	// _max_tip_amount_.
-	SuggestedTipAmounts []int "json:\"suggested_tip_amounts\""
+	SuggestedTipAmounts []int `json:"suggested_tip_amounts"`
 	// JSON-serialized data about the invoice, which will be shared with the payment provider. A detailed
 	// description of required fields should be provided by the payment provider.
-	ProviderData OptString "json:\"provider_data\""
+	ProviderData OptString `json:"provider_data"`
 	// URL of the product photo for the invoice. Can be a photo of the goods or a marketing image for a
 	// service.
-	PhotoURL OptString "json:\"photo_url\""
+	PhotoURL OptString `json:"photo_url"`
 	// Photo size in bytes.
-	PhotoSize OptInt "json:\"photo_size\""
+	PhotoSize OptInt `json:"photo_size"`
 	// Photo width.
-	PhotoWidth OptInt "json:\"photo_width\""
+	PhotoWidth OptInt `json:"photo_width"`
 	// Photo height.
-	PhotoHeight OptInt "json:\"photo_height\""
+	PhotoHeight OptInt `json:"photo_height"`
 	// Pass _True_ if you require the user's full name to complete the order.
-	NeedName OptBool "json:\"need_name\""
+	NeedName OptBool `json:"need_name"`
 	// Pass _True_ if you require the user's phone number to complete the order.
-	NeedPhoneNumber OptBool "json:\"need_phone_number\""
+	NeedPhoneNumber OptBool `json:"need_phone_number"`
 	// Pass _True_ if you require the user's email address to complete the order.
-	NeedEmail OptBool "json:\"need_email\""
+	NeedEmail OptBool `json:"need_email"`
 	// Pass _True_ if you require the user's shipping address to complete the order.
-	NeedShippingAddress OptBool "json:\"need_shipping_address\""
+	NeedShippingAddress OptBool `json:"need_shipping_address"`
 	// Pass _True_ if the user's phone number should be sent to the provider.
-	SendPhoneNumberToProvider OptBool "json:\"send_phone_number_to_provider\""
+	SendPhoneNumberToProvider OptBool `json:"send_phone_number_to_provider"`
 	// Pass _True_ if the user's email address should be sent to the provider.
-	SendEmailToProvider OptBool "json:\"send_email_to_provider\""
+	SendEmailToProvider OptBool `json:"send_email_to_provider"`
 	// Pass _True_ if the final price depends on the shipping method.
-	IsFlexible OptBool "json:\"is_flexible\""
+	IsFlexible OptBool `json:"is_flexible"`
+}
+
+// GetTitle returns the value of Title.
+func (s CreateInvoiceLink) GetTitle() string {
+	return s.Title
+}
+
+// GetDescription returns the value of Description.
+func (s CreateInvoiceLink) GetDescription() string {
+	return s.Description
+}
+
+// GetPayload returns the value of Payload.
+func (s CreateInvoiceLink) GetPayload() string {
+	return s.Payload
+}
+
+// GetProviderToken returns the value of ProviderToken.
+func (s CreateInvoiceLink) GetProviderToken() string {
+	return s.ProviderToken
+}
+
+// GetCurrency returns the value of Currency.
+func (s CreateInvoiceLink) GetCurrency() string {
+	return s.Currency
+}
+
+// GetPrices returns the value of Prices.
+func (s CreateInvoiceLink) GetPrices() []LabeledPrice {
+	return s.Prices
+}
+
+// GetMaxTipAmount returns the value of MaxTipAmount.
+func (s CreateInvoiceLink) GetMaxTipAmount() OptInt {
+	return s.MaxTipAmount
+}
+
+// GetSuggestedTipAmounts returns the value of SuggestedTipAmounts.
+func (s CreateInvoiceLink) GetSuggestedTipAmounts() []int {
+	return s.SuggestedTipAmounts
+}
+
+// GetProviderData returns the value of ProviderData.
+func (s CreateInvoiceLink) GetProviderData() OptString {
+	return s.ProviderData
+}
+
+// GetPhotoURL returns the value of PhotoURL.
+func (s CreateInvoiceLink) GetPhotoURL() OptString {
+	return s.PhotoURL
+}
+
+// GetPhotoSize returns the value of PhotoSize.
+func (s CreateInvoiceLink) GetPhotoSize() OptInt {
+	return s.PhotoSize
+}
+
+// GetPhotoWidth returns the value of PhotoWidth.
+func (s CreateInvoiceLink) GetPhotoWidth() OptInt {
+	return s.PhotoWidth
+}
+
+// GetPhotoHeight returns the value of PhotoHeight.
+func (s CreateInvoiceLink) GetPhotoHeight() OptInt {
+	return s.PhotoHeight
+}
+
+// GetNeedName returns the value of NeedName.
+func (s CreateInvoiceLink) GetNeedName() OptBool {
+	return s.NeedName
+}
+
+// GetNeedPhoneNumber returns the value of NeedPhoneNumber.
+func (s CreateInvoiceLink) GetNeedPhoneNumber() OptBool {
+	return s.NeedPhoneNumber
+}
+
+// GetNeedEmail returns the value of NeedEmail.
+func (s CreateInvoiceLink) GetNeedEmail() OptBool {
+	return s.NeedEmail
+}
+
+// GetNeedShippingAddress returns the value of NeedShippingAddress.
+func (s CreateInvoiceLink) GetNeedShippingAddress() OptBool {
+	return s.NeedShippingAddress
+}
+
+// GetSendPhoneNumberToProvider returns the value of SendPhoneNumberToProvider.
+func (s CreateInvoiceLink) GetSendPhoneNumberToProvider() OptBool {
+	return s.SendPhoneNumberToProvider
+}
+
+// GetSendEmailToProvider returns the value of SendEmailToProvider.
+func (s CreateInvoiceLink) GetSendEmailToProvider() OptBool {
+	return s.SendEmailToProvider
+}
+
+// GetIsFlexible returns the value of IsFlexible.
+func (s CreateInvoiceLink) GetIsFlexible() OptBool {
+	return s.IsFlexible
+}
+
+// SetTitle sets the value of Title.
+func (s *CreateInvoiceLink) SetTitle(val string) {
+	s.Title = val
+}
+
+// SetDescription sets the value of Description.
+func (s *CreateInvoiceLink) SetDescription(val string) {
+	s.Description = val
+}
+
+// SetPayload sets the value of Payload.
+func (s *CreateInvoiceLink) SetPayload(val string) {
+	s.Payload = val
+}
+
+// SetProviderToken sets the value of ProviderToken.
+func (s *CreateInvoiceLink) SetProviderToken(val string) {
+	s.ProviderToken = val
+}
+
+// SetCurrency sets the value of Currency.
+func (s *CreateInvoiceLink) SetCurrency(val string) {
+	s.Currency = val
+}
+
+// SetPrices sets the value of Prices.
+func (s *CreateInvoiceLink) SetPrices(val []LabeledPrice) {
+	s.Prices = val
+}
+
+// SetMaxTipAmount sets the value of MaxTipAmount.
+func (s *CreateInvoiceLink) SetMaxTipAmount(val OptInt) {
+	s.MaxTipAmount = val
+}
+
+// SetSuggestedTipAmounts sets the value of SuggestedTipAmounts.
+func (s *CreateInvoiceLink) SetSuggestedTipAmounts(val []int) {
+	s.SuggestedTipAmounts = val
+}
+
+// SetProviderData sets the value of ProviderData.
+func (s *CreateInvoiceLink) SetProviderData(val OptString) {
+	s.ProviderData = val
+}
+
+// SetPhotoURL sets the value of PhotoURL.
+func (s *CreateInvoiceLink) SetPhotoURL(val OptString) {
+	s.PhotoURL = val
+}
+
+// SetPhotoSize sets the value of PhotoSize.
+func (s *CreateInvoiceLink) SetPhotoSize(val OptInt) {
+	s.PhotoSize = val
+}
+
+// SetPhotoWidth sets the value of PhotoWidth.
+func (s *CreateInvoiceLink) SetPhotoWidth(val OptInt) {
+	s.PhotoWidth = val
+}
+
+// SetPhotoHeight sets the value of PhotoHeight.
+func (s *CreateInvoiceLink) SetPhotoHeight(val OptInt) {
+	s.PhotoHeight = val
+}
+
+// SetNeedName sets the value of NeedName.
+func (s *CreateInvoiceLink) SetNeedName(val OptBool) {
+	s.NeedName = val
+}
+
+// SetNeedPhoneNumber sets the value of NeedPhoneNumber.
+func (s *CreateInvoiceLink) SetNeedPhoneNumber(val OptBool) {
+	s.NeedPhoneNumber = val
+}
+
+// SetNeedEmail sets the value of NeedEmail.
+func (s *CreateInvoiceLink) SetNeedEmail(val OptBool) {
+	s.NeedEmail = val
+}
+
+// SetNeedShippingAddress sets the value of NeedShippingAddress.
+func (s *CreateInvoiceLink) SetNeedShippingAddress(val OptBool) {
+	s.NeedShippingAddress = val
+}
+
+// SetSendPhoneNumberToProvider sets the value of SendPhoneNumberToProvider.
+func (s *CreateInvoiceLink) SetSendPhoneNumberToProvider(val OptBool) {
+	s.SendPhoneNumberToProvider = val
+}
+
+// SetSendEmailToProvider sets the value of SendEmailToProvider.
+func (s *CreateInvoiceLink) SetSendEmailToProvider(val OptBool) {
+	s.SendEmailToProvider = val
+}
+
+// SetIsFlexible sets the value of IsFlexible.
+func (s *CreateInvoiceLink) SetIsFlexible(val OptBool) {
+	s.IsFlexible = val
 }
 
 // Input for createNewStickerSet.
 // Ref: #/components/schemas/createNewStickerSet
 type CreateNewStickerSet struct {
 	// User identifier of created sticker set owner.
-	UserID int64 "json:\"user_id\""
+	UserID int64 `json:"user_id"`
 	// Short name of sticker set, to be used in `t.me/addstickers/` URLs (e.g., _animals_). Can contain
 	// only English letters, digits and underscores. Must begin with a letter, can't contain consecutive
 	// underscores and must end in `"_by_<bot_username>"`. `<bot_username>` is case insensitive. 1-64
 	// characters.
-	Name string "json:\"name\""
+	Name string `json:"name"`
 	// Sticker set title, 1-64 characters.
-	Title string "json:\"title\""
+	Title string `json:"title"`
 	// **PNG** image with the sticker, must be up to 512 kilobytes in size, dimensions must not exceed
 	// 512px, and either width or height must be exactly 512px. Pass a _file_id_ as a String to send a
 	// file that already exists on the Telegram servers, pass an HTTP URL as a String for Telegram to get
 	// a file from the Internet, or upload a new one using multipart/form-data. [More information on
 	// Sending Files](https://core.telegram.org/bots/api#sending-files).
-	PNGSticker OptString "json:\"png_sticker\""
+	PNGSticker OptString `json:"png_sticker"`
 	// **TGS** animation with the sticker, uploaded using multipart/form-data. See [](https://core.
 	// telegram.org/stickers#animated-sticker-requirements)[https://core.telegram.
 	// org/stickers#animated-sticker-requirements](https://core.telegram.
 	// org/stickers#animated-sticker-requirements) for technical requirements.
-	TgsSticker OptString "json:\"tgs_sticker\""
+	TgsSticker OptString `json:"tgs_sticker"`
 	// **WEBM** video with the sticker, uploaded using multipart/form-data. See [](https://core.telegram.
 	// org/stickers#video-sticker-requirements)[https://core.telegram.
 	// org/stickers#video-sticker-requirements](https://core.telegram.
 	// org/stickers#video-sticker-requirements) for technical requirements.
-	WebmSticker OptString "json:\"webm_sticker\""
+	WebmSticker OptString `json:"webm_sticker"`
 	// Type of stickers in the set, pass `regular` or `mask`. Custom emoji sticker sets can't be created
 	// via the Bot API at the moment. By default, a regular sticker set is created.
-	StickerType OptString "json:\"sticker_type\""
+	StickerType OptString `json:"sticker_type"`
 	// One or more emoji corresponding to the sticker.
-	Emojis       string          "json:\"emojis\""
-	MaskPosition OptMaskPosition "json:\"mask_position\""
+	Emojis       string          `json:"emojis"`
+	MaskPosition OptMaskPosition `json:"mask_position"`
+}
+
+// GetUserID returns the value of UserID.
+func (s CreateNewStickerSet) GetUserID() int64 {
+	return s.UserID
+}
+
+// GetName returns the value of Name.
+func (s CreateNewStickerSet) GetName() string {
+	return s.Name
+}
+
+// GetTitle returns the value of Title.
+func (s CreateNewStickerSet) GetTitle() string {
+	return s.Title
+}
+
+// GetPNGSticker returns the value of PNGSticker.
+func (s CreateNewStickerSet) GetPNGSticker() OptString {
+	return s.PNGSticker
+}
+
+// GetTgsSticker returns the value of TgsSticker.
+func (s CreateNewStickerSet) GetTgsSticker() OptString {
+	return s.TgsSticker
+}
+
+// GetWebmSticker returns the value of WebmSticker.
+func (s CreateNewStickerSet) GetWebmSticker() OptString {
+	return s.WebmSticker
+}
+
+// GetStickerType returns the value of StickerType.
+func (s CreateNewStickerSet) GetStickerType() OptString {
+	return s.StickerType
+}
+
+// GetEmojis returns the value of Emojis.
+func (s CreateNewStickerSet) GetEmojis() string {
+	return s.Emojis
+}
+
+// GetMaskPosition returns the value of MaskPosition.
+func (s CreateNewStickerSet) GetMaskPosition() OptMaskPosition {
+	return s.MaskPosition
+}
+
+// SetUserID sets the value of UserID.
+func (s *CreateNewStickerSet) SetUserID(val int64) {
+	s.UserID = val
+}
+
+// SetName sets the value of Name.
+func (s *CreateNewStickerSet) SetName(val string) {
+	s.Name = val
+}
+
+// SetTitle sets the value of Title.
+func (s *CreateNewStickerSet) SetTitle(val string) {
+	s.Title = val
+}
+
+// SetPNGSticker sets the value of PNGSticker.
+func (s *CreateNewStickerSet) SetPNGSticker(val OptString) {
+	s.PNGSticker = val
+}
+
+// SetTgsSticker sets the value of TgsSticker.
+func (s *CreateNewStickerSet) SetTgsSticker(val OptString) {
+	s.TgsSticker = val
+}
+
+// SetWebmSticker sets the value of WebmSticker.
+func (s *CreateNewStickerSet) SetWebmSticker(val OptString) {
+	s.WebmSticker = val
+}
+
+// SetStickerType sets the value of StickerType.
+func (s *CreateNewStickerSet) SetStickerType(val OptString) {
+	s.StickerType = val
+}
+
+// SetEmojis sets the value of Emojis.
+func (s *CreateNewStickerSet) SetEmojis(val string) {
+	s.Emojis = val
+}
+
+// SetMaskPosition sets the value of MaskPosition.
+func (s *CreateNewStickerSet) SetMaskPosition(val OptMaskPosition) {
+	s.MaskPosition = val
 }
 
 // Input for declineChatJoinRequest.
 // Ref: #/components/schemas/declineChatJoinRequest
 type DeclineChatJoinRequest struct {
-	ChatID ID "json:\"chat_id\""
+	ChatID ID `json:"chat_id"`
 	// Unique identifier of the target user.
-	UserID int64 "json:\"user_id\""
+	UserID int64 `json:"user_id"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s DeclineChatJoinRequest) GetChatID() ID {
+	return s.ChatID
+}
+
+// GetUserID returns the value of UserID.
+func (s DeclineChatJoinRequest) GetUserID() int64 {
+	return s.UserID
+}
+
+// SetChatID sets the value of ChatID.
+func (s *DeclineChatJoinRequest) SetChatID(val ID) {
+	s.ChatID = val
+}
+
+// SetUserID sets the value of UserID.
+func (s *DeclineChatJoinRequest) SetUserID(val int64) {
+	s.UserID = val
 }
 
 // Input for deleteChatPhoto.
 // Ref: #/components/schemas/deleteChatPhoto
 type DeleteChatPhoto struct {
-	ChatID ID "json:\"chat_id\""
+	ChatID ID `json:"chat_id"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s DeleteChatPhoto) GetChatID() ID {
+	return s.ChatID
+}
+
+// SetChatID sets the value of ChatID.
+func (s *DeleteChatPhoto) SetChatID(val ID) {
+	s.ChatID = val
 }
 
 // Input for deleteChatStickerSet.
 // Ref: #/components/schemas/deleteChatStickerSet
 type DeleteChatStickerSet struct {
-	ChatID ID "json:\"chat_id\""
+	ChatID ID `json:"chat_id"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s DeleteChatStickerSet) GetChatID() ID {
+	return s.ChatID
+}
+
+// SetChatID sets the value of ChatID.
+func (s *DeleteChatStickerSet) SetChatID(val ID) {
+	s.ChatID = val
 }
 
 // Input for deleteForumTopic.
 // Ref: #/components/schemas/deleteForumTopic
 type DeleteForumTopic struct {
-	ChatID ID "json:\"chat_id\""
+	ChatID ID `json:"chat_id"`
 	// Unique identifier for the target message thread of the forum topic.
-	MessageThreadID int "json:\"message_thread_id\""
+	MessageThreadID int `json:"message_thread_id"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s DeleteForumTopic) GetChatID() ID {
+	return s.ChatID
+}
+
+// GetMessageThreadID returns the value of MessageThreadID.
+func (s DeleteForumTopic) GetMessageThreadID() int {
+	return s.MessageThreadID
+}
+
+// SetChatID sets the value of ChatID.
+func (s *DeleteForumTopic) SetChatID(val ID) {
+	s.ChatID = val
+}
+
+// SetMessageThreadID sets the value of MessageThreadID.
+func (s *DeleteForumTopic) SetMessageThreadID(val int) {
+	s.MessageThreadID = val
 }
 
 // Input for deleteMessage.
 // Ref: #/components/schemas/deleteMessage
 type DeleteMessage struct {
-	ChatID ID "json:\"chat_id\""
+	ChatID ID `json:"chat_id"`
 	// Identifier of the message to delete.
-	MessageID int "json:\"message_id\""
+	MessageID int `json:"message_id"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s DeleteMessage) GetChatID() ID {
+	return s.ChatID
+}
+
+// GetMessageID returns the value of MessageID.
+func (s DeleteMessage) GetMessageID() int {
+	return s.MessageID
+}
+
+// SetChatID sets the value of ChatID.
+func (s *DeleteMessage) SetChatID(val ID) {
+	s.ChatID = val
+}
+
+// SetMessageID sets the value of MessageID.
+func (s *DeleteMessage) SetMessageID(val int) {
+	s.MessageID = val
 }
 
 // Input for deleteMyCommands.
 // Ref: #/components/schemas/deleteMyCommands
 type DeleteMyCommands struct {
-	Scope OptBotCommandScope "json:\"scope\""
+	Scope OptBotCommandScope `json:"scope"`
 	// A two-letter ISO 639-1 language code. If empty, commands will be applied to all users from the
 	// given scope, for whose language there are no dedicated commands.
-	LanguageCode OptString "json:\"language_code\""
+	LanguageCode OptString `json:"language_code"`
+}
+
+// GetScope returns the value of Scope.
+func (s DeleteMyCommands) GetScope() OptBotCommandScope {
+	return s.Scope
+}
+
+// GetLanguageCode returns the value of LanguageCode.
+func (s DeleteMyCommands) GetLanguageCode() OptString {
+	return s.LanguageCode
+}
+
+// SetScope sets the value of Scope.
+func (s *DeleteMyCommands) SetScope(val OptBotCommandScope) {
+	s.Scope = val
+}
+
+// SetLanguageCode sets the value of LanguageCode.
+func (s *DeleteMyCommands) SetLanguageCode(val OptString) {
+	s.LanguageCode = val
 }
 
 // Input for deleteStickerFromSet.
 // Ref: #/components/schemas/deleteStickerFromSet
 type DeleteStickerFromSet struct {
 	// File identifier of the sticker.
-	Sticker string "json:\"sticker\""
+	Sticker string `json:"sticker"`
+}
+
+// GetSticker returns the value of Sticker.
+func (s DeleteStickerFromSet) GetSticker() string {
+	return s.Sticker
+}
+
+// SetSticker sets the value of Sticker.
+func (s *DeleteStickerFromSet) SetSticker(val string) {
+	s.Sticker = val
 }
 
 // Input for deleteWebhook.
 // Ref: #/components/schemas/deleteWebhook
 type DeleteWebhook struct {
 	// Pass _True_ to drop all pending updates.
-	DropPendingUpdates OptBool "json:\"drop_pending_updates\""
+	DropPendingUpdates OptBool `json:"drop_pending_updates"`
+}
+
+// GetDropPendingUpdates returns the value of DropPendingUpdates.
+func (s DeleteWebhook) GetDropPendingUpdates() OptBool {
+	return s.DropPendingUpdates
+}
+
+// SetDropPendingUpdates sets the value of DropPendingUpdates.
+func (s *DeleteWebhook) SetDropPendingUpdates(val OptBool) {
+	s.DropPendingUpdates = val
 }
 
 // This object represents an animated emoji that displays a random value.
 // Ref: #/components/schemas/Dice
 type Dice struct {
 	// Emoji on which the dice throw animation is based.
-	Emoji string "json:\"emoji\""
+	Emoji string `json:"emoji"`
 	// Value of the dice, 1-6 for `🎲`, `🎯` and `🎳` base emoji, 1-5 for `🏀` and `⚽` base
 	// emoji, 1-64 for `🎰` base emoji.
-	Value int "json:\"value\""
+	Value int `json:"value"`
+}
+
+// GetEmoji returns the value of Emoji.
+func (s Dice) GetEmoji() string {
+	return s.Emoji
+}
+
+// GetValue returns the value of Value.
+func (s Dice) GetValue() int {
+	return s.Value
+}
+
+// SetEmoji sets the value of Emoji.
+func (s *Dice) SetEmoji(val string) {
+	s.Emoji = val
+}
+
+// SetValue sets the value of Value.
+func (s *Dice) SetValue(val int) {
+	s.Value = val
 }
 
 // This object represents a general file (as opposed to [photos](https://core.telegram.
@@ -1300,136 +3870,626 @@ type Dice struct {
 // Ref: #/components/schemas/Document
 type Document struct {
 	// Identifier for this file, which can be used to download or reuse the file.
-	FileID string "json:\"file_id\""
+	FileID string `json:"file_id"`
 	// Unique identifier for this file, which is supposed to be the same over time and for different bots.
 	//  Can't be used to download or reuse the file.
-	FileUniqueID string       "json:\"file_unique_id\""
-	Thumb        OptPhotoSize "json:\"thumb\""
+	FileUniqueID string       `json:"file_unique_id"`
+	Thumb        OptPhotoSize `json:"thumb"`
 	// _Optional_. Original filename as defined by sender.
-	FileName OptString "json:\"file_name\""
+	FileName OptString `json:"file_name"`
 	// _Optional_. MIME type of the file as defined by sender.
-	MimeType OptString "json:\"mime_type\""
+	MimeType OptString `json:"mime_type"`
 	// _Optional_. File size in bytes. It can be bigger than 2^31 and some programming languages may have
 	// difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed
 	// 64-bit integer or double-precision float type are safe for storing this value.
-	FileSize OptInt "json:\"file_size\""
+	FileSize OptInt `json:"file_size"`
+}
+
+// GetFileID returns the value of FileID.
+func (s Document) GetFileID() string {
+	return s.FileID
+}
+
+// GetFileUniqueID returns the value of FileUniqueID.
+func (s Document) GetFileUniqueID() string {
+	return s.FileUniqueID
+}
+
+// GetThumb returns the value of Thumb.
+func (s Document) GetThumb() OptPhotoSize {
+	return s.Thumb
+}
+
+// GetFileName returns the value of FileName.
+func (s Document) GetFileName() OptString {
+	return s.FileName
+}
+
+// GetMimeType returns the value of MimeType.
+func (s Document) GetMimeType() OptString {
+	return s.MimeType
+}
+
+// GetFileSize returns the value of FileSize.
+func (s Document) GetFileSize() OptInt {
+	return s.FileSize
+}
+
+// SetFileID sets the value of FileID.
+func (s *Document) SetFileID(val string) {
+	s.FileID = val
+}
+
+// SetFileUniqueID sets the value of FileUniqueID.
+func (s *Document) SetFileUniqueID(val string) {
+	s.FileUniqueID = val
+}
+
+// SetThumb sets the value of Thumb.
+func (s *Document) SetThumb(val OptPhotoSize) {
+	s.Thumb = val
+}
+
+// SetFileName sets the value of FileName.
+func (s *Document) SetFileName(val OptString) {
+	s.FileName = val
+}
+
+// SetMimeType sets the value of MimeType.
+func (s *Document) SetMimeType(val OptString) {
+	s.MimeType = val
+}
+
+// SetFileSize sets the value of FileSize.
+func (s *Document) SetFileSize(val OptInt) {
+	s.FileSize = val
 }
 
 // Input for editChatInviteLink.
 // Ref: #/components/schemas/editChatInviteLink
 type EditChatInviteLink struct {
-	ChatID ID "json:\"chat_id\""
+	ChatID ID `json:"chat_id"`
 	// The invite link to edit.
-	InviteLink string "json:\"invite_link\""
+	InviteLink string `json:"invite_link"`
 	// Invite link name; 0-32 characters.
-	Name OptString "json:\"name\""
+	Name OptString `json:"name"`
 	// Point in time (Unix timestamp) when the link will expire.
-	ExpireDate OptInt "json:\"expire_date\""
+	ExpireDate OptInt `json:"expire_date"`
 	// The maximum number of users that can be members of the chat simultaneously after joining the chat
 	// via this invite link; 1-99999.
-	MemberLimit OptInt "json:\"member_limit\""
+	MemberLimit OptInt `json:"member_limit"`
 	// _True_, if users joining the chat via the link need to be approved by chat administrators. If
 	// _True_, _member_limit_ can't be specified.
-	CreatesJoinRequest OptBool "json:\"creates_join_request\""
+	CreatesJoinRequest OptBool `json:"creates_join_request"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s EditChatInviteLink) GetChatID() ID {
+	return s.ChatID
+}
+
+// GetInviteLink returns the value of InviteLink.
+func (s EditChatInviteLink) GetInviteLink() string {
+	return s.InviteLink
+}
+
+// GetName returns the value of Name.
+func (s EditChatInviteLink) GetName() OptString {
+	return s.Name
+}
+
+// GetExpireDate returns the value of ExpireDate.
+func (s EditChatInviteLink) GetExpireDate() OptInt {
+	return s.ExpireDate
+}
+
+// GetMemberLimit returns the value of MemberLimit.
+func (s EditChatInviteLink) GetMemberLimit() OptInt {
+	return s.MemberLimit
+}
+
+// GetCreatesJoinRequest returns the value of CreatesJoinRequest.
+func (s EditChatInviteLink) GetCreatesJoinRequest() OptBool {
+	return s.CreatesJoinRequest
+}
+
+// SetChatID sets the value of ChatID.
+func (s *EditChatInviteLink) SetChatID(val ID) {
+	s.ChatID = val
+}
+
+// SetInviteLink sets the value of InviteLink.
+func (s *EditChatInviteLink) SetInviteLink(val string) {
+	s.InviteLink = val
+}
+
+// SetName sets the value of Name.
+func (s *EditChatInviteLink) SetName(val OptString) {
+	s.Name = val
+}
+
+// SetExpireDate sets the value of ExpireDate.
+func (s *EditChatInviteLink) SetExpireDate(val OptInt) {
+	s.ExpireDate = val
+}
+
+// SetMemberLimit sets the value of MemberLimit.
+func (s *EditChatInviteLink) SetMemberLimit(val OptInt) {
+	s.MemberLimit = val
+}
+
+// SetCreatesJoinRequest sets the value of CreatesJoinRequest.
+func (s *EditChatInviteLink) SetCreatesJoinRequest(val OptBool) {
+	s.CreatesJoinRequest = val
 }
 
 // Input for editForumTopic.
 // Ref: #/components/schemas/editForumTopic
 type EditForumTopic struct {
-	ChatID ID "json:\"chat_id\""
+	ChatID ID `json:"chat_id"`
 	// Unique identifier for the target message thread of the forum topic.
-	MessageThreadID int "json:\"message_thread_id\""
+	MessageThreadID int `json:"message_thread_id"`
 	// New topic name, 1-128 characters.
-	Name string "json:\"name\""
+	Name string `json:"name"`
 	// New unique identifier of the custom emoji shown as the topic icon. Use
 	// [getForumTopicIconStickers](https://core.telegram.org/bots/api#getforumtopiciconstickers) to get
 	// all allowed custom emoji identifiers.
-	IconCustomEmojiID string "json:\"icon_custom_emoji_id\""
+	IconCustomEmojiID string `json:"icon_custom_emoji_id"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s EditForumTopic) GetChatID() ID {
+	return s.ChatID
+}
+
+// GetMessageThreadID returns the value of MessageThreadID.
+func (s EditForumTopic) GetMessageThreadID() int {
+	return s.MessageThreadID
+}
+
+// GetName returns the value of Name.
+func (s EditForumTopic) GetName() string {
+	return s.Name
+}
+
+// GetIconCustomEmojiID returns the value of IconCustomEmojiID.
+func (s EditForumTopic) GetIconCustomEmojiID() string {
+	return s.IconCustomEmojiID
+}
+
+// SetChatID sets the value of ChatID.
+func (s *EditForumTopic) SetChatID(val ID) {
+	s.ChatID = val
+}
+
+// SetMessageThreadID sets the value of MessageThreadID.
+func (s *EditForumTopic) SetMessageThreadID(val int) {
+	s.MessageThreadID = val
+}
+
+// SetName sets the value of Name.
+func (s *EditForumTopic) SetName(val string) {
+	s.Name = val
+}
+
+// SetIconCustomEmojiID sets the value of IconCustomEmojiID.
+func (s *EditForumTopic) SetIconCustomEmojiID(val string) {
+	s.IconCustomEmojiID = val
 }
 
 // Input for editMessageCaption.
 // Ref: #/components/schemas/editMessageCaption
 type EditMessageCaption struct {
-	ChatID OptID "json:\"chat_id\""
+	ChatID OptID `json:"chat_id"`
 	// Required if _inline_message_id_ is not specified. Identifier of the message to edit.
-	MessageID OptInt "json:\"message_id\""
+	MessageID OptInt `json:"message_id"`
 	// Required if _chat_id_ and _message_id_ are not specified. Identifier of the inline message.
-	InlineMessageID OptString "json:\"inline_message_id\""
+	InlineMessageID OptString `json:"inline_message_id"`
 	// New caption of the message, 0-1024 characters after entities parsing.
-	Caption OptString "json:\"caption\""
+	Caption OptString `json:"caption"`
 	// Mode for parsing entities in the message caption. See [formatting options](https://core.telegram.
 	// org/bots/api#formatting-options) for more details.
-	ParseMode OptString "json:\"parse_mode\""
+	ParseMode OptString `json:"parse_mode"`
 	// A JSON-serialized list of special entities that appear in the caption, which can be specified
 	// instead of _parse_mode_.
-	CaptionEntities []MessageEntity         "json:\"caption_entities\""
-	ReplyMarkup     OptInlineKeyboardMarkup "json:\"reply_markup\""
+	CaptionEntities []MessageEntity         `json:"caption_entities"`
+	ReplyMarkup     OptInlineKeyboardMarkup `json:"reply_markup"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s EditMessageCaption) GetChatID() OptID {
+	return s.ChatID
+}
+
+// GetMessageID returns the value of MessageID.
+func (s EditMessageCaption) GetMessageID() OptInt {
+	return s.MessageID
+}
+
+// GetInlineMessageID returns the value of InlineMessageID.
+func (s EditMessageCaption) GetInlineMessageID() OptString {
+	return s.InlineMessageID
+}
+
+// GetCaption returns the value of Caption.
+func (s EditMessageCaption) GetCaption() OptString {
+	return s.Caption
+}
+
+// GetParseMode returns the value of ParseMode.
+func (s EditMessageCaption) GetParseMode() OptString {
+	return s.ParseMode
+}
+
+// GetCaptionEntities returns the value of CaptionEntities.
+func (s EditMessageCaption) GetCaptionEntities() []MessageEntity {
+	return s.CaptionEntities
+}
+
+// GetReplyMarkup returns the value of ReplyMarkup.
+func (s EditMessageCaption) GetReplyMarkup() OptInlineKeyboardMarkup {
+	return s.ReplyMarkup
+}
+
+// SetChatID sets the value of ChatID.
+func (s *EditMessageCaption) SetChatID(val OptID) {
+	s.ChatID = val
+}
+
+// SetMessageID sets the value of MessageID.
+func (s *EditMessageCaption) SetMessageID(val OptInt) {
+	s.MessageID = val
+}
+
+// SetInlineMessageID sets the value of InlineMessageID.
+func (s *EditMessageCaption) SetInlineMessageID(val OptString) {
+	s.InlineMessageID = val
+}
+
+// SetCaption sets the value of Caption.
+func (s *EditMessageCaption) SetCaption(val OptString) {
+	s.Caption = val
+}
+
+// SetParseMode sets the value of ParseMode.
+func (s *EditMessageCaption) SetParseMode(val OptString) {
+	s.ParseMode = val
+}
+
+// SetCaptionEntities sets the value of CaptionEntities.
+func (s *EditMessageCaption) SetCaptionEntities(val []MessageEntity) {
+	s.CaptionEntities = val
+}
+
+// SetReplyMarkup sets the value of ReplyMarkup.
+func (s *EditMessageCaption) SetReplyMarkup(val OptInlineKeyboardMarkup) {
+	s.ReplyMarkup = val
 }
 
 // Input for editMessageLiveLocation.
 // Ref: #/components/schemas/editMessageLiveLocation
 type EditMessageLiveLocation struct {
-	ChatID OptID "json:\"chat_id\""
+	ChatID OptID `json:"chat_id"`
 	// Required if _inline_message_id_ is not specified. Identifier of the message to edit.
-	MessageID OptInt "json:\"message_id\""
+	MessageID OptInt `json:"message_id"`
 	// Required if _chat_id_ and _message_id_ are not specified. Identifier of the inline message.
-	InlineMessageID OptString "json:\"inline_message_id\""
+	InlineMessageID OptString `json:"inline_message_id"`
 	// Latitude of new location.
-	Latitude float64 "json:\"latitude\""
+	Latitude float64 `json:"latitude"`
 	// Longitude of new location.
-	Longitude float64 "json:\"longitude\""
+	Longitude float64 `json:"longitude"`
 	// The radius of uncertainty for the location, measured in meters; 0-1500.
-	HorizontalAccuracy OptFloat64 "json:\"horizontal_accuracy\""
+	HorizontalAccuracy OptFloat64 `json:"horizontal_accuracy"`
 	// Direction in which the user is moving, in degrees. Must be between 1 and 360 if specified.
-	Heading OptInt "json:\"heading\""
+	Heading OptInt `json:"heading"`
 	// The maximum distance for proximity alerts about approaching another chat member, in meters. Must
 	// be between 1 and 100000 if specified.
-	ProximityAlertRadius OptInt                  "json:\"proximity_alert_radius\""
-	ReplyMarkup          OptInlineKeyboardMarkup "json:\"reply_markup\""
+	ProximityAlertRadius OptInt                  `json:"proximity_alert_radius"`
+	ReplyMarkup          OptInlineKeyboardMarkup `json:"reply_markup"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s EditMessageLiveLocation) GetChatID() OptID {
+	return s.ChatID
+}
+
+// GetMessageID returns the value of MessageID.
+func (s EditMessageLiveLocation) GetMessageID() OptInt {
+	return s.MessageID
+}
+
+// GetInlineMessageID returns the value of InlineMessageID.
+func (s EditMessageLiveLocation) GetInlineMessageID() OptString {
+	return s.InlineMessageID
+}
+
+// GetLatitude returns the value of Latitude.
+func (s EditMessageLiveLocation) GetLatitude() float64 {
+	return s.Latitude
+}
+
+// GetLongitude returns the value of Longitude.
+func (s EditMessageLiveLocation) GetLongitude() float64 {
+	return s.Longitude
+}
+
+// GetHorizontalAccuracy returns the value of HorizontalAccuracy.
+func (s EditMessageLiveLocation) GetHorizontalAccuracy() OptFloat64 {
+	return s.HorizontalAccuracy
+}
+
+// GetHeading returns the value of Heading.
+func (s EditMessageLiveLocation) GetHeading() OptInt {
+	return s.Heading
+}
+
+// GetProximityAlertRadius returns the value of ProximityAlertRadius.
+func (s EditMessageLiveLocation) GetProximityAlertRadius() OptInt {
+	return s.ProximityAlertRadius
+}
+
+// GetReplyMarkup returns the value of ReplyMarkup.
+func (s EditMessageLiveLocation) GetReplyMarkup() OptInlineKeyboardMarkup {
+	return s.ReplyMarkup
+}
+
+// SetChatID sets the value of ChatID.
+func (s *EditMessageLiveLocation) SetChatID(val OptID) {
+	s.ChatID = val
+}
+
+// SetMessageID sets the value of MessageID.
+func (s *EditMessageLiveLocation) SetMessageID(val OptInt) {
+	s.MessageID = val
+}
+
+// SetInlineMessageID sets the value of InlineMessageID.
+func (s *EditMessageLiveLocation) SetInlineMessageID(val OptString) {
+	s.InlineMessageID = val
+}
+
+// SetLatitude sets the value of Latitude.
+func (s *EditMessageLiveLocation) SetLatitude(val float64) {
+	s.Latitude = val
+}
+
+// SetLongitude sets the value of Longitude.
+func (s *EditMessageLiveLocation) SetLongitude(val float64) {
+	s.Longitude = val
+}
+
+// SetHorizontalAccuracy sets the value of HorizontalAccuracy.
+func (s *EditMessageLiveLocation) SetHorizontalAccuracy(val OptFloat64) {
+	s.HorizontalAccuracy = val
+}
+
+// SetHeading sets the value of Heading.
+func (s *EditMessageLiveLocation) SetHeading(val OptInt) {
+	s.Heading = val
+}
+
+// SetProximityAlertRadius sets the value of ProximityAlertRadius.
+func (s *EditMessageLiveLocation) SetProximityAlertRadius(val OptInt) {
+	s.ProximityAlertRadius = val
+}
+
+// SetReplyMarkup sets the value of ReplyMarkup.
+func (s *EditMessageLiveLocation) SetReplyMarkup(val OptInlineKeyboardMarkup) {
+	s.ReplyMarkup = val
 }
 
 // Input for editMessageMedia.
 // Ref: #/components/schemas/editMessageMedia
 type EditMessageMedia struct {
-	ChatID OptID "json:\"chat_id\""
+	ChatID OptID `json:"chat_id"`
 	// Required if _inline_message_id_ is not specified. Identifier of the message to edit.
-	MessageID OptInt "json:\"message_id\""
+	MessageID OptInt `json:"message_id"`
 	// Required if _chat_id_ and _message_id_ are not specified. Identifier of the inline message.
-	InlineMessageID OptString               "json:\"inline_message_id\""
-	Media           InputMedia              "json:\"media\""
-	ReplyMarkup     OptInlineKeyboardMarkup "json:\"reply_markup\""
+	InlineMessageID OptString               `json:"inline_message_id"`
+	Media           InputMedia              `json:"media"`
+	ReplyMarkup     OptInlineKeyboardMarkup `json:"reply_markup"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s EditMessageMedia) GetChatID() OptID {
+	return s.ChatID
+}
+
+// GetMessageID returns the value of MessageID.
+func (s EditMessageMedia) GetMessageID() OptInt {
+	return s.MessageID
+}
+
+// GetInlineMessageID returns the value of InlineMessageID.
+func (s EditMessageMedia) GetInlineMessageID() OptString {
+	return s.InlineMessageID
+}
+
+// GetMedia returns the value of Media.
+func (s EditMessageMedia) GetMedia() InputMedia {
+	return s.Media
+}
+
+// GetReplyMarkup returns the value of ReplyMarkup.
+func (s EditMessageMedia) GetReplyMarkup() OptInlineKeyboardMarkup {
+	return s.ReplyMarkup
+}
+
+// SetChatID sets the value of ChatID.
+func (s *EditMessageMedia) SetChatID(val OptID) {
+	s.ChatID = val
+}
+
+// SetMessageID sets the value of MessageID.
+func (s *EditMessageMedia) SetMessageID(val OptInt) {
+	s.MessageID = val
+}
+
+// SetInlineMessageID sets the value of InlineMessageID.
+func (s *EditMessageMedia) SetInlineMessageID(val OptString) {
+	s.InlineMessageID = val
+}
+
+// SetMedia sets the value of Media.
+func (s *EditMessageMedia) SetMedia(val InputMedia) {
+	s.Media = val
+}
+
+// SetReplyMarkup sets the value of ReplyMarkup.
+func (s *EditMessageMedia) SetReplyMarkup(val OptInlineKeyboardMarkup) {
+	s.ReplyMarkup = val
 }
 
 // Input for editMessageReplyMarkup.
 // Ref: #/components/schemas/editMessageReplyMarkup
 type EditMessageReplyMarkup struct {
-	ChatID OptID "json:\"chat_id\""
+	ChatID OptID `json:"chat_id"`
 	// Required if _inline_message_id_ is not specified. Identifier of the message to edit.
-	MessageID OptInt "json:\"message_id\""
+	MessageID OptInt `json:"message_id"`
 	// Required if _chat_id_ and _message_id_ are not specified. Identifier of the inline message.
-	InlineMessageID OptString               "json:\"inline_message_id\""
-	ReplyMarkup     OptInlineKeyboardMarkup "json:\"reply_markup\""
+	InlineMessageID OptString               `json:"inline_message_id"`
+	ReplyMarkup     OptInlineKeyboardMarkup `json:"reply_markup"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s EditMessageReplyMarkup) GetChatID() OptID {
+	return s.ChatID
+}
+
+// GetMessageID returns the value of MessageID.
+func (s EditMessageReplyMarkup) GetMessageID() OptInt {
+	return s.MessageID
+}
+
+// GetInlineMessageID returns the value of InlineMessageID.
+func (s EditMessageReplyMarkup) GetInlineMessageID() OptString {
+	return s.InlineMessageID
+}
+
+// GetReplyMarkup returns the value of ReplyMarkup.
+func (s EditMessageReplyMarkup) GetReplyMarkup() OptInlineKeyboardMarkup {
+	return s.ReplyMarkup
+}
+
+// SetChatID sets the value of ChatID.
+func (s *EditMessageReplyMarkup) SetChatID(val OptID) {
+	s.ChatID = val
+}
+
+// SetMessageID sets the value of MessageID.
+func (s *EditMessageReplyMarkup) SetMessageID(val OptInt) {
+	s.MessageID = val
+}
+
+// SetInlineMessageID sets the value of InlineMessageID.
+func (s *EditMessageReplyMarkup) SetInlineMessageID(val OptString) {
+	s.InlineMessageID = val
+}
+
+// SetReplyMarkup sets the value of ReplyMarkup.
+func (s *EditMessageReplyMarkup) SetReplyMarkup(val OptInlineKeyboardMarkup) {
+	s.ReplyMarkup = val
 }
 
 // Input for editMessageText.
 // Ref: #/components/schemas/editMessageText
 type EditMessageText struct {
-	ChatID OptID "json:\"chat_id\""
+	ChatID OptID `json:"chat_id"`
 	// Required if _inline_message_id_ is not specified. Identifier of the message to edit.
-	MessageID OptInt "json:\"message_id\""
+	MessageID OptInt `json:"message_id"`
 	// Required if _chat_id_ and _message_id_ are not specified. Identifier of the inline message.
-	InlineMessageID OptString "json:\"inline_message_id\""
+	InlineMessageID OptString `json:"inline_message_id"`
 	// New text of the message, 1-4096 characters after entities parsing.
-	Text string "json:\"text\""
+	Text string `json:"text"`
 	// Mode for parsing entities in the message text. See [formatting options](https://core.telegram.
 	// org/bots/api#formatting-options) for more details.
-	ParseMode OptString "json:\"parse_mode\""
+	ParseMode OptString `json:"parse_mode"`
 	// A JSON-serialized list of special entities that appear in message text, which can be specified
 	// instead of _parse_mode_.
-	Entities []MessageEntity "json:\"entities\""
+	Entities []MessageEntity `json:"entities"`
 	// Disables link previews for links in this message.
-	DisableWebPagePreview OptBool                 "json:\"disable_web_page_preview\""
-	ReplyMarkup           OptInlineKeyboardMarkup "json:\"reply_markup\""
+	DisableWebPagePreview OptBool                 `json:"disable_web_page_preview"`
+	ReplyMarkup           OptInlineKeyboardMarkup `json:"reply_markup"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s EditMessageText) GetChatID() OptID {
+	return s.ChatID
+}
+
+// GetMessageID returns the value of MessageID.
+func (s EditMessageText) GetMessageID() OptInt {
+	return s.MessageID
+}
+
+// GetInlineMessageID returns the value of InlineMessageID.
+func (s EditMessageText) GetInlineMessageID() OptString {
+	return s.InlineMessageID
+}
+
+// GetText returns the value of Text.
+func (s EditMessageText) GetText() string {
+	return s.Text
+}
+
+// GetParseMode returns the value of ParseMode.
+func (s EditMessageText) GetParseMode() OptString {
+	return s.ParseMode
+}
+
+// GetEntities returns the value of Entities.
+func (s EditMessageText) GetEntities() []MessageEntity {
+	return s.Entities
+}
+
+// GetDisableWebPagePreview returns the value of DisableWebPagePreview.
+func (s EditMessageText) GetDisableWebPagePreview() OptBool {
+	return s.DisableWebPagePreview
+}
+
+// GetReplyMarkup returns the value of ReplyMarkup.
+func (s EditMessageText) GetReplyMarkup() OptInlineKeyboardMarkup {
+	return s.ReplyMarkup
+}
+
+// SetChatID sets the value of ChatID.
+func (s *EditMessageText) SetChatID(val OptID) {
+	s.ChatID = val
+}
+
+// SetMessageID sets the value of MessageID.
+func (s *EditMessageText) SetMessageID(val OptInt) {
+	s.MessageID = val
+}
+
+// SetInlineMessageID sets the value of InlineMessageID.
+func (s *EditMessageText) SetInlineMessageID(val OptString) {
+	s.InlineMessageID = val
+}
+
+// SetText sets the value of Text.
+func (s *EditMessageText) SetText(val string) {
+	s.Text = val
+}
+
+// SetParseMode sets the value of ParseMode.
+func (s *EditMessageText) SetParseMode(val OptString) {
+	s.ParseMode = val
+}
+
+// SetEntities sets the value of Entities.
+func (s *EditMessageText) SetEntities(val []MessageEntity) {
+	s.Entities = val
+}
+
+// SetDisableWebPagePreview sets the value of DisableWebPagePreview.
+func (s *EditMessageText) SetDisableWebPagePreview(val OptBool) {
+	s.DisableWebPagePreview = val
+}
+
+// SetReplyMarkup sets the value of ReplyMarkup.
+func (s *EditMessageText) SetReplyMarkup(val OptInlineKeyboardMarkup) {
+	s.ReplyMarkup = val
 }
 
 // Describes data required for decrypting and authenticating [EncryptedPassportElement](https://core.
@@ -1441,11 +4501,41 @@ type EncryptedCredentials struct {
 	// Base64-encoded encrypted JSON-serialized data with unique user's payload, data hashes and secrets
 	// required for [EncryptedPassportElement](https://core.telegram.
 	// org/bots/api#encryptedpassportelement) decryption and authentication.
-	Data string "json:\"data\""
+	Data string `json:"data"`
 	// Base64-encoded data hash for data authentication.
-	Hash string "json:\"hash\""
+	Hash string `json:"hash"`
 	// Base64-encoded secret, encrypted with the bot's public RSA key, required for data decryption.
-	Secret string "json:\"secret\""
+	Secret string `json:"secret"`
+}
+
+// GetData returns the value of Data.
+func (s EncryptedCredentials) GetData() string {
+	return s.Data
+}
+
+// GetHash returns the value of Hash.
+func (s EncryptedCredentials) GetHash() string {
+	return s.Hash
+}
+
+// GetSecret returns the value of Secret.
+func (s EncryptedCredentials) GetSecret() string {
+	return s.Secret
+}
+
+// SetData sets the value of Data.
+func (s *EncryptedCredentials) SetData(val string) {
+	s.Data = val
+}
+
+// SetHash sets the value of Hash.
+func (s *EncryptedCredentials) SetHash(val string) {
+	s.Hash = val
+}
+
+// SetSecret sets the value of Secret.
+func (s *EncryptedCredentials) SetSecret(val string) {
+	s.Secret = val
 }
 
 // Describes documents or other Telegram Passport elements shared with the bot by the user.
@@ -1454,33 +4544,133 @@ type EncryptedPassportElement struct {
 	// Element type. One of `personal_details`, `passport`, `driver_license`, `identity_card`,
 	// `internal_passport`, `address`, `utility_bill`, `bank_statement`, `rental_agreement`,
 	// `passport_registration`, `temporary_registration`, `phone_number`, `email`.
-	Type EncryptedPassportElementType "json:\"type\""
+	Type EncryptedPassportElementType `json:"type"`
 	// _Optional_. Base64-encoded encrypted Telegram Passport element data provided by the user,
 	// available for `personal_details`, `passport`, `driver_license`, `identity_card`,
 	// `internal_passport` and `address` types. Can be decrypted and verified using the accompanying
 	// [EncryptedCredentials](https://core.telegram.org/bots/api#encryptedcredentials).
-	Data OptString "json:\"data\""
+	Data OptString `json:"data"`
 	// _Optional_. User's verified phone number, available only for `phone_number` type.
-	PhoneNumber OptString "json:\"phone_number\""
+	PhoneNumber OptString `json:"phone_number"`
 	// _Optional_. User's verified email address, available only for `email` type.
-	Email OptString "json:\"email\""
+	Email OptString `json:"email"`
 	// _Optional_. Array of encrypted files with documents provided by the user, available for
 	// `utility_bill`, `bank_statement`, `rental_agreement`, `passport_registration` and
 	// `temporary_registration` types. Files can be decrypted and verified using the accompanying
 	// [EncryptedCredentials](https://core.telegram.org/bots/api#encryptedcredentials).
-	Files       []PassportFile  "json:\"files\""
-	FrontSide   OptPassportFile "json:\"front_side\""
-	ReverseSide OptPassportFile "json:\"reverse_side\""
-	Selfie      OptPassportFile "json:\"selfie\""
+	Files       []PassportFile  `json:"files"`
+	FrontSide   OptPassportFile `json:"front_side"`
+	ReverseSide OptPassportFile `json:"reverse_side"`
+	Selfie      OptPassportFile `json:"selfie"`
 	// _Optional_. Array of encrypted files with translated versions of documents provided by the user.
 	// Available if requested for `passport`, `driver_license`, `identity_card`, `internal_passport`,
 	// `utility_bill`, `bank_statement`, `rental_agreement`, `passport_registration` and
 	// `temporary_registration` types. Files can be decrypted and verified using the accompanying
 	// [EncryptedCredentials](https://core.telegram.org/bots/api#encryptedcredentials).
-	Translation []PassportFile "json:\"translation\""
+	Translation []PassportFile `json:"translation"`
 	// Base64-encoded element hash for using in [PassportElementErrorUnspecified](https://core.telegram.
 	// org/bots/api#passportelementerrorunspecified).
-	Hash string "json:\"hash\""
+	Hash string `json:"hash"`
+}
+
+// GetType returns the value of Type.
+func (s EncryptedPassportElement) GetType() EncryptedPassportElementType {
+	return s.Type
+}
+
+// GetData returns the value of Data.
+func (s EncryptedPassportElement) GetData() OptString {
+	return s.Data
+}
+
+// GetPhoneNumber returns the value of PhoneNumber.
+func (s EncryptedPassportElement) GetPhoneNumber() OptString {
+	return s.PhoneNumber
+}
+
+// GetEmail returns the value of Email.
+func (s EncryptedPassportElement) GetEmail() OptString {
+	return s.Email
+}
+
+// GetFiles returns the value of Files.
+func (s EncryptedPassportElement) GetFiles() []PassportFile {
+	return s.Files
+}
+
+// GetFrontSide returns the value of FrontSide.
+func (s EncryptedPassportElement) GetFrontSide() OptPassportFile {
+	return s.FrontSide
+}
+
+// GetReverseSide returns the value of ReverseSide.
+func (s EncryptedPassportElement) GetReverseSide() OptPassportFile {
+	return s.ReverseSide
+}
+
+// GetSelfie returns the value of Selfie.
+func (s EncryptedPassportElement) GetSelfie() OptPassportFile {
+	return s.Selfie
+}
+
+// GetTranslation returns the value of Translation.
+func (s EncryptedPassportElement) GetTranslation() []PassportFile {
+	return s.Translation
+}
+
+// GetHash returns the value of Hash.
+func (s EncryptedPassportElement) GetHash() string {
+	return s.Hash
+}
+
+// SetType sets the value of Type.
+func (s *EncryptedPassportElement) SetType(val EncryptedPassportElementType) {
+	s.Type = val
+}
+
+// SetData sets the value of Data.
+func (s *EncryptedPassportElement) SetData(val OptString) {
+	s.Data = val
+}
+
+// SetPhoneNumber sets the value of PhoneNumber.
+func (s *EncryptedPassportElement) SetPhoneNumber(val OptString) {
+	s.PhoneNumber = val
+}
+
+// SetEmail sets the value of Email.
+func (s *EncryptedPassportElement) SetEmail(val OptString) {
+	s.Email = val
+}
+
+// SetFiles sets the value of Files.
+func (s *EncryptedPassportElement) SetFiles(val []PassportFile) {
+	s.Files = val
+}
+
+// SetFrontSide sets the value of FrontSide.
+func (s *EncryptedPassportElement) SetFrontSide(val OptPassportFile) {
+	s.FrontSide = val
+}
+
+// SetReverseSide sets the value of ReverseSide.
+func (s *EncryptedPassportElement) SetReverseSide(val OptPassportFile) {
+	s.ReverseSide = val
+}
+
+// SetSelfie sets the value of Selfie.
+func (s *EncryptedPassportElement) SetSelfie(val OptPassportFile) {
+	s.Selfie = val
+}
+
+// SetTranslation sets the value of Translation.
+func (s *EncryptedPassportElement) SetTranslation(val []PassportFile) {
+	s.Translation = val
+}
+
+// SetHash sets the value of Hash.
+func (s *EncryptedPassportElement) SetHash(val string) {
+	s.Hash = val
 }
 
 // Element type. One of `personal_details`, `passport`, `driver_license`, `identity_card`,
@@ -1506,10 +4696,50 @@ const (
 
 // Ref: #/components/schemas/Error
 type Error struct {
-	Ok          bool                  "json:\"ok\""
-	ErrorCode   int                   "json:\"error_code\""
-	Description string                "json:\"description\""
-	Parameters  OptResponseParameters "json:\"parameters\""
+	Ok          bool                  `json:"ok"`
+	ErrorCode   int                   `json:"error_code"`
+	Description string                `json:"description"`
+	Parameters  OptResponseParameters `json:"parameters"`
+}
+
+// GetOk returns the value of Ok.
+func (s Error) GetOk() bool {
+	return s.Ok
+}
+
+// GetErrorCode returns the value of ErrorCode.
+func (s Error) GetErrorCode() int {
+	return s.ErrorCode
+}
+
+// GetDescription returns the value of Description.
+func (s Error) GetDescription() string {
+	return s.Description
+}
+
+// GetParameters returns the value of Parameters.
+func (s Error) GetParameters() OptResponseParameters {
+	return s.Parameters
+}
+
+// SetOk sets the value of Ok.
+func (s *Error) SetOk(val bool) {
+	s.Ok = val
+}
+
+// SetErrorCode sets the value of ErrorCode.
+func (s *Error) SetErrorCode(val int) {
+	s.ErrorCode = val
+}
+
+// SetDescription sets the value of Description.
+func (s *Error) SetDescription(val string) {
+	s.Description = val
+}
+
+// SetParameters sets the value of Parameters.
+func (s *Error) SetParameters(val OptResponseParameters) {
+	s.Parameters = val
 }
 
 // ErrorStatusCode wraps Error with StatusCode.
@@ -1518,10 +4748,40 @@ type ErrorStatusCode struct {
 	Response   Error
 }
 
+// GetStatusCode returns the value of StatusCode.
+func (s ErrorStatusCode) GetStatusCode() int {
+	return s.StatusCode
+}
+
+// GetResponse returns the value of Response.
+func (s ErrorStatusCode) GetResponse() Error {
+	return s.Response
+}
+
+// SetStatusCode sets the value of StatusCode.
+func (s *ErrorStatusCode) SetStatusCode(val int) {
+	s.StatusCode = val
+}
+
+// SetResponse sets the value of Response.
+func (s *ErrorStatusCode) SetResponse(val Error) {
+	s.Response = val
+}
+
 // Input for exportChatInviteLink.
 // Ref: #/components/schemas/exportChatInviteLink
 type ExportChatInviteLink struct {
-	ChatID ID "json:\"chat_id\""
+	ChatID ID `json:"chat_id"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s ExportChatInviteLink) GetChatID() ID {
+	return s.ChatID
+}
+
+// SetChatID sets the value of ChatID.
+func (s *ExportChatInviteLink) SetChatID(val ID) {
+	s.ChatID = val
 }
 
 // This object represents a file ready to be downloaded. The file can be downloaded via the link
@@ -1531,16 +4791,56 @@ type ExportChatInviteLink struct {
 // Ref: #/components/schemas/File
 type File struct {
 	// Identifier for this file, which can be used to download or reuse the file.
-	FileID string "json:\"file_id\""
+	FileID string `json:"file_id"`
 	// Unique identifier for this file, which is supposed to be the same over time and for different bots.
 	//  Can't be used to download or reuse the file.
-	FileUniqueID string "json:\"file_unique_id\""
+	FileUniqueID string `json:"file_unique_id"`
 	// _Optional_. File size in bytes. It can be bigger than 2^31 and some programming languages may have
 	// difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed
 	// 64-bit integer or double-precision float type are safe for storing this value.
-	FileSize OptInt "json:\"file_size\""
+	FileSize OptInt `json:"file_size"`
 	// _Optional_. File path. Use `https://api.telegram.org/file/bot<token>/<file_path>` to get the file.
-	FilePath OptString "json:\"file_path\""
+	FilePath OptString `json:"file_path"`
+}
+
+// GetFileID returns the value of FileID.
+func (s File) GetFileID() string {
+	return s.FileID
+}
+
+// GetFileUniqueID returns the value of FileUniqueID.
+func (s File) GetFileUniqueID() string {
+	return s.FileUniqueID
+}
+
+// GetFileSize returns the value of FileSize.
+func (s File) GetFileSize() OptInt {
+	return s.FileSize
+}
+
+// GetFilePath returns the value of FilePath.
+func (s File) GetFilePath() OptString {
+	return s.FilePath
+}
+
+// SetFileID sets the value of FileID.
+func (s *File) SetFileID(val string) {
+	s.FileID = val
+}
+
+// SetFileUniqueID sets the value of FileUniqueID.
+func (s *File) SetFileUniqueID(val string) {
+	s.FileUniqueID = val
+}
+
+// SetFileSize sets the value of FileSize.
+func (s *File) SetFileSize(val OptInt) {
+	s.FileSize = val
+}
+
+// SetFilePath sets the value of FilePath.
+func (s *File) SetFilePath(val OptString) {
+	s.FilePath = val
 }
 
 // Upon receiving a message with this object, Telegram clients will display a reply interface to the
@@ -1551,15 +4851,45 @@ type File struct {
 type ForceReply struct {
 	// Shows reply interface to the user, as if they manually selected the bot's message and tapped
 	// 'Reply'.
-	ForceReply bool "json:\"force_reply\""
+	ForceReply bool `json:"force_reply"`
 	// _Optional_. The placeholder to be shown in the input field when the reply is active; 1-64
 	// characters.
-	InputFieldPlaceholder OptString "json:\"input_field_placeholder\""
+	InputFieldPlaceholder OptString `json:"input_field_placeholder"`
 	// _Optional_. Use this parameter if you want to force reply from specific users only. Targets: 1)
 	// users that are @mentioned in the _text_ of the [Message](https://core.telegram.
 	// org/bots/api#message) object; 2) if the bot's message is a reply (has _reply_to_message_id_),
 	// sender of the original message.
-	Selective OptBool "json:\"selective\""
+	Selective OptBool `json:"selective"`
+}
+
+// GetForceReply returns the value of ForceReply.
+func (s ForceReply) GetForceReply() bool {
+	return s.ForceReply
+}
+
+// GetInputFieldPlaceholder returns the value of InputFieldPlaceholder.
+func (s ForceReply) GetInputFieldPlaceholder() OptString {
+	return s.InputFieldPlaceholder
+}
+
+// GetSelective returns the value of Selective.
+func (s ForceReply) GetSelective() OptBool {
+	return s.Selective
+}
+
+// SetForceReply sets the value of ForceReply.
+func (s *ForceReply) SetForceReply(val bool) {
+	s.ForceReply = val
+}
+
+// SetInputFieldPlaceholder sets the value of InputFieldPlaceholder.
+func (s *ForceReply) SetInputFieldPlaceholder(val OptString) {
+	s.InputFieldPlaceholder = val
+}
+
+// SetSelective sets the value of Selective.
+func (s *ForceReply) SetSelective(val OptBool) {
+	s.Selective = val
 }
 
 // This object represents a service message about a forum topic closed in the chat. Currently holds
@@ -1571,11 +4901,41 @@ type ForumTopicClosed struct{}
 // Ref: #/components/schemas/ForumTopicCreated
 type ForumTopicCreated struct {
 	// Name of the topic.
-	Name string "json:\"name\""
+	Name string `json:"name"`
 	// Color of the topic icon in RGB format.
-	IconColor int "json:\"icon_color\""
+	IconColor int `json:"icon_color"`
 	// _Optional_. Unique identifier of the custom emoji shown as the topic icon.
-	IconCustomEmojiID OptString "json:\"icon_custom_emoji_id\""
+	IconCustomEmojiID OptString `json:"icon_custom_emoji_id"`
+}
+
+// GetName returns the value of Name.
+func (s ForumTopicCreated) GetName() string {
+	return s.Name
+}
+
+// GetIconColor returns the value of IconColor.
+func (s ForumTopicCreated) GetIconColor() int {
+	return s.IconColor
+}
+
+// GetIconCustomEmojiID returns the value of IconCustomEmojiID.
+func (s ForumTopicCreated) GetIconCustomEmojiID() OptString {
+	return s.IconCustomEmojiID
+}
+
+// SetName sets the value of Name.
+func (s *ForumTopicCreated) SetName(val string) {
+	s.Name = val
+}
+
+// SetIconColor sets the value of IconColor.
+func (s *ForumTopicCreated) SetIconColor(val int) {
+	s.IconColor = val
+}
+
+// SetIconCustomEmojiID sets the value of IconCustomEmojiID.
+func (s *ForumTopicCreated) SetIconCustomEmojiID(val OptString) {
+	s.IconCustomEmojiID = val
 }
 
 // This object represents a service message about a forum topic reopened in the chat. Currently holds
@@ -1586,17 +4946,77 @@ type ForumTopicReopened struct{}
 // Input for forwardMessage.
 // Ref: #/components/schemas/forwardMessage
 type ForwardMessage struct {
-	ChatID ID "json:\"chat_id\""
+	ChatID ID `json:"chat_id"`
 	// Unique identifier for the target message thread (topic) of the forum; for forum supergroups only.
-	MessageThreadID OptInt "json:\"message_thread_id\""
-	FromChatID      ID     "json:\"from_chat_id\""
+	MessageThreadID OptInt `json:"message_thread_id"`
+	FromChatID      ID     `json:"from_chat_id"`
 	// Sends the message [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will
 	// receive a notification with no sound.
-	DisableNotification OptBool "json:\"disable_notification\""
+	DisableNotification OptBool `json:"disable_notification"`
 	// Protects the contents of the forwarded message from forwarding and saving.
-	ProtectContent OptBool "json:\"protect_content\""
+	ProtectContent OptBool `json:"protect_content"`
 	// Message identifier in the chat specified in _from_chat_id_.
-	MessageID int "json:\"message_id\""
+	MessageID int `json:"message_id"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s ForwardMessage) GetChatID() ID {
+	return s.ChatID
+}
+
+// GetMessageThreadID returns the value of MessageThreadID.
+func (s ForwardMessage) GetMessageThreadID() OptInt {
+	return s.MessageThreadID
+}
+
+// GetFromChatID returns the value of FromChatID.
+func (s ForwardMessage) GetFromChatID() ID {
+	return s.FromChatID
+}
+
+// GetDisableNotification returns the value of DisableNotification.
+func (s ForwardMessage) GetDisableNotification() OptBool {
+	return s.DisableNotification
+}
+
+// GetProtectContent returns the value of ProtectContent.
+func (s ForwardMessage) GetProtectContent() OptBool {
+	return s.ProtectContent
+}
+
+// GetMessageID returns the value of MessageID.
+func (s ForwardMessage) GetMessageID() int {
+	return s.MessageID
+}
+
+// SetChatID sets the value of ChatID.
+func (s *ForwardMessage) SetChatID(val ID) {
+	s.ChatID = val
+}
+
+// SetMessageThreadID sets the value of MessageThreadID.
+func (s *ForwardMessage) SetMessageThreadID(val OptInt) {
+	s.MessageThreadID = val
+}
+
+// SetFromChatID sets the value of FromChatID.
+func (s *ForwardMessage) SetFromChatID(val ID) {
+	s.FromChatID = val
+}
+
+// SetDisableNotification sets the value of DisableNotification.
+func (s *ForwardMessage) SetDisableNotification(val OptBool) {
+	s.DisableNotification = val
+}
+
+// SetProtectContent sets the value of ProtectContent.
+func (s *ForwardMessage) SetProtectContent(val OptBool) {
+	s.ProtectContent = val
+}
+
+// SetMessageID sets the value of MessageID.
+func (s *ForwardMessage) SetMessageID(val int) {
+	s.MessageID = val
 }
 
 // This object represents a game. Use BotFather to create and edit games, their short names will act
@@ -1604,55 +5024,195 @@ type ForwardMessage struct {
 // Ref: #/components/schemas/Game
 type Game struct {
 	// Title of the game.
-	Title string "json:\"title\""
+	Title string `json:"title"`
 	// Description of the game.
-	Description string "json:\"description\""
+	Description string `json:"description"`
 	// Photo that will be displayed in the game message in chats.
-	Photo []PhotoSize "json:\"photo\""
+	Photo []PhotoSize `json:"photo"`
 	// _Optional_. Brief description of the game or high scores included in the game message. Can be
 	// automatically edited to include current high scores for the game when the bot calls
 	// [setGameScore](https://core.telegram.org/bots/api#setgamescore), or manually edited using
 	// [editMessageText](https://core.telegram.org/bots/api#editmessagetext). 0-4096 characters.
-	Text OptString "json:\"text\""
+	Text OptString `json:"text"`
 	// _Optional_. Special entities that appear in _text_, such as usernames, URLs, bot commands, etc.
-	TextEntities []MessageEntity "json:\"text_entities\""
-	Animation    OptAnimation    "json:\"animation\""
+	TextEntities []MessageEntity `json:"text_entities"`
+	Animation    OptAnimation    `json:"animation"`
+}
+
+// GetTitle returns the value of Title.
+func (s Game) GetTitle() string {
+	return s.Title
+}
+
+// GetDescription returns the value of Description.
+func (s Game) GetDescription() string {
+	return s.Description
+}
+
+// GetPhoto returns the value of Photo.
+func (s Game) GetPhoto() []PhotoSize {
+	return s.Photo
+}
+
+// GetText returns the value of Text.
+func (s Game) GetText() OptString {
+	return s.Text
+}
+
+// GetTextEntities returns the value of TextEntities.
+func (s Game) GetTextEntities() []MessageEntity {
+	return s.TextEntities
+}
+
+// GetAnimation returns the value of Animation.
+func (s Game) GetAnimation() OptAnimation {
+	return s.Animation
+}
+
+// SetTitle sets the value of Title.
+func (s *Game) SetTitle(val string) {
+	s.Title = val
+}
+
+// SetDescription sets the value of Description.
+func (s *Game) SetDescription(val string) {
+	s.Description = val
+}
+
+// SetPhoto sets the value of Photo.
+func (s *Game) SetPhoto(val []PhotoSize) {
+	s.Photo = val
+}
+
+// SetText sets the value of Text.
+func (s *Game) SetText(val OptString) {
+	s.Text = val
+}
+
+// SetTextEntities sets the value of TextEntities.
+func (s *Game) SetTextEntities(val []MessageEntity) {
+	s.TextEntities = val
+}
+
+// SetAnimation sets the value of Animation.
+func (s *Game) SetAnimation(val OptAnimation) {
+	s.Animation = val
 }
 
 // This object represents one row of the high scores table for a game.
 // Ref: #/components/schemas/GameHighScore
 type GameHighScore struct {
 	// Position in high score table for the game.
-	Position int  "json:\"position\""
-	User     User "json:\"user\""
+	Position int  `json:"position"`
+	User     User `json:"user"`
 	// Score.
-	Score int "json:\"score\""
+	Score int `json:"score"`
+}
+
+// GetPosition returns the value of Position.
+func (s GameHighScore) GetPosition() int {
+	return s.Position
+}
+
+// GetUser returns the value of User.
+func (s GameHighScore) GetUser() User {
+	return s.User
+}
+
+// GetScore returns the value of Score.
+func (s GameHighScore) GetScore() int {
+	return s.Score
+}
+
+// SetPosition sets the value of Position.
+func (s *GameHighScore) SetPosition(val int) {
+	s.Position = val
+}
+
+// SetUser sets the value of User.
+func (s *GameHighScore) SetUser(val User) {
+	s.User = val
+}
+
+// SetScore sets the value of Score.
+func (s *GameHighScore) SetScore(val int) {
+	s.Score = val
 }
 
 // Input for getChat.
 // Ref: #/components/schemas/getChat
 type GetChat struct {
-	ChatID ID "json:\"chat_id\""
+	ChatID ID `json:"chat_id"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s GetChat) GetChatID() ID {
+	return s.ChatID
+}
+
+// SetChatID sets the value of ChatID.
+func (s *GetChat) SetChatID(val ID) {
+	s.ChatID = val
 }
 
 // Input for getChatAdministrators.
 // Ref: #/components/schemas/getChatAdministrators
 type GetChatAdministrators struct {
-	ChatID ID "json:\"chat_id\""
+	ChatID ID `json:"chat_id"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s GetChatAdministrators) GetChatID() ID {
+	return s.ChatID
+}
+
+// SetChatID sets the value of ChatID.
+func (s *GetChatAdministrators) SetChatID(val ID) {
+	s.ChatID = val
 }
 
 // Input for getChatMember.
 // Ref: #/components/schemas/getChatMember
 type GetChatMember struct {
-	ChatID ID "json:\"chat_id\""
+	ChatID ID `json:"chat_id"`
 	// Unique identifier of the target user.
-	UserID int64 "json:\"user_id\""
+	UserID int64 `json:"user_id"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s GetChatMember) GetChatID() ID {
+	return s.ChatID
+}
+
+// GetUserID returns the value of UserID.
+func (s GetChatMember) GetUserID() int64 {
+	return s.UserID
+}
+
+// SetChatID sets the value of ChatID.
+func (s *GetChatMember) SetChatID(val ID) {
+	s.ChatID = val
+}
+
+// SetUserID sets the value of UserID.
+func (s *GetChatMember) SetUserID(val int64) {
+	s.UserID = val
 }
 
 // Input for getChatMemberCount.
 // Ref: #/components/schemas/getChatMemberCount
 type GetChatMemberCount struct {
-	ChatID ID "json:\"chat_id\""
+	ChatID ID `json:"chat_id"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s GetChatMemberCount) GetChatID() ID {
+	return s.ChatID
+}
+
+// SetChatID sets the value of ChatID.
+func (s *GetChatMemberCount) SetChatID(val ID) {
+	s.ChatID = val
 }
 
 // Input for getChatMenuButton.
@@ -1660,42 +5220,132 @@ type GetChatMemberCount struct {
 type GetChatMenuButton struct {
 	// Unique identifier for the target private chat. If not specified, default bot's menu button will be
 	// returned.
-	ChatID OptInt64 "json:\"chat_id\""
+	ChatID OptInt64 `json:"chat_id"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s GetChatMenuButton) GetChatID() OptInt64 {
+	return s.ChatID
+}
+
+// SetChatID sets the value of ChatID.
+func (s *GetChatMenuButton) SetChatID(val OptInt64) {
+	s.ChatID = val
 }
 
 // Input for getCustomEmojiStickers.
 // Ref: #/components/schemas/getCustomEmojiStickers
 type GetCustomEmojiStickers struct {
 	// List of custom emoji identifiers. At most 200 custom emoji identifiers can be specified.
-	CustomEmojiIds []string "json:\"custom_emoji_ids\""
+	CustomEmojiIds []string `json:"custom_emoji_ids"`
+}
+
+// GetCustomEmojiIds returns the value of CustomEmojiIds.
+func (s GetCustomEmojiStickers) GetCustomEmojiIds() []string {
+	return s.CustomEmojiIds
+}
+
+// SetCustomEmojiIds sets the value of CustomEmojiIds.
+func (s *GetCustomEmojiStickers) SetCustomEmojiIds(val []string) {
+	s.CustomEmojiIds = val
 }
 
 // Input for getFile.
 // Ref: #/components/schemas/getFile
 type GetFile struct {
 	// File identifier to get information about.
-	FileID string "json:\"file_id\""
+	FileID string `json:"file_id"`
+}
+
+// GetFileID returns the value of FileID.
+func (s GetFile) GetFileID() string {
+	return s.FileID
+}
+
+// SetFileID sets the value of FileID.
+func (s *GetFile) SetFileID(val string) {
+	s.FileID = val
 }
 
 // Input for getGameHighScores.
 // Ref: #/components/schemas/getGameHighScores
 type GetGameHighScores struct {
 	// Target user id.
-	UserID int64 "json:\"user_id\""
+	UserID int64 `json:"user_id"`
 	// Required if _inline_message_id_ is not specified. Unique identifier for the target chat.
-	ChatID OptInt64 "json:\"chat_id\""
+	ChatID OptInt64 `json:"chat_id"`
 	// Required if _inline_message_id_ is not specified. Identifier of the sent message.
-	MessageID OptInt "json:\"message_id\""
+	MessageID OptInt `json:"message_id"`
 	// Required if _chat_id_ and _message_id_ are not specified. Identifier of the inline message.
-	InlineMessageID OptString "json:\"inline_message_id\""
+	InlineMessageID OptString `json:"inline_message_id"`
+}
+
+// GetUserID returns the value of UserID.
+func (s GetGameHighScores) GetUserID() int64 {
+	return s.UserID
+}
+
+// GetChatID returns the value of ChatID.
+func (s GetGameHighScores) GetChatID() OptInt64 {
+	return s.ChatID
+}
+
+// GetMessageID returns the value of MessageID.
+func (s GetGameHighScores) GetMessageID() OptInt {
+	return s.MessageID
+}
+
+// GetInlineMessageID returns the value of InlineMessageID.
+func (s GetGameHighScores) GetInlineMessageID() OptString {
+	return s.InlineMessageID
+}
+
+// SetUserID sets the value of UserID.
+func (s *GetGameHighScores) SetUserID(val int64) {
+	s.UserID = val
+}
+
+// SetChatID sets the value of ChatID.
+func (s *GetGameHighScores) SetChatID(val OptInt64) {
+	s.ChatID = val
+}
+
+// SetMessageID sets the value of MessageID.
+func (s *GetGameHighScores) SetMessageID(val OptInt) {
+	s.MessageID = val
+}
+
+// SetInlineMessageID sets the value of InlineMessageID.
+func (s *GetGameHighScores) SetInlineMessageID(val OptString) {
+	s.InlineMessageID = val
 }
 
 // Input for getMyCommands.
 // Ref: #/components/schemas/getMyCommands
 type GetMyCommands struct {
-	Scope OptBotCommandScope "json:\"scope\""
+	Scope OptBotCommandScope `json:"scope"`
 	// A two-letter ISO 639-1 language code or an empty string.
-	LanguageCode OptString "json:\"language_code\""
+	LanguageCode OptString `json:"language_code"`
+}
+
+// GetScope returns the value of Scope.
+func (s GetMyCommands) GetScope() OptBotCommandScope {
+	return s.Scope
+}
+
+// GetLanguageCode returns the value of LanguageCode.
+func (s GetMyCommands) GetLanguageCode() OptString {
+	return s.LanguageCode
+}
+
+// SetScope sets the value of Scope.
+func (s *GetMyCommands) SetScope(val OptBotCommandScope) {
+	s.Scope = val
+}
+
+// SetLanguageCode sets the value of LanguageCode.
+func (s *GetMyCommands) SetLanguageCode(val OptString) {
+	s.LanguageCode = val
 }
 
 // Input for getMyDefaultAdministratorRights.
@@ -1703,14 +5353,34 @@ type GetMyCommands struct {
 type GetMyDefaultAdministratorRights struct {
 	// Pass _True_ to get default administrator rights of the bot in channels. Otherwise, default
 	// administrator rights of the bot for groups and supergroups will be returned.
-	ForChannels OptBool "json:\"for_channels\""
+	ForChannels OptBool `json:"for_channels"`
+}
+
+// GetForChannels returns the value of ForChannels.
+func (s GetMyDefaultAdministratorRights) GetForChannels() OptBool {
+	return s.ForChannels
+}
+
+// SetForChannels sets the value of ForChannels.
+func (s *GetMyDefaultAdministratorRights) SetForChannels(val OptBool) {
+	s.ForChannels = val
 }
 
 // Input for getStickerSet.
 // Ref: #/components/schemas/getStickerSet
 type GetStickerSet struct {
 	// Name of the sticker set.
-	Name string "json:\"name\""
+	Name string `json:"name"`
+}
+
+// GetName returns the value of Name.
+func (s GetStickerSet) GetName() string {
+	return s.Name
+}
+
+// SetName sets the value of Name.
+func (s *GetStickerSet) SetName(val string) {
+	s.Name = val
 }
 
 // Input for getUpdates.
@@ -1722,30 +5392,100 @@ type GetUpdates struct {
 	// [getUpdates](https://core.telegram.org/bots/api#getupdates) is called with an _offset_ higher than
 	// its _update_id_. The negative offset can be specified to retrieve updates starting from _-offset_
 	// update from the end of the updates queue. All previous updates will forgotten.
-	Offset OptInt "json:\"offset\""
+	Offset OptInt `json:"offset"`
 	// Limits the number of updates to be retrieved. Values between 1-100 are accepted. Defaults to 100.
-	Limit OptInt "json:\"limit\""
+	Limit OptInt `json:"limit"`
 	// Timeout in seconds for long polling. Defaults to 0, i.e. usual short polling. Should be positive,
 	// short polling should be used for testing purposes only.
-	Timeout OptInt "json:\"timeout\""
+	Timeout OptInt `json:"timeout"`
 	// A JSON-serialized list of the update types you want your bot to receive. For example, specify
 	// [`message`, `edited_channel_post`, `callback_query`] to only receive updates of these types. See
 	// [Update](https://core.telegram.org/bots/api#update) for a complete list of available update types.
 	// Specify an empty list to receive all update types except _chat_member_ (default). If not specified,
 	//  the previous setting will be used.Please note that this parameter doesn't affect updates created
 	// before the call to the getUpdates, so unwanted updates may be received for a short period of time.
-	AllowedUpdates []string "json:\"allowed_updates\""
+	AllowedUpdates []string `json:"allowed_updates"`
+}
+
+// GetOffset returns the value of Offset.
+func (s GetUpdates) GetOffset() OptInt {
+	return s.Offset
+}
+
+// GetLimit returns the value of Limit.
+func (s GetUpdates) GetLimit() OptInt {
+	return s.Limit
+}
+
+// GetTimeout returns the value of Timeout.
+func (s GetUpdates) GetTimeout() OptInt {
+	return s.Timeout
+}
+
+// GetAllowedUpdates returns the value of AllowedUpdates.
+func (s GetUpdates) GetAllowedUpdates() []string {
+	return s.AllowedUpdates
+}
+
+// SetOffset sets the value of Offset.
+func (s *GetUpdates) SetOffset(val OptInt) {
+	s.Offset = val
+}
+
+// SetLimit sets the value of Limit.
+func (s *GetUpdates) SetLimit(val OptInt) {
+	s.Limit = val
+}
+
+// SetTimeout sets the value of Timeout.
+func (s *GetUpdates) SetTimeout(val OptInt) {
+	s.Timeout = val
+}
+
+// SetAllowedUpdates sets the value of AllowedUpdates.
+func (s *GetUpdates) SetAllowedUpdates(val []string) {
+	s.AllowedUpdates = val
 }
 
 // Input for getUserProfilePhotos.
 // Ref: #/components/schemas/getUserProfilePhotos
 type GetUserProfilePhotos struct {
 	// Unique identifier of the target user.
-	UserID int64 "json:\"user_id\""
+	UserID int64 `json:"user_id"`
 	// Sequential number of the first photo to be returned. By default, all photos are returned.
-	Offset OptInt "json:\"offset\""
+	Offset OptInt `json:"offset"`
 	// Limits the number of photos to be retrieved. Values between 1-100 are accepted. Defaults to 100.
-	Limit OptInt "json:\"limit\""
+	Limit OptInt `json:"limit"`
+}
+
+// GetUserID returns the value of UserID.
+func (s GetUserProfilePhotos) GetUserID() int64 {
+	return s.UserID
+}
+
+// GetOffset returns the value of Offset.
+func (s GetUserProfilePhotos) GetOffset() OptInt {
+	return s.Offset
+}
+
+// GetLimit returns the value of Limit.
+func (s GetUserProfilePhotos) GetLimit() OptInt {
+	return s.Limit
+}
+
+// SetUserID sets the value of UserID.
+func (s *GetUserProfilePhotos) SetUserID(val int64) {
+	s.UserID = val
+}
+
+// SetOffset sets the value of Offset.
+func (s *GetUserProfilePhotos) SetOffset(val OptInt) {
+	s.Offset = val
+}
+
+// SetLimit sets the value of Limit.
+func (s *GetUserProfilePhotos) SetLimit(val OptInt) {
+	s.Limit = val
 }
 
 // Ref: #/components/schemas/ID
@@ -1818,16 +5558,16 @@ func NewInt64ID(v int64) ID {
 // Ref: #/components/schemas/InlineKeyboardButton
 type InlineKeyboardButton struct {
 	// Label text on the button.
-	Text string "json:\"text\""
+	Text string `json:"text"`
 	// _Optional_. HTTP or tg:// URL to be opened when the button is pressed. Links
 	// `tg://user?id=<user_id>` can be used to mention a user by their ID without using a username, if
 	// this is allowed by their privacy settings.
-	URL OptString "json:\"url\""
+	URL OptString `json:"url"`
 	// _Optional_. Data to be sent in a [callback query](https://core.telegram.
 	// org/bots/api#callbackquery) to the bot when button is pressed, 1-64 bytes.
-	CallbackData OptString     "json:\"callback_data\""
-	WebApp       OptWebAppInfo "json:\"web_app\""
-	LoginURL     OptLoginUrl   "json:\"login_url\""
+	CallbackData OptString     `json:"callback_data"`
+	WebApp       OptWebAppInfo `json:"web_app"`
+	LoginURL     OptLoginUrl   `json:"login_url"`
 	// _Optional_. If set, pressing the button will prompt the user to select one of their chats, open
 	// that chat and insert the bot's username and the specified inline query in the input field. May be
 	// empty, in which case just the bot's username will be inserted.**Note:** This offers an easy way
@@ -1835,17 +5575,107 @@ type InlineKeyboardButton struct {
 	// they are currently in a private chat with it. Especially useful when combined with [_switch_pm...
 	// _](https://core.telegram.org/bots/api#answerinlinequery) actions - in this case the user will be
 	// automatically returned to the chat they switched from, skipping the chat selection screen.
-	SwitchInlineQuery OptString "json:\"switch_inline_query\""
+	SwitchInlineQuery OptString `json:"switch_inline_query"`
 	// _Optional_. If set, pressing the button will insert the bot's username and the specified inline
 	// query in the current chat's input field. May be empty, in which case only the bot's username will
 	// be inserted.This offers a quick way for the user to open your bot in inline mode in the same chat
 	// - good for selecting something from multiple options.
-	SwitchInlineQueryCurrentChat OptString     "json:\"switch_inline_query_current_chat\""
-	CallbackGame                 *CallbackGame "json:\"callback_game\""
+	SwitchInlineQueryCurrentChat OptString     `json:"switch_inline_query_current_chat"`
+	CallbackGame                 *CallbackGame `json:"callback_game"`
 	// _Optional_. Specify _True_, to send a [Pay button](https://core.telegram.org/bots/api#payments).
 	// **NOTE:** This type of button **must** always be the first button in the first row and can only be
 	// used in invoice messages.
-	Pay OptBool "json:\"pay\""
+	Pay OptBool `json:"pay"`
+}
+
+// GetText returns the value of Text.
+func (s InlineKeyboardButton) GetText() string {
+	return s.Text
+}
+
+// GetURL returns the value of URL.
+func (s InlineKeyboardButton) GetURL() OptString {
+	return s.URL
+}
+
+// GetCallbackData returns the value of CallbackData.
+func (s InlineKeyboardButton) GetCallbackData() OptString {
+	return s.CallbackData
+}
+
+// GetWebApp returns the value of WebApp.
+func (s InlineKeyboardButton) GetWebApp() OptWebAppInfo {
+	return s.WebApp
+}
+
+// GetLoginURL returns the value of LoginURL.
+func (s InlineKeyboardButton) GetLoginURL() OptLoginUrl {
+	return s.LoginURL
+}
+
+// GetSwitchInlineQuery returns the value of SwitchInlineQuery.
+func (s InlineKeyboardButton) GetSwitchInlineQuery() OptString {
+	return s.SwitchInlineQuery
+}
+
+// GetSwitchInlineQueryCurrentChat returns the value of SwitchInlineQueryCurrentChat.
+func (s InlineKeyboardButton) GetSwitchInlineQueryCurrentChat() OptString {
+	return s.SwitchInlineQueryCurrentChat
+}
+
+// GetCallbackGame returns the value of CallbackGame.
+func (s InlineKeyboardButton) GetCallbackGame() *CallbackGame {
+	return s.CallbackGame
+}
+
+// GetPay returns the value of Pay.
+func (s InlineKeyboardButton) GetPay() OptBool {
+	return s.Pay
+}
+
+// SetText sets the value of Text.
+func (s *InlineKeyboardButton) SetText(val string) {
+	s.Text = val
+}
+
+// SetURL sets the value of URL.
+func (s *InlineKeyboardButton) SetURL(val OptString) {
+	s.URL = val
+}
+
+// SetCallbackData sets the value of CallbackData.
+func (s *InlineKeyboardButton) SetCallbackData(val OptString) {
+	s.CallbackData = val
+}
+
+// SetWebApp sets the value of WebApp.
+func (s *InlineKeyboardButton) SetWebApp(val OptWebAppInfo) {
+	s.WebApp = val
+}
+
+// SetLoginURL sets the value of LoginURL.
+func (s *InlineKeyboardButton) SetLoginURL(val OptLoginUrl) {
+	s.LoginURL = val
+}
+
+// SetSwitchInlineQuery sets the value of SwitchInlineQuery.
+func (s *InlineKeyboardButton) SetSwitchInlineQuery(val OptString) {
+	s.SwitchInlineQuery = val
+}
+
+// SetSwitchInlineQueryCurrentChat sets the value of SwitchInlineQueryCurrentChat.
+func (s *InlineKeyboardButton) SetSwitchInlineQueryCurrentChat(val OptString) {
+	s.SwitchInlineQueryCurrentChat = val
+}
+
+// SetCallbackGame sets the value of CallbackGame.
+func (s *InlineKeyboardButton) SetCallbackGame(val *CallbackGame) {
+	s.CallbackGame = val
+}
+
+// SetPay sets the value of Pay.
+func (s *InlineKeyboardButton) SetPay(val OptBool) {
+	s.Pay = val
 }
 
 // This object represents an [inline keyboard](https://core.telegram.
@@ -1854,7 +5684,17 @@ type InlineKeyboardButton struct {
 type InlineKeyboardMarkup struct {
 	// Array of button rows, each represented by an Array of [InlineKeyboardButton](https://core.telegram.
 	// org/bots/api#inlinekeyboardbutton) objects.
-	InlineKeyboard [][]InlineKeyboardButton "json:\"inline_keyboard\""
+	InlineKeyboard [][]InlineKeyboardButton `json:"inline_keyboard"`
+}
+
+// GetInlineKeyboard returns the value of InlineKeyboard.
+func (s InlineKeyboardMarkup) GetInlineKeyboard() [][]InlineKeyboardButton {
+	return s.InlineKeyboard
+}
+
+// SetInlineKeyboard sets the value of InlineKeyboard.
+func (s *InlineKeyboardMarkup) SetInlineKeyboard(val [][]InlineKeyboardButton) {
+	s.InlineKeyboard = val
 }
 
 // This object represents an incoming inline query. When the user sends an empty query, your bot
@@ -1862,18 +5702,78 @@ type InlineKeyboardMarkup struct {
 // Ref: #/components/schemas/InlineQuery
 type InlineQuery struct {
 	// Unique identifier for this query.
-	ID   string "json:\"id\""
-	From User   "json:\"from\""
+	ID   string `json:"id"`
+	From User   `json:"from"`
 	// Text of the query (up to 256 characters).
-	Query string "json:\"query\""
+	Query string `json:"query"`
 	// Offset of the results to be returned, can be controlled by the bot.
-	Offset string "json:\"offset\""
+	Offset string `json:"offset"`
 	// _Optional_. Type of the chat from which the inline query was sent. Can be either `sender` for a
 	// private chat with the inline query sender, `private`, `group`, `supergroup`, or `channel`. The
 	// chat type should be always known for requests sent from official clients and most third-party
 	// clients, unless the request was sent from a secret chat.
-	ChatType OptInlineQueryChatType "json:\"chat_type\""
-	Location OptLocation            "json:\"location\""
+	ChatType OptInlineQueryChatType `json:"chat_type"`
+	Location OptLocation            `json:"location"`
+}
+
+// GetID returns the value of ID.
+func (s InlineQuery) GetID() string {
+	return s.ID
+}
+
+// GetFrom returns the value of From.
+func (s InlineQuery) GetFrom() User {
+	return s.From
+}
+
+// GetQuery returns the value of Query.
+func (s InlineQuery) GetQuery() string {
+	return s.Query
+}
+
+// GetOffset returns the value of Offset.
+func (s InlineQuery) GetOffset() string {
+	return s.Offset
+}
+
+// GetChatType returns the value of ChatType.
+func (s InlineQuery) GetChatType() OptInlineQueryChatType {
+	return s.ChatType
+}
+
+// GetLocation returns the value of Location.
+func (s InlineQuery) GetLocation() OptLocation {
+	return s.Location
+}
+
+// SetID sets the value of ID.
+func (s *InlineQuery) SetID(val string) {
+	s.ID = val
+}
+
+// SetFrom sets the value of From.
+func (s *InlineQuery) SetFrom(val User) {
+	s.From = val
+}
+
+// SetQuery sets the value of Query.
+func (s *InlineQuery) SetQuery(val string) {
+	s.Query = val
+}
+
+// SetOffset sets the value of Offset.
+func (s *InlineQuery) SetOffset(val string) {
+	s.Offset = val
+}
+
+// SetChatType sets the value of ChatType.
+func (s *InlineQuery) SetChatType(val OptInlineQueryChatType) {
+	s.ChatType = val
+}
+
+// SetLocation sets the value of Location.
+func (s *InlineQuery) SetLocation(val OptLocation) {
+	s.Location = val
 }
 
 // _Optional_. Type of the chat from which the inline query was sent. Can be either `sender` for a
@@ -2469,23 +6369,123 @@ func NewInlineQueryResultVoiceInlineQueryResult(v InlineQueryResultVoice) Inline
 // Ref: #/components/schemas/InlineQueryResultArticle
 type InlineQueryResultArticle struct {
 	// Unique identifier for this result, 1-64 Bytes.
-	ID string "json:\"id\""
+	ID string `json:"id"`
 	// Title of the result.
-	Title               string                  "json:\"title\""
-	InputMessageContent InputMessageContent     "json:\"input_message_content\""
-	ReplyMarkup         OptInlineKeyboardMarkup "json:\"reply_markup\""
+	Title               string                  `json:"title"`
+	InputMessageContent InputMessageContent     `json:"input_message_content"`
+	ReplyMarkup         OptInlineKeyboardMarkup `json:"reply_markup"`
 	// _Optional_. URL of the result.
-	URL OptString "json:\"url\""
+	URL OptString `json:"url"`
 	// _Optional_. Pass _True_ if you don't want the URL to be shown in the message.
-	HideURL OptBool "json:\"hide_url\""
+	HideURL OptBool `json:"hide_url"`
 	// _Optional_. Short description of the result.
-	Description OptString "json:\"description\""
+	Description OptString `json:"description"`
 	// _Optional_. URL of the thumbnail for the result.
-	ThumbURL OptString "json:\"thumb_url\""
+	ThumbURL OptString `json:"thumb_url"`
 	// _Optional_. Thumbnail width.
-	ThumbWidth OptInt "json:\"thumb_width\""
+	ThumbWidth OptInt `json:"thumb_width"`
 	// _Optional_. Thumbnail height.
-	ThumbHeight OptInt "json:\"thumb_height\""
+	ThumbHeight OptInt `json:"thumb_height"`
+}
+
+// GetID returns the value of ID.
+func (s InlineQueryResultArticle) GetID() string {
+	return s.ID
+}
+
+// GetTitle returns the value of Title.
+func (s InlineQueryResultArticle) GetTitle() string {
+	return s.Title
+}
+
+// GetInputMessageContent returns the value of InputMessageContent.
+func (s InlineQueryResultArticle) GetInputMessageContent() InputMessageContent {
+	return s.InputMessageContent
+}
+
+// GetReplyMarkup returns the value of ReplyMarkup.
+func (s InlineQueryResultArticle) GetReplyMarkup() OptInlineKeyboardMarkup {
+	return s.ReplyMarkup
+}
+
+// GetURL returns the value of URL.
+func (s InlineQueryResultArticle) GetURL() OptString {
+	return s.URL
+}
+
+// GetHideURL returns the value of HideURL.
+func (s InlineQueryResultArticle) GetHideURL() OptBool {
+	return s.HideURL
+}
+
+// GetDescription returns the value of Description.
+func (s InlineQueryResultArticle) GetDescription() OptString {
+	return s.Description
+}
+
+// GetThumbURL returns the value of ThumbURL.
+func (s InlineQueryResultArticle) GetThumbURL() OptString {
+	return s.ThumbURL
+}
+
+// GetThumbWidth returns the value of ThumbWidth.
+func (s InlineQueryResultArticle) GetThumbWidth() OptInt {
+	return s.ThumbWidth
+}
+
+// GetThumbHeight returns the value of ThumbHeight.
+func (s InlineQueryResultArticle) GetThumbHeight() OptInt {
+	return s.ThumbHeight
+}
+
+// SetID sets the value of ID.
+func (s *InlineQueryResultArticle) SetID(val string) {
+	s.ID = val
+}
+
+// SetTitle sets the value of Title.
+func (s *InlineQueryResultArticle) SetTitle(val string) {
+	s.Title = val
+}
+
+// SetInputMessageContent sets the value of InputMessageContent.
+func (s *InlineQueryResultArticle) SetInputMessageContent(val InputMessageContent) {
+	s.InputMessageContent = val
+}
+
+// SetReplyMarkup sets the value of ReplyMarkup.
+func (s *InlineQueryResultArticle) SetReplyMarkup(val OptInlineKeyboardMarkup) {
+	s.ReplyMarkup = val
+}
+
+// SetURL sets the value of URL.
+func (s *InlineQueryResultArticle) SetURL(val OptString) {
+	s.URL = val
+}
+
+// SetHideURL sets the value of HideURL.
+func (s *InlineQueryResultArticle) SetHideURL(val OptBool) {
+	s.HideURL = val
+}
+
+// SetDescription sets the value of Description.
+func (s *InlineQueryResultArticle) SetDescription(val OptString) {
+	s.Description = val
+}
+
+// SetThumbURL sets the value of ThumbURL.
+func (s *InlineQueryResultArticle) SetThumbURL(val OptString) {
+	s.ThumbURL = val
+}
+
+// SetThumbWidth sets the value of ThumbWidth.
+func (s *InlineQueryResultArticle) SetThumbWidth(val OptInt) {
+	s.ThumbWidth = val
+}
+
+// SetThumbHeight sets the value of ThumbHeight.
+func (s *InlineQueryResultArticle) SetThumbHeight(val OptInt) {
+	s.ThumbHeight = val
 }
 
 // Represents a link to an MP3 audio file. By default, this audio file will be sent by the user.
@@ -2494,25 +6494,125 @@ type InlineQueryResultArticle struct {
 // Ref: #/components/schemas/InlineQueryResultAudio
 type InlineQueryResultAudio struct {
 	// Unique identifier for this result, 1-64 bytes.
-	ID string "json:\"id\""
+	ID string `json:"id"`
 	// A valid URL for the audio file.
-	AudioURL string "json:\"audio_url\""
+	AudioURL string `json:"audio_url"`
 	// Title.
-	Title string "json:\"title\""
+	Title string `json:"title"`
 	// _Optional_. Caption, 0-1024 characters after entities parsing.
-	Caption OptString "json:\"caption\""
+	Caption OptString `json:"caption"`
 	// _Optional_. Mode for parsing entities in the audio caption. See [formatting options](https://core.
 	// telegram.org/bots/api#formatting-options) for more details.
-	ParseMode OptString "json:\"parse_mode\""
+	ParseMode OptString `json:"parse_mode"`
 	// _Optional_. List of special entities that appear in the caption, which can be specified instead of
 	// _parse_mode_.
-	CaptionEntities []MessageEntity "json:\"caption_entities\""
+	CaptionEntities []MessageEntity `json:"caption_entities"`
 	// _Optional_. Performer.
-	Performer OptString "json:\"performer\""
+	Performer OptString `json:"performer"`
 	// _Optional_. Audio duration in seconds.
-	AudioDuration       OptInt                  "json:\"audio_duration\""
-	ReplyMarkup         OptInlineKeyboardMarkup "json:\"reply_markup\""
-	InputMessageContent OptInputMessageContent  "json:\"input_message_content\""
+	AudioDuration       OptInt                  `json:"audio_duration"`
+	ReplyMarkup         OptInlineKeyboardMarkup `json:"reply_markup"`
+	InputMessageContent OptInputMessageContent  `json:"input_message_content"`
+}
+
+// GetID returns the value of ID.
+func (s InlineQueryResultAudio) GetID() string {
+	return s.ID
+}
+
+// GetAudioURL returns the value of AudioURL.
+func (s InlineQueryResultAudio) GetAudioURL() string {
+	return s.AudioURL
+}
+
+// GetTitle returns the value of Title.
+func (s InlineQueryResultAudio) GetTitle() string {
+	return s.Title
+}
+
+// GetCaption returns the value of Caption.
+func (s InlineQueryResultAudio) GetCaption() OptString {
+	return s.Caption
+}
+
+// GetParseMode returns the value of ParseMode.
+func (s InlineQueryResultAudio) GetParseMode() OptString {
+	return s.ParseMode
+}
+
+// GetCaptionEntities returns the value of CaptionEntities.
+func (s InlineQueryResultAudio) GetCaptionEntities() []MessageEntity {
+	return s.CaptionEntities
+}
+
+// GetPerformer returns the value of Performer.
+func (s InlineQueryResultAudio) GetPerformer() OptString {
+	return s.Performer
+}
+
+// GetAudioDuration returns the value of AudioDuration.
+func (s InlineQueryResultAudio) GetAudioDuration() OptInt {
+	return s.AudioDuration
+}
+
+// GetReplyMarkup returns the value of ReplyMarkup.
+func (s InlineQueryResultAudio) GetReplyMarkup() OptInlineKeyboardMarkup {
+	return s.ReplyMarkup
+}
+
+// GetInputMessageContent returns the value of InputMessageContent.
+func (s InlineQueryResultAudio) GetInputMessageContent() OptInputMessageContent {
+	return s.InputMessageContent
+}
+
+// SetID sets the value of ID.
+func (s *InlineQueryResultAudio) SetID(val string) {
+	s.ID = val
+}
+
+// SetAudioURL sets the value of AudioURL.
+func (s *InlineQueryResultAudio) SetAudioURL(val string) {
+	s.AudioURL = val
+}
+
+// SetTitle sets the value of Title.
+func (s *InlineQueryResultAudio) SetTitle(val string) {
+	s.Title = val
+}
+
+// SetCaption sets the value of Caption.
+func (s *InlineQueryResultAudio) SetCaption(val OptString) {
+	s.Caption = val
+}
+
+// SetParseMode sets the value of ParseMode.
+func (s *InlineQueryResultAudio) SetParseMode(val OptString) {
+	s.ParseMode = val
+}
+
+// SetCaptionEntities sets the value of CaptionEntities.
+func (s *InlineQueryResultAudio) SetCaptionEntities(val []MessageEntity) {
+	s.CaptionEntities = val
+}
+
+// SetPerformer sets the value of Performer.
+func (s *InlineQueryResultAudio) SetPerformer(val OptString) {
+	s.Performer = val
+}
+
+// SetAudioDuration sets the value of AudioDuration.
+func (s *InlineQueryResultAudio) SetAudioDuration(val OptInt) {
+	s.AudioDuration = val
+}
+
+// SetReplyMarkup sets the value of ReplyMarkup.
+func (s *InlineQueryResultAudio) SetReplyMarkup(val OptInlineKeyboardMarkup) {
+	s.ReplyMarkup = val
+}
+
+// SetInputMessageContent sets the value of InputMessageContent.
+func (s *InlineQueryResultAudio) SetInputMessageContent(val OptInputMessageContent) {
+	s.InputMessageContent = val
 }
 
 // Represents a link to an MP3 audio file stored on the Telegram servers. By default, this audio file
@@ -2521,21 +6621,101 @@ type InlineQueryResultAudio struct {
 // Ref: #/components/schemas/InlineQueryResultCachedAudio
 type InlineQueryResultCachedAudio struct {
 	// Type of the result, must be _audio_.
-	Type string "json:\"type\""
+	Type string `json:"type"`
 	// Unique identifier for this result, 1-64 bytes.
-	ID string "json:\"id\""
+	ID string `json:"id"`
 	// A valid file identifier for the audio file.
-	AudioFileID string "json:\"audio_file_id\""
+	AudioFileID string `json:"audio_file_id"`
 	// _Optional_. Caption, 0-1024 characters after entities parsing.
-	Caption OptString "json:\"caption\""
+	Caption OptString `json:"caption"`
 	// _Optional_. Mode for parsing entities in the audio caption. See [formatting options](https://core.
 	// telegram.org/bots/api#formatting-options) for more details.
-	ParseMode OptString "json:\"parse_mode\""
+	ParseMode OptString `json:"parse_mode"`
 	// _Optional_. List of special entities that appear in the caption, which can be specified instead of
 	// _parse_mode_.
-	CaptionEntities     []MessageEntity         "json:\"caption_entities\""
-	ReplyMarkup         OptInlineKeyboardMarkup "json:\"reply_markup\""
-	InputMessageContent OptInputMessageContent  "json:\"input_message_content\""
+	CaptionEntities     []MessageEntity         `json:"caption_entities"`
+	ReplyMarkup         OptInlineKeyboardMarkup `json:"reply_markup"`
+	InputMessageContent OptInputMessageContent  `json:"input_message_content"`
+}
+
+// GetType returns the value of Type.
+func (s InlineQueryResultCachedAudio) GetType() string {
+	return s.Type
+}
+
+// GetID returns the value of ID.
+func (s InlineQueryResultCachedAudio) GetID() string {
+	return s.ID
+}
+
+// GetAudioFileID returns the value of AudioFileID.
+func (s InlineQueryResultCachedAudio) GetAudioFileID() string {
+	return s.AudioFileID
+}
+
+// GetCaption returns the value of Caption.
+func (s InlineQueryResultCachedAudio) GetCaption() OptString {
+	return s.Caption
+}
+
+// GetParseMode returns the value of ParseMode.
+func (s InlineQueryResultCachedAudio) GetParseMode() OptString {
+	return s.ParseMode
+}
+
+// GetCaptionEntities returns the value of CaptionEntities.
+func (s InlineQueryResultCachedAudio) GetCaptionEntities() []MessageEntity {
+	return s.CaptionEntities
+}
+
+// GetReplyMarkup returns the value of ReplyMarkup.
+func (s InlineQueryResultCachedAudio) GetReplyMarkup() OptInlineKeyboardMarkup {
+	return s.ReplyMarkup
+}
+
+// GetInputMessageContent returns the value of InputMessageContent.
+func (s InlineQueryResultCachedAudio) GetInputMessageContent() OptInputMessageContent {
+	return s.InputMessageContent
+}
+
+// SetType sets the value of Type.
+func (s *InlineQueryResultCachedAudio) SetType(val string) {
+	s.Type = val
+}
+
+// SetID sets the value of ID.
+func (s *InlineQueryResultCachedAudio) SetID(val string) {
+	s.ID = val
+}
+
+// SetAudioFileID sets the value of AudioFileID.
+func (s *InlineQueryResultCachedAudio) SetAudioFileID(val string) {
+	s.AudioFileID = val
+}
+
+// SetCaption sets the value of Caption.
+func (s *InlineQueryResultCachedAudio) SetCaption(val OptString) {
+	s.Caption = val
+}
+
+// SetParseMode sets the value of ParseMode.
+func (s *InlineQueryResultCachedAudio) SetParseMode(val OptString) {
+	s.ParseMode = val
+}
+
+// SetCaptionEntities sets the value of CaptionEntities.
+func (s *InlineQueryResultCachedAudio) SetCaptionEntities(val []MessageEntity) {
+	s.CaptionEntities = val
+}
+
+// SetReplyMarkup sets the value of ReplyMarkup.
+func (s *InlineQueryResultCachedAudio) SetReplyMarkup(val OptInlineKeyboardMarkup) {
+	s.ReplyMarkup = val
+}
+
+// SetInputMessageContent sets the value of InputMessageContent.
+func (s *InlineQueryResultCachedAudio) SetInputMessageContent(val OptInputMessageContent) {
+	s.InputMessageContent = val
 }
 
 // Represents a link to a file stored on the Telegram servers. By default, this file will be sent by
@@ -2544,25 +6724,125 @@ type InlineQueryResultCachedAudio struct {
 // Ref: #/components/schemas/InlineQueryResultCachedDocument
 type InlineQueryResultCachedDocument struct {
 	// Type of the result, must be _document_.
-	Type string "json:\"type\""
+	Type string `json:"type"`
 	// Unique identifier for this result, 1-64 bytes.
-	ID string "json:\"id\""
+	ID string `json:"id"`
 	// Title for the result.
-	Title string "json:\"title\""
+	Title string `json:"title"`
 	// A valid file identifier for the file.
-	DocumentFileID string "json:\"document_file_id\""
+	DocumentFileID string `json:"document_file_id"`
 	// _Optional_. Short description of the result.
-	Description OptString "json:\"description\""
+	Description OptString `json:"description"`
 	// _Optional_. Caption of the document to be sent, 0-1024 characters after entities parsing.
-	Caption OptString "json:\"caption\""
+	Caption OptString `json:"caption"`
 	// _Optional_. Mode for parsing entities in the document caption. See [formatting
 	// options](https://core.telegram.org/bots/api#formatting-options) for more details.
-	ParseMode OptString "json:\"parse_mode\""
+	ParseMode OptString `json:"parse_mode"`
 	// _Optional_. List of special entities that appear in the caption, which can be specified instead of
 	// _parse_mode_.
-	CaptionEntities     []MessageEntity         "json:\"caption_entities\""
-	ReplyMarkup         OptInlineKeyboardMarkup "json:\"reply_markup\""
-	InputMessageContent OptInputMessageContent  "json:\"input_message_content\""
+	CaptionEntities     []MessageEntity         `json:"caption_entities"`
+	ReplyMarkup         OptInlineKeyboardMarkup `json:"reply_markup"`
+	InputMessageContent OptInputMessageContent  `json:"input_message_content"`
+}
+
+// GetType returns the value of Type.
+func (s InlineQueryResultCachedDocument) GetType() string {
+	return s.Type
+}
+
+// GetID returns the value of ID.
+func (s InlineQueryResultCachedDocument) GetID() string {
+	return s.ID
+}
+
+// GetTitle returns the value of Title.
+func (s InlineQueryResultCachedDocument) GetTitle() string {
+	return s.Title
+}
+
+// GetDocumentFileID returns the value of DocumentFileID.
+func (s InlineQueryResultCachedDocument) GetDocumentFileID() string {
+	return s.DocumentFileID
+}
+
+// GetDescription returns the value of Description.
+func (s InlineQueryResultCachedDocument) GetDescription() OptString {
+	return s.Description
+}
+
+// GetCaption returns the value of Caption.
+func (s InlineQueryResultCachedDocument) GetCaption() OptString {
+	return s.Caption
+}
+
+// GetParseMode returns the value of ParseMode.
+func (s InlineQueryResultCachedDocument) GetParseMode() OptString {
+	return s.ParseMode
+}
+
+// GetCaptionEntities returns the value of CaptionEntities.
+func (s InlineQueryResultCachedDocument) GetCaptionEntities() []MessageEntity {
+	return s.CaptionEntities
+}
+
+// GetReplyMarkup returns the value of ReplyMarkup.
+func (s InlineQueryResultCachedDocument) GetReplyMarkup() OptInlineKeyboardMarkup {
+	return s.ReplyMarkup
+}
+
+// GetInputMessageContent returns the value of InputMessageContent.
+func (s InlineQueryResultCachedDocument) GetInputMessageContent() OptInputMessageContent {
+	return s.InputMessageContent
+}
+
+// SetType sets the value of Type.
+func (s *InlineQueryResultCachedDocument) SetType(val string) {
+	s.Type = val
+}
+
+// SetID sets the value of ID.
+func (s *InlineQueryResultCachedDocument) SetID(val string) {
+	s.ID = val
+}
+
+// SetTitle sets the value of Title.
+func (s *InlineQueryResultCachedDocument) SetTitle(val string) {
+	s.Title = val
+}
+
+// SetDocumentFileID sets the value of DocumentFileID.
+func (s *InlineQueryResultCachedDocument) SetDocumentFileID(val string) {
+	s.DocumentFileID = val
+}
+
+// SetDescription sets the value of Description.
+func (s *InlineQueryResultCachedDocument) SetDescription(val OptString) {
+	s.Description = val
+}
+
+// SetCaption sets the value of Caption.
+func (s *InlineQueryResultCachedDocument) SetCaption(val OptString) {
+	s.Caption = val
+}
+
+// SetParseMode sets the value of ParseMode.
+func (s *InlineQueryResultCachedDocument) SetParseMode(val OptString) {
+	s.ParseMode = val
+}
+
+// SetCaptionEntities sets the value of CaptionEntities.
+func (s *InlineQueryResultCachedDocument) SetCaptionEntities(val []MessageEntity) {
+	s.CaptionEntities = val
+}
+
+// SetReplyMarkup sets the value of ReplyMarkup.
+func (s *InlineQueryResultCachedDocument) SetReplyMarkup(val OptInlineKeyboardMarkup) {
+	s.ReplyMarkup = val
+}
+
+// SetInputMessageContent sets the value of InputMessageContent.
+func (s *InlineQueryResultCachedDocument) SetInputMessageContent(val OptInputMessageContent) {
+	s.InputMessageContent = val
 }
 
 // Represents a link to an animated GIF file stored on the Telegram servers. By default, this
@@ -2571,23 +6851,113 @@ type InlineQueryResultCachedDocument struct {
 // Ref: #/components/schemas/InlineQueryResultCachedGif
 type InlineQueryResultCachedGif struct {
 	// Type of the result, must be _gif_.
-	Type string "json:\"type\""
+	Type string `json:"type"`
 	// Unique identifier for this result, 1-64 bytes.
-	ID string "json:\"id\""
+	ID string `json:"id"`
 	// A valid file identifier for the GIF file.
-	GIFFileID string "json:\"gif_file_id\""
+	GIFFileID string `json:"gif_file_id"`
 	// _Optional_. Title for the result.
-	Title OptString "json:\"title\""
+	Title OptString `json:"title"`
 	// _Optional_. Caption of the GIF file to be sent, 0-1024 characters after entities parsing.
-	Caption OptString "json:\"caption\""
+	Caption OptString `json:"caption"`
 	// _Optional_. Mode for parsing entities in the caption. See [formatting options](https://core.
 	// telegram.org/bots/api#formatting-options) for more details.
-	ParseMode OptString "json:\"parse_mode\""
+	ParseMode OptString `json:"parse_mode"`
 	// _Optional_. List of special entities that appear in the caption, which can be specified instead of
 	// _parse_mode_.
-	CaptionEntities     []MessageEntity         "json:\"caption_entities\""
-	ReplyMarkup         OptInlineKeyboardMarkup "json:\"reply_markup\""
-	InputMessageContent OptInputMessageContent  "json:\"input_message_content\""
+	CaptionEntities     []MessageEntity         `json:"caption_entities"`
+	ReplyMarkup         OptInlineKeyboardMarkup `json:"reply_markup"`
+	InputMessageContent OptInputMessageContent  `json:"input_message_content"`
+}
+
+// GetType returns the value of Type.
+func (s InlineQueryResultCachedGif) GetType() string {
+	return s.Type
+}
+
+// GetID returns the value of ID.
+func (s InlineQueryResultCachedGif) GetID() string {
+	return s.ID
+}
+
+// GetGIFFileID returns the value of GIFFileID.
+func (s InlineQueryResultCachedGif) GetGIFFileID() string {
+	return s.GIFFileID
+}
+
+// GetTitle returns the value of Title.
+func (s InlineQueryResultCachedGif) GetTitle() OptString {
+	return s.Title
+}
+
+// GetCaption returns the value of Caption.
+func (s InlineQueryResultCachedGif) GetCaption() OptString {
+	return s.Caption
+}
+
+// GetParseMode returns the value of ParseMode.
+func (s InlineQueryResultCachedGif) GetParseMode() OptString {
+	return s.ParseMode
+}
+
+// GetCaptionEntities returns the value of CaptionEntities.
+func (s InlineQueryResultCachedGif) GetCaptionEntities() []MessageEntity {
+	return s.CaptionEntities
+}
+
+// GetReplyMarkup returns the value of ReplyMarkup.
+func (s InlineQueryResultCachedGif) GetReplyMarkup() OptInlineKeyboardMarkup {
+	return s.ReplyMarkup
+}
+
+// GetInputMessageContent returns the value of InputMessageContent.
+func (s InlineQueryResultCachedGif) GetInputMessageContent() OptInputMessageContent {
+	return s.InputMessageContent
+}
+
+// SetType sets the value of Type.
+func (s *InlineQueryResultCachedGif) SetType(val string) {
+	s.Type = val
+}
+
+// SetID sets the value of ID.
+func (s *InlineQueryResultCachedGif) SetID(val string) {
+	s.ID = val
+}
+
+// SetGIFFileID sets the value of GIFFileID.
+func (s *InlineQueryResultCachedGif) SetGIFFileID(val string) {
+	s.GIFFileID = val
+}
+
+// SetTitle sets the value of Title.
+func (s *InlineQueryResultCachedGif) SetTitle(val OptString) {
+	s.Title = val
+}
+
+// SetCaption sets the value of Caption.
+func (s *InlineQueryResultCachedGif) SetCaption(val OptString) {
+	s.Caption = val
+}
+
+// SetParseMode sets the value of ParseMode.
+func (s *InlineQueryResultCachedGif) SetParseMode(val OptString) {
+	s.ParseMode = val
+}
+
+// SetCaptionEntities sets the value of CaptionEntities.
+func (s *InlineQueryResultCachedGif) SetCaptionEntities(val []MessageEntity) {
+	s.CaptionEntities = val
+}
+
+// SetReplyMarkup sets the value of ReplyMarkup.
+func (s *InlineQueryResultCachedGif) SetReplyMarkup(val OptInlineKeyboardMarkup) {
+	s.ReplyMarkup = val
+}
+
+// SetInputMessageContent sets the value of InputMessageContent.
+func (s *InlineQueryResultCachedGif) SetInputMessageContent(val OptInputMessageContent) {
+	s.InputMessageContent = val
 }
 
 // Represents a link to a video animation (H.264/MPEG-4 AVC video without sound) stored on the
@@ -2597,23 +6967,113 @@ type InlineQueryResultCachedGif struct {
 // Ref: #/components/schemas/InlineQueryResultCachedMpeg4Gif
 type InlineQueryResultCachedMpeg4Gif struct {
 	// Type of the result, must be _mpeg4_gif_.
-	Type string "json:\"type\""
+	Type string `json:"type"`
 	// Unique identifier for this result, 1-64 bytes.
-	ID string "json:\"id\""
+	ID string `json:"id"`
 	// A valid file identifier for the MPEG4 file.
-	Mpeg4FileID string "json:\"mpeg4_file_id\""
+	Mpeg4FileID string `json:"mpeg4_file_id"`
 	// _Optional_. Title for the result.
-	Title OptString "json:\"title\""
+	Title OptString `json:"title"`
 	// _Optional_. Caption of the MPEG-4 file to be sent, 0-1024 characters after entities parsing.
-	Caption OptString "json:\"caption\""
+	Caption OptString `json:"caption"`
 	// _Optional_. Mode for parsing entities in the caption. See [formatting options](https://core.
 	// telegram.org/bots/api#formatting-options) for more details.
-	ParseMode OptString "json:\"parse_mode\""
+	ParseMode OptString `json:"parse_mode"`
 	// _Optional_. List of special entities that appear in the caption, which can be specified instead of
 	// _parse_mode_.
-	CaptionEntities     []MessageEntity         "json:\"caption_entities\""
-	ReplyMarkup         OptInlineKeyboardMarkup "json:\"reply_markup\""
-	InputMessageContent OptInputMessageContent  "json:\"input_message_content\""
+	CaptionEntities     []MessageEntity         `json:"caption_entities"`
+	ReplyMarkup         OptInlineKeyboardMarkup `json:"reply_markup"`
+	InputMessageContent OptInputMessageContent  `json:"input_message_content"`
+}
+
+// GetType returns the value of Type.
+func (s InlineQueryResultCachedMpeg4Gif) GetType() string {
+	return s.Type
+}
+
+// GetID returns the value of ID.
+func (s InlineQueryResultCachedMpeg4Gif) GetID() string {
+	return s.ID
+}
+
+// GetMpeg4FileID returns the value of Mpeg4FileID.
+func (s InlineQueryResultCachedMpeg4Gif) GetMpeg4FileID() string {
+	return s.Mpeg4FileID
+}
+
+// GetTitle returns the value of Title.
+func (s InlineQueryResultCachedMpeg4Gif) GetTitle() OptString {
+	return s.Title
+}
+
+// GetCaption returns the value of Caption.
+func (s InlineQueryResultCachedMpeg4Gif) GetCaption() OptString {
+	return s.Caption
+}
+
+// GetParseMode returns the value of ParseMode.
+func (s InlineQueryResultCachedMpeg4Gif) GetParseMode() OptString {
+	return s.ParseMode
+}
+
+// GetCaptionEntities returns the value of CaptionEntities.
+func (s InlineQueryResultCachedMpeg4Gif) GetCaptionEntities() []MessageEntity {
+	return s.CaptionEntities
+}
+
+// GetReplyMarkup returns the value of ReplyMarkup.
+func (s InlineQueryResultCachedMpeg4Gif) GetReplyMarkup() OptInlineKeyboardMarkup {
+	return s.ReplyMarkup
+}
+
+// GetInputMessageContent returns the value of InputMessageContent.
+func (s InlineQueryResultCachedMpeg4Gif) GetInputMessageContent() OptInputMessageContent {
+	return s.InputMessageContent
+}
+
+// SetType sets the value of Type.
+func (s *InlineQueryResultCachedMpeg4Gif) SetType(val string) {
+	s.Type = val
+}
+
+// SetID sets the value of ID.
+func (s *InlineQueryResultCachedMpeg4Gif) SetID(val string) {
+	s.ID = val
+}
+
+// SetMpeg4FileID sets the value of Mpeg4FileID.
+func (s *InlineQueryResultCachedMpeg4Gif) SetMpeg4FileID(val string) {
+	s.Mpeg4FileID = val
+}
+
+// SetTitle sets the value of Title.
+func (s *InlineQueryResultCachedMpeg4Gif) SetTitle(val OptString) {
+	s.Title = val
+}
+
+// SetCaption sets the value of Caption.
+func (s *InlineQueryResultCachedMpeg4Gif) SetCaption(val OptString) {
+	s.Caption = val
+}
+
+// SetParseMode sets the value of ParseMode.
+func (s *InlineQueryResultCachedMpeg4Gif) SetParseMode(val OptString) {
+	s.ParseMode = val
+}
+
+// SetCaptionEntities sets the value of CaptionEntities.
+func (s *InlineQueryResultCachedMpeg4Gif) SetCaptionEntities(val []MessageEntity) {
+	s.CaptionEntities = val
+}
+
+// SetReplyMarkup sets the value of ReplyMarkup.
+func (s *InlineQueryResultCachedMpeg4Gif) SetReplyMarkup(val OptInlineKeyboardMarkup) {
+	s.ReplyMarkup = val
+}
+
+// SetInputMessageContent sets the value of InputMessageContent.
+func (s *InlineQueryResultCachedMpeg4Gif) SetInputMessageContent(val OptInputMessageContent) {
+	s.InputMessageContent = val
 }
 
 // Represents a link to a photo stored on the Telegram servers. By default, this photo will be sent
@@ -2622,25 +7082,125 @@ type InlineQueryResultCachedMpeg4Gif struct {
 // Ref: #/components/schemas/InlineQueryResultCachedPhoto
 type InlineQueryResultCachedPhoto struct {
 	// Type of the result, must be _photo_.
-	Type string "json:\"type\""
+	Type string `json:"type"`
 	// Unique identifier for this result, 1-64 bytes.
-	ID string "json:\"id\""
+	ID string `json:"id"`
 	// A valid file identifier of the photo.
-	PhotoFileID string "json:\"photo_file_id\""
+	PhotoFileID string `json:"photo_file_id"`
 	// _Optional_. Title for the result.
-	Title OptString "json:\"title\""
+	Title OptString `json:"title"`
 	// _Optional_. Short description of the result.
-	Description OptString "json:\"description\""
+	Description OptString `json:"description"`
 	// _Optional_. Caption of the photo to be sent, 0-1024 characters after entities parsing.
-	Caption OptString "json:\"caption\""
+	Caption OptString `json:"caption"`
 	// _Optional_. Mode for parsing entities in the photo caption. See [formatting options](https://core.
 	// telegram.org/bots/api#formatting-options) for more details.
-	ParseMode OptString "json:\"parse_mode\""
+	ParseMode OptString `json:"parse_mode"`
 	// _Optional_. List of special entities that appear in the caption, which can be specified instead of
 	// _parse_mode_.
-	CaptionEntities     []MessageEntity         "json:\"caption_entities\""
-	ReplyMarkup         OptInlineKeyboardMarkup "json:\"reply_markup\""
-	InputMessageContent OptInputMessageContent  "json:\"input_message_content\""
+	CaptionEntities     []MessageEntity         `json:"caption_entities"`
+	ReplyMarkup         OptInlineKeyboardMarkup `json:"reply_markup"`
+	InputMessageContent OptInputMessageContent  `json:"input_message_content"`
+}
+
+// GetType returns the value of Type.
+func (s InlineQueryResultCachedPhoto) GetType() string {
+	return s.Type
+}
+
+// GetID returns the value of ID.
+func (s InlineQueryResultCachedPhoto) GetID() string {
+	return s.ID
+}
+
+// GetPhotoFileID returns the value of PhotoFileID.
+func (s InlineQueryResultCachedPhoto) GetPhotoFileID() string {
+	return s.PhotoFileID
+}
+
+// GetTitle returns the value of Title.
+func (s InlineQueryResultCachedPhoto) GetTitle() OptString {
+	return s.Title
+}
+
+// GetDescription returns the value of Description.
+func (s InlineQueryResultCachedPhoto) GetDescription() OptString {
+	return s.Description
+}
+
+// GetCaption returns the value of Caption.
+func (s InlineQueryResultCachedPhoto) GetCaption() OptString {
+	return s.Caption
+}
+
+// GetParseMode returns the value of ParseMode.
+func (s InlineQueryResultCachedPhoto) GetParseMode() OptString {
+	return s.ParseMode
+}
+
+// GetCaptionEntities returns the value of CaptionEntities.
+func (s InlineQueryResultCachedPhoto) GetCaptionEntities() []MessageEntity {
+	return s.CaptionEntities
+}
+
+// GetReplyMarkup returns the value of ReplyMarkup.
+func (s InlineQueryResultCachedPhoto) GetReplyMarkup() OptInlineKeyboardMarkup {
+	return s.ReplyMarkup
+}
+
+// GetInputMessageContent returns the value of InputMessageContent.
+func (s InlineQueryResultCachedPhoto) GetInputMessageContent() OptInputMessageContent {
+	return s.InputMessageContent
+}
+
+// SetType sets the value of Type.
+func (s *InlineQueryResultCachedPhoto) SetType(val string) {
+	s.Type = val
+}
+
+// SetID sets the value of ID.
+func (s *InlineQueryResultCachedPhoto) SetID(val string) {
+	s.ID = val
+}
+
+// SetPhotoFileID sets the value of PhotoFileID.
+func (s *InlineQueryResultCachedPhoto) SetPhotoFileID(val string) {
+	s.PhotoFileID = val
+}
+
+// SetTitle sets the value of Title.
+func (s *InlineQueryResultCachedPhoto) SetTitle(val OptString) {
+	s.Title = val
+}
+
+// SetDescription sets the value of Description.
+func (s *InlineQueryResultCachedPhoto) SetDescription(val OptString) {
+	s.Description = val
+}
+
+// SetCaption sets the value of Caption.
+func (s *InlineQueryResultCachedPhoto) SetCaption(val OptString) {
+	s.Caption = val
+}
+
+// SetParseMode sets the value of ParseMode.
+func (s *InlineQueryResultCachedPhoto) SetParseMode(val OptString) {
+	s.ParseMode = val
+}
+
+// SetCaptionEntities sets the value of CaptionEntities.
+func (s *InlineQueryResultCachedPhoto) SetCaptionEntities(val []MessageEntity) {
+	s.CaptionEntities = val
+}
+
+// SetReplyMarkup sets the value of ReplyMarkup.
+func (s *InlineQueryResultCachedPhoto) SetReplyMarkup(val OptInlineKeyboardMarkup) {
+	s.ReplyMarkup = val
+}
+
+// SetInputMessageContent sets the value of InputMessageContent.
+func (s *InlineQueryResultCachedPhoto) SetInputMessageContent(val OptInputMessageContent) {
+	s.InputMessageContent = val
 }
 
 // Represents a link to a sticker stored on the Telegram servers. By default, this sticker will be
@@ -2649,11 +7209,51 @@ type InlineQueryResultCachedPhoto struct {
 // Ref: #/components/schemas/InlineQueryResultCachedSticker
 type InlineQueryResultCachedSticker struct {
 	// Unique identifier for this result, 1-64 bytes.
-	ID string "json:\"id\""
+	ID string `json:"id"`
 	// A valid file identifier of the sticker.
-	StickerFileID       string                  "json:\"sticker_file_id\""
-	ReplyMarkup         OptInlineKeyboardMarkup "json:\"reply_markup\""
-	InputMessageContent OptInputMessageContent  "json:\"input_message_content\""
+	StickerFileID       string                  `json:"sticker_file_id"`
+	ReplyMarkup         OptInlineKeyboardMarkup `json:"reply_markup"`
+	InputMessageContent OptInputMessageContent  `json:"input_message_content"`
+}
+
+// GetID returns the value of ID.
+func (s InlineQueryResultCachedSticker) GetID() string {
+	return s.ID
+}
+
+// GetStickerFileID returns the value of StickerFileID.
+func (s InlineQueryResultCachedSticker) GetStickerFileID() string {
+	return s.StickerFileID
+}
+
+// GetReplyMarkup returns the value of ReplyMarkup.
+func (s InlineQueryResultCachedSticker) GetReplyMarkup() OptInlineKeyboardMarkup {
+	return s.ReplyMarkup
+}
+
+// GetInputMessageContent returns the value of InputMessageContent.
+func (s InlineQueryResultCachedSticker) GetInputMessageContent() OptInputMessageContent {
+	return s.InputMessageContent
+}
+
+// SetID sets the value of ID.
+func (s *InlineQueryResultCachedSticker) SetID(val string) {
+	s.ID = val
+}
+
+// SetStickerFileID sets the value of StickerFileID.
+func (s *InlineQueryResultCachedSticker) SetStickerFileID(val string) {
+	s.StickerFileID = val
+}
+
+// SetReplyMarkup sets the value of ReplyMarkup.
+func (s *InlineQueryResultCachedSticker) SetReplyMarkup(val OptInlineKeyboardMarkup) {
+	s.ReplyMarkup = val
+}
+
+// SetInputMessageContent sets the value of InputMessageContent.
+func (s *InlineQueryResultCachedSticker) SetInputMessageContent(val OptInputMessageContent) {
+	s.InputMessageContent = val
 }
 
 // Represents a link to a video file stored on the Telegram servers. By default, this video file will
@@ -2662,25 +7262,125 @@ type InlineQueryResultCachedSticker struct {
 // Ref: #/components/schemas/InlineQueryResultCachedVideo
 type InlineQueryResultCachedVideo struct {
 	// Type of the result, must be _video_.
-	Type string "json:\"type\""
+	Type string `json:"type"`
 	// Unique identifier for this result, 1-64 bytes.
-	ID string "json:\"id\""
+	ID string `json:"id"`
 	// A valid file identifier for the video file.
-	VideoFileID string "json:\"video_file_id\""
+	VideoFileID string `json:"video_file_id"`
 	// Title for the result.
-	Title string "json:\"title\""
+	Title string `json:"title"`
 	// _Optional_. Short description of the result.
-	Description OptString "json:\"description\""
+	Description OptString `json:"description"`
 	// _Optional_. Caption of the video to be sent, 0-1024 characters after entities parsing.
-	Caption OptString "json:\"caption\""
+	Caption OptString `json:"caption"`
 	// _Optional_. Mode for parsing entities in the video caption. See [formatting options](https://core.
 	// telegram.org/bots/api#formatting-options) for more details.
-	ParseMode OptString "json:\"parse_mode\""
+	ParseMode OptString `json:"parse_mode"`
 	// _Optional_. List of special entities that appear in the caption, which can be specified instead of
 	// _parse_mode_.
-	CaptionEntities     []MessageEntity         "json:\"caption_entities\""
-	ReplyMarkup         OptInlineKeyboardMarkup "json:\"reply_markup\""
-	InputMessageContent OptInputMessageContent  "json:\"input_message_content\""
+	CaptionEntities     []MessageEntity         `json:"caption_entities"`
+	ReplyMarkup         OptInlineKeyboardMarkup `json:"reply_markup"`
+	InputMessageContent OptInputMessageContent  `json:"input_message_content"`
+}
+
+// GetType returns the value of Type.
+func (s InlineQueryResultCachedVideo) GetType() string {
+	return s.Type
+}
+
+// GetID returns the value of ID.
+func (s InlineQueryResultCachedVideo) GetID() string {
+	return s.ID
+}
+
+// GetVideoFileID returns the value of VideoFileID.
+func (s InlineQueryResultCachedVideo) GetVideoFileID() string {
+	return s.VideoFileID
+}
+
+// GetTitle returns the value of Title.
+func (s InlineQueryResultCachedVideo) GetTitle() string {
+	return s.Title
+}
+
+// GetDescription returns the value of Description.
+func (s InlineQueryResultCachedVideo) GetDescription() OptString {
+	return s.Description
+}
+
+// GetCaption returns the value of Caption.
+func (s InlineQueryResultCachedVideo) GetCaption() OptString {
+	return s.Caption
+}
+
+// GetParseMode returns the value of ParseMode.
+func (s InlineQueryResultCachedVideo) GetParseMode() OptString {
+	return s.ParseMode
+}
+
+// GetCaptionEntities returns the value of CaptionEntities.
+func (s InlineQueryResultCachedVideo) GetCaptionEntities() []MessageEntity {
+	return s.CaptionEntities
+}
+
+// GetReplyMarkup returns the value of ReplyMarkup.
+func (s InlineQueryResultCachedVideo) GetReplyMarkup() OptInlineKeyboardMarkup {
+	return s.ReplyMarkup
+}
+
+// GetInputMessageContent returns the value of InputMessageContent.
+func (s InlineQueryResultCachedVideo) GetInputMessageContent() OptInputMessageContent {
+	return s.InputMessageContent
+}
+
+// SetType sets the value of Type.
+func (s *InlineQueryResultCachedVideo) SetType(val string) {
+	s.Type = val
+}
+
+// SetID sets the value of ID.
+func (s *InlineQueryResultCachedVideo) SetID(val string) {
+	s.ID = val
+}
+
+// SetVideoFileID sets the value of VideoFileID.
+func (s *InlineQueryResultCachedVideo) SetVideoFileID(val string) {
+	s.VideoFileID = val
+}
+
+// SetTitle sets the value of Title.
+func (s *InlineQueryResultCachedVideo) SetTitle(val string) {
+	s.Title = val
+}
+
+// SetDescription sets the value of Description.
+func (s *InlineQueryResultCachedVideo) SetDescription(val OptString) {
+	s.Description = val
+}
+
+// SetCaption sets the value of Caption.
+func (s *InlineQueryResultCachedVideo) SetCaption(val OptString) {
+	s.Caption = val
+}
+
+// SetParseMode sets the value of ParseMode.
+func (s *InlineQueryResultCachedVideo) SetParseMode(val OptString) {
+	s.ParseMode = val
+}
+
+// SetCaptionEntities sets the value of CaptionEntities.
+func (s *InlineQueryResultCachedVideo) SetCaptionEntities(val []MessageEntity) {
+	s.CaptionEntities = val
+}
+
+// SetReplyMarkup sets the value of ReplyMarkup.
+func (s *InlineQueryResultCachedVideo) SetReplyMarkup(val OptInlineKeyboardMarkup) {
+	s.ReplyMarkup = val
+}
+
+// SetInputMessageContent sets the value of InputMessageContent.
+func (s *InlineQueryResultCachedVideo) SetInputMessageContent(val OptInputMessageContent) {
+	s.InputMessageContent = val
 }
 
 // Represents a link to a voice message stored on the Telegram servers. By default, this voice
@@ -2689,23 +7389,113 @@ type InlineQueryResultCachedVideo struct {
 // Ref: #/components/schemas/InlineQueryResultCachedVoice
 type InlineQueryResultCachedVoice struct {
 	// Type of the result, must be _voice_.
-	Type string "json:\"type\""
+	Type string `json:"type"`
 	// Unique identifier for this result, 1-64 bytes.
-	ID string "json:\"id\""
+	ID string `json:"id"`
 	// A valid file identifier for the voice message.
-	VoiceFileID string "json:\"voice_file_id\""
+	VoiceFileID string `json:"voice_file_id"`
 	// Voice message title.
-	Title string "json:\"title\""
+	Title string `json:"title"`
 	// _Optional_. Caption, 0-1024 characters after entities parsing.
-	Caption OptString "json:\"caption\""
+	Caption OptString `json:"caption"`
 	// _Optional_. Mode for parsing entities in the voice message caption. See [formatting
 	// options](https://core.telegram.org/bots/api#formatting-options) for more details.
-	ParseMode OptString "json:\"parse_mode\""
+	ParseMode OptString `json:"parse_mode"`
 	// _Optional_. List of special entities that appear in the caption, which can be specified instead of
 	// _parse_mode_.
-	CaptionEntities     []MessageEntity         "json:\"caption_entities\""
-	ReplyMarkup         OptInlineKeyboardMarkup "json:\"reply_markup\""
-	InputMessageContent OptInputMessageContent  "json:\"input_message_content\""
+	CaptionEntities     []MessageEntity         `json:"caption_entities"`
+	ReplyMarkup         OptInlineKeyboardMarkup `json:"reply_markup"`
+	InputMessageContent OptInputMessageContent  `json:"input_message_content"`
+}
+
+// GetType returns the value of Type.
+func (s InlineQueryResultCachedVoice) GetType() string {
+	return s.Type
+}
+
+// GetID returns the value of ID.
+func (s InlineQueryResultCachedVoice) GetID() string {
+	return s.ID
+}
+
+// GetVoiceFileID returns the value of VoiceFileID.
+func (s InlineQueryResultCachedVoice) GetVoiceFileID() string {
+	return s.VoiceFileID
+}
+
+// GetTitle returns the value of Title.
+func (s InlineQueryResultCachedVoice) GetTitle() string {
+	return s.Title
+}
+
+// GetCaption returns the value of Caption.
+func (s InlineQueryResultCachedVoice) GetCaption() OptString {
+	return s.Caption
+}
+
+// GetParseMode returns the value of ParseMode.
+func (s InlineQueryResultCachedVoice) GetParseMode() OptString {
+	return s.ParseMode
+}
+
+// GetCaptionEntities returns the value of CaptionEntities.
+func (s InlineQueryResultCachedVoice) GetCaptionEntities() []MessageEntity {
+	return s.CaptionEntities
+}
+
+// GetReplyMarkup returns the value of ReplyMarkup.
+func (s InlineQueryResultCachedVoice) GetReplyMarkup() OptInlineKeyboardMarkup {
+	return s.ReplyMarkup
+}
+
+// GetInputMessageContent returns the value of InputMessageContent.
+func (s InlineQueryResultCachedVoice) GetInputMessageContent() OptInputMessageContent {
+	return s.InputMessageContent
+}
+
+// SetType sets the value of Type.
+func (s *InlineQueryResultCachedVoice) SetType(val string) {
+	s.Type = val
+}
+
+// SetID sets the value of ID.
+func (s *InlineQueryResultCachedVoice) SetID(val string) {
+	s.ID = val
+}
+
+// SetVoiceFileID sets the value of VoiceFileID.
+func (s *InlineQueryResultCachedVoice) SetVoiceFileID(val string) {
+	s.VoiceFileID = val
+}
+
+// SetTitle sets the value of Title.
+func (s *InlineQueryResultCachedVoice) SetTitle(val string) {
+	s.Title = val
+}
+
+// SetCaption sets the value of Caption.
+func (s *InlineQueryResultCachedVoice) SetCaption(val OptString) {
+	s.Caption = val
+}
+
+// SetParseMode sets the value of ParseMode.
+func (s *InlineQueryResultCachedVoice) SetParseMode(val OptString) {
+	s.ParseMode = val
+}
+
+// SetCaptionEntities sets the value of CaptionEntities.
+func (s *InlineQueryResultCachedVoice) SetCaptionEntities(val []MessageEntity) {
+	s.CaptionEntities = val
+}
+
+// SetReplyMarkup sets the value of ReplyMarkup.
+func (s *InlineQueryResultCachedVoice) SetReplyMarkup(val OptInlineKeyboardMarkup) {
+	s.ReplyMarkup = val
+}
+
+// SetInputMessageContent sets the value of InputMessageContent.
+func (s *InlineQueryResultCachedVoice) SetInputMessageContent(val OptInputMessageContent) {
+	s.InputMessageContent = val
 }
 
 // Represents a contact with a phone number. By default, this contact will be sent by the user.
@@ -2714,24 +7504,124 @@ type InlineQueryResultCachedVoice struct {
 // Ref: #/components/schemas/InlineQueryResultContact
 type InlineQueryResultContact struct {
 	// Unique identifier for this result, 1-64 Bytes.
-	ID string "json:\"id\""
+	ID string `json:"id"`
 	// Contact's phone number.
-	PhoneNumber string "json:\"phone_number\""
+	PhoneNumber string `json:"phone_number"`
 	// Contact's first name.
-	FirstName string "json:\"first_name\""
+	FirstName string `json:"first_name"`
 	// _Optional_. Contact's last name.
-	LastName OptString "json:\"last_name\""
+	LastName OptString `json:"last_name"`
 	// _Optional_. Additional data about the contact in the form of a [vCard](https://en.wikipedia.
 	// org/wiki/VCard), 0-2048 bytes.
-	Vcard               OptString               "json:\"vcard\""
-	ReplyMarkup         OptInlineKeyboardMarkup "json:\"reply_markup\""
-	InputMessageContent OptInputMessageContent  "json:\"input_message_content\""
+	Vcard               OptString               `json:"vcard"`
+	ReplyMarkup         OptInlineKeyboardMarkup `json:"reply_markup"`
+	InputMessageContent OptInputMessageContent  `json:"input_message_content"`
 	// _Optional_. URL of the thumbnail for the result.
-	ThumbURL OptString "json:\"thumb_url\""
+	ThumbURL OptString `json:"thumb_url"`
 	// _Optional_. Thumbnail width.
-	ThumbWidth OptInt "json:\"thumb_width\""
+	ThumbWidth OptInt `json:"thumb_width"`
 	// _Optional_. Thumbnail height.
-	ThumbHeight OptInt "json:\"thumb_height\""
+	ThumbHeight OptInt `json:"thumb_height"`
+}
+
+// GetID returns the value of ID.
+func (s InlineQueryResultContact) GetID() string {
+	return s.ID
+}
+
+// GetPhoneNumber returns the value of PhoneNumber.
+func (s InlineQueryResultContact) GetPhoneNumber() string {
+	return s.PhoneNumber
+}
+
+// GetFirstName returns the value of FirstName.
+func (s InlineQueryResultContact) GetFirstName() string {
+	return s.FirstName
+}
+
+// GetLastName returns the value of LastName.
+func (s InlineQueryResultContact) GetLastName() OptString {
+	return s.LastName
+}
+
+// GetVcard returns the value of Vcard.
+func (s InlineQueryResultContact) GetVcard() OptString {
+	return s.Vcard
+}
+
+// GetReplyMarkup returns the value of ReplyMarkup.
+func (s InlineQueryResultContact) GetReplyMarkup() OptInlineKeyboardMarkup {
+	return s.ReplyMarkup
+}
+
+// GetInputMessageContent returns the value of InputMessageContent.
+func (s InlineQueryResultContact) GetInputMessageContent() OptInputMessageContent {
+	return s.InputMessageContent
+}
+
+// GetThumbURL returns the value of ThumbURL.
+func (s InlineQueryResultContact) GetThumbURL() OptString {
+	return s.ThumbURL
+}
+
+// GetThumbWidth returns the value of ThumbWidth.
+func (s InlineQueryResultContact) GetThumbWidth() OptInt {
+	return s.ThumbWidth
+}
+
+// GetThumbHeight returns the value of ThumbHeight.
+func (s InlineQueryResultContact) GetThumbHeight() OptInt {
+	return s.ThumbHeight
+}
+
+// SetID sets the value of ID.
+func (s *InlineQueryResultContact) SetID(val string) {
+	s.ID = val
+}
+
+// SetPhoneNumber sets the value of PhoneNumber.
+func (s *InlineQueryResultContact) SetPhoneNumber(val string) {
+	s.PhoneNumber = val
+}
+
+// SetFirstName sets the value of FirstName.
+func (s *InlineQueryResultContact) SetFirstName(val string) {
+	s.FirstName = val
+}
+
+// SetLastName sets the value of LastName.
+func (s *InlineQueryResultContact) SetLastName(val OptString) {
+	s.LastName = val
+}
+
+// SetVcard sets the value of Vcard.
+func (s *InlineQueryResultContact) SetVcard(val OptString) {
+	s.Vcard = val
+}
+
+// SetReplyMarkup sets the value of ReplyMarkup.
+func (s *InlineQueryResultContact) SetReplyMarkup(val OptInlineKeyboardMarkup) {
+	s.ReplyMarkup = val
+}
+
+// SetInputMessageContent sets the value of InputMessageContent.
+func (s *InlineQueryResultContact) SetInputMessageContent(val OptInputMessageContent) {
+	s.InputMessageContent = val
+}
+
+// SetThumbURL sets the value of ThumbURL.
+func (s *InlineQueryResultContact) SetThumbURL(val OptString) {
+	s.ThumbURL = val
+}
+
+// SetThumbWidth sets the value of ThumbWidth.
+func (s *InlineQueryResultContact) SetThumbWidth(val OptInt) {
+	s.ThumbWidth = val
+}
+
+// SetThumbHeight sets the value of ThumbHeight.
+func (s *InlineQueryResultContact) SetThumbHeight(val OptInt) {
+	s.ThumbHeight = val
 }
 
 // Represents a link to a file. By default, this file will be sent by the user with an optional
@@ -2741,41 +7631,201 @@ type InlineQueryResultContact struct {
 // Ref: #/components/schemas/InlineQueryResultDocument
 type InlineQueryResultDocument struct {
 	// Unique identifier for this result, 1-64 bytes.
-	ID string "json:\"id\""
+	ID string `json:"id"`
 	// Title for the result.
-	Title string "json:\"title\""
+	Title string `json:"title"`
 	// _Optional_. Caption of the document to be sent, 0-1024 characters after entities parsing.
-	Caption OptString "json:\"caption\""
+	Caption OptString `json:"caption"`
 	// _Optional_. Mode for parsing entities in the document caption. See [formatting
 	// options](https://core.telegram.org/bots/api#formatting-options) for more details.
-	ParseMode OptString "json:\"parse_mode\""
+	ParseMode OptString `json:"parse_mode"`
 	// _Optional_. List of special entities that appear in the caption, which can be specified instead of
 	// _parse_mode_.
-	CaptionEntities []MessageEntity "json:\"caption_entities\""
+	CaptionEntities []MessageEntity `json:"caption_entities"`
 	// A valid URL for the file.
-	DocumentURL string "json:\"document_url\""
+	DocumentURL string `json:"document_url"`
 	// MIME type of the content of the file, either `application/pdf` or `application/zip`.
-	MimeType string "json:\"mime_type\""
+	MimeType string `json:"mime_type"`
 	// _Optional_. Short description of the result.
-	Description         OptString               "json:\"description\""
-	ReplyMarkup         OptInlineKeyboardMarkup "json:\"reply_markup\""
-	InputMessageContent OptInputMessageContent  "json:\"input_message_content\""
+	Description         OptString               `json:"description"`
+	ReplyMarkup         OptInlineKeyboardMarkup `json:"reply_markup"`
+	InputMessageContent OptInputMessageContent  `json:"input_message_content"`
 	// _Optional_. URL of the thumbnail (JPEG only) for the file.
-	ThumbURL OptString "json:\"thumb_url\""
+	ThumbURL OptString `json:"thumb_url"`
 	// _Optional_. Thumbnail width.
-	ThumbWidth OptInt "json:\"thumb_width\""
+	ThumbWidth OptInt `json:"thumb_width"`
 	// _Optional_. Thumbnail height.
-	ThumbHeight OptInt "json:\"thumb_height\""
+	ThumbHeight OptInt `json:"thumb_height"`
+}
+
+// GetID returns the value of ID.
+func (s InlineQueryResultDocument) GetID() string {
+	return s.ID
+}
+
+// GetTitle returns the value of Title.
+func (s InlineQueryResultDocument) GetTitle() string {
+	return s.Title
+}
+
+// GetCaption returns the value of Caption.
+func (s InlineQueryResultDocument) GetCaption() OptString {
+	return s.Caption
+}
+
+// GetParseMode returns the value of ParseMode.
+func (s InlineQueryResultDocument) GetParseMode() OptString {
+	return s.ParseMode
+}
+
+// GetCaptionEntities returns the value of CaptionEntities.
+func (s InlineQueryResultDocument) GetCaptionEntities() []MessageEntity {
+	return s.CaptionEntities
+}
+
+// GetDocumentURL returns the value of DocumentURL.
+func (s InlineQueryResultDocument) GetDocumentURL() string {
+	return s.DocumentURL
+}
+
+// GetMimeType returns the value of MimeType.
+func (s InlineQueryResultDocument) GetMimeType() string {
+	return s.MimeType
+}
+
+// GetDescription returns the value of Description.
+func (s InlineQueryResultDocument) GetDescription() OptString {
+	return s.Description
+}
+
+// GetReplyMarkup returns the value of ReplyMarkup.
+func (s InlineQueryResultDocument) GetReplyMarkup() OptInlineKeyboardMarkup {
+	return s.ReplyMarkup
+}
+
+// GetInputMessageContent returns the value of InputMessageContent.
+func (s InlineQueryResultDocument) GetInputMessageContent() OptInputMessageContent {
+	return s.InputMessageContent
+}
+
+// GetThumbURL returns the value of ThumbURL.
+func (s InlineQueryResultDocument) GetThumbURL() OptString {
+	return s.ThumbURL
+}
+
+// GetThumbWidth returns the value of ThumbWidth.
+func (s InlineQueryResultDocument) GetThumbWidth() OptInt {
+	return s.ThumbWidth
+}
+
+// GetThumbHeight returns the value of ThumbHeight.
+func (s InlineQueryResultDocument) GetThumbHeight() OptInt {
+	return s.ThumbHeight
+}
+
+// SetID sets the value of ID.
+func (s *InlineQueryResultDocument) SetID(val string) {
+	s.ID = val
+}
+
+// SetTitle sets the value of Title.
+func (s *InlineQueryResultDocument) SetTitle(val string) {
+	s.Title = val
+}
+
+// SetCaption sets the value of Caption.
+func (s *InlineQueryResultDocument) SetCaption(val OptString) {
+	s.Caption = val
+}
+
+// SetParseMode sets the value of ParseMode.
+func (s *InlineQueryResultDocument) SetParseMode(val OptString) {
+	s.ParseMode = val
+}
+
+// SetCaptionEntities sets the value of CaptionEntities.
+func (s *InlineQueryResultDocument) SetCaptionEntities(val []MessageEntity) {
+	s.CaptionEntities = val
+}
+
+// SetDocumentURL sets the value of DocumentURL.
+func (s *InlineQueryResultDocument) SetDocumentURL(val string) {
+	s.DocumentURL = val
+}
+
+// SetMimeType sets the value of MimeType.
+func (s *InlineQueryResultDocument) SetMimeType(val string) {
+	s.MimeType = val
+}
+
+// SetDescription sets the value of Description.
+func (s *InlineQueryResultDocument) SetDescription(val OptString) {
+	s.Description = val
+}
+
+// SetReplyMarkup sets the value of ReplyMarkup.
+func (s *InlineQueryResultDocument) SetReplyMarkup(val OptInlineKeyboardMarkup) {
+	s.ReplyMarkup = val
+}
+
+// SetInputMessageContent sets the value of InputMessageContent.
+func (s *InlineQueryResultDocument) SetInputMessageContent(val OptInputMessageContent) {
+	s.InputMessageContent = val
+}
+
+// SetThumbURL sets the value of ThumbURL.
+func (s *InlineQueryResultDocument) SetThumbURL(val OptString) {
+	s.ThumbURL = val
+}
+
+// SetThumbWidth sets the value of ThumbWidth.
+func (s *InlineQueryResultDocument) SetThumbWidth(val OptInt) {
+	s.ThumbWidth = val
+}
+
+// SetThumbHeight sets the value of ThumbHeight.
+func (s *InlineQueryResultDocument) SetThumbHeight(val OptInt) {
+	s.ThumbHeight = val
 }
 
 // Represents a [Game](https://core.telegram.org/bots/api#games).
 // Ref: #/components/schemas/InlineQueryResultGame
 type InlineQueryResultGame struct {
 	// Unique identifier for this result, 1-64 bytes.
-	ID string "json:\"id\""
+	ID string `json:"id"`
 	// Short name of the game.
-	GameShortName string                  "json:\"game_short_name\""
-	ReplyMarkup   OptInlineKeyboardMarkup "json:\"reply_markup\""
+	GameShortName string                  `json:"game_short_name"`
+	ReplyMarkup   OptInlineKeyboardMarkup `json:"reply_markup"`
+}
+
+// GetID returns the value of ID.
+func (s InlineQueryResultGame) GetID() string {
+	return s.ID
+}
+
+// GetGameShortName returns the value of GameShortName.
+func (s InlineQueryResultGame) GetGameShortName() string {
+	return s.GameShortName
+}
+
+// GetReplyMarkup returns the value of ReplyMarkup.
+func (s InlineQueryResultGame) GetReplyMarkup() OptInlineKeyboardMarkup {
+	return s.ReplyMarkup
+}
+
+// SetID sets the value of ID.
+func (s *InlineQueryResultGame) SetID(val string) {
+	s.ID = val
+}
+
+// SetGameShortName sets the value of GameShortName.
+func (s *InlineQueryResultGame) SetGameShortName(val string) {
+	s.GameShortName = val
+}
+
+// SetReplyMarkup sets the value of ReplyMarkup.
+func (s *InlineQueryResultGame) SetReplyMarkup(val OptInlineKeyboardMarkup) {
+	s.ReplyMarkup = val
 }
 
 // Represents a link to an animated GIF file. By default, this animated GIF file will be sent by the
@@ -2784,32 +7834,162 @@ type InlineQueryResultGame struct {
 // Ref: #/components/schemas/InlineQueryResultGif
 type InlineQueryResultGif struct {
 	// Unique identifier for this result, 1-64 bytes.
-	ID string "json:\"id\""
+	ID string `json:"id"`
 	// A valid URL for the GIF file. File size must not exceed 1MB.
-	GIFURL string "json:\"gif_url\""
+	GIFURL string `json:"gif_url"`
 	// _Optional_. Width of the GIF.
-	GIFWidth OptInt "json:\"gif_width\""
+	GIFWidth OptInt `json:"gif_width"`
 	// _Optional_. Height of the GIF.
-	GIFHeight OptInt "json:\"gif_height\""
+	GIFHeight OptInt `json:"gif_height"`
 	// _Optional_. Duration of the GIF in seconds.
-	GIFDuration OptInt "json:\"gif_duration\""
+	GIFDuration OptInt `json:"gif_duration"`
 	// URL of the static (JPEG or GIF) or animated (MPEG4) thumbnail for the result.
-	ThumbURL string "json:\"thumb_url\""
+	ThumbURL string `json:"thumb_url"`
 	// _Optional_. MIME type of the thumbnail, must be one of `image/jpeg`, `image/gif`, or `video/mp4`.
 	// Defaults to `image/jpeg`.
-	ThumbMimeType OptString "json:\"thumb_mime_type\""
+	ThumbMimeType OptString `json:"thumb_mime_type"`
 	// _Optional_. Title for the result.
-	Title OptString "json:\"title\""
+	Title OptString `json:"title"`
 	// _Optional_. Caption of the GIF file to be sent, 0-1024 characters after entities parsing.
-	Caption OptString "json:\"caption\""
+	Caption OptString `json:"caption"`
 	// _Optional_. Mode for parsing entities in the caption. See [formatting options](https://core.
 	// telegram.org/bots/api#formatting-options) for more details.
-	ParseMode OptString "json:\"parse_mode\""
+	ParseMode OptString `json:"parse_mode"`
 	// _Optional_. List of special entities that appear in the caption, which can be specified instead of
 	// _parse_mode_.
-	CaptionEntities     []MessageEntity         "json:\"caption_entities\""
-	ReplyMarkup         OptInlineKeyboardMarkup "json:\"reply_markup\""
-	InputMessageContent OptInputMessageContent  "json:\"input_message_content\""
+	CaptionEntities     []MessageEntity         `json:"caption_entities"`
+	ReplyMarkup         OptInlineKeyboardMarkup `json:"reply_markup"`
+	InputMessageContent OptInputMessageContent  `json:"input_message_content"`
+}
+
+// GetID returns the value of ID.
+func (s InlineQueryResultGif) GetID() string {
+	return s.ID
+}
+
+// GetGIFURL returns the value of GIFURL.
+func (s InlineQueryResultGif) GetGIFURL() string {
+	return s.GIFURL
+}
+
+// GetGIFWidth returns the value of GIFWidth.
+func (s InlineQueryResultGif) GetGIFWidth() OptInt {
+	return s.GIFWidth
+}
+
+// GetGIFHeight returns the value of GIFHeight.
+func (s InlineQueryResultGif) GetGIFHeight() OptInt {
+	return s.GIFHeight
+}
+
+// GetGIFDuration returns the value of GIFDuration.
+func (s InlineQueryResultGif) GetGIFDuration() OptInt {
+	return s.GIFDuration
+}
+
+// GetThumbURL returns the value of ThumbURL.
+func (s InlineQueryResultGif) GetThumbURL() string {
+	return s.ThumbURL
+}
+
+// GetThumbMimeType returns the value of ThumbMimeType.
+func (s InlineQueryResultGif) GetThumbMimeType() OptString {
+	return s.ThumbMimeType
+}
+
+// GetTitle returns the value of Title.
+func (s InlineQueryResultGif) GetTitle() OptString {
+	return s.Title
+}
+
+// GetCaption returns the value of Caption.
+func (s InlineQueryResultGif) GetCaption() OptString {
+	return s.Caption
+}
+
+// GetParseMode returns the value of ParseMode.
+func (s InlineQueryResultGif) GetParseMode() OptString {
+	return s.ParseMode
+}
+
+// GetCaptionEntities returns the value of CaptionEntities.
+func (s InlineQueryResultGif) GetCaptionEntities() []MessageEntity {
+	return s.CaptionEntities
+}
+
+// GetReplyMarkup returns the value of ReplyMarkup.
+func (s InlineQueryResultGif) GetReplyMarkup() OptInlineKeyboardMarkup {
+	return s.ReplyMarkup
+}
+
+// GetInputMessageContent returns the value of InputMessageContent.
+func (s InlineQueryResultGif) GetInputMessageContent() OptInputMessageContent {
+	return s.InputMessageContent
+}
+
+// SetID sets the value of ID.
+func (s *InlineQueryResultGif) SetID(val string) {
+	s.ID = val
+}
+
+// SetGIFURL sets the value of GIFURL.
+func (s *InlineQueryResultGif) SetGIFURL(val string) {
+	s.GIFURL = val
+}
+
+// SetGIFWidth sets the value of GIFWidth.
+func (s *InlineQueryResultGif) SetGIFWidth(val OptInt) {
+	s.GIFWidth = val
+}
+
+// SetGIFHeight sets the value of GIFHeight.
+func (s *InlineQueryResultGif) SetGIFHeight(val OptInt) {
+	s.GIFHeight = val
+}
+
+// SetGIFDuration sets the value of GIFDuration.
+func (s *InlineQueryResultGif) SetGIFDuration(val OptInt) {
+	s.GIFDuration = val
+}
+
+// SetThumbURL sets the value of ThumbURL.
+func (s *InlineQueryResultGif) SetThumbURL(val string) {
+	s.ThumbURL = val
+}
+
+// SetThumbMimeType sets the value of ThumbMimeType.
+func (s *InlineQueryResultGif) SetThumbMimeType(val OptString) {
+	s.ThumbMimeType = val
+}
+
+// SetTitle sets the value of Title.
+func (s *InlineQueryResultGif) SetTitle(val OptString) {
+	s.Title = val
+}
+
+// SetCaption sets the value of Caption.
+func (s *InlineQueryResultGif) SetCaption(val OptString) {
+	s.Caption = val
+}
+
+// SetParseMode sets the value of ParseMode.
+func (s *InlineQueryResultGif) SetParseMode(val OptString) {
+	s.ParseMode = val
+}
+
+// SetCaptionEntities sets the value of CaptionEntities.
+func (s *InlineQueryResultGif) SetCaptionEntities(val []MessageEntity) {
+	s.CaptionEntities = val
+}
+
+// SetReplyMarkup sets the value of ReplyMarkup.
+func (s *InlineQueryResultGif) SetReplyMarkup(val OptInlineKeyboardMarkup) {
+	s.ReplyMarkup = val
+}
+
+// SetInputMessageContent sets the value of InputMessageContent.
+func (s *InlineQueryResultGif) SetInputMessageContent(val OptInputMessageContent) {
+	s.InputMessageContent = val
 }
 
 // Represents a location on a map. By default, the location will be sent by the user. Alternatively,
@@ -2818,31 +7998,161 @@ type InlineQueryResultGif struct {
 // Ref: #/components/schemas/InlineQueryResultLocation
 type InlineQueryResultLocation struct {
 	// Unique identifier for this result, 1-64 Bytes.
-	ID string "json:\"id\""
+	ID string `json:"id"`
 	// Location latitude in degrees.
-	Latitude float64 "json:\"latitude\""
+	Latitude float64 `json:"latitude"`
 	// Location longitude in degrees.
-	Longitude float64 "json:\"longitude\""
+	Longitude float64 `json:"longitude"`
 	// Location title.
-	Title string "json:\"title\""
+	Title string `json:"title"`
 	// _Optional_. The radius of uncertainty for the location, measured in meters; 0-1500.
-	HorizontalAccuracy OptFloat64 "json:\"horizontal_accuracy\""
+	HorizontalAccuracy OptFloat64 `json:"horizontal_accuracy"`
 	// _Optional_. Period in seconds for which the location can be updated, should be between 60 and 86400.
-	LivePeriod OptInt "json:\"live_period\""
+	LivePeriod OptInt `json:"live_period"`
 	// _Optional_. For live locations, a direction in which the user is moving, in degrees. Must be
 	// between 1 and 360 if specified.
-	Heading OptInt "json:\"heading\""
+	Heading OptInt `json:"heading"`
 	// _Optional_. For live locations, a maximum distance for proximity alerts about approaching another
 	// chat member, in meters. Must be between 1 and 100000 if specified.
-	ProximityAlertRadius OptInt                  "json:\"proximity_alert_radius\""
-	ReplyMarkup          OptInlineKeyboardMarkup "json:\"reply_markup\""
-	InputMessageContent  OptInputMessageContent  "json:\"input_message_content\""
+	ProximityAlertRadius OptInt                  `json:"proximity_alert_radius"`
+	ReplyMarkup          OptInlineKeyboardMarkup `json:"reply_markup"`
+	InputMessageContent  OptInputMessageContent  `json:"input_message_content"`
 	// _Optional_. URL of the thumbnail for the result.
-	ThumbURL OptString "json:\"thumb_url\""
+	ThumbURL OptString `json:"thumb_url"`
 	// _Optional_. Thumbnail width.
-	ThumbWidth OptInt "json:\"thumb_width\""
+	ThumbWidth OptInt `json:"thumb_width"`
 	// _Optional_. Thumbnail height.
-	ThumbHeight OptInt "json:\"thumb_height\""
+	ThumbHeight OptInt `json:"thumb_height"`
+}
+
+// GetID returns the value of ID.
+func (s InlineQueryResultLocation) GetID() string {
+	return s.ID
+}
+
+// GetLatitude returns the value of Latitude.
+func (s InlineQueryResultLocation) GetLatitude() float64 {
+	return s.Latitude
+}
+
+// GetLongitude returns the value of Longitude.
+func (s InlineQueryResultLocation) GetLongitude() float64 {
+	return s.Longitude
+}
+
+// GetTitle returns the value of Title.
+func (s InlineQueryResultLocation) GetTitle() string {
+	return s.Title
+}
+
+// GetHorizontalAccuracy returns the value of HorizontalAccuracy.
+func (s InlineQueryResultLocation) GetHorizontalAccuracy() OptFloat64 {
+	return s.HorizontalAccuracy
+}
+
+// GetLivePeriod returns the value of LivePeriod.
+func (s InlineQueryResultLocation) GetLivePeriod() OptInt {
+	return s.LivePeriod
+}
+
+// GetHeading returns the value of Heading.
+func (s InlineQueryResultLocation) GetHeading() OptInt {
+	return s.Heading
+}
+
+// GetProximityAlertRadius returns the value of ProximityAlertRadius.
+func (s InlineQueryResultLocation) GetProximityAlertRadius() OptInt {
+	return s.ProximityAlertRadius
+}
+
+// GetReplyMarkup returns the value of ReplyMarkup.
+func (s InlineQueryResultLocation) GetReplyMarkup() OptInlineKeyboardMarkup {
+	return s.ReplyMarkup
+}
+
+// GetInputMessageContent returns the value of InputMessageContent.
+func (s InlineQueryResultLocation) GetInputMessageContent() OptInputMessageContent {
+	return s.InputMessageContent
+}
+
+// GetThumbURL returns the value of ThumbURL.
+func (s InlineQueryResultLocation) GetThumbURL() OptString {
+	return s.ThumbURL
+}
+
+// GetThumbWidth returns the value of ThumbWidth.
+func (s InlineQueryResultLocation) GetThumbWidth() OptInt {
+	return s.ThumbWidth
+}
+
+// GetThumbHeight returns the value of ThumbHeight.
+func (s InlineQueryResultLocation) GetThumbHeight() OptInt {
+	return s.ThumbHeight
+}
+
+// SetID sets the value of ID.
+func (s *InlineQueryResultLocation) SetID(val string) {
+	s.ID = val
+}
+
+// SetLatitude sets the value of Latitude.
+func (s *InlineQueryResultLocation) SetLatitude(val float64) {
+	s.Latitude = val
+}
+
+// SetLongitude sets the value of Longitude.
+func (s *InlineQueryResultLocation) SetLongitude(val float64) {
+	s.Longitude = val
+}
+
+// SetTitle sets the value of Title.
+func (s *InlineQueryResultLocation) SetTitle(val string) {
+	s.Title = val
+}
+
+// SetHorizontalAccuracy sets the value of HorizontalAccuracy.
+func (s *InlineQueryResultLocation) SetHorizontalAccuracy(val OptFloat64) {
+	s.HorizontalAccuracy = val
+}
+
+// SetLivePeriod sets the value of LivePeriod.
+func (s *InlineQueryResultLocation) SetLivePeriod(val OptInt) {
+	s.LivePeriod = val
+}
+
+// SetHeading sets the value of Heading.
+func (s *InlineQueryResultLocation) SetHeading(val OptInt) {
+	s.Heading = val
+}
+
+// SetProximityAlertRadius sets the value of ProximityAlertRadius.
+func (s *InlineQueryResultLocation) SetProximityAlertRadius(val OptInt) {
+	s.ProximityAlertRadius = val
+}
+
+// SetReplyMarkup sets the value of ReplyMarkup.
+func (s *InlineQueryResultLocation) SetReplyMarkup(val OptInlineKeyboardMarkup) {
+	s.ReplyMarkup = val
+}
+
+// SetInputMessageContent sets the value of InputMessageContent.
+func (s *InlineQueryResultLocation) SetInputMessageContent(val OptInputMessageContent) {
+	s.InputMessageContent = val
+}
+
+// SetThumbURL sets the value of ThumbURL.
+func (s *InlineQueryResultLocation) SetThumbURL(val OptString) {
+	s.ThumbURL = val
+}
+
+// SetThumbWidth sets the value of ThumbWidth.
+func (s *InlineQueryResultLocation) SetThumbWidth(val OptInt) {
+	s.ThumbWidth = val
+}
+
+// SetThumbHeight sets the value of ThumbHeight.
+func (s *InlineQueryResultLocation) SetThumbHeight(val OptInt) {
+	s.ThumbHeight = val
 }
 
 // Represents a link to a video animation (H.264/MPEG-4 AVC video without sound). By default, this
@@ -2851,32 +8161,162 @@ type InlineQueryResultLocation struct {
 // Ref: #/components/schemas/InlineQueryResultMpeg4Gif
 type InlineQueryResultMpeg4Gif struct {
 	// Unique identifier for this result, 1-64 bytes.
-	ID string "json:\"id\""
+	ID string `json:"id"`
 	// A valid URL for the MPEG4 file. File size must not exceed 1MB.
-	Mpeg4URL string "json:\"mpeg4_url\""
+	Mpeg4URL string `json:"mpeg4_url"`
 	// _Optional_. Video width.
-	Mpeg4Width OptInt "json:\"mpeg4_width\""
+	Mpeg4Width OptInt `json:"mpeg4_width"`
 	// _Optional_. Video height.
-	Mpeg4Height OptInt "json:\"mpeg4_height\""
+	Mpeg4Height OptInt `json:"mpeg4_height"`
 	// _Optional_. Video duration in seconds.
-	Mpeg4Duration OptInt "json:\"mpeg4_duration\""
+	Mpeg4Duration OptInt `json:"mpeg4_duration"`
 	// URL of the static (JPEG or GIF) or animated (MPEG4) thumbnail for the result.
-	ThumbURL string "json:\"thumb_url\""
+	ThumbURL string `json:"thumb_url"`
 	// _Optional_. MIME type of the thumbnail, must be one of `image/jpeg`, `image/gif`, or `video/mp4`.
 	// Defaults to `image/jpeg`.
-	ThumbMimeType OptString "json:\"thumb_mime_type\""
+	ThumbMimeType OptString `json:"thumb_mime_type"`
 	// _Optional_. Title for the result.
-	Title OptString "json:\"title\""
+	Title OptString `json:"title"`
 	// _Optional_. Caption of the MPEG-4 file to be sent, 0-1024 characters after entities parsing.
-	Caption OptString "json:\"caption\""
+	Caption OptString `json:"caption"`
 	// _Optional_. Mode for parsing entities in the caption. See [formatting options](https://core.
 	// telegram.org/bots/api#formatting-options) for more details.
-	ParseMode OptString "json:\"parse_mode\""
+	ParseMode OptString `json:"parse_mode"`
 	// _Optional_. List of special entities that appear in the caption, which can be specified instead of
 	// _parse_mode_.
-	CaptionEntities     []MessageEntity         "json:\"caption_entities\""
-	ReplyMarkup         OptInlineKeyboardMarkup "json:\"reply_markup\""
-	InputMessageContent OptInputMessageContent  "json:\"input_message_content\""
+	CaptionEntities     []MessageEntity         `json:"caption_entities"`
+	ReplyMarkup         OptInlineKeyboardMarkup `json:"reply_markup"`
+	InputMessageContent OptInputMessageContent  `json:"input_message_content"`
+}
+
+// GetID returns the value of ID.
+func (s InlineQueryResultMpeg4Gif) GetID() string {
+	return s.ID
+}
+
+// GetMpeg4URL returns the value of Mpeg4URL.
+func (s InlineQueryResultMpeg4Gif) GetMpeg4URL() string {
+	return s.Mpeg4URL
+}
+
+// GetMpeg4Width returns the value of Mpeg4Width.
+func (s InlineQueryResultMpeg4Gif) GetMpeg4Width() OptInt {
+	return s.Mpeg4Width
+}
+
+// GetMpeg4Height returns the value of Mpeg4Height.
+func (s InlineQueryResultMpeg4Gif) GetMpeg4Height() OptInt {
+	return s.Mpeg4Height
+}
+
+// GetMpeg4Duration returns the value of Mpeg4Duration.
+func (s InlineQueryResultMpeg4Gif) GetMpeg4Duration() OptInt {
+	return s.Mpeg4Duration
+}
+
+// GetThumbURL returns the value of ThumbURL.
+func (s InlineQueryResultMpeg4Gif) GetThumbURL() string {
+	return s.ThumbURL
+}
+
+// GetThumbMimeType returns the value of ThumbMimeType.
+func (s InlineQueryResultMpeg4Gif) GetThumbMimeType() OptString {
+	return s.ThumbMimeType
+}
+
+// GetTitle returns the value of Title.
+func (s InlineQueryResultMpeg4Gif) GetTitle() OptString {
+	return s.Title
+}
+
+// GetCaption returns the value of Caption.
+func (s InlineQueryResultMpeg4Gif) GetCaption() OptString {
+	return s.Caption
+}
+
+// GetParseMode returns the value of ParseMode.
+func (s InlineQueryResultMpeg4Gif) GetParseMode() OptString {
+	return s.ParseMode
+}
+
+// GetCaptionEntities returns the value of CaptionEntities.
+func (s InlineQueryResultMpeg4Gif) GetCaptionEntities() []MessageEntity {
+	return s.CaptionEntities
+}
+
+// GetReplyMarkup returns the value of ReplyMarkup.
+func (s InlineQueryResultMpeg4Gif) GetReplyMarkup() OptInlineKeyboardMarkup {
+	return s.ReplyMarkup
+}
+
+// GetInputMessageContent returns the value of InputMessageContent.
+func (s InlineQueryResultMpeg4Gif) GetInputMessageContent() OptInputMessageContent {
+	return s.InputMessageContent
+}
+
+// SetID sets the value of ID.
+func (s *InlineQueryResultMpeg4Gif) SetID(val string) {
+	s.ID = val
+}
+
+// SetMpeg4URL sets the value of Mpeg4URL.
+func (s *InlineQueryResultMpeg4Gif) SetMpeg4URL(val string) {
+	s.Mpeg4URL = val
+}
+
+// SetMpeg4Width sets the value of Mpeg4Width.
+func (s *InlineQueryResultMpeg4Gif) SetMpeg4Width(val OptInt) {
+	s.Mpeg4Width = val
+}
+
+// SetMpeg4Height sets the value of Mpeg4Height.
+func (s *InlineQueryResultMpeg4Gif) SetMpeg4Height(val OptInt) {
+	s.Mpeg4Height = val
+}
+
+// SetMpeg4Duration sets the value of Mpeg4Duration.
+func (s *InlineQueryResultMpeg4Gif) SetMpeg4Duration(val OptInt) {
+	s.Mpeg4Duration = val
+}
+
+// SetThumbURL sets the value of ThumbURL.
+func (s *InlineQueryResultMpeg4Gif) SetThumbURL(val string) {
+	s.ThumbURL = val
+}
+
+// SetThumbMimeType sets the value of ThumbMimeType.
+func (s *InlineQueryResultMpeg4Gif) SetThumbMimeType(val OptString) {
+	s.ThumbMimeType = val
+}
+
+// SetTitle sets the value of Title.
+func (s *InlineQueryResultMpeg4Gif) SetTitle(val OptString) {
+	s.Title = val
+}
+
+// SetCaption sets the value of Caption.
+func (s *InlineQueryResultMpeg4Gif) SetCaption(val OptString) {
+	s.Caption = val
+}
+
+// SetParseMode sets the value of ParseMode.
+func (s *InlineQueryResultMpeg4Gif) SetParseMode(val OptString) {
+	s.ParseMode = val
+}
+
+// SetCaptionEntities sets the value of CaptionEntities.
+func (s *InlineQueryResultMpeg4Gif) SetCaptionEntities(val []MessageEntity) {
+	s.CaptionEntities = val
+}
+
+// SetReplyMarkup sets the value of ReplyMarkup.
+func (s *InlineQueryResultMpeg4Gif) SetReplyMarkup(val OptInlineKeyboardMarkup) {
+	s.ReplyMarkup = val
+}
+
+// SetInputMessageContent sets the value of InputMessageContent.
+func (s *InlineQueryResultMpeg4Gif) SetInputMessageContent(val OptInputMessageContent) {
+	s.InputMessageContent = val
 }
 
 // Represents a link to a photo. By default, this photo will be sent by the user with optional
@@ -2885,29 +8325,149 @@ type InlineQueryResultMpeg4Gif struct {
 // Ref: #/components/schemas/InlineQueryResultPhoto
 type InlineQueryResultPhoto struct {
 	// Unique identifier for this result, 1-64 bytes.
-	ID string "json:\"id\""
+	ID string `json:"id"`
 	// A valid URL of the photo. Photo must be in **JPEG** format. Photo size must not exceed 5MB.
-	PhotoURL string "json:\"photo_url\""
+	PhotoURL string `json:"photo_url"`
 	// URL of the thumbnail for the photo.
-	ThumbURL string "json:\"thumb_url\""
+	ThumbURL string `json:"thumb_url"`
 	// _Optional_. Width of the photo.
-	PhotoWidth OptInt "json:\"photo_width\""
+	PhotoWidth OptInt `json:"photo_width"`
 	// _Optional_. Height of the photo.
-	PhotoHeight OptInt "json:\"photo_height\""
+	PhotoHeight OptInt `json:"photo_height"`
 	// _Optional_. Title for the result.
-	Title OptString "json:\"title\""
+	Title OptString `json:"title"`
 	// _Optional_. Short description of the result.
-	Description OptString "json:\"description\""
+	Description OptString `json:"description"`
 	// _Optional_. Caption of the photo to be sent, 0-1024 characters after entities parsing.
-	Caption OptString "json:\"caption\""
+	Caption OptString `json:"caption"`
 	// _Optional_. Mode for parsing entities in the photo caption. See [formatting options](https://core.
 	// telegram.org/bots/api#formatting-options) for more details.
-	ParseMode OptString "json:\"parse_mode\""
+	ParseMode OptString `json:"parse_mode"`
 	// _Optional_. List of special entities that appear in the caption, which can be specified instead of
 	// _parse_mode_.
-	CaptionEntities     []MessageEntity         "json:\"caption_entities\""
-	ReplyMarkup         OptInlineKeyboardMarkup "json:\"reply_markup\""
-	InputMessageContent OptInputMessageContent  "json:\"input_message_content\""
+	CaptionEntities     []MessageEntity         `json:"caption_entities"`
+	ReplyMarkup         OptInlineKeyboardMarkup `json:"reply_markup"`
+	InputMessageContent OptInputMessageContent  `json:"input_message_content"`
+}
+
+// GetID returns the value of ID.
+func (s InlineQueryResultPhoto) GetID() string {
+	return s.ID
+}
+
+// GetPhotoURL returns the value of PhotoURL.
+func (s InlineQueryResultPhoto) GetPhotoURL() string {
+	return s.PhotoURL
+}
+
+// GetThumbURL returns the value of ThumbURL.
+func (s InlineQueryResultPhoto) GetThumbURL() string {
+	return s.ThumbURL
+}
+
+// GetPhotoWidth returns the value of PhotoWidth.
+func (s InlineQueryResultPhoto) GetPhotoWidth() OptInt {
+	return s.PhotoWidth
+}
+
+// GetPhotoHeight returns the value of PhotoHeight.
+func (s InlineQueryResultPhoto) GetPhotoHeight() OptInt {
+	return s.PhotoHeight
+}
+
+// GetTitle returns the value of Title.
+func (s InlineQueryResultPhoto) GetTitle() OptString {
+	return s.Title
+}
+
+// GetDescription returns the value of Description.
+func (s InlineQueryResultPhoto) GetDescription() OptString {
+	return s.Description
+}
+
+// GetCaption returns the value of Caption.
+func (s InlineQueryResultPhoto) GetCaption() OptString {
+	return s.Caption
+}
+
+// GetParseMode returns the value of ParseMode.
+func (s InlineQueryResultPhoto) GetParseMode() OptString {
+	return s.ParseMode
+}
+
+// GetCaptionEntities returns the value of CaptionEntities.
+func (s InlineQueryResultPhoto) GetCaptionEntities() []MessageEntity {
+	return s.CaptionEntities
+}
+
+// GetReplyMarkup returns the value of ReplyMarkup.
+func (s InlineQueryResultPhoto) GetReplyMarkup() OptInlineKeyboardMarkup {
+	return s.ReplyMarkup
+}
+
+// GetInputMessageContent returns the value of InputMessageContent.
+func (s InlineQueryResultPhoto) GetInputMessageContent() OptInputMessageContent {
+	return s.InputMessageContent
+}
+
+// SetID sets the value of ID.
+func (s *InlineQueryResultPhoto) SetID(val string) {
+	s.ID = val
+}
+
+// SetPhotoURL sets the value of PhotoURL.
+func (s *InlineQueryResultPhoto) SetPhotoURL(val string) {
+	s.PhotoURL = val
+}
+
+// SetThumbURL sets the value of ThumbURL.
+func (s *InlineQueryResultPhoto) SetThumbURL(val string) {
+	s.ThumbURL = val
+}
+
+// SetPhotoWidth sets the value of PhotoWidth.
+func (s *InlineQueryResultPhoto) SetPhotoWidth(val OptInt) {
+	s.PhotoWidth = val
+}
+
+// SetPhotoHeight sets the value of PhotoHeight.
+func (s *InlineQueryResultPhoto) SetPhotoHeight(val OptInt) {
+	s.PhotoHeight = val
+}
+
+// SetTitle sets the value of Title.
+func (s *InlineQueryResultPhoto) SetTitle(val OptString) {
+	s.Title = val
+}
+
+// SetDescription sets the value of Description.
+func (s *InlineQueryResultPhoto) SetDescription(val OptString) {
+	s.Description = val
+}
+
+// SetCaption sets the value of Caption.
+func (s *InlineQueryResultPhoto) SetCaption(val OptString) {
+	s.Caption = val
+}
+
+// SetParseMode sets the value of ParseMode.
+func (s *InlineQueryResultPhoto) SetParseMode(val OptString) {
+	s.ParseMode = val
+}
+
+// SetCaptionEntities sets the value of CaptionEntities.
+func (s *InlineQueryResultPhoto) SetCaptionEntities(val []MessageEntity) {
+	s.CaptionEntities = val
+}
+
+// SetReplyMarkup sets the value of ReplyMarkup.
+func (s *InlineQueryResultPhoto) SetReplyMarkup(val OptInlineKeyboardMarkup) {
+	s.ReplyMarkup = val
+}
+
+// SetInputMessageContent sets the value of InputMessageContent.
+func (s *InlineQueryResultPhoto) SetInputMessageContent(val OptInputMessageContent) {
+	s.InputMessageContent = val
 }
 
 // Represents a venue. By default, the venue will be sent by the user. Alternatively, you can use
@@ -2915,33 +8475,173 @@ type InlineQueryResultPhoto struct {
 // Ref: #/components/schemas/InlineQueryResultVenue
 type InlineQueryResultVenue struct {
 	// Unique identifier for this result, 1-64 Bytes.
-	ID string "json:\"id\""
+	ID string `json:"id"`
 	// Latitude of the venue location in degrees.
-	Latitude float64 "json:\"latitude\""
+	Latitude float64 `json:"latitude"`
 	// Longitude of the venue location in degrees.
-	Longitude float64 "json:\"longitude\""
+	Longitude float64 `json:"longitude"`
 	// Title of the venue.
-	Title string "json:\"title\""
+	Title string `json:"title"`
 	// Address of the venue.
-	Address string "json:\"address\""
+	Address string `json:"address"`
 	// _Optional_. Foursquare identifier of the venue if known.
-	FoursquareID OptString "json:\"foursquare_id\""
+	FoursquareID OptString `json:"foursquare_id"`
 	// _Optional_. Foursquare type of the venue, if known. (For example, `arts_entertainment/default`,
 	// `arts_entertainment/aquarium` or `food/icecream`.).
-	FoursquareType OptString "json:\"foursquare_type\""
+	FoursquareType OptString `json:"foursquare_type"`
 	// _Optional_. Google Places identifier of the venue.
-	GooglePlaceID OptString "json:\"google_place_id\""
+	GooglePlaceID OptString `json:"google_place_id"`
 	// _Optional_. Google Places type of the venue. (See [supported types](https://developers.google.
 	// com/places/web-service/supported_types).).
-	GooglePlaceType     OptString               "json:\"google_place_type\""
-	ReplyMarkup         OptInlineKeyboardMarkup "json:\"reply_markup\""
-	InputMessageContent OptInputMessageContent  "json:\"input_message_content\""
+	GooglePlaceType     OptString               `json:"google_place_type"`
+	ReplyMarkup         OptInlineKeyboardMarkup `json:"reply_markup"`
+	InputMessageContent OptInputMessageContent  `json:"input_message_content"`
 	// _Optional_. URL of the thumbnail for the result.
-	ThumbURL OptString "json:\"thumb_url\""
+	ThumbURL OptString `json:"thumb_url"`
 	// _Optional_. Thumbnail width.
-	ThumbWidth OptInt "json:\"thumb_width\""
+	ThumbWidth OptInt `json:"thumb_width"`
 	// _Optional_. Thumbnail height.
-	ThumbHeight OptInt "json:\"thumb_height\""
+	ThumbHeight OptInt `json:"thumb_height"`
+}
+
+// GetID returns the value of ID.
+func (s InlineQueryResultVenue) GetID() string {
+	return s.ID
+}
+
+// GetLatitude returns the value of Latitude.
+func (s InlineQueryResultVenue) GetLatitude() float64 {
+	return s.Latitude
+}
+
+// GetLongitude returns the value of Longitude.
+func (s InlineQueryResultVenue) GetLongitude() float64 {
+	return s.Longitude
+}
+
+// GetTitle returns the value of Title.
+func (s InlineQueryResultVenue) GetTitle() string {
+	return s.Title
+}
+
+// GetAddress returns the value of Address.
+func (s InlineQueryResultVenue) GetAddress() string {
+	return s.Address
+}
+
+// GetFoursquareID returns the value of FoursquareID.
+func (s InlineQueryResultVenue) GetFoursquareID() OptString {
+	return s.FoursquareID
+}
+
+// GetFoursquareType returns the value of FoursquareType.
+func (s InlineQueryResultVenue) GetFoursquareType() OptString {
+	return s.FoursquareType
+}
+
+// GetGooglePlaceID returns the value of GooglePlaceID.
+func (s InlineQueryResultVenue) GetGooglePlaceID() OptString {
+	return s.GooglePlaceID
+}
+
+// GetGooglePlaceType returns the value of GooglePlaceType.
+func (s InlineQueryResultVenue) GetGooglePlaceType() OptString {
+	return s.GooglePlaceType
+}
+
+// GetReplyMarkup returns the value of ReplyMarkup.
+func (s InlineQueryResultVenue) GetReplyMarkup() OptInlineKeyboardMarkup {
+	return s.ReplyMarkup
+}
+
+// GetInputMessageContent returns the value of InputMessageContent.
+func (s InlineQueryResultVenue) GetInputMessageContent() OptInputMessageContent {
+	return s.InputMessageContent
+}
+
+// GetThumbURL returns the value of ThumbURL.
+func (s InlineQueryResultVenue) GetThumbURL() OptString {
+	return s.ThumbURL
+}
+
+// GetThumbWidth returns the value of ThumbWidth.
+func (s InlineQueryResultVenue) GetThumbWidth() OptInt {
+	return s.ThumbWidth
+}
+
+// GetThumbHeight returns the value of ThumbHeight.
+func (s InlineQueryResultVenue) GetThumbHeight() OptInt {
+	return s.ThumbHeight
+}
+
+// SetID sets the value of ID.
+func (s *InlineQueryResultVenue) SetID(val string) {
+	s.ID = val
+}
+
+// SetLatitude sets the value of Latitude.
+func (s *InlineQueryResultVenue) SetLatitude(val float64) {
+	s.Latitude = val
+}
+
+// SetLongitude sets the value of Longitude.
+func (s *InlineQueryResultVenue) SetLongitude(val float64) {
+	s.Longitude = val
+}
+
+// SetTitle sets the value of Title.
+func (s *InlineQueryResultVenue) SetTitle(val string) {
+	s.Title = val
+}
+
+// SetAddress sets the value of Address.
+func (s *InlineQueryResultVenue) SetAddress(val string) {
+	s.Address = val
+}
+
+// SetFoursquareID sets the value of FoursquareID.
+func (s *InlineQueryResultVenue) SetFoursquareID(val OptString) {
+	s.FoursquareID = val
+}
+
+// SetFoursquareType sets the value of FoursquareType.
+func (s *InlineQueryResultVenue) SetFoursquareType(val OptString) {
+	s.FoursquareType = val
+}
+
+// SetGooglePlaceID sets the value of GooglePlaceID.
+func (s *InlineQueryResultVenue) SetGooglePlaceID(val OptString) {
+	s.GooglePlaceID = val
+}
+
+// SetGooglePlaceType sets the value of GooglePlaceType.
+func (s *InlineQueryResultVenue) SetGooglePlaceType(val OptString) {
+	s.GooglePlaceType = val
+}
+
+// SetReplyMarkup sets the value of ReplyMarkup.
+func (s *InlineQueryResultVenue) SetReplyMarkup(val OptInlineKeyboardMarkup) {
+	s.ReplyMarkup = val
+}
+
+// SetInputMessageContent sets the value of InputMessageContent.
+func (s *InlineQueryResultVenue) SetInputMessageContent(val OptInputMessageContent) {
+	s.InputMessageContent = val
+}
+
+// SetThumbURL sets the value of ThumbURL.
+func (s *InlineQueryResultVenue) SetThumbURL(val OptString) {
+	s.ThumbURL = val
+}
+
+// SetThumbWidth sets the value of ThumbWidth.
+func (s *InlineQueryResultVenue) SetThumbWidth(val OptInt) {
+	s.ThumbWidth = val
+}
+
+// SetThumbHeight sets the value of ThumbHeight.
+func (s *InlineQueryResultVenue) SetThumbHeight(val OptInt) {
+	s.ThumbHeight = val
 }
 
 // Represents a link to a page containing an embedded video player or a video file. By default, this
@@ -2950,33 +8650,173 @@ type InlineQueryResultVenue struct {
 // Ref: #/components/schemas/InlineQueryResultVideo
 type InlineQueryResultVideo struct {
 	// Unique identifier for this result, 1-64 bytes.
-	ID string "json:\"id\""
+	ID string `json:"id"`
 	// A valid URL for the embedded video player or video file.
-	VideoURL string "json:\"video_url\""
+	VideoURL string `json:"video_url"`
 	// MIME type of the content of the video URL, `text/html` or `video/mp4`.
-	MimeType string "json:\"mime_type\""
+	MimeType string `json:"mime_type"`
 	// URL of the thumbnail (JPEG only) for the video.
-	ThumbURL string "json:\"thumb_url\""
+	ThumbURL string `json:"thumb_url"`
 	// Title for the result.
-	Title string "json:\"title\""
+	Title string `json:"title"`
 	// _Optional_. Caption of the video to be sent, 0-1024 characters after entities parsing.
-	Caption OptString "json:\"caption\""
+	Caption OptString `json:"caption"`
 	// _Optional_. Mode for parsing entities in the video caption. See [formatting options](https://core.
 	// telegram.org/bots/api#formatting-options) for more details.
-	ParseMode OptString "json:\"parse_mode\""
+	ParseMode OptString `json:"parse_mode"`
 	// _Optional_. List of special entities that appear in the caption, which can be specified instead of
 	// _parse_mode_.
-	CaptionEntities []MessageEntity "json:\"caption_entities\""
+	CaptionEntities []MessageEntity `json:"caption_entities"`
 	// _Optional_. Video width.
-	VideoWidth OptInt "json:\"video_width\""
+	VideoWidth OptInt `json:"video_width"`
 	// _Optional_. Video height.
-	VideoHeight OptInt "json:\"video_height\""
+	VideoHeight OptInt `json:"video_height"`
 	// _Optional_. Video duration in seconds.
-	VideoDuration OptInt "json:\"video_duration\""
+	VideoDuration OptInt `json:"video_duration"`
 	// _Optional_. Short description of the result.
-	Description         OptString               "json:\"description\""
-	ReplyMarkup         OptInlineKeyboardMarkup "json:\"reply_markup\""
-	InputMessageContent OptInputMessageContent  "json:\"input_message_content\""
+	Description         OptString               `json:"description"`
+	ReplyMarkup         OptInlineKeyboardMarkup `json:"reply_markup"`
+	InputMessageContent OptInputMessageContent  `json:"input_message_content"`
+}
+
+// GetID returns the value of ID.
+func (s InlineQueryResultVideo) GetID() string {
+	return s.ID
+}
+
+// GetVideoURL returns the value of VideoURL.
+func (s InlineQueryResultVideo) GetVideoURL() string {
+	return s.VideoURL
+}
+
+// GetMimeType returns the value of MimeType.
+func (s InlineQueryResultVideo) GetMimeType() string {
+	return s.MimeType
+}
+
+// GetThumbURL returns the value of ThumbURL.
+func (s InlineQueryResultVideo) GetThumbURL() string {
+	return s.ThumbURL
+}
+
+// GetTitle returns the value of Title.
+func (s InlineQueryResultVideo) GetTitle() string {
+	return s.Title
+}
+
+// GetCaption returns the value of Caption.
+func (s InlineQueryResultVideo) GetCaption() OptString {
+	return s.Caption
+}
+
+// GetParseMode returns the value of ParseMode.
+func (s InlineQueryResultVideo) GetParseMode() OptString {
+	return s.ParseMode
+}
+
+// GetCaptionEntities returns the value of CaptionEntities.
+func (s InlineQueryResultVideo) GetCaptionEntities() []MessageEntity {
+	return s.CaptionEntities
+}
+
+// GetVideoWidth returns the value of VideoWidth.
+func (s InlineQueryResultVideo) GetVideoWidth() OptInt {
+	return s.VideoWidth
+}
+
+// GetVideoHeight returns the value of VideoHeight.
+func (s InlineQueryResultVideo) GetVideoHeight() OptInt {
+	return s.VideoHeight
+}
+
+// GetVideoDuration returns the value of VideoDuration.
+func (s InlineQueryResultVideo) GetVideoDuration() OptInt {
+	return s.VideoDuration
+}
+
+// GetDescription returns the value of Description.
+func (s InlineQueryResultVideo) GetDescription() OptString {
+	return s.Description
+}
+
+// GetReplyMarkup returns the value of ReplyMarkup.
+func (s InlineQueryResultVideo) GetReplyMarkup() OptInlineKeyboardMarkup {
+	return s.ReplyMarkup
+}
+
+// GetInputMessageContent returns the value of InputMessageContent.
+func (s InlineQueryResultVideo) GetInputMessageContent() OptInputMessageContent {
+	return s.InputMessageContent
+}
+
+// SetID sets the value of ID.
+func (s *InlineQueryResultVideo) SetID(val string) {
+	s.ID = val
+}
+
+// SetVideoURL sets the value of VideoURL.
+func (s *InlineQueryResultVideo) SetVideoURL(val string) {
+	s.VideoURL = val
+}
+
+// SetMimeType sets the value of MimeType.
+func (s *InlineQueryResultVideo) SetMimeType(val string) {
+	s.MimeType = val
+}
+
+// SetThumbURL sets the value of ThumbURL.
+func (s *InlineQueryResultVideo) SetThumbURL(val string) {
+	s.ThumbURL = val
+}
+
+// SetTitle sets the value of Title.
+func (s *InlineQueryResultVideo) SetTitle(val string) {
+	s.Title = val
+}
+
+// SetCaption sets the value of Caption.
+func (s *InlineQueryResultVideo) SetCaption(val OptString) {
+	s.Caption = val
+}
+
+// SetParseMode sets the value of ParseMode.
+func (s *InlineQueryResultVideo) SetParseMode(val OptString) {
+	s.ParseMode = val
+}
+
+// SetCaptionEntities sets the value of CaptionEntities.
+func (s *InlineQueryResultVideo) SetCaptionEntities(val []MessageEntity) {
+	s.CaptionEntities = val
+}
+
+// SetVideoWidth sets the value of VideoWidth.
+func (s *InlineQueryResultVideo) SetVideoWidth(val OptInt) {
+	s.VideoWidth = val
+}
+
+// SetVideoHeight sets the value of VideoHeight.
+func (s *InlineQueryResultVideo) SetVideoHeight(val OptInt) {
+	s.VideoHeight = val
+}
+
+// SetVideoDuration sets the value of VideoDuration.
+func (s *InlineQueryResultVideo) SetVideoDuration(val OptInt) {
+	s.VideoDuration = val
+}
+
+// SetDescription sets the value of Description.
+func (s *InlineQueryResultVideo) SetDescription(val OptString) {
+	s.Description = val
+}
+
+// SetReplyMarkup sets the value of ReplyMarkup.
+func (s *InlineQueryResultVideo) SetReplyMarkup(val OptInlineKeyboardMarkup) {
+	s.ReplyMarkup = val
+}
+
+// SetInputMessageContent sets the value of InputMessageContent.
+func (s *InlineQueryResultVideo) SetInputMessageContent(val OptInputMessageContent) {
+	s.InputMessageContent = val
 }
 
 // Represents a link to a voice recording in an .OGG container encoded with OPUS. By default, this
@@ -2985,23 +8825,113 @@ type InlineQueryResultVideo struct {
 // Ref: #/components/schemas/InlineQueryResultVoice
 type InlineQueryResultVoice struct {
 	// Unique identifier for this result, 1-64 bytes.
-	ID string "json:\"id\""
+	ID string `json:"id"`
 	// A valid URL for the voice recording.
-	VoiceURL string "json:\"voice_url\""
+	VoiceURL string `json:"voice_url"`
 	// Recording title.
-	Title string "json:\"title\""
+	Title string `json:"title"`
 	// _Optional_. Caption, 0-1024 characters after entities parsing.
-	Caption OptString "json:\"caption\""
+	Caption OptString `json:"caption"`
 	// _Optional_. Mode for parsing entities in the voice message caption. See [formatting
 	// options](https://core.telegram.org/bots/api#formatting-options) for more details.
-	ParseMode OptString "json:\"parse_mode\""
+	ParseMode OptString `json:"parse_mode"`
 	// _Optional_. List of special entities that appear in the caption, which can be specified instead of
 	// _parse_mode_.
-	CaptionEntities []MessageEntity "json:\"caption_entities\""
+	CaptionEntities []MessageEntity `json:"caption_entities"`
 	// _Optional_. Recording duration in seconds.
-	VoiceDuration       OptInt                  "json:\"voice_duration\""
-	ReplyMarkup         OptInlineKeyboardMarkup "json:\"reply_markup\""
-	InputMessageContent OptInputMessageContent  "json:\"input_message_content\""
+	VoiceDuration       OptInt                  `json:"voice_duration"`
+	ReplyMarkup         OptInlineKeyboardMarkup `json:"reply_markup"`
+	InputMessageContent OptInputMessageContent  `json:"input_message_content"`
+}
+
+// GetID returns the value of ID.
+func (s InlineQueryResultVoice) GetID() string {
+	return s.ID
+}
+
+// GetVoiceURL returns the value of VoiceURL.
+func (s InlineQueryResultVoice) GetVoiceURL() string {
+	return s.VoiceURL
+}
+
+// GetTitle returns the value of Title.
+func (s InlineQueryResultVoice) GetTitle() string {
+	return s.Title
+}
+
+// GetCaption returns the value of Caption.
+func (s InlineQueryResultVoice) GetCaption() OptString {
+	return s.Caption
+}
+
+// GetParseMode returns the value of ParseMode.
+func (s InlineQueryResultVoice) GetParseMode() OptString {
+	return s.ParseMode
+}
+
+// GetCaptionEntities returns the value of CaptionEntities.
+func (s InlineQueryResultVoice) GetCaptionEntities() []MessageEntity {
+	return s.CaptionEntities
+}
+
+// GetVoiceDuration returns the value of VoiceDuration.
+func (s InlineQueryResultVoice) GetVoiceDuration() OptInt {
+	return s.VoiceDuration
+}
+
+// GetReplyMarkup returns the value of ReplyMarkup.
+func (s InlineQueryResultVoice) GetReplyMarkup() OptInlineKeyboardMarkup {
+	return s.ReplyMarkup
+}
+
+// GetInputMessageContent returns the value of InputMessageContent.
+func (s InlineQueryResultVoice) GetInputMessageContent() OptInputMessageContent {
+	return s.InputMessageContent
+}
+
+// SetID sets the value of ID.
+func (s *InlineQueryResultVoice) SetID(val string) {
+	s.ID = val
+}
+
+// SetVoiceURL sets the value of VoiceURL.
+func (s *InlineQueryResultVoice) SetVoiceURL(val string) {
+	s.VoiceURL = val
+}
+
+// SetTitle sets the value of Title.
+func (s *InlineQueryResultVoice) SetTitle(val string) {
+	s.Title = val
+}
+
+// SetCaption sets the value of Caption.
+func (s *InlineQueryResultVoice) SetCaption(val OptString) {
+	s.Caption = val
+}
+
+// SetParseMode sets the value of ParseMode.
+func (s *InlineQueryResultVoice) SetParseMode(val OptString) {
+	s.ParseMode = val
+}
+
+// SetCaptionEntities sets the value of CaptionEntities.
+func (s *InlineQueryResultVoice) SetCaptionEntities(val []MessageEntity) {
+	s.CaptionEntities = val
+}
+
+// SetVoiceDuration sets the value of VoiceDuration.
+func (s *InlineQueryResultVoice) SetVoiceDuration(val OptInt) {
+	s.VoiceDuration = val
+}
+
+// SetReplyMarkup sets the value of ReplyMarkup.
+func (s *InlineQueryResultVoice) SetReplyMarkup(val OptInlineKeyboardMarkup) {
+	s.ReplyMarkup = val
+}
+
+// SetInputMessageContent sets the value of InputMessageContent.
+func (s *InlineQueryResultVoice) SetInputMessageContent(val OptInputMessageContent) {
+	s.InputMessageContent = val
 }
 
 // Represents the [content](https://core.telegram.org/bots/api#inputmessagecontent) of a contact
@@ -3009,14 +8939,54 @@ type InlineQueryResultVoice struct {
 // Ref: #/components/schemas/InputContactMessageContent
 type InputContactMessageContent struct {
 	// Contact's phone number.
-	PhoneNumber string "json:\"phone_number\""
+	PhoneNumber string `json:"phone_number"`
 	// Contact's first name.
-	FirstName string "json:\"first_name\""
+	FirstName string `json:"first_name"`
 	// _Optional_. Contact's last name.
-	LastName OptString "json:\"last_name\""
+	LastName OptString `json:"last_name"`
 	// _Optional_. Additional data about the contact in the form of a [vCard](https://en.wikipedia.
 	// org/wiki/VCard), 0-2048 bytes.
-	Vcard OptString "json:\"vcard\""
+	Vcard OptString `json:"vcard"`
+}
+
+// GetPhoneNumber returns the value of PhoneNumber.
+func (s InputContactMessageContent) GetPhoneNumber() string {
+	return s.PhoneNumber
+}
+
+// GetFirstName returns the value of FirstName.
+func (s InputContactMessageContent) GetFirstName() string {
+	return s.FirstName
+}
+
+// GetLastName returns the value of LastName.
+func (s InputContactMessageContent) GetLastName() OptString {
+	return s.LastName
+}
+
+// GetVcard returns the value of Vcard.
+func (s InputContactMessageContent) GetVcard() OptString {
+	return s.Vcard
+}
+
+// SetPhoneNumber sets the value of PhoneNumber.
+func (s *InputContactMessageContent) SetPhoneNumber(val string) {
+	s.PhoneNumber = val
+}
+
+// SetFirstName sets the value of FirstName.
+func (s *InputContactMessageContent) SetFirstName(val string) {
+	s.FirstName = val
+}
+
+// SetLastName sets the value of LastName.
+func (s *InputContactMessageContent) SetLastName(val OptString) {
+	s.LastName = val
+}
+
+// SetVcard sets the value of Vcard.
+func (s *InputContactMessageContent) SetVcard(val OptString) {
+	s.Vcard = val
 }
 
 // Represents the [content](https://core.telegram.org/bots/api#inputmessagecontent) of an invoice
@@ -3024,58 +8994,258 @@ type InputContactMessageContent struct {
 // Ref: #/components/schemas/InputInvoiceMessageContent
 type InputInvoiceMessageContent struct {
 	// Product name, 1-32 characters.
-	Title string "json:\"title\""
+	Title string `json:"title"`
 	// Product description, 1-255 characters.
-	Description string "json:\"description\""
+	Description string `json:"description"`
 	// Bot-defined invoice payload, 1-128 bytes. This will not be displayed to the user, use for your
 	// internal processes.
-	Payload string "json:\"payload\""
+	Payload string `json:"payload"`
 	// Payment provider token, obtained via [@BotFather](https://t.me/botfather).
-	ProviderToken string "json:\"provider_token\""
+	ProviderToken string `json:"provider_token"`
 	// Three-letter ISO 4217 currency code, see [more on currencies](https://core.telegram.
 	// org/bots/payments#supported-currencies).
-	Currency string "json:\"currency\""
+	Currency string `json:"currency"`
 	// Price breakdown, a JSON-serialized list of components (e.g. product price, tax, discount, delivery
 	// cost, delivery tax, bonus, etc.).
-	Prices []LabeledPrice "json:\"prices\""
+	Prices []LabeledPrice `json:"prices"`
 	// _Optional_. The maximum accepted amount for tips in the _smallest units_ of the currency (integer,
 	// **not** float/double). For example, for a maximum tip of `US$ 1.45` pass `max_tip_amount = 145`.
 	// See the _exp_ parameter in [currencies.json](https://core.telegram.org/bots/payments/currencies.
 	// json), it shows the number of digits past the decimal point for each currency (2 for the majority
 	// of currencies). Defaults to 0.
-	MaxTipAmount OptInt "json:\"max_tip_amount\""
+	MaxTipAmount OptInt `json:"max_tip_amount"`
 	// _Optional_. A JSON-serialized array of suggested amounts of tip in the _smallest units_ of the
 	// currency (integer, **not** float/double). At most 4 suggested tip amounts can be specified. The
 	// suggested tip amounts must be positive, passed in a strictly increased order and must not exceed
 	// _max_tip_amount_.
-	SuggestedTipAmounts []int64 "json:\"suggested_tip_amounts\""
+	SuggestedTipAmounts []int64 `json:"suggested_tip_amounts"`
 	// _Optional_. A JSON-serialized object for data about the invoice, which will be shared with the
 	// payment provider. A detailed description of the required fields should be provided by the payment
 	// provider.
-	ProviderData OptString "json:\"provider_data\""
+	ProviderData OptString `json:"provider_data"`
 	// _Optional_. URL of the product photo for the invoice. Can be a photo of the goods or a marketing
 	// image for a service.
-	PhotoURL OptString "json:\"photo_url\""
+	PhotoURL OptString `json:"photo_url"`
 	// _Optional_. Photo size in bytes.
-	PhotoSize OptInt "json:\"photo_size\""
+	PhotoSize OptInt `json:"photo_size"`
 	// _Optional_. Photo width.
-	PhotoWidth OptInt "json:\"photo_width\""
+	PhotoWidth OptInt `json:"photo_width"`
 	// _Optional_. Photo height.
-	PhotoHeight OptInt "json:\"photo_height\""
+	PhotoHeight OptInt `json:"photo_height"`
 	// _Optional_. Pass _True_ if you require the user's full name to complete the order.
-	NeedName OptBool "json:\"need_name\""
+	NeedName OptBool `json:"need_name"`
 	// _Optional_. Pass _True_ if you require the user's phone number to complete the order.
-	NeedPhoneNumber OptBool "json:\"need_phone_number\""
+	NeedPhoneNumber OptBool `json:"need_phone_number"`
 	// _Optional_. Pass _True_ if you require the user's email address to complete the order.
-	NeedEmail OptBool "json:\"need_email\""
+	NeedEmail OptBool `json:"need_email"`
 	// _Optional_. Pass _True_ if you require the user's shipping address to complete the order.
-	NeedShippingAddress OptBool "json:\"need_shipping_address\""
+	NeedShippingAddress OptBool `json:"need_shipping_address"`
 	// _Optional_. Pass _True_ if the user's phone number should be sent to provider.
-	SendPhoneNumberToProvider OptBool "json:\"send_phone_number_to_provider\""
+	SendPhoneNumberToProvider OptBool `json:"send_phone_number_to_provider"`
 	// _Optional_. Pass _True_ if the user's email address should be sent to provider.
-	SendEmailToProvider OptBool "json:\"send_email_to_provider\""
+	SendEmailToProvider OptBool `json:"send_email_to_provider"`
 	// _Optional_. Pass _True_ if the final price depends on the shipping method.
-	IsFlexible OptBool "json:\"is_flexible\""
+	IsFlexible OptBool `json:"is_flexible"`
+}
+
+// GetTitle returns the value of Title.
+func (s InputInvoiceMessageContent) GetTitle() string {
+	return s.Title
+}
+
+// GetDescription returns the value of Description.
+func (s InputInvoiceMessageContent) GetDescription() string {
+	return s.Description
+}
+
+// GetPayload returns the value of Payload.
+func (s InputInvoiceMessageContent) GetPayload() string {
+	return s.Payload
+}
+
+// GetProviderToken returns the value of ProviderToken.
+func (s InputInvoiceMessageContent) GetProviderToken() string {
+	return s.ProviderToken
+}
+
+// GetCurrency returns the value of Currency.
+func (s InputInvoiceMessageContent) GetCurrency() string {
+	return s.Currency
+}
+
+// GetPrices returns the value of Prices.
+func (s InputInvoiceMessageContent) GetPrices() []LabeledPrice {
+	return s.Prices
+}
+
+// GetMaxTipAmount returns the value of MaxTipAmount.
+func (s InputInvoiceMessageContent) GetMaxTipAmount() OptInt {
+	return s.MaxTipAmount
+}
+
+// GetSuggestedTipAmounts returns the value of SuggestedTipAmounts.
+func (s InputInvoiceMessageContent) GetSuggestedTipAmounts() []int64 {
+	return s.SuggestedTipAmounts
+}
+
+// GetProviderData returns the value of ProviderData.
+func (s InputInvoiceMessageContent) GetProviderData() OptString {
+	return s.ProviderData
+}
+
+// GetPhotoURL returns the value of PhotoURL.
+func (s InputInvoiceMessageContent) GetPhotoURL() OptString {
+	return s.PhotoURL
+}
+
+// GetPhotoSize returns the value of PhotoSize.
+func (s InputInvoiceMessageContent) GetPhotoSize() OptInt {
+	return s.PhotoSize
+}
+
+// GetPhotoWidth returns the value of PhotoWidth.
+func (s InputInvoiceMessageContent) GetPhotoWidth() OptInt {
+	return s.PhotoWidth
+}
+
+// GetPhotoHeight returns the value of PhotoHeight.
+func (s InputInvoiceMessageContent) GetPhotoHeight() OptInt {
+	return s.PhotoHeight
+}
+
+// GetNeedName returns the value of NeedName.
+func (s InputInvoiceMessageContent) GetNeedName() OptBool {
+	return s.NeedName
+}
+
+// GetNeedPhoneNumber returns the value of NeedPhoneNumber.
+func (s InputInvoiceMessageContent) GetNeedPhoneNumber() OptBool {
+	return s.NeedPhoneNumber
+}
+
+// GetNeedEmail returns the value of NeedEmail.
+func (s InputInvoiceMessageContent) GetNeedEmail() OptBool {
+	return s.NeedEmail
+}
+
+// GetNeedShippingAddress returns the value of NeedShippingAddress.
+func (s InputInvoiceMessageContent) GetNeedShippingAddress() OptBool {
+	return s.NeedShippingAddress
+}
+
+// GetSendPhoneNumberToProvider returns the value of SendPhoneNumberToProvider.
+func (s InputInvoiceMessageContent) GetSendPhoneNumberToProvider() OptBool {
+	return s.SendPhoneNumberToProvider
+}
+
+// GetSendEmailToProvider returns the value of SendEmailToProvider.
+func (s InputInvoiceMessageContent) GetSendEmailToProvider() OptBool {
+	return s.SendEmailToProvider
+}
+
+// GetIsFlexible returns the value of IsFlexible.
+func (s InputInvoiceMessageContent) GetIsFlexible() OptBool {
+	return s.IsFlexible
+}
+
+// SetTitle sets the value of Title.
+func (s *InputInvoiceMessageContent) SetTitle(val string) {
+	s.Title = val
+}
+
+// SetDescription sets the value of Description.
+func (s *InputInvoiceMessageContent) SetDescription(val string) {
+	s.Description = val
+}
+
+// SetPayload sets the value of Payload.
+func (s *InputInvoiceMessageContent) SetPayload(val string) {
+	s.Payload = val
+}
+
+// SetProviderToken sets the value of ProviderToken.
+func (s *InputInvoiceMessageContent) SetProviderToken(val string) {
+	s.ProviderToken = val
+}
+
+// SetCurrency sets the value of Currency.
+func (s *InputInvoiceMessageContent) SetCurrency(val string) {
+	s.Currency = val
+}
+
+// SetPrices sets the value of Prices.
+func (s *InputInvoiceMessageContent) SetPrices(val []LabeledPrice) {
+	s.Prices = val
+}
+
+// SetMaxTipAmount sets the value of MaxTipAmount.
+func (s *InputInvoiceMessageContent) SetMaxTipAmount(val OptInt) {
+	s.MaxTipAmount = val
+}
+
+// SetSuggestedTipAmounts sets the value of SuggestedTipAmounts.
+func (s *InputInvoiceMessageContent) SetSuggestedTipAmounts(val []int64) {
+	s.SuggestedTipAmounts = val
+}
+
+// SetProviderData sets the value of ProviderData.
+func (s *InputInvoiceMessageContent) SetProviderData(val OptString) {
+	s.ProviderData = val
+}
+
+// SetPhotoURL sets the value of PhotoURL.
+func (s *InputInvoiceMessageContent) SetPhotoURL(val OptString) {
+	s.PhotoURL = val
+}
+
+// SetPhotoSize sets the value of PhotoSize.
+func (s *InputInvoiceMessageContent) SetPhotoSize(val OptInt) {
+	s.PhotoSize = val
+}
+
+// SetPhotoWidth sets the value of PhotoWidth.
+func (s *InputInvoiceMessageContent) SetPhotoWidth(val OptInt) {
+	s.PhotoWidth = val
+}
+
+// SetPhotoHeight sets the value of PhotoHeight.
+func (s *InputInvoiceMessageContent) SetPhotoHeight(val OptInt) {
+	s.PhotoHeight = val
+}
+
+// SetNeedName sets the value of NeedName.
+func (s *InputInvoiceMessageContent) SetNeedName(val OptBool) {
+	s.NeedName = val
+}
+
+// SetNeedPhoneNumber sets the value of NeedPhoneNumber.
+func (s *InputInvoiceMessageContent) SetNeedPhoneNumber(val OptBool) {
+	s.NeedPhoneNumber = val
+}
+
+// SetNeedEmail sets the value of NeedEmail.
+func (s *InputInvoiceMessageContent) SetNeedEmail(val OptBool) {
+	s.NeedEmail = val
+}
+
+// SetNeedShippingAddress sets the value of NeedShippingAddress.
+func (s *InputInvoiceMessageContent) SetNeedShippingAddress(val OptBool) {
+	s.NeedShippingAddress = val
+}
+
+// SetSendPhoneNumberToProvider sets the value of SendPhoneNumberToProvider.
+func (s *InputInvoiceMessageContent) SetSendPhoneNumberToProvider(val OptBool) {
+	s.SendPhoneNumberToProvider = val
+}
+
+// SetSendEmailToProvider sets the value of SendEmailToProvider.
+func (s *InputInvoiceMessageContent) SetSendEmailToProvider(val OptBool) {
+	s.SendEmailToProvider = val
+}
+
+// SetIsFlexible sets the value of IsFlexible.
+func (s *InputInvoiceMessageContent) SetIsFlexible(val OptBool) {
+	s.IsFlexible = val
 }
 
 // Represents the [content](https://core.telegram.org/bots/api#inputmessagecontent) of a location
@@ -3083,19 +9253,79 @@ type InputInvoiceMessageContent struct {
 // Ref: #/components/schemas/InputLocationMessageContent
 type InputLocationMessageContent struct {
 	// Latitude of the location in degrees.
-	Latitude float64 "json:\"latitude\""
+	Latitude float64 `json:"latitude"`
 	// Longitude of the location in degrees.
-	Longitude float64 "json:\"longitude\""
+	Longitude float64 `json:"longitude"`
 	// _Optional_. The radius of uncertainty for the location, measured in meters; 0-1500.
-	HorizontalAccuracy OptFloat64 "json:\"horizontal_accuracy\""
+	HorizontalAccuracy OptFloat64 `json:"horizontal_accuracy"`
 	// _Optional_. Period in seconds for which the location can be updated, should be between 60 and 86400.
-	LivePeriod OptInt "json:\"live_period\""
+	LivePeriod OptInt `json:"live_period"`
 	// _Optional_. For live locations, a direction in which the user is moving, in degrees. Must be
 	// between 1 and 360 if specified.
-	Heading OptInt "json:\"heading\""
+	Heading OptInt `json:"heading"`
 	// _Optional_. For live locations, a maximum distance for proximity alerts about approaching another
 	// chat member, in meters. Must be between 1 and 100000 if specified.
-	ProximityAlertRadius OptInt "json:\"proximity_alert_radius\""
+	ProximityAlertRadius OptInt `json:"proximity_alert_radius"`
+}
+
+// GetLatitude returns the value of Latitude.
+func (s InputLocationMessageContent) GetLatitude() float64 {
+	return s.Latitude
+}
+
+// GetLongitude returns the value of Longitude.
+func (s InputLocationMessageContent) GetLongitude() float64 {
+	return s.Longitude
+}
+
+// GetHorizontalAccuracy returns the value of HorizontalAccuracy.
+func (s InputLocationMessageContent) GetHorizontalAccuracy() OptFloat64 {
+	return s.HorizontalAccuracy
+}
+
+// GetLivePeriod returns the value of LivePeriod.
+func (s InputLocationMessageContent) GetLivePeriod() OptInt {
+	return s.LivePeriod
+}
+
+// GetHeading returns the value of Heading.
+func (s InputLocationMessageContent) GetHeading() OptInt {
+	return s.Heading
+}
+
+// GetProximityAlertRadius returns the value of ProximityAlertRadius.
+func (s InputLocationMessageContent) GetProximityAlertRadius() OptInt {
+	return s.ProximityAlertRadius
+}
+
+// SetLatitude sets the value of Latitude.
+func (s *InputLocationMessageContent) SetLatitude(val float64) {
+	s.Latitude = val
+}
+
+// SetLongitude sets the value of Longitude.
+func (s *InputLocationMessageContent) SetLongitude(val float64) {
+	s.Longitude = val
+}
+
+// SetHorizontalAccuracy sets the value of HorizontalAccuracy.
+func (s *InputLocationMessageContent) SetHorizontalAccuracy(val OptFloat64) {
+	s.HorizontalAccuracy = val
+}
+
+// SetLivePeriod sets the value of LivePeriod.
+func (s *InputLocationMessageContent) SetLivePeriod(val OptInt) {
+	s.LivePeriod = val
+}
+
+// SetHeading sets the value of Heading.
+func (s *InputLocationMessageContent) SetHeading(val OptInt) {
+	s.Heading = val
+}
+
+// SetProximityAlertRadius sets the value of ProximityAlertRadius.
+func (s *InputLocationMessageContent) SetProximityAlertRadius(val OptInt) {
+	s.ProximityAlertRadius = val
 }
 
 // This object represents the content of a media message to be sent. It should be one of.
@@ -3250,7 +9480,7 @@ type InputMediaAnimation struct {
 	// `attach://<file_attach_name>` to upload a new one using multipart/form-data under
 	// <file_attach_name> name. [More information on Sending Files](https://core.telegram.
 	// org/bots/api#sending-files).
-	Media string "json:\"media\""
+	Media string `json:"media"`
 	// _Optional_. Thumbnail of the file sent; can be ignored if thumbnail generation for the file is
 	// supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A
 	// thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using
@@ -3258,21 +9488,101 @@ type InputMediaAnimation struct {
 	// pass `attach://<file_attach_name>` if the thumbnail was uploaded using multipart/form-data under
 	// <file_attach_name>. [More information on Sending Files](https://core.telegram.
 	// org/bots/api#sending-files).
-	Thumb OptString "json:\"thumb\""
+	Thumb OptString `json:"thumb"`
 	// _Optional_. Caption of the animation to be sent, 0-1024 characters after entities parsing.
-	Caption OptString "json:\"caption\""
+	Caption OptString `json:"caption"`
 	// _Optional_. Mode for parsing entities in the animation caption. See [formatting
 	// options](https://core.telegram.org/bots/api#formatting-options) for more details.
-	ParseMode OptString "json:\"parse_mode\""
+	ParseMode OptString `json:"parse_mode"`
 	// _Optional_. List of special entities that appear in the caption, which can be specified instead of
 	// _parse_mode_.
-	CaptionEntities []MessageEntity "json:\"caption_entities\""
+	CaptionEntities []MessageEntity `json:"caption_entities"`
 	// _Optional_. Animation width.
-	Width OptInt "json:\"width\""
+	Width OptInt `json:"width"`
 	// _Optional_. Animation height.
-	Height OptInt "json:\"height\""
+	Height OptInt `json:"height"`
 	// _Optional_. Animation duration in seconds.
-	Duration OptInt "json:\"duration\""
+	Duration OptInt `json:"duration"`
+}
+
+// GetMedia returns the value of Media.
+func (s InputMediaAnimation) GetMedia() string {
+	return s.Media
+}
+
+// GetThumb returns the value of Thumb.
+func (s InputMediaAnimation) GetThumb() OptString {
+	return s.Thumb
+}
+
+// GetCaption returns the value of Caption.
+func (s InputMediaAnimation) GetCaption() OptString {
+	return s.Caption
+}
+
+// GetParseMode returns the value of ParseMode.
+func (s InputMediaAnimation) GetParseMode() OptString {
+	return s.ParseMode
+}
+
+// GetCaptionEntities returns the value of CaptionEntities.
+func (s InputMediaAnimation) GetCaptionEntities() []MessageEntity {
+	return s.CaptionEntities
+}
+
+// GetWidth returns the value of Width.
+func (s InputMediaAnimation) GetWidth() OptInt {
+	return s.Width
+}
+
+// GetHeight returns the value of Height.
+func (s InputMediaAnimation) GetHeight() OptInt {
+	return s.Height
+}
+
+// GetDuration returns the value of Duration.
+func (s InputMediaAnimation) GetDuration() OptInt {
+	return s.Duration
+}
+
+// SetMedia sets the value of Media.
+func (s *InputMediaAnimation) SetMedia(val string) {
+	s.Media = val
+}
+
+// SetThumb sets the value of Thumb.
+func (s *InputMediaAnimation) SetThumb(val OptString) {
+	s.Thumb = val
+}
+
+// SetCaption sets the value of Caption.
+func (s *InputMediaAnimation) SetCaption(val OptString) {
+	s.Caption = val
+}
+
+// SetParseMode sets the value of ParseMode.
+func (s *InputMediaAnimation) SetParseMode(val OptString) {
+	s.ParseMode = val
+}
+
+// SetCaptionEntities sets the value of CaptionEntities.
+func (s *InputMediaAnimation) SetCaptionEntities(val []MessageEntity) {
+	s.CaptionEntities = val
+}
+
+// SetWidth sets the value of Width.
+func (s *InputMediaAnimation) SetWidth(val OptInt) {
+	s.Width = val
+}
+
+// SetHeight sets the value of Height.
+func (s *InputMediaAnimation) SetHeight(val OptInt) {
+	s.Height = val
+}
+
+// SetDuration sets the value of Duration.
+func (s *InputMediaAnimation) SetDuration(val OptInt) {
+	s.Duration = val
 }
 
 // Represents an audio file to be treated as music to be sent.
@@ -3283,7 +9593,7 @@ type InputMediaAudio struct {
 	// `attach://<file_attach_name>` to upload a new one using multipart/form-data under
 	// <file_attach_name> name. [More information on Sending Files](https://core.telegram.
 	// org/bots/api#sending-files).
-	Media string "json:\"media\""
+	Media string `json:"media"`
 	// _Optional_. Thumbnail of the file sent; can be ignored if thumbnail generation for the file is
 	// supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A
 	// thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using
@@ -3291,21 +9601,101 @@ type InputMediaAudio struct {
 	// pass `attach://<file_attach_name>` if the thumbnail was uploaded using multipart/form-data under
 	// <file_attach_name>. [More information on Sending Files](https://core.telegram.
 	// org/bots/api#sending-files).
-	Thumb OptString "json:\"thumb\""
+	Thumb OptString `json:"thumb"`
 	// _Optional_. Caption of the audio to be sent, 0-1024 characters after entities parsing.
-	Caption OptString "json:\"caption\""
+	Caption OptString `json:"caption"`
 	// _Optional_. Mode for parsing entities in the audio caption. See [formatting options](https://core.
 	// telegram.org/bots/api#formatting-options) for more details.
-	ParseMode OptString "json:\"parse_mode\""
+	ParseMode OptString `json:"parse_mode"`
 	// _Optional_. List of special entities that appear in the caption, which can be specified instead of
 	// _parse_mode_.
-	CaptionEntities []MessageEntity "json:\"caption_entities\""
+	CaptionEntities []MessageEntity `json:"caption_entities"`
 	// _Optional_. Duration of the audio in seconds.
-	Duration OptInt "json:\"duration\""
+	Duration OptInt `json:"duration"`
 	// _Optional_. Performer of the audio.
-	Performer OptString "json:\"performer\""
+	Performer OptString `json:"performer"`
 	// _Optional_. Title of the audio.
-	Title OptString "json:\"title\""
+	Title OptString `json:"title"`
+}
+
+// GetMedia returns the value of Media.
+func (s InputMediaAudio) GetMedia() string {
+	return s.Media
+}
+
+// GetThumb returns the value of Thumb.
+func (s InputMediaAudio) GetThumb() OptString {
+	return s.Thumb
+}
+
+// GetCaption returns the value of Caption.
+func (s InputMediaAudio) GetCaption() OptString {
+	return s.Caption
+}
+
+// GetParseMode returns the value of ParseMode.
+func (s InputMediaAudio) GetParseMode() OptString {
+	return s.ParseMode
+}
+
+// GetCaptionEntities returns the value of CaptionEntities.
+func (s InputMediaAudio) GetCaptionEntities() []MessageEntity {
+	return s.CaptionEntities
+}
+
+// GetDuration returns the value of Duration.
+func (s InputMediaAudio) GetDuration() OptInt {
+	return s.Duration
+}
+
+// GetPerformer returns the value of Performer.
+func (s InputMediaAudio) GetPerformer() OptString {
+	return s.Performer
+}
+
+// GetTitle returns the value of Title.
+func (s InputMediaAudio) GetTitle() OptString {
+	return s.Title
+}
+
+// SetMedia sets the value of Media.
+func (s *InputMediaAudio) SetMedia(val string) {
+	s.Media = val
+}
+
+// SetThumb sets the value of Thumb.
+func (s *InputMediaAudio) SetThumb(val OptString) {
+	s.Thumb = val
+}
+
+// SetCaption sets the value of Caption.
+func (s *InputMediaAudio) SetCaption(val OptString) {
+	s.Caption = val
+}
+
+// SetParseMode sets the value of ParseMode.
+func (s *InputMediaAudio) SetParseMode(val OptString) {
+	s.ParseMode = val
+}
+
+// SetCaptionEntities sets the value of CaptionEntities.
+func (s *InputMediaAudio) SetCaptionEntities(val []MessageEntity) {
+	s.CaptionEntities = val
+}
+
+// SetDuration sets the value of Duration.
+func (s *InputMediaAudio) SetDuration(val OptInt) {
+	s.Duration = val
+}
+
+// SetPerformer sets the value of Performer.
+func (s *InputMediaAudio) SetPerformer(val OptString) {
+	s.Performer = val
+}
+
+// SetTitle sets the value of Title.
+func (s *InputMediaAudio) SetTitle(val OptString) {
+	s.Title = val
 }
 
 // Represents a general file to be sent.
@@ -3316,7 +9706,7 @@ type InputMediaDocument struct {
 	// `attach://<file_attach_name>` to upload a new one using multipart/form-data under
 	// <file_attach_name> name. [More information on Sending Files](https://core.telegram.
 	// org/bots/api#sending-files).
-	Media string "json:\"media\""
+	Media string `json:"media"`
 	// _Optional_. Thumbnail of the file sent; can be ignored if thumbnail generation for the file is
 	// supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A
 	// thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using
@@ -3324,18 +9714,78 @@ type InputMediaDocument struct {
 	// pass `attach://<file_attach_name>` if the thumbnail was uploaded using multipart/form-data under
 	// <file_attach_name>. [More information on Sending Files](https://core.telegram.
 	// org/bots/api#sending-files).
-	Thumb OptString "json:\"thumb\""
+	Thumb OptString `json:"thumb"`
 	// _Optional_. Caption of the document to be sent, 0-1024 characters after entities parsing.
-	Caption OptString "json:\"caption\""
+	Caption OptString `json:"caption"`
 	// _Optional_. Mode for parsing entities in the document caption. See [formatting
 	// options](https://core.telegram.org/bots/api#formatting-options) for more details.
-	ParseMode OptString "json:\"parse_mode\""
+	ParseMode OptString `json:"parse_mode"`
 	// _Optional_. List of special entities that appear in the caption, which can be specified instead of
 	// _parse_mode_.
-	CaptionEntities []MessageEntity "json:\"caption_entities\""
+	CaptionEntities []MessageEntity `json:"caption_entities"`
 	// _Optional_. Disables automatic server-side content type detection for files uploaded using
 	// multipart/form-data. Always _True_, if the document is sent as part of an album.
-	DisableContentTypeDetection OptBool "json:\"disable_content_type_detection\""
+	DisableContentTypeDetection OptBool `json:"disable_content_type_detection"`
+}
+
+// GetMedia returns the value of Media.
+func (s InputMediaDocument) GetMedia() string {
+	return s.Media
+}
+
+// GetThumb returns the value of Thumb.
+func (s InputMediaDocument) GetThumb() OptString {
+	return s.Thumb
+}
+
+// GetCaption returns the value of Caption.
+func (s InputMediaDocument) GetCaption() OptString {
+	return s.Caption
+}
+
+// GetParseMode returns the value of ParseMode.
+func (s InputMediaDocument) GetParseMode() OptString {
+	return s.ParseMode
+}
+
+// GetCaptionEntities returns the value of CaptionEntities.
+func (s InputMediaDocument) GetCaptionEntities() []MessageEntity {
+	return s.CaptionEntities
+}
+
+// GetDisableContentTypeDetection returns the value of DisableContentTypeDetection.
+func (s InputMediaDocument) GetDisableContentTypeDetection() OptBool {
+	return s.DisableContentTypeDetection
+}
+
+// SetMedia sets the value of Media.
+func (s *InputMediaDocument) SetMedia(val string) {
+	s.Media = val
+}
+
+// SetThumb sets the value of Thumb.
+func (s *InputMediaDocument) SetThumb(val OptString) {
+	s.Thumb = val
+}
+
+// SetCaption sets the value of Caption.
+func (s *InputMediaDocument) SetCaption(val OptString) {
+	s.Caption = val
+}
+
+// SetParseMode sets the value of ParseMode.
+func (s *InputMediaDocument) SetParseMode(val OptString) {
+	s.ParseMode = val
+}
+
+// SetCaptionEntities sets the value of CaptionEntities.
+func (s *InputMediaDocument) SetCaptionEntities(val []MessageEntity) {
+	s.CaptionEntities = val
+}
+
+// SetDisableContentTypeDetection sets the value of DisableContentTypeDetection.
+func (s *InputMediaDocument) SetDisableContentTypeDetection(val OptBool) {
+	s.DisableContentTypeDetection = val
 }
 
 // Represents a photo to be sent.
@@ -3346,15 +9796,55 @@ type InputMediaPhoto struct {
 	// `attach://<file_attach_name>` to upload a new one using multipart/form-data under
 	// <file_attach_name> name. [More information on Sending Files](https://core.telegram.
 	// org/bots/api#sending-files).
-	Media string "json:\"media\""
+	Media string `json:"media"`
 	// _Optional_. Caption of the photo to be sent, 0-1024 characters after entities parsing.
-	Caption OptString "json:\"caption\""
+	Caption OptString `json:"caption"`
 	// _Optional_. Mode for parsing entities in the photo caption. See [formatting options](https://core.
 	// telegram.org/bots/api#formatting-options) for more details.
-	ParseMode OptString "json:\"parse_mode\""
+	ParseMode OptString `json:"parse_mode"`
 	// _Optional_. List of special entities that appear in the caption, which can be specified instead of
 	// _parse_mode_.
-	CaptionEntities []MessageEntity "json:\"caption_entities\""
+	CaptionEntities []MessageEntity `json:"caption_entities"`
+}
+
+// GetMedia returns the value of Media.
+func (s InputMediaPhoto) GetMedia() string {
+	return s.Media
+}
+
+// GetCaption returns the value of Caption.
+func (s InputMediaPhoto) GetCaption() OptString {
+	return s.Caption
+}
+
+// GetParseMode returns the value of ParseMode.
+func (s InputMediaPhoto) GetParseMode() OptString {
+	return s.ParseMode
+}
+
+// GetCaptionEntities returns the value of CaptionEntities.
+func (s InputMediaPhoto) GetCaptionEntities() []MessageEntity {
+	return s.CaptionEntities
+}
+
+// SetMedia sets the value of Media.
+func (s *InputMediaPhoto) SetMedia(val string) {
+	s.Media = val
+}
+
+// SetCaption sets the value of Caption.
+func (s *InputMediaPhoto) SetCaption(val OptString) {
+	s.Caption = val
+}
+
+// SetParseMode sets the value of ParseMode.
+func (s *InputMediaPhoto) SetParseMode(val OptString) {
+	s.ParseMode = val
+}
+
+// SetCaptionEntities sets the value of CaptionEntities.
+func (s *InputMediaPhoto) SetCaptionEntities(val []MessageEntity) {
+	s.CaptionEntities = val
 }
 
 // Represents a video to be sent.
@@ -3365,7 +9855,7 @@ type InputMediaVideo struct {
 	// `attach://<file_attach_name>` to upload a new one using multipart/form-data under
 	// <file_attach_name> name. [More information on Sending Files](https://core.telegram.
 	// org/bots/api#sending-files).
-	Media string "json:\"media\""
+	Media string `json:"media"`
 	// _Optional_. Thumbnail of the file sent; can be ignored if thumbnail generation for the file is
 	// supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A
 	// thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using
@@ -3373,23 +9863,113 @@ type InputMediaVideo struct {
 	// pass `attach://<file_attach_name>` if the thumbnail was uploaded using multipart/form-data under
 	// <file_attach_name>. [More information on Sending Files](https://core.telegram.
 	// org/bots/api#sending-files).
-	Thumb OptString "json:\"thumb\""
+	Thumb OptString `json:"thumb"`
 	// _Optional_. Caption of the video to be sent, 0-1024 characters after entities parsing.
-	Caption OptString "json:\"caption\""
+	Caption OptString `json:"caption"`
 	// _Optional_. Mode for parsing entities in the video caption. See [formatting options](https://core.
 	// telegram.org/bots/api#formatting-options) for more details.
-	ParseMode OptString "json:\"parse_mode\""
+	ParseMode OptString `json:"parse_mode"`
 	// _Optional_. List of special entities that appear in the caption, which can be specified instead of
 	// _parse_mode_.
-	CaptionEntities []MessageEntity "json:\"caption_entities\""
+	CaptionEntities []MessageEntity `json:"caption_entities"`
 	// _Optional_. Video width.
-	Width OptInt "json:\"width\""
+	Width OptInt `json:"width"`
 	// _Optional_. Video height.
-	Height OptInt "json:\"height\""
+	Height OptInt `json:"height"`
 	// _Optional_. Video duration in seconds.
-	Duration OptInt "json:\"duration\""
+	Duration OptInt `json:"duration"`
 	// _Optional_. Pass _True_ if the uploaded video is suitable for streaming.
-	SupportsStreaming OptBool "json:\"supports_streaming\""
+	SupportsStreaming OptBool `json:"supports_streaming"`
+}
+
+// GetMedia returns the value of Media.
+func (s InputMediaVideo) GetMedia() string {
+	return s.Media
+}
+
+// GetThumb returns the value of Thumb.
+func (s InputMediaVideo) GetThumb() OptString {
+	return s.Thumb
+}
+
+// GetCaption returns the value of Caption.
+func (s InputMediaVideo) GetCaption() OptString {
+	return s.Caption
+}
+
+// GetParseMode returns the value of ParseMode.
+func (s InputMediaVideo) GetParseMode() OptString {
+	return s.ParseMode
+}
+
+// GetCaptionEntities returns the value of CaptionEntities.
+func (s InputMediaVideo) GetCaptionEntities() []MessageEntity {
+	return s.CaptionEntities
+}
+
+// GetWidth returns the value of Width.
+func (s InputMediaVideo) GetWidth() OptInt {
+	return s.Width
+}
+
+// GetHeight returns the value of Height.
+func (s InputMediaVideo) GetHeight() OptInt {
+	return s.Height
+}
+
+// GetDuration returns the value of Duration.
+func (s InputMediaVideo) GetDuration() OptInt {
+	return s.Duration
+}
+
+// GetSupportsStreaming returns the value of SupportsStreaming.
+func (s InputMediaVideo) GetSupportsStreaming() OptBool {
+	return s.SupportsStreaming
+}
+
+// SetMedia sets the value of Media.
+func (s *InputMediaVideo) SetMedia(val string) {
+	s.Media = val
+}
+
+// SetThumb sets the value of Thumb.
+func (s *InputMediaVideo) SetThumb(val OptString) {
+	s.Thumb = val
+}
+
+// SetCaption sets the value of Caption.
+func (s *InputMediaVideo) SetCaption(val OptString) {
+	s.Caption = val
+}
+
+// SetParseMode sets the value of ParseMode.
+func (s *InputMediaVideo) SetParseMode(val OptString) {
+	s.ParseMode = val
+}
+
+// SetCaptionEntities sets the value of CaptionEntities.
+func (s *InputMediaVideo) SetCaptionEntities(val []MessageEntity) {
+	s.CaptionEntities = val
+}
+
+// SetWidth sets the value of Width.
+func (s *InputMediaVideo) SetWidth(val OptInt) {
+	s.Width = val
+}
+
+// SetHeight sets the value of Height.
+func (s *InputMediaVideo) SetHeight(val OptInt) {
+	s.Height = val
+}
+
+// SetDuration sets the value of Duration.
+func (s *InputMediaVideo) SetDuration(val OptInt) {
+	s.Duration = val
+}
+
+// SetSupportsStreaming sets the value of SupportsStreaming.
+func (s *InputMediaVideo) SetSupportsStreaming(val OptBool) {
+	s.SupportsStreaming = val
 }
 
 // This object represents the content of a message to be sent as a result of an inline query.
@@ -3552,15 +10132,55 @@ func NewInputInvoiceMessageContentInputMessageContent(v InputInvoiceMessageConte
 // Ref: #/components/schemas/InputTextMessageContent
 type InputTextMessageContent struct {
 	// Text of the message to be sent, 1-4096 characters.
-	MessageText string "json:\"message_text\""
+	MessageText string `json:"message_text"`
 	// _Optional_. Mode for parsing entities in the message text. See [formatting options](https://core.
 	// telegram.org/bots/api#formatting-options) for more details.
-	ParseMode OptString "json:\"parse_mode\""
+	ParseMode OptString `json:"parse_mode"`
 	// _Optional_. List of special entities that appear in message text, which can be specified instead
 	// of _parse_mode_.
-	Entities []MessageEntity "json:\"entities\""
+	Entities []MessageEntity `json:"entities"`
 	// _Optional_. Disables link previews for links in the sent message.
-	DisableWebPagePreview OptBool "json:\"disable_web_page_preview\""
+	DisableWebPagePreview OptBool `json:"disable_web_page_preview"`
+}
+
+// GetMessageText returns the value of MessageText.
+func (s InputTextMessageContent) GetMessageText() string {
+	return s.MessageText
+}
+
+// GetParseMode returns the value of ParseMode.
+func (s InputTextMessageContent) GetParseMode() OptString {
+	return s.ParseMode
+}
+
+// GetEntities returns the value of Entities.
+func (s InputTextMessageContent) GetEntities() []MessageEntity {
+	return s.Entities
+}
+
+// GetDisableWebPagePreview returns the value of DisableWebPagePreview.
+func (s InputTextMessageContent) GetDisableWebPagePreview() OptBool {
+	return s.DisableWebPagePreview
+}
+
+// SetMessageText sets the value of MessageText.
+func (s *InputTextMessageContent) SetMessageText(val string) {
+	s.MessageText = val
+}
+
+// SetParseMode sets the value of ParseMode.
+func (s *InputTextMessageContent) SetParseMode(val OptString) {
+	s.ParseMode = val
+}
+
+// SetEntities sets the value of Entities.
+func (s *InputTextMessageContent) SetEntities(val []MessageEntity) {
+	s.Entities = val
+}
+
+// SetDisableWebPagePreview sets the value of DisableWebPagePreview.
+func (s *InputTextMessageContent) SetDisableWebPagePreview(val OptBool) {
+	s.DisableWebPagePreview = val
 }
 
 // Represents the [content](https://core.telegram.org/bots/api#inputmessagecontent) of a venue
@@ -3568,41 +10188,171 @@ type InputTextMessageContent struct {
 // Ref: #/components/schemas/InputVenueMessageContent
 type InputVenueMessageContent struct {
 	// Latitude of the venue in degrees.
-	Latitude float64 "json:\"latitude\""
+	Latitude float64 `json:"latitude"`
 	// Longitude of the venue in degrees.
-	Longitude float64 "json:\"longitude\""
+	Longitude float64 `json:"longitude"`
 	// Name of the venue.
-	Title string "json:\"title\""
+	Title string `json:"title"`
 	// Address of the venue.
-	Address string "json:\"address\""
+	Address string `json:"address"`
 	// _Optional_. Foursquare identifier of the venue, if known.
-	FoursquareID OptString "json:\"foursquare_id\""
+	FoursquareID OptString `json:"foursquare_id"`
 	// _Optional_. Foursquare type of the venue, if known. (For example, `arts_entertainment/default`,
 	// `arts_entertainment/aquarium` or `food/icecream`.).
-	FoursquareType OptString "json:\"foursquare_type\""
+	FoursquareType OptString `json:"foursquare_type"`
 	// _Optional_. Google Places identifier of the venue.
-	GooglePlaceID OptString "json:\"google_place_id\""
+	GooglePlaceID OptString `json:"google_place_id"`
 	// _Optional_. Google Places type of the venue. (See [supported types](https://developers.google.
 	// com/places/web-service/supported_types).).
-	GooglePlaceType OptString "json:\"google_place_type\""
+	GooglePlaceType OptString `json:"google_place_type"`
+}
+
+// GetLatitude returns the value of Latitude.
+func (s InputVenueMessageContent) GetLatitude() float64 {
+	return s.Latitude
+}
+
+// GetLongitude returns the value of Longitude.
+func (s InputVenueMessageContent) GetLongitude() float64 {
+	return s.Longitude
+}
+
+// GetTitle returns the value of Title.
+func (s InputVenueMessageContent) GetTitle() string {
+	return s.Title
+}
+
+// GetAddress returns the value of Address.
+func (s InputVenueMessageContent) GetAddress() string {
+	return s.Address
+}
+
+// GetFoursquareID returns the value of FoursquareID.
+func (s InputVenueMessageContent) GetFoursquareID() OptString {
+	return s.FoursquareID
+}
+
+// GetFoursquareType returns the value of FoursquareType.
+func (s InputVenueMessageContent) GetFoursquareType() OptString {
+	return s.FoursquareType
+}
+
+// GetGooglePlaceID returns the value of GooglePlaceID.
+func (s InputVenueMessageContent) GetGooglePlaceID() OptString {
+	return s.GooglePlaceID
+}
+
+// GetGooglePlaceType returns the value of GooglePlaceType.
+func (s InputVenueMessageContent) GetGooglePlaceType() OptString {
+	return s.GooglePlaceType
+}
+
+// SetLatitude sets the value of Latitude.
+func (s *InputVenueMessageContent) SetLatitude(val float64) {
+	s.Latitude = val
+}
+
+// SetLongitude sets the value of Longitude.
+func (s *InputVenueMessageContent) SetLongitude(val float64) {
+	s.Longitude = val
+}
+
+// SetTitle sets the value of Title.
+func (s *InputVenueMessageContent) SetTitle(val string) {
+	s.Title = val
+}
+
+// SetAddress sets the value of Address.
+func (s *InputVenueMessageContent) SetAddress(val string) {
+	s.Address = val
+}
+
+// SetFoursquareID sets the value of FoursquareID.
+func (s *InputVenueMessageContent) SetFoursquareID(val OptString) {
+	s.FoursquareID = val
+}
+
+// SetFoursquareType sets the value of FoursquareType.
+func (s *InputVenueMessageContent) SetFoursquareType(val OptString) {
+	s.FoursquareType = val
+}
+
+// SetGooglePlaceID sets the value of GooglePlaceID.
+func (s *InputVenueMessageContent) SetGooglePlaceID(val OptString) {
+	s.GooglePlaceID = val
+}
+
+// SetGooglePlaceType sets the value of GooglePlaceType.
+func (s *InputVenueMessageContent) SetGooglePlaceType(val OptString) {
+	s.GooglePlaceType = val
 }
 
 // This object contains basic information about an invoice.
 // Ref: #/components/schemas/Invoice
 type Invoice struct {
 	// Product name.
-	Title string "json:\"title\""
+	Title string `json:"title"`
 	// Product description.
-	Description string "json:\"description\""
+	Description string `json:"description"`
 	// Unique bot deep-linking parameter that can be used to generate this invoice.
-	StartParameter string "json:\"start_parameter\""
+	StartParameter string `json:"start_parameter"`
 	// Three-letter ISO 4217 [currency](https://core.telegram.org/bots/payments#supported-currencies) code.
-	Currency string "json:\"currency\""
+	Currency string `json:"currency"`
 	// Total price in the _smallest units_ of the currency (integer, **not** float/double). For example,
 	// for a price of `US$ 1.45` pass `amount = 145`. See the _exp_ parameter in [currencies.
 	// json](https://core.telegram.org/bots/payments/currencies.json), it shows the number of digits past
 	// the decimal point for each currency (2 for the majority of currencies).
-	TotalAmount int "json:\"total_amount\""
+	TotalAmount int `json:"total_amount"`
+}
+
+// GetTitle returns the value of Title.
+func (s Invoice) GetTitle() string {
+	return s.Title
+}
+
+// GetDescription returns the value of Description.
+func (s Invoice) GetDescription() string {
+	return s.Description
+}
+
+// GetStartParameter returns the value of StartParameter.
+func (s Invoice) GetStartParameter() string {
+	return s.StartParameter
+}
+
+// GetCurrency returns the value of Currency.
+func (s Invoice) GetCurrency() string {
+	return s.Currency
+}
+
+// GetTotalAmount returns the value of TotalAmount.
+func (s Invoice) GetTotalAmount() int {
+	return s.TotalAmount
+}
+
+// SetTitle sets the value of Title.
+func (s *Invoice) SetTitle(val string) {
+	s.Title = val
+}
+
+// SetDescription sets the value of Description.
+func (s *Invoice) SetDescription(val string) {
+	s.Description = val
+}
+
+// SetStartParameter sets the value of StartParameter.
+func (s *Invoice) SetStartParameter(val string) {
+	s.StartParameter = val
+}
+
+// SetCurrency sets the value of Currency.
+func (s *Invoice) SetCurrency(val string) {
+	s.Currency = val
+}
+
+// SetTotalAmount sets the value of TotalAmount.
+func (s *Invoice) SetTotalAmount(val int) {
+	s.TotalAmount = val
 }
 
 // Ref: #/components/schemas/KeyboardButton
@@ -3679,15 +10429,65 @@ func NewKeyboardButtonObjectKeyboardButton(v KeyboardButtonObject) KeyboardButto
 type KeyboardButtonObject struct {
 	// Text of the button. If none of the optional fields are used, it will be sent as a message when the
 	// button is pressed.
-	Text string "json:\"text\""
+	Text string `json:"text"`
 	// _Optional_. If _True_, the user's phone number will be sent as a contact when the button is
 	// pressed. Available in private chats only.
-	RequestContact OptBool "json:\"request_contact\""
+	RequestContact OptBool `json:"request_contact"`
 	// _Optional_. If _True_, the user's current location will be sent when the button is pressed.
 	// Available in private chats only.
-	RequestLocation OptBool                   "json:\"request_location\""
-	RequestPoll     OptKeyboardButtonPollType "json:\"request_poll\""
-	WebApp          OptWebAppInfo             "json:\"web_app\""
+	RequestLocation OptBool                   `json:"request_location"`
+	RequestPoll     OptKeyboardButtonPollType `json:"request_poll"`
+	WebApp          OptWebAppInfo             `json:"web_app"`
+}
+
+// GetText returns the value of Text.
+func (s KeyboardButtonObject) GetText() string {
+	return s.Text
+}
+
+// GetRequestContact returns the value of RequestContact.
+func (s KeyboardButtonObject) GetRequestContact() OptBool {
+	return s.RequestContact
+}
+
+// GetRequestLocation returns the value of RequestLocation.
+func (s KeyboardButtonObject) GetRequestLocation() OptBool {
+	return s.RequestLocation
+}
+
+// GetRequestPoll returns the value of RequestPoll.
+func (s KeyboardButtonObject) GetRequestPoll() OptKeyboardButtonPollType {
+	return s.RequestPoll
+}
+
+// GetWebApp returns the value of WebApp.
+func (s KeyboardButtonObject) GetWebApp() OptWebAppInfo {
+	return s.WebApp
+}
+
+// SetText sets the value of Text.
+func (s *KeyboardButtonObject) SetText(val string) {
+	s.Text = val
+}
+
+// SetRequestContact sets the value of RequestContact.
+func (s *KeyboardButtonObject) SetRequestContact(val OptBool) {
+	s.RequestContact = val
+}
+
+// SetRequestLocation sets the value of RequestLocation.
+func (s *KeyboardButtonObject) SetRequestLocation(val OptBool) {
+	s.RequestLocation = val
+}
+
+// SetRequestPoll sets the value of RequestPoll.
+func (s *KeyboardButtonObject) SetRequestPoll(val OptKeyboardButtonPollType) {
+	s.RequestPoll = val
+}
+
+// SetWebApp sets the value of WebApp.
+func (s *KeyboardButtonObject) SetWebApp(val OptWebAppInfo) {
+	s.WebApp = val
 }
 
 // This object represents type of a poll, which is allowed to be created and sent when the
@@ -3697,46 +10497,146 @@ type KeyboardButtonPollType struct {
 	// _Optional_. If _quiz_ is passed, the user will be allowed to create only polls in the quiz mode.
 	// If _regular_ is passed, only regular polls will be allowed. Otherwise, the user will be allowed to
 	// create a poll of any type.
-	Type OptString "json:\"type\""
+	Type OptString `json:"type"`
+}
+
+// GetType returns the value of Type.
+func (s KeyboardButtonPollType) GetType() OptString {
+	return s.Type
+}
+
+// SetType sets the value of Type.
+func (s *KeyboardButtonPollType) SetType(val OptString) {
+	s.Type = val
 }
 
 // This object represents a portion of the price for goods or services.
 // Ref: #/components/schemas/LabeledPrice
 type LabeledPrice struct {
 	// Portion label.
-	Label string "json:\"label\""
+	Label string `json:"label"`
 	// Price of the product in the _smallest units_ of the [currency](https://core.telegram.
 	// org/bots/payments#supported-currencies) (integer, **not** float/double). For example, for a price
 	// of `US$ 1.45` pass `amount = 145`. See the _exp_ parameter in [currencies.json](https://core.
 	// telegram.org/bots/payments/currencies.json), it shows the number of digits past the decimal point
 	// for each currency (2 for the majority of currencies).
-	Amount int "json:\"amount\""
+	Amount int `json:"amount"`
+}
+
+// GetLabel returns the value of Label.
+func (s LabeledPrice) GetLabel() string {
+	return s.Label
+}
+
+// GetAmount returns the value of Amount.
+func (s LabeledPrice) GetAmount() int {
+	return s.Amount
+}
+
+// SetLabel sets the value of Label.
+func (s *LabeledPrice) SetLabel(val string) {
+	s.Label = val
+}
+
+// SetAmount sets the value of Amount.
+func (s *LabeledPrice) SetAmount(val int) {
+	s.Amount = val
 }
 
 // Input for leaveChat.
 // Ref: #/components/schemas/leaveChat
 type LeaveChat struct {
-	ChatID ID "json:\"chat_id\""
+	ChatID ID `json:"chat_id"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s LeaveChat) GetChatID() ID {
+	return s.ChatID
+}
+
+// SetChatID sets the value of ChatID.
+func (s *LeaveChat) SetChatID(val ID) {
+	s.ChatID = val
 }
 
 // This object represents a point on the map.
 // Ref: #/components/schemas/Location
 type Location struct {
 	// Longitude as defined by sender.
-	Longitude float64 "json:\"longitude\""
+	Longitude float64 `json:"longitude"`
 	// Latitude as defined by sender.
-	Latitude float64 "json:\"latitude\""
+	Latitude float64 `json:"latitude"`
 	// _Optional_. The radius of uncertainty for the location, measured in meters; 0-1500.
-	HorizontalAccuracy OptFloat64 "json:\"horizontal_accuracy\""
+	HorizontalAccuracy OptFloat64 `json:"horizontal_accuracy"`
 	// _Optional_. Time relative to the message sending date, during which the location can be updated;
 	// in seconds. For active live locations only.
-	LivePeriod OptInt "json:\"live_period\""
+	LivePeriod OptInt `json:"live_period"`
 	// _Optional_. The direction in which user is moving, in degrees; 1-360. For active live locations
 	// only.
-	Heading OptInt "json:\"heading\""
+	Heading OptInt `json:"heading"`
 	// _Optional_. The maximum distance for proximity alerts about approaching another chat member, in
 	// meters. For sent live locations only.
-	ProximityAlertRadius OptInt "json:\"proximity_alert_radius\""
+	ProximityAlertRadius OptInt `json:"proximity_alert_radius"`
+}
+
+// GetLongitude returns the value of Longitude.
+func (s Location) GetLongitude() float64 {
+	return s.Longitude
+}
+
+// GetLatitude returns the value of Latitude.
+func (s Location) GetLatitude() float64 {
+	return s.Latitude
+}
+
+// GetHorizontalAccuracy returns the value of HorizontalAccuracy.
+func (s Location) GetHorizontalAccuracy() OptFloat64 {
+	return s.HorizontalAccuracy
+}
+
+// GetLivePeriod returns the value of LivePeriod.
+func (s Location) GetLivePeriod() OptInt {
+	return s.LivePeriod
+}
+
+// GetHeading returns the value of Heading.
+func (s Location) GetHeading() OptInt {
+	return s.Heading
+}
+
+// GetProximityAlertRadius returns the value of ProximityAlertRadius.
+func (s Location) GetProximityAlertRadius() OptInt {
+	return s.ProximityAlertRadius
+}
+
+// SetLongitude sets the value of Longitude.
+func (s *Location) SetLongitude(val float64) {
+	s.Longitude = val
+}
+
+// SetLatitude sets the value of Latitude.
+func (s *Location) SetLatitude(val float64) {
+	s.Latitude = val
+}
+
+// SetHorizontalAccuracy sets the value of HorizontalAccuracy.
+func (s *Location) SetHorizontalAccuracy(val OptFloat64) {
+	s.HorizontalAccuracy = val
+}
+
+// SetLivePeriod sets the value of LivePeriod.
+func (s *Location) SetLivePeriod(val OptInt) {
+	s.LivePeriod = val
+}
+
+// SetHeading sets the value of Heading.
+func (s *Location) SetHeading(val OptInt) {
+	s.Heading = val
+}
+
+// SetProximityAlertRadius sets the value of ProximityAlertRadius.
+func (s *Location) SetProximityAlertRadius(val OptInt) {
+	s.ProximityAlertRadius = val
 }
 
 // Telegram apps support these buttons as of [version 5.7](https://telegram.
@@ -3750,17 +10650,57 @@ type LoginUrl struct {
 	// **NOTE:** You **must** always check the hash of the received data to verify the authentication and
 	// the integrity of the data as described in [Checking authorization](https://core.telegram.
 	// org/widgets/login#checking-authorization).
-	URL string "json:\"url\""
+	URL string `json:"url"`
 	// _Optional_. New text of the button in forwarded messages.
-	ForwardText OptString "json:\"forward_text\""
+	ForwardText OptString `json:"forward_text"`
 	// _Optional_. Username of a bot, which will be used for user authorization. See [Setting up a
 	// bot](https://core.telegram.org/widgets/login#setting-up-a-bot) for more details. If not specified,
 	// the current bot's username will be assumed. The _url_'s domain must be the same as the domain
 	// linked with the bot. See [Linking your domain to the bot](https://core.telegram.
 	// org/widgets/login#linking-your-domain-to-the-bot) for more details.
-	BotUsername OptString "json:\"bot_username\""
+	BotUsername OptString `json:"bot_username"`
 	// _Optional_. Pass _True_ to request the permission for your bot to send messages to the user.
-	RequestWriteAccess OptBool "json:\"request_write_access\""
+	RequestWriteAccess OptBool `json:"request_write_access"`
+}
+
+// GetURL returns the value of URL.
+func (s LoginUrl) GetURL() string {
+	return s.URL
+}
+
+// GetForwardText returns the value of ForwardText.
+func (s LoginUrl) GetForwardText() OptString {
+	return s.ForwardText
+}
+
+// GetBotUsername returns the value of BotUsername.
+func (s LoginUrl) GetBotUsername() OptString {
+	return s.BotUsername
+}
+
+// GetRequestWriteAccess returns the value of RequestWriteAccess.
+func (s LoginUrl) GetRequestWriteAccess() OptBool {
+	return s.RequestWriteAccess
+}
+
+// SetURL sets the value of URL.
+func (s *LoginUrl) SetURL(val string) {
+	s.URL = val
+}
+
+// SetForwardText sets the value of ForwardText.
+func (s *LoginUrl) SetForwardText(val OptString) {
+	s.ForwardText = val
+}
+
+// SetBotUsername sets the value of BotUsername.
+func (s *LoginUrl) SetBotUsername(val OptString) {
+	s.BotUsername = val
+}
+
+// SetRequestWriteAccess sets the value of RequestWriteAccess.
+func (s *LoginUrl) SetRequestWriteAccess(val OptBool) {
+	s.RequestWriteAccess = val
 }
 
 // This object describes the position on faces where a mask should be placed by default.
@@ -3768,15 +10708,55 @@ type LoginUrl struct {
 type MaskPosition struct {
 	// The part of the face relative to which the mask should be placed. One of `forehead`, `eyes`,
 	// `mouth`, or `chin`.
-	Point string "json:\"point\""
+	Point string `json:"point"`
 	// Shift by X-axis measured in widths of the mask scaled to the face size, from left to right. For
 	// example, choosing -1.0 will place mask just to the left of the default mask position.
-	XShift float64 "json:\"x_shift\""
+	XShift float64 `json:"x_shift"`
 	// Shift by Y-axis measured in heights of the mask scaled to the face size, from top to bottom. For
 	// example, 1.0 will place the mask just below the default mask position.
-	YShift float64 "json:\"y_shift\""
+	YShift float64 `json:"y_shift"`
 	// Mask scaling coefficient. For example, 2.0 means double size.
-	Scale float64 "json:\"scale\""
+	Scale float64 `json:"scale"`
+}
+
+// GetPoint returns the value of Point.
+func (s MaskPosition) GetPoint() string {
+	return s.Point
+}
+
+// GetXShift returns the value of XShift.
+func (s MaskPosition) GetXShift() float64 {
+	return s.XShift
+}
+
+// GetYShift returns the value of YShift.
+func (s MaskPosition) GetYShift() float64 {
+	return s.YShift
+}
+
+// GetScale returns the value of Scale.
+func (s MaskPosition) GetScale() float64 {
+	return s.Scale
+}
+
+// SetPoint sets the value of Point.
+func (s *MaskPosition) SetPoint(val string) {
+	s.Point = val
+}
+
+// SetXShift sets the value of XShift.
+func (s *MaskPosition) SetXShift(val float64) {
+	s.XShift = val
+}
+
+// SetYShift sets the value of YShift.
+func (s *MaskPosition) SetYShift(val float64) {
+	s.YShift = val
+}
+
+// SetScale sets the value of Scale.
+func (s *MaskPosition) SetScale(val float64) {
+	s.Scale = val
 }
 
 // This object describes the bot's menu button in a private chat. It should be one of.
@@ -3883,135 +10863,835 @@ type MenuButtonDefault struct{}
 // Ref: #/components/schemas/MenuButtonWebApp
 type MenuButtonWebApp struct {
 	// Text on the button.
-	Text   string     "json:\"text\""
-	WebApp WebAppInfo "json:\"web_app\""
+	Text   string     `json:"text"`
+	WebApp WebAppInfo `json:"web_app"`
+}
+
+// GetText returns the value of Text.
+func (s MenuButtonWebApp) GetText() string {
+	return s.Text
+}
+
+// GetWebApp returns the value of WebApp.
+func (s MenuButtonWebApp) GetWebApp() WebAppInfo {
+	return s.WebApp
+}
+
+// SetText sets the value of Text.
+func (s *MenuButtonWebApp) SetText(val string) {
+	s.Text = val
+}
+
+// SetWebApp sets the value of WebApp.
+func (s *MenuButtonWebApp) SetWebApp(val WebAppInfo) {
+	s.WebApp = val
 }
 
 // This object represents a message.
 // Ref: #/components/schemas/Message
 type Message struct {
 	// Unique message identifier inside this chat.
-	MessageID int "json:\"message_id\""
+	MessageID int `json:"message_id"`
 	// _Optional_. Unique identifier of a message thread to which the message belongs; for supergroups
 	// only.
-	MessageThreadID OptInt  "json:\"message_thread_id\""
-	From            OptUser "json:\"from\""
-	SenderChat      OptChat "json:\"sender_chat\""
+	MessageThreadID OptInt  `json:"message_thread_id"`
+	From            OptUser `json:"from"`
+	SenderChat      OptChat `json:"sender_chat"`
 	// Date the message was sent in Unix time.
-	Date            int     "json:\"date\""
-	Chat            Chat    "json:\"chat\""
-	ForwardFrom     OptUser "json:\"forward_from\""
-	ForwardFromChat OptChat "json:\"forward_from_chat\""
+	Date            int     `json:"date"`
+	Chat            Chat    `json:"chat"`
+	ForwardFrom     OptUser `json:"forward_from"`
+	ForwardFromChat OptChat `json:"forward_from_chat"`
 	// _Optional_. For messages forwarded from channels, identifier of the original message in the channel.
-	ForwardFromMessageID OptInt "json:\"forward_from_message_id\""
+	ForwardFromMessageID OptInt `json:"forward_from_message_id"`
 	// _Optional_. For forwarded messages that were originally sent in channels or by an anonymous chat
 	// administrator, signature of the message sender if present.
-	ForwardSignature OptString "json:\"forward_signature\""
+	ForwardSignature OptString `json:"forward_signature"`
 	// _Optional_. Sender's name for messages forwarded from users who disallow adding a link to their
 	// account in forwarded messages.
-	ForwardSenderName OptString "json:\"forward_sender_name\""
+	ForwardSenderName OptString `json:"forward_sender_name"`
 	// _Optional_. For forwarded messages, date the original message was sent in Unix time.
-	ForwardDate OptInt "json:\"forward_date\""
+	ForwardDate OptInt `json:"forward_date"`
 	// _Optional_. _True_, if the message is sent to a forum topic.
-	IsTopicMessage OptBool "json:\"is_topic_message\""
+	IsTopicMessage OptBool `json:"is_topic_message"`
 	// _Optional_. _True_, if the message is a channel post that was automatically forwarded to the
 	// connected discussion group.
-	IsAutomaticForward OptBool  "json:\"is_automatic_forward\""
-	ReplyToMessage     *Message "json:\"reply_to_message\""
-	ViaBot             OptUser  "json:\"via_bot\""
+	IsAutomaticForward OptBool  `json:"is_automatic_forward"`
+	ReplyToMessage     *Message `json:"reply_to_message"`
+	ViaBot             OptUser  `json:"via_bot"`
 	// _Optional_. Date the message was last edited in Unix time.
-	EditDate OptInt "json:\"edit_date\""
+	EditDate OptInt `json:"edit_date"`
 	// _Optional_. _True_, if the message can't be forwarded.
-	HasProtectedContent OptBool "json:\"has_protected_content\""
+	HasProtectedContent OptBool `json:"has_protected_content"`
 	// _Optional_. The unique identifier of a media message group this message belongs to.
-	MediaGroupID OptString "json:\"media_group_id\""
+	MediaGroupID OptString `json:"media_group_id"`
 	// _Optional_. Signature of the post author for messages in channels, or the custom title of an
 	// anonymous group administrator.
-	AuthorSignature OptString "json:\"author_signature\""
+	AuthorSignature OptString `json:"author_signature"`
 	// _Optional_. For text messages, the actual UTF-8 text of the message.
-	Text OptString "json:\"text\""
+	Text OptString `json:"text"`
 	// _Optional_. For text messages, special entities like usernames, URLs, bot commands, etc. that
 	// appear in the text.
-	Entities  []MessageEntity "json:\"entities\""
-	Animation OptAnimation    "json:\"animation\""
-	Audio     OptAudio        "json:\"audio\""
-	Document  OptDocument     "json:\"document\""
+	Entities  []MessageEntity `json:"entities"`
+	Animation OptAnimation    `json:"animation"`
+	Audio     OptAudio        `json:"audio"`
+	Document  OptDocument     `json:"document"`
 	// _Optional_. Message is a photo, available sizes of the photo.
-	Photo     []PhotoSize  "json:\"photo\""
-	Sticker   OptSticker   "json:\"sticker\""
-	Video     OptVideo     "json:\"video\""
-	VideoNote OptVideoNote "json:\"video_note\""
-	Voice     OptVoice     "json:\"voice\""
+	Photo     []PhotoSize  `json:"photo"`
+	Sticker   OptSticker   `json:"sticker"`
+	Video     OptVideo     `json:"video"`
+	VideoNote OptVideoNote `json:"video_note"`
+	Voice     OptVoice     `json:"voice"`
 	// _Optional_. Caption for the animation, audio, document, photo, video or voice.
-	Caption OptString "json:\"caption\""
+	Caption OptString `json:"caption"`
 	// _Optional_. For messages with a caption, special entities like usernames, URLs, bot commands, etc.
 	// that appear in the caption.
-	CaptionEntities []MessageEntity "json:\"caption_entities\""
-	Contact         OptContact      "json:\"contact\""
-	Dice            OptDice         "json:\"dice\""
-	Game            OptGame         "json:\"game\""
-	Poll            OptPoll         "json:\"poll\""
-	Venue           OptVenue        "json:\"venue\""
-	Location        OptLocation     "json:\"location\""
+	CaptionEntities []MessageEntity `json:"caption_entities"`
+	Contact         OptContact      `json:"contact"`
+	Dice            OptDice         `json:"dice"`
+	Game            OptGame         `json:"game"`
+	Poll            OptPoll         `json:"poll"`
+	Venue           OptVenue        `json:"venue"`
+	Location        OptLocation     `json:"location"`
 	// _Optional_. New members that were added to the group or supergroup and information about them (the
 	// bot itself may be one of these members).
-	NewChatMembers []User  "json:\"new_chat_members\""
-	LeftChatMember OptUser "json:\"left_chat_member\""
+	NewChatMembers []User  `json:"new_chat_members"`
+	LeftChatMember OptUser `json:"left_chat_member"`
 	// _Optional_. A chat title was changed to this value.
-	NewChatTitle OptString "json:\"new_chat_title\""
+	NewChatTitle OptString `json:"new_chat_title"`
 	// _Optional_. A chat photo was change to this value.
-	NewChatPhoto []PhotoSize "json:\"new_chat_photo\""
+	NewChatPhoto []PhotoSize `json:"new_chat_photo"`
 	// _Optional_. Service message: the chat photo was deleted.
-	DeleteChatPhoto OptBool "json:\"delete_chat_photo\""
+	DeleteChatPhoto OptBool `json:"delete_chat_photo"`
 	// _Optional_. Service message: the group has been created.
-	GroupChatCreated OptBool "json:\"group_chat_created\""
+	GroupChatCreated OptBool `json:"group_chat_created"`
 	// _Optional_. Service message: the supergroup has been created. This field can't be received in a
 	// message coming through updates, because bot can't be a member of a supergroup when it is created.
 	// It can only be found in reply_to_message if someone replies to a very first message in a directly
 	// created supergroup.
-	SupergroupChatCreated OptBool "json:\"supergroup_chat_created\""
+	SupergroupChatCreated OptBool `json:"supergroup_chat_created"`
 	// _Optional_. Service message: the channel has been created. This field can't be received in a
 	// message coming through updates, because bot can't be a member of a channel when it is created. It
 	// can only be found in reply_to_message if someone replies to a very first message in a channel.
-	ChannelChatCreated            OptBool                          "json:\"channel_chat_created\""
-	MessageAutoDeleteTimerChanged OptMessageAutoDeleteTimerChanged "json:\"message_auto_delete_timer_changed\""
+	ChannelChatCreated            OptBool                          `json:"channel_chat_created"`
+	MessageAutoDeleteTimerChanged OptMessageAutoDeleteTimerChanged `json:"message_auto_delete_timer_changed"`
 	// _Optional_. The group has been migrated to a supergroup with the specified identifier. This number
 	// may have more than 32 significant bits and some programming languages may have difficulty/silent
 	// defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or
 	// double-precision float type are safe for storing this identifier.
-	MigrateToChatID OptInt64 "json:\"migrate_to_chat_id\""
+	MigrateToChatID OptInt64 `json:"migrate_to_chat_id"`
 	// _Optional_. The supergroup has been migrated from a group with the specified identifier. This
 	// number may have more than 32 significant bits and some programming languages may have
 	// difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed
 	// 64-bit integer or double-precision float type are safe for storing this identifier.
-	MigrateFromChatID OptInt64             "json:\"migrate_from_chat_id\""
-	PinnedMessage     *Message             "json:\"pinned_message\""
-	Invoice           OptInvoice           "json:\"invoice\""
-	SuccessfulPayment OptSuccessfulPayment "json:\"successful_payment\""
+	MigrateFromChatID OptInt64             `json:"migrate_from_chat_id"`
+	PinnedMessage     *Message             `json:"pinned_message"`
+	Invoice           OptInvoice           `json:"invoice"`
+	SuccessfulPayment OptSuccessfulPayment `json:"successful_payment"`
 	// _Optional_. The domain name of the website on which the user has logged in. [More about Telegram
 	// Login](https://core.telegram.org/widgets/login).
-	ConnectedWebsite             OptString                       "json:\"connected_website\""
-	PassportData                 OptPassportData                 "json:\"passport_data\""
-	ProximityAlertTriggered      OptProximityAlertTriggered      "json:\"proximity_alert_triggered\""
-	ForumTopicCreated            OptForumTopicCreated            "json:\"forum_topic_created\""
-	ForumTopicClosed             *ForumTopicClosed               "json:\"forum_topic_closed\""
-	ForumTopicReopened           *ForumTopicReopened             "json:\"forum_topic_reopened\""
-	VideoChatScheduled           OptVideoChatScheduled           "json:\"video_chat_scheduled\""
-	VideoChatStarted             *VideoChatStarted               "json:\"video_chat_started\""
-	VideoChatEnded               OptVideoChatEnded               "json:\"video_chat_ended\""
-	VideoChatParticipantsInvited OptVideoChatParticipantsInvited "json:\"video_chat_participants_invited\""
-	WebAppData                   OptWebAppData                   "json:\"web_app_data\""
-	ReplyMarkup                  OptInlineKeyboardMarkup         "json:\"reply_markup\""
-	NewChatMember                OptUser                         "json:\"new_chat_member\""
-	NewChatParticipant           OptUser                         "json:\"new_chat_participant\""
-	LeftChatParticipant          OptUser                         "json:\"left_chat_participant\""
+	ConnectedWebsite             OptString                       `json:"connected_website"`
+	PassportData                 OptPassportData                 `json:"passport_data"`
+	ProximityAlertTriggered      OptProximityAlertTriggered      `json:"proximity_alert_triggered"`
+	ForumTopicCreated            OptForumTopicCreated            `json:"forum_topic_created"`
+	ForumTopicClosed             *ForumTopicClosed               `json:"forum_topic_closed"`
+	ForumTopicReopened           *ForumTopicReopened             `json:"forum_topic_reopened"`
+	VideoChatScheduled           OptVideoChatScheduled           `json:"video_chat_scheduled"`
+	VideoChatStarted             *VideoChatStarted               `json:"video_chat_started"`
+	VideoChatEnded               OptVideoChatEnded               `json:"video_chat_ended"`
+	VideoChatParticipantsInvited OptVideoChatParticipantsInvited `json:"video_chat_participants_invited"`
+	WebAppData                   OptWebAppData                   `json:"web_app_data"`
+	ReplyMarkup                  OptInlineKeyboardMarkup         `json:"reply_markup"`
+	NewChatMember                OptUser                         `json:"new_chat_member"`
+	NewChatParticipant           OptUser                         `json:"new_chat_participant"`
+	LeftChatParticipant          OptUser                         `json:"left_chat_participant"`
+}
+
+// GetMessageID returns the value of MessageID.
+func (s Message) GetMessageID() int {
+	return s.MessageID
+}
+
+// GetMessageThreadID returns the value of MessageThreadID.
+func (s Message) GetMessageThreadID() OptInt {
+	return s.MessageThreadID
+}
+
+// GetFrom returns the value of From.
+func (s Message) GetFrom() OptUser {
+	return s.From
+}
+
+// GetSenderChat returns the value of SenderChat.
+func (s Message) GetSenderChat() OptChat {
+	return s.SenderChat
+}
+
+// GetDate returns the value of Date.
+func (s Message) GetDate() int {
+	return s.Date
+}
+
+// GetChat returns the value of Chat.
+func (s Message) GetChat() Chat {
+	return s.Chat
+}
+
+// GetForwardFrom returns the value of ForwardFrom.
+func (s Message) GetForwardFrom() OptUser {
+	return s.ForwardFrom
+}
+
+// GetForwardFromChat returns the value of ForwardFromChat.
+func (s Message) GetForwardFromChat() OptChat {
+	return s.ForwardFromChat
+}
+
+// GetForwardFromMessageID returns the value of ForwardFromMessageID.
+func (s Message) GetForwardFromMessageID() OptInt {
+	return s.ForwardFromMessageID
+}
+
+// GetForwardSignature returns the value of ForwardSignature.
+func (s Message) GetForwardSignature() OptString {
+	return s.ForwardSignature
+}
+
+// GetForwardSenderName returns the value of ForwardSenderName.
+func (s Message) GetForwardSenderName() OptString {
+	return s.ForwardSenderName
+}
+
+// GetForwardDate returns the value of ForwardDate.
+func (s Message) GetForwardDate() OptInt {
+	return s.ForwardDate
+}
+
+// GetIsTopicMessage returns the value of IsTopicMessage.
+func (s Message) GetIsTopicMessage() OptBool {
+	return s.IsTopicMessage
+}
+
+// GetIsAutomaticForward returns the value of IsAutomaticForward.
+func (s Message) GetIsAutomaticForward() OptBool {
+	return s.IsAutomaticForward
+}
+
+// GetReplyToMessage returns the value of ReplyToMessage.
+func (s Message) GetReplyToMessage() *Message {
+	return s.ReplyToMessage
+}
+
+// GetViaBot returns the value of ViaBot.
+func (s Message) GetViaBot() OptUser {
+	return s.ViaBot
+}
+
+// GetEditDate returns the value of EditDate.
+func (s Message) GetEditDate() OptInt {
+	return s.EditDate
+}
+
+// GetHasProtectedContent returns the value of HasProtectedContent.
+func (s Message) GetHasProtectedContent() OptBool {
+	return s.HasProtectedContent
+}
+
+// GetMediaGroupID returns the value of MediaGroupID.
+func (s Message) GetMediaGroupID() OptString {
+	return s.MediaGroupID
+}
+
+// GetAuthorSignature returns the value of AuthorSignature.
+func (s Message) GetAuthorSignature() OptString {
+	return s.AuthorSignature
+}
+
+// GetText returns the value of Text.
+func (s Message) GetText() OptString {
+	return s.Text
+}
+
+// GetEntities returns the value of Entities.
+func (s Message) GetEntities() []MessageEntity {
+	return s.Entities
+}
+
+// GetAnimation returns the value of Animation.
+func (s Message) GetAnimation() OptAnimation {
+	return s.Animation
+}
+
+// GetAudio returns the value of Audio.
+func (s Message) GetAudio() OptAudio {
+	return s.Audio
+}
+
+// GetDocument returns the value of Document.
+func (s Message) GetDocument() OptDocument {
+	return s.Document
+}
+
+// GetPhoto returns the value of Photo.
+func (s Message) GetPhoto() []PhotoSize {
+	return s.Photo
+}
+
+// GetSticker returns the value of Sticker.
+func (s Message) GetSticker() OptSticker {
+	return s.Sticker
+}
+
+// GetVideo returns the value of Video.
+func (s Message) GetVideo() OptVideo {
+	return s.Video
+}
+
+// GetVideoNote returns the value of VideoNote.
+func (s Message) GetVideoNote() OptVideoNote {
+	return s.VideoNote
+}
+
+// GetVoice returns the value of Voice.
+func (s Message) GetVoice() OptVoice {
+	return s.Voice
+}
+
+// GetCaption returns the value of Caption.
+func (s Message) GetCaption() OptString {
+	return s.Caption
+}
+
+// GetCaptionEntities returns the value of CaptionEntities.
+func (s Message) GetCaptionEntities() []MessageEntity {
+	return s.CaptionEntities
+}
+
+// GetContact returns the value of Contact.
+func (s Message) GetContact() OptContact {
+	return s.Contact
+}
+
+// GetDice returns the value of Dice.
+func (s Message) GetDice() OptDice {
+	return s.Dice
+}
+
+// GetGame returns the value of Game.
+func (s Message) GetGame() OptGame {
+	return s.Game
+}
+
+// GetPoll returns the value of Poll.
+func (s Message) GetPoll() OptPoll {
+	return s.Poll
+}
+
+// GetVenue returns the value of Venue.
+func (s Message) GetVenue() OptVenue {
+	return s.Venue
+}
+
+// GetLocation returns the value of Location.
+func (s Message) GetLocation() OptLocation {
+	return s.Location
+}
+
+// GetNewChatMembers returns the value of NewChatMembers.
+func (s Message) GetNewChatMembers() []User {
+	return s.NewChatMembers
+}
+
+// GetLeftChatMember returns the value of LeftChatMember.
+func (s Message) GetLeftChatMember() OptUser {
+	return s.LeftChatMember
+}
+
+// GetNewChatTitle returns the value of NewChatTitle.
+func (s Message) GetNewChatTitle() OptString {
+	return s.NewChatTitle
+}
+
+// GetNewChatPhoto returns the value of NewChatPhoto.
+func (s Message) GetNewChatPhoto() []PhotoSize {
+	return s.NewChatPhoto
+}
+
+// GetDeleteChatPhoto returns the value of DeleteChatPhoto.
+func (s Message) GetDeleteChatPhoto() OptBool {
+	return s.DeleteChatPhoto
+}
+
+// GetGroupChatCreated returns the value of GroupChatCreated.
+func (s Message) GetGroupChatCreated() OptBool {
+	return s.GroupChatCreated
+}
+
+// GetSupergroupChatCreated returns the value of SupergroupChatCreated.
+func (s Message) GetSupergroupChatCreated() OptBool {
+	return s.SupergroupChatCreated
+}
+
+// GetChannelChatCreated returns the value of ChannelChatCreated.
+func (s Message) GetChannelChatCreated() OptBool {
+	return s.ChannelChatCreated
+}
+
+// GetMessageAutoDeleteTimerChanged returns the value of MessageAutoDeleteTimerChanged.
+func (s Message) GetMessageAutoDeleteTimerChanged() OptMessageAutoDeleteTimerChanged {
+	return s.MessageAutoDeleteTimerChanged
+}
+
+// GetMigrateToChatID returns the value of MigrateToChatID.
+func (s Message) GetMigrateToChatID() OptInt64 {
+	return s.MigrateToChatID
+}
+
+// GetMigrateFromChatID returns the value of MigrateFromChatID.
+func (s Message) GetMigrateFromChatID() OptInt64 {
+	return s.MigrateFromChatID
+}
+
+// GetPinnedMessage returns the value of PinnedMessage.
+func (s Message) GetPinnedMessage() *Message {
+	return s.PinnedMessage
+}
+
+// GetInvoice returns the value of Invoice.
+func (s Message) GetInvoice() OptInvoice {
+	return s.Invoice
+}
+
+// GetSuccessfulPayment returns the value of SuccessfulPayment.
+func (s Message) GetSuccessfulPayment() OptSuccessfulPayment {
+	return s.SuccessfulPayment
+}
+
+// GetConnectedWebsite returns the value of ConnectedWebsite.
+func (s Message) GetConnectedWebsite() OptString {
+	return s.ConnectedWebsite
+}
+
+// GetPassportData returns the value of PassportData.
+func (s Message) GetPassportData() OptPassportData {
+	return s.PassportData
+}
+
+// GetProximityAlertTriggered returns the value of ProximityAlertTriggered.
+func (s Message) GetProximityAlertTriggered() OptProximityAlertTriggered {
+	return s.ProximityAlertTriggered
+}
+
+// GetForumTopicCreated returns the value of ForumTopicCreated.
+func (s Message) GetForumTopicCreated() OptForumTopicCreated {
+	return s.ForumTopicCreated
+}
+
+// GetForumTopicClosed returns the value of ForumTopicClosed.
+func (s Message) GetForumTopicClosed() *ForumTopicClosed {
+	return s.ForumTopicClosed
+}
+
+// GetForumTopicReopened returns the value of ForumTopicReopened.
+func (s Message) GetForumTopicReopened() *ForumTopicReopened {
+	return s.ForumTopicReopened
+}
+
+// GetVideoChatScheduled returns the value of VideoChatScheduled.
+func (s Message) GetVideoChatScheduled() OptVideoChatScheduled {
+	return s.VideoChatScheduled
+}
+
+// GetVideoChatStarted returns the value of VideoChatStarted.
+func (s Message) GetVideoChatStarted() *VideoChatStarted {
+	return s.VideoChatStarted
+}
+
+// GetVideoChatEnded returns the value of VideoChatEnded.
+func (s Message) GetVideoChatEnded() OptVideoChatEnded {
+	return s.VideoChatEnded
+}
+
+// GetVideoChatParticipantsInvited returns the value of VideoChatParticipantsInvited.
+func (s Message) GetVideoChatParticipantsInvited() OptVideoChatParticipantsInvited {
+	return s.VideoChatParticipantsInvited
+}
+
+// GetWebAppData returns the value of WebAppData.
+func (s Message) GetWebAppData() OptWebAppData {
+	return s.WebAppData
+}
+
+// GetReplyMarkup returns the value of ReplyMarkup.
+func (s Message) GetReplyMarkup() OptInlineKeyboardMarkup {
+	return s.ReplyMarkup
+}
+
+// GetNewChatMember returns the value of NewChatMember.
+func (s Message) GetNewChatMember() OptUser {
+	return s.NewChatMember
+}
+
+// GetNewChatParticipant returns the value of NewChatParticipant.
+func (s Message) GetNewChatParticipant() OptUser {
+	return s.NewChatParticipant
+}
+
+// GetLeftChatParticipant returns the value of LeftChatParticipant.
+func (s Message) GetLeftChatParticipant() OptUser {
+	return s.LeftChatParticipant
+}
+
+// SetMessageID sets the value of MessageID.
+func (s *Message) SetMessageID(val int) {
+	s.MessageID = val
+}
+
+// SetMessageThreadID sets the value of MessageThreadID.
+func (s *Message) SetMessageThreadID(val OptInt) {
+	s.MessageThreadID = val
+}
+
+// SetFrom sets the value of From.
+func (s *Message) SetFrom(val OptUser) {
+	s.From = val
+}
+
+// SetSenderChat sets the value of SenderChat.
+func (s *Message) SetSenderChat(val OptChat) {
+	s.SenderChat = val
+}
+
+// SetDate sets the value of Date.
+func (s *Message) SetDate(val int) {
+	s.Date = val
+}
+
+// SetChat sets the value of Chat.
+func (s *Message) SetChat(val Chat) {
+	s.Chat = val
+}
+
+// SetForwardFrom sets the value of ForwardFrom.
+func (s *Message) SetForwardFrom(val OptUser) {
+	s.ForwardFrom = val
+}
+
+// SetForwardFromChat sets the value of ForwardFromChat.
+func (s *Message) SetForwardFromChat(val OptChat) {
+	s.ForwardFromChat = val
+}
+
+// SetForwardFromMessageID sets the value of ForwardFromMessageID.
+func (s *Message) SetForwardFromMessageID(val OptInt) {
+	s.ForwardFromMessageID = val
+}
+
+// SetForwardSignature sets the value of ForwardSignature.
+func (s *Message) SetForwardSignature(val OptString) {
+	s.ForwardSignature = val
+}
+
+// SetForwardSenderName sets the value of ForwardSenderName.
+func (s *Message) SetForwardSenderName(val OptString) {
+	s.ForwardSenderName = val
+}
+
+// SetForwardDate sets the value of ForwardDate.
+func (s *Message) SetForwardDate(val OptInt) {
+	s.ForwardDate = val
+}
+
+// SetIsTopicMessage sets the value of IsTopicMessage.
+func (s *Message) SetIsTopicMessage(val OptBool) {
+	s.IsTopicMessage = val
+}
+
+// SetIsAutomaticForward sets the value of IsAutomaticForward.
+func (s *Message) SetIsAutomaticForward(val OptBool) {
+	s.IsAutomaticForward = val
+}
+
+// SetReplyToMessage sets the value of ReplyToMessage.
+func (s *Message) SetReplyToMessage(val *Message) {
+	s.ReplyToMessage = val
+}
+
+// SetViaBot sets the value of ViaBot.
+func (s *Message) SetViaBot(val OptUser) {
+	s.ViaBot = val
+}
+
+// SetEditDate sets the value of EditDate.
+func (s *Message) SetEditDate(val OptInt) {
+	s.EditDate = val
+}
+
+// SetHasProtectedContent sets the value of HasProtectedContent.
+func (s *Message) SetHasProtectedContent(val OptBool) {
+	s.HasProtectedContent = val
+}
+
+// SetMediaGroupID sets the value of MediaGroupID.
+func (s *Message) SetMediaGroupID(val OptString) {
+	s.MediaGroupID = val
+}
+
+// SetAuthorSignature sets the value of AuthorSignature.
+func (s *Message) SetAuthorSignature(val OptString) {
+	s.AuthorSignature = val
+}
+
+// SetText sets the value of Text.
+func (s *Message) SetText(val OptString) {
+	s.Text = val
+}
+
+// SetEntities sets the value of Entities.
+func (s *Message) SetEntities(val []MessageEntity) {
+	s.Entities = val
+}
+
+// SetAnimation sets the value of Animation.
+func (s *Message) SetAnimation(val OptAnimation) {
+	s.Animation = val
+}
+
+// SetAudio sets the value of Audio.
+func (s *Message) SetAudio(val OptAudio) {
+	s.Audio = val
+}
+
+// SetDocument sets the value of Document.
+func (s *Message) SetDocument(val OptDocument) {
+	s.Document = val
+}
+
+// SetPhoto sets the value of Photo.
+func (s *Message) SetPhoto(val []PhotoSize) {
+	s.Photo = val
+}
+
+// SetSticker sets the value of Sticker.
+func (s *Message) SetSticker(val OptSticker) {
+	s.Sticker = val
+}
+
+// SetVideo sets the value of Video.
+func (s *Message) SetVideo(val OptVideo) {
+	s.Video = val
+}
+
+// SetVideoNote sets the value of VideoNote.
+func (s *Message) SetVideoNote(val OptVideoNote) {
+	s.VideoNote = val
+}
+
+// SetVoice sets the value of Voice.
+func (s *Message) SetVoice(val OptVoice) {
+	s.Voice = val
+}
+
+// SetCaption sets the value of Caption.
+func (s *Message) SetCaption(val OptString) {
+	s.Caption = val
+}
+
+// SetCaptionEntities sets the value of CaptionEntities.
+func (s *Message) SetCaptionEntities(val []MessageEntity) {
+	s.CaptionEntities = val
+}
+
+// SetContact sets the value of Contact.
+func (s *Message) SetContact(val OptContact) {
+	s.Contact = val
+}
+
+// SetDice sets the value of Dice.
+func (s *Message) SetDice(val OptDice) {
+	s.Dice = val
+}
+
+// SetGame sets the value of Game.
+func (s *Message) SetGame(val OptGame) {
+	s.Game = val
+}
+
+// SetPoll sets the value of Poll.
+func (s *Message) SetPoll(val OptPoll) {
+	s.Poll = val
+}
+
+// SetVenue sets the value of Venue.
+func (s *Message) SetVenue(val OptVenue) {
+	s.Venue = val
+}
+
+// SetLocation sets the value of Location.
+func (s *Message) SetLocation(val OptLocation) {
+	s.Location = val
+}
+
+// SetNewChatMembers sets the value of NewChatMembers.
+func (s *Message) SetNewChatMembers(val []User) {
+	s.NewChatMembers = val
+}
+
+// SetLeftChatMember sets the value of LeftChatMember.
+func (s *Message) SetLeftChatMember(val OptUser) {
+	s.LeftChatMember = val
+}
+
+// SetNewChatTitle sets the value of NewChatTitle.
+func (s *Message) SetNewChatTitle(val OptString) {
+	s.NewChatTitle = val
+}
+
+// SetNewChatPhoto sets the value of NewChatPhoto.
+func (s *Message) SetNewChatPhoto(val []PhotoSize) {
+	s.NewChatPhoto = val
+}
+
+// SetDeleteChatPhoto sets the value of DeleteChatPhoto.
+func (s *Message) SetDeleteChatPhoto(val OptBool) {
+	s.DeleteChatPhoto = val
+}
+
+// SetGroupChatCreated sets the value of GroupChatCreated.
+func (s *Message) SetGroupChatCreated(val OptBool) {
+	s.GroupChatCreated = val
+}
+
+// SetSupergroupChatCreated sets the value of SupergroupChatCreated.
+func (s *Message) SetSupergroupChatCreated(val OptBool) {
+	s.SupergroupChatCreated = val
+}
+
+// SetChannelChatCreated sets the value of ChannelChatCreated.
+func (s *Message) SetChannelChatCreated(val OptBool) {
+	s.ChannelChatCreated = val
+}
+
+// SetMessageAutoDeleteTimerChanged sets the value of MessageAutoDeleteTimerChanged.
+func (s *Message) SetMessageAutoDeleteTimerChanged(val OptMessageAutoDeleteTimerChanged) {
+	s.MessageAutoDeleteTimerChanged = val
+}
+
+// SetMigrateToChatID sets the value of MigrateToChatID.
+func (s *Message) SetMigrateToChatID(val OptInt64) {
+	s.MigrateToChatID = val
+}
+
+// SetMigrateFromChatID sets the value of MigrateFromChatID.
+func (s *Message) SetMigrateFromChatID(val OptInt64) {
+	s.MigrateFromChatID = val
+}
+
+// SetPinnedMessage sets the value of PinnedMessage.
+func (s *Message) SetPinnedMessage(val *Message) {
+	s.PinnedMessage = val
+}
+
+// SetInvoice sets the value of Invoice.
+func (s *Message) SetInvoice(val OptInvoice) {
+	s.Invoice = val
+}
+
+// SetSuccessfulPayment sets the value of SuccessfulPayment.
+func (s *Message) SetSuccessfulPayment(val OptSuccessfulPayment) {
+	s.SuccessfulPayment = val
+}
+
+// SetConnectedWebsite sets the value of ConnectedWebsite.
+func (s *Message) SetConnectedWebsite(val OptString) {
+	s.ConnectedWebsite = val
+}
+
+// SetPassportData sets the value of PassportData.
+func (s *Message) SetPassportData(val OptPassportData) {
+	s.PassportData = val
+}
+
+// SetProximityAlertTriggered sets the value of ProximityAlertTriggered.
+func (s *Message) SetProximityAlertTriggered(val OptProximityAlertTriggered) {
+	s.ProximityAlertTriggered = val
+}
+
+// SetForumTopicCreated sets the value of ForumTopicCreated.
+func (s *Message) SetForumTopicCreated(val OptForumTopicCreated) {
+	s.ForumTopicCreated = val
+}
+
+// SetForumTopicClosed sets the value of ForumTopicClosed.
+func (s *Message) SetForumTopicClosed(val *ForumTopicClosed) {
+	s.ForumTopicClosed = val
+}
+
+// SetForumTopicReopened sets the value of ForumTopicReopened.
+func (s *Message) SetForumTopicReopened(val *ForumTopicReopened) {
+	s.ForumTopicReopened = val
+}
+
+// SetVideoChatScheduled sets the value of VideoChatScheduled.
+func (s *Message) SetVideoChatScheduled(val OptVideoChatScheduled) {
+	s.VideoChatScheduled = val
+}
+
+// SetVideoChatStarted sets the value of VideoChatStarted.
+func (s *Message) SetVideoChatStarted(val *VideoChatStarted) {
+	s.VideoChatStarted = val
+}
+
+// SetVideoChatEnded sets the value of VideoChatEnded.
+func (s *Message) SetVideoChatEnded(val OptVideoChatEnded) {
+	s.VideoChatEnded = val
+}
+
+// SetVideoChatParticipantsInvited sets the value of VideoChatParticipantsInvited.
+func (s *Message) SetVideoChatParticipantsInvited(val OptVideoChatParticipantsInvited) {
+	s.VideoChatParticipantsInvited = val
+}
+
+// SetWebAppData sets the value of WebAppData.
+func (s *Message) SetWebAppData(val OptWebAppData) {
+	s.WebAppData = val
+}
+
+// SetReplyMarkup sets the value of ReplyMarkup.
+func (s *Message) SetReplyMarkup(val OptInlineKeyboardMarkup) {
+	s.ReplyMarkup = val
+}
+
+// SetNewChatMember sets the value of NewChatMember.
+func (s *Message) SetNewChatMember(val OptUser) {
+	s.NewChatMember = val
+}
+
+// SetNewChatParticipant sets the value of NewChatParticipant.
+func (s *Message) SetNewChatParticipant(val OptUser) {
+	s.NewChatParticipant = val
+}
+
+// SetLeftChatParticipant sets the value of LeftChatParticipant.
+func (s *Message) SetLeftChatParticipant(val OptUser) {
+	s.LeftChatParticipant = val
 }
 
 // This object represents a service message about a change in auto-delete timer settings.
 // Ref: #/components/schemas/MessageAutoDeleteTimerChanged
 type MessageAutoDeleteTimerChanged struct {
 	// New auto-delete time for messages in the chat; in seconds.
-	MessageAutoDeleteTime int "json:\"message_auto_delete_time\""
+	MessageAutoDeleteTime int `json:"message_auto_delete_time"`
+}
+
+// GetMessageAutoDeleteTime returns the value of MessageAutoDeleteTime.
+func (s MessageAutoDeleteTimerChanged) GetMessageAutoDeleteTime() int {
+	return s.MessageAutoDeleteTime
+}
+
+// SetMessageAutoDeleteTime sets the value of MessageAutoDeleteTime.
+func (s *MessageAutoDeleteTimerChanged) SetMessageAutoDeleteTime(val int) {
+	s.MessageAutoDeleteTime = val
 }
 
 // This object represents one special entity in a text message. For example, hashtags, usernames,
@@ -4025,20 +11705,90 @@ type MessageEntity struct {
 	// `spoiler` (spoiler message), `code` (monowidth string), `pre` (monowidth block), `text_link` (for
 	// clickable text URLs), `text_mention` (for users [without usernames](https://telegram.
 	// org/blog/edit#new-mentions)), `custom_emoji` (for inline custom emoji stickers).
-	Type MessageEntityType "json:\"type\""
+	Type MessageEntityType `json:"type"`
 	// Offset in UTF-16 code units to the start of the entity.
-	Offset int "json:\"offset\""
+	Offset int `json:"offset"`
 	// Length of the entity in UTF-16 code units.
-	Length int "json:\"length\""
+	Length int `json:"length"`
 	// _Optional_. For `text_link` only, URL that will be opened after user taps on the text.
-	URL  OptString "json:\"url\""
-	User OptUser   "json:\"user\""
+	URL  OptString `json:"url"`
+	User OptUser   `json:"user"`
 	// _Optional_. For `pre` only, the programming language of the entity text.
-	Language OptString "json:\"language\""
+	Language OptString `json:"language"`
 	// _Optional_. For `custom_emoji` only, unique identifier of the custom emoji. Use
 	// [getCustomEmojiStickers](https://core.telegram.org/bots/api#getcustomemojistickers) to get full
 	// information about the sticker.
-	CustomEmojiID OptString "json:\"custom_emoji_id\""
+	CustomEmojiID OptString `json:"custom_emoji_id"`
+}
+
+// GetType returns the value of Type.
+func (s MessageEntity) GetType() MessageEntityType {
+	return s.Type
+}
+
+// GetOffset returns the value of Offset.
+func (s MessageEntity) GetOffset() int {
+	return s.Offset
+}
+
+// GetLength returns the value of Length.
+func (s MessageEntity) GetLength() int {
+	return s.Length
+}
+
+// GetURL returns the value of URL.
+func (s MessageEntity) GetURL() OptString {
+	return s.URL
+}
+
+// GetUser returns the value of User.
+func (s MessageEntity) GetUser() OptUser {
+	return s.User
+}
+
+// GetLanguage returns the value of Language.
+func (s MessageEntity) GetLanguage() OptString {
+	return s.Language
+}
+
+// GetCustomEmojiID returns the value of CustomEmojiID.
+func (s MessageEntity) GetCustomEmojiID() OptString {
+	return s.CustomEmojiID
+}
+
+// SetType sets the value of Type.
+func (s *MessageEntity) SetType(val MessageEntityType) {
+	s.Type = val
+}
+
+// SetOffset sets the value of Offset.
+func (s *MessageEntity) SetOffset(val int) {
+	s.Offset = val
+}
+
+// SetLength sets the value of Length.
+func (s *MessageEntity) SetLength(val int) {
+	s.Length = val
+}
+
+// SetURL sets the value of URL.
+func (s *MessageEntity) SetURL(val OptString) {
+	s.URL = val
+}
+
+// SetUser sets the value of User.
+func (s *MessageEntity) SetUser(val OptUser) {
+	s.User = val
+}
+
+// SetLanguage sets the value of Language.
+func (s *MessageEntity) SetLanguage(val OptString) {
+	s.Language = val
+}
+
+// SetCustomEmojiID sets the value of CustomEmojiID.
+func (s *MessageEntity) SetCustomEmojiID(val OptString) {
+	s.CustomEmojiID = val
 }
 
 // Type of the entity. Currently, can be `mention` (`@username`), `hashtag` (`#hashtag`), `cashtag`
@@ -4074,7 +11824,17 @@ const (
 // Ref: #/components/schemas/MessageId
 type MessageId struct {
 	// Unique message identifier.
-	MessageID int "json:\"message_id\""
+	MessageID int `json:"message_id"`
+}
+
+// GetMessageID returns the value of MessageID.
+func (s MessageId) GetMessageID() int {
+	return s.MessageID
+}
+
+// SetMessageID sets the value of MessageID.
+func (s *MessageId) SetMessageID(val int) {
+	s.MessageID = val
 }
 
 // NewOptAnimation returns new OptAnimation with value set to v.
@@ -7531,12 +15291,52 @@ func (o OptWebhookInfo) Or(d WebhookInfo) WebhookInfo {
 // Ref: #/components/schemas/OrderInfo
 type OrderInfo struct {
 	// _Optional_. User name.
-	Name OptString "json:\"name\""
+	Name OptString `json:"name"`
 	// _Optional_. User's phone number.
-	PhoneNumber OptString "json:\"phone_number\""
+	PhoneNumber OptString `json:"phone_number"`
 	// _Optional_. User email.
-	Email           OptString          "json:\"email\""
-	ShippingAddress OptShippingAddress "json:\"shipping_address\""
+	Email           OptString          `json:"email"`
+	ShippingAddress OptShippingAddress `json:"shipping_address"`
+}
+
+// GetName returns the value of Name.
+func (s OrderInfo) GetName() OptString {
+	return s.Name
+}
+
+// GetPhoneNumber returns the value of PhoneNumber.
+func (s OrderInfo) GetPhoneNumber() OptString {
+	return s.PhoneNumber
+}
+
+// GetEmail returns the value of Email.
+func (s OrderInfo) GetEmail() OptString {
+	return s.Email
+}
+
+// GetShippingAddress returns the value of ShippingAddress.
+func (s OrderInfo) GetShippingAddress() OptShippingAddress {
+	return s.ShippingAddress
+}
+
+// SetName sets the value of Name.
+func (s *OrderInfo) SetName(val OptString) {
+	s.Name = val
+}
+
+// SetPhoneNumber sets the value of PhoneNumber.
+func (s *OrderInfo) SetPhoneNumber(val OptString) {
+	s.PhoneNumber = val
+}
+
+// SetEmail sets the value of Email.
+func (s *OrderInfo) SetEmail(val OptString) {
+	s.Email = val
+}
+
+// SetShippingAddress sets the value of ShippingAddress.
+func (s *OrderInfo) SetShippingAddress(val OptShippingAddress) {
+	s.ShippingAddress = val
 }
 
 // Describes Telegram Passport data shared with the bot by the user.
@@ -7544,8 +15344,28 @@ type OrderInfo struct {
 type PassportData struct {
 	// Array with information about documents and other Telegram Passport elements that was shared with
 	// the bot.
-	Data        []EncryptedPassportElement "json:\"data\""
-	Credentials EncryptedCredentials       "json:\"credentials\""
+	Data        []EncryptedPassportElement `json:"data"`
+	Credentials EncryptedCredentials       `json:"credentials"`
+}
+
+// GetData returns the value of Data.
+func (s PassportData) GetData() []EncryptedPassportElement {
+	return s.Data
+}
+
+// GetCredentials returns the value of Credentials.
+func (s PassportData) GetCredentials() EncryptedCredentials {
+	return s.Credentials
+}
+
+// SetData sets the value of Data.
+func (s *PassportData) SetData(val []EncryptedPassportElement) {
+	s.Data = val
+}
+
+// SetCredentials sets the value of Credentials.
+func (s *PassportData) SetCredentials(val EncryptedCredentials) {
+	s.Credentials = val
 }
 
 // This object represents an error in the Telegram Passport element which was submitted that should
@@ -7820,13 +15640,53 @@ func NewPassportElementErrorUnspecifiedPassportElementError(v PassportElementErr
 // Ref: #/components/schemas/PassportElementErrorDataField
 type PassportElementErrorDataField struct {
 	// Error source, must be _data_.
-	Source string "json:\"source\""
+	Source string `json:"source"`
 	// Name of the data field which has the error.
-	FieldName string "json:\"field_name\""
+	FieldName string `json:"field_name"`
 	// Base64-encoded data hash.
-	DataHash string "json:\"data_hash\""
+	DataHash string `json:"data_hash"`
 	// Error message.
-	Message string "json:\"message\""
+	Message string `json:"message"`
+}
+
+// GetSource returns the value of Source.
+func (s PassportElementErrorDataField) GetSource() string {
+	return s.Source
+}
+
+// GetFieldName returns the value of FieldName.
+func (s PassportElementErrorDataField) GetFieldName() string {
+	return s.FieldName
+}
+
+// GetDataHash returns the value of DataHash.
+func (s PassportElementErrorDataField) GetDataHash() string {
+	return s.DataHash
+}
+
+// GetMessage returns the value of Message.
+func (s PassportElementErrorDataField) GetMessage() string {
+	return s.Message
+}
+
+// SetSource sets the value of Source.
+func (s *PassportElementErrorDataField) SetSource(val string) {
+	s.Source = val
+}
+
+// SetFieldName sets the value of FieldName.
+func (s *PassportElementErrorDataField) SetFieldName(val string) {
+	s.FieldName = val
+}
+
+// SetDataHash sets the value of DataHash.
+func (s *PassportElementErrorDataField) SetDataHash(val string) {
+	s.DataHash = val
+}
+
+// SetMessage sets the value of Message.
+func (s *PassportElementErrorDataField) SetMessage(val string) {
+	s.Message = val
 }
 
 // The section of the user's Telegram Passport which has the error, one of `personal_details`,
@@ -7847,11 +15707,41 @@ const (
 // Ref: #/components/schemas/PassportElementErrorFile
 type PassportElementErrorFile struct {
 	// Error source, must be _file_.
-	Source string "json:\"source\""
+	Source string `json:"source"`
 	// Base64-encoded file hash.
-	FileHash string "json:\"file_hash\""
+	FileHash string `json:"file_hash"`
 	// Error message.
-	Message string "json:\"message\""
+	Message string `json:"message"`
+}
+
+// GetSource returns the value of Source.
+func (s PassportElementErrorFile) GetSource() string {
+	return s.Source
+}
+
+// GetFileHash returns the value of FileHash.
+func (s PassportElementErrorFile) GetFileHash() string {
+	return s.FileHash
+}
+
+// GetMessage returns the value of Message.
+func (s PassportElementErrorFile) GetMessage() string {
+	return s.Message
+}
+
+// SetSource sets the value of Source.
+func (s *PassportElementErrorFile) SetSource(val string) {
+	s.Source = val
+}
+
+// SetFileHash sets the value of FileHash.
+func (s *PassportElementErrorFile) SetFileHash(val string) {
+	s.FileHash = val
+}
+
+// SetMessage sets the value of Message.
+func (s *PassportElementErrorFile) SetMessage(val string) {
+	s.Message = val
 }
 
 // The section of the user's Telegram Passport which has the issue, one of `utility_bill`,
@@ -7871,11 +15761,41 @@ const (
 // Ref: #/components/schemas/PassportElementErrorFiles
 type PassportElementErrorFiles struct {
 	// Error source, must be _files_.
-	Source string "json:\"source\""
+	Source string `json:"source"`
 	// List of base64-encoded file hashes.
-	FileHashes []string "json:\"file_hashes\""
+	FileHashes []string `json:"file_hashes"`
 	// Error message.
-	Message string "json:\"message\""
+	Message string `json:"message"`
+}
+
+// GetSource returns the value of Source.
+func (s PassportElementErrorFiles) GetSource() string {
+	return s.Source
+}
+
+// GetFileHashes returns the value of FileHashes.
+func (s PassportElementErrorFiles) GetFileHashes() []string {
+	return s.FileHashes
+}
+
+// GetMessage returns the value of Message.
+func (s PassportElementErrorFiles) GetMessage() string {
+	return s.Message
+}
+
+// SetSource sets the value of Source.
+func (s *PassportElementErrorFiles) SetSource(val string) {
+	s.Source = val
+}
+
+// SetFileHashes sets the value of FileHashes.
+func (s *PassportElementErrorFiles) SetFileHashes(val []string) {
+	s.FileHashes = val
+}
+
+// SetMessage sets the value of Message.
+func (s *PassportElementErrorFiles) SetMessage(val string) {
+	s.Message = val
 }
 
 // The section of the user's Telegram Passport which has the issue, one of `utility_bill`,
@@ -7895,11 +15815,41 @@ const (
 // Ref: #/components/schemas/PassportElementErrorFrontSide
 type PassportElementErrorFrontSide struct {
 	// Error source, must be _front_side_.
-	Source string "json:\"source\""
+	Source string `json:"source"`
 	// Base64-encoded hash of the file with the front side of the document.
-	FileHash string "json:\"file_hash\""
+	FileHash string `json:"file_hash"`
 	// Error message.
-	Message string "json:\"message\""
+	Message string `json:"message"`
+}
+
+// GetSource returns the value of Source.
+func (s PassportElementErrorFrontSide) GetSource() string {
+	return s.Source
+}
+
+// GetFileHash returns the value of FileHash.
+func (s PassportElementErrorFrontSide) GetFileHash() string {
+	return s.FileHash
+}
+
+// GetMessage returns the value of Message.
+func (s PassportElementErrorFrontSide) GetMessage() string {
+	return s.Message
+}
+
+// SetSource sets the value of Source.
+func (s *PassportElementErrorFrontSide) SetSource(val string) {
+	s.Source = val
+}
+
+// SetFileHash sets the value of FileHash.
+func (s *PassportElementErrorFrontSide) SetFileHash(val string) {
+	s.FileHash = val
+}
+
+// SetMessage sets the value of Message.
+func (s *PassportElementErrorFrontSide) SetMessage(val string) {
+	s.Message = val
 }
 
 // The section of the user's Telegram Passport which has the issue, one of `passport`,
@@ -7918,11 +15868,41 @@ const (
 // Ref: #/components/schemas/PassportElementErrorReverseSide
 type PassportElementErrorReverseSide struct {
 	// Error source, must be _reverse_side_.
-	Source string "json:\"source\""
+	Source string `json:"source"`
 	// Base64-encoded hash of the file with the reverse side of the document.
-	FileHash string "json:\"file_hash\""
+	FileHash string `json:"file_hash"`
 	// Error message.
-	Message string "json:\"message\""
+	Message string `json:"message"`
+}
+
+// GetSource returns the value of Source.
+func (s PassportElementErrorReverseSide) GetSource() string {
+	return s.Source
+}
+
+// GetFileHash returns the value of FileHash.
+func (s PassportElementErrorReverseSide) GetFileHash() string {
+	return s.FileHash
+}
+
+// GetMessage returns the value of Message.
+func (s PassportElementErrorReverseSide) GetMessage() string {
+	return s.Message
+}
+
+// SetSource sets the value of Source.
+func (s *PassportElementErrorReverseSide) SetSource(val string) {
+	s.Source = val
+}
+
+// SetFileHash sets the value of FileHash.
+func (s *PassportElementErrorReverseSide) SetFileHash(val string) {
+	s.FileHash = val
+}
+
+// SetMessage sets the value of Message.
+func (s *PassportElementErrorReverseSide) SetMessage(val string) {
+	s.Message = val
 }
 
 // The section of the user's Telegram Passport which has the issue, one of `driver_license`,
@@ -7939,11 +15919,41 @@ const (
 // Ref: #/components/schemas/PassportElementErrorSelfie
 type PassportElementErrorSelfie struct {
 	// Error source, must be _selfie_.
-	Source string "json:\"source\""
+	Source string `json:"source"`
 	// Base64-encoded hash of the file with the selfie.
-	FileHash string "json:\"file_hash\""
+	FileHash string `json:"file_hash"`
 	// Error message.
-	Message string "json:\"message\""
+	Message string `json:"message"`
+}
+
+// GetSource returns the value of Source.
+func (s PassportElementErrorSelfie) GetSource() string {
+	return s.Source
+}
+
+// GetFileHash returns the value of FileHash.
+func (s PassportElementErrorSelfie) GetFileHash() string {
+	return s.FileHash
+}
+
+// GetMessage returns the value of Message.
+func (s PassportElementErrorSelfie) GetMessage() string {
+	return s.Message
+}
+
+// SetSource sets the value of Source.
+func (s *PassportElementErrorSelfie) SetSource(val string) {
+	s.Source = val
+}
+
+// SetFileHash sets the value of FileHash.
+func (s *PassportElementErrorSelfie) SetFileHash(val string) {
+	s.FileHash = val
+}
+
+// SetMessage sets the value of Message.
+func (s *PassportElementErrorSelfie) SetMessage(val string) {
+	s.Message = val
 }
 
 // The section of the user's Telegram Passport which has the issue, one of `passport`,
@@ -7962,11 +15972,41 @@ const (
 // Ref: #/components/schemas/PassportElementErrorTranslationFile
 type PassportElementErrorTranslationFile struct {
 	// Error source, must be _translation_file_.
-	Source string "json:\"source\""
+	Source string `json:"source"`
 	// Base64-encoded file hash.
-	FileHash string "json:\"file_hash\""
+	FileHash string `json:"file_hash"`
 	// Error message.
-	Message string "json:\"message\""
+	Message string `json:"message"`
+}
+
+// GetSource returns the value of Source.
+func (s PassportElementErrorTranslationFile) GetSource() string {
+	return s.Source
+}
+
+// GetFileHash returns the value of FileHash.
+func (s PassportElementErrorTranslationFile) GetFileHash() string {
+	return s.FileHash
+}
+
+// GetMessage returns the value of Message.
+func (s PassportElementErrorTranslationFile) GetMessage() string {
+	return s.Message
+}
+
+// SetSource sets the value of Source.
+func (s *PassportElementErrorTranslationFile) SetSource(val string) {
+	s.Source = val
+}
+
+// SetFileHash sets the value of FileHash.
+func (s *PassportElementErrorTranslationFile) SetFileHash(val string) {
+	s.FileHash = val
+}
+
+// SetMessage sets the value of Message.
+func (s *PassportElementErrorTranslationFile) SetMessage(val string) {
+	s.Message = val
 }
 
 // Type of element of the user's Telegram Passport which has the issue, one of `passport`,
@@ -7991,11 +16031,41 @@ const (
 // Ref: #/components/schemas/PassportElementErrorTranslationFiles
 type PassportElementErrorTranslationFiles struct {
 	// Error source, must be _translation_files_.
-	Source string "json:\"source\""
+	Source string `json:"source"`
 	// List of base64-encoded file hashes.
-	FileHashes []string "json:\"file_hashes\""
+	FileHashes []string `json:"file_hashes"`
 	// Error message.
-	Message string "json:\"message\""
+	Message string `json:"message"`
+}
+
+// GetSource returns the value of Source.
+func (s PassportElementErrorTranslationFiles) GetSource() string {
+	return s.Source
+}
+
+// GetFileHashes returns the value of FileHashes.
+func (s PassportElementErrorTranslationFiles) GetFileHashes() []string {
+	return s.FileHashes
+}
+
+// GetMessage returns the value of Message.
+func (s PassportElementErrorTranslationFiles) GetMessage() string {
+	return s.Message
+}
+
+// SetSource sets the value of Source.
+func (s *PassportElementErrorTranslationFiles) SetSource(val string) {
+	s.Source = val
+}
+
+// SetFileHashes sets the value of FileHashes.
+func (s *PassportElementErrorTranslationFiles) SetFileHashes(val []string) {
+	s.FileHashes = val
+}
+
+// SetMessage sets the value of Message.
+func (s *PassportElementErrorTranslationFiles) SetMessage(val string) {
+	s.Message = val
 }
 
 // Type of element of the user's Telegram Passport which has the issue, one of `passport`,
@@ -8020,11 +16090,41 @@ const (
 // Ref: #/components/schemas/PassportElementErrorUnspecified
 type PassportElementErrorUnspecified struct {
 	// Error source, must be _unspecified_.
-	Source string "json:\"source\""
+	Source string `json:"source"`
 	// Base64-encoded element hash.
-	ElementHash string "json:\"element_hash\""
+	ElementHash string `json:"element_hash"`
 	// Error message.
-	Message string "json:\"message\""
+	Message string `json:"message"`
+}
+
+// GetSource returns the value of Source.
+func (s PassportElementErrorUnspecified) GetSource() string {
+	return s.Source
+}
+
+// GetElementHash returns the value of ElementHash.
+func (s PassportElementErrorUnspecified) GetElementHash() string {
+	return s.ElementHash
+}
+
+// GetMessage returns the value of Message.
+func (s PassportElementErrorUnspecified) GetMessage() string {
+	return s.Message
+}
+
+// SetSource sets the value of Source.
+func (s *PassportElementErrorUnspecified) SetSource(val string) {
+	s.Source = val
+}
+
+// SetElementHash sets the value of ElementHash.
+func (s *PassportElementErrorUnspecified) SetElementHash(val string) {
+	s.ElementHash = val
+}
+
+// SetMessage sets the value of Message.
+func (s *PassportElementErrorUnspecified) SetMessage(val string) {
+	s.Message = val
 }
 
 // This object represents a file uploaded to Telegram Passport. Currently all Telegram Passport files
@@ -8032,14 +16132,54 @@ type PassportElementErrorUnspecified struct {
 // Ref: #/components/schemas/PassportFile
 type PassportFile struct {
 	// Identifier for this file, which can be used to download or reuse the file.
-	FileID string "json:\"file_id\""
+	FileID string `json:"file_id"`
 	// Unique identifier for this file, which is supposed to be the same over time and for different bots.
 	//  Can't be used to download or reuse the file.
-	FileUniqueID string "json:\"file_unique_id\""
+	FileUniqueID string `json:"file_unique_id"`
 	// File size in bytes.
-	FileSize int "json:\"file_size\""
+	FileSize int `json:"file_size"`
 	// Unix time when the file was uploaded.
-	FileDate int "json:\"file_date\""
+	FileDate int `json:"file_date"`
+}
+
+// GetFileID returns the value of FileID.
+func (s PassportFile) GetFileID() string {
+	return s.FileID
+}
+
+// GetFileUniqueID returns the value of FileUniqueID.
+func (s PassportFile) GetFileUniqueID() string {
+	return s.FileUniqueID
+}
+
+// GetFileSize returns the value of FileSize.
+func (s PassportFile) GetFileSize() int {
+	return s.FileSize
+}
+
+// GetFileDate returns the value of FileDate.
+func (s PassportFile) GetFileDate() int {
+	return s.FileDate
+}
+
+// SetFileID sets the value of FileID.
+func (s *PassportFile) SetFileID(val string) {
+	s.FileID = val
+}
+
+// SetFileUniqueID sets the value of FileUniqueID.
+func (s *PassportFile) SetFileUniqueID(val string) {
+	s.FileUniqueID = val
+}
+
+// SetFileSize sets the value of FileSize.
+func (s *PassportFile) SetFileSize(val int) {
+	s.FileSize = val
+}
+
+// SetFileDate sets the value of FileDate.
+func (s *PassportFile) SetFileDate(val int) {
+	s.FileDate = val
 }
 
 // This object represents one size of a photo or a [file](https://core.telegram.
@@ -8047,81 +16187,341 @@ type PassportFile struct {
 // Ref: #/components/schemas/PhotoSize
 type PhotoSize struct {
 	// Identifier for this file, which can be used to download or reuse the file.
-	FileID string "json:\"file_id\""
+	FileID string `json:"file_id"`
 	// Unique identifier for this file, which is supposed to be the same over time and for different bots.
 	//  Can't be used to download or reuse the file.
-	FileUniqueID string "json:\"file_unique_id\""
+	FileUniqueID string `json:"file_unique_id"`
 	// Photo width.
-	Width int "json:\"width\""
+	Width int `json:"width"`
 	// Photo height.
-	Height int "json:\"height\""
+	Height int `json:"height"`
 	// _Optional_. File size in bytes.
-	FileSize OptInt "json:\"file_size\""
+	FileSize OptInt `json:"file_size"`
+}
+
+// GetFileID returns the value of FileID.
+func (s PhotoSize) GetFileID() string {
+	return s.FileID
+}
+
+// GetFileUniqueID returns the value of FileUniqueID.
+func (s PhotoSize) GetFileUniqueID() string {
+	return s.FileUniqueID
+}
+
+// GetWidth returns the value of Width.
+func (s PhotoSize) GetWidth() int {
+	return s.Width
+}
+
+// GetHeight returns the value of Height.
+func (s PhotoSize) GetHeight() int {
+	return s.Height
+}
+
+// GetFileSize returns the value of FileSize.
+func (s PhotoSize) GetFileSize() OptInt {
+	return s.FileSize
+}
+
+// SetFileID sets the value of FileID.
+func (s *PhotoSize) SetFileID(val string) {
+	s.FileID = val
+}
+
+// SetFileUniqueID sets the value of FileUniqueID.
+func (s *PhotoSize) SetFileUniqueID(val string) {
+	s.FileUniqueID = val
+}
+
+// SetWidth sets the value of Width.
+func (s *PhotoSize) SetWidth(val int) {
+	s.Width = val
+}
+
+// SetHeight sets the value of Height.
+func (s *PhotoSize) SetHeight(val int) {
+	s.Height = val
+}
+
+// SetFileSize sets the value of FileSize.
+func (s *PhotoSize) SetFileSize(val OptInt) {
+	s.FileSize = val
 }
 
 // Input for pinChatMessage.
 // Ref: #/components/schemas/pinChatMessage
 type PinChatMessage struct {
-	ChatID ID "json:\"chat_id\""
+	ChatID ID `json:"chat_id"`
 	// Identifier of a message to pin.
-	MessageID int "json:\"message_id\""
+	MessageID int `json:"message_id"`
 	// Pass _True_ if it is not necessary to send a notification to all chat members about the new pinned
 	// message. Notifications are always disabled in channels and private chats.
-	DisableNotification OptBool "json:\"disable_notification\""
+	DisableNotification OptBool `json:"disable_notification"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s PinChatMessage) GetChatID() ID {
+	return s.ChatID
+}
+
+// GetMessageID returns the value of MessageID.
+func (s PinChatMessage) GetMessageID() int {
+	return s.MessageID
+}
+
+// GetDisableNotification returns the value of DisableNotification.
+func (s PinChatMessage) GetDisableNotification() OptBool {
+	return s.DisableNotification
+}
+
+// SetChatID sets the value of ChatID.
+func (s *PinChatMessage) SetChatID(val ID) {
+	s.ChatID = val
+}
+
+// SetMessageID sets the value of MessageID.
+func (s *PinChatMessage) SetMessageID(val int) {
+	s.MessageID = val
+}
+
+// SetDisableNotification sets the value of DisableNotification.
+func (s *PinChatMessage) SetDisableNotification(val OptBool) {
+	s.DisableNotification = val
 }
 
 // This object contains information about a poll.
 // Ref: #/components/schemas/Poll
 type Poll struct {
 	// Unique poll identifier.
-	ID string "json:\"id\""
+	ID string `json:"id"`
 	// Poll question, 1-300 characters.
-	Question string "json:\"question\""
+	Question string `json:"question"`
 	// List of poll options.
-	Options []PollOption "json:\"options\""
+	Options []PollOption `json:"options"`
 	// Total number of users that voted in the poll.
-	TotalVoterCount int "json:\"total_voter_count\""
+	TotalVoterCount int `json:"total_voter_count"`
 	// _True_, if the poll is closed.
-	IsClosed bool "json:\"is_closed\""
+	IsClosed bool `json:"is_closed"`
 	// _True_, if the poll is anonymous.
-	IsAnonymous bool "json:\"is_anonymous\""
+	IsAnonymous bool `json:"is_anonymous"`
 	// Poll type, currently can be `regular` or `quiz`.
-	Type PollType "json:\"type\""
+	Type PollType `json:"type"`
 	// _True_, if the poll allows multiple answers.
-	AllowsMultipleAnswers bool "json:\"allows_multiple_answers\""
+	AllowsMultipleAnswers bool `json:"allows_multiple_answers"`
 	// _Optional_. 0-based identifier of the correct answer option. Available only for polls in the quiz
 	// mode, which are closed, or was sent (not forwarded) by the bot or to the private chat with the bot.
-	CorrectOptionID OptInt "json:\"correct_option_id\""
+	CorrectOptionID OptInt `json:"correct_option_id"`
 	// _Optional_. Text that is shown when a user chooses an incorrect answer or taps on the lamp icon in
 	// a quiz-style poll, 0-200 characters.
-	Explanation OptString "json:\"explanation\""
+	Explanation OptString `json:"explanation"`
 	// _Optional_. Special entities like usernames, URLs, bot commands, etc. that appear in the
 	// _explanation_.
-	ExplanationEntities []MessageEntity "json:\"explanation_entities\""
+	ExplanationEntities []MessageEntity `json:"explanation_entities"`
 	// _Optional_. Amount of time in seconds the poll will be active after creation.
-	OpenPeriod OptInt "json:\"open_period\""
+	OpenPeriod OptInt `json:"open_period"`
 	// _Optional_. Point in time (Unix timestamp) when the poll will be automatically closed.
-	CloseDate OptInt "json:\"close_date\""
+	CloseDate OptInt `json:"close_date"`
+}
+
+// GetID returns the value of ID.
+func (s Poll) GetID() string {
+	return s.ID
+}
+
+// GetQuestion returns the value of Question.
+func (s Poll) GetQuestion() string {
+	return s.Question
+}
+
+// GetOptions returns the value of Options.
+func (s Poll) GetOptions() []PollOption {
+	return s.Options
+}
+
+// GetTotalVoterCount returns the value of TotalVoterCount.
+func (s Poll) GetTotalVoterCount() int {
+	return s.TotalVoterCount
+}
+
+// GetIsClosed returns the value of IsClosed.
+func (s Poll) GetIsClosed() bool {
+	return s.IsClosed
+}
+
+// GetIsAnonymous returns the value of IsAnonymous.
+func (s Poll) GetIsAnonymous() bool {
+	return s.IsAnonymous
+}
+
+// GetType returns the value of Type.
+func (s Poll) GetType() PollType {
+	return s.Type
+}
+
+// GetAllowsMultipleAnswers returns the value of AllowsMultipleAnswers.
+func (s Poll) GetAllowsMultipleAnswers() bool {
+	return s.AllowsMultipleAnswers
+}
+
+// GetCorrectOptionID returns the value of CorrectOptionID.
+func (s Poll) GetCorrectOptionID() OptInt {
+	return s.CorrectOptionID
+}
+
+// GetExplanation returns the value of Explanation.
+func (s Poll) GetExplanation() OptString {
+	return s.Explanation
+}
+
+// GetExplanationEntities returns the value of ExplanationEntities.
+func (s Poll) GetExplanationEntities() []MessageEntity {
+	return s.ExplanationEntities
+}
+
+// GetOpenPeriod returns the value of OpenPeriod.
+func (s Poll) GetOpenPeriod() OptInt {
+	return s.OpenPeriod
+}
+
+// GetCloseDate returns the value of CloseDate.
+func (s Poll) GetCloseDate() OptInt {
+	return s.CloseDate
+}
+
+// SetID sets the value of ID.
+func (s *Poll) SetID(val string) {
+	s.ID = val
+}
+
+// SetQuestion sets the value of Question.
+func (s *Poll) SetQuestion(val string) {
+	s.Question = val
+}
+
+// SetOptions sets the value of Options.
+func (s *Poll) SetOptions(val []PollOption) {
+	s.Options = val
+}
+
+// SetTotalVoterCount sets the value of TotalVoterCount.
+func (s *Poll) SetTotalVoterCount(val int) {
+	s.TotalVoterCount = val
+}
+
+// SetIsClosed sets the value of IsClosed.
+func (s *Poll) SetIsClosed(val bool) {
+	s.IsClosed = val
+}
+
+// SetIsAnonymous sets the value of IsAnonymous.
+func (s *Poll) SetIsAnonymous(val bool) {
+	s.IsAnonymous = val
+}
+
+// SetType sets the value of Type.
+func (s *Poll) SetType(val PollType) {
+	s.Type = val
+}
+
+// SetAllowsMultipleAnswers sets the value of AllowsMultipleAnswers.
+func (s *Poll) SetAllowsMultipleAnswers(val bool) {
+	s.AllowsMultipleAnswers = val
+}
+
+// SetCorrectOptionID sets the value of CorrectOptionID.
+func (s *Poll) SetCorrectOptionID(val OptInt) {
+	s.CorrectOptionID = val
+}
+
+// SetExplanation sets the value of Explanation.
+func (s *Poll) SetExplanation(val OptString) {
+	s.Explanation = val
+}
+
+// SetExplanationEntities sets the value of ExplanationEntities.
+func (s *Poll) SetExplanationEntities(val []MessageEntity) {
+	s.ExplanationEntities = val
+}
+
+// SetOpenPeriod sets the value of OpenPeriod.
+func (s *Poll) SetOpenPeriod(val OptInt) {
+	s.OpenPeriod = val
+}
+
+// SetCloseDate sets the value of CloseDate.
+func (s *Poll) SetCloseDate(val OptInt) {
+	s.CloseDate = val
 }
 
 // This object represents an answer of a user in a non-anonymous poll.
 // Ref: #/components/schemas/PollAnswer
 type PollAnswer struct {
 	// Unique poll identifier.
-	PollID string "json:\"poll_id\""
-	User   User   "json:\"user\""
+	PollID string `json:"poll_id"`
+	User   User   `json:"user"`
 	// 0-based identifiers of answer options, chosen by the user. May be empty if the user retracted
 	// their vote.
-	OptionIds []int "json:\"option_ids\""
+	OptionIds []int `json:"option_ids"`
+}
+
+// GetPollID returns the value of PollID.
+func (s PollAnswer) GetPollID() string {
+	return s.PollID
+}
+
+// GetUser returns the value of User.
+func (s PollAnswer) GetUser() User {
+	return s.User
+}
+
+// GetOptionIds returns the value of OptionIds.
+func (s PollAnswer) GetOptionIds() []int {
+	return s.OptionIds
+}
+
+// SetPollID sets the value of PollID.
+func (s *PollAnswer) SetPollID(val string) {
+	s.PollID = val
+}
+
+// SetUser sets the value of User.
+func (s *PollAnswer) SetUser(val User) {
+	s.User = val
+}
+
+// SetOptionIds sets the value of OptionIds.
+func (s *PollAnswer) SetOptionIds(val []int) {
+	s.OptionIds = val
 }
 
 // This object contains information about one answer option in a poll.
 // Ref: #/components/schemas/PollOption
 type PollOption struct {
 	// Option text, 1-100 characters.
-	Text string "json:\"text\""
+	Text string `json:"text"`
 	// Number of users that voted for this option.
-	VoterCount int "json:\"voter_count\""
+	VoterCount int `json:"voter_count"`
+}
+
+// GetText returns the value of Text.
+func (s PollOption) GetText() string {
+	return s.Text
+}
+
+// GetVoterCount returns the value of VoterCount.
+func (s PollOption) GetVoterCount() int {
+	return s.VoterCount
+}
+
+// SetText sets the value of Text.
+func (s *PollOption) SetText(val string) {
+	s.Text = val
+}
+
+// SetVoterCount sets the value of VoterCount.
+func (s *PollOption) SetVoterCount(val int) {
+	s.VoterCount = val
 }
 
 // Poll type, currently can be `regular` or `quiz`.
@@ -8136,76 +16536,336 @@ const (
 // Ref: #/components/schemas/PreCheckoutQuery
 type PreCheckoutQuery struct {
 	// Unique query identifier.
-	ID   string "json:\"id\""
-	From User   "json:\"from\""
+	ID   string `json:"id"`
+	From User   `json:"from"`
 	// Three-letter ISO 4217 [currency](https://core.telegram.org/bots/payments#supported-currencies) code.
-	Currency string "json:\"currency\""
+	Currency string `json:"currency"`
 	// Total price in the _smallest units_ of the currency (integer, **not** float/double). For example,
 	// for a price of `US$ 1.45` pass `amount = 145`. See the _exp_ parameter in [currencies.
 	// json](https://core.telegram.org/bots/payments/currencies.json), it shows the number of digits past
 	// the decimal point for each currency (2 for the majority of currencies).
-	TotalAmount int "json:\"total_amount\""
+	TotalAmount int `json:"total_amount"`
 	// Bot specified invoice payload.
-	InvoicePayload string "json:\"invoice_payload\""
+	InvoicePayload string `json:"invoice_payload"`
 	// _Optional_. Identifier of the shipping option chosen by the user.
-	ShippingOptionID OptString    "json:\"shipping_option_id\""
-	OrderInfo        OptOrderInfo "json:\"order_info\""
+	ShippingOptionID OptString    `json:"shipping_option_id"`
+	OrderInfo        OptOrderInfo `json:"order_info"`
+}
+
+// GetID returns the value of ID.
+func (s PreCheckoutQuery) GetID() string {
+	return s.ID
+}
+
+// GetFrom returns the value of From.
+func (s PreCheckoutQuery) GetFrom() User {
+	return s.From
+}
+
+// GetCurrency returns the value of Currency.
+func (s PreCheckoutQuery) GetCurrency() string {
+	return s.Currency
+}
+
+// GetTotalAmount returns the value of TotalAmount.
+func (s PreCheckoutQuery) GetTotalAmount() int {
+	return s.TotalAmount
+}
+
+// GetInvoicePayload returns the value of InvoicePayload.
+func (s PreCheckoutQuery) GetInvoicePayload() string {
+	return s.InvoicePayload
+}
+
+// GetShippingOptionID returns the value of ShippingOptionID.
+func (s PreCheckoutQuery) GetShippingOptionID() OptString {
+	return s.ShippingOptionID
+}
+
+// GetOrderInfo returns the value of OrderInfo.
+func (s PreCheckoutQuery) GetOrderInfo() OptOrderInfo {
+	return s.OrderInfo
+}
+
+// SetID sets the value of ID.
+func (s *PreCheckoutQuery) SetID(val string) {
+	s.ID = val
+}
+
+// SetFrom sets the value of From.
+func (s *PreCheckoutQuery) SetFrom(val User) {
+	s.From = val
+}
+
+// SetCurrency sets the value of Currency.
+func (s *PreCheckoutQuery) SetCurrency(val string) {
+	s.Currency = val
+}
+
+// SetTotalAmount sets the value of TotalAmount.
+func (s *PreCheckoutQuery) SetTotalAmount(val int) {
+	s.TotalAmount = val
+}
+
+// SetInvoicePayload sets the value of InvoicePayload.
+func (s *PreCheckoutQuery) SetInvoicePayload(val string) {
+	s.InvoicePayload = val
+}
+
+// SetShippingOptionID sets the value of ShippingOptionID.
+func (s *PreCheckoutQuery) SetShippingOptionID(val OptString) {
+	s.ShippingOptionID = val
+}
+
+// SetOrderInfo sets the value of OrderInfo.
+func (s *PreCheckoutQuery) SetOrderInfo(val OptOrderInfo) {
+	s.OrderInfo = val
 }
 
 // Input for promoteChatMember.
 // Ref: #/components/schemas/promoteChatMember
 type PromoteChatMember struct {
-	ChatID ID "json:\"chat_id\""
+	ChatID ID `json:"chat_id"`
 	// Unique identifier of the target user.
-	UserID int64 "json:\"user_id\""
+	UserID int64 `json:"user_id"`
 	// Pass _True_ if the administrator's presence in the chat is hidden.
-	IsAnonymous OptBool "json:\"is_anonymous\""
+	IsAnonymous OptBool `json:"is_anonymous"`
 	// Pass _True_ if the administrator can access the chat event log, chat statistics, message
 	// statistics in channels, see channel members, see anonymous administrators in supergroups and
 	// ignore slow mode. Implied by any other administrator privilege.
-	CanManageChat OptBool "json:\"can_manage_chat\""
+	CanManageChat OptBool `json:"can_manage_chat"`
 	// Pass _True_ if the administrator can create channel posts, channels only.
-	CanPostMessages OptBool "json:\"can_post_messages\""
+	CanPostMessages OptBool `json:"can_post_messages"`
 	// Pass _True_ if the administrator can edit messages of other users and can pin messages, channels
 	// only.
-	CanEditMessages OptBool "json:\"can_edit_messages\""
+	CanEditMessages OptBool `json:"can_edit_messages"`
 	// Pass _True_ if the administrator can delete messages of other users.
-	CanDeleteMessages OptBool "json:\"can_delete_messages\""
+	CanDeleteMessages OptBool `json:"can_delete_messages"`
 	// Pass _True_ if the administrator can manage video chats.
-	CanManageVideoChats OptBool "json:\"can_manage_video_chats\""
+	CanManageVideoChats OptBool `json:"can_manage_video_chats"`
 	// Pass _True_ if the administrator can restrict, ban or unban chat members.
-	CanRestrictMembers OptBool "json:\"can_restrict_members\""
+	CanRestrictMembers OptBool `json:"can_restrict_members"`
 	// Pass _True_ if the administrator can add new administrators with a subset of their own privileges
 	// or demote administrators that he has promoted, directly or indirectly (promoted by administrators
 	// that were appointed by him).
-	CanPromoteMembers OptBool "json:\"can_promote_members\""
+	CanPromoteMembers OptBool `json:"can_promote_members"`
 	// Pass _True_ if the administrator can change chat title, photo and other settings.
-	CanChangeInfo OptBool "json:\"can_change_info\""
+	CanChangeInfo OptBool `json:"can_change_info"`
 	// Pass _True_ if the administrator can invite new users to the chat.
-	CanInviteUsers OptBool "json:\"can_invite_users\""
+	CanInviteUsers OptBool `json:"can_invite_users"`
 	// Pass _True_ if the administrator can pin messages, supergroups only.
-	CanPinMessages OptBool "json:\"can_pin_messages\""
+	CanPinMessages OptBool `json:"can_pin_messages"`
 	// Pass _True_ if the user is allowed to create, rename, close, and reopen forum topics, supergroups
 	// only.
-	CanManageTopics OptBool "json:\"can_manage_topics\""
+	CanManageTopics OptBool `json:"can_manage_topics"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s PromoteChatMember) GetChatID() ID {
+	return s.ChatID
+}
+
+// GetUserID returns the value of UserID.
+func (s PromoteChatMember) GetUserID() int64 {
+	return s.UserID
+}
+
+// GetIsAnonymous returns the value of IsAnonymous.
+func (s PromoteChatMember) GetIsAnonymous() OptBool {
+	return s.IsAnonymous
+}
+
+// GetCanManageChat returns the value of CanManageChat.
+func (s PromoteChatMember) GetCanManageChat() OptBool {
+	return s.CanManageChat
+}
+
+// GetCanPostMessages returns the value of CanPostMessages.
+func (s PromoteChatMember) GetCanPostMessages() OptBool {
+	return s.CanPostMessages
+}
+
+// GetCanEditMessages returns the value of CanEditMessages.
+func (s PromoteChatMember) GetCanEditMessages() OptBool {
+	return s.CanEditMessages
+}
+
+// GetCanDeleteMessages returns the value of CanDeleteMessages.
+func (s PromoteChatMember) GetCanDeleteMessages() OptBool {
+	return s.CanDeleteMessages
+}
+
+// GetCanManageVideoChats returns the value of CanManageVideoChats.
+func (s PromoteChatMember) GetCanManageVideoChats() OptBool {
+	return s.CanManageVideoChats
+}
+
+// GetCanRestrictMembers returns the value of CanRestrictMembers.
+func (s PromoteChatMember) GetCanRestrictMembers() OptBool {
+	return s.CanRestrictMembers
+}
+
+// GetCanPromoteMembers returns the value of CanPromoteMembers.
+func (s PromoteChatMember) GetCanPromoteMembers() OptBool {
+	return s.CanPromoteMembers
+}
+
+// GetCanChangeInfo returns the value of CanChangeInfo.
+func (s PromoteChatMember) GetCanChangeInfo() OptBool {
+	return s.CanChangeInfo
+}
+
+// GetCanInviteUsers returns the value of CanInviteUsers.
+func (s PromoteChatMember) GetCanInviteUsers() OptBool {
+	return s.CanInviteUsers
+}
+
+// GetCanPinMessages returns the value of CanPinMessages.
+func (s PromoteChatMember) GetCanPinMessages() OptBool {
+	return s.CanPinMessages
+}
+
+// GetCanManageTopics returns the value of CanManageTopics.
+func (s PromoteChatMember) GetCanManageTopics() OptBool {
+	return s.CanManageTopics
+}
+
+// SetChatID sets the value of ChatID.
+func (s *PromoteChatMember) SetChatID(val ID) {
+	s.ChatID = val
+}
+
+// SetUserID sets the value of UserID.
+func (s *PromoteChatMember) SetUserID(val int64) {
+	s.UserID = val
+}
+
+// SetIsAnonymous sets the value of IsAnonymous.
+func (s *PromoteChatMember) SetIsAnonymous(val OptBool) {
+	s.IsAnonymous = val
+}
+
+// SetCanManageChat sets the value of CanManageChat.
+func (s *PromoteChatMember) SetCanManageChat(val OptBool) {
+	s.CanManageChat = val
+}
+
+// SetCanPostMessages sets the value of CanPostMessages.
+func (s *PromoteChatMember) SetCanPostMessages(val OptBool) {
+	s.CanPostMessages = val
+}
+
+// SetCanEditMessages sets the value of CanEditMessages.
+func (s *PromoteChatMember) SetCanEditMessages(val OptBool) {
+	s.CanEditMessages = val
+}
+
+// SetCanDeleteMessages sets the value of CanDeleteMessages.
+func (s *PromoteChatMember) SetCanDeleteMessages(val OptBool) {
+	s.CanDeleteMessages = val
+}
+
+// SetCanManageVideoChats sets the value of CanManageVideoChats.
+func (s *PromoteChatMember) SetCanManageVideoChats(val OptBool) {
+	s.CanManageVideoChats = val
+}
+
+// SetCanRestrictMembers sets the value of CanRestrictMembers.
+func (s *PromoteChatMember) SetCanRestrictMembers(val OptBool) {
+	s.CanRestrictMembers = val
+}
+
+// SetCanPromoteMembers sets the value of CanPromoteMembers.
+func (s *PromoteChatMember) SetCanPromoteMembers(val OptBool) {
+	s.CanPromoteMembers = val
+}
+
+// SetCanChangeInfo sets the value of CanChangeInfo.
+func (s *PromoteChatMember) SetCanChangeInfo(val OptBool) {
+	s.CanChangeInfo = val
+}
+
+// SetCanInviteUsers sets the value of CanInviteUsers.
+func (s *PromoteChatMember) SetCanInviteUsers(val OptBool) {
+	s.CanInviteUsers = val
+}
+
+// SetCanPinMessages sets the value of CanPinMessages.
+func (s *PromoteChatMember) SetCanPinMessages(val OptBool) {
+	s.CanPinMessages = val
+}
+
+// SetCanManageTopics sets the value of CanManageTopics.
+func (s *PromoteChatMember) SetCanManageTopics(val OptBool) {
+	s.CanManageTopics = val
 }
 
 // This object represents the content of a service message, sent whenever a user in the chat triggers
 // a proximity alert set by another user.
 // Ref: #/components/schemas/ProximityAlertTriggered
 type ProximityAlertTriggered struct {
-	Traveler User "json:\"traveler\""
-	Watcher  User "json:\"watcher\""
+	Traveler User `json:"traveler"`
+	Watcher  User `json:"watcher"`
 	// The distance between the users.
-	Distance int "json:\"distance\""
+	Distance int `json:"distance"`
+}
+
+// GetTraveler returns the value of Traveler.
+func (s ProximityAlertTriggered) GetTraveler() User {
+	return s.Traveler
+}
+
+// GetWatcher returns the value of Watcher.
+func (s ProximityAlertTriggered) GetWatcher() User {
+	return s.Watcher
+}
+
+// GetDistance returns the value of Distance.
+func (s ProximityAlertTriggered) GetDistance() int {
+	return s.Distance
+}
+
+// SetTraveler sets the value of Traveler.
+func (s *ProximityAlertTriggered) SetTraveler(val User) {
+	s.Traveler = val
+}
+
+// SetWatcher sets the value of Watcher.
+func (s *ProximityAlertTriggered) SetWatcher(val User) {
+	s.Watcher = val
+}
+
+// SetDistance sets the value of Distance.
+func (s *ProximityAlertTriggered) SetDistance(val int) {
+	s.Distance = val
 }
 
 // Input for reopenForumTopic.
 // Ref: #/components/schemas/reopenForumTopic
 type ReopenForumTopic struct {
-	ChatID ID "json:\"chat_id\""
+	ChatID ID `json:"chat_id"`
 	// Unique identifier for the target message thread of the forum topic.
-	MessageThreadID int "json:\"message_thread_id\""
+	MessageThreadID int `json:"message_thread_id"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s ReopenForumTopic) GetChatID() ID {
+	return s.ChatID
+}
+
+// GetMessageThreadID returns the value of MessageThreadID.
+func (s ReopenForumTopic) GetMessageThreadID() int {
+	return s.MessageThreadID
+}
+
+// SetChatID sets the value of ChatID.
+func (s *ReopenForumTopic) SetChatID(val ID) {
+	s.ChatID = val
+}
+
+// SetMessageThreadID sets the value of MessageThreadID.
+func (s *ReopenForumTopic) SetMessageThreadID(val int) {
+	s.MessageThreadID = val
 }
 
 // This object represents a [custom keyboard](https://core.telegram.org/bots/features#keyboards) with
@@ -8215,26 +16875,76 @@ type ReopenForumTopic struct {
 type ReplyKeyboardMarkup struct {
 	// Array of button rows, each represented by an Array of [KeyboardButton](https://core.telegram.
 	// org/bots/api#keyboardbutton) objects.
-	Keyboard [][]KeyboardButton "json:\"keyboard\""
+	Keyboard [][]KeyboardButton `json:"keyboard"`
 	// _Optional_. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the
 	// keyboard smaller if there are just two rows of buttons). Defaults to _false_, in which case the
 	// custom keyboard is always of the same height as the app's standard keyboard.
-	ResizeKeyboard OptBool "json:\"resize_keyboard\""
+	ResizeKeyboard OptBool `json:"resize_keyboard"`
 	// _Optional_. Requests clients to hide the keyboard as soon as it's been used. The keyboard will
 	// still be available, but clients will automatically display the usual letter-keyboard in the chat -
 	// the user can press a special button in the input field to see the custom keyboard again. Defaults
 	// to _false_.
-	OneTimeKeyboard OptBool "json:\"one_time_keyboard\""
+	OneTimeKeyboard OptBool `json:"one_time_keyboard"`
 	// _Optional_. The placeholder to be shown in the input field when the keyboard is active; 1-64
 	// characters.
-	InputFieldPlaceholder OptString "json:\"input_field_placeholder\""
+	InputFieldPlaceholder OptString `json:"input_field_placeholder"`
 	// _Optional_. Use this parameter if you want to show the keyboard to specific users only. Targets:
 	// 1) users that are @mentioned in the _text_ of the [Message](https://core.telegram.
 	// org/bots/api#message) object; 2) if the bot's message is a reply (has _reply_to_message_id_),
 	// sender of the original message._Example:_ A user requests to change the bot's language, bot
 	// replies to the request with a keyboard to select the new language. Other users in the group don't
 	// see the keyboard.
-	Selective OptBool "json:\"selective\""
+	Selective OptBool `json:"selective"`
+}
+
+// GetKeyboard returns the value of Keyboard.
+func (s ReplyKeyboardMarkup) GetKeyboard() [][]KeyboardButton {
+	return s.Keyboard
+}
+
+// GetResizeKeyboard returns the value of ResizeKeyboard.
+func (s ReplyKeyboardMarkup) GetResizeKeyboard() OptBool {
+	return s.ResizeKeyboard
+}
+
+// GetOneTimeKeyboard returns the value of OneTimeKeyboard.
+func (s ReplyKeyboardMarkup) GetOneTimeKeyboard() OptBool {
+	return s.OneTimeKeyboard
+}
+
+// GetInputFieldPlaceholder returns the value of InputFieldPlaceholder.
+func (s ReplyKeyboardMarkup) GetInputFieldPlaceholder() OptString {
+	return s.InputFieldPlaceholder
+}
+
+// GetSelective returns the value of Selective.
+func (s ReplyKeyboardMarkup) GetSelective() OptBool {
+	return s.Selective
+}
+
+// SetKeyboard sets the value of Keyboard.
+func (s *ReplyKeyboardMarkup) SetKeyboard(val [][]KeyboardButton) {
+	s.Keyboard = val
+}
+
+// SetResizeKeyboard sets the value of ResizeKeyboard.
+func (s *ReplyKeyboardMarkup) SetResizeKeyboard(val OptBool) {
+	s.ResizeKeyboard = val
+}
+
+// SetOneTimeKeyboard sets the value of OneTimeKeyboard.
+func (s *ReplyKeyboardMarkup) SetOneTimeKeyboard(val OptBool) {
+	s.OneTimeKeyboard = val
+}
+
+// SetInputFieldPlaceholder sets the value of InputFieldPlaceholder.
+func (s *ReplyKeyboardMarkup) SetInputFieldPlaceholder(val OptString) {
+	s.InputFieldPlaceholder = val
+}
+
+// SetSelective sets the value of Selective.
+func (s *ReplyKeyboardMarkup) SetSelective(val OptBool) {
+	s.Selective = val
 }
 
 // Upon receiving a message with this object, Telegram clients will remove the current custom
@@ -8247,14 +16957,34 @@ type ReplyKeyboardRemove struct {
 	// Requests clients to remove the custom keyboard (user will not be able to summon this keyboard; if
 	// you want to hide the keyboard from sight but keep it accessible, use _one_time_keyboard_ in
 	// [ReplyKeyboardMarkup](https://core.telegram.org/bots/api#replykeyboardmarkup)).
-	RemoveKeyboard bool "json:\"remove_keyboard\""
+	RemoveKeyboard bool `json:"remove_keyboard"`
 	// _Optional_. Use this parameter if you want to remove the keyboard for specific users only.
 	// Targets: 1) users that are @mentioned in the _text_ of the [Message](https://core.telegram.
 	// org/bots/api#message) object; 2) if the bot's message is a reply (has _reply_to_message_id_),
 	// sender of the original message._Example:_ A user votes in a poll, bot returns confirmation message
 	// in reply to the vote and removes the keyboard for that user, while still showing the keyboard with
 	// poll options to users who haven't voted yet.
-	Selective OptBool "json:\"selective\""
+	Selective OptBool `json:"selective"`
+}
+
+// GetRemoveKeyboard returns the value of RemoveKeyboard.
+func (s ReplyKeyboardRemove) GetRemoveKeyboard() bool {
+	return s.RemoveKeyboard
+}
+
+// GetSelective returns the value of Selective.
+func (s ReplyKeyboardRemove) GetSelective() OptBool {
+	return s.Selective
+}
+
+// SetRemoveKeyboard sets the value of RemoveKeyboard.
+func (s *ReplyKeyboardRemove) SetRemoveKeyboard(val bool) {
+	s.RemoveKeyboard = val
+}
+
+// SetSelective sets the value of Selective.
+func (s *ReplyKeyboardRemove) SetSelective(val OptBool) {
+	s.Selective = val
 }
 
 // Describes why a request was unsuccessful.
@@ -8264,113 +16994,473 @@ type ResponseParameters struct {
 	// may have more than 32 significant bits and some programming languages may have difficulty/silent
 	// defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or
 	// double-precision float type are safe for storing this identifier.
-	MigrateToChatID OptInt64 "json:\"migrate_to_chat_id\""
+	MigrateToChatID OptInt64 `json:"migrate_to_chat_id"`
 	// _Optional_. In case of exceeding flood control, the number of seconds left to wait before the
 	// request can be repeated.
-	RetryAfter OptInt "json:\"retry_after\""
+	RetryAfter OptInt `json:"retry_after"`
+}
+
+// GetMigrateToChatID returns the value of MigrateToChatID.
+func (s ResponseParameters) GetMigrateToChatID() OptInt64 {
+	return s.MigrateToChatID
+}
+
+// GetRetryAfter returns the value of RetryAfter.
+func (s ResponseParameters) GetRetryAfter() OptInt {
+	return s.RetryAfter
+}
+
+// SetMigrateToChatID sets the value of MigrateToChatID.
+func (s *ResponseParameters) SetMigrateToChatID(val OptInt64) {
+	s.MigrateToChatID = val
+}
+
+// SetRetryAfter sets the value of RetryAfter.
+func (s *ResponseParameters) SetRetryAfter(val OptInt) {
+	s.RetryAfter = val
 }
 
 // Input for restrictChatMember.
 // Ref: #/components/schemas/restrictChatMember
 type RestrictChatMember struct {
-	ChatID ID "json:\"chat_id\""
+	ChatID ID `json:"chat_id"`
 	// Unique identifier of the target user.
-	UserID      int64           "json:\"user_id\""
-	Permissions ChatPermissions "json:\"permissions\""
+	UserID      int64           `json:"user_id"`
+	Permissions ChatPermissions `json:"permissions"`
 	// Date when restrictions will be lifted for the user, unix time. If user is restricted for more than
 	// 366 days or less than 30 seconds from the current time, they are considered to be restricted
 	// forever.
-	UntilDate OptInt "json:\"until_date\""
+	UntilDate OptInt `json:"until_date"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s RestrictChatMember) GetChatID() ID {
+	return s.ChatID
+}
+
+// GetUserID returns the value of UserID.
+func (s RestrictChatMember) GetUserID() int64 {
+	return s.UserID
+}
+
+// GetPermissions returns the value of Permissions.
+func (s RestrictChatMember) GetPermissions() ChatPermissions {
+	return s.Permissions
+}
+
+// GetUntilDate returns the value of UntilDate.
+func (s RestrictChatMember) GetUntilDate() OptInt {
+	return s.UntilDate
+}
+
+// SetChatID sets the value of ChatID.
+func (s *RestrictChatMember) SetChatID(val ID) {
+	s.ChatID = val
+}
+
+// SetUserID sets the value of UserID.
+func (s *RestrictChatMember) SetUserID(val int64) {
+	s.UserID = val
+}
+
+// SetPermissions sets the value of Permissions.
+func (s *RestrictChatMember) SetPermissions(val ChatPermissions) {
+	s.Permissions = val
+}
+
+// SetUntilDate sets the value of UntilDate.
+func (s *RestrictChatMember) SetUntilDate(val OptInt) {
+	s.UntilDate = val
 }
 
 // Ref: #/components/schemas/Result
 type Result struct {
-	Result OptBool "json:\"result\""
-	Ok     bool    "json:\"ok\""
+	Result OptBool `json:"result"`
+	Ok     bool    `json:"ok"`
+}
+
+// GetResult returns the value of Result.
+func (s Result) GetResult() OptBool {
+	return s.Result
+}
+
+// GetOk returns the value of Ok.
+func (s Result) GetOk() bool {
+	return s.Ok
+}
+
+// SetResult sets the value of Result.
+func (s *Result) SetResult(val OptBool) {
+	s.Result = val
+}
+
+// SetOk sets the value of Ok.
+func (s *Result) SetOk(val bool) {
+	s.Ok = val
 }
 
 // Ref: #/components/schemas/ResultArrayOfBotCommand
 type ResultArrayOfBotCommand struct {
-	Result []BotCommand "json:\"result\""
-	Ok     bool         "json:\"ok\""
+	Result []BotCommand `json:"result"`
+	Ok     bool         `json:"ok"`
+}
+
+// GetResult returns the value of Result.
+func (s ResultArrayOfBotCommand) GetResult() []BotCommand {
+	return s.Result
+}
+
+// GetOk returns the value of Ok.
+func (s ResultArrayOfBotCommand) GetOk() bool {
+	return s.Ok
+}
+
+// SetResult sets the value of Result.
+func (s *ResultArrayOfBotCommand) SetResult(val []BotCommand) {
+	s.Result = val
+}
+
+// SetOk sets the value of Ok.
+func (s *ResultArrayOfBotCommand) SetOk(val bool) {
+	s.Ok = val
 }
 
 // Ref: #/components/schemas/ResultArrayOfChatMember
 type ResultArrayOfChatMember struct {
-	Result []ChatMember "json:\"result\""
-	Ok     bool         "json:\"ok\""
+	Result []ChatMember `json:"result"`
+	Ok     bool         `json:"ok"`
+}
+
+// GetResult returns the value of Result.
+func (s ResultArrayOfChatMember) GetResult() []ChatMember {
+	return s.Result
+}
+
+// GetOk returns the value of Ok.
+func (s ResultArrayOfChatMember) GetOk() bool {
+	return s.Ok
+}
+
+// SetResult sets the value of Result.
+func (s *ResultArrayOfChatMember) SetResult(val []ChatMember) {
+	s.Result = val
+}
+
+// SetOk sets the value of Ok.
+func (s *ResultArrayOfChatMember) SetOk(val bool) {
+	s.Ok = val
 }
 
 // Ref: #/components/schemas/ResultArrayOfGameHighScore
 type ResultArrayOfGameHighScore struct {
-	Result []GameHighScore "json:\"result\""
-	Ok     bool            "json:\"ok\""
+	Result []GameHighScore `json:"result"`
+	Ok     bool            `json:"ok"`
+}
+
+// GetResult returns the value of Result.
+func (s ResultArrayOfGameHighScore) GetResult() []GameHighScore {
+	return s.Result
+}
+
+// GetOk returns the value of Ok.
+func (s ResultArrayOfGameHighScore) GetOk() bool {
+	return s.Ok
+}
+
+// SetResult sets the value of Result.
+func (s *ResultArrayOfGameHighScore) SetResult(val []GameHighScore) {
+	s.Result = val
+}
+
+// SetOk sets the value of Ok.
+func (s *ResultArrayOfGameHighScore) SetOk(val bool) {
+	s.Ok = val
 }
 
 // Ref: #/components/schemas/ResultArrayOfMessage
 type ResultArrayOfMessage struct {
-	Result []Message "json:\"result\""
-	Ok     bool      "json:\"ok\""
+	Result []Message `json:"result"`
+	Ok     bool      `json:"ok"`
+}
+
+// GetResult returns the value of Result.
+func (s ResultArrayOfMessage) GetResult() []Message {
+	return s.Result
+}
+
+// GetOk returns the value of Ok.
+func (s ResultArrayOfMessage) GetOk() bool {
+	return s.Ok
+}
+
+// SetResult sets the value of Result.
+func (s *ResultArrayOfMessage) SetResult(val []Message) {
+	s.Result = val
+}
+
+// SetOk sets the value of Ok.
+func (s *ResultArrayOfMessage) SetOk(val bool) {
+	s.Ok = val
 }
 
 // Ref: #/components/schemas/ResultArrayOfSticker
 type ResultArrayOfSticker struct {
-	Result []Sticker "json:\"result\""
-	Ok     bool      "json:\"ok\""
+	Result []Sticker `json:"result"`
+	Ok     bool      `json:"ok"`
+}
+
+// GetResult returns the value of Result.
+func (s ResultArrayOfSticker) GetResult() []Sticker {
+	return s.Result
+}
+
+// GetOk returns the value of Ok.
+func (s ResultArrayOfSticker) GetOk() bool {
+	return s.Ok
+}
+
+// SetResult sets the value of Result.
+func (s *ResultArrayOfSticker) SetResult(val []Sticker) {
+	s.Result = val
+}
+
+// SetOk sets the value of Ok.
+func (s *ResultArrayOfSticker) SetOk(val bool) {
+	s.Ok = val
 }
 
 // Ref: #/components/schemas/ResultArrayOfUpdate
 type ResultArrayOfUpdate struct {
-	Result []Update "json:\"result\""
-	Ok     bool     "json:\"ok\""
+	Result []Update `json:"result"`
+	Ok     bool     `json:"ok"`
+}
+
+// GetResult returns the value of Result.
+func (s ResultArrayOfUpdate) GetResult() []Update {
+	return s.Result
+}
+
+// GetOk returns the value of Ok.
+func (s ResultArrayOfUpdate) GetOk() bool {
+	return s.Ok
+}
+
+// SetResult sets the value of Result.
+func (s *ResultArrayOfUpdate) SetResult(val []Update) {
+	s.Result = val
+}
+
+// SetOk sets the value of Ok.
+func (s *ResultArrayOfUpdate) SetOk(val bool) {
+	s.Ok = val
 }
 
 // Ref: #/components/schemas/ResultChat
 type ResultChat struct {
-	Result OptChat "json:\"result\""
-	Ok     bool    "json:\"ok\""
+	Result OptChat `json:"result"`
+	Ok     bool    `json:"ok"`
+}
+
+// GetResult returns the value of Result.
+func (s ResultChat) GetResult() OptChat {
+	return s.Result
+}
+
+// GetOk returns the value of Ok.
+func (s ResultChat) GetOk() bool {
+	return s.Ok
+}
+
+// SetResult sets the value of Result.
+func (s *ResultChat) SetResult(val OptChat) {
+	s.Result = val
+}
+
+// SetOk sets the value of Ok.
+func (s *ResultChat) SetOk(val bool) {
+	s.Ok = val
 }
 
 // Ref: #/components/schemas/ResultChatInviteLink
 type ResultChatInviteLink struct {
-	Result OptChatInviteLink "json:\"result\""
-	Ok     bool              "json:\"ok\""
+	Result OptChatInviteLink `json:"result"`
+	Ok     bool              `json:"ok"`
+}
+
+// GetResult returns the value of Result.
+func (s ResultChatInviteLink) GetResult() OptChatInviteLink {
+	return s.Result
+}
+
+// GetOk returns the value of Ok.
+func (s ResultChatInviteLink) GetOk() bool {
+	return s.Ok
+}
+
+// SetResult sets the value of Result.
+func (s *ResultChatInviteLink) SetResult(val OptChatInviteLink) {
+	s.Result = val
+}
+
+// SetOk sets the value of Ok.
+func (s *ResultChatInviteLink) SetOk(val bool) {
+	s.Ok = val
 }
 
 // Ref: #/components/schemas/ResultChatMember
 type ResultChatMember struct {
-	Result OptChatMember "json:\"result\""
-	Ok     bool          "json:\"ok\""
+	Result OptChatMember `json:"result"`
+	Ok     bool          `json:"ok"`
+}
+
+// GetResult returns the value of Result.
+func (s ResultChatMember) GetResult() OptChatMember {
+	return s.Result
+}
+
+// GetOk returns the value of Ok.
+func (s ResultChatMember) GetOk() bool {
+	return s.Ok
+}
+
+// SetResult sets the value of Result.
+func (s *ResultChatMember) SetResult(val OptChatMember) {
+	s.Result = val
+}
+
+// SetOk sets the value of Ok.
+func (s *ResultChatMember) SetOk(val bool) {
+	s.Ok = val
 }
 
 // Ref: #/components/schemas/ResultFile
 type ResultFile struct {
-	Result OptFile "json:\"result\""
-	Ok     bool    "json:\"ok\""
+	Result OptFile `json:"result"`
+	Ok     bool    `json:"ok"`
+}
+
+// GetResult returns the value of Result.
+func (s ResultFile) GetResult() OptFile {
+	return s.Result
+}
+
+// GetOk returns the value of Ok.
+func (s ResultFile) GetOk() bool {
+	return s.Ok
+}
+
+// SetResult sets the value of Result.
+func (s *ResultFile) SetResult(val OptFile) {
+	s.Result = val
+}
+
+// SetOk sets the value of Ok.
+func (s *ResultFile) SetOk(val bool) {
+	s.Ok = val
 }
 
 // Ref: #/components/schemas/ResultInt
 type ResultInt struct {
-	Result OptInt "json:\"result\""
-	Ok     bool   "json:\"ok\""
+	Result OptInt `json:"result"`
+	Ok     bool   `json:"ok"`
+}
+
+// GetResult returns the value of Result.
+func (s ResultInt) GetResult() OptInt {
+	return s.Result
+}
+
+// GetOk returns the value of Ok.
+func (s ResultInt) GetOk() bool {
+	return s.Ok
+}
+
+// SetResult sets the value of Result.
+func (s *ResultInt) SetResult(val OptInt) {
+	s.Result = val
+}
+
+// SetOk sets the value of Ok.
+func (s *ResultInt) SetOk(val bool) {
+	s.Ok = val
 }
 
 // Ref: #/components/schemas/ResultMessage
 type ResultMessage struct {
-	Result OptMessage "json:\"result\""
-	Ok     bool       "json:\"ok\""
+	Result OptMessage `json:"result"`
+	Ok     bool       `json:"ok"`
+}
+
+// GetResult returns the value of Result.
+func (s ResultMessage) GetResult() OptMessage {
+	return s.Result
+}
+
+// GetOk returns the value of Ok.
+func (s ResultMessage) GetOk() bool {
+	return s.Ok
+}
+
+// SetResult sets the value of Result.
+func (s *ResultMessage) SetResult(val OptMessage) {
+	s.Result = val
+}
+
+// SetOk sets the value of Ok.
+func (s *ResultMessage) SetOk(val bool) {
+	s.Ok = val
 }
 
 // Ref: #/components/schemas/ResultMessageId
 type ResultMessageId struct {
-	Result OptMessageId "json:\"result\""
-	Ok     bool         "json:\"ok\""
+	Result OptMessageId `json:"result"`
+	Ok     bool         `json:"ok"`
+}
+
+// GetResult returns the value of Result.
+func (s ResultMessageId) GetResult() OptMessageId {
+	return s.Result
+}
+
+// GetOk returns the value of Ok.
+func (s ResultMessageId) GetOk() bool {
+	return s.Ok
+}
+
+// SetResult sets the value of Result.
+func (s *ResultMessageId) SetResult(val OptMessageId) {
+	s.Result = val
+}
+
+// SetOk sets the value of Ok.
+func (s *ResultMessageId) SetOk(val bool) {
+	s.Ok = val
 }
 
 // Ref: #/components/schemas/ResultMessageOrBoolean
 type ResultMessageOrBoolean struct {
-	Result OptResultMessageOrBooleanResult "json:\"result\""
-	Ok     bool                            "json:\"ok\""
+	Result OptResultMessageOrBooleanResult `json:"result"`
+	Ok     bool                            `json:"ok"`
+}
+
+// GetResult returns the value of Result.
+func (s ResultMessageOrBoolean) GetResult() OptResultMessageOrBooleanResult {
+	return s.Result
+}
+
+// GetOk returns the value of Ok.
+func (s ResultMessageOrBoolean) GetOk() bool {
+	return s.Ok
+}
+
+// SetResult sets the value of Result.
+func (s *ResultMessageOrBoolean) SetResult(val OptResultMessageOrBooleanResult) {
+	s.Result = val
+}
+
+// SetOk sets the value of Ok.
+func (s *ResultMessageOrBoolean) SetOk(val bool) {
+	s.Ok = val
 }
 
 // ResultMessageOrBooleanResult represents sum type.
@@ -8443,65 +17533,205 @@ func NewBoolResultMessageOrBooleanResult(v bool) ResultMessageOrBooleanResult {
 
 // Ref: #/components/schemas/ResultPoll
 type ResultPoll struct {
-	Result OptPoll "json:\"result\""
-	Ok     bool    "json:\"ok\""
+	Result OptPoll `json:"result"`
+	Ok     bool    `json:"ok"`
+}
+
+// GetResult returns the value of Result.
+func (s ResultPoll) GetResult() OptPoll {
+	return s.Result
+}
+
+// GetOk returns the value of Ok.
+func (s ResultPoll) GetOk() bool {
+	return s.Ok
+}
+
+// SetResult sets the value of Result.
+func (s *ResultPoll) SetResult(val OptPoll) {
+	s.Result = val
+}
+
+// SetOk sets the value of Ok.
+func (s *ResultPoll) SetOk(val bool) {
+	s.Ok = val
 }
 
 // Ref: #/components/schemas/ResultStickerSet
 type ResultStickerSet struct {
-	Result OptStickerSet "json:\"result\""
-	Ok     bool          "json:\"ok\""
+	Result OptStickerSet `json:"result"`
+	Ok     bool          `json:"ok"`
+}
+
+// GetResult returns the value of Result.
+func (s ResultStickerSet) GetResult() OptStickerSet {
+	return s.Result
+}
+
+// GetOk returns the value of Ok.
+func (s ResultStickerSet) GetOk() bool {
+	return s.Ok
+}
+
+// SetResult sets the value of Result.
+func (s *ResultStickerSet) SetResult(val OptStickerSet) {
+	s.Result = val
+}
+
+// SetOk sets the value of Ok.
+func (s *ResultStickerSet) SetOk(val bool) {
+	s.Ok = val
 }
 
 // Ref: #/components/schemas/ResultString
 type ResultString struct {
-	Result OptString "json:\"result\""
-	Ok     bool      "json:\"ok\""
+	Result OptString `json:"result"`
+	Ok     bool      `json:"ok"`
+}
+
+// GetResult returns the value of Result.
+func (s ResultString) GetResult() OptString {
+	return s.Result
+}
+
+// GetOk returns the value of Ok.
+func (s ResultString) GetOk() bool {
+	return s.Ok
+}
+
+// SetResult sets the value of Result.
+func (s *ResultString) SetResult(val OptString) {
+	s.Result = val
+}
+
+// SetOk sets the value of Ok.
+func (s *ResultString) SetOk(val bool) {
+	s.Ok = val
 }
 
 // Ref: #/components/schemas/ResultUser
 type ResultUser struct {
-	Result OptUser "json:\"result\""
-	Ok     bool    "json:\"ok\""
+	Result OptUser `json:"result"`
+	Ok     bool    `json:"ok"`
+}
+
+// GetResult returns the value of Result.
+func (s ResultUser) GetResult() OptUser {
+	return s.Result
+}
+
+// GetOk returns the value of Ok.
+func (s ResultUser) GetOk() bool {
+	return s.Ok
+}
+
+// SetResult sets the value of Result.
+func (s *ResultUser) SetResult(val OptUser) {
+	s.Result = val
+}
+
+// SetOk sets the value of Ok.
+func (s *ResultUser) SetOk(val bool) {
+	s.Ok = val
 }
 
 // Ref: #/components/schemas/ResultUserProfilePhotos
 type ResultUserProfilePhotos struct {
-	Result OptUserProfilePhotos "json:\"result\""
-	Ok     bool                 "json:\"ok\""
+	Result OptUserProfilePhotos `json:"result"`
+	Ok     bool                 `json:"ok"`
+}
+
+// GetResult returns the value of Result.
+func (s ResultUserProfilePhotos) GetResult() OptUserProfilePhotos {
+	return s.Result
+}
+
+// GetOk returns the value of Ok.
+func (s ResultUserProfilePhotos) GetOk() bool {
+	return s.Ok
+}
+
+// SetResult sets the value of Result.
+func (s *ResultUserProfilePhotos) SetResult(val OptUserProfilePhotos) {
+	s.Result = val
+}
+
+// SetOk sets the value of Ok.
+func (s *ResultUserProfilePhotos) SetOk(val bool) {
+	s.Ok = val
 }
 
 // Ref: #/components/schemas/ResultWebhookInfo
 type ResultWebhookInfo struct {
-	Result OptWebhookInfo "json:\"result\""
-	Ok     bool           "json:\"ok\""
+	Result OptWebhookInfo `json:"result"`
+	Ok     bool           `json:"ok"`
+}
+
+// GetResult returns the value of Result.
+func (s ResultWebhookInfo) GetResult() OptWebhookInfo {
+	return s.Result
+}
+
+// GetOk returns the value of Ok.
+func (s ResultWebhookInfo) GetOk() bool {
+	return s.Ok
+}
+
+// SetResult sets the value of Result.
+func (s *ResultWebhookInfo) SetResult(val OptWebhookInfo) {
+	s.Result = val
+}
+
+// SetOk sets the value of Ok.
+func (s *ResultWebhookInfo) SetOk(val bool) {
+	s.Ok = val
 }
 
 // Input for revokeChatInviteLink.
 // Ref: #/components/schemas/revokeChatInviteLink
 type RevokeChatInviteLink struct {
-	ChatID ID "json:\"chat_id\""
+	ChatID ID `json:"chat_id"`
 	// The invite link to revoke.
-	InviteLink string "json:\"invite_link\""
+	InviteLink string `json:"invite_link"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s RevokeChatInviteLink) GetChatID() ID {
+	return s.ChatID
+}
+
+// GetInviteLink returns the value of InviteLink.
+func (s RevokeChatInviteLink) GetInviteLink() string {
+	return s.InviteLink
+}
+
+// SetChatID sets the value of ChatID.
+func (s *RevokeChatInviteLink) SetChatID(val ID) {
+	s.ChatID = val
+}
+
+// SetInviteLink sets the value of InviteLink.
+func (s *RevokeChatInviteLink) SetInviteLink(val string) {
+	s.InviteLink = val
 }
 
 // Input for sendAnimation.
 // Ref: #/components/schemas/sendAnimation
 type SendAnimation struct {
-	ChatID ID "json:\"chat_id\""
+	ChatID ID `json:"chat_id"`
 	// Unique identifier for the target message thread (topic) of the forum; for forum supergroups only.
-	MessageThreadID OptInt "json:\"message_thread_id\""
+	MessageThreadID OptInt `json:"message_thread_id"`
 	// Animation to send. Pass a file_id as String to send an animation that exists on the Telegram
 	// servers (recommended), pass an HTTP URL as a String for Telegram to get an animation from the
 	// Internet, or upload a new animation using multipart/form-data. [More information on Sending
 	// Files](https://core.telegram.org/bots/api#sending-files).
-	Animation string "json:\"animation\""
+	Animation string `json:"animation"`
 	// Duration of sent animation in seconds.
-	Duration OptInt "json:\"duration\""
+	Duration OptInt `json:"duration"`
 	// Animation width.
-	Width OptInt "json:\"width\""
+	Width OptInt `json:"width"`
 	// Animation height.
-	Height OptInt "json:\"height\""
+	Height OptInt `json:"height"`
 	// Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported
 	// server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's
 	// width and height should not exceed 320. Ignored if the file is not uploaded using
@@ -8509,53 +17739,203 @@ type SendAnimation struct {
 	// pass `attach://<file_attach_name>` if the thumbnail was uploaded using multipart/form-data under
 	// <file_attach_name>. [More information on Sending Files](https://core.telegram.
 	// org/bots/api#sending-files).
-	Thumb OptString "json:\"thumb\""
+	Thumb OptString `json:"thumb"`
 	// Animation caption (may also be used when resending animation by _file_id_), 0-1024 characters
 	// after entities parsing.
-	Caption OptString "json:\"caption\""
+	Caption OptString `json:"caption"`
 	// Mode for parsing entities in the animation caption. See [formatting options](https://core.telegram.
 	// org/bots/api#formatting-options) for more details.
-	ParseMode OptString "json:\"parse_mode\""
+	ParseMode OptString `json:"parse_mode"`
 	// A JSON-serialized list of special entities that appear in the caption, which can be specified
 	// instead of _parse_mode_.
-	CaptionEntities []MessageEntity "json:\"caption_entities\""
+	CaptionEntities []MessageEntity `json:"caption_entities"`
 	// Sends the message [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will
 	// receive a notification with no sound.
-	DisableNotification OptBool "json:\"disable_notification\""
+	DisableNotification OptBool `json:"disable_notification"`
 	// Protects the contents of the sent message from forwarding and saving.
-	ProtectContent OptBool "json:\"protect_content\""
+	ProtectContent OptBool `json:"protect_content"`
 	// If the message is a reply, ID of the original message.
-	ReplyToMessageID OptInt "json:\"reply_to_message_id\""
+	ReplyToMessageID OptInt `json:"reply_to_message_id"`
 	// Pass _True_ if the message should be sent even if the specified replied-to message is not found.
-	AllowSendingWithoutReply OptBool            "json:\"allow_sending_without_reply\""
-	ReplyMarkup              OptSendReplyMarkup "json:\"reply_markup\""
+	AllowSendingWithoutReply OptBool            `json:"allow_sending_without_reply"`
+	ReplyMarkup              OptSendReplyMarkup `json:"reply_markup"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s SendAnimation) GetChatID() ID {
+	return s.ChatID
+}
+
+// GetMessageThreadID returns the value of MessageThreadID.
+func (s SendAnimation) GetMessageThreadID() OptInt {
+	return s.MessageThreadID
+}
+
+// GetAnimation returns the value of Animation.
+func (s SendAnimation) GetAnimation() string {
+	return s.Animation
+}
+
+// GetDuration returns the value of Duration.
+func (s SendAnimation) GetDuration() OptInt {
+	return s.Duration
+}
+
+// GetWidth returns the value of Width.
+func (s SendAnimation) GetWidth() OptInt {
+	return s.Width
+}
+
+// GetHeight returns the value of Height.
+func (s SendAnimation) GetHeight() OptInt {
+	return s.Height
+}
+
+// GetThumb returns the value of Thumb.
+func (s SendAnimation) GetThumb() OptString {
+	return s.Thumb
+}
+
+// GetCaption returns the value of Caption.
+func (s SendAnimation) GetCaption() OptString {
+	return s.Caption
+}
+
+// GetParseMode returns the value of ParseMode.
+func (s SendAnimation) GetParseMode() OptString {
+	return s.ParseMode
+}
+
+// GetCaptionEntities returns the value of CaptionEntities.
+func (s SendAnimation) GetCaptionEntities() []MessageEntity {
+	return s.CaptionEntities
+}
+
+// GetDisableNotification returns the value of DisableNotification.
+func (s SendAnimation) GetDisableNotification() OptBool {
+	return s.DisableNotification
+}
+
+// GetProtectContent returns the value of ProtectContent.
+func (s SendAnimation) GetProtectContent() OptBool {
+	return s.ProtectContent
+}
+
+// GetReplyToMessageID returns the value of ReplyToMessageID.
+func (s SendAnimation) GetReplyToMessageID() OptInt {
+	return s.ReplyToMessageID
+}
+
+// GetAllowSendingWithoutReply returns the value of AllowSendingWithoutReply.
+func (s SendAnimation) GetAllowSendingWithoutReply() OptBool {
+	return s.AllowSendingWithoutReply
+}
+
+// GetReplyMarkup returns the value of ReplyMarkup.
+func (s SendAnimation) GetReplyMarkup() OptSendReplyMarkup {
+	return s.ReplyMarkup
+}
+
+// SetChatID sets the value of ChatID.
+func (s *SendAnimation) SetChatID(val ID) {
+	s.ChatID = val
+}
+
+// SetMessageThreadID sets the value of MessageThreadID.
+func (s *SendAnimation) SetMessageThreadID(val OptInt) {
+	s.MessageThreadID = val
+}
+
+// SetAnimation sets the value of Animation.
+func (s *SendAnimation) SetAnimation(val string) {
+	s.Animation = val
+}
+
+// SetDuration sets the value of Duration.
+func (s *SendAnimation) SetDuration(val OptInt) {
+	s.Duration = val
+}
+
+// SetWidth sets the value of Width.
+func (s *SendAnimation) SetWidth(val OptInt) {
+	s.Width = val
+}
+
+// SetHeight sets the value of Height.
+func (s *SendAnimation) SetHeight(val OptInt) {
+	s.Height = val
+}
+
+// SetThumb sets the value of Thumb.
+func (s *SendAnimation) SetThumb(val OptString) {
+	s.Thumb = val
+}
+
+// SetCaption sets the value of Caption.
+func (s *SendAnimation) SetCaption(val OptString) {
+	s.Caption = val
+}
+
+// SetParseMode sets the value of ParseMode.
+func (s *SendAnimation) SetParseMode(val OptString) {
+	s.ParseMode = val
+}
+
+// SetCaptionEntities sets the value of CaptionEntities.
+func (s *SendAnimation) SetCaptionEntities(val []MessageEntity) {
+	s.CaptionEntities = val
+}
+
+// SetDisableNotification sets the value of DisableNotification.
+func (s *SendAnimation) SetDisableNotification(val OptBool) {
+	s.DisableNotification = val
+}
+
+// SetProtectContent sets the value of ProtectContent.
+func (s *SendAnimation) SetProtectContent(val OptBool) {
+	s.ProtectContent = val
+}
+
+// SetReplyToMessageID sets the value of ReplyToMessageID.
+func (s *SendAnimation) SetReplyToMessageID(val OptInt) {
+	s.ReplyToMessageID = val
+}
+
+// SetAllowSendingWithoutReply sets the value of AllowSendingWithoutReply.
+func (s *SendAnimation) SetAllowSendingWithoutReply(val OptBool) {
+	s.AllowSendingWithoutReply = val
+}
+
+// SetReplyMarkup sets the value of ReplyMarkup.
+func (s *SendAnimation) SetReplyMarkup(val OptSendReplyMarkup) {
+	s.ReplyMarkup = val
 }
 
 // Input for sendAudio.
 // Ref: #/components/schemas/sendAudio
 type SendAudio struct {
-	ChatID ID "json:\"chat_id\""
+	ChatID ID `json:"chat_id"`
 	// Unique identifier for the target message thread (topic) of the forum; for forum supergroups only.
-	MessageThreadID OptInt "json:\"message_thread_id\""
+	MessageThreadID OptInt `json:"message_thread_id"`
 	// Audio file to send. Pass a file_id as String to send an audio file that exists on the Telegram
 	// servers (recommended), pass an HTTP URL as a String for Telegram to get an audio file from the
 	// Internet, or upload a new one using multipart/form-data. [More information on Sending
 	// Files](https://core.telegram.org/bots/api#sending-files).
-	Audio string "json:\"audio\""
+	Audio string `json:"audio"`
 	// Audio caption, 0-1024 characters after entities parsing.
-	Caption OptString "json:\"caption\""
+	Caption OptString `json:"caption"`
 	// Mode for parsing entities in the audio caption. See [formatting options](https://core.telegram.
 	// org/bots/api#formatting-options) for more details.
-	ParseMode OptString "json:\"parse_mode\""
+	ParseMode OptString `json:"parse_mode"`
 	// A JSON-serialized list of special entities that appear in the caption, which can be specified
 	// instead of _parse_mode_.
-	CaptionEntities []MessageEntity "json:\"caption_entities\""
+	CaptionEntities []MessageEntity `json:"caption_entities"`
 	// Duration of the audio in seconds.
-	Duration OptInt "json:\"duration\""
+	Duration OptInt `json:"duration"`
 	// Performer.
-	Performer OptString "json:\"performer\""
+	Performer OptString `json:"performer"`
 	// Track name.
-	Title OptString "json:\"title\""
+	Title OptString `json:"title"`
 	// Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported
 	// server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's
 	// width and height should not exceed 320. Ignored if the file is not uploaded using
@@ -8563,23 +17943,173 @@ type SendAudio struct {
 	// pass `attach://<file_attach_name>` if the thumbnail was uploaded using multipart/form-data under
 	// <file_attach_name>. [More information on Sending Files](https://core.telegram.
 	// org/bots/api#sending-files).
-	Thumb OptString "json:\"thumb\""
+	Thumb OptString `json:"thumb"`
 	// Sends the message [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will
 	// receive a notification with no sound.
-	DisableNotification OptBool "json:\"disable_notification\""
+	DisableNotification OptBool `json:"disable_notification"`
 	// Protects the contents of the sent message from forwarding and saving.
-	ProtectContent OptBool "json:\"protect_content\""
+	ProtectContent OptBool `json:"protect_content"`
 	// If the message is a reply, ID of the original message.
-	ReplyToMessageID OptInt "json:\"reply_to_message_id\""
+	ReplyToMessageID OptInt `json:"reply_to_message_id"`
 	// Pass _True_ if the message should be sent even if the specified replied-to message is not found.
-	AllowSendingWithoutReply OptBool            "json:\"allow_sending_without_reply\""
-	ReplyMarkup              OptSendReplyMarkup "json:\"reply_markup\""
+	AllowSendingWithoutReply OptBool            `json:"allow_sending_without_reply"`
+	ReplyMarkup              OptSendReplyMarkup `json:"reply_markup"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s SendAudio) GetChatID() ID {
+	return s.ChatID
+}
+
+// GetMessageThreadID returns the value of MessageThreadID.
+func (s SendAudio) GetMessageThreadID() OptInt {
+	return s.MessageThreadID
+}
+
+// GetAudio returns the value of Audio.
+func (s SendAudio) GetAudio() string {
+	return s.Audio
+}
+
+// GetCaption returns the value of Caption.
+func (s SendAudio) GetCaption() OptString {
+	return s.Caption
+}
+
+// GetParseMode returns the value of ParseMode.
+func (s SendAudio) GetParseMode() OptString {
+	return s.ParseMode
+}
+
+// GetCaptionEntities returns the value of CaptionEntities.
+func (s SendAudio) GetCaptionEntities() []MessageEntity {
+	return s.CaptionEntities
+}
+
+// GetDuration returns the value of Duration.
+func (s SendAudio) GetDuration() OptInt {
+	return s.Duration
+}
+
+// GetPerformer returns the value of Performer.
+func (s SendAudio) GetPerformer() OptString {
+	return s.Performer
+}
+
+// GetTitle returns the value of Title.
+func (s SendAudio) GetTitle() OptString {
+	return s.Title
+}
+
+// GetThumb returns the value of Thumb.
+func (s SendAudio) GetThumb() OptString {
+	return s.Thumb
+}
+
+// GetDisableNotification returns the value of DisableNotification.
+func (s SendAudio) GetDisableNotification() OptBool {
+	return s.DisableNotification
+}
+
+// GetProtectContent returns the value of ProtectContent.
+func (s SendAudio) GetProtectContent() OptBool {
+	return s.ProtectContent
+}
+
+// GetReplyToMessageID returns the value of ReplyToMessageID.
+func (s SendAudio) GetReplyToMessageID() OptInt {
+	return s.ReplyToMessageID
+}
+
+// GetAllowSendingWithoutReply returns the value of AllowSendingWithoutReply.
+func (s SendAudio) GetAllowSendingWithoutReply() OptBool {
+	return s.AllowSendingWithoutReply
+}
+
+// GetReplyMarkup returns the value of ReplyMarkup.
+func (s SendAudio) GetReplyMarkup() OptSendReplyMarkup {
+	return s.ReplyMarkup
+}
+
+// SetChatID sets the value of ChatID.
+func (s *SendAudio) SetChatID(val ID) {
+	s.ChatID = val
+}
+
+// SetMessageThreadID sets the value of MessageThreadID.
+func (s *SendAudio) SetMessageThreadID(val OptInt) {
+	s.MessageThreadID = val
+}
+
+// SetAudio sets the value of Audio.
+func (s *SendAudio) SetAudio(val string) {
+	s.Audio = val
+}
+
+// SetCaption sets the value of Caption.
+func (s *SendAudio) SetCaption(val OptString) {
+	s.Caption = val
+}
+
+// SetParseMode sets the value of ParseMode.
+func (s *SendAudio) SetParseMode(val OptString) {
+	s.ParseMode = val
+}
+
+// SetCaptionEntities sets the value of CaptionEntities.
+func (s *SendAudio) SetCaptionEntities(val []MessageEntity) {
+	s.CaptionEntities = val
+}
+
+// SetDuration sets the value of Duration.
+func (s *SendAudio) SetDuration(val OptInt) {
+	s.Duration = val
+}
+
+// SetPerformer sets the value of Performer.
+func (s *SendAudio) SetPerformer(val OptString) {
+	s.Performer = val
+}
+
+// SetTitle sets the value of Title.
+func (s *SendAudio) SetTitle(val OptString) {
+	s.Title = val
+}
+
+// SetThumb sets the value of Thumb.
+func (s *SendAudio) SetThumb(val OptString) {
+	s.Thumb = val
+}
+
+// SetDisableNotification sets the value of DisableNotification.
+func (s *SendAudio) SetDisableNotification(val OptBool) {
+	s.DisableNotification = val
+}
+
+// SetProtectContent sets the value of ProtectContent.
+func (s *SendAudio) SetProtectContent(val OptBool) {
+	s.ProtectContent = val
+}
+
+// SetReplyToMessageID sets the value of ReplyToMessageID.
+func (s *SendAudio) SetReplyToMessageID(val OptInt) {
+	s.ReplyToMessageID = val
+}
+
+// SetAllowSendingWithoutReply sets the value of AllowSendingWithoutReply.
+func (s *SendAudio) SetAllowSendingWithoutReply(val OptBool) {
+	s.AllowSendingWithoutReply = val
+}
+
+// SetReplyMarkup sets the value of ReplyMarkup.
+func (s *SendAudio) SetReplyMarkup(val OptSendReplyMarkup) {
+	s.ReplyMarkup = val
 }
 
 // Input for sendChatAction.
 // Ref: #/components/schemas/sendChatAction
 type SendChatAction struct {
-	ChatID ID "json:\"chat_id\""
+	ChatID ID `json:"chat_id"`
 	// Type of action to broadcast. Choose one, depending on what the user is about to receive: _typing_
 	// for [text messages](https://core.telegram.org/bots/api#sendmessage), _upload_photo_ for
 	// [photos](https://core.telegram.org/bots/api#sendphoto), _record_video_ or _upload_video_ for
@@ -8589,69 +18119,279 @@ type SendChatAction struct {
 	// [stickers](https://core.telegram.org/bots/api#sendsticker), _find_location_ for [location
 	// data](https://core.telegram.org/bots/api#sendlocation), _record_video_note_ or _upload_video_note_
 	// for [video notes](https://core.telegram.org/bots/api#sendvideonote).
-	Action string "json:\"action\""
+	Action string `json:"action"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s SendChatAction) GetChatID() ID {
+	return s.ChatID
+}
+
+// GetAction returns the value of Action.
+func (s SendChatAction) GetAction() string {
+	return s.Action
+}
+
+// SetChatID sets the value of ChatID.
+func (s *SendChatAction) SetChatID(val ID) {
+	s.ChatID = val
+}
+
+// SetAction sets the value of Action.
+func (s *SendChatAction) SetAction(val string) {
+	s.Action = val
 }
 
 // Input for sendContact.
 // Ref: #/components/schemas/sendContact
 type SendContact struct {
-	ChatID ID "json:\"chat_id\""
+	ChatID ID `json:"chat_id"`
 	// Unique identifier for the target message thread (topic) of the forum; for forum supergroups only.
-	MessageThreadID OptInt "json:\"message_thread_id\""
+	MessageThreadID OptInt `json:"message_thread_id"`
 	// Contact's phone number.
-	PhoneNumber string "json:\"phone_number\""
+	PhoneNumber string `json:"phone_number"`
 	// Contact's first name.
-	FirstName string "json:\"first_name\""
+	FirstName string `json:"first_name"`
 	// Contact's last name.
-	LastName OptString "json:\"last_name\""
+	LastName OptString `json:"last_name"`
 	// Additional data about the contact in the form of a [vCard](https://en.wikipedia.org/wiki/VCard),
 	// 0-2048 bytes.
-	Vcard OptString "json:\"vcard\""
+	Vcard OptString `json:"vcard"`
 	// Sends the message [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will
 	// receive a notification with no sound.
-	DisableNotification OptBool "json:\"disable_notification\""
+	DisableNotification OptBool `json:"disable_notification"`
 	// Protects the contents of the sent message from forwarding and saving.
-	ProtectContent OptBool "json:\"protect_content\""
+	ProtectContent OptBool `json:"protect_content"`
 	// If the message is a reply, ID of the original message.
-	ReplyToMessageID OptInt "json:\"reply_to_message_id\""
+	ReplyToMessageID OptInt `json:"reply_to_message_id"`
 	// Pass _True_ if the message should be sent even if the specified replied-to message is not found.
-	AllowSendingWithoutReply OptBool            "json:\"allow_sending_without_reply\""
-	ReplyMarkup              OptSendReplyMarkup "json:\"reply_markup\""
+	AllowSendingWithoutReply OptBool            `json:"allow_sending_without_reply"`
+	ReplyMarkup              OptSendReplyMarkup `json:"reply_markup"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s SendContact) GetChatID() ID {
+	return s.ChatID
+}
+
+// GetMessageThreadID returns the value of MessageThreadID.
+func (s SendContact) GetMessageThreadID() OptInt {
+	return s.MessageThreadID
+}
+
+// GetPhoneNumber returns the value of PhoneNumber.
+func (s SendContact) GetPhoneNumber() string {
+	return s.PhoneNumber
+}
+
+// GetFirstName returns the value of FirstName.
+func (s SendContact) GetFirstName() string {
+	return s.FirstName
+}
+
+// GetLastName returns the value of LastName.
+func (s SendContact) GetLastName() OptString {
+	return s.LastName
+}
+
+// GetVcard returns the value of Vcard.
+func (s SendContact) GetVcard() OptString {
+	return s.Vcard
+}
+
+// GetDisableNotification returns the value of DisableNotification.
+func (s SendContact) GetDisableNotification() OptBool {
+	return s.DisableNotification
+}
+
+// GetProtectContent returns the value of ProtectContent.
+func (s SendContact) GetProtectContent() OptBool {
+	return s.ProtectContent
+}
+
+// GetReplyToMessageID returns the value of ReplyToMessageID.
+func (s SendContact) GetReplyToMessageID() OptInt {
+	return s.ReplyToMessageID
+}
+
+// GetAllowSendingWithoutReply returns the value of AllowSendingWithoutReply.
+func (s SendContact) GetAllowSendingWithoutReply() OptBool {
+	return s.AllowSendingWithoutReply
+}
+
+// GetReplyMarkup returns the value of ReplyMarkup.
+func (s SendContact) GetReplyMarkup() OptSendReplyMarkup {
+	return s.ReplyMarkup
+}
+
+// SetChatID sets the value of ChatID.
+func (s *SendContact) SetChatID(val ID) {
+	s.ChatID = val
+}
+
+// SetMessageThreadID sets the value of MessageThreadID.
+func (s *SendContact) SetMessageThreadID(val OptInt) {
+	s.MessageThreadID = val
+}
+
+// SetPhoneNumber sets the value of PhoneNumber.
+func (s *SendContact) SetPhoneNumber(val string) {
+	s.PhoneNumber = val
+}
+
+// SetFirstName sets the value of FirstName.
+func (s *SendContact) SetFirstName(val string) {
+	s.FirstName = val
+}
+
+// SetLastName sets the value of LastName.
+func (s *SendContact) SetLastName(val OptString) {
+	s.LastName = val
+}
+
+// SetVcard sets the value of Vcard.
+func (s *SendContact) SetVcard(val OptString) {
+	s.Vcard = val
+}
+
+// SetDisableNotification sets the value of DisableNotification.
+func (s *SendContact) SetDisableNotification(val OptBool) {
+	s.DisableNotification = val
+}
+
+// SetProtectContent sets the value of ProtectContent.
+func (s *SendContact) SetProtectContent(val OptBool) {
+	s.ProtectContent = val
+}
+
+// SetReplyToMessageID sets the value of ReplyToMessageID.
+func (s *SendContact) SetReplyToMessageID(val OptInt) {
+	s.ReplyToMessageID = val
+}
+
+// SetAllowSendingWithoutReply sets the value of AllowSendingWithoutReply.
+func (s *SendContact) SetAllowSendingWithoutReply(val OptBool) {
+	s.AllowSendingWithoutReply = val
+}
+
+// SetReplyMarkup sets the value of ReplyMarkup.
+func (s *SendContact) SetReplyMarkup(val OptSendReplyMarkup) {
+	s.ReplyMarkup = val
 }
 
 // Input for sendDice.
 // Ref: #/components/schemas/sendDice
 type SendDice struct {
-	ChatID ID "json:\"chat_id\""
+	ChatID ID `json:"chat_id"`
 	// Unique identifier for the target message thread (topic) of the forum; for forum supergroups only.
-	MessageThreadID OptInt "json:\"message_thread_id\""
+	MessageThreadID OptInt `json:"message_thread_id"`
 	// Emoji on which the dice throw animation is based. Currently, must be one of `🎲`, `🎯`, `🏀`,
 	//  `⚽`, `🎳`, or `🎰`. Dice can have values 1-6 for `🎲`, `🎯` and `🎳`, values 1-5 for
 	// `🏀` and `⚽`, and values 1-64 for `🎰`. Defaults to `🎲`.
-	Emoji OptString "json:\"emoji\""
+	Emoji OptString `json:"emoji"`
 	// Sends the message [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will
 	// receive a notification with no sound.
-	DisableNotification OptBool "json:\"disable_notification\""
+	DisableNotification OptBool `json:"disable_notification"`
 	// Protects the contents of the sent message from forwarding.
-	ProtectContent OptBool "json:\"protect_content\""
+	ProtectContent OptBool `json:"protect_content"`
 	// If the message is a reply, ID of the original message.
-	ReplyToMessageID OptInt "json:\"reply_to_message_id\""
+	ReplyToMessageID OptInt `json:"reply_to_message_id"`
 	// Pass _True_ if the message should be sent even if the specified replied-to message is not found.
-	AllowSendingWithoutReply OptBool            "json:\"allow_sending_without_reply\""
-	ReplyMarkup              OptSendReplyMarkup "json:\"reply_markup\""
+	AllowSendingWithoutReply OptBool            `json:"allow_sending_without_reply"`
+	ReplyMarkup              OptSendReplyMarkup `json:"reply_markup"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s SendDice) GetChatID() ID {
+	return s.ChatID
+}
+
+// GetMessageThreadID returns the value of MessageThreadID.
+func (s SendDice) GetMessageThreadID() OptInt {
+	return s.MessageThreadID
+}
+
+// GetEmoji returns the value of Emoji.
+func (s SendDice) GetEmoji() OptString {
+	return s.Emoji
+}
+
+// GetDisableNotification returns the value of DisableNotification.
+func (s SendDice) GetDisableNotification() OptBool {
+	return s.DisableNotification
+}
+
+// GetProtectContent returns the value of ProtectContent.
+func (s SendDice) GetProtectContent() OptBool {
+	return s.ProtectContent
+}
+
+// GetReplyToMessageID returns the value of ReplyToMessageID.
+func (s SendDice) GetReplyToMessageID() OptInt {
+	return s.ReplyToMessageID
+}
+
+// GetAllowSendingWithoutReply returns the value of AllowSendingWithoutReply.
+func (s SendDice) GetAllowSendingWithoutReply() OptBool {
+	return s.AllowSendingWithoutReply
+}
+
+// GetReplyMarkup returns the value of ReplyMarkup.
+func (s SendDice) GetReplyMarkup() OptSendReplyMarkup {
+	return s.ReplyMarkup
+}
+
+// SetChatID sets the value of ChatID.
+func (s *SendDice) SetChatID(val ID) {
+	s.ChatID = val
+}
+
+// SetMessageThreadID sets the value of MessageThreadID.
+func (s *SendDice) SetMessageThreadID(val OptInt) {
+	s.MessageThreadID = val
+}
+
+// SetEmoji sets the value of Emoji.
+func (s *SendDice) SetEmoji(val OptString) {
+	s.Emoji = val
+}
+
+// SetDisableNotification sets the value of DisableNotification.
+func (s *SendDice) SetDisableNotification(val OptBool) {
+	s.DisableNotification = val
+}
+
+// SetProtectContent sets the value of ProtectContent.
+func (s *SendDice) SetProtectContent(val OptBool) {
+	s.ProtectContent = val
+}
+
+// SetReplyToMessageID sets the value of ReplyToMessageID.
+func (s *SendDice) SetReplyToMessageID(val OptInt) {
+	s.ReplyToMessageID = val
+}
+
+// SetAllowSendingWithoutReply sets the value of AllowSendingWithoutReply.
+func (s *SendDice) SetAllowSendingWithoutReply(val OptBool) {
+	s.AllowSendingWithoutReply = val
+}
+
+// SetReplyMarkup sets the value of ReplyMarkup.
+func (s *SendDice) SetReplyMarkup(val OptSendReplyMarkup) {
+	s.ReplyMarkup = val
 }
 
 // Input for sendDocument.
 // Ref: #/components/schemas/sendDocument
 type SendDocument struct {
-	ChatID ID "json:\"chat_id\""
+	ChatID ID `json:"chat_id"`
 	// Unique identifier for the target message thread (topic) of the forum; for forum supergroups only.
-	MessageThreadID OptInt "json:\"message_thread_id\""
+	MessageThreadID OptInt `json:"message_thread_id"`
 	// File to send. Pass a file_id as String to send a file that exists on the Telegram servers
 	// (recommended), pass an HTTP URL as a String for Telegram to get a file from the Internet, or
 	// upload a new one using multipart/form-data. [More information on Sending Files](https://core.
 	// telegram.org/bots/api#sending-files).
-	Document string "json:\"document\""
+	Document string `json:"document"`
 	// Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported
 	// server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's
 	// width and height should not exceed 320. Ignored if the file is not uploaded using
@@ -8659,177 +18399,867 @@ type SendDocument struct {
 	// pass `attach://<file_attach_name>` if the thumbnail was uploaded using multipart/form-data under
 	// <file_attach_name>. [More information on Sending Files](https://core.telegram.
 	// org/bots/api#sending-files).
-	Thumb OptString "json:\"thumb\""
+	Thumb OptString `json:"thumb"`
 	// Document caption (may also be used when resending documents by _file_id_), 0-1024 characters after
 	// entities parsing.
-	Caption OptString "json:\"caption\""
+	Caption OptString `json:"caption"`
 	// Mode for parsing entities in the document caption. See [formatting options](https://core.telegram.
 	// org/bots/api#formatting-options) for more details.
-	ParseMode OptString "json:\"parse_mode\""
+	ParseMode OptString `json:"parse_mode"`
 	// A JSON-serialized list of special entities that appear in the caption, which can be specified
 	// instead of _parse_mode_.
-	CaptionEntities []MessageEntity "json:\"caption_entities\""
+	CaptionEntities []MessageEntity `json:"caption_entities"`
 	// Disables automatic server-side content type detection for files uploaded using multipart/form-data.
-	DisableContentTypeDetection OptBool "json:\"disable_content_type_detection\""
+	DisableContentTypeDetection OptBool `json:"disable_content_type_detection"`
 	// Sends the message [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will
 	// receive a notification with no sound.
-	DisableNotification OptBool "json:\"disable_notification\""
+	DisableNotification OptBool `json:"disable_notification"`
 	// Protects the contents of the sent message from forwarding and saving.
-	ProtectContent OptBool "json:\"protect_content\""
+	ProtectContent OptBool `json:"protect_content"`
 	// If the message is a reply, ID of the original message.
-	ReplyToMessageID OptInt "json:\"reply_to_message_id\""
+	ReplyToMessageID OptInt `json:"reply_to_message_id"`
 	// Pass _True_ if the message should be sent even if the specified replied-to message is not found.
-	AllowSendingWithoutReply OptBool            "json:\"allow_sending_without_reply\""
-	ReplyMarkup              OptSendReplyMarkup "json:\"reply_markup\""
+	AllowSendingWithoutReply OptBool            `json:"allow_sending_without_reply"`
+	ReplyMarkup              OptSendReplyMarkup `json:"reply_markup"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s SendDocument) GetChatID() ID {
+	return s.ChatID
+}
+
+// GetMessageThreadID returns the value of MessageThreadID.
+func (s SendDocument) GetMessageThreadID() OptInt {
+	return s.MessageThreadID
+}
+
+// GetDocument returns the value of Document.
+func (s SendDocument) GetDocument() string {
+	return s.Document
+}
+
+// GetThumb returns the value of Thumb.
+func (s SendDocument) GetThumb() OptString {
+	return s.Thumb
+}
+
+// GetCaption returns the value of Caption.
+func (s SendDocument) GetCaption() OptString {
+	return s.Caption
+}
+
+// GetParseMode returns the value of ParseMode.
+func (s SendDocument) GetParseMode() OptString {
+	return s.ParseMode
+}
+
+// GetCaptionEntities returns the value of CaptionEntities.
+func (s SendDocument) GetCaptionEntities() []MessageEntity {
+	return s.CaptionEntities
+}
+
+// GetDisableContentTypeDetection returns the value of DisableContentTypeDetection.
+func (s SendDocument) GetDisableContentTypeDetection() OptBool {
+	return s.DisableContentTypeDetection
+}
+
+// GetDisableNotification returns the value of DisableNotification.
+func (s SendDocument) GetDisableNotification() OptBool {
+	return s.DisableNotification
+}
+
+// GetProtectContent returns the value of ProtectContent.
+func (s SendDocument) GetProtectContent() OptBool {
+	return s.ProtectContent
+}
+
+// GetReplyToMessageID returns the value of ReplyToMessageID.
+func (s SendDocument) GetReplyToMessageID() OptInt {
+	return s.ReplyToMessageID
+}
+
+// GetAllowSendingWithoutReply returns the value of AllowSendingWithoutReply.
+func (s SendDocument) GetAllowSendingWithoutReply() OptBool {
+	return s.AllowSendingWithoutReply
+}
+
+// GetReplyMarkup returns the value of ReplyMarkup.
+func (s SendDocument) GetReplyMarkup() OptSendReplyMarkup {
+	return s.ReplyMarkup
+}
+
+// SetChatID sets the value of ChatID.
+func (s *SendDocument) SetChatID(val ID) {
+	s.ChatID = val
+}
+
+// SetMessageThreadID sets the value of MessageThreadID.
+func (s *SendDocument) SetMessageThreadID(val OptInt) {
+	s.MessageThreadID = val
+}
+
+// SetDocument sets the value of Document.
+func (s *SendDocument) SetDocument(val string) {
+	s.Document = val
+}
+
+// SetThumb sets the value of Thumb.
+func (s *SendDocument) SetThumb(val OptString) {
+	s.Thumb = val
+}
+
+// SetCaption sets the value of Caption.
+func (s *SendDocument) SetCaption(val OptString) {
+	s.Caption = val
+}
+
+// SetParseMode sets the value of ParseMode.
+func (s *SendDocument) SetParseMode(val OptString) {
+	s.ParseMode = val
+}
+
+// SetCaptionEntities sets the value of CaptionEntities.
+func (s *SendDocument) SetCaptionEntities(val []MessageEntity) {
+	s.CaptionEntities = val
+}
+
+// SetDisableContentTypeDetection sets the value of DisableContentTypeDetection.
+func (s *SendDocument) SetDisableContentTypeDetection(val OptBool) {
+	s.DisableContentTypeDetection = val
+}
+
+// SetDisableNotification sets the value of DisableNotification.
+func (s *SendDocument) SetDisableNotification(val OptBool) {
+	s.DisableNotification = val
+}
+
+// SetProtectContent sets the value of ProtectContent.
+func (s *SendDocument) SetProtectContent(val OptBool) {
+	s.ProtectContent = val
+}
+
+// SetReplyToMessageID sets the value of ReplyToMessageID.
+func (s *SendDocument) SetReplyToMessageID(val OptInt) {
+	s.ReplyToMessageID = val
+}
+
+// SetAllowSendingWithoutReply sets the value of AllowSendingWithoutReply.
+func (s *SendDocument) SetAllowSendingWithoutReply(val OptBool) {
+	s.AllowSendingWithoutReply = val
+}
+
+// SetReplyMarkup sets the value of ReplyMarkup.
+func (s *SendDocument) SetReplyMarkup(val OptSendReplyMarkup) {
+	s.ReplyMarkup = val
 }
 
 // Input for sendGame.
 // Ref: #/components/schemas/sendGame
 type SendGame struct {
 	// Unique identifier for the target chat.
-	ChatID int64 "json:\"chat_id\""
+	ChatID int64 `json:"chat_id"`
 	// Unique identifier for the target message thread (topic) of the forum; for forum supergroups only.
-	MessageThreadID OptInt "json:\"message_thread_id\""
+	MessageThreadID OptInt `json:"message_thread_id"`
 	// Short name of the game, serves as the unique identifier for the game. Set up your games via
 	// [@BotFather](https://t.me/botfather).
-	GameShortName string "json:\"game_short_name\""
+	GameShortName string `json:"game_short_name"`
 	// Sends the message [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will
 	// receive a notification with no sound.
-	DisableNotification OptBool "json:\"disable_notification\""
+	DisableNotification OptBool `json:"disable_notification"`
 	// Protects the contents of the sent message from forwarding and saving.
-	ProtectContent OptBool "json:\"protect_content\""
+	ProtectContent OptBool `json:"protect_content"`
 	// If the message is a reply, ID of the original message.
-	ReplyToMessageID OptInt "json:\"reply_to_message_id\""
+	ReplyToMessageID OptInt `json:"reply_to_message_id"`
 	// Pass _True_ if the message should be sent even if the specified replied-to message is not found.
-	AllowSendingWithoutReply OptBool                 "json:\"allow_sending_without_reply\""
-	ReplyMarkup              OptInlineKeyboardMarkup "json:\"reply_markup\""
+	AllowSendingWithoutReply OptBool                 `json:"allow_sending_without_reply"`
+	ReplyMarkup              OptInlineKeyboardMarkup `json:"reply_markup"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s SendGame) GetChatID() int64 {
+	return s.ChatID
+}
+
+// GetMessageThreadID returns the value of MessageThreadID.
+func (s SendGame) GetMessageThreadID() OptInt {
+	return s.MessageThreadID
+}
+
+// GetGameShortName returns the value of GameShortName.
+func (s SendGame) GetGameShortName() string {
+	return s.GameShortName
+}
+
+// GetDisableNotification returns the value of DisableNotification.
+func (s SendGame) GetDisableNotification() OptBool {
+	return s.DisableNotification
+}
+
+// GetProtectContent returns the value of ProtectContent.
+func (s SendGame) GetProtectContent() OptBool {
+	return s.ProtectContent
+}
+
+// GetReplyToMessageID returns the value of ReplyToMessageID.
+func (s SendGame) GetReplyToMessageID() OptInt {
+	return s.ReplyToMessageID
+}
+
+// GetAllowSendingWithoutReply returns the value of AllowSendingWithoutReply.
+func (s SendGame) GetAllowSendingWithoutReply() OptBool {
+	return s.AllowSendingWithoutReply
+}
+
+// GetReplyMarkup returns the value of ReplyMarkup.
+func (s SendGame) GetReplyMarkup() OptInlineKeyboardMarkup {
+	return s.ReplyMarkup
+}
+
+// SetChatID sets the value of ChatID.
+func (s *SendGame) SetChatID(val int64) {
+	s.ChatID = val
+}
+
+// SetMessageThreadID sets the value of MessageThreadID.
+func (s *SendGame) SetMessageThreadID(val OptInt) {
+	s.MessageThreadID = val
+}
+
+// SetGameShortName sets the value of GameShortName.
+func (s *SendGame) SetGameShortName(val string) {
+	s.GameShortName = val
+}
+
+// SetDisableNotification sets the value of DisableNotification.
+func (s *SendGame) SetDisableNotification(val OptBool) {
+	s.DisableNotification = val
+}
+
+// SetProtectContent sets the value of ProtectContent.
+func (s *SendGame) SetProtectContent(val OptBool) {
+	s.ProtectContent = val
+}
+
+// SetReplyToMessageID sets the value of ReplyToMessageID.
+func (s *SendGame) SetReplyToMessageID(val OptInt) {
+	s.ReplyToMessageID = val
+}
+
+// SetAllowSendingWithoutReply sets the value of AllowSendingWithoutReply.
+func (s *SendGame) SetAllowSendingWithoutReply(val OptBool) {
+	s.AllowSendingWithoutReply = val
+}
+
+// SetReplyMarkup sets the value of ReplyMarkup.
+func (s *SendGame) SetReplyMarkup(val OptInlineKeyboardMarkup) {
+	s.ReplyMarkup = val
 }
 
 // Input for sendInvoice.
 // Ref: #/components/schemas/sendInvoice
 type SendInvoice struct {
-	ChatID ID "json:\"chat_id\""
+	ChatID ID `json:"chat_id"`
 	// Unique identifier for the target message thread (topic) of the forum; for forum supergroups only.
-	MessageThreadID OptInt "json:\"message_thread_id\""
+	MessageThreadID OptInt `json:"message_thread_id"`
 	// Product name, 1-32 characters.
-	Title string "json:\"title\""
+	Title string `json:"title"`
 	// Product description, 1-255 characters.
-	Description string "json:\"description\""
+	Description string `json:"description"`
 	// Bot-defined invoice payload, 1-128 bytes. This will not be displayed to the user, use for your
 	// internal processes.
-	Payload string "json:\"payload\""
+	Payload string `json:"payload"`
 	// Payment provider token, obtained via [@BotFather](https://t.me/botfather).
-	ProviderToken string "json:\"provider_token\""
+	ProviderToken string `json:"provider_token"`
 	// Three-letter ISO 4217 currency code, see [more on currencies](https://core.telegram.
 	// org/bots/payments#supported-currencies).
-	Currency string "json:\"currency\""
+	Currency string `json:"currency"`
 	// Price breakdown, a JSON-serialized list of components (e.g. product price, tax, discount, delivery
 	// cost, delivery tax, bonus, etc.).
-	Prices []LabeledPrice "json:\"prices\""
+	Prices []LabeledPrice `json:"prices"`
 	// The maximum accepted amount for tips in the _smallest units_ of the currency (integer, **not**
 	// float/double). For example, for a maximum tip of `US$ 1.45` pass `max_tip_amount = 145`. See the
 	// _exp_ parameter in [currencies.json](https://core.telegram.org/bots/payments/currencies.json), it
 	// shows the number of digits past the decimal point for each currency (2 for the majority of
 	// currencies). Defaults to 0.
-	MaxTipAmount OptInt "json:\"max_tip_amount\""
+	MaxTipAmount OptInt `json:"max_tip_amount"`
 	// A JSON-serialized array of suggested amounts of tips in the _smallest units_ of the currency
 	// (integer, **not** float/double). At most 4 suggested tip amounts can be specified. The suggested
 	// tip amounts must be positive, passed in a strictly increased order and must not exceed
 	// _max_tip_amount_.
-	SuggestedTipAmounts []int64 "json:\"suggested_tip_amounts\""
+	SuggestedTipAmounts []int64 `json:"suggested_tip_amounts"`
 	// Unique deep-linking parameter. If left empty, **forwarded copies** of the sent message will have a
 	// _Pay_ button, allowing multiple users to pay directly from the forwarded message, using the same
 	// invoice. If non-empty, forwarded copies of the sent message will have a _URL_ button with a deep
 	// link to the bot (instead of a _Pay_ button), with the value used as the start parameter.
-	StartParameter OptString "json:\"start_parameter\""
+	StartParameter OptString `json:"start_parameter"`
 	// JSON-serialized data about the invoice, which will be shared with the payment provider. A detailed
 	// description of required fields should be provided by the payment provider.
-	ProviderData OptString "json:\"provider_data\""
+	ProviderData OptString `json:"provider_data"`
 	// URL of the product photo for the invoice. Can be a photo of the goods or a marketing image for a
 	// service. People like it better when they see what they are paying for.
-	PhotoURL OptString "json:\"photo_url\""
+	PhotoURL OptString `json:"photo_url"`
 	// Photo size in bytes.
-	PhotoSize OptInt "json:\"photo_size\""
+	PhotoSize OptInt `json:"photo_size"`
 	// Photo width.
-	PhotoWidth OptInt "json:\"photo_width\""
+	PhotoWidth OptInt `json:"photo_width"`
 	// Photo height.
-	PhotoHeight OptInt "json:\"photo_height\""
+	PhotoHeight OptInt `json:"photo_height"`
 	// Pass _True_ if you require the user's full name to complete the order.
-	NeedName OptBool "json:\"need_name\""
+	NeedName OptBool `json:"need_name"`
 	// Pass _True_ if you require the user's phone number to complete the order.
-	NeedPhoneNumber OptBool "json:\"need_phone_number\""
+	NeedPhoneNumber OptBool `json:"need_phone_number"`
 	// Pass _True_ if you require the user's email address to complete the order.
-	NeedEmail OptBool "json:\"need_email\""
+	NeedEmail OptBool `json:"need_email"`
 	// Pass _True_ if you require the user's shipping address to complete the order.
-	NeedShippingAddress OptBool "json:\"need_shipping_address\""
+	NeedShippingAddress OptBool `json:"need_shipping_address"`
 	// Pass _True_ if the user's phone number should be sent to provider.
-	SendPhoneNumberToProvider OptBool "json:\"send_phone_number_to_provider\""
+	SendPhoneNumberToProvider OptBool `json:"send_phone_number_to_provider"`
 	// Pass _True_ if the user's email address should be sent to provider.
-	SendEmailToProvider OptBool "json:\"send_email_to_provider\""
+	SendEmailToProvider OptBool `json:"send_email_to_provider"`
 	// Pass _True_ if the final price depends on the shipping method.
-	IsFlexible OptBool "json:\"is_flexible\""
+	IsFlexible OptBool `json:"is_flexible"`
 	// Sends the message [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will
 	// receive a notification with no sound.
-	DisableNotification OptBool "json:\"disable_notification\""
+	DisableNotification OptBool `json:"disable_notification"`
 	// Protects the contents of the sent message from forwarding and saving.
-	ProtectContent OptBool "json:\"protect_content\""
+	ProtectContent OptBool `json:"protect_content"`
 	// If the message is a reply, ID of the original message.
-	ReplyToMessageID OptInt "json:\"reply_to_message_id\""
+	ReplyToMessageID OptInt `json:"reply_to_message_id"`
 	// Pass _True_ if the message should be sent even if the specified replied-to message is not found.
-	AllowSendingWithoutReply OptBool                 "json:\"allow_sending_without_reply\""
-	ReplyMarkup              OptInlineKeyboardMarkup "json:\"reply_markup\""
+	AllowSendingWithoutReply OptBool                 `json:"allow_sending_without_reply"`
+	ReplyMarkup              OptInlineKeyboardMarkup `json:"reply_markup"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s SendInvoice) GetChatID() ID {
+	return s.ChatID
+}
+
+// GetMessageThreadID returns the value of MessageThreadID.
+func (s SendInvoice) GetMessageThreadID() OptInt {
+	return s.MessageThreadID
+}
+
+// GetTitle returns the value of Title.
+func (s SendInvoice) GetTitle() string {
+	return s.Title
+}
+
+// GetDescription returns the value of Description.
+func (s SendInvoice) GetDescription() string {
+	return s.Description
+}
+
+// GetPayload returns the value of Payload.
+func (s SendInvoice) GetPayload() string {
+	return s.Payload
+}
+
+// GetProviderToken returns the value of ProviderToken.
+func (s SendInvoice) GetProviderToken() string {
+	return s.ProviderToken
+}
+
+// GetCurrency returns the value of Currency.
+func (s SendInvoice) GetCurrency() string {
+	return s.Currency
+}
+
+// GetPrices returns the value of Prices.
+func (s SendInvoice) GetPrices() []LabeledPrice {
+	return s.Prices
+}
+
+// GetMaxTipAmount returns the value of MaxTipAmount.
+func (s SendInvoice) GetMaxTipAmount() OptInt {
+	return s.MaxTipAmount
+}
+
+// GetSuggestedTipAmounts returns the value of SuggestedTipAmounts.
+func (s SendInvoice) GetSuggestedTipAmounts() []int64 {
+	return s.SuggestedTipAmounts
+}
+
+// GetStartParameter returns the value of StartParameter.
+func (s SendInvoice) GetStartParameter() OptString {
+	return s.StartParameter
+}
+
+// GetProviderData returns the value of ProviderData.
+func (s SendInvoice) GetProviderData() OptString {
+	return s.ProviderData
+}
+
+// GetPhotoURL returns the value of PhotoURL.
+func (s SendInvoice) GetPhotoURL() OptString {
+	return s.PhotoURL
+}
+
+// GetPhotoSize returns the value of PhotoSize.
+func (s SendInvoice) GetPhotoSize() OptInt {
+	return s.PhotoSize
+}
+
+// GetPhotoWidth returns the value of PhotoWidth.
+func (s SendInvoice) GetPhotoWidth() OptInt {
+	return s.PhotoWidth
+}
+
+// GetPhotoHeight returns the value of PhotoHeight.
+func (s SendInvoice) GetPhotoHeight() OptInt {
+	return s.PhotoHeight
+}
+
+// GetNeedName returns the value of NeedName.
+func (s SendInvoice) GetNeedName() OptBool {
+	return s.NeedName
+}
+
+// GetNeedPhoneNumber returns the value of NeedPhoneNumber.
+func (s SendInvoice) GetNeedPhoneNumber() OptBool {
+	return s.NeedPhoneNumber
+}
+
+// GetNeedEmail returns the value of NeedEmail.
+func (s SendInvoice) GetNeedEmail() OptBool {
+	return s.NeedEmail
+}
+
+// GetNeedShippingAddress returns the value of NeedShippingAddress.
+func (s SendInvoice) GetNeedShippingAddress() OptBool {
+	return s.NeedShippingAddress
+}
+
+// GetSendPhoneNumberToProvider returns the value of SendPhoneNumberToProvider.
+func (s SendInvoice) GetSendPhoneNumberToProvider() OptBool {
+	return s.SendPhoneNumberToProvider
+}
+
+// GetSendEmailToProvider returns the value of SendEmailToProvider.
+func (s SendInvoice) GetSendEmailToProvider() OptBool {
+	return s.SendEmailToProvider
+}
+
+// GetIsFlexible returns the value of IsFlexible.
+func (s SendInvoice) GetIsFlexible() OptBool {
+	return s.IsFlexible
+}
+
+// GetDisableNotification returns the value of DisableNotification.
+func (s SendInvoice) GetDisableNotification() OptBool {
+	return s.DisableNotification
+}
+
+// GetProtectContent returns the value of ProtectContent.
+func (s SendInvoice) GetProtectContent() OptBool {
+	return s.ProtectContent
+}
+
+// GetReplyToMessageID returns the value of ReplyToMessageID.
+func (s SendInvoice) GetReplyToMessageID() OptInt {
+	return s.ReplyToMessageID
+}
+
+// GetAllowSendingWithoutReply returns the value of AllowSendingWithoutReply.
+func (s SendInvoice) GetAllowSendingWithoutReply() OptBool {
+	return s.AllowSendingWithoutReply
+}
+
+// GetReplyMarkup returns the value of ReplyMarkup.
+func (s SendInvoice) GetReplyMarkup() OptInlineKeyboardMarkup {
+	return s.ReplyMarkup
+}
+
+// SetChatID sets the value of ChatID.
+func (s *SendInvoice) SetChatID(val ID) {
+	s.ChatID = val
+}
+
+// SetMessageThreadID sets the value of MessageThreadID.
+func (s *SendInvoice) SetMessageThreadID(val OptInt) {
+	s.MessageThreadID = val
+}
+
+// SetTitle sets the value of Title.
+func (s *SendInvoice) SetTitle(val string) {
+	s.Title = val
+}
+
+// SetDescription sets the value of Description.
+func (s *SendInvoice) SetDescription(val string) {
+	s.Description = val
+}
+
+// SetPayload sets the value of Payload.
+func (s *SendInvoice) SetPayload(val string) {
+	s.Payload = val
+}
+
+// SetProviderToken sets the value of ProviderToken.
+func (s *SendInvoice) SetProviderToken(val string) {
+	s.ProviderToken = val
+}
+
+// SetCurrency sets the value of Currency.
+func (s *SendInvoice) SetCurrency(val string) {
+	s.Currency = val
+}
+
+// SetPrices sets the value of Prices.
+func (s *SendInvoice) SetPrices(val []LabeledPrice) {
+	s.Prices = val
+}
+
+// SetMaxTipAmount sets the value of MaxTipAmount.
+func (s *SendInvoice) SetMaxTipAmount(val OptInt) {
+	s.MaxTipAmount = val
+}
+
+// SetSuggestedTipAmounts sets the value of SuggestedTipAmounts.
+func (s *SendInvoice) SetSuggestedTipAmounts(val []int64) {
+	s.SuggestedTipAmounts = val
+}
+
+// SetStartParameter sets the value of StartParameter.
+func (s *SendInvoice) SetStartParameter(val OptString) {
+	s.StartParameter = val
+}
+
+// SetProviderData sets the value of ProviderData.
+func (s *SendInvoice) SetProviderData(val OptString) {
+	s.ProviderData = val
+}
+
+// SetPhotoURL sets the value of PhotoURL.
+func (s *SendInvoice) SetPhotoURL(val OptString) {
+	s.PhotoURL = val
+}
+
+// SetPhotoSize sets the value of PhotoSize.
+func (s *SendInvoice) SetPhotoSize(val OptInt) {
+	s.PhotoSize = val
+}
+
+// SetPhotoWidth sets the value of PhotoWidth.
+func (s *SendInvoice) SetPhotoWidth(val OptInt) {
+	s.PhotoWidth = val
+}
+
+// SetPhotoHeight sets the value of PhotoHeight.
+func (s *SendInvoice) SetPhotoHeight(val OptInt) {
+	s.PhotoHeight = val
+}
+
+// SetNeedName sets the value of NeedName.
+func (s *SendInvoice) SetNeedName(val OptBool) {
+	s.NeedName = val
+}
+
+// SetNeedPhoneNumber sets the value of NeedPhoneNumber.
+func (s *SendInvoice) SetNeedPhoneNumber(val OptBool) {
+	s.NeedPhoneNumber = val
+}
+
+// SetNeedEmail sets the value of NeedEmail.
+func (s *SendInvoice) SetNeedEmail(val OptBool) {
+	s.NeedEmail = val
+}
+
+// SetNeedShippingAddress sets the value of NeedShippingAddress.
+func (s *SendInvoice) SetNeedShippingAddress(val OptBool) {
+	s.NeedShippingAddress = val
+}
+
+// SetSendPhoneNumberToProvider sets the value of SendPhoneNumberToProvider.
+func (s *SendInvoice) SetSendPhoneNumberToProvider(val OptBool) {
+	s.SendPhoneNumberToProvider = val
+}
+
+// SetSendEmailToProvider sets the value of SendEmailToProvider.
+func (s *SendInvoice) SetSendEmailToProvider(val OptBool) {
+	s.SendEmailToProvider = val
+}
+
+// SetIsFlexible sets the value of IsFlexible.
+func (s *SendInvoice) SetIsFlexible(val OptBool) {
+	s.IsFlexible = val
+}
+
+// SetDisableNotification sets the value of DisableNotification.
+func (s *SendInvoice) SetDisableNotification(val OptBool) {
+	s.DisableNotification = val
+}
+
+// SetProtectContent sets the value of ProtectContent.
+func (s *SendInvoice) SetProtectContent(val OptBool) {
+	s.ProtectContent = val
+}
+
+// SetReplyToMessageID sets the value of ReplyToMessageID.
+func (s *SendInvoice) SetReplyToMessageID(val OptInt) {
+	s.ReplyToMessageID = val
+}
+
+// SetAllowSendingWithoutReply sets the value of AllowSendingWithoutReply.
+func (s *SendInvoice) SetAllowSendingWithoutReply(val OptBool) {
+	s.AllowSendingWithoutReply = val
+}
+
+// SetReplyMarkup sets the value of ReplyMarkup.
+func (s *SendInvoice) SetReplyMarkup(val OptInlineKeyboardMarkup) {
+	s.ReplyMarkup = val
 }
 
 // Input for sendLocation.
 // Ref: #/components/schemas/sendLocation
 type SendLocation struct {
-	ChatID ID "json:\"chat_id\""
+	ChatID ID `json:"chat_id"`
 	// Unique identifier for the target message thread (topic) of the forum; for forum supergroups only.
-	MessageThreadID OptInt "json:\"message_thread_id\""
+	MessageThreadID OptInt `json:"message_thread_id"`
 	// Latitude of the location.
-	Latitude float64 "json:\"latitude\""
+	Latitude float64 `json:"latitude"`
 	// Longitude of the location.
-	Longitude float64 "json:\"longitude\""
+	Longitude float64 `json:"longitude"`
 	// The radius of uncertainty for the location, measured in meters; 0-1500.
-	HorizontalAccuracy OptFloat64 "json:\"horizontal_accuracy\""
+	HorizontalAccuracy OptFloat64 `json:"horizontal_accuracy"`
 	// Period in seconds for which the location will be updated (see [Live Locations](https://telegram.
 	// org/blog/live-locations), should be between 60 and 86400.
-	LivePeriod OptInt "json:\"live_period\""
+	LivePeriod OptInt `json:"live_period"`
 	// For live locations, a direction in which the user is moving, in degrees. Must be between 1 and 360
 	// if specified.
-	Heading OptInt "json:\"heading\""
+	Heading OptInt `json:"heading"`
 	// For live locations, a maximum distance for proximity alerts about approaching another chat member,
 	// in meters. Must be between 1 and 100000 if specified.
-	ProximityAlertRadius OptInt "json:\"proximity_alert_radius\""
+	ProximityAlertRadius OptInt `json:"proximity_alert_radius"`
 	// Sends the message [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will
 	// receive a notification with no sound.
-	DisableNotification OptBool "json:\"disable_notification\""
+	DisableNotification OptBool `json:"disable_notification"`
 	// Protects the contents of the sent message from forwarding and saving.
-	ProtectContent OptBool "json:\"protect_content\""
+	ProtectContent OptBool `json:"protect_content"`
 	// If the message is a reply, ID of the original message.
-	ReplyToMessageID OptInt "json:\"reply_to_message_id\""
+	ReplyToMessageID OptInt `json:"reply_to_message_id"`
 	// Pass _True_ if the message should be sent even if the specified replied-to message is not found.
-	AllowSendingWithoutReply OptBool            "json:\"allow_sending_without_reply\""
-	ReplyMarkup              OptSendReplyMarkup "json:\"reply_markup\""
+	AllowSendingWithoutReply OptBool            `json:"allow_sending_without_reply"`
+	ReplyMarkup              OptSendReplyMarkup `json:"reply_markup"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s SendLocation) GetChatID() ID {
+	return s.ChatID
+}
+
+// GetMessageThreadID returns the value of MessageThreadID.
+func (s SendLocation) GetMessageThreadID() OptInt {
+	return s.MessageThreadID
+}
+
+// GetLatitude returns the value of Latitude.
+func (s SendLocation) GetLatitude() float64 {
+	return s.Latitude
+}
+
+// GetLongitude returns the value of Longitude.
+func (s SendLocation) GetLongitude() float64 {
+	return s.Longitude
+}
+
+// GetHorizontalAccuracy returns the value of HorizontalAccuracy.
+func (s SendLocation) GetHorizontalAccuracy() OptFloat64 {
+	return s.HorizontalAccuracy
+}
+
+// GetLivePeriod returns the value of LivePeriod.
+func (s SendLocation) GetLivePeriod() OptInt {
+	return s.LivePeriod
+}
+
+// GetHeading returns the value of Heading.
+func (s SendLocation) GetHeading() OptInt {
+	return s.Heading
+}
+
+// GetProximityAlertRadius returns the value of ProximityAlertRadius.
+func (s SendLocation) GetProximityAlertRadius() OptInt {
+	return s.ProximityAlertRadius
+}
+
+// GetDisableNotification returns the value of DisableNotification.
+func (s SendLocation) GetDisableNotification() OptBool {
+	return s.DisableNotification
+}
+
+// GetProtectContent returns the value of ProtectContent.
+func (s SendLocation) GetProtectContent() OptBool {
+	return s.ProtectContent
+}
+
+// GetReplyToMessageID returns the value of ReplyToMessageID.
+func (s SendLocation) GetReplyToMessageID() OptInt {
+	return s.ReplyToMessageID
+}
+
+// GetAllowSendingWithoutReply returns the value of AllowSendingWithoutReply.
+func (s SendLocation) GetAllowSendingWithoutReply() OptBool {
+	return s.AllowSendingWithoutReply
+}
+
+// GetReplyMarkup returns the value of ReplyMarkup.
+func (s SendLocation) GetReplyMarkup() OptSendReplyMarkup {
+	return s.ReplyMarkup
+}
+
+// SetChatID sets the value of ChatID.
+func (s *SendLocation) SetChatID(val ID) {
+	s.ChatID = val
+}
+
+// SetMessageThreadID sets the value of MessageThreadID.
+func (s *SendLocation) SetMessageThreadID(val OptInt) {
+	s.MessageThreadID = val
+}
+
+// SetLatitude sets the value of Latitude.
+func (s *SendLocation) SetLatitude(val float64) {
+	s.Latitude = val
+}
+
+// SetLongitude sets the value of Longitude.
+func (s *SendLocation) SetLongitude(val float64) {
+	s.Longitude = val
+}
+
+// SetHorizontalAccuracy sets the value of HorizontalAccuracy.
+func (s *SendLocation) SetHorizontalAccuracy(val OptFloat64) {
+	s.HorizontalAccuracy = val
+}
+
+// SetLivePeriod sets the value of LivePeriod.
+func (s *SendLocation) SetLivePeriod(val OptInt) {
+	s.LivePeriod = val
+}
+
+// SetHeading sets the value of Heading.
+func (s *SendLocation) SetHeading(val OptInt) {
+	s.Heading = val
+}
+
+// SetProximityAlertRadius sets the value of ProximityAlertRadius.
+func (s *SendLocation) SetProximityAlertRadius(val OptInt) {
+	s.ProximityAlertRadius = val
+}
+
+// SetDisableNotification sets the value of DisableNotification.
+func (s *SendLocation) SetDisableNotification(val OptBool) {
+	s.DisableNotification = val
+}
+
+// SetProtectContent sets the value of ProtectContent.
+func (s *SendLocation) SetProtectContent(val OptBool) {
+	s.ProtectContent = val
+}
+
+// SetReplyToMessageID sets the value of ReplyToMessageID.
+func (s *SendLocation) SetReplyToMessageID(val OptInt) {
+	s.ReplyToMessageID = val
+}
+
+// SetAllowSendingWithoutReply sets the value of AllowSendingWithoutReply.
+func (s *SendLocation) SetAllowSendingWithoutReply(val OptBool) {
+	s.AllowSendingWithoutReply = val
+}
+
+// SetReplyMarkup sets the value of ReplyMarkup.
+func (s *SendLocation) SetReplyMarkup(val OptSendReplyMarkup) {
+	s.ReplyMarkup = val
 }
 
 // Input for sendMediaGroup.
 // Ref: #/components/schemas/sendMediaGroup
 type SendMediaGroup struct {
-	ChatID ID "json:\"chat_id\""
+	ChatID ID `json:"chat_id"`
 	// Unique identifier for the target message thread (topic) of the forum; for forum supergroups only.
-	MessageThreadID OptInt "json:\"message_thread_id\""
+	MessageThreadID OptInt `json:"message_thread_id"`
 	// A JSON-serialized array describing messages to be sent, must include 2-10 items.
-	Media []SendMediaGroupMediaItem "json:\"media\""
+	Media []SendMediaGroupMediaItem `json:"media"`
 	// Sends messages [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will
 	// receive a notification with no sound.
-	DisableNotification OptBool "json:\"disable_notification\""
+	DisableNotification OptBool `json:"disable_notification"`
 	// Protects the contents of the sent messages from forwarding and saving.
-	ProtectContent OptBool "json:\"protect_content\""
+	ProtectContent OptBool `json:"protect_content"`
 	// If the messages are a reply, ID of the original message.
-	ReplyToMessageID OptInt "json:\"reply_to_message_id\""
+	ReplyToMessageID OptInt `json:"reply_to_message_id"`
 	// Pass _True_ if the message should be sent even if the specified replied-to message is not found.
-	AllowSendingWithoutReply OptBool "json:\"allow_sending_without_reply\""
+	AllowSendingWithoutReply OptBool `json:"allow_sending_without_reply"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s SendMediaGroup) GetChatID() ID {
+	return s.ChatID
+}
+
+// GetMessageThreadID returns the value of MessageThreadID.
+func (s SendMediaGroup) GetMessageThreadID() OptInt {
+	return s.MessageThreadID
+}
+
+// GetMedia returns the value of Media.
+func (s SendMediaGroup) GetMedia() []SendMediaGroupMediaItem {
+	return s.Media
+}
+
+// GetDisableNotification returns the value of DisableNotification.
+func (s SendMediaGroup) GetDisableNotification() OptBool {
+	return s.DisableNotification
+}
+
+// GetProtectContent returns the value of ProtectContent.
+func (s SendMediaGroup) GetProtectContent() OptBool {
+	return s.ProtectContent
+}
+
+// GetReplyToMessageID returns the value of ReplyToMessageID.
+func (s SendMediaGroup) GetReplyToMessageID() OptInt {
+	return s.ReplyToMessageID
+}
+
+// GetAllowSendingWithoutReply returns the value of AllowSendingWithoutReply.
+func (s SendMediaGroup) GetAllowSendingWithoutReply() OptBool {
+	return s.AllowSendingWithoutReply
+}
+
+// SetChatID sets the value of ChatID.
+func (s *SendMediaGroup) SetChatID(val ID) {
+	s.ChatID = val
+}
+
+// SetMessageThreadID sets the value of MessageThreadID.
+func (s *SendMediaGroup) SetMessageThreadID(val OptInt) {
+	s.MessageThreadID = val
+}
+
+// SetMedia sets the value of Media.
+func (s *SendMediaGroup) SetMedia(val []SendMediaGroupMediaItem) {
+	s.Media = val
+}
+
+// SetDisableNotification sets the value of DisableNotification.
+func (s *SendMediaGroup) SetDisableNotification(val OptBool) {
+	s.DisableNotification = val
+}
+
+// SetProtectContent sets the value of ProtectContent.
+func (s *SendMediaGroup) SetProtectContent(val OptBool) {
+	s.ProtectContent = val
+}
+
+// SetReplyToMessageID sets the value of ReplyToMessageID.
+func (s *SendMediaGroup) SetReplyToMessageID(val OptInt) {
+	s.ReplyToMessageID = val
+}
+
+// SetAllowSendingWithoutReply sets the value of AllowSendingWithoutReply.
+func (s *SendMediaGroup) SetAllowSendingWithoutReply(val OptBool) {
+	s.AllowSendingWithoutReply = val
 }
 
 // SendMediaGroupMediaItem represents sum type.
@@ -8959,109 +19389,519 @@ func NewInputMediaVideoSendMediaGroupMediaItem(v InputMediaVideo) SendMediaGroup
 // Input for sendMessage.
 // Ref: #/components/schemas/sendMessage
 type SendMessage struct {
-	ChatID ID "json:\"chat_id\""
+	ChatID ID `json:"chat_id"`
 	// Unique identifier for the target message thread (topic) of the forum; for forum supergroups only.
-	MessageThreadID OptInt "json:\"message_thread_id\""
+	MessageThreadID OptInt `json:"message_thread_id"`
 	// Text of the message to be sent, 1-4096 characters after entities parsing.
-	Text string "json:\"text\""
+	Text string `json:"text"`
 	// Mode for parsing entities in the message text. See [formatting options](https://core.telegram.
 	// org/bots/api#formatting-options) for more details.
-	ParseMode OptString "json:\"parse_mode\""
+	ParseMode OptString `json:"parse_mode"`
 	// A JSON-serialized list of special entities that appear in message text, which can be specified
 	// instead of _parse_mode_.
-	Entities []MessageEntity "json:\"entities\""
+	Entities []MessageEntity `json:"entities"`
 	// Disables link previews for links in this message.
-	DisableWebPagePreview OptBool "json:\"disable_web_page_preview\""
+	DisableWebPagePreview OptBool `json:"disable_web_page_preview"`
 	// Sends the message [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will
 	// receive a notification with no sound.
-	DisableNotification OptBool "json:\"disable_notification\""
+	DisableNotification OptBool `json:"disable_notification"`
 	// Protects the contents of the sent message from forwarding and saving.
-	ProtectContent OptBool "json:\"protect_content\""
+	ProtectContent OptBool `json:"protect_content"`
 	// If the message is a reply, ID of the original message.
-	ReplyToMessageID OptInt "json:\"reply_to_message_id\""
+	ReplyToMessageID OptInt `json:"reply_to_message_id"`
 	// Pass _True_ if the message should be sent even if the specified replied-to message is not found.
-	AllowSendingWithoutReply OptBool            "json:\"allow_sending_without_reply\""
-	ReplyMarkup              OptSendReplyMarkup "json:\"reply_markup\""
+	AllowSendingWithoutReply OptBool            `json:"allow_sending_without_reply"`
+	ReplyMarkup              OptSendReplyMarkup `json:"reply_markup"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s SendMessage) GetChatID() ID {
+	return s.ChatID
+}
+
+// GetMessageThreadID returns the value of MessageThreadID.
+func (s SendMessage) GetMessageThreadID() OptInt {
+	return s.MessageThreadID
+}
+
+// GetText returns the value of Text.
+func (s SendMessage) GetText() string {
+	return s.Text
+}
+
+// GetParseMode returns the value of ParseMode.
+func (s SendMessage) GetParseMode() OptString {
+	return s.ParseMode
+}
+
+// GetEntities returns the value of Entities.
+func (s SendMessage) GetEntities() []MessageEntity {
+	return s.Entities
+}
+
+// GetDisableWebPagePreview returns the value of DisableWebPagePreview.
+func (s SendMessage) GetDisableWebPagePreview() OptBool {
+	return s.DisableWebPagePreview
+}
+
+// GetDisableNotification returns the value of DisableNotification.
+func (s SendMessage) GetDisableNotification() OptBool {
+	return s.DisableNotification
+}
+
+// GetProtectContent returns the value of ProtectContent.
+func (s SendMessage) GetProtectContent() OptBool {
+	return s.ProtectContent
+}
+
+// GetReplyToMessageID returns the value of ReplyToMessageID.
+func (s SendMessage) GetReplyToMessageID() OptInt {
+	return s.ReplyToMessageID
+}
+
+// GetAllowSendingWithoutReply returns the value of AllowSendingWithoutReply.
+func (s SendMessage) GetAllowSendingWithoutReply() OptBool {
+	return s.AllowSendingWithoutReply
+}
+
+// GetReplyMarkup returns the value of ReplyMarkup.
+func (s SendMessage) GetReplyMarkup() OptSendReplyMarkup {
+	return s.ReplyMarkup
+}
+
+// SetChatID sets the value of ChatID.
+func (s *SendMessage) SetChatID(val ID) {
+	s.ChatID = val
+}
+
+// SetMessageThreadID sets the value of MessageThreadID.
+func (s *SendMessage) SetMessageThreadID(val OptInt) {
+	s.MessageThreadID = val
+}
+
+// SetText sets the value of Text.
+func (s *SendMessage) SetText(val string) {
+	s.Text = val
+}
+
+// SetParseMode sets the value of ParseMode.
+func (s *SendMessage) SetParseMode(val OptString) {
+	s.ParseMode = val
+}
+
+// SetEntities sets the value of Entities.
+func (s *SendMessage) SetEntities(val []MessageEntity) {
+	s.Entities = val
+}
+
+// SetDisableWebPagePreview sets the value of DisableWebPagePreview.
+func (s *SendMessage) SetDisableWebPagePreview(val OptBool) {
+	s.DisableWebPagePreview = val
+}
+
+// SetDisableNotification sets the value of DisableNotification.
+func (s *SendMessage) SetDisableNotification(val OptBool) {
+	s.DisableNotification = val
+}
+
+// SetProtectContent sets the value of ProtectContent.
+func (s *SendMessage) SetProtectContent(val OptBool) {
+	s.ProtectContent = val
+}
+
+// SetReplyToMessageID sets the value of ReplyToMessageID.
+func (s *SendMessage) SetReplyToMessageID(val OptInt) {
+	s.ReplyToMessageID = val
+}
+
+// SetAllowSendingWithoutReply sets the value of AllowSendingWithoutReply.
+func (s *SendMessage) SetAllowSendingWithoutReply(val OptBool) {
+	s.AllowSendingWithoutReply = val
+}
+
+// SetReplyMarkup sets the value of ReplyMarkup.
+func (s *SendMessage) SetReplyMarkup(val OptSendReplyMarkup) {
+	s.ReplyMarkup = val
 }
 
 // Input for sendPhoto.
 // Ref: #/components/schemas/sendPhoto
 type SendPhoto struct {
-	ChatID ID "json:\"chat_id\""
+	ChatID ID `json:"chat_id"`
 	// Unique identifier for the target message thread (topic) of the forum; for forum supergroups only.
-	MessageThreadID OptInt "json:\"message_thread_id\""
+	MessageThreadID OptInt `json:"message_thread_id"`
 	// Photo to send. Pass a file_id as String to send a photo that exists on the Telegram servers
 	// (recommended), pass an HTTP URL as a String for Telegram to get a photo from the Internet, or
 	// upload a new photo using multipart/form-data. The photo must be at most 10 MB in size. The photo's
 	// width and height must not exceed 10000 in total. Width and height ratio must be at most 20. [More
 	// information on Sending Files](https://core.telegram.org/bots/api#sending-files).
-	Photo string "json:\"photo\""
+	Photo string `json:"photo"`
 	// Photo caption (may also be used when resending photos by _file_id_), 0-1024 characters after
 	// entities parsing.
-	Caption OptString "json:\"caption\""
+	Caption OptString `json:"caption"`
 	// Mode for parsing entities in the photo caption. See [formatting options](https://core.telegram.
 	// org/bots/api#formatting-options) for more details.
-	ParseMode OptString "json:\"parse_mode\""
+	ParseMode OptString `json:"parse_mode"`
 	// A JSON-serialized list of special entities that appear in the caption, which can be specified
 	// instead of _parse_mode_.
-	CaptionEntities []MessageEntity "json:\"caption_entities\""
+	CaptionEntities []MessageEntity `json:"caption_entities"`
 	// Sends the message [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will
 	// receive a notification with no sound.
-	DisableNotification OptBool "json:\"disable_notification\""
+	DisableNotification OptBool `json:"disable_notification"`
 	// Protects the contents of the sent message from forwarding and saving.
-	ProtectContent OptBool "json:\"protect_content\""
+	ProtectContent OptBool `json:"protect_content"`
 	// If the message is a reply, ID of the original message.
-	ReplyToMessageID OptInt "json:\"reply_to_message_id\""
+	ReplyToMessageID OptInt `json:"reply_to_message_id"`
 	// Pass _True_ if the message should be sent even if the specified replied-to message is not found.
-	AllowSendingWithoutReply OptBool            "json:\"allow_sending_without_reply\""
-	ReplyMarkup              OptSendReplyMarkup "json:\"reply_markup\""
+	AllowSendingWithoutReply OptBool            `json:"allow_sending_without_reply"`
+	ReplyMarkup              OptSendReplyMarkup `json:"reply_markup"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s SendPhoto) GetChatID() ID {
+	return s.ChatID
+}
+
+// GetMessageThreadID returns the value of MessageThreadID.
+func (s SendPhoto) GetMessageThreadID() OptInt {
+	return s.MessageThreadID
+}
+
+// GetPhoto returns the value of Photo.
+func (s SendPhoto) GetPhoto() string {
+	return s.Photo
+}
+
+// GetCaption returns the value of Caption.
+func (s SendPhoto) GetCaption() OptString {
+	return s.Caption
+}
+
+// GetParseMode returns the value of ParseMode.
+func (s SendPhoto) GetParseMode() OptString {
+	return s.ParseMode
+}
+
+// GetCaptionEntities returns the value of CaptionEntities.
+func (s SendPhoto) GetCaptionEntities() []MessageEntity {
+	return s.CaptionEntities
+}
+
+// GetDisableNotification returns the value of DisableNotification.
+func (s SendPhoto) GetDisableNotification() OptBool {
+	return s.DisableNotification
+}
+
+// GetProtectContent returns the value of ProtectContent.
+func (s SendPhoto) GetProtectContent() OptBool {
+	return s.ProtectContent
+}
+
+// GetReplyToMessageID returns the value of ReplyToMessageID.
+func (s SendPhoto) GetReplyToMessageID() OptInt {
+	return s.ReplyToMessageID
+}
+
+// GetAllowSendingWithoutReply returns the value of AllowSendingWithoutReply.
+func (s SendPhoto) GetAllowSendingWithoutReply() OptBool {
+	return s.AllowSendingWithoutReply
+}
+
+// GetReplyMarkup returns the value of ReplyMarkup.
+func (s SendPhoto) GetReplyMarkup() OptSendReplyMarkup {
+	return s.ReplyMarkup
+}
+
+// SetChatID sets the value of ChatID.
+func (s *SendPhoto) SetChatID(val ID) {
+	s.ChatID = val
+}
+
+// SetMessageThreadID sets the value of MessageThreadID.
+func (s *SendPhoto) SetMessageThreadID(val OptInt) {
+	s.MessageThreadID = val
+}
+
+// SetPhoto sets the value of Photo.
+func (s *SendPhoto) SetPhoto(val string) {
+	s.Photo = val
+}
+
+// SetCaption sets the value of Caption.
+func (s *SendPhoto) SetCaption(val OptString) {
+	s.Caption = val
+}
+
+// SetParseMode sets the value of ParseMode.
+func (s *SendPhoto) SetParseMode(val OptString) {
+	s.ParseMode = val
+}
+
+// SetCaptionEntities sets the value of CaptionEntities.
+func (s *SendPhoto) SetCaptionEntities(val []MessageEntity) {
+	s.CaptionEntities = val
+}
+
+// SetDisableNotification sets the value of DisableNotification.
+func (s *SendPhoto) SetDisableNotification(val OptBool) {
+	s.DisableNotification = val
+}
+
+// SetProtectContent sets the value of ProtectContent.
+func (s *SendPhoto) SetProtectContent(val OptBool) {
+	s.ProtectContent = val
+}
+
+// SetReplyToMessageID sets the value of ReplyToMessageID.
+func (s *SendPhoto) SetReplyToMessageID(val OptInt) {
+	s.ReplyToMessageID = val
+}
+
+// SetAllowSendingWithoutReply sets the value of AllowSendingWithoutReply.
+func (s *SendPhoto) SetAllowSendingWithoutReply(val OptBool) {
+	s.AllowSendingWithoutReply = val
+}
+
+// SetReplyMarkup sets the value of ReplyMarkup.
+func (s *SendPhoto) SetReplyMarkup(val OptSendReplyMarkup) {
+	s.ReplyMarkup = val
 }
 
 // Input for sendPoll.
 // Ref: #/components/schemas/sendPoll
 type SendPoll struct {
-	ChatID ID "json:\"chat_id\""
+	ChatID ID `json:"chat_id"`
 	// Unique identifier for the target message thread (topic) of the forum; for forum supergroups only.
-	MessageThreadID OptInt "json:\"message_thread_id\""
+	MessageThreadID OptInt `json:"message_thread_id"`
 	// Poll question, 1-300 characters.
-	Question string "json:\"question\""
+	Question string `json:"question"`
 	// A JSON-serialized list of answer options, 2-10 strings 1-100 characters each.
-	Options []string "json:\"options\""
+	Options []string `json:"options"`
 	// _True_, if the poll needs to be anonymous, defaults to _True_.
-	IsAnonymous OptBool "json:\"is_anonymous\""
+	IsAnonymous OptBool `json:"is_anonymous"`
 	// Poll type, `quiz` or `regular`, defaults to `regular`.
-	Type OptString "json:\"type\""
+	Type OptString `json:"type"`
 	// _True_, if the poll allows multiple answers, ignored for polls in quiz mode, defaults to _False_.
-	AllowsMultipleAnswers OptBool "json:\"allows_multiple_answers\""
+	AllowsMultipleAnswers OptBool `json:"allows_multiple_answers"`
 	// 0-based identifier of the correct answer option, required for polls in quiz mode.
-	CorrectOptionID OptInt "json:\"correct_option_id\""
+	CorrectOptionID OptInt `json:"correct_option_id"`
 	// Text that is shown when a user chooses an incorrect answer or taps on the lamp icon in a
 	// quiz-style poll, 0-200 characters with at most 2 line feeds after entities parsing.
-	Explanation OptString "json:\"explanation\""
+	Explanation OptString `json:"explanation"`
 	// Mode for parsing entities in the explanation. See [formatting options](https://core.telegram.
 	// org/bots/api#formatting-options) for more details.
-	ExplanationParseMode OptString "json:\"explanation_parse_mode\""
+	ExplanationParseMode OptString `json:"explanation_parse_mode"`
 	// A JSON-serialized list of special entities that appear in the poll explanation, which can be
 	// specified instead of _parse_mode_.
-	ExplanationEntities []MessageEntity "json:\"explanation_entities\""
+	ExplanationEntities []MessageEntity `json:"explanation_entities"`
 	// Amount of time in seconds the poll will be active after creation, 5-600. Can't be used together
 	// with _close_date_.
-	OpenPeriod OptInt "json:\"open_period\""
+	OpenPeriod OptInt `json:"open_period"`
 	// Point in time (Unix timestamp) when the poll will be automatically closed. Must be at least 5 and
 	// no more than 600 seconds in the future. Can't be used together with _open_period_.
-	CloseDate OptInt "json:\"close_date\""
+	CloseDate OptInt `json:"close_date"`
 	// Pass _True_ if the poll needs to be immediately closed. This can be useful for poll preview.
-	IsClosed OptBool "json:\"is_closed\""
+	IsClosed OptBool `json:"is_closed"`
 	// Sends the message [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will
 	// receive a notification with no sound.
-	DisableNotification OptBool "json:\"disable_notification\""
+	DisableNotification OptBool `json:"disable_notification"`
 	// Protects the contents of the sent message from forwarding and saving.
-	ProtectContent OptBool "json:\"protect_content\""
+	ProtectContent OptBool `json:"protect_content"`
 	// If the message is a reply, ID of the original message.
-	ReplyToMessageID OptInt "json:\"reply_to_message_id\""
+	ReplyToMessageID OptInt `json:"reply_to_message_id"`
 	// Pass _True_ if the message should be sent even if the specified replied-to message is not found.
-	AllowSendingWithoutReply OptBool            "json:\"allow_sending_without_reply\""
-	ReplyMarkup              OptSendReplyMarkup "json:\"reply_markup\""
+	AllowSendingWithoutReply OptBool            `json:"allow_sending_without_reply"`
+	ReplyMarkup              OptSendReplyMarkup `json:"reply_markup"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s SendPoll) GetChatID() ID {
+	return s.ChatID
+}
+
+// GetMessageThreadID returns the value of MessageThreadID.
+func (s SendPoll) GetMessageThreadID() OptInt {
+	return s.MessageThreadID
+}
+
+// GetQuestion returns the value of Question.
+func (s SendPoll) GetQuestion() string {
+	return s.Question
+}
+
+// GetOptions returns the value of Options.
+func (s SendPoll) GetOptions() []string {
+	return s.Options
+}
+
+// GetIsAnonymous returns the value of IsAnonymous.
+func (s SendPoll) GetIsAnonymous() OptBool {
+	return s.IsAnonymous
+}
+
+// GetType returns the value of Type.
+func (s SendPoll) GetType() OptString {
+	return s.Type
+}
+
+// GetAllowsMultipleAnswers returns the value of AllowsMultipleAnswers.
+func (s SendPoll) GetAllowsMultipleAnswers() OptBool {
+	return s.AllowsMultipleAnswers
+}
+
+// GetCorrectOptionID returns the value of CorrectOptionID.
+func (s SendPoll) GetCorrectOptionID() OptInt {
+	return s.CorrectOptionID
+}
+
+// GetExplanation returns the value of Explanation.
+func (s SendPoll) GetExplanation() OptString {
+	return s.Explanation
+}
+
+// GetExplanationParseMode returns the value of ExplanationParseMode.
+func (s SendPoll) GetExplanationParseMode() OptString {
+	return s.ExplanationParseMode
+}
+
+// GetExplanationEntities returns the value of ExplanationEntities.
+func (s SendPoll) GetExplanationEntities() []MessageEntity {
+	return s.ExplanationEntities
+}
+
+// GetOpenPeriod returns the value of OpenPeriod.
+func (s SendPoll) GetOpenPeriod() OptInt {
+	return s.OpenPeriod
+}
+
+// GetCloseDate returns the value of CloseDate.
+func (s SendPoll) GetCloseDate() OptInt {
+	return s.CloseDate
+}
+
+// GetIsClosed returns the value of IsClosed.
+func (s SendPoll) GetIsClosed() OptBool {
+	return s.IsClosed
+}
+
+// GetDisableNotification returns the value of DisableNotification.
+func (s SendPoll) GetDisableNotification() OptBool {
+	return s.DisableNotification
+}
+
+// GetProtectContent returns the value of ProtectContent.
+func (s SendPoll) GetProtectContent() OptBool {
+	return s.ProtectContent
+}
+
+// GetReplyToMessageID returns the value of ReplyToMessageID.
+func (s SendPoll) GetReplyToMessageID() OptInt {
+	return s.ReplyToMessageID
+}
+
+// GetAllowSendingWithoutReply returns the value of AllowSendingWithoutReply.
+func (s SendPoll) GetAllowSendingWithoutReply() OptBool {
+	return s.AllowSendingWithoutReply
+}
+
+// GetReplyMarkup returns the value of ReplyMarkup.
+func (s SendPoll) GetReplyMarkup() OptSendReplyMarkup {
+	return s.ReplyMarkup
+}
+
+// SetChatID sets the value of ChatID.
+func (s *SendPoll) SetChatID(val ID) {
+	s.ChatID = val
+}
+
+// SetMessageThreadID sets the value of MessageThreadID.
+func (s *SendPoll) SetMessageThreadID(val OptInt) {
+	s.MessageThreadID = val
+}
+
+// SetQuestion sets the value of Question.
+func (s *SendPoll) SetQuestion(val string) {
+	s.Question = val
+}
+
+// SetOptions sets the value of Options.
+func (s *SendPoll) SetOptions(val []string) {
+	s.Options = val
+}
+
+// SetIsAnonymous sets the value of IsAnonymous.
+func (s *SendPoll) SetIsAnonymous(val OptBool) {
+	s.IsAnonymous = val
+}
+
+// SetType sets the value of Type.
+func (s *SendPoll) SetType(val OptString) {
+	s.Type = val
+}
+
+// SetAllowsMultipleAnswers sets the value of AllowsMultipleAnswers.
+func (s *SendPoll) SetAllowsMultipleAnswers(val OptBool) {
+	s.AllowsMultipleAnswers = val
+}
+
+// SetCorrectOptionID sets the value of CorrectOptionID.
+func (s *SendPoll) SetCorrectOptionID(val OptInt) {
+	s.CorrectOptionID = val
+}
+
+// SetExplanation sets the value of Explanation.
+func (s *SendPoll) SetExplanation(val OptString) {
+	s.Explanation = val
+}
+
+// SetExplanationParseMode sets the value of ExplanationParseMode.
+func (s *SendPoll) SetExplanationParseMode(val OptString) {
+	s.ExplanationParseMode = val
+}
+
+// SetExplanationEntities sets the value of ExplanationEntities.
+func (s *SendPoll) SetExplanationEntities(val []MessageEntity) {
+	s.ExplanationEntities = val
+}
+
+// SetOpenPeriod sets the value of OpenPeriod.
+func (s *SendPoll) SetOpenPeriod(val OptInt) {
+	s.OpenPeriod = val
+}
+
+// SetCloseDate sets the value of CloseDate.
+func (s *SendPoll) SetCloseDate(val OptInt) {
+	s.CloseDate = val
+}
+
+// SetIsClosed sets the value of IsClosed.
+func (s *SendPoll) SetIsClosed(val OptBool) {
+	s.IsClosed = val
+}
+
+// SetDisableNotification sets the value of DisableNotification.
+func (s *SendPoll) SetDisableNotification(val OptBool) {
+	s.DisableNotification = val
+}
+
+// SetProtectContent sets the value of ProtectContent.
+func (s *SendPoll) SetProtectContent(val OptBool) {
+	s.ProtectContent = val
+}
+
+// SetReplyToMessageID sets the value of ReplyToMessageID.
+func (s *SendPoll) SetReplyToMessageID(val OptInt) {
+	s.ReplyToMessageID = val
+}
+
+// SetAllowSendingWithoutReply sets the value of AllowSendingWithoutReply.
+func (s *SendPoll) SetAllowSendingWithoutReply(val OptBool) {
+	s.AllowSendingWithoutReply = val
+}
+
+// SetReplyMarkup sets the value of ReplyMarkup.
+func (s *SendPoll) SetReplyMarkup(val OptSendReplyMarkup) {
+	s.ReplyMarkup = val
 }
 
 // Ref: #/components/schemas/SendReplyMarkup
@@ -9190,79 +20030,309 @@ func NewForceReplySendReplyMarkup(v ForceReply) SendReplyMarkup {
 // Input for sendSticker.
 // Ref: #/components/schemas/sendSticker
 type SendSticker struct {
-	ChatID ID "json:\"chat_id\""
+	ChatID ID `json:"chat_id"`
 	// Unique identifier for the target message thread (topic) of the forum; for forum supergroups only.
-	MessageThreadID OptInt "json:\"message_thread_id\""
+	MessageThreadID OptInt `json:"message_thread_id"`
 	// Sticker to send. Pass a file_id as String to send a file that exists on the Telegram servers
 	// (recommended), pass an HTTP URL as a String for Telegram to get a .WEBP file from the Internet, or
 	// upload a new one using multipart/form-data. [More information on Sending Files](https://core.
 	// telegram.org/bots/api#sending-files).
-	Sticker string "json:\"sticker\""
+	Sticker string `json:"sticker"`
 	// Sends the message [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will
 	// receive a notification with no sound.
-	DisableNotification OptBool "json:\"disable_notification\""
+	DisableNotification OptBool `json:"disable_notification"`
 	// Protects the contents of the sent message from forwarding and saving.
-	ProtectContent OptBool "json:\"protect_content\""
+	ProtectContent OptBool `json:"protect_content"`
 	// If the message is a reply, ID of the original message.
-	ReplyToMessageID OptInt "json:\"reply_to_message_id\""
+	ReplyToMessageID OptInt `json:"reply_to_message_id"`
 	// Pass _True_ if the message should be sent even if the specified replied-to message is not found.
-	AllowSendingWithoutReply OptBool            "json:\"allow_sending_without_reply\""
-	ReplyMarkup              OptSendReplyMarkup "json:\"reply_markup\""
+	AllowSendingWithoutReply OptBool            `json:"allow_sending_without_reply"`
+	ReplyMarkup              OptSendReplyMarkup `json:"reply_markup"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s SendSticker) GetChatID() ID {
+	return s.ChatID
+}
+
+// GetMessageThreadID returns the value of MessageThreadID.
+func (s SendSticker) GetMessageThreadID() OptInt {
+	return s.MessageThreadID
+}
+
+// GetSticker returns the value of Sticker.
+func (s SendSticker) GetSticker() string {
+	return s.Sticker
+}
+
+// GetDisableNotification returns the value of DisableNotification.
+func (s SendSticker) GetDisableNotification() OptBool {
+	return s.DisableNotification
+}
+
+// GetProtectContent returns the value of ProtectContent.
+func (s SendSticker) GetProtectContent() OptBool {
+	return s.ProtectContent
+}
+
+// GetReplyToMessageID returns the value of ReplyToMessageID.
+func (s SendSticker) GetReplyToMessageID() OptInt {
+	return s.ReplyToMessageID
+}
+
+// GetAllowSendingWithoutReply returns the value of AllowSendingWithoutReply.
+func (s SendSticker) GetAllowSendingWithoutReply() OptBool {
+	return s.AllowSendingWithoutReply
+}
+
+// GetReplyMarkup returns the value of ReplyMarkup.
+func (s SendSticker) GetReplyMarkup() OptSendReplyMarkup {
+	return s.ReplyMarkup
+}
+
+// SetChatID sets the value of ChatID.
+func (s *SendSticker) SetChatID(val ID) {
+	s.ChatID = val
+}
+
+// SetMessageThreadID sets the value of MessageThreadID.
+func (s *SendSticker) SetMessageThreadID(val OptInt) {
+	s.MessageThreadID = val
+}
+
+// SetSticker sets the value of Sticker.
+func (s *SendSticker) SetSticker(val string) {
+	s.Sticker = val
+}
+
+// SetDisableNotification sets the value of DisableNotification.
+func (s *SendSticker) SetDisableNotification(val OptBool) {
+	s.DisableNotification = val
+}
+
+// SetProtectContent sets the value of ProtectContent.
+func (s *SendSticker) SetProtectContent(val OptBool) {
+	s.ProtectContent = val
+}
+
+// SetReplyToMessageID sets the value of ReplyToMessageID.
+func (s *SendSticker) SetReplyToMessageID(val OptInt) {
+	s.ReplyToMessageID = val
+}
+
+// SetAllowSendingWithoutReply sets the value of AllowSendingWithoutReply.
+func (s *SendSticker) SetAllowSendingWithoutReply(val OptBool) {
+	s.AllowSendingWithoutReply = val
+}
+
+// SetReplyMarkup sets the value of ReplyMarkup.
+func (s *SendSticker) SetReplyMarkup(val OptSendReplyMarkup) {
+	s.ReplyMarkup = val
 }
 
 // Input for sendVenue.
 // Ref: #/components/schemas/sendVenue
 type SendVenue struct {
-	ChatID ID "json:\"chat_id\""
+	ChatID ID `json:"chat_id"`
 	// Unique identifier for the target message thread (topic) of the forum; for forum supergroups only.
-	MessageThreadID OptInt "json:\"message_thread_id\""
+	MessageThreadID OptInt `json:"message_thread_id"`
 	// Latitude of the venue.
-	Latitude float64 "json:\"latitude\""
+	Latitude float64 `json:"latitude"`
 	// Longitude of the venue.
-	Longitude float64 "json:\"longitude\""
+	Longitude float64 `json:"longitude"`
 	// Name of the venue.
-	Title string "json:\"title\""
+	Title string `json:"title"`
 	// Address of the venue.
-	Address string "json:\"address\""
+	Address string `json:"address"`
 	// Foursquare identifier of the venue.
-	FoursquareID OptString "json:\"foursquare_id\""
+	FoursquareID OptString `json:"foursquare_id"`
 	// Foursquare type of the venue, if known. (For example, `arts_entertainment/default`,
 	// `arts_entertainment/aquarium` or `food/icecream`.).
-	FoursquareType OptString "json:\"foursquare_type\""
+	FoursquareType OptString `json:"foursquare_type"`
 	// Google Places identifier of the venue.
-	GooglePlaceID OptString "json:\"google_place_id\""
+	GooglePlaceID OptString `json:"google_place_id"`
 	// Google Places type of the venue. (See [supported types](https://developers.google.
 	// com/places/web-service/supported_types).).
-	GooglePlaceType OptString "json:\"google_place_type\""
+	GooglePlaceType OptString `json:"google_place_type"`
 	// Sends the message [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will
 	// receive a notification with no sound.
-	DisableNotification OptBool "json:\"disable_notification\""
+	DisableNotification OptBool `json:"disable_notification"`
 	// Protects the contents of the sent message from forwarding and saving.
-	ProtectContent OptBool "json:\"protect_content\""
+	ProtectContent OptBool `json:"protect_content"`
 	// If the message is a reply, ID of the original message.
-	ReplyToMessageID OptInt "json:\"reply_to_message_id\""
+	ReplyToMessageID OptInt `json:"reply_to_message_id"`
 	// Pass _True_ if the message should be sent even if the specified replied-to message is not found.
-	AllowSendingWithoutReply OptBool            "json:\"allow_sending_without_reply\""
-	ReplyMarkup              OptSendReplyMarkup "json:\"reply_markup\""
+	AllowSendingWithoutReply OptBool            `json:"allow_sending_without_reply"`
+	ReplyMarkup              OptSendReplyMarkup `json:"reply_markup"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s SendVenue) GetChatID() ID {
+	return s.ChatID
+}
+
+// GetMessageThreadID returns the value of MessageThreadID.
+func (s SendVenue) GetMessageThreadID() OptInt {
+	return s.MessageThreadID
+}
+
+// GetLatitude returns the value of Latitude.
+func (s SendVenue) GetLatitude() float64 {
+	return s.Latitude
+}
+
+// GetLongitude returns the value of Longitude.
+func (s SendVenue) GetLongitude() float64 {
+	return s.Longitude
+}
+
+// GetTitle returns the value of Title.
+func (s SendVenue) GetTitle() string {
+	return s.Title
+}
+
+// GetAddress returns the value of Address.
+func (s SendVenue) GetAddress() string {
+	return s.Address
+}
+
+// GetFoursquareID returns the value of FoursquareID.
+func (s SendVenue) GetFoursquareID() OptString {
+	return s.FoursquareID
+}
+
+// GetFoursquareType returns the value of FoursquareType.
+func (s SendVenue) GetFoursquareType() OptString {
+	return s.FoursquareType
+}
+
+// GetGooglePlaceID returns the value of GooglePlaceID.
+func (s SendVenue) GetGooglePlaceID() OptString {
+	return s.GooglePlaceID
+}
+
+// GetGooglePlaceType returns the value of GooglePlaceType.
+func (s SendVenue) GetGooglePlaceType() OptString {
+	return s.GooglePlaceType
+}
+
+// GetDisableNotification returns the value of DisableNotification.
+func (s SendVenue) GetDisableNotification() OptBool {
+	return s.DisableNotification
+}
+
+// GetProtectContent returns the value of ProtectContent.
+func (s SendVenue) GetProtectContent() OptBool {
+	return s.ProtectContent
+}
+
+// GetReplyToMessageID returns the value of ReplyToMessageID.
+func (s SendVenue) GetReplyToMessageID() OptInt {
+	return s.ReplyToMessageID
+}
+
+// GetAllowSendingWithoutReply returns the value of AllowSendingWithoutReply.
+func (s SendVenue) GetAllowSendingWithoutReply() OptBool {
+	return s.AllowSendingWithoutReply
+}
+
+// GetReplyMarkup returns the value of ReplyMarkup.
+func (s SendVenue) GetReplyMarkup() OptSendReplyMarkup {
+	return s.ReplyMarkup
+}
+
+// SetChatID sets the value of ChatID.
+func (s *SendVenue) SetChatID(val ID) {
+	s.ChatID = val
+}
+
+// SetMessageThreadID sets the value of MessageThreadID.
+func (s *SendVenue) SetMessageThreadID(val OptInt) {
+	s.MessageThreadID = val
+}
+
+// SetLatitude sets the value of Latitude.
+func (s *SendVenue) SetLatitude(val float64) {
+	s.Latitude = val
+}
+
+// SetLongitude sets the value of Longitude.
+func (s *SendVenue) SetLongitude(val float64) {
+	s.Longitude = val
+}
+
+// SetTitle sets the value of Title.
+func (s *SendVenue) SetTitle(val string) {
+	s.Title = val
+}
+
+// SetAddress sets the value of Address.
+func (s *SendVenue) SetAddress(val string) {
+	s.Address = val
+}
+
+// SetFoursquareID sets the value of FoursquareID.
+func (s *SendVenue) SetFoursquareID(val OptString) {
+	s.FoursquareID = val
+}
+
+// SetFoursquareType sets the value of FoursquareType.
+func (s *SendVenue) SetFoursquareType(val OptString) {
+	s.FoursquareType = val
+}
+
+// SetGooglePlaceID sets the value of GooglePlaceID.
+func (s *SendVenue) SetGooglePlaceID(val OptString) {
+	s.GooglePlaceID = val
+}
+
+// SetGooglePlaceType sets the value of GooglePlaceType.
+func (s *SendVenue) SetGooglePlaceType(val OptString) {
+	s.GooglePlaceType = val
+}
+
+// SetDisableNotification sets the value of DisableNotification.
+func (s *SendVenue) SetDisableNotification(val OptBool) {
+	s.DisableNotification = val
+}
+
+// SetProtectContent sets the value of ProtectContent.
+func (s *SendVenue) SetProtectContent(val OptBool) {
+	s.ProtectContent = val
+}
+
+// SetReplyToMessageID sets the value of ReplyToMessageID.
+func (s *SendVenue) SetReplyToMessageID(val OptInt) {
+	s.ReplyToMessageID = val
+}
+
+// SetAllowSendingWithoutReply sets the value of AllowSendingWithoutReply.
+func (s *SendVenue) SetAllowSendingWithoutReply(val OptBool) {
+	s.AllowSendingWithoutReply = val
+}
+
+// SetReplyMarkup sets the value of ReplyMarkup.
+func (s *SendVenue) SetReplyMarkup(val OptSendReplyMarkup) {
+	s.ReplyMarkup = val
 }
 
 // Input for sendVideo.
 // Ref: #/components/schemas/sendVideo
 type SendVideo struct {
-	ChatID ID "json:\"chat_id\""
+	ChatID ID `json:"chat_id"`
 	// Unique identifier for the target message thread (topic) of the forum; for forum supergroups only.
-	MessageThreadID OptInt "json:\"message_thread_id\""
+	MessageThreadID OptInt `json:"message_thread_id"`
 	// Video to send. Pass a file_id as String to send a video that exists on the Telegram servers
 	// (recommended), pass an HTTP URL as a String for Telegram to get a video from the Internet, or
 	// upload a new video using multipart/form-data. [More information on Sending Files](https://core.
 	// telegram.org/bots/api#sending-files).
-	Video string "json:\"video\""
+	Video string `json:"video"`
 	// Duration of sent video in seconds.
-	Duration OptInt "json:\"duration\""
+	Duration OptInt `json:"duration"`
 	// Video width.
-	Width OptInt "json:\"width\""
+	Width OptInt `json:"width"`
 	// Video height.
-	Height OptInt "json:\"height\""
+	Height OptInt `json:"height"`
 	// Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported
 	// server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's
 	// width and height should not exceed 320. Ignored if the file is not uploaded using
@@ -9270,45 +20340,205 @@ type SendVideo struct {
 	// pass `attach://<file_attach_name>` if the thumbnail was uploaded using multipart/form-data under
 	// <file_attach_name>. [More information on Sending Files](https://core.telegram.
 	// org/bots/api#sending-files).
-	Thumb OptString "json:\"thumb\""
+	Thumb OptString `json:"thumb"`
 	// Video caption (may also be used when resending videos by _file_id_), 0-1024 characters after
 	// entities parsing.
-	Caption OptString "json:\"caption\""
+	Caption OptString `json:"caption"`
 	// Mode for parsing entities in the video caption. See [formatting options](https://core.telegram.
 	// org/bots/api#formatting-options) for more details.
-	ParseMode OptString "json:\"parse_mode\""
+	ParseMode OptString `json:"parse_mode"`
 	// A JSON-serialized list of special entities that appear in the caption, which can be specified
 	// instead of _parse_mode_.
-	CaptionEntities []MessageEntity "json:\"caption_entities\""
+	CaptionEntities []MessageEntity `json:"caption_entities"`
 	// Pass _True_ if the uploaded video is suitable for streaming.
-	SupportsStreaming OptBool "json:\"supports_streaming\""
+	SupportsStreaming OptBool `json:"supports_streaming"`
 	// Sends the message [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will
 	// receive a notification with no sound.
-	DisableNotification OptBool "json:\"disable_notification\""
+	DisableNotification OptBool `json:"disable_notification"`
 	// Protects the contents of the sent message from forwarding and saving.
-	ProtectContent OptBool "json:\"protect_content\""
+	ProtectContent OptBool `json:"protect_content"`
 	// If the message is a reply, ID of the original message.
-	ReplyToMessageID OptInt "json:\"reply_to_message_id\""
+	ReplyToMessageID OptInt `json:"reply_to_message_id"`
 	// Pass _True_ if the message should be sent even if the specified replied-to message is not found.
-	AllowSendingWithoutReply OptBool            "json:\"allow_sending_without_reply\""
-	ReplyMarkup              OptSendReplyMarkup "json:\"reply_markup\""
+	AllowSendingWithoutReply OptBool            `json:"allow_sending_without_reply"`
+	ReplyMarkup              OptSendReplyMarkup `json:"reply_markup"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s SendVideo) GetChatID() ID {
+	return s.ChatID
+}
+
+// GetMessageThreadID returns the value of MessageThreadID.
+func (s SendVideo) GetMessageThreadID() OptInt {
+	return s.MessageThreadID
+}
+
+// GetVideo returns the value of Video.
+func (s SendVideo) GetVideo() string {
+	return s.Video
+}
+
+// GetDuration returns the value of Duration.
+func (s SendVideo) GetDuration() OptInt {
+	return s.Duration
+}
+
+// GetWidth returns the value of Width.
+func (s SendVideo) GetWidth() OptInt {
+	return s.Width
+}
+
+// GetHeight returns the value of Height.
+func (s SendVideo) GetHeight() OptInt {
+	return s.Height
+}
+
+// GetThumb returns the value of Thumb.
+func (s SendVideo) GetThumb() OptString {
+	return s.Thumb
+}
+
+// GetCaption returns the value of Caption.
+func (s SendVideo) GetCaption() OptString {
+	return s.Caption
+}
+
+// GetParseMode returns the value of ParseMode.
+func (s SendVideo) GetParseMode() OptString {
+	return s.ParseMode
+}
+
+// GetCaptionEntities returns the value of CaptionEntities.
+func (s SendVideo) GetCaptionEntities() []MessageEntity {
+	return s.CaptionEntities
+}
+
+// GetSupportsStreaming returns the value of SupportsStreaming.
+func (s SendVideo) GetSupportsStreaming() OptBool {
+	return s.SupportsStreaming
+}
+
+// GetDisableNotification returns the value of DisableNotification.
+func (s SendVideo) GetDisableNotification() OptBool {
+	return s.DisableNotification
+}
+
+// GetProtectContent returns the value of ProtectContent.
+func (s SendVideo) GetProtectContent() OptBool {
+	return s.ProtectContent
+}
+
+// GetReplyToMessageID returns the value of ReplyToMessageID.
+func (s SendVideo) GetReplyToMessageID() OptInt {
+	return s.ReplyToMessageID
+}
+
+// GetAllowSendingWithoutReply returns the value of AllowSendingWithoutReply.
+func (s SendVideo) GetAllowSendingWithoutReply() OptBool {
+	return s.AllowSendingWithoutReply
+}
+
+// GetReplyMarkup returns the value of ReplyMarkup.
+func (s SendVideo) GetReplyMarkup() OptSendReplyMarkup {
+	return s.ReplyMarkup
+}
+
+// SetChatID sets the value of ChatID.
+func (s *SendVideo) SetChatID(val ID) {
+	s.ChatID = val
+}
+
+// SetMessageThreadID sets the value of MessageThreadID.
+func (s *SendVideo) SetMessageThreadID(val OptInt) {
+	s.MessageThreadID = val
+}
+
+// SetVideo sets the value of Video.
+func (s *SendVideo) SetVideo(val string) {
+	s.Video = val
+}
+
+// SetDuration sets the value of Duration.
+func (s *SendVideo) SetDuration(val OptInt) {
+	s.Duration = val
+}
+
+// SetWidth sets the value of Width.
+func (s *SendVideo) SetWidth(val OptInt) {
+	s.Width = val
+}
+
+// SetHeight sets the value of Height.
+func (s *SendVideo) SetHeight(val OptInt) {
+	s.Height = val
+}
+
+// SetThumb sets the value of Thumb.
+func (s *SendVideo) SetThumb(val OptString) {
+	s.Thumb = val
+}
+
+// SetCaption sets the value of Caption.
+func (s *SendVideo) SetCaption(val OptString) {
+	s.Caption = val
+}
+
+// SetParseMode sets the value of ParseMode.
+func (s *SendVideo) SetParseMode(val OptString) {
+	s.ParseMode = val
+}
+
+// SetCaptionEntities sets the value of CaptionEntities.
+func (s *SendVideo) SetCaptionEntities(val []MessageEntity) {
+	s.CaptionEntities = val
+}
+
+// SetSupportsStreaming sets the value of SupportsStreaming.
+func (s *SendVideo) SetSupportsStreaming(val OptBool) {
+	s.SupportsStreaming = val
+}
+
+// SetDisableNotification sets the value of DisableNotification.
+func (s *SendVideo) SetDisableNotification(val OptBool) {
+	s.DisableNotification = val
+}
+
+// SetProtectContent sets the value of ProtectContent.
+func (s *SendVideo) SetProtectContent(val OptBool) {
+	s.ProtectContent = val
+}
+
+// SetReplyToMessageID sets the value of ReplyToMessageID.
+func (s *SendVideo) SetReplyToMessageID(val OptInt) {
+	s.ReplyToMessageID = val
+}
+
+// SetAllowSendingWithoutReply sets the value of AllowSendingWithoutReply.
+func (s *SendVideo) SetAllowSendingWithoutReply(val OptBool) {
+	s.AllowSendingWithoutReply = val
+}
+
+// SetReplyMarkup sets the value of ReplyMarkup.
+func (s *SendVideo) SetReplyMarkup(val OptSendReplyMarkup) {
+	s.ReplyMarkup = val
 }
 
 // Input for sendVideoNote.
 // Ref: #/components/schemas/sendVideoNote
 type SendVideoNote struct {
-	ChatID ID "json:\"chat_id\""
+	ChatID ID `json:"chat_id"`
 	// Unique identifier for the target message thread (topic) of the forum; for forum supergroups only.
-	MessageThreadID OptInt "json:\"message_thread_id\""
+	MessageThreadID OptInt `json:"message_thread_id"`
 	// Video note to send. Pass a file_id as String to send a video note that exists on the Telegram
 	// servers (recommended) or upload a new video using multipart/form-data. [More information on
 	// Sending Files](https://core.telegram.org/bots/api#sending-files). Sending video notes by a URL is
 	// currently unsupported.
-	VideoNote string "json:\"video_note\""
+	VideoNote string `json:"video_note"`
 	// Duration of sent video in seconds.
-	Duration OptInt "json:\"duration\""
+	Duration OptInt `json:"duration"`
 	// Video width and height, i.e. diameter of the video message.
-	Length OptInt "json:\"length\""
+	Length OptInt `json:"length"`
 	// Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported
 	// server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's
 	// width and height should not exceed 320. Ignored if the file is not uploaded using
@@ -9316,68 +20546,348 @@ type SendVideoNote struct {
 	// pass `attach://<file_attach_name>` if the thumbnail was uploaded using multipart/form-data under
 	// <file_attach_name>. [More information on Sending Files](https://core.telegram.
 	// org/bots/api#sending-files).
-	Thumb OptString "json:\"thumb\""
+	Thumb OptString `json:"thumb"`
 	// Sends the message [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will
 	// receive a notification with no sound.
-	DisableNotification OptBool "json:\"disable_notification\""
+	DisableNotification OptBool `json:"disable_notification"`
 	// Protects the contents of the sent message from forwarding and saving.
-	ProtectContent OptBool "json:\"protect_content\""
+	ProtectContent OptBool `json:"protect_content"`
 	// If the message is a reply, ID of the original message.
-	ReplyToMessageID OptInt "json:\"reply_to_message_id\""
+	ReplyToMessageID OptInt `json:"reply_to_message_id"`
 	// Pass _True_ if the message should be sent even if the specified replied-to message is not found.
-	AllowSendingWithoutReply OptBool            "json:\"allow_sending_without_reply\""
-	ReplyMarkup              OptSendReplyMarkup "json:\"reply_markup\""
+	AllowSendingWithoutReply OptBool            `json:"allow_sending_without_reply"`
+	ReplyMarkup              OptSendReplyMarkup `json:"reply_markup"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s SendVideoNote) GetChatID() ID {
+	return s.ChatID
+}
+
+// GetMessageThreadID returns the value of MessageThreadID.
+func (s SendVideoNote) GetMessageThreadID() OptInt {
+	return s.MessageThreadID
+}
+
+// GetVideoNote returns the value of VideoNote.
+func (s SendVideoNote) GetVideoNote() string {
+	return s.VideoNote
+}
+
+// GetDuration returns the value of Duration.
+func (s SendVideoNote) GetDuration() OptInt {
+	return s.Duration
+}
+
+// GetLength returns the value of Length.
+func (s SendVideoNote) GetLength() OptInt {
+	return s.Length
+}
+
+// GetThumb returns the value of Thumb.
+func (s SendVideoNote) GetThumb() OptString {
+	return s.Thumb
+}
+
+// GetDisableNotification returns the value of DisableNotification.
+func (s SendVideoNote) GetDisableNotification() OptBool {
+	return s.DisableNotification
+}
+
+// GetProtectContent returns the value of ProtectContent.
+func (s SendVideoNote) GetProtectContent() OptBool {
+	return s.ProtectContent
+}
+
+// GetReplyToMessageID returns the value of ReplyToMessageID.
+func (s SendVideoNote) GetReplyToMessageID() OptInt {
+	return s.ReplyToMessageID
+}
+
+// GetAllowSendingWithoutReply returns the value of AllowSendingWithoutReply.
+func (s SendVideoNote) GetAllowSendingWithoutReply() OptBool {
+	return s.AllowSendingWithoutReply
+}
+
+// GetReplyMarkup returns the value of ReplyMarkup.
+func (s SendVideoNote) GetReplyMarkup() OptSendReplyMarkup {
+	return s.ReplyMarkup
+}
+
+// SetChatID sets the value of ChatID.
+func (s *SendVideoNote) SetChatID(val ID) {
+	s.ChatID = val
+}
+
+// SetMessageThreadID sets the value of MessageThreadID.
+func (s *SendVideoNote) SetMessageThreadID(val OptInt) {
+	s.MessageThreadID = val
+}
+
+// SetVideoNote sets the value of VideoNote.
+func (s *SendVideoNote) SetVideoNote(val string) {
+	s.VideoNote = val
+}
+
+// SetDuration sets the value of Duration.
+func (s *SendVideoNote) SetDuration(val OptInt) {
+	s.Duration = val
+}
+
+// SetLength sets the value of Length.
+func (s *SendVideoNote) SetLength(val OptInt) {
+	s.Length = val
+}
+
+// SetThumb sets the value of Thumb.
+func (s *SendVideoNote) SetThumb(val OptString) {
+	s.Thumb = val
+}
+
+// SetDisableNotification sets the value of DisableNotification.
+func (s *SendVideoNote) SetDisableNotification(val OptBool) {
+	s.DisableNotification = val
+}
+
+// SetProtectContent sets the value of ProtectContent.
+func (s *SendVideoNote) SetProtectContent(val OptBool) {
+	s.ProtectContent = val
+}
+
+// SetReplyToMessageID sets the value of ReplyToMessageID.
+func (s *SendVideoNote) SetReplyToMessageID(val OptInt) {
+	s.ReplyToMessageID = val
+}
+
+// SetAllowSendingWithoutReply sets the value of AllowSendingWithoutReply.
+func (s *SendVideoNote) SetAllowSendingWithoutReply(val OptBool) {
+	s.AllowSendingWithoutReply = val
+}
+
+// SetReplyMarkup sets the value of ReplyMarkup.
+func (s *SendVideoNote) SetReplyMarkup(val OptSendReplyMarkup) {
+	s.ReplyMarkup = val
 }
 
 // Input for sendVoice.
 // Ref: #/components/schemas/sendVoice
 type SendVoice struct {
-	ChatID ID "json:\"chat_id\""
+	ChatID ID `json:"chat_id"`
 	// Unique identifier for the target message thread (topic) of the forum; for forum supergroups only.
-	MessageThreadID OptInt "json:\"message_thread_id\""
+	MessageThreadID OptInt `json:"message_thread_id"`
 	// Audio file to send. Pass a file_id as String to send a file that exists on the Telegram servers
 	// (recommended), pass an HTTP URL as a String for Telegram to get a file from the Internet, or
 	// upload a new one using multipart/form-data. [More information on Sending Files](https://core.
 	// telegram.org/bots/api#sending-files).
-	Voice string "json:\"voice\""
+	Voice string `json:"voice"`
 	// Voice message caption, 0-1024 characters after entities parsing.
-	Caption OptString "json:\"caption\""
+	Caption OptString `json:"caption"`
 	// Mode for parsing entities in the voice message caption. See [formatting options](https://core.
 	// telegram.org/bots/api#formatting-options) for more details.
-	ParseMode OptString "json:\"parse_mode\""
+	ParseMode OptString `json:"parse_mode"`
 	// A JSON-serialized list of special entities that appear in the caption, which can be specified
 	// instead of _parse_mode_.
-	CaptionEntities []MessageEntity "json:\"caption_entities\""
+	CaptionEntities []MessageEntity `json:"caption_entities"`
 	// Duration of the voice message in seconds.
-	Duration OptInt "json:\"duration\""
+	Duration OptInt `json:"duration"`
 	// Sends the message [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will
 	// receive a notification with no sound.
-	DisableNotification OptBool "json:\"disable_notification\""
+	DisableNotification OptBool `json:"disable_notification"`
 	// Protects the contents of the sent message from forwarding and saving.
-	ProtectContent OptBool "json:\"protect_content\""
+	ProtectContent OptBool `json:"protect_content"`
 	// If the message is a reply, ID of the original message.
-	ReplyToMessageID OptInt "json:\"reply_to_message_id\""
+	ReplyToMessageID OptInt `json:"reply_to_message_id"`
 	// Pass _True_ if the message should be sent even if the specified replied-to message is not found.
-	AllowSendingWithoutReply OptBool            "json:\"allow_sending_without_reply\""
-	ReplyMarkup              OptSendReplyMarkup "json:\"reply_markup\""
+	AllowSendingWithoutReply OptBool            `json:"allow_sending_without_reply"`
+	ReplyMarkup              OptSendReplyMarkup `json:"reply_markup"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s SendVoice) GetChatID() ID {
+	return s.ChatID
+}
+
+// GetMessageThreadID returns the value of MessageThreadID.
+func (s SendVoice) GetMessageThreadID() OptInt {
+	return s.MessageThreadID
+}
+
+// GetVoice returns the value of Voice.
+func (s SendVoice) GetVoice() string {
+	return s.Voice
+}
+
+// GetCaption returns the value of Caption.
+func (s SendVoice) GetCaption() OptString {
+	return s.Caption
+}
+
+// GetParseMode returns the value of ParseMode.
+func (s SendVoice) GetParseMode() OptString {
+	return s.ParseMode
+}
+
+// GetCaptionEntities returns the value of CaptionEntities.
+func (s SendVoice) GetCaptionEntities() []MessageEntity {
+	return s.CaptionEntities
+}
+
+// GetDuration returns the value of Duration.
+func (s SendVoice) GetDuration() OptInt {
+	return s.Duration
+}
+
+// GetDisableNotification returns the value of DisableNotification.
+func (s SendVoice) GetDisableNotification() OptBool {
+	return s.DisableNotification
+}
+
+// GetProtectContent returns the value of ProtectContent.
+func (s SendVoice) GetProtectContent() OptBool {
+	return s.ProtectContent
+}
+
+// GetReplyToMessageID returns the value of ReplyToMessageID.
+func (s SendVoice) GetReplyToMessageID() OptInt {
+	return s.ReplyToMessageID
+}
+
+// GetAllowSendingWithoutReply returns the value of AllowSendingWithoutReply.
+func (s SendVoice) GetAllowSendingWithoutReply() OptBool {
+	return s.AllowSendingWithoutReply
+}
+
+// GetReplyMarkup returns the value of ReplyMarkup.
+func (s SendVoice) GetReplyMarkup() OptSendReplyMarkup {
+	return s.ReplyMarkup
+}
+
+// SetChatID sets the value of ChatID.
+func (s *SendVoice) SetChatID(val ID) {
+	s.ChatID = val
+}
+
+// SetMessageThreadID sets the value of MessageThreadID.
+func (s *SendVoice) SetMessageThreadID(val OptInt) {
+	s.MessageThreadID = val
+}
+
+// SetVoice sets the value of Voice.
+func (s *SendVoice) SetVoice(val string) {
+	s.Voice = val
+}
+
+// SetCaption sets the value of Caption.
+func (s *SendVoice) SetCaption(val OptString) {
+	s.Caption = val
+}
+
+// SetParseMode sets the value of ParseMode.
+func (s *SendVoice) SetParseMode(val OptString) {
+	s.ParseMode = val
+}
+
+// SetCaptionEntities sets the value of CaptionEntities.
+func (s *SendVoice) SetCaptionEntities(val []MessageEntity) {
+	s.CaptionEntities = val
+}
+
+// SetDuration sets the value of Duration.
+func (s *SendVoice) SetDuration(val OptInt) {
+	s.Duration = val
+}
+
+// SetDisableNotification sets the value of DisableNotification.
+func (s *SendVoice) SetDisableNotification(val OptBool) {
+	s.DisableNotification = val
+}
+
+// SetProtectContent sets the value of ProtectContent.
+func (s *SendVoice) SetProtectContent(val OptBool) {
+	s.ProtectContent = val
+}
+
+// SetReplyToMessageID sets the value of ReplyToMessageID.
+func (s *SendVoice) SetReplyToMessageID(val OptInt) {
+	s.ReplyToMessageID = val
+}
+
+// SetAllowSendingWithoutReply sets the value of AllowSendingWithoutReply.
+func (s *SendVoice) SetAllowSendingWithoutReply(val OptBool) {
+	s.AllowSendingWithoutReply = val
+}
+
+// SetReplyMarkup sets the value of ReplyMarkup.
+func (s *SendVoice) SetReplyMarkup(val OptSendReplyMarkup) {
+	s.ReplyMarkup = val
 }
 
 // Input for setChatAdministratorCustomTitle.
 // Ref: #/components/schemas/setChatAdministratorCustomTitle
 type SetChatAdministratorCustomTitle struct {
-	ChatID ID "json:\"chat_id\""
+	ChatID ID `json:"chat_id"`
 	// Unique identifier of the target user.
-	UserID int64 "json:\"user_id\""
+	UserID int64 `json:"user_id"`
 	// New custom title for the administrator; 0-16 characters, emoji are not allowed.
-	CustomTitle string "json:\"custom_title\""
+	CustomTitle string `json:"custom_title"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s SetChatAdministratorCustomTitle) GetChatID() ID {
+	return s.ChatID
+}
+
+// GetUserID returns the value of UserID.
+func (s SetChatAdministratorCustomTitle) GetUserID() int64 {
+	return s.UserID
+}
+
+// GetCustomTitle returns the value of CustomTitle.
+func (s SetChatAdministratorCustomTitle) GetCustomTitle() string {
+	return s.CustomTitle
+}
+
+// SetChatID sets the value of ChatID.
+func (s *SetChatAdministratorCustomTitle) SetChatID(val ID) {
+	s.ChatID = val
+}
+
+// SetUserID sets the value of UserID.
+func (s *SetChatAdministratorCustomTitle) SetUserID(val int64) {
+	s.UserID = val
+}
+
+// SetCustomTitle sets the value of CustomTitle.
+func (s *SetChatAdministratorCustomTitle) SetCustomTitle(val string) {
+	s.CustomTitle = val
 }
 
 // Input for setChatDescription.
 // Ref: #/components/schemas/setChatDescription
 type SetChatDescription struct {
-	ChatID ID "json:\"chat_id\""
+	ChatID ID `json:"chat_id"`
 	// New chat description, 0-255 characters.
-	Description OptString "json:\"description\""
+	Description OptString `json:"description"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s SetChatDescription) GetChatID() ID {
+	return s.ChatID
+}
+
+// GetDescription returns the value of Description.
+func (s SetChatDescription) GetDescription() OptString {
+	return s.Description
+}
+
+// SetChatID sets the value of ChatID.
+func (s *SetChatDescription) SetChatID(val ID) {
+	s.ChatID = val
+}
+
+// SetDescription sets the value of Description.
+func (s *SetChatDescription) SetDescription(val OptString) {
+	s.Description = val
 }
 
 // Input for setChatMenuButton.
@@ -9385,60 +20895,230 @@ type SetChatDescription struct {
 type SetChatMenuButton struct {
 	// Unique identifier for the target private chat. If not specified, default bot's menu button will be
 	// changed.
-	ChatID     OptInt64      "json:\"chat_id\""
-	MenuButton OptMenuButton "json:\"menu_button\""
+	ChatID     OptInt64      `json:"chat_id"`
+	MenuButton OptMenuButton `json:"menu_button"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s SetChatMenuButton) GetChatID() OptInt64 {
+	return s.ChatID
+}
+
+// GetMenuButton returns the value of MenuButton.
+func (s SetChatMenuButton) GetMenuButton() OptMenuButton {
+	return s.MenuButton
+}
+
+// SetChatID sets the value of ChatID.
+func (s *SetChatMenuButton) SetChatID(val OptInt64) {
+	s.ChatID = val
+}
+
+// SetMenuButton sets the value of MenuButton.
+func (s *SetChatMenuButton) SetMenuButton(val OptMenuButton) {
+	s.MenuButton = val
 }
 
 // Input for setChatPermissions.
 // Ref: #/components/schemas/setChatPermissions
 type SetChatPermissions struct {
-	ChatID      ID              "json:\"chat_id\""
-	Permissions ChatPermissions "json:\"permissions\""
+	ChatID      ID              `json:"chat_id"`
+	Permissions ChatPermissions `json:"permissions"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s SetChatPermissions) GetChatID() ID {
+	return s.ChatID
+}
+
+// GetPermissions returns the value of Permissions.
+func (s SetChatPermissions) GetPermissions() ChatPermissions {
+	return s.Permissions
+}
+
+// SetChatID sets the value of ChatID.
+func (s *SetChatPermissions) SetChatID(val ID) {
+	s.ChatID = val
+}
+
+// SetPermissions sets the value of Permissions.
+func (s *SetChatPermissions) SetPermissions(val ChatPermissions) {
+	s.Permissions = val
 }
 
 // Input for setChatPhoto.
 // Ref: #/components/schemas/setChatPhoto
 type SetChatPhoto struct {
-	ChatID ID "json:\"chat_id\""
+	ChatID ID `json:"chat_id"`
 	// New chat photo, uploaded using multipart/form-data.
-	Photo string "json:\"photo\""
+	Photo string `json:"photo"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s SetChatPhoto) GetChatID() ID {
+	return s.ChatID
+}
+
+// GetPhoto returns the value of Photo.
+func (s SetChatPhoto) GetPhoto() string {
+	return s.Photo
+}
+
+// SetChatID sets the value of ChatID.
+func (s *SetChatPhoto) SetChatID(val ID) {
+	s.ChatID = val
+}
+
+// SetPhoto sets the value of Photo.
+func (s *SetChatPhoto) SetPhoto(val string) {
+	s.Photo = val
 }
 
 // Input for setChatStickerSet.
 // Ref: #/components/schemas/setChatStickerSet
 type SetChatStickerSet struct {
-	ChatID ID "json:\"chat_id\""
+	ChatID ID `json:"chat_id"`
 	// Name of the sticker set to be set as the group sticker set.
-	StickerSetName string "json:\"sticker_set_name\""
+	StickerSetName string `json:"sticker_set_name"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s SetChatStickerSet) GetChatID() ID {
+	return s.ChatID
+}
+
+// GetStickerSetName returns the value of StickerSetName.
+func (s SetChatStickerSet) GetStickerSetName() string {
+	return s.StickerSetName
+}
+
+// SetChatID sets the value of ChatID.
+func (s *SetChatStickerSet) SetChatID(val ID) {
+	s.ChatID = val
+}
+
+// SetStickerSetName sets the value of StickerSetName.
+func (s *SetChatStickerSet) SetStickerSetName(val string) {
+	s.StickerSetName = val
 }
 
 // Input for setChatTitle.
 // Ref: #/components/schemas/setChatTitle
 type SetChatTitle struct {
-	ChatID ID "json:\"chat_id\""
+	ChatID ID `json:"chat_id"`
 	// New chat title, 1-128 characters.
-	Title string "json:\"title\""
+	Title string `json:"title"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s SetChatTitle) GetChatID() ID {
+	return s.ChatID
+}
+
+// GetTitle returns the value of Title.
+func (s SetChatTitle) GetTitle() string {
+	return s.Title
+}
+
+// SetChatID sets the value of ChatID.
+func (s *SetChatTitle) SetChatID(val ID) {
+	s.ChatID = val
+}
+
+// SetTitle sets the value of Title.
+func (s *SetChatTitle) SetTitle(val string) {
+	s.Title = val
 }
 
 // Input for setGameScore.
 // Ref: #/components/schemas/setGameScore
 type SetGameScore struct {
 	// User identifier.
-	UserID int64 "json:\"user_id\""
+	UserID int64 `json:"user_id"`
 	// New score, must be non-negative.
-	Score int "json:\"score\""
+	Score int `json:"score"`
 	// Pass _True_ if the high score is allowed to decrease. This can be useful when fixing mistakes or
 	// banning cheaters.
-	Force OptBool "json:\"force\""
+	Force OptBool `json:"force"`
 	// Pass _True_ if the game message should not be automatically edited to include the current
 	// scoreboard.
-	DisableEditMessage OptBool "json:\"disable_edit_message\""
+	DisableEditMessage OptBool `json:"disable_edit_message"`
 	// Required if _inline_message_id_ is not specified. Unique identifier for the target chat.
-	ChatID OptInt64 "json:\"chat_id\""
+	ChatID OptInt64 `json:"chat_id"`
 	// Required if _inline_message_id_ is not specified. Identifier of the sent message.
-	MessageID OptInt "json:\"message_id\""
+	MessageID OptInt `json:"message_id"`
 	// Required if _chat_id_ and _message_id_ are not specified. Identifier of the inline message.
-	InlineMessageID OptString "json:\"inline_message_id\""
+	InlineMessageID OptString `json:"inline_message_id"`
+}
+
+// GetUserID returns the value of UserID.
+func (s SetGameScore) GetUserID() int64 {
+	return s.UserID
+}
+
+// GetScore returns the value of Score.
+func (s SetGameScore) GetScore() int {
+	return s.Score
+}
+
+// GetForce returns the value of Force.
+func (s SetGameScore) GetForce() OptBool {
+	return s.Force
+}
+
+// GetDisableEditMessage returns the value of DisableEditMessage.
+func (s SetGameScore) GetDisableEditMessage() OptBool {
+	return s.DisableEditMessage
+}
+
+// GetChatID returns the value of ChatID.
+func (s SetGameScore) GetChatID() OptInt64 {
+	return s.ChatID
+}
+
+// GetMessageID returns the value of MessageID.
+func (s SetGameScore) GetMessageID() OptInt {
+	return s.MessageID
+}
+
+// GetInlineMessageID returns the value of InlineMessageID.
+func (s SetGameScore) GetInlineMessageID() OptString {
+	return s.InlineMessageID
+}
+
+// SetUserID sets the value of UserID.
+func (s *SetGameScore) SetUserID(val int64) {
+	s.UserID = val
+}
+
+// SetScore sets the value of Score.
+func (s *SetGameScore) SetScore(val int) {
+	s.Score = val
+}
+
+// SetForce sets the value of Force.
+func (s *SetGameScore) SetForce(val OptBool) {
+	s.Force = val
+}
+
+// SetDisableEditMessage sets the value of DisableEditMessage.
+func (s *SetGameScore) SetDisableEditMessage(val OptBool) {
+	s.DisableEditMessage = val
+}
+
+// SetChatID sets the value of ChatID.
+func (s *SetGameScore) SetChatID(val OptInt64) {
+	s.ChatID = val
+}
+
+// SetMessageID sets the value of MessageID.
+func (s *SetGameScore) SetMessageID(val OptInt) {
+	s.MessageID = val
+}
+
+// SetInlineMessageID sets the value of InlineMessageID.
+func (s *SetGameScore) SetInlineMessageID(val OptString) {
+	s.InlineMessageID = val
 }
 
 // Input for setMyCommands.
@@ -9446,47 +21126,137 @@ type SetGameScore struct {
 type SetMyCommands struct {
 	// A JSON-serialized list of bot commands to be set as the list of the bot's commands. At most 100
 	// commands can be specified.
-	Commands []BotCommand       "json:\"commands\""
-	Scope    OptBotCommandScope "json:\"scope\""
+	Commands []BotCommand       `json:"commands"`
+	Scope    OptBotCommandScope `json:"scope"`
 	// A two-letter ISO 639-1 language code. If empty, commands will be applied to all users from the
 	// given scope, for whose language there are no dedicated commands.
-	LanguageCode OptString "json:\"language_code\""
+	LanguageCode OptString `json:"language_code"`
+}
+
+// GetCommands returns the value of Commands.
+func (s SetMyCommands) GetCommands() []BotCommand {
+	return s.Commands
+}
+
+// GetScope returns the value of Scope.
+func (s SetMyCommands) GetScope() OptBotCommandScope {
+	return s.Scope
+}
+
+// GetLanguageCode returns the value of LanguageCode.
+func (s SetMyCommands) GetLanguageCode() OptString {
+	return s.LanguageCode
+}
+
+// SetCommands sets the value of Commands.
+func (s *SetMyCommands) SetCommands(val []BotCommand) {
+	s.Commands = val
+}
+
+// SetScope sets the value of Scope.
+func (s *SetMyCommands) SetScope(val OptBotCommandScope) {
+	s.Scope = val
+}
+
+// SetLanguageCode sets the value of LanguageCode.
+func (s *SetMyCommands) SetLanguageCode(val OptString) {
+	s.LanguageCode = val
 }
 
 // Input for setMyDefaultAdministratorRights.
 // Ref: #/components/schemas/setMyDefaultAdministratorRights
 type SetMyDefaultAdministratorRights struct {
-	Rights OptChatAdministratorRights "json:\"rights\""
+	Rights OptChatAdministratorRights `json:"rights"`
 	// Pass _True_ to change the default administrator rights of the bot in channels. Otherwise, the
 	// default administrator rights of the bot for groups and supergroups will be changed.
-	ForChannels OptBool "json:\"for_channels\""
+	ForChannels OptBool `json:"for_channels"`
+}
+
+// GetRights returns the value of Rights.
+func (s SetMyDefaultAdministratorRights) GetRights() OptChatAdministratorRights {
+	return s.Rights
+}
+
+// GetForChannels returns the value of ForChannels.
+func (s SetMyDefaultAdministratorRights) GetForChannels() OptBool {
+	return s.ForChannels
+}
+
+// SetRights sets the value of Rights.
+func (s *SetMyDefaultAdministratorRights) SetRights(val OptChatAdministratorRights) {
+	s.Rights = val
+}
+
+// SetForChannels sets the value of ForChannels.
+func (s *SetMyDefaultAdministratorRights) SetForChannels(val OptBool) {
+	s.ForChannels = val
 }
 
 // Input for setPassportDataErrors.
 // Ref: #/components/schemas/setPassportDataErrors
 type SetPassportDataErrors struct {
 	// User identifier.
-	UserID int64 "json:\"user_id\""
+	UserID int64 `json:"user_id"`
 	// A JSON-serialized array describing the errors.
-	Errors []PassportElementError "json:\"errors\""
+	Errors []PassportElementError `json:"errors"`
+}
+
+// GetUserID returns the value of UserID.
+func (s SetPassportDataErrors) GetUserID() int64 {
+	return s.UserID
+}
+
+// GetErrors returns the value of Errors.
+func (s SetPassportDataErrors) GetErrors() []PassportElementError {
+	return s.Errors
+}
+
+// SetUserID sets the value of UserID.
+func (s *SetPassportDataErrors) SetUserID(val int64) {
+	s.UserID = val
+}
+
+// SetErrors sets the value of Errors.
+func (s *SetPassportDataErrors) SetErrors(val []PassportElementError) {
+	s.Errors = val
 }
 
 // Input for setStickerPositionInSet.
 // Ref: #/components/schemas/setStickerPositionInSet
 type SetStickerPositionInSet struct {
 	// File identifier of the sticker.
-	Sticker string "json:\"sticker\""
+	Sticker string `json:"sticker"`
 	// New sticker position in the set, zero-based.
-	Position int "json:\"position\""
+	Position int `json:"position"`
+}
+
+// GetSticker returns the value of Sticker.
+func (s SetStickerPositionInSet) GetSticker() string {
+	return s.Sticker
+}
+
+// GetPosition returns the value of Position.
+func (s SetStickerPositionInSet) GetPosition() int {
+	return s.Position
+}
+
+// SetSticker sets the value of Sticker.
+func (s *SetStickerPositionInSet) SetSticker(val string) {
+	s.Sticker = val
+}
+
+// SetPosition sets the value of Position.
+func (s *SetStickerPositionInSet) SetPosition(val int) {
+	s.Position = val
 }
 
 // Input for setStickerSetThumb.
 // Ref: #/components/schemas/setStickerSetThumb
 type SetStickerSetThumb struct {
 	// Sticker set name.
-	Name string "json:\"name\""
+	Name string `json:"name"`
 	// User identifier of the sticker set owner.
-	UserID int64 "json:\"user_id\""
+	UserID int64 `json:"user_id"`
 	// A **PNG** image with the thumbnail, must be up to 128 kilobytes in size and have width and height
 	// exactly 100px, or a **TGS** animation with the thumbnail up to 32 kilobytes in size; see
 	// [](https://core.telegram.org/stickers#animated-sticker-requirements)[https://core.telegram.
@@ -9500,129 +21270,569 @@ type SetStickerSetThumb struct {
 	// as a String for Telegram to get a file from the Internet, or upload a new one using
 	// multipart/form-data. [More information on Sending Files](https://core.telegram.
 	// org/bots/api#sending-files). Animated sticker set thumbnails can't be uploaded via HTTP URL.
-	Thumb OptString "json:\"thumb\""
+	Thumb OptString `json:"thumb"`
+}
+
+// GetName returns the value of Name.
+func (s SetStickerSetThumb) GetName() string {
+	return s.Name
+}
+
+// GetUserID returns the value of UserID.
+func (s SetStickerSetThumb) GetUserID() int64 {
+	return s.UserID
+}
+
+// GetThumb returns the value of Thumb.
+func (s SetStickerSetThumb) GetThumb() OptString {
+	return s.Thumb
+}
+
+// SetName sets the value of Name.
+func (s *SetStickerSetThumb) SetName(val string) {
+	s.Name = val
+}
+
+// SetUserID sets the value of UserID.
+func (s *SetStickerSetThumb) SetUserID(val int64) {
+	s.UserID = val
+}
+
+// SetThumb sets the value of Thumb.
+func (s *SetStickerSetThumb) SetThumb(val OptString) {
+	s.Thumb = val
 }
 
 // Input for setWebhook.
 // Ref: #/components/schemas/setWebhook
 type SetWebhook struct {
 	// HTTPS URL to send updates to. Use an empty string to remove webhook integration.
-	URL string "json:\"url\""
+	URL string `json:"url"`
 	// Upload your public key certificate so that the root certificate in use can be checked. See our
 	// [self-signed guide](https://core.telegram.org/bots/self-signed) for details.
-	Certificate OptString "json:\"certificate\""
+	Certificate OptString `json:"certificate"`
 	// The fixed IP address which will be used to send webhook requests instead of the IP address
 	// resolved through DNS.
-	IPAddress OptString "json:\"ip_address\""
+	IPAddress OptString `json:"ip_address"`
 	// The maximum allowed number of simultaneous HTTPS connections to the webhook for update delivery,
 	// 1-100. Defaults to _40_. Use lower values to limit the load on your bot's server, and higher
 	// values to increase your bot's throughput.
-	MaxConnections OptInt "json:\"max_connections\""
+	MaxConnections OptInt `json:"max_connections"`
 	// A JSON-serialized list of the update types you want your bot to receive. For example, specify
 	// [`message`, `edited_channel_post`, `callback_query`] to only receive updates of these types. See
 	// [Update](https://core.telegram.org/bots/api#update) for a complete list of available update types.
 	// Specify an empty list to receive all update types except _chat_member_ (default). If not specified,
 	//  the previous setting will be used.Please note that this parameter doesn't affect updates created
 	// before the call to the setWebhook, so unwanted updates may be received for a short period of time.
-	AllowedUpdates []string "json:\"allowed_updates\""
+	AllowedUpdates []string `json:"allowed_updates"`
 	// Pass _True_ to drop all pending updates.
-	DropPendingUpdates OptBool "json:\"drop_pending_updates\""
+	DropPendingUpdates OptBool `json:"drop_pending_updates"`
 	// A secret token to be sent in a header `X-Telegram-Bot-Api-Secret-Token` in every webhook request,
 	// 1-256 characters. Only characters `A-Z`, `a-z`, `0-9`, `_` and `-` are allowed. The header is
 	// useful to ensure that the request comes from a webhook set by you.
-	SecretToken OptString "json:\"secret_token\""
+	SecretToken OptString `json:"secret_token"`
+}
+
+// GetURL returns the value of URL.
+func (s SetWebhook) GetURL() string {
+	return s.URL
+}
+
+// GetCertificate returns the value of Certificate.
+func (s SetWebhook) GetCertificate() OptString {
+	return s.Certificate
+}
+
+// GetIPAddress returns the value of IPAddress.
+func (s SetWebhook) GetIPAddress() OptString {
+	return s.IPAddress
+}
+
+// GetMaxConnections returns the value of MaxConnections.
+func (s SetWebhook) GetMaxConnections() OptInt {
+	return s.MaxConnections
+}
+
+// GetAllowedUpdates returns the value of AllowedUpdates.
+func (s SetWebhook) GetAllowedUpdates() []string {
+	return s.AllowedUpdates
+}
+
+// GetDropPendingUpdates returns the value of DropPendingUpdates.
+func (s SetWebhook) GetDropPendingUpdates() OptBool {
+	return s.DropPendingUpdates
+}
+
+// GetSecretToken returns the value of SecretToken.
+func (s SetWebhook) GetSecretToken() OptString {
+	return s.SecretToken
+}
+
+// SetURL sets the value of URL.
+func (s *SetWebhook) SetURL(val string) {
+	s.URL = val
+}
+
+// SetCertificate sets the value of Certificate.
+func (s *SetWebhook) SetCertificate(val OptString) {
+	s.Certificate = val
+}
+
+// SetIPAddress sets the value of IPAddress.
+func (s *SetWebhook) SetIPAddress(val OptString) {
+	s.IPAddress = val
+}
+
+// SetMaxConnections sets the value of MaxConnections.
+func (s *SetWebhook) SetMaxConnections(val OptInt) {
+	s.MaxConnections = val
+}
+
+// SetAllowedUpdates sets the value of AllowedUpdates.
+func (s *SetWebhook) SetAllowedUpdates(val []string) {
+	s.AllowedUpdates = val
+}
+
+// SetDropPendingUpdates sets the value of DropPendingUpdates.
+func (s *SetWebhook) SetDropPendingUpdates(val OptBool) {
+	s.DropPendingUpdates = val
+}
+
+// SetSecretToken sets the value of SecretToken.
+func (s *SetWebhook) SetSecretToken(val OptString) {
+	s.SecretToken = val
 }
 
 // This object represents a shipping address.
 // Ref: #/components/schemas/ShippingAddress
 type ShippingAddress struct {
 	// Two-letter ISO 3166-1 alpha-2 country code.
-	CountryCode string "json:\"country_code\""
+	CountryCode string `json:"country_code"`
 	// State, if applicable.
-	State string "json:\"state\""
+	State string `json:"state"`
 	// City.
-	City string "json:\"city\""
+	City string `json:"city"`
 	// First line for the address.
-	StreetLine1 string "json:\"street_line1\""
+	StreetLine1 string `json:"street_line1"`
 	// Second line for the address.
-	StreetLine2 string "json:\"street_line2\""
+	StreetLine2 string `json:"street_line2"`
 	// Address post code.
-	PostCode string "json:\"post_code\""
+	PostCode string `json:"post_code"`
+}
+
+// GetCountryCode returns the value of CountryCode.
+func (s ShippingAddress) GetCountryCode() string {
+	return s.CountryCode
+}
+
+// GetState returns the value of State.
+func (s ShippingAddress) GetState() string {
+	return s.State
+}
+
+// GetCity returns the value of City.
+func (s ShippingAddress) GetCity() string {
+	return s.City
+}
+
+// GetStreetLine1 returns the value of StreetLine1.
+func (s ShippingAddress) GetStreetLine1() string {
+	return s.StreetLine1
+}
+
+// GetStreetLine2 returns the value of StreetLine2.
+func (s ShippingAddress) GetStreetLine2() string {
+	return s.StreetLine2
+}
+
+// GetPostCode returns the value of PostCode.
+func (s ShippingAddress) GetPostCode() string {
+	return s.PostCode
+}
+
+// SetCountryCode sets the value of CountryCode.
+func (s *ShippingAddress) SetCountryCode(val string) {
+	s.CountryCode = val
+}
+
+// SetState sets the value of State.
+func (s *ShippingAddress) SetState(val string) {
+	s.State = val
+}
+
+// SetCity sets the value of City.
+func (s *ShippingAddress) SetCity(val string) {
+	s.City = val
+}
+
+// SetStreetLine1 sets the value of StreetLine1.
+func (s *ShippingAddress) SetStreetLine1(val string) {
+	s.StreetLine1 = val
+}
+
+// SetStreetLine2 sets the value of StreetLine2.
+func (s *ShippingAddress) SetStreetLine2(val string) {
+	s.StreetLine2 = val
+}
+
+// SetPostCode sets the value of PostCode.
+func (s *ShippingAddress) SetPostCode(val string) {
+	s.PostCode = val
 }
 
 // This object represents one shipping option.
 // Ref: #/components/schemas/ShippingOption
 type ShippingOption struct {
 	// Shipping option identifier.
-	ID string "json:\"id\""
+	ID string `json:"id"`
 	// Option title.
-	Title string "json:\"title\""
+	Title string `json:"title"`
 	// List of price portions.
-	Prices []LabeledPrice "json:\"prices\""
+	Prices []LabeledPrice `json:"prices"`
+}
+
+// GetID returns the value of ID.
+func (s ShippingOption) GetID() string {
+	return s.ID
+}
+
+// GetTitle returns the value of Title.
+func (s ShippingOption) GetTitle() string {
+	return s.Title
+}
+
+// GetPrices returns the value of Prices.
+func (s ShippingOption) GetPrices() []LabeledPrice {
+	return s.Prices
+}
+
+// SetID sets the value of ID.
+func (s *ShippingOption) SetID(val string) {
+	s.ID = val
+}
+
+// SetTitle sets the value of Title.
+func (s *ShippingOption) SetTitle(val string) {
+	s.Title = val
+}
+
+// SetPrices sets the value of Prices.
+func (s *ShippingOption) SetPrices(val []LabeledPrice) {
+	s.Prices = val
 }
 
 // This object contains information about an incoming shipping query.
 // Ref: #/components/schemas/ShippingQuery
 type ShippingQuery struct {
 	// Unique query identifier.
-	ID   string "json:\"id\""
-	From User   "json:\"from\""
+	ID   string `json:"id"`
+	From User   `json:"from"`
 	// Bot specified invoice payload.
-	InvoicePayload  string          "json:\"invoice_payload\""
-	ShippingAddress ShippingAddress "json:\"shipping_address\""
+	InvoicePayload  string          `json:"invoice_payload"`
+	ShippingAddress ShippingAddress `json:"shipping_address"`
+}
+
+// GetID returns the value of ID.
+func (s ShippingQuery) GetID() string {
+	return s.ID
+}
+
+// GetFrom returns the value of From.
+func (s ShippingQuery) GetFrom() User {
+	return s.From
+}
+
+// GetInvoicePayload returns the value of InvoicePayload.
+func (s ShippingQuery) GetInvoicePayload() string {
+	return s.InvoicePayload
+}
+
+// GetShippingAddress returns the value of ShippingAddress.
+func (s ShippingQuery) GetShippingAddress() ShippingAddress {
+	return s.ShippingAddress
+}
+
+// SetID sets the value of ID.
+func (s *ShippingQuery) SetID(val string) {
+	s.ID = val
+}
+
+// SetFrom sets the value of From.
+func (s *ShippingQuery) SetFrom(val User) {
+	s.From = val
+}
+
+// SetInvoicePayload sets the value of InvoicePayload.
+func (s *ShippingQuery) SetInvoicePayload(val string) {
+	s.InvoicePayload = val
+}
+
+// SetShippingAddress sets the value of ShippingAddress.
+func (s *ShippingQuery) SetShippingAddress(val ShippingAddress) {
+	s.ShippingAddress = val
 }
 
 // This object represents a sticker.
 // Ref: #/components/schemas/Sticker
 type Sticker struct {
 	// Identifier for this file, which can be used to download or reuse the file.
-	FileID string "json:\"file_id\""
+	FileID string `json:"file_id"`
 	// Unique identifier for this file, which is supposed to be the same over time and for different bots.
 	//  Can't be used to download or reuse the file.
-	FileUniqueID string "json:\"file_unique_id\""
+	FileUniqueID string `json:"file_unique_id"`
 	// Type of the sticker, currently one of `regular`, `mask`, `custom_emoji`. The type of the sticker
 	// is independent from its format, which is determined by the fields _is_animated_ and _is_video_.
-	Type StickerType "json:\"type\""
+	Type StickerType `json:"type"`
 	// Sticker width.
-	Width int "json:\"width\""
+	Width int `json:"width"`
 	// Sticker height.
-	Height int "json:\"height\""
+	Height int `json:"height"`
 	// _True_, if the sticker is [animated](https://telegram.org/blog/animated-stickers).
-	IsAnimated bool "json:\"is_animated\""
+	IsAnimated bool `json:"is_animated"`
 	// _True_, if the sticker is a [video sticker](https://telegram.
 	// org/blog/video-stickers-better-reactions).
-	IsVideo bool         "json:\"is_video\""
-	Thumb   OptPhotoSize "json:\"thumb\""
+	IsVideo bool         `json:"is_video"`
+	Thumb   OptPhotoSize `json:"thumb"`
 	// _Optional_. Emoji associated with the sticker.
-	Emoji OptString "json:\"emoji\""
+	Emoji OptString `json:"emoji"`
 	// _Optional_. Name of the sticker set to which the sticker belongs.
-	SetName          OptString       "json:\"set_name\""
-	PremiumAnimation OptFile         "json:\"premium_animation\""
-	MaskPosition     OptMaskPosition "json:\"mask_position\""
+	SetName          OptString       `json:"set_name"`
+	PremiumAnimation OptFile         `json:"premium_animation"`
+	MaskPosition     OptMaskPosition `json:"mask_position"`
 	// _Optional_. For custom emoji stickers, unique identifier of the custom emoji.
-	CustomEmojiID OptString "json:\"custom_emoji_id\""
+	CustomEmojiID OptString `json:"custom_emoji_id"`
 	// _Optional_. File size in bytes.
-	FileSize OptInt "json:\"file_size\""
+	FileSize OptInt `json:"file_size"`
+}
+
+// GetFileID returns the value of FileID.
+func (s Sticker) GetFileID() string {
+	return s.FileID
+}
+
+// GetFileUniqueID returns the value of FileUniqueID.
+func (s Sticker) GetFileUniqueID() string {
+	return s.FileUniqueID
+}
+
+// GetType returns the value of Type.
+func (s Sticker) GetType() StickerType {
+	return s.Type
+}
+
+// GetWidth returns the value of Width.
+func (s Sticker) GetWidth() int {
+	return s.Width
+}
+
+// GetHeight returns the value of Height.
+func (s Sticker) GetHeight() int {
+	return s.Height
+}
+
+// GetIsAnimated returns the value of IsAnimated.
+func (s Sticker) GetIsAnimated() bool {
+	return s.IsAnimated
+}
+
+// GetIsVideo returns the value of IsVideo.
+func (s Sticker) GetIsVideo() bool {
+	return s.IsVideo
+}
+
+// GetThumb returns the value of Thumb.
+func (s Sticker) GetThumb() OptPhotoSize {
+	return s.Thumb
+}
+
+// GetEmoji returns the value of Emoji.
+func (s Sticker) GetEmoji() OptString {
+	return s.Emoji
+}
+
+// GetSetName returns the value of SetName.
+func (s Sticker) GetSetName() OptString {
+	return s.SetName
+}
+
+// GetPremiumAnimation returns the value of PremiumAnimation.
+func (s Sticker) GetPremiumAnimation() OptFile {
+	return s.PremiumAnimation
+}
+
+// GetMaskPosition returns the value of MaskPosition.
+func (s Sticker) GetMaskPosition() OptMaskPosition {
+	return s.MaskPosition
+}
+
+// GetCustomEmojiID returns the value of CustomEmojiID.
+func (s Sticker) GetCustomEmojiID() OptString {
+	return s.CustomEmojiID
+}
+
+// GetFileSize returns the value of FileSize.
+func (s Sticker) GetFileSize() OptInt {
+	return s.FileSize
+}
+
+// SetFileID sets the value of FileID.
+func (s *Sticker) SetFileID(val string) {
+	s.FileID = val
+}
+
+// SetFileUniqueID sets the value of FileUniqueID.
+func (s *Sticker) SetFileUniqueID(val string) {
+	s.FileUniqueID = val
+}
+
+// SetType sets the value of Type.
+func (s *Sticker) SetType(val StickerType) {
+	s.Type = val
+}
+
+// SetWidth sets the value of Width.
+func (s *Sticker) SetWidth(val int) {
+	s.Width = val
+}
+
+// SetHeight sets the value of Height.
+func (s *Sticker) SetHeight(val int) {
+	s.Height = val
+}
+
+// SetIsAnimated sets the value of IsAnimated.
+func (s *Sticker) SetIsAnimated(val bool) {
+	s.IsAnimated = val
+}
+
+// SetIsVideo sets the value of IsVideo.
+func (s *Sticker) SetIsVideo(val bool) {
+	s.IsVideo = val
+}
+
+// SetThumb sets the value of Thumb.
+func (s *Sticker) SetThumb(val OptPhotoSize) {
+	s.Thumb = val
+}
+
+// SetEmoji sets the value of Emoji.
+func (s *Sticker) SetEmoji(val OptString) {
+	s.Emoji = val
+}
+
+// SetSetName sets the value of SetName.
+func (s *Sticker) SetSetName(val OptString) {
+	s.SetName = val
+}
+
+// SetPremiumAnimation sets the value of PremiumAnimation.
+func (s *Sticker) SetPremiumAnimation(val OptFile) {
+	s.PremiumAnimation = val
+}
+
+// SetMaskPosition sets the value of MaskPosition.
+func (s *Sticker) SetMaskPosition(val OptMaskPosition) {
+	s.MaskPosition = val
+}
+
+// SetCustomEmojiID sets the value of CustomEmojiID.
+func (s *Sticker) SetCustomEmojiID(val OptString) {
+	s.CustomEmojiID = val
+}
+
+// SetFileSize sets the value of FileSize.
+func (s *Sticker) SetFileSize(val OptInt) {
+	s.FileSize = val
 }
 
 // This object represents a sticker set.
 // Ref: #/components/schemas/StickerSet
 type StickerSet struct {
 	// Sticker set name.
-	Name string "json:\"name\""
+	Name string `json:"name"`
 	// Sticker set title.
-	Title string "json:\"title\""
+	Title string `json:"title"`
 	// Type of stickers in the set, currently one of `regular`, `mask`, `custom_emoji`.
-	StickerType string "json:\"sticker_type\""
+	StickerType string `json:"sticker_type"`
 	// _True_, if the sticker set contains [animated stickers](https://telegram.
 	// org/blog/animated-stickers).
-	IsAnimated bool "json:\"is_animated\""
+	IsAnimated bool `json:"is_animated"`
 	// _True_, if the sticker set contains [video stickers](https://telegram.
 	// org/blog/video-stickers-better-reactions).
-	IsVideo bool "json:\"is_video\""
+	IsVideo bool `json:"is_video"`
 	// List of all set stickers.
-	Stickers []Sticker    "json:\"stickers\""
-	Thumb    OptPhotoSize "json:\"thumb\""
+	Stickers []Sticker    `json:"stickers"`
+	Thumb    OptPhotoSize `json:"thumb"`
+}
+
+// GetName returns the value of Name.
+func (s StickerSet) GetName() string {
+	return s.Name
+}
+
+// GetTitle returns the value of Title.
+func (s StickerSet) GetTitle() string {
+	return s.Title
+}
+
+// GetStickerType returns the value of StickerType.
+func (s StickerSet) GetStickerType() string {
+	return s.StickerType
+}
+
+// GetIsAnimated returns the value of IsAnimated.
+func (s StickerSet) GetIsAnimated() bool {
+	return s.IsAnimated
+}
+
+// GetIsVideo returns the value of IsVideo.
+func (s StickerSet) GetIsVideo() bool {
+	return s.IsVideo
+}
+
+// GetStickers returns the value of Stickers.
+func (s StickerSet) GetStickers() []Sticker {
+	return s.Stickers
+}
+
+// GetThumb returns the value of Thumb.
+func (s StickerSet) GetThumb() OptPhotoSize {
+	return s.Thumb
+}
+
+// SetName sets the value of Name.
+func (s *StickerSet) SetName(val string) {
+	s.Name = val
+}
+
+// SetTitle sets the value of Title.
+func (s *StickerSet) SetTitle(val string) {
+	s.Title = val
+}
+
+// SetStickerType sets the value of StickerType.
+func (s *StickerSet) SetStickerType(val string) {
+	s.StickerType = val
+}
+
+// SetIsAnimated sets the value of IsAnimated.
+func (s *StickerSet) SetIsAnimated(val bool) {
+	s.IsAnimated = val
+}
+
+// SetIsVideo sets the value of IsVideo.
+func (s *StickerSet) SetIsVideo(val bool) {
+	s.IsVideo = val
+}
+
+// SetStickers sets the value of Stickers.
+func (s *StickerSet) SetStickers(val []Sticker) {
+	s.Stickers = val
+}
+
+// SetThumb sets the value of Thumb.
+func (s *StickerSet) SetThumb(val OptPhotoSize) {
+	s.Thumb = val
 }
 
 // Type of the sticker, currently one of `regular`, `mask`, `custom_emoji`. The type of the sticker
@@ -9638,84 +21848,324 @@ const (
 // Input for stopMessageLiveLocation.
 // Ref: #/components/schemas/stopMessageLiveLocation
 type StopMessageLiveLocation struct {
-	ChatID OptID "json:\"chat_id\""
+	ChatID OptID `json:"chat_id"`
 	// Required if _inline_message_id_ is not specified. Identifier of the message with live location to
 	// stop.
-	MessageID OptInt "json:\"message_id\""
+	MessageID OptInt `json:"message_id"`
 	// Required if _chat_id_ and _message_id_ are not specified. Identifier of the inline message.
-	InlineMessageID OptString               "json:\"inline_message_id\""
-	ReplyMarkup     OptInlineKeyboardMarkup "json:\"reply_markup\""
+	InlineMessageID OptString               `json:"inline_message_id"`
+	ReplyMarkup     OptInlineKeyboardMarkup `json:"reply_markup"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s StopMessageLiveLocation) GetChatID() OptID {
+	return s.ChatID
+}
+
+// GetMessageID returns the value of MessageID.
+func (s StopMessageLiveLocation) GetMessageID() OptInt {
+	return s.MessageID
+}
+
+// GetInlineMessageID returns the value of InlineMessageID.
+func (s StopMessageLiveLocation) GetInlineMessageID() OptString {
+	return s.InlineMessageID
+}
+
+// GetReplyMarkup returns the value of ReplyMarkup.
+func (s StopMessageLiveLocation) GetReplyMarkup() OptInlineKeyboardMarkup {
+	return s.ReplyMarkup
+}
+
+// SetChatID sets the value of ChatID.
+func (s *StopMessageLiveLocation) SetChatID(val OptID) {
+	s.ChatID = val
+}
+
+// SetMessageID sets the value of MessageID.
+func (s *StopMessageLiveLocation) SetMessageID(val OptInt) {
+	s.MessageID = val
+}
+
+// SetInlineMessageID sets the value of InlineMessageID.
+func (s *StopMessageLiveLocation) SetInlineMessageID(val OptString) {
+	s.InlineMessageID = val
+}
+
+// SetReplyMarkup sets the value of ReplyMarkup.
+func (s *StopMessageLiveLocation) SetReplyMarkup(val OptInlineKeyboardMarkup) {
+	s.ReplyMarkup = val
 }
 
 // Input for stopPoll.
 // Ref: #/components/schemas/stopPoll
 type StopPoll struct {
-	ChatID ID "json:\"chat_id\""
+	ChatID ID `json:"chat_id"`
 	// Identifier of the original message with the poll.
-	MessageID   int                     "json:\"message_id\""
-	ReplyMarkup OptInlineKeyboardMarkup "json:\"reply_markup\""
+	MessageID   int                     `json:"message_id"`
+	ReplyMarkup OptInlineKeyboardMarkup `json:"reply_markup"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s StopPoll) GetChatID() ID {
+	return s.ChatID
+}
+
+// GetMessageID returns the value of MessageID.
+func (s StopPoll) GetMessageID() int {
+	return s.MessageID
+}
+
+// GetReplyMarkup returns the value of ReplyMarkup.
+func (s StopPoll) GetReplyMarkup() OptInlineKeyboardMarkup {
+	return s.ReplyMarkup
+}
+
+// SetChatID sets the value of ChatID.
+func (s *StopPoll) SetChatID(val ID) {
+	s.ChatID = val
+}
+
+// SetMessageID sets the value of MessageID.
+func (s *StopPoll) SetMessageID(val int) {
+	s.MessageID = val
+}
+
+// SetReplyMarkup sets the value of ReplyMarkup.
+func (s *StopPoll) SetReplyMarkup(val OptInlineKeyboardMarkup) {
+	s.ReplyMarkup = val
 }
 
 // This object contains basic information about a successful payment.
 // Ref: #/components/schemas/SuccessfulPayment
 type SuccessfulPayment struct {
 	// Three-letter ISO 4217 [currency](https://core.telegram.org/bots/payments#supported-currencies) code.
-	Currency string "json:\"currency\""
+	Currency string `json:"currency"`
 	// Total price in the _smallest units_ of the currency (integer, **not** float/double). For example,
 	// for a price of `US$ 1.45` pass `amount = 145`. See the _exp_ parameter in [currencies.
 	// json](https://core.telegram.org/bots/payments/currencies.json), it shows the number of digits past
 	// the decimal point for each currency (2 for the majority of currencies).
-	TotalAmount int "json:\"total_amount\""
+	TotalAmount int `json:"total_amount"`
 	// Bot specified invoice payload.
-	InvoicePayload string "json:\"invoice_payload\""
+	InvoicePayload string `json:"invoice_payload"`
 	// _Optional_. Identifier of the shipping option chosen by the user.
-	ShippingOptionID OptString    "json:\"shipping_option_id\""
-	OrderInfo        OptOrderInfo "json:\"order_info\""
+	ShippingOptionID OptString    `json:"shipping_option_id"`
+	OrderInfo        OptOrderInfo `json:"order_info"`
 	// Telegram payment identifier.
-	TelegramPaymentChargeID string "json:\"telegram_payment_charge_id\""
+	TelegramPaymentChargeID string `json:"telegram_payment_charge_id"`
 	// Provider payment identifier.
-	ProviderPaymentChargeID string "json:\"provider_payment_charge_id\""
+	ProviderPaymentChargeID string `json:"provider_payment_charge_id"`
+}
+
+// GetCurrency returns the value of Currency.
+func (s SuccessfulPayment) GetCurrency() string {
+	return s.Currency
+}
+
+// GetTotalAmount returns the value of TotalAmount.
+func (s SuccessfulPayment) GetTotalAmount() int {
+	return s.TotalAmount
+}
+
+// GetInvoicePayload returns the value of InvoicePayload.
+func (s SuccessfulPayment) GetInvoicePayload() string {
+	return s.InvoicePayload
+}
+
+// GetShippingOptionID returns the value of ShippingOptionID.
+func (s SuccessfulPayment) GetShippingOptionID() OptString {
+	return s.ShippingOptionID
+}
+
+// GetOrderInfo returns the value of OrderInfo.
+func (s SuccessfulPayment) GetOrderInfo() OptOrderInfo {
+	return s.OrderInfo
+}
+
+// GetTelegramPaymentChargeID returns the value of TelegramPaymentChargeID.
+func (s SuccessfulPayment) GetTelegramPaymentChargeID() string {
+	return s.TelegramPaymentChargeID
+}
+
+// GetProviderPaymentChargeID returns the value of ProviderPaymentChargeID.
+func (s SuccessfulPayment) GetProviderPaymentChargeID() string {
+	return s.ProviderPaymentChargeID
+}
+
+// SetCurrency sets the value of Currency.
+func (s *SuccessfulPayment) SetCurrency(val string) {
+	s.Currency = val
+}
+
+// SetTotalAmount sets the value of TotalAmount.
+func (s *SuccessfulPayment) SetTotalAmount(val int) {
+	s.TotalAmount = val
+}
+
+// SetInvoicePayload sets the value of InvoicePayload.
+func (s *SuccessfulPayment) SetInvoicePayload(val string) {
+	s.InvoicePayload = val
+}
+
+// SetShippingOptionID sets the value of ShippingOptionID.
+func (s *SuccessfulPayment) SetShippingOptionID(val OptString) {
+	s.ShippingOptionID = val
+}
+
+// SetOrderInfo sets the value of OrderInfo.
+func (s *SuccessfulPayment) SetOrderInfo(val OptOrderInfo) {
+	s.OrderInfo = val
+}
+
+// SetTelegramPaymentChargeID sets the value of TelegramPaymentChargeID.
+func (s *SuccessfulPayment) SetTelegramPaymentChargeID(val string) {
+	s.TelegramPaymentChargeID = val
+}
+
+// SetProviderPaymentChargeID sets the value of ProviderPaymentChargeID.
+func (s *SuccessfulPayment) SetProviderPaymentChargeID(val string) {
+	s.ProviderPaymentChargeID = val
 }
 
 // Input for unbanChatMember.
 // Ref: #/components/schemas/unbanChatMember
 type UnbanChatMember struct {
-	ChatID ID "json:\"chat_id\""
+	ChatID ID `json:"chat_id"`
 	// Unique identifier of the target user.
-	UserID int64 "json:\"user_id\""
+	UserID int64 `json:"user_id"`
 	// Do nothing if the user is not banned.
-	OnlyIfBanned OptBool "json:\"only_if_banned\""
+	OnlyIfBanned OptBool `json:"only_if_banned"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s UnbanChatMember) GetChatID() ID {
+	return s.ChatID
+}
+
+// GetUserID returns the value of UserID.
+func (s UnbanChatMember) GetUserID() int64 {
+	return s.UserID
+}
+
+// GetOnlyIfBanned returns the value of OnlyIfBanned.
+func (s UnbanChatMember) GetOnlyIfBanned() OptBool {
+	return s.OnlyIfBanned
+}
+
+// SetChatID sets the value of ChatID.
+func (s *UnbanChatMember) SetChatID(val ID) {
+	s.ChatID = val
+}
+
+// SetUserID sets the value of UserID.
+func (s *UnbanChatMember) SetUserID(val int64) {
+	s.UserID = val
+}
+
+// SetOnlyIfBanned sets the value of OnlyIfBanned.
+func (s *UnbanChatMember) SetOnlyIfBanned(val OptBool) {
+	s.OnlyIfBanned = val
 }
 
 // Input for unbanChatSenderChat.
 // Ref: #/components/schemas/unbanChatSenderChat
 type UnbanChatSenderChat struct {
-	ChatID ID "json:\"chat_id\""
+	ChatID ID `json:"chat_id"`
 	// Unique identifier of the target sender chat.
-	SenderChatID int64 "json:\"sender_chat_id\""
+	SenderChatID int64 `json:"sender_chat_id"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s UnbanChatSenderChat) GetChatID() ID {
+	return s.ChatID
+}
+
+// GetSenderChatID returns the value of SenderChatID.
+func (s UnbanChatSenderChat) GetSenderChatID() int64 {
+	return s.SenderChatID
+}
+
+// SetChatID sets the value of ChatID.
+func (s *UnbanChatSenderChat) SetChatID(val ID) {
+	s.ChatID = val
+}
+
+// SetSenderChatID sets the value of SenderChatID.
+func (s *UnbanChatSenderChat) SetSenderChatID(val int64) {
+	s.SenderChatID = val
 }
 
 // Input for unpinAllChatMessages.
 // Ref: #/components/schemas/unpinAllChatMessages
 type UnpinAllChatMessages struct {
-	ChatID ID "json:\"chat_id\""
+	ChatID ID `json:"chat_id"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s UnpinAllChatMessages) GetChatID() ID {
+	return s.ChatID
+}
+
+// SetChatID sets the value of ChatID.
+func (s *UnpinAllChatMessages) SetChatID(val ID) {
+	s.ChatID = val
 }
 
 // Input for unpinAllForumTopicMessages.
 // Ref: #/components/schemas/unpinAllForumTopicMessages
 type UnpinAllForumTopicMessages struct {
-	ChatID ID "json:\"chat_id\""
+	ChatID ID `json:"chat_id"`
 	// Unique identifier for the target message thread of the forum topic.
-	MessageThreadID int "json:\"message_thread_id\""
+	MessageThreadID int `json:"message_thread_id"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s UnpinAllForumTopicMessages) GetChatID() ID {
+	return s.ChatID
+}
+
+// GetMessageThreadID returns the value of MessageThreadID.
+func (s UnpinAllForumTopicMessages) GetMessageThreadID() int {
+	return s.MessageThreadID
+}
+
+// SetChatID sets the value of ChatID.
+func (s *UnpinAllForumTopicMessages) SetChatID(val ID) {
+	s.ChatID = val
+}
+
+// SetMessageThreadID sets the value of MessageThreadID.
+func (s *UnpinAllForumTopicMessages) SetMessageThreadID(val int) {
+	s.MessageThreadID = val
 }
 
 // Input for unpinChatMessage.
 // Ref: #/components/schemas/unpinChatMessage
 type UnpinChatMessage struct {
-	ChatID ID "json:\"chat_id\""
+	ChatID ID `json:"chat_id"`
 	// Identifier of a message to unpin. If not specified, the most recent pinned message (by sending
 	// date) will be unpinned.
-	MessageID OptInt "json:\"message_id\""
+	MessageID OptInt `json:"message_id"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s UnpinChatMessage) GetChatID() ID {
+	return s.ChatID
+}
+
+// GetMessageID returns the value of MessageID.
+func (s UnpinChatMessage) GetMessageID() OptInt {
+	return s.MessageID
+}
+
+// SetChatID sets the value of ChatID.
+func (s *UnpinChatMessage) SetChatID(val ID) {
+	s.ChatID = val
+}
+
+// SetMessageID sets the value of MessageID.
+func (s *UnpinChatMessage) SetMessageID(val OptInt) {
+	s.MessageID = val
 }
 
 // This [object](https://core.telegram.org/bots/api#available-types) represents an incoming update.At
@@ -9727,32 +22177,202 @@ type Update struct {
 	// telegram.org/bots/api#setwebhook), since it allows you to ignore repeated updates or to restore
 	// the correct update sequence, should they get out of order. If there are no new updates for at
 	// least a week, then identifier of the next update will be chosen randomly instead of sequentially.
-	UpdateID           int                   "json:\"update_id\""
-	Message            OptMessage            "json:\"message\""
-	EditedMessage      OptMessage            "json:\"edited_message\""
-	ChannelPost        OptMessage            "json:\"channel_post\""
-	EditedChannelPost  OptMessage            "json:\"edited_channel_post\""
-	InlineQuery        OptInlineQuery        "json:\"inline_query\""
-	ChosenInlineResult OptChosenInlineResult "json:\"chosen_inline_result\""
-	CallbackQuery      OptCallbackQuery      "json:\"callback_query\""
-	ShippingQuery      OptShippingQuery      "json:\"shipping_query\""
-	PreCheckoutQuery   OptPreCheckoutQuery   "json:\"pre_checkout_query\""
-	Poll               OptPoll               "json:\"poll\""
-	PollAnswer         OptPollAnswer         "json:\"poll_answer\""
-	MyChatMember       OptChatMemberUpdated  "json:\"my_chat_member\""
-	ChatMember         OptChatMemberUpdated  "json:\"chat_member\""
-	ChatJoinRequest    OptChatJoinRequest    "json:\"chat_join_request\""
+	UpdateID           int                   `json:"update_id"`
+	Message            OptMessage            `json:"message"`
+	EditedMessage      OptMessage            `json:"edited_message"`
+	ChannelPost        OptMessage            `json:"channel_post"`
+	EditedChannelPost  OptMessage            `json:"edited_channel_post"`
+	InlineQuery        OptInlineQuery        `json:"inline_query"`
+	ChosenInlineResult OptChosenInlineResult `json:"chosen_inline_result"`
+	CallbackQuery      OptCallbackQuery      `json:"callback_query"`
+	ShippingQuery      OptShippingQuery      `json:"shipping_query"`
+	PreCheckoutQuery   OptPreCheckoutQuery   `json:"pre_checkout_query"`
+	Poll               OptPoll               `json:"poll"`
+	PollAnswer         OptPollAnswer         `json:"poll_answer"`
+	MyChatMember       OptChatMemberUpdated  `json:"my_chat_member"`
+	ChatMember         OptChatMemberUpdated  `json:"chat_member"`
+	ChatJoinRequest    OptChatJoinRequest    `json:"chat_join_request"`
+}
+
+// GetUpdateID returns the value of UpdateID.
+func (s Update) GetUpdateID() int {
+	return s.UpdateID
+}
+
+// GetMessage returns the value of Message.
+func (s Update) GetMessage() OptMessage {
+	return s.Message
+}
+
+// GetEditedMessage returns the value of EditedMessage.
+func (s Update) GetEditedMessage() OptMessage {
+	return s.EditedMessage
+}
+
+// GetChannelPost returns the value of ChannelPost.
+func (s Update) GetChannelPost() OptMessage {
+	return s.ChannelPost
+}
+
+// GetEditedChannelPost returns the value of EditedChannelPost.
+func (s Update) GetEditedChannelPost() OptMessage {
+	return s.EditedChannelPost
+}
+
+// GetInlineQuery returns the value of InlineQuery.
+func (s Update) GetInlineQuery() OptInlineQuery {
+	return s.InlineQuery
+}
+
+// GetChosenInlineResult returns the value of ChosenInlineResult.
+func (s Update) GetChosenInlineResult() OptChosenInlineResult {
+	return s.ChosenInlineResult
+}
+
+// GetCallbackQuery returns the value of CallbackQuery.
+func (s Update) GetCallbackQuery() OptCallbackQuery {
+	return s.CallbackQuery
+}
+
+// GetShippingQuery returns the value of ShippingQuery.
+func (s Update) GetShippingQuery() OptShippingQuery {
+	return s.ShippingQuery
+}
+
+// GetPreCheckoutQuery returns the value of PreCheckoutQuery.
+func (s Update) GetPreCheckoutQuery() OptPreCheckoutQuery {
+	return s.PreCheckoutQuery
+}
+
+// GetPoll returns the value of Poll.
+func (s Update) GetPoll() OptPoll {
+	return s.Poll
+}
+
+// GetPollAnswer returns the value of PollAnswer.
+func (s Update) GetPollAnswer() OptPollAnswer {
+	return s.PollAnswer
+}
+
+// GetMyChatMember returns the value of MyChatMember.
+func (s Update) GetMyChatMember() OptChatMemberUpdated {
+	return s.MyChatMember
+}
+
+// GetChatMember returns the value of ChatMember.
+func (s Update) GetChatMember() OptChatMemberUpdated {
+	return s.ChatMember
+}
+
+// GetChatJoinRequest returns the value of ChatJoinRequest.
+func (s Update) GetChatJoinRequest() OptChatJoinRequest {
+	return s.ChatJoinRequest
+}
+
+// SetUpdateID sets the value of UpdateID.
+func (s *Update) SetUpdateID(val int) {
+	s.UpdateID = val
+}
+
+// SetMessage sets the value of Message.
+func (s *Update) SetMessage(val OptMessage) {
+	s.Message = val
+}
+
+// SetEditedMessage sets the value of EditedMessage.
+func (s *Update) SetEditedMessage(val OptMessage) {
+	s.EditedMessage = val
+}
+
+// SetChannelPost sets the value of ChannelPost.
+func (s *Update) SetChannelPost(val OptMessage) {
+	s.ChannelPost = val
+}
+
+// SetEditedChannelPost sets the value of EditedChannelPost.
+func (s *Update) SetEditedChannelPost(val OptMessage) {
+	s.EditedChannelPost = val
+}
+
+// SetInlineQuery sets the value of InlineQuery.
+func (s *Update) SetInlineQuery(val OptInlineQuery) {
+	s.InlineQuery = val
+}
+
+// SetChosenInlineResult sets the value of ChosenInlineResult.
+func (s *Update) SetChosenInlineResult(val OptChosenInlineResult) {
+	s.ChosenInlineResult = val
+}
+
+// SetCallbackQuery sets the value of CallbackQuery.
+func (s *Update) SetCallbackQuery(val OptCallbackQuery) {
+	s.CallbackQuery = val
+}
+
+// SetShippingQuery sets the value of ShippingQuery.
+func (s *Update) SetShippingQuery(val OptShippingQuery) {
+	s.ShippingQuery = val
+}
+
+// SetPreCheckoutQuery sets the value of PreCheckoutQuery.
+func (s *Update) SetPreCheckoutQuery(val OptPreCheckoutQuery) {
+	s.PreCheckoutQuery = val
+}
+
+// SetPoll sets the value of Poll.
+func (s *Update) SetPoll(val OptPoll) {
+	s.Poll = val
+}
+
+// SetPollAnswer sets the value of PollAnswer.
+func (s *Update) SetPollAnswer(val OptPollAnswer) {
+	s.PollAnswer = val
+}
+
+// SetMyChatMember sets the value of MyChatMember.
+func (s *Update) SetMyChatMember(val OptChatMemberUpdated) {
+	s.MyChatMember = val
+}
+
+// SetChatMember sets the value of ChatMember.
+func (s *Update) SetChatMember(val OptChatMemberUpdated) {
+	s.ChatMember = val
+}
+
+// SetChatJoinRequest sets the value of ChatJoinRequest.
+func (s *Update) SetChatJoinRequest(val OptChatJoinRequest) {
+	s.ChatJoinRequest = val
 }
 
 // Input for uploadStickerFile.
 // Ref: #/components/schemas/uploadStickerFile
 type UploadStickerFile struct {
 	// User identifier of sticker file owner.
-	UserID int64 "json:\"user_id\""
+	UserID int64 `json:"user_id"`
 	// **PNG** image with the sticker, must be up to 512 kilobytes in size, dimensions must not exceed
 	// 512px, and either width or height must be exactly 512px. [More information on Sending
 	// Files](https://core.telegram.org/bots/api#sending-files).
-	PNGSticker string "json:\"png_sticker\""
+	PNGSticker string `json:"png_sticker"`
+}
+
+// GetUserID returns the value of UserID.
+func (s UploadStickerFile) GetUserID() int64 {
+	return s.UserID
+}
+
+// GetPNGSticker returns the value of PNGSticker.
+func (s UploadStickerFile) GetPNGSticker() string {
+	return s.PNGSticker
+}
+
+// SetUserID sets the value of UserID.
+func (s *UploadStickerFile) SetUserID(val int64) {
+	s.UserID = val
+}
+
+// SetPNGSticker sets the value of PNGSticker.
+func (s *UploadStickerFile) SetPNGSticker(val string) {
+	s.PNGSticker = val
 }
 
 // This object represents a Telegram user or bot.
@@ -9762,99 +22382,409 @@ type User struct {
 	// some programming languages may have difficulty/silent defects in interpreting it. But it has at
 	// most 52 significant bits, so a 64-bit integer or double-precision float type are safe for storing
 	// this identifier.
-	ID int64 "json:\"id\""
+	ID int64 `json:"id"`
 	// _True_, if this user is a bot.
-	IsBot bool "json:\"is_bot\""
+	IsBot bool `json:"is_bot"`
 	// User's or bot's first name.
-	FirstName string "json:\"first_name\""
+	FirstName string `json:"first_name"`
 	// _Optional_. User's or bot's last name.
-	LastName OptString "json:\"last_name\""
+	LastName OptString `json:"last_name"`
 	// _Optional_. User's or bot's username.
-	Username OptString "json:\"username\""
+	Username OptString `json:"username"`
 	// _Optional_. [IETF language tag](https://en.wikipedia.org/wiki/IETF_language_tag) of the user's
 	// language.
-	LanguageCode OptString "json:\"language_code\""
+	LanguageCode OptString `json:"language_code"`
 	// _Optional_. _True_, if this user is a Telegram Premium user.
-	IsPremium OptBool "json:\"is_premium\""
+	IsPremium OptBool `json:"is_premium"`
 	// _Optional_. _True_, if this user added the bot to the attachment menu.
-	AddedToAttachmentMenu OptBool "json:\"added_to_attachment_menu\""
+	AddedToAttachmentMenu OptBool `json:"added_to_attachment_menu"`
 	// _Optional_. _True_, if the bot can be invited to groups. Returned only in [getMe](https://core.
 	// telegram.org/bots/api#getme).
-	CanJoinGroups OptBool "json:\"can_join_groups\""
+	CanJoinGroups OptBool `json:"can_join_groups"`
 	// _Optional_. _True_, if [privacy mode](https://core.telegram.org/bots/features#privacy-mode) is
 	// disabled for the bot. Returned only in [getMe](https://core.telegram.org/bots/api#getme).
-	CanReadAllGroupMessages OptBool "json:\"can_read_all_group_messages\""
+	CanReadAllGroupMessages OptBool `json:"can_read_all_group_messages"`
 	// _Optional_. _True_, if the bot supports inline queries. Returned only in [getMe](https://core.
 	// telegram.org/bots/api#getme).
-	SupportsInlineQueries OptBool "json:\"supports_inline_queries\""
+	SupportsInlineQueries OptBool `json:"supports_inline_queries"`
+}
+
+// GetID returns the value of ID.
+func (s User) GetID() int64 {
+	return s.ID
+}
+
+// GetIsBot returns the value of IsBot.
+func (s User) GetIsBot() bool {
+	return s.IsBot
+}
+
+// GetFirstName returns the value of FirstName.
+func (s User) GetFirstName() string {
+	return s.FirstName
+}
+
+// GetLastName returns the value of LastName.
+func (s User) GetLastName() OptString {
+	return s.LastName
+}
+
+// GetUsername returns the value of Username.
+func (s User) GetUsername() OptString {
+	return s.Username
+}
+
+// GetLanguageCode returns the value of LanguageCode.
+func (s User) GetLanguageCode() OptString {
+	return s.LanguageCode
+}
+
+// GetIsPremium returns the value of IsPremium.
+func (s User) GetIsPremium() OptBool {
+	return s.IsPremium
+}
+
+// GetAddedToAttachmentMenu returns the value of AddedToAttachmentMenu.
+func (s User) GetAddedToAttachmentMenu() OptBool {
+	return s.AddedToAttachmentMenu
+}
+
+// GetCanJoinGroups returns the value of CanJoinGroups.
+func (s User) GetCanJoinGroups() OptBool {
+	return s.CanJoinGroups
+}
+
+// GetCanReadAllGroupMessages returns the value of CanReadAllGroupMessages.
+func (s User) GetCanReadAllGroupMessages() OptBool {
+	return s.CanReadAllGroupMessages
+}
+
+// GetSupportsInlineQueries returns the value of SupportsInlineQueries.
+func (s User) GetSupportsInlineQueries() OptBool {
+	return s.SupportsInlineQueries
+}
+
+// SetID sets the value of ID.
+func (s *User) SetID(val int64) {
+	s.ID = val
+}
+
+// SetIsBot sets the value of IsBot.
+func (s *User) SetIsBot(val bool) {
+	s.IsBot = val
+}
+
+// SetFirstName sets the value of FirstName.
+func (s *User) SetFirstName(val string) {
+	s.FirstName = val
+}
+
+// SetLastName sets the value of LastName.
+func (s *User) SetLastName(val OptString) {
+	s.LastName = val
+}
+
+// SetUsername sets the value of Username.
+func (s *User) SetUsername(val OptString) {
+	s.Username = val
+}
+
+// SetLanguageCode sets the value of LanguageCode.
+func (s *User) SetLanguageCode(val OptString) {
+	s.LanguageCode = val
+}
+
+// SetIsPremium sets the value of IsPremium.
+func (s *User) SetIsPremium(val OptBool) {
+	s.IsPremium = val
+}
+
+// SetAddedToAttachmentMenu sets the value of AddedToAttachmentMenu.
+func (s *User) SetAddedToAttachmentMenu(val OptBool) {
+	s.AddedToAttachmentMenu = val
+}
+
+// SetCanJoinGroups sets the value of CanJoinGroups.
+func (s *User) SetCanJoinGroups(val OptBool) {
+	s.CanJoinGroups = val
+}
+
+// SetCanReadAllGroupMessages sets the value of CanReadAllGroupMessages.
+func (s *User) SetCanReadAllGroupMessages(val OptBool) {
+	s.CanReadAllGroupMessages = val
+}
+
+// SetSupportsInlineQueries sets the value of SupportsInlineQueries.
+func (s *User) SetSupportsInlineQueries(val OptBool) {
+	s.SupportsInlineQueries = val
 }
 
 // This object represent a user's profile pictures.
 // Ref: #/components/schemas/UserProfilePhotos
 type UserProfilePhotos struct {
 	// Total number of profile pictures the target user has.
-	TotalCount int "json:\"total_count\""
+	TotalCount int `json:"total_count"`
 	// Requested profile pictures (in up to 4 sizes each).
-	Photos [][]PhotoSize "json:\"photos\""
+	Photos [][]PhotoSize `json:"photos"`
+}
+
+// GetTotalCount returns the value of TotalCount.
+func (s UserProfilePhotos) GetTotalCount() int {
+	return s.TotalCount
+}
+
+// GetPhotos returns the value of Photos.
+func (s UserProfilePhotos) GetPhotos() [][]PhotoSize {
+	return s.Photos
+}
+
+// SetTotalCount sets the value of TotalCount.
+func (s *UserProfilePhotos) SetTotalCount(val int) {
+	s.TotalCount = val
+}
+
+// SetPhotos sets the value of Photos.
+func (s *UserProfilePhotos) SetPhotos(val [][]PhotoSize) {
+	s.Photos = val
 }
 
 // This object represents a venue.
 // Ref: #/components/schemas/Venue
 type Venue struct {
-	Location Location "json:\"location\""
+	Location Location `json:"location"`
 	// Name of the venue.
-	Title string "json:\"title\""
+	Title string `json:"title"`
 	// Address of the venue.
-	Address string "json:\"address\""
+	Address string `json:"address"`
 	// _Optional_. Foursquare identifier of the venue.
-	FoursquareID OptString "json:\"foursquare_id\""
+	FoursquareID OptString `json:"foursquare_id"`
 	// _Optional_. Foursquare type of the venue. (For example, `arts_entertainment/default`,
 	// `arts_entertainment/aquarium` or `food/icecream`.).
-	FoursquareType OptString "json:\"foursquare_type\""
+	FoursquareType OptString `json:"foursquare_type"`
 	// _Optional_. Google Places identifier of the venue.
-	GooglePlaceID OptString "json:\"google_place_id\""
+	GooglePlaceID OptString `json:"google_place_id"`
 	// _Optional_. Google Places type of the venue. (See [supported types](https://developers.google.
 	// com/places/web-service/supported_types).).
-	GooglePlaceType OptString "json:\"google_place_type\""
+	GooglePlaceType OptString `json:"google_place_type"`
+}
+
+// GetLocation returns the value of Location.
+func (s Venue) GetLocation() Location {
+	return s.Location
+}
+
+// GetTitle returns the value of Title.
+func (s Venue) GetTitle() string {
+	return s.Title
+}
+
+// GetAddress returns the value of Address.
+func (s Venue) GetAddress() string {
+	return s.Address
+}
+
+// GetFoursquareID returns the value of FoursquareID.
+func (s Venue) GetFoursquareID() OptString {
+	return s.FoursquareID
+}
+
+// GetFoursquareType returns the value of FoursquareType.
+func (s Venue) GetFoursquareType() OptString {
+	return s.FoursquareType
+}
+
+// GetGooglePlaceID returns the value of GooglePlaceID.
+func (s Venue) GetGooglePlaceID() OptString {
+	return s.GooglePlaceID
+}
+
+// GetGooglePlaceType returns the value of GooglePlaceType.
+func (s Venue) GetGooglePlaceType() OptString {
+	return s.GooglePlaceType
+}
+
+// SetLocation sets the value of Location.
+func (s *Venue) SetLocation(val Location) {
+	s.Location = val
+}
+
+// SetTitle sets the value of Title.
+func (s *Venue) SetTitle(val string) {
+	s.Title = val
+}
+
+// SetAddress sets the value of Address.
+func (s *Venue) SetAddress(val string) {
+	s.Address = val
+}
+
+// SetFoursquareID sets the value of FoursquareID.
+func (s *Venue) SetFoursquareID(val OptString) {
+	s.FoursquareID = val
+}
+
+// SetFoursquareType sets the value of FoursquareType.
+func (s *Venue) SetFoursquareType(val OptString) {
+	s.FoursquareType = val
+}
+
+// SetGooglePlaceID sets the value of GooglePlaceID.
+func (s *Venue) SetGooglePlaceID(val OptString) {
+	s.GooglePlaceID = val
+}
+
+// SetGooglePlaceType sets the value of GooglePlaceType.
+func (s *Venue) SetGooglePlaceType(val OptString) {
+	s.GooglePlaceType = val
 }
 
 // This object represents a video file.
 // Ref: #/components/schemas/Video
 type Video struct {
 	// Identifier for this file, which can be used to download or reuse the file.
-	FileID string "json:\"file_id\""
+	FileID string `json:"file_id"`
 	// Unique identifier for this file, which is supposed to be the same over time and for different bots.
 	//  Can't be used to download or reuse the file.
-	FileUniqueID string "json:\"file_unique_id\""
+	FileUniqueID string `json:"file_unique_id"`
 	// Video width as defined by sender.
-	Width int "json:\"width\""
+	Width int `json:"width"`
 	// Video height as defined by sender.
-	Height int "json:\"height\""
+	Height int `json:"height"`
 	// Duration of the video in seconds as defined by sender.
-	Duration int          "json:\"duration\""
-	Thumb    OptPhotoSize "json:\"thumb\""
+	Duration int          `json:"duration"`
+	Thumb    OptPhotoSize `json:"thumb"`
 	// _Optional_. Original filename as defined by sender.
-	FileName OptString "json:\"file_name\""
+	FileName OptString `json:"file_name"`
 	// _Optional_. MIME type of the file as defined by sender.
-	MimeType OptString "json:\"mime_type\""
+	MimeType OptString `json:"mime_type"`
 	// _Optional_. File size in bytes. It can be bigger than 2^31 and some programming languages may have
 	// difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed
 	// 64-bit integer or double-precision float type are safe for storing this value.
-	FileSize OptInt "json:\"file_size\""
+	FileSize OptInt `json:"file_size"`
+}
+
+// GetFileID returns the value of FileID.
+func (s Video) GetFileID() string {
+	return s.FileID
+}
+
+// GetFileUniqueID returns the value of FileUniqueID.
+func (s Video) GetFileUniqueID() string {
+	return s.FileUniqueID
+}
+
+// GetWidth returns the value of Width.
+func (s Video) GetWidth() int {
+	return s.Width
+}
+
+// GetHeight returns the value of Height.
+func (s Video) GetHeight() int {
+	return s.Height
+}
+
+// GetDuration returns the value of Duration.
+func (s Video) GetDuration() int {
+	return s.Duration
+}
+
+// GetThumb returns the value of Thumb.
+func (s Video) GetThumb() OptPhotoSize {
+	return s.Thumb
+}
+
+// GetFileName returns the value of FileName.
+func (s Video) GetFileName() OptString {
+	return s.FileName
+}
+
+// GetMimeType returns the value of MimeType.
+func (s Video) GetMimeType() OptString {
+	return s.MimeType
+}
+
+// GetFileSize returns the value of FileSize.
+func (s Video) GetFileSize() OptInt {
+	return s.FileSize
+}
+
+// SetFileID sets the value of FileID.
+func (s *Video) SetFileID(val string) {
+	s.FileID = val
+}
+
+// SetFileUniqueID sets the value of FileUniqueID.
+func (s *Video) SetFileUniqueID(val string) {
+	s.FileUniqueID = val
+}
+
+// SetWidth sets the value of Width.
+func (s *Video) SetWidth(val int) {
+	s.Width = val
+}
+
+// SetHeight sets the value of Height.
+func (s *Video) SetHeight(val int) {
+	s.Height = val
+}
+
+// SetDuration sets the value of Duration.
+func (s *Video) SetDuration(val int) {
+	s.Duration = val
+}
+
+// SetThumb sets the value of Thumb.
+func (s *Video) SetThumb(val OptPhotoSize) {
+	s.Thumb = val
+}
+
+// SetFileName sets the value of FileName.
+func (s *Video) SetFileName(val OptString) {
+	s.FileName = val
+}
+
+// SetMimeType sets the value of MimeType.
+func (s *Video) SetMimeType(val OptString) {
+	s.MimeType = val
+}
+
+// SetFileSize sets the value of FileSize.
+func (s *Video) SetFileSize(val OptInt) {
+	s.FileSize = val
 }
 
 // This object represents a service message about a video chat ended in the chat.
 // Ref: #/components/schemas/VideoChatEnded
 type VideoChatEnded struct {
 	// Video chat duration in seconds.
-	Duration int "json:\"duration\""
+	Duration int `json:"duration"`
+}
+
+// GetDuration returns the value of Duration.
+func (s VideoChatEnded) GetDuration() int {
+	return s.Duration
+}
+
+// SetDuration sets the value of Duration.
+func (s *VideoChatEnded) SetDuration(val int) {
+	s.Duration = val
 }
 
 // This object represents a service message about new members invited to a video chat.
 // Ref: #/components/schemas/VideoChatParticipantsInvited
 type VideoChatParticipantsInvited struct {
 	// New members that were invited to the video chat.
-	Users []User "json:\"users\""
+	Users []User `json:"users"`
+}
+
+// GetUsers returns the value of Users.
+func (s VideoChatParticipantsInvited) GetUsers() []User {
+	return s.Users
+}
+
+// SetUsers sets the value of Users.
+func (s *VideoChatParticipantsInvited) SetUsers(val []User) {
+	s.Users = val
 }
 
 // This object represents a service message about a video chat scheduled in the chat.
@@ -9862,7 +22792,17 @@ type VideoChatParticipantsInvited struct {
 type VideoChatScheduled struct {
 	// Point in time (Unix timestamp) when the video chat is supposed to be started by a chat
 	// administrator.
-	StartDate int "json:\"start_date\""
+	StartDate int `json:"start_date"`
+}
+
+// GetStartDate returns the value of StartDate.
+func (s VideoChatScheduled) GetStartDate() int {
+	return s.StartDate
+}
+
+// SetStartDate sets the value of StartDate.
+func (s *VideoChatScheduled) SetStartDate(val int) {
+	s.StartDate = val
 }
 
 // This object represents a service message about a video chat started in the chat. Currently holds
@@ -9875,45 +22815,175 @@ type VideoChatStarted struct{}
 // Ref: #/components/schemas/VideoNote
 type VideoNote struct {
 	// Identifier for this file, which can be used to download or reuse the file.
-	FileID string "json:\"file_id\""
+	FileID string `json:"file_id"`
 	// Unique identifier for this file, which is supposed to be the same over time and for different bots.
 	//  Can't be used to download or reuse the file.
-	FileUniqueID string "json:\"file_unique_id\""
+	FileUniqueID string `json:"file_unique_id"`
 	// Video width and height (diameter of the video message) as defined by sender.
-	Length int "json:\"length\""
+	Length int `json:"length"`
 	// Duration of the video in seconds as defined by sender.
-	Duration int          "json:\"duration\""
-	Thumb    OptPhotoSize "json:\"thumb\""
+	Duration int          `json:"duration"`
+	Thumb    OptPhotoSize `json:"thumb"`
 	// _Optional_. File size in bytes.
-	FileSize OptInt "json:\"file_size\""
+	FileSize OptInt `json:"file_size"`
+}
+
+// GetFileID returns the value of FileID.
+func (s VideoNote) GetFileID() string {
+	return s.FileID
+}
+
+// GetFileUniqueID returns the value of FileUniqueID.
+func (s VideoNote) GetFileUniqueID() string {
+	return s.FileUniqueID
+}
+
+// GetLength returns the value of Length.
+func (s VideoNote) GetLength() int {
+	return s.Length
+}
+
+// GetDuration returns the value of Duration.
+func (s VideoNote) GetDuration() int {
+	return s.Duration
+}
+
+// GetThumb returns the value of Thumb.
+func (s VideoNote) GetThumb() OptPhotoSize {
+	return s.Thumb
+}
+
+// GetFileSize returns the value of FileSize.
+func (s VideoNote) GetFileSize() OptInt {
+	return s.FileSize
+}
+
+// SetFileID sets the value of FileID.
+func (s *VideoNote) SetFileID(val string) {
+	s.FileID = val
+}
+
+// SetFileUniqueID sets the value of FileUniqueID.
+func (s *VideoNote) SetFileUniqueID(val string) {
+	s.FileUniqueID = val
+}
+
+// SetLength sets the value of Length.
+func (s *VideoNote) SetLength(val int) {
+	s.Length = val
+}
+
+// SetDuration sets the value of Duration.
+func (s *VideoNote) SetDuration(val int) {
+	s.Duration = val
+}
+
+// SetThumb sets the value of Thumb.
+func (s *VideoNote) SetThumb(val OptPhotoSize) {
+	s.Thumb = val
+}
+
+// SetFileSize sets the value of FileSize.
+func (s *VideoNote) SetFileSize(val OptInt) {
+	s.FileSize = val
 }
 
 // This object represents a voice note.
 // Ref: #/components/schemas/Voice
 type Voice struct {
 	// Identifier for this file, which can be used to download or reuse the file.
-	FileID string "json:\"file_id\""
+	FileID string `json:"file_id"`
 	// Unique identifier for this file, which is supposed to be the same over time and for different bots.
 	//  Can't be used to download or reuse the file.
-	FileUniqueID string "json:\"file_unique_id\""
+	FileUniqueID string `json:"file_unique_id"`
 	// Duration of the audio in seconds as defined by sender.
-	Duration int "json:\"duration\""
+	Duration int `json:"duration"`
 	// _Optional_. MIME type of the file as defined by sender.
-	MimeType OptString "json:\"mime_type\""
+	MimeType OptString `json:"mime_type"`
 	// _Optional_. File size in bytes. It can be bigger than 2^31 and some programming languages may have
 	// difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed
 	// 64-bit integer or double-precision float type are safe for storing this value.
-	FileSize OptInt "json:\"file_size\""
+	FileSize OptInt `json:"file_size"`
+}
+
+// GetFileID returns the value of FileID.
+func (s Voice) GetFileID() string {
+	return s.FileID
+}
+
+// GetFileUniqueID returns the value of FileUniqueID.
+func (s Voice) GetFileUniqueID() string {
+	return s.FileUniqueID
+}
+
+// GetDuration returns the value of Duration.
+func (s Voice) GetDuration() int {
+	return s.Duration
+}
+
+// GetMimeType returns the value of MimeType.
+func (s Voice) GetMimeType() OptString {
+	return s.MimeType
+}
+
+// GetFileSize returns the value of FileSize.
+func (s Voice) GetFileSize() OptInt {
+	return s.FileSize
+}
+
+// SetFileID sets the value of FileID.
+func (s *Voice) SetFileID(val string) {
+	s.FileID = val
+}
+
+// SetFileUniqueID sets the value of FileUniqueID.
+func (s *Voice) SetFileUniqueID(val string) {
+	s.FileUniqueID = val
+}
+
+// SetDuration sets the value of Duration.
+func (s *Voice) SetDuration(val int) {
+	s.Duration = val
+}
+
+// SetMimeType sets the value of MimeType.
+func (s *Voice) SetMimeType(val OptString) {
+	s.MimeType = val
+}
+
+// SetFileSize sets the value of FileSize.
+func (s *Voice) SetFileSize(val OptInt) {
+	s.FileSize = val
 }
 
 // Describes data sent from a [Web App](https://core.telegram.org/bots/webapps) to the bot.
 // Ref: #/components/schemas/WebAppData
 type WebAppData struct {
 	// The data. Be aware that a bad client can send arbitrary data in this field.
-	Data string "json:\"data\""
+	Data string `json:"data"`
 	// Text of the _web_app_ keyboard button from which the Web App was opened. Be aware that a bad
 	// client can send arbitrary data in this field.
-	ButtonText string "json:\"button_text\""
+	ButtonText string `json:"button_text"`
+}
+
+// GetData returns the value of Data.
+func (s WebAppData) GetData() string {
+	return s.Data
+}
+
+// GetButtonText returns the value of ButtonText.
+func (s WebAppData) GetButtonText() string {
+	return s.ButtonText
+}
+
+// SetData sets the value of Data.
+func (s *WebAppData) SetData(val string) {
+	s.Data = val
+}
+
+// SetButtonText sets the value of ButtonText.
+func (s *WebAppData) SetButtonText(val string) {
+	s.ButtonText = val
 }
 
 // Describes a [Web App](https://core.telegram.org/bots/webapps).
@@ -9921,33 +22991,133 @@ type WebAppData struct {
 type WebAppInfo struct {
 	// An HTTPS URL of a Web App to be opened with additional data as specified in [Initializing Web
 	// Apps](https://core.telegram.org/bots/webapps#initializing-web-apps).
-	URL string "json:\"url\""
+	URL string `json:"url"`
+}
+
+// GetURL returns the value of URL.
+func (s WebAppInfo) GetURL() string {
+	return s.URL
+}
+
+// SetURL sets the value of URL.
+func (s *WebAppInfo) SetURL(val string) {
+	s.URL = val
 }
 
 // Describes the current status of a webhook.
 // Ref: #/components/schemas/WebhookInfo
 type WebhookInfo struct {
 	// Webhook URL, may be empty if webhook is not set up.
-	URL string "json:\"url\""
+	URL string `json:"url"`
 	// _True_, if a custom certificate was provided for webhook certificate checks.
-	HasCustomCertificate bool "json:\"has_custom_certificate\""
+	HasCustomCertificate bool `json:"has_custom_certificate"`
 	// Number of updates awaiting delivery.
-	PendingUpdateCount int "json:\"pending_update_count\""
+	PendingUpdateCount int `json:"pending_update_count"`
 	// _Optional_. Currently used webhook IP address.
-	IPAddress OptString "json:\"ip_address\""
+	IPAddress OptString `json:"ip_address"`
 	// _Optional_. Unix time for the most recent error that happened when trying to deliver an update via
 	// webhook.
-	LastErrorDate OptInt "json:\"last_error_date\""
+	LastErrorDate OptInt `json:"last_error_date"`
 	// _Optional_. Error message in human-readable format for the most recent error that happened when
 	// trying to deliver an update via webhook.
-	LastErrorMessage OptString "json:\"last_error_message\""
+	LastErrorMessage OptString `json:"last_error_message"`
 	// _Optional_. Unix time of the most recent error that happened when trying to synchronize available
 	// updates with Telegram datacenters.
-	LastSynchronizationErrorDate OptInt "json:\"last_synchronization_error_date\""
+	LastSynchronizationErrorDate OptInt `json:"last_synchronization_error_date"`
 	// _Optional_. The maximum allowed number of simultaneous HTTPS connections to the webhook for update
 	// delivery.
-	MaxConnections OptInt "json:\"max_connections\""
+	MaxConnections OptInt `json:"max_connections"`
 	// _Optional_. A list of update types the bot is subscribed to. Defaults to all update types except
 	// _chat_member_.
-	AllowedUpdates []string "json:\"allowed_updates\""
+	AllowedUpdates []string `json:"allowed_updates"`
+}
+
+// GetURL returns the value of URL.
+func (s WebhookInfo) GetURL() string {
+	return s.URL
+}
+
+// GetHasCustomCertificate returns the value of HasCustomCertificate.
+func (s WebhookInfo) GetHasCustomCertificate() bool {
+	return s.HasCustomCertificate
+}
+
+// GetPendingUpdateCount returns the value of PendingUpdateCount.
+func (s WebhookInfo) GetPendingUpdateCount() int {
+	return s.PendingUpdateCount
+}
+
+// GetIPAddress returns the value of IPAddress.
+func (s WebhookInfo) GetIPAddress() OptString {
+	return s.IPAddress
+}
+
+// GetLastErrorDate returns the value of LastErrorDate.
+func (s WebhookInfo) GetLastErrorDate() OptInt {
+	return s.LastErrorDate
+}
+
+// GetLastErrorMessage returns the value of LastErrorMessage.
+func (s WebhookInfo) GetLastErrorMessage() OptString {
+	return s.LastErrorMessage
+}
+
+// GetLastSynchronizationErrorDate returns the value of LastSynchronizationErrorDate.
+func (s WebhookInfo) GetLastSynchronizationErrorDate() OptInt {
+	return s.LastSynchronizationErrorDate
+}
+
+// GetMaxConnections returns the value of MaxConnections.
+func (s WebhookInfo) GetMaxConnections() OptInt {
+	return s.MaxConnections
+}
+
+// GetAllowedUpdates returns the value of AllowedUpdates.
+func (s WebhookInfo) GetAllowedUpdates() []string {
+	return s.AllowedUpdates
+}
+
+// SetURL sets the value of URL.
+func (s *WebhookInfo) SetURL(val string) {
+	s.URL = val
+}
+
+// SetHasCustomCertificate sets the value of HasCustomCertificate.
+func (s *WebhookInfo) SetHasCustomCertificate(val bool) {
+	s.HasCustomCertificate = val
+}
+
+// SetPendingUpdateCount sets the value of PendingUpdateCount.
+func (s *WebhookInfo) SetPendingUpdateCount(val int) {
+	s.PendingUpdateCount = val
+}
+
+// SetIPAddress sets the value of IPAddress.
+func (s *WebhookInfo) SetIPAddress(val OptString) {
+	s.IPAddress = val
+}
+
+// SetLastErrorDate sets the value of LastErrorDate.
+func (s *WebhookInfo) SetLastErrorDate(val OptInt) {
+	s.LastErrorDate = val
+}
+
+// SetLastErrorMessage sets the value of LastErrorMessage.
+func (s *WebhookInfo) SetLastErrorMessage(val OptString) {
+	s.LastErrorMessage = val
+}
+
+// SetLastSynchronizationErrorDate sets the value of LastSynchronizationErrorDate.
+func (s *WebhookInfo) SetLastSynchronizationErrorDate(val OptInt) {
+	s.LastSynchronizationErrorDate = val
+}
+
+// SetMaxConnections sets the value of MaxConnections.
+func (s *WebhookInfo) SetMaxConnections(val OptInt) {
+	s.MaxConnections = val
+}
+
+// SetAllowedUpdates sets the value of AllowedUpdates.
+func (s *WebhookInfo) SetAllowedUpdates(val []string) {
+	s.AllowedUpdates = val
 }

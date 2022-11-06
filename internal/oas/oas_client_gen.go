@@ -10,7 +10,6 @@ import (
 	"github.com/go-faster/errors"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
-	"go.opentelemetry.io/otel/metric/instrument/syncint64"
 	"go.opentelemetry.io/otel/trace"
 
 	ht "github.com/ogen-go/ogen/http"
@@ -18,13 +17,19 @@ import (
 	"github.com/ogen-go/ogen/uri"
 )
 
+type errorHandler interface {
+	NewError(ctx context.Context, err error) ErrorStatusCode
+}
+
+var _ Handler = struct {
+	errorHandler
+	*Client
+}{}
+
 // Client implements OAS client.
 type Client struct {
 	serverURL *url.URL
-	cfg       config
-	requests  syncint64.Counter
-	errors    syncint64.Counter
-	duration  syncint64.Histogram
+	baseClient
 }
 
 // NewClient initializes new Client defined by OAS.
@@ -33,20 +38,29 @@ func NewClient(serverURL string, opts ...Option) (*Client, error) {
 	if err != nil {
 		return nil, err
 	}
-	c := &Client{
-		cfg:       newConfig(opts...),
-		serverURL: u,
-	}
-	if c.requests, err = c.cfg.Meter.SyncInt64().Counter(otelogen.ClientRequestCount); err != nil {
+	c, err := newConfig(opts...).baseClient()
+	if err != nil {
 		return nil, err
 	}
-	if c.errors, err = c.cfg.Meter.SyncInt64().Counter(otelogen.ClientErrorsCount); err != nil {
-		return nil, err
+	return &Client{
+		serverURL:  u,
+		baseClient: c,
+	}, nil
+}
+
+type serverURLKey struct{}
+
+// WithServerURL sets context key to override server URL.
+func WithServerURL(ctx context.Context, u *url.URL) context.Context {
+	return context.WithValue(ctx, serverURLKey{}, u)
+}
+
+func (c *Client) requestURL(ctx context.Context) *url.URL {
+	u, ok := ctx.Value(serverURLKey{}).(*url.URL)
+	if !ok {
+		return c.serverURL
 	}
-	if c.duration, err = c.cfg.Meter.SyncInt64().Histogram(otelogen.ClientDuration); err != nil {
-		return nil, err
-	}
-	return c, nil
+	return u
 }
 
 // AddStickerToSet invokes addStickerToSet operation.
@@ -84,7 +98,7 @@ func (c *Client) AddStickerToSet(ctx context.Context, request AddStickerToSet) (
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "AddStickerToSet",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -98,7 +112,7 @@ func (c *Client) AddStickerToSet(ctx context.Context, request AddStickerToSet) (
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/addStickerToSet"
 
 	stage = "EncodeRequest"
@@ -118,7 +132,7 @@ func (c *Client) AddStickerToSet(ctx context.Context, request AddStickerToSet) (
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeAddStickerToSetResponse(resp, span)
+	result, err := decodeAddStickerToSetResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -160,7 +174,7 @@ func (c *Client) AnswerCallbackQuery(ctx context.Context, request AnswerCallback
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "AnswerCallbackQuery",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -174,7 +188,7 @@ func (c *Client) AnswerCallbackQuery(ctx context.Context, request AnswerCallback
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/answerCallbackQuery"
 
 	stage = "EncodeRequest"
@@ -194,7 +208,7 @@ func (c *Client) AnswerCallbackQuery(ctx context.Context, request AnswerCallback
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeAnswerCallbackQueryResponse(resp, span)
+	result, err := decodeAnswerCallbackQueryResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -235,7 +249,7 @@ func (c *Client) AnswerInlineQuery(ctx context.Context, request AnswerInlineQuer
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "AnswerInlineQuery",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -249,7 +263,7 @@ func (c *Client) AnswerInlineQuery(ctx context.Context, request AnswerInlineQuer
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/answerInlineQuery"
 
 	stage = "EncodeRequest"
@@ -269,7 +283,7 @@ func (c *Client) AnswerInlineQuery(ctx context.Context, request AnswerInlineQuer
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeAnswerInlineQueryResponse(resp, span)
+	result, err := decodeAnswerInlineQueryResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -305,7 +319,7 @@ func (c *Client) AnswerPreCheckoutQuery(ctx context.Context, request AnswerPreCh
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "AnswerPreCheckoutQuery",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -319,7 +333,7 @@ func (c *Client) AnswerPreCheckoutQuery(ctx context.Context, request AnswerPreCh
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/answerPreCheckoutQuery"
 
 	stage = "EncodeRequest"
@@ -339,7 +353,7 @@ func (c *Client) AnswerPreCheckoutQuery(ctx context.Context, request AnswerPreCh
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeAnswerPreCheckoutQueryResponse(resp, span)
+	result, err := decodeAnswerPreCheckoutQueryResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -384,7 +398,7 @@ func (c *Client) AnswerShippingQuery(ctx context.Context, request AnswerShipping
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "AnswerShippingQuery",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -398,7 +412,7 @@ func (c *Client) AnswerShippingQuery(ctx context.Context, request AnswerShipping
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/answerShippingQuery"
 
 	stage = "EncodeRequest"
@@ -418,7 +432,7 @@ func (c *Client) AnswerShippingQuery(ctx context.Context, request AnswerShipping
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeAnswerShippingQueryResponse(resp, span)
+	result, err := decodeAnswerShippingQueryResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -461,7 +475,7 @@ func (c *Client) AnswerWebAppQuery(ctx context.Context, request AnswerWebAppQuer
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "AnswerWebAppQuery",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -475,7 +489,7 @@ func (c *Client) AnswerWebAppQuery(ctx context.Context, request AnswerWebAppQuer
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/answerWebAppQuery"
 
 	stage = "EncodeRequest"
@@ -495,7 +509,7 @@ func (c *Client) AnswerWebAppQuery(ctx context.Context, request AnswerWebAppQuer
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeAnswerWebAppQueryResponse(resp, span)
+	result, err := decodeAnswerWebAppQueryResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -528,7 +542,7 @@ func (c *Client) ApproveChatJoinRequest(ctx context.Context, request ApproveChat
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "ApproveChatJoinRequest",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -542,7 +556,7 @@ func (c *Client) ApproveChatJoinRequest(ctx context.Context, request ApproveChat
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/approveChatJoinRequest"
 
 	stage = "EncodeRequest"
@@ -562,7 +576,7 @@ func (c *Client) ApproveChatJoinRequest(ctx context.Context, request ApproveChat
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeApproveChatJoinRequestResponse(resp, span)
+	result, err := decodeApproveChatJoinRequestResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -598,7 +612,7 @@ func (c *Client) BanChatMember(ctx context.Context, request BanChatMember) (res 
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "BanChatMember",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -612,7 +626,7 @@ func (c *Client) BanChatMember(ctx context.Context, request BanChatMember) (res 
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/banChatMember"
 
 	stage = "EncodeRequest"
@@ -632,7 +646,7 @@ func (c *Client) BanChatMember(ctx context.Context, request BanChatMember) (res 
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeBanChatMemberResponse(resp, span)
+	result, err := decodeBanChatMemberResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -668,7 +682,7 @@ func (c *Client) BanChatSenderChat(ctx context.Context, request BanChatSenderCha
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "BanChatSenderChat",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -682,7 +696,7 @@ func (c *Client) BanChatSenderChat(ctx context.Context, request BanChatSenderCha
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/banChatSenderChat"
 
 	stage = "EncodeRequest"
@@ -702,7 +716,7 @@ func (c *Client) BanChatSenderChat(ctx context.Context, request BanChatSenderCha
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeBanChatSenderChatResponse(resp, span)
+	result, err := decodeBanChatSenderChatResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -736,7 +750,7 @@ func (c *Client) Close(ctx context.Context) (res Result, err error) {
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "Close",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -750,7 +764,7 @@ func (c *Client) Close(ctx context.Context) (res Result, err error) {
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/close"
 
 	stage = "EncodeRequest"
@@ -767,7 +781,7 @@ func (c *Client) Close(ctx context.Context) (res Result, err error) {
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeCloseResponse(resp, span)
+	result, err := decodeCloseResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -801,7 +815,7 @@ func (c *Client) CloseForumTopic(ctx context.Context, request CloseForumTopic) (
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "CloseForumTopic",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -815,7 +829,7 @@ func (c *Client) CloseForumTopic(ctx context.Context, request CloseForumTopic) (
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/closeForumTopic"
 
 	stage = "EncodeRequest"
@@ -835,7 +849,7 @@ func (c *Client) CloseForumTopic(ctx context.Context, request CloseForumTopic) (
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeCloseForumTopicResponse(resp, span)
+	result, err := decodeCloseForumTopicResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -880,7 +894,7 @@ func (c *Client) CopyMessage(ctx context.Context, request CopyMessage) (res Resu
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "CopyMessage",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -894,7 +908,7 @@ func (c *Client) CopyMessage(ctx context.Context, request CopyMessage) (res Resu
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/copyMessage"
 
 	stage = "EncodeRequest"
@@ -914,7 +928,7 @@ func (c *Client) CopyMessage(ctx context.Context, request CopyMessage) (res Resu
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeCopyMessageResponse(resp, span)
+	result, err := decodeCopyMessageResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -958,7 +972,7 @@ func (c *Client) CreateChatInviteLink(ctx context.Context, request CreateChatInv
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "CreateChatInviteLink",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -972,7 +986,7 @@ func (c *Client) CreateChatInviteLink(ctx context.Context, request CreateChatInv
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/createChatInviteLink"
 
 	stage = "EncodeRequest"
@@ -992,7 +1006,7 @@ func (c *Client) CreateChatInviteLink(ctx context.Context, request CreateChatInv
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeCreateChatInviteLinkResponse(resp, span)
+	result, err := decodeCreateChatInviteLinkResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -1035,7 +1049,7 @@ func (c *Client) CreateForumTopic(ctx context.Context, request CreateForumTopic)
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "CreateForumTopic",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -1049,7 +1063,7 @@ func (c *Client) CreateForumTopic(ctx context.Context, request CreateForumTopic)
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/createForumTopic"
 
 	stage = "EncodeRequest"
@@ -1069,7 +1083,7 @@ func (c *Client) CreateForumTopic(ctx context.Context, request CreateForumTopic)
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeCreateForumTopicResponse(resp, span)
+	result, err := decodeCreateForumTopicResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -1110,7 +1124,7 @@ func (c *Client) CreateInvoiceLink(ctx context.Context, request CreateInvoiceLin
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "CreateInvoiceLink",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -1124,7 +1138,7 @@ func (c *Client) CreateInvoiceLink(ctx context.Context, request CreateInvoiceLin
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/createInvoiceLink"
 
 	stage = "EncodeRequest"
@@ -1144,7 +1158,7 @@ func (c *Client) CreateInvoiceLink(ctx context.Context, request CreateInvoiceLin
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeCreateInvoiceLinkResponse(resp, span)
+	result, err := decodeCreateInvoiceLinkResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -1186,7 +1200,7 @@ func (c *Client) CreateNewStickerSet(ctx context.Context, request CreateNewStick
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "CreateNewStickerSet",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -1200,7 +1214,7 @@ func (c *Client) CreateNewStickerSet(ctx context.Context, request CreateNewStick
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/createNewStickerSet"
 
 	stage = "EncodeRequest"
@@ -1220,7 +1234,7 @@ func (c *Client) CreateNewStickerSet(ctx context.Context, request CreateNewStick
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeCreateNewStickerSetResponse(resp, span)
+	result, err := decodeCreateNewStickerSetResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -1253,7 +1267,7 @@ func (c *Client) DeclineChatJoinRequest(ctx context.Context, request DeclineChat
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "DeclineChatJoinRequest",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -1267,7 +1281,7 @@ func (c *Client) DeclineChatJoinRequest(ctx context.Context, request DeclineChat
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/declineChatJoinRequest"
 
 	stage = "EncodeRequest"
@@ -1287,7 +1301,7 @@ func (c *Client) DeclineChatJoinRequest(ctx context.Context, request DeclineChat
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeDeclineChatJoinRequestResponse(resp, span)
+	result, err := decodeDeclineChatJoinRequestResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -1321,7 +1335,7 @@ func (c *Client) DeleteChatPhoto(ctx context.Context, request DeleteChatPhoto) (
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "DeleteChatPhoto",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -1335,7 +1349,7 @@ func (c *Client) DeleteChatPhoto(ctx context.Context, request DeleteChatPhoto) (
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/deleteChatPhoto"
 
 	stage = "EncodeRequest"
@@ -1355,7 +1369,7 @@ func (c *Client) DeleteChatPhoto(ctx context.Context, request DeleteChatPhoto) (
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeDeleteChatPhotoResponse(resp, span)
+	result, err := decodeDeleteChatPhotoResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -1390,7 +1404,7 @@ func (c *Client) DeleteChatStickerSet(ctx context.Context, request DeleteChatSti
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "DeleteChatStickerSet",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -1404,7 +1418,7 @@ func (c *Client) DeleteChatStickerSet(ctx context.Context, request DeleteChatSti
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/deleteChatStickerSet"
 
 	stage = "EncodeRequest"
@@ -1424,7 +1438,7 @@ func (c *Client) DeleteChatStickerSet(ctx context.Context, request DeleteChatSti
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeDeleteChatStickerSetResponse(resp, span)
+	result, err := decodeDeleteChatStickerSetResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -1458,7 +1472,7 @@ func (c *Client) DeleteForumTopic(ctx context.Context, request DeleteForumTopic)
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "DeleteForumTopic",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -1472,7 +1486,7 @@ func (c *Client) DeleteForumTopic(ctx context.Context, request DeleteForumTopic)
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/deleteForumTopic"
 
 	stage = "EncodeRequest"
@@ -1492,7 +1506,7 @@ func (c *Client) DeleteForumTopic(ctx context.Context, request DeleteForumTopic)
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeDeleteForumTopicResponse(resp, span)
+	result, err := decodeDeleteForumTopicResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -1532,7 +1546,7 @@ func (c *Client) DeleteMessage(ctx context.Context, request DeleteMessage) (res 
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "DeleteMessage",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -1546,7 +1560,7 @@ func (c *Client) DeleteMessage(ctx context.Context, request DeleteMessage) (res 
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/deleteMessage"
 
 	stage = "EncodeRequest"
@@ -1566,7 +1580,7 @@ func (c *Client) DeleteMessage(ctx context.Context, request DeleteMessage) (res 
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeDeleteMessageResponse(resp, span)
+	result, err := decodeDeleteMessageResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -1601,7 +1615,7 @@ func (c *Client) DeleteMyCommands(ctx context.Context, request OptDeleteMyComman
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "DeleteMyCommands",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -1615,7 +1629,7 @@ func (c *Client) DeleteMyCommands(ctx context.Context, request OptDeleteMyComman
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/deleteMyCommands"
 
 	stage = "EncodeRequest"
@@ -1635,7 +1649,7 @@ func (c *Client) DeleteMyCommands(ctx context.Context, request OptDeleteMyComman
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeDeleteMyCommandsResponse(resp, span)
+	result, err := decodeDeleteMyCommandsResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -1667,7 +1681,7 @@ func (c *Client) DeleteStickerFromSet(ctx context.Context, request DeleteSticker
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "DeleteStickerFromSet",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -1681,7 +1695,7 @@ func (c *Client) DeleteStickerFromSet(ctx context.Context, request DeleteSticker
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/deleteStickerFromSet"
 
 	stage = "EncodeRequest"
@@ -1701,7 +1715,7 @@ func (c *Client) DeleteStickerFromSet(ctx context.Context, request DeleteSticker
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeDeleteStickerFromSetResponse(resp, span)
+	result, err := decodeDeleteStickerFromSetResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -1734,7 +1748,7 @@ func (c *Client) DeleteWebhook(ctx context.Context, request OptDeleteWebhook) (r
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "DeleteWebhook",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -1748,7 +1762,7 @@ func (c *Client) DeleteWebhook(ctx context.Context, request OptDeleteWebhook) (r
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/deleteWebhook"
 
 	stage = "EncodeRequest"
@@ -1768,7 +1782,7 @@ func (c *Client) DeleteWebhook(ctx context.Context, request OptDeleteWebhook) (r
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeDeleteWebhookResponse(resp, span)
+	result, err := decodeDeleteWebhookResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -1811,7 +1825,7 @@ func (c *Client) EditChatInviteLink(ctx context.Context, request EditChatInviteL
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "EditChatInviteLink",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -1825,7 +1839,7 @@ func (c *Client) EditChatInviteLink(ctx context.Context, request EditChatInviteL
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/editChatInviteLink"
 
 	stage = "EncodeRequest"
@@ -1845,7 +1859,7 @@ func (c *Client) EditChatInviteLink(ctx context.Context, request EditChatInviteL
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeEditChatInviteLinkResponse(resp, span)
+	result, err := decodeEditChatInviteLinkResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -1887,7 +1901,7 @@ func (c *Client) EditForumTopic(ctx context.Context, request EditForumTopic) (re
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "EditForumTopic",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -1901,7 +1915,7 @@ func (c *Client) EditForumTopic(ctx context.Context, request EditForumTopic) (re
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/editForumTopic"
 
 	stage = "EncodeRequest"
@@ -1921,7 +1935,7 @@ func (c *Client) EditForumTopic(ctx context.Context, request EditForumTopic) (re
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeEditForumTopicResponse(resp, span)
+	result, err := decodeEditForumTopicResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -1963,7 +1977,7 @@ func (c *Client) EditMessageCaption(ctx context.Context, request EditMessageCapt
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "EditMessageCaption",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -1977,7 +1991,7 @@ func (c *Client) EditMessageCaption(ctx context.Context, request EditMessageCapt
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/editMessageCaption"
 
 	stage = "EncodeRequest"
@@ -1997,7 +2011,7 @@ func (c *Client) EditMessageCaption(ctx context.Context, request EditMessageCapt
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeEditMessageCaptionResponse(resp, span)
+	result, err := decodeEditMessageCaptionResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -2041,7 +2055,7 @@ func (c *Client) EditMessageLiveLocation(ctx context.Context, request EditMessag
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "EditMessageLiveLocation",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -2055,7 +2069,7 @@ func (c *Client) EditMessageLiveLocation(ctx context.Context, request EditMessag
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/editMessageLiveLocation"
 
 	stage = "EncodeRequest"
@@ -2075,7 +2089,7 @@ func (c *Client) EditMessageLiveLocation(ctx context.Context, request EditMessag
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeEditMessageLiveLocationResponse(resp, span)
+	result, err := decodeEditMessageLiveLocationResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -2120,7 +2134,7 @@ func (c *Client) EditMessageMedia(ctx context.Context, request EditMessageMedia)
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "EditMessageMedia",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -2134,7 +2148,7 @@ func (c *Client) EditMessageMedia(ctx context.Context, request EditMessageMedia)
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/editMessageMedia"
 
 	stage = "EncodeRequest"
@@ -2154,7 +2168,7 @@ func (c *Client) EditMessageMedia(ctx context.Context, request EditMessageMedia)
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeEditMessageMediaResponse(resp, span)
+	result, err := decodeEditMessageMediaResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -2196,7 +2210,7 @@ func (c *Client) EditMessageReplyMarkup(ctx context.Context, request EditMessage
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "EditMessageReplyMarkup",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -2210,7 +2224,7 @@ func (c *Client) EditMessageReplyMarkup(ctx context.Context, request EditMessage
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/editMessageReplyMarkup"
 
 	stage = "EncodeRequest"
@@ -2230,7 +2244,7 @@ func (c *Client) EditMessageReplyMarkup(ctx context.Context, request EditMessage
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeEditMessageReplyMarkupResponse(resp, span)
+	result, err := decodeEditMessageReplyMarkupResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -2272,7 +2286,7 @@ func (c *Client) EditMessageText(ctx context.Context, request EditMessageText) (
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "EditMessageText",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -2286,7 +2300,7 @@ func (c *Client) EditMessageText(ctx context.Context, request EditMessageText) (
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/editMessageText"
 
 	stage = "EncodeRequest"
@@ -2306,7 +2320,7 @@ func (c *Client) EditMessageText(ctx context.Context, request EditMessageText) (
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeEditMessageTextResponse(resp, span)
+	result, err := decodeEditMessageTextResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -2340,7 +2354,7 @@ func (c *Client) ExportChatInviteLink(ctx context.Context, request ExportChatInv
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "ExportChatInviteLink",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -2354,7 +2368,7 @@ func (c *Client) ExportChatInviteLink(ctx context.Context, request ExportChatInv
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/exportChatInviteLink"
 
 	stage = "EncodeRequest"
@@ -2374,7 +2388,7 @@ func (c *Client) ExportChatInviteLink(ctx context.Context, request ExportChatInv
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeExportChatInviteLinkResponse(resp, span)
+	result, err := decodeExportChatInviteLinkResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -2407,7 +2421,7 @@ func (c *Client) ForwardMessage(ctx context.Context, request ForwardMessage) (re
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "ForwardMessage",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -2421,7 +2435,7 @@ func (c *Client) ForwardMessage(ctx context.Context, request ForwardMessage) (re
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/forwardMessage"
 
 	stage = "EncodeRequest"
@@ -2441,7 +2455,7 @@ func (c *Client) ForwardMessage(ctx context.Context, request ForwardMessage) (re
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeForwardMessageResponse(resp, span)
+	result, err := decodeForwardMessageResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -2475,7 +2489,7 @@ func (c *Client) GetChat(ctx context.Context, request GetChat) (res ResultChat, 
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "GetChat",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -2489,7 +2503,7 @@ func (c *Client) GetChat(ctx context.Context, request GetChat) (res ResultChat, 
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/getChat"
 
 	stage = "EncodeRequest"
@@ -2509,7 +2523,7 @@ func (c *Client) GetChat(ctx context.Context, request GetChat) (res ResultChat, 
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeGetChatResponse(resp, span)
+	result, err := decodeGetChatResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -2542,7 +2556,7 @@ func (c *Client) GetChatAdministrators(ctx context.Context, request GetChatAdmin
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "GetChatAdministrators",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -2556,7 +2570,7 @@ func (c *Client) GetChatAdministrators(ctx context.Context, request GetChatAdmin
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/getChatAdministrators"
 
 	stage = "EncodeRequest"
@@ -2576,7 +2590,7 @@ func (c *Client) GetChatAdministrators(ctx context.Context, request GetChatAdmin
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeGetChatAdministratorsResponse(resp, span)
+	result, err := decodeGetChatAdministratorsResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -2609,7 +2623,7 @@ func (c *Client) GetChatMember(ctx context.Context, request GetChatMember) (res 
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "GetChatMember",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -2623,7 +2637,7 @@ func (c *Client) GetChatMember(ctx context.Context, request GetChatMember) (res 
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/getChatMember"
 
 	stage = "EncodeRequest"
@@ -2643,7 +2657,7 @@ func (c *Client) GetChatMember(ctx context.Context, request GetChatMember) (res 
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeGetChatMemberResponse(resp, span)
+	result, err := decodeGetChatMemberResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -2675,7 +2689,7 @@ func (c *Client) GetChatMemberCount(ctx context.Context, request GetChatMemberCo
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "GetChatMemberCount",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -2689,7 +2703,7 @@ func (c *Client) GetChatMemberCount(ctx context.Context, request GetChatMemberCo
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/getChatMemberCount"
 
 	stage = "EncodeRequest"
@@ -2709,7 +2723,7 @@ func (c *Client) GetChatMemberCount(ctx context.Context, request GetChatMemberCo
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeGetChatMemberCountResponse(resp, span)
+	result, err := decodeGetChatMemberCountResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -2743,7 +2757,7 @@ func (c *Client) GetChatMenuButton(ctx context.Context, request OptGetChatMenuBu
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "GetChatMenuButton",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -2757,7 +2771,7 @@ func (c *Client) GetChatMenuButton(ctx context.Context, request OptGetChatMenuBu
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/getChatMenuButton"
 
 	stage = "EncodeRequest"
@@ -2777,7 +2791,7 @@ func (c *Client) GetChatMenuButton(ctx context.Context, request OptGetChatMenuBu
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeGetChatMenuButtonResponse(resp, span)
+	result, err := decodeGetChatMenuButtonResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -2818,7 +2832,7 @@ func (c *Client) GetCustomEmojiStickers(ctx context.Context, request GetCustomEm
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "GetCustomEmojiStickers",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -2832,7 +2846,7 @@ func (c *Client) GetCustomEmojiStickers(ctx context.Context, request GetCustomEm
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/getCustomEmojiStickers"
 
 	stage = "EncodeRequest"
@@ -2852,7 +2866,7 @@ func (c *Client) GetCustomEmojiStickers(ctx context.Context, request GetCustomEm
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeGetCustomEmojiStickersResponse(resp, span)
+	result, err := decodeGetCustomEmojiStickersResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -2889,7 +2903,7 @@ func (c *Client) GetFile(ctx context.Context, request GetFile) (res ResultFile, 
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "GetFile",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -2903,7 +2917,7 @@ func (c *Client) GetFile(ctx context.Context, request GetFile) (res ResultFile, 
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/getFile"
 
 	stage = "EncodeRequest"
@@ -2923,7 +2937,7 @@ func (c *Client) GetFile(ctx context.Context, request GetFile) (res ResultFile, 
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeGetFileResponse(resp, span)
+	result, err := decodeGetFileResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -2956,7 +2970,7 @@ func (c *Client) GetForumTopicIconStickers(ctx context.Context) (res ResultArray
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "GetForumTopicIconStickers",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -2970,7 +2984,7 @@ func (c *Client) GetForumTopicIconStickers(ctx context.Context) (res ResultArray
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/getForumTopicIconStickers"
 
 	stage = "EncodeRequest"
@@ -2987,7 +3001,7 @@ func (c *Client) GetForumTopicIconStickers(ctx context.Context) (res ResultArray
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeGetForumTopicIconStickersResponse(resp, span)
+	result, err := decodeGetForumTopicIconStickersResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -3021,7 +3035,7 @@ func (c *Client) GetGameHighScores(ctx context.Context, request GetGameHighScore
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "GetGameHighScores",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -3035,7 +3049,7 @@ func (c *Client) GetGameHighScores(ctx context.Context, request GetGameHighScore
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/getGameHighScores"
 
 	stage = "EncodeRequest"
@@ -3055,7 +3069,7 @@ func (c *Client) GetGameHighScores(ctx context.Context, request GetGameHighScore
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeGetGameHighScoresResponse(resp, span)
+	result, err := decodeGetGameHighScoresResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -3087,7 +3101,7 @@ func (c *Client) GetMe(ctx context.Context) (res ResultUser, err error) {
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "GetMe",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -3101,7 +3115,7 @@ func (c *Client) GetMe(ctx context.Context) (res ResultUser, err error) {
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/getMe"
 
 	stage = "EncodeRequest"
@@ -3118,7 +3132,7 @@ func (c *Client) GetMe(ctx context.Context) (res ResultUser, err error) {
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeGetMeResponse(resp, span)
+	result, err := decodeGetMeResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -3152,7 +3166,7 @@ func (c *Client) GetMyCommands(ctx context.Context, request OptGetMyCommands) (r
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "GetMyCommands",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -3166,7 +3180,7 @@ func (c *Client) GetMyCommands(ctx context.Context, request OptGetMyCommands) (r
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/getMyCommands"
 
 	stage = "EncodeRequest"
@@ -3186,7 +3200,7 @@ func (c *Client) GetMyCommands(ctx context.Context, request OptGetMyCommands) (r
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeGetMyCommandsResponse(resp, span)
+	result, err := decodeGetMyCommandsResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -3219,7 +3233,7 @@ func (c *Client) GetMyDefaultAdministratorRights(ctx context.Context, request Op
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "GetMyDefaultAdministratorRights",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -3233,7 +3247,7 @@ func (c *Client) GetMyDefaultAdministratorRights(ctx context.Context, request Op
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/getMyDefaultAdministratorRights"
 
 	stage = "EncodeRequest"
@@ -3253,7 +3267,7 @@ func (c *Client) GetMyDefaultAdministratorRights(ctx context.Context, request Op
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeGetMyDefaultAdministratorRightsResponse(resp, span)
+	result, err := decodeGetMyDefaultAdministratorRightsResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -3286,7 +3300,7 @@ func (c *Client) GetStickerSet(ctx context.Context, request GetStickerSet) (res 
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "GetStickerSet",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -3300,7 +3314,7 @@ func (c *Client) GetStickerSet(ctx context.Context, request GetStickerSet) (res 
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/getStickerSet"
 
 	stage = "EncodeRequest"
@@ -3320,7 +3334,7 @@ func (c *Client) GetStickerSet(ctx context.Context, request GetStickerSet) (res 
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeGetStickerSetResponse(resp, span)
+	result, err := decodeGetStickerSetResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -3369,7 +3383,7 @@ func (c *Client) GetUpdates(ctx context.Context, request OptGetUpdates) (res Res
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "GetUpdates",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -3383,7 +3397,7 @@ func (c *Client) GetUpdates(ctx context.Context, request OptGetUpdates) (res Res
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/getUpdates"
 
 	stage = "EncodeRequest"
@@ -3403,7 +3417,7 @@ func (c *Client) GetUpdates(ctx context.Context, request OptGetUpdates) (res Res
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeGetUpdatesResponse(resp, span)
+	result, err := decodeGetUpdatesResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -3444,7 +3458,7 @@ func (c *Client) GetUserProfilePhotos(ctx context.Context, request GetUserProfil
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "GetUserProfilePhotos",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -3458,7 +3472,7 @@ func (c *Client) GetUserProfilePhotos(ctx context.Context, request GetUserProfil
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/getUserProfilePhotos"
 
 	stage = "EncodeRequest"
@@ -3478,7 +3492,7 @@ func (c *Client) GetUserProfilePhotos(ctx context.Context, request GetUserProfil
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeGetUserProfilePhotosResponse(resp, span)
+	result, err := decodeGetUserProfilePhotosResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -3512,7 +3526,7 @@ func (c *Client) GetWebhookInfo(ctx context.Context) (res ResultWebhookInfo, err
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "GetWebhookInfo",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -3526,7 +3540,7 @@ func (c *Client) GetWebhookInfo(ctx context.Context) (res ResultWebhookInfo, err
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/getWebhookInfo"
 
 	stage = "EncodeRequest"
@@ -3543,7 +3557,7 @@ func (c *Client) GetWebhookInfo(ctx context.Context) (res ResultWebhookInfo, err
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeGetWebhookInfoResponse(resp, span)
+	result, err := decodeGetWebhookInfoResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -3575,7 +3589,7 @@ func (c *Client) LeaveChat(ctx context.Context, request LeaveChat) (res Result, 
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "LeaveChat",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -3589,7 +3603,7 @@ func (c *Client) LeaveChat(ctx context.Context, request LeaveChat) (res Result, 
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/leaveChat"
 
 	stage = "EncodeRequest"
@@ -3609,7 +3623,7 @@ func (c *Client) LeaveChat(ctx context.Context, request LeaveChat) (res Result, 
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeLeaveChatResponse(resp, span)
+	result, err := decodeLeaveChatResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -3644,7 +3658,7 @@ func (c *Client) LogOut(ctx context.Context) (res Result, err error) {
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "LogOut",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -3658,7 +3672,7 @@ func (c *Client) LogOut(ctx context.Context) (res Result, err error) {
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/logOut"
 
 	stage = "EncodeRequest"
@@ -3675,7 +3689,7 @@ func (c *Client) LogOut(ctx context.Context) (res Result, err error) {
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeLogOutResponse(resp, span)
+	result, err := decodeLogOutResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -3710,7 +3724,7 @@ func (c *Client) PinChatMessage(ctx context.Context, request PinChatMessage) (re
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "PinChatMessage",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -3724,7 +3738,7 @@ func (c *Client) PinChatMessage(ctx context.Context, request PinChatMessage) (re
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/pinChatMessage"
 
 	stage = "EncodeRequest"
@@ -3744,7 +3758,7 @@ func (c *Client) PinChatMessage(ctx context.Context, request PinChatMessage) (re
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodePinChatMessageResponse(resp, span)
+	result, err := decodePinChatMessageResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -3778,7 +3792,7 @@ func (c *Client) PromoteChatMember(ctx context.Context, request PromoteChatMembe
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "PromoteChatMember",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -3792,7 +3806,7 @@ func (c *Client) PromoteChatMember(ctx context.Context, request PromoteChatMembe
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/promoteChatMember"
 
 	stage = "EncodeRequest"
@@ -3812,7 +3826,7 @@ func (c *Client) PromoteChatMember(ctx context.Context, request PromoteChatMembe
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodePromoteChatMemberResponse(resp, span)
+	result, err := decodePromoteChatMemberResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -3846,7 +3860,7 @@ func (c *Client) ReopenForumTopic(ctx context.Context, request ReopenForumTopic)
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "ReopenForumTopic",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -3860,7 +3874,7 @@ func (c *Client) ReopenForumTopic(ctx context.Context, request ReopenForumTopic)
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/reopenForumTopic"
 
 	stage = "EncodeRequest"
@@ -3880,7 +3894,7 @@ func (c *Client) ReopenForumTopic(ctx context.Context, request ReopenForumTopic)
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeReopenForumTopicResponse(resp, span)
+	result, err := decodeReopenForumTopicResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -3914,7 +3928,7 @@ func (c *Client) RestrictChatMember(ctx context.Context, request RestrictChatMem
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "RestrictChatMember",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -3928,7 +3942,7 @@ func (c *Client) RestrictChatMember(ctx context.Context, request RestrictChatMem
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/restrictChatMember"
 
 	stage = "EncodeRequest"
@@ -3948,7 +3962,7 @@ func (c *Client) RestrictChatMember(ctx context.Context, request RestrictChatMem
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeRestrictChatMemberResponse(resp, span)
+	result, err := decodeRestrictChatMemberResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -3983,7 +3997,7 @@ func (c *Client) RevokeChatInviteLink(ctx context.Context, request RevokeChatInv
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "RevokeChatInviteLink",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -3997,7 +4011,7 @@ func (c *Client) RevokeChatInviteLink(ctx context.Context, request RevokeChatInv
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/revokeChatInviteLink"
 
 	stage = "EncodeRequest"
@@ -4017,7 +4031,7 @@ func (c *Client) RevokeChatInviteLink(ctx context.Context, request RevokeChatInv
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeRevokeChatInviteLinkResponse(resp, span)
+	result, err := decodeRevokeChatInviteLinkResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -4059,7 +4073,7 @@ func (c *Client) SendAnimation(ctx context.Context, request SendAnimation) (res 
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "SendAnimation",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -4073,7 +4087,7 @@ func (c *Client) SendAnimation(ctx context.Context, request SendAnimation) (res 
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/sendAnimation"
 
 	stage = "EncodeRequest"
@@ -4093,7 +4107,7 @@ func (c *Client) SendAnimation(ctx context.Context, request SendAnimation) (res 
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeSendAnimationResponse(resp, span)
+	result, err := decodeSendAnimationResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -4134,7 +4148,7 @@ func (c *Client) SendAudio(ctx context.Context, request SendAudio) (res ResultMe
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "SendAudio",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -4148,7 +4162,7 @@ func (c *Client) SendAudio(ctx context.Context, request SendAudio) (res ResultMe
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/sendAudio"
 
 	stage = "EncodeRequest"
@@ -4168,7 +4182,7 @@ func (c *Client) SendAudio(ctx context.Context, request SendAudio) (res ResultMe
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeSendAudioResponse(resp, span)
+	result, err := decodeSendAudioResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -4201,7 +4215,7 @@ func (c *Client) SendChatAction(ctx context.Context, request SendChatAction) (re
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "SendChatAction",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -4215,7 +4229,7 @@ func (c *Client) SendChatAction(ctx context.Context, request SendChatAction) (re
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/sendChatAction"
 
 	stage = "EncodeRequest"
@@ -4235,7 +4249,7 @@ func (c *Client) SendChatAction(ctx context.Context, request SendChatAction) (re
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeSendChatActionResponse(resp, span)
+	result, err := decodeSendChatActionResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -4276,7 +4290,7 @@ func (c *Client) SendContact(ctx context.Context, request SendContact) (res Resu
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "SendContact",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -4290,7 +4304,7 @@ func (c *Client) SendContact(ctx context.Context, request SendContact) (res Resu
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/sendContact"
 
 	stage = "EncodeRequest"
@@ -4310,7 +4324,7 @@ func (c *Client) SendContact(ctx context.Context, request SendContact) (res Resu
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeSendContactResponse(resp, span)
+	result, err := decodeSendContactResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -4351,7 +4365,7 @@ func (c *Client) SendDice(ctx context.Context, request SendDice) (res ResultMess
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "SendDice",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -4365,7 +4379,7 @@ func (c *Client) SendDice(ctx context.Context, request SendDice) (res ResultMess
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/sendDice"
 
 	stage = "EncodeRequest"
@@ -4385,7 +4399,7 @@ func (c *Client) SendDice(ctx context.Context, request SendDice) (res ResultMess
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeSendDiceResponse(resp, span)
+	result, err := decodeSendDiceResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -4427,7 +4441,7 @@ func (c *Client) SendDocument(ctx context.Context, request SendDocument) (res Re
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "SendDocument",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -4441,7 +4455,7 @@ func (c *Client) SendDocument(ctx context.Context, request SendDocument) (res Re
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/sendDocument"
 
 	stage = "EncodeRequest"
@@ -4461,7 +4475,7 @@ func (c *Client) SendDocument(ctx context.Context, request SendDocument) (res Re
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeSendDocumentResponse(resp, span)
+	result, err := decodeSendDocumentResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -4502,7 +4516,7 @@ func (c *Client) SendGame(ctx context.Context, request SendGame) (res ResultMess
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "SendGame",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -4516,7 +4530,7 @@ func (c *Client) SendGame(ctx context.Context, request SendGame) (res ResultMess
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/sendGame"
 
 	stage = "EncodeRequest"
@@ -4536,7 +4550,7 @@ func (c *Client) SendGame(ctx context.Context, request SendGame) (res ResultMess
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeSendGameResponse(resp, span)
+	result, err := decodeSendGameResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -4577,7 +4591,7 @@ func (c *Client) SendInvoice(ctx context.Context, request SendInvoice) (res Resu
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "SendInvoice",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -4591,7 +4605,7 @@ func (c *Client) SendInvoice(ctx context.Context, request SendInvoice) (res Resu
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/sendInvoice"
 
 	stage = "EncodeRequest"
@@ -4611,7 +4625,7 @@ func (c *Client) SendInvoice(ctx context.Context, request SendInvoice) (res Resu
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeSendInvoiceResponse(resp, span)
+	result, err := decodeSendInvoiceResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -4652,7 +4666,7 @@ func (c *Client) SendLocation(ctx context.Context, request SendLocation) (res Re
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "SendLocation",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -4666,7 +4680,7 @@ func (c *Client) SendLocation(ctx context.Context, request SendLocation) (res Re
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/sendLocation"
 
 	stage = "EncodeRequest"
@@ -4686,7 +4700,7 @@ func (c *Client) SendLocation(ctx context.Context, request SendLocation) (res Re
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeSendLocationResponse(resp, span)
+	result, err := decodeSendLocationResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -4728,7 +4742,7 @@ func (c *Client) SendMediaGroup(ctx context.Context, request SendMediaGroup) (re
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "SendMediaGroup",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -4742,7 +4756,7 @@ func (c *Client) SendMediaGroup(ctx context.Context, request SendMediaGroup) (re
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/sendMediaGroup"
 
 	stage = "EncodeRequest"
@@ -4762,7 +4776,7 @@ func (c *Client) SendMediaGroup(ctx context.Context, request SendMediaGroup) (re
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeSendMediaGroupResponse(resp, span)
+	result, err := decodeSendMediaGroupResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -4803,7 +4817,7 @@ func (c *Client) SendMessage(ctx context.Context, request SendMessage) (res Resu
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "SendMessage",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -4817,7 +4831,7 @@ func (c *Client) SendMessage(ctx context.Context, request SendMessage) (res Resu
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/sendMessage"
 
 	stage = "EncodeRequest"
@@ -4837,7 +4851,7 @@ func (c *Client) SendMessage(ctx context.Context, request SendMessage) (res Resu
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeSendMessageResponse(resp, span)
+	result, err := decodeSendMessageResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -4878,7 +4892,7 @@ func (c *Client) SendPhoto(ctx context.Context, request SendPhoto) (res ResultMe
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "SendPhoto",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -4892,7 +4906,7 @@ func (c *Client) SendPhoto(ctx context.Context, request SendPhoto) (res ResultMe
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/sendPhoto"
 
 	stage = "EncodeRequest"
@@ -4912,7 +4926,7 @@ func (c *Client) SendPhoto(ctx context.Context, request SendPhoto) (res ResultMe
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeSendPhotoResponse(resp, span)
+	result, err := decodeSendPhotoResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -4953,7 +4967,7 @@ func (c *Client) SendPoll(ctx context.Context, request SendPoll) (res ResultMess
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "SendPoll",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -4967,7 +4981,7 @@ func (c *Client) SendPoll(ctx context.Context, request SendPoll) (res ResultMess
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/sendPoll"
 
 	stage = "EncodeRequest"
@@ -4987,7 +5001,7 @@ func (c *Client) SendPoll(ctx context.Context, request SendPoll) (res ResultMess
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeSendPollResponse(resp, span)
+	result, err := decodeSendPollResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -5031,7 +5045,7 @@ func (c *Client) SendSticker(ctx context.Context, request SendSticker) (res Resu
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "SendSticker",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -5045,7 +5059,7 @@ func (c *Client) SendSticker(ctx context.Context, request SendSticker) (res Resu
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/sendSticker"
 
 	stage = "EncodeRequest"
@@ -5065,7 +5079,7 @@ func (c *Client) SendSticker(ctx context.Context, request SendSticker) (res Resu
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeSendStickerResponse(resp, span)
+	result, err := decodeSendStickerResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -5106,7 +5120,7 @@ func (c *Client) SendVenue(ctx context.Context, request SendVenue) (res ResultMe
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "SendVenue",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -5120,7 +5134,7 @@ func (c *Client) SendVenue(ctx context.Context, request SendVenue) (res ResultMe
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/sendVenue"
 
 	stage = "EncodeRequest"
@@ -5140,7 +5154,7 @@ func (c *Client) SendVenue(ctx context.Context, request SendVenue) (res ResultMe
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeSendVenueResponse(resp, span)
+	result, err := decodeSendVenueResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -5183,7 +5197,7 @@ func (c *Client) SendVideo(ctx context.Context, request SendVideo) (res ResultMe
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "SendVideo",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -5197,7 +5211,7 @@ func (c *Client) SendVideo(ctx context.Context, request SendVideo) (res ResultMe
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/sendVideo"
 
 	stage = "EncodeRequest"
@@ -5217,7 +5231,7 @@ func (c *Client) SendVideo(ctx context.Context, request SendVideo) (res ResultMe
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeSendVideoResponse(resp, span)
+	result, err := decodeSendVideoResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -5259,7 +5273,7 @@ func (c *Client) SendVideoNote(ctx context.Context, request SendVideoNote) (res 
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "SendVideoNote",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -5273,7 +5287,7 @@ func (c *Client) SendVideoNote(ctx context.Context, request SendVideoNote) (res 
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/sendVideoNote"
 
 	stage = "EncodeRequest"
@@ -5293,7 +5307,7 @@ func (c *Client) SendVideoNote(ctx context.Context, request SendVideoNote) (res 
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeSendVideoNoteResponse(resp, span)
+	result, err := decodeSendVideoNoteResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -5338,7 +5352,7 @@ func (c *Client) SendVoice(ctx context.Context, request SendVoice) (res ResultMe
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "SendVoice",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -5352,7 +5366,7 @@ func (c *Client) SendVoice(ctx context.Context, request SendVoice) (res ResultMe
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/sendVoice"
 
 	stage = "EncodeRequest"
@@ -5372,7 +5386,7 @@ func (c *Client) SendVoice(ctx context.Context, request SendVoice) (res ResultMe
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeSendVoiceResponse(resp, span)
+	result, err := decodeSendVoiceResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -5413,7 +5427,7 @@ func (c *Client) SetChatAdministratorCustomTitle(ctx context.Context, request Se
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "SetChatAdministratorCustomTitle",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -5427,7 +5441,7 @@ func (c *Client) SetChatAdministratorCustomTitle(ctx context.Context, request Se
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/setChatAdministratorCustomTitle"
 
 	stage = "EncodeRequest"
@@ -5447,7 +5461,7 @@ func (c *Client) SetChatAdministratorCustomTitle(ctx context.Context, request Se
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeSetChatAdministratorCustomTitleResponse(resp, span)
+	result, err := decodeSetChatAdministratorCustomTitleResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -5489,7 +5503,7 @@ func (c *Client) SetChatDescription(ctx context.Context, request SetChatDescript
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "SetChatDescription",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -5503,7 +5517,7 @@ func (c *Client) SetChatDescription(ctx context.Context, request SetChatDescript
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/setChatDescription"
 
 	stage = "EncodeRequest"
@@ -5523,7 +5537,7 @@ func (c *Client) SetChatDescription(ctx context.Context, request SetChatDescript
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeSetChatDescriptionResponse(resp, span)
+	result, err := decodeSetChatDescriptionResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -5556,7 +5570,7 @@ func (c *Client) SetChatMenuButton(ctx context.Context, request OptSetChatMenuBu
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "SetChatMenuButton",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -5570,7 +5584,7 @@ func (c *Client) SetChatMenuButton(ctx context.Context, request OptSetChatMenuBu
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/setChatMenuButton"
 
 	stage = "EncodeRequest"
@@ -5590,7 +5604,7 @@ func (c *Client) SetChatMenuButton(ctx context.Context, request OptSetChatMenuBu
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeSetChatMenuButtonResponse(resp, span)
+	result, err := decodeSetChatMenuButtonResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -5624,7 +5638,7 @@ func (c *Client) SetChatPermissions(ctx context.Context, request SetChatPermissi
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "SetChatPermissions",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -5638,7 +5652,7 @@ func (c *Client) SetChatPermissions(ctx context.Context, request SetChatPermissi
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/setChatPermissions"
 
 	stage = "EncodeRequest"
@@ -5658,7 +5672,7 @@ func (c *Client) SetChatPermissions(ctx context.Context, request SetChatPermissi
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeSetChatPermissionsResponse(resp, span)
+	result, err := decodeSetChatPermissionsResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -5694,7 +5708,7 @@ func (c *Client) SetChatPhoto(ctx context.Context, request SetChatPhoto) (res Re
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "SetChatPhoto",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -5708,7 +5722,7 @@ func (c *Client) SetChatPhoto(ctx context.Context, request SetChatPhoto) (res Re
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/setChatPhoto"
 
 	stage = "EncodeRequest"
@@ -5728,7 +5742,7 @@ func (c *Client) SetChatPhoto(ctx context.Context, request SetChatPhoto) (res Re
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeSetChatPhotoResponse(resp, span)
+	result, err := decodeSetChatPhotoResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -5763,7 +5777,7 @@ func (c *Client) SetChatStickerSet(ctx context.Context, request SetChatStickerSe
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "SetChatStickerSet",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -5777,7 +5791,7 @@ func (c *Client) SetChatStickerSet(ctx context.Context, request SetChatStickerSe
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/setChatStickerSet"
 
 	stage = "EncodeRequest"
@@ -5797,7 +5811,7 @@ func (c *Client) SetChatStickerSet(ctx context.Context, request SetChatStickerSe
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeSetChatStickerSetResponse(resp, span)
+	result, err := decodeSetChatStickerSetResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -5839,7 +5853,7 @@ func (c *Client) SetChatTitle(ctx context.Context, request SetChatTitle) (res Re
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "SetChatTitle",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -5853,7 +5867,7 @@ func (c *Client) SetChatTitle(ctx context.Context, request SetChatTitle) (res Re
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/setChatTitle"
 
 	stage = "EncodeRequest"
@@ -5873,7 +5887,7 @@ func (c *Client) SetChatTitle(ctx context.Context, request SetChatTitle) (res Re
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeSetChatTitleResponse(resp, span)
+	result, err := decodeSetChatTitleResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -5908,7 +5922,7 @@ func (c *Client) SetGameScore(ctx context.Context, request SetGameScore) (res Re
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "SetGameScore",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -5922,7 +5936,7 @@ func (c *Client) SetGameScore(ctx context.Context, request SetGameScore) (res Re
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/setGameScore"
 
 	stage = "EncodeRequest"
@@ -5942,7 +5956,7 @@ func (c *Client) SetGameScore(ctx context.Context, request SetGameScore) (res Re
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeSetGameScoreResponse(resp, span)
+	result, err := decodeSetGameScoreResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -5983,7 +5997,7 @@ func (c *Client) SetMyCommands(ctx context.Context, request SetMyCommands) (res 
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "SetMyCommands",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -5997,7 +6011,7 @@ func (c *Client) SetMyCommands(ctx context.Context, request SetMyCommands) (res 
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/setMyCommands"
 
 	stage = "EncodeRequest"
@@ -6017,7 +6031,7 @@ func (c *Client) SetMyCommands(ctx context.Context, request SetMyCommands) (res 
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeSetMyCommandsResponse(resp, span)
+	result, err := decodeSetMyCommandsResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -6051,7 +6065,7 @@ func (c *Client) SetMyDefaultAdministratorRights(ctx context.Context, request Op
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "SetMyDefaultAdministratorRights",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -6065,7 +6079,7 @@ func (c *Client) SetMyDefaultAdministratorRights(ctx context.Context, request Op
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/setMyDefaultAdministratorRights"
 
 	stage = "EncodeRequest"
@@ -6085,7 +6099,7 @@ func (c *Client) SetMyDefaultAdministratorRights(ctx context.Context, request Op
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeSetMyDefaultAdministratorRightsResponse(resp, span)
+	result, err := decodeSetMyDefaultAdministratorRightsResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -6128,7 +6142,7 @@ func (c *Client) SetPassportDataErrors(ctx context.Context, request SetPassportD
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "SetPassportDataErrors",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -6142,7 +6156,7 @@ func (c *Client) SetPassportDataErrors(ctx context.Context, request SetPassportD
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/setPassportDataErrors"
 
 	stage = "EncodeRequest"
@@ -6162,7 +6176,7 @@ func (c *Client) SetPassportDataErrors(ctx context.Context, request SetPassportD
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeSetPassportDataErrorsResponse(resp, span)
+	result, err := decodeSetPassportDataErrorsResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -6195,7 +6209,7 @@ func (c *Client) SetStickerPositionInSet(ctx context.Context, request SetSticker
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "SetStickerPositionInSet",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -6209,7 +6223,7 @@ func (c *Client) SetStickerPositionInSet(ctx context.Context, request SetSticker
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/setStickerPositionInSet"
 
 	stage = "EncodeRequest"
@@ -6229,7 +6243,7 @@ func (c *Client) SetStickerPositionInSet(ctx context.Context, request SetSticker
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeSetStickerPositionInSetResponse(resp, span)
+	result, err := decodeSetStickerPositionInSetResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -6263,7 +6277,7 @@ func (c *Client) SetStickerSetThumb(ctx context.Context, request SetStickerSetTh
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "SetStickerSetThumb",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -6277,7 +6291,7 @@ func (c *Client) SetStickerSetThumb(ctx context.Context, request SetStickerSetTh
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/setStickerSetThumb"
 
 	stage = "EncodeRequest"
@@ -6297,7 +6311,7 @@ func (c *Client) SetStickerSetThumb(ctx context.Context, request SetStickerSetTh
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeSetStickerSetThumbResponse(resp, span)
+	result, err := decodeSetStickerSetThumbResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -6339,7 +6353,7 @@ func (c *Client) SetWebhook(ctx context.Context, request SetWebhook) (res Result
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "SetWebhook",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -6353,7 +6367,7 @@ func (c *Client) SetWebhook(ctx context.Context, request SetWebhook) (res Result
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/setWebhook"
 
 	stage = "EncodeRequest"
@@ -6373,7 +6387,7 @@ func (c *Client) SetWebhook(ctx context.Context, request SetWebhook) (res Result
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeSetWebhookResponse(resp, span)
+	result, err := decodeSetWebhookResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -6415,7 +6429,7 @@ func (c *Client) StopMessageLiveLocation(ctx context.Context, request StopMessag
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "StopMessageLiveLocation",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -6429,7 +6443,7 @@ func (c *Client) StopMessageLiveLocation(ctx context.Context, request StopMessag
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/stopMessageLiveLocation"
 
 	stage = "EncodeRequest"
@@ -6449,7 +6463,7 @@ func (c *Client) StopMessageLiveLocation(ctx context.Context, request StopMessag
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeStopMessageLiveLocationResponse(resp, span)
+	result, err := decodeStopMessageLiveLocationResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -6490,7 +6504,7 @@ func (c *Client) StopPoll(ctx context.Context, request StopPoll) (res ResultPoll
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "StopPoll",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -6504,7 +6518,7 @@ func (c *Client) StopPoll(ctx context.Context, request StopPoll) (res ResultPoll
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/stopPoll"
 
 	stage = "EncodeRequest"
@@ -6524,7 +6538,7 @@ func (c *Client) StopPoll(ctx context.Context, request StopPoll) (res ResultPoll
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeStopPollResponse(resp, span)
+	result, err := decodeStopPollResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -6561,7 +6575,7 @@ func (c *Client) UnbanChatMember(ctx context.Context, request UnbanChatMember) (
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "UnbanChatMember",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -6575,7 +6589,7 @@ func (c *Client) UnbanChatMember(ctx context.Context, request UnbanChatMember) (
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/unbanChatMember"
 
 	stage = "EncodeRequest"
@@ -6595,7 +6609,7 @@ func (c *Client) UnbanChatMember(ctx context.Context, request UnbanChatMember) (
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeUnbanChatMemberResponse(resp, span)
+	result, err := decodeUnbanChatMemberResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -6629,7 +6643,7 @@ func (c *Client) UnbanChatSenderChat(ctx context.Context, request UnbanChatSende
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "UnbanChatSenderChat",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -6643,7 +6657,7 @@ func (c *Client) UnbanChatSenderChat(ctx context.Context, request UnbanChatSende
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/unbanChatSenderChat"
 
 	stage = "EncodeRequest"
@@ -6663,7 +6677,7 @@ func (c *Client) UnbanChatSenderChat(ctx context.Context, request UnbanChatSende
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeUnbanChatSenderChatResponse(resp, span)
+	result, err := decodeUnbanChatSenderChatResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -6698,7 +6712,7 @@ func (c *Client) UnpinAllChatMessages(ctx context.Context, request UnpinAllChatM
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "UnpinAllChatMessages",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -6712,7 +6726,7 @@ func (c *Client) UnpinAllChatMessages(ctx context.Context, request UnpinAllChatM
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/unpinAllChatMessages"
 
 	stage = "EncodeRequest"
@@ -6732,7 +6746,7 @@ func (c *Client) UnpinAllChatMessages(ctx context.Context, request UnpinAllChatM
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeUnpinAllChatMessagesResponse(resp, span)
+	result, err := decodeUnpinAllChatMessagesResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -6766,7 +6780,7 @@ func (c *Client) UnpinAllForumTopicMessages(ctx context.Context, request UnpinAl
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "UnpinAllForumTopicMessages",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -6780,7 +6794,7 @@ func (c *Client) UnpinAllForumTopicMessages(ctx context.Context, request UnpinAl
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/unpinAllForumTopicMessages"
 
 	stage = "EncodeRequest"
@@ -6800,7 +6814,7 @@ func (c *Client) UnpinAllForumTopicMessages(ctx context.Context, request UnpinAl
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeUnpinAllForumTopicMessagesResponse(resp, span)
+	result, err := decodeUnpinAllForumTopicMessagesResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -6835,7 +6849,7 @@ func (c *Client) UnpinChatMessage(ctx context.Context, request UnpinChatMessage)
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "UnpinChatMessage",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -6849,7 +6863,7 @@ func (c *Client) UnpinChatMessage(ctx context.Context, request UnpinChatMessage)
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/unpinChatMessage"
 
 	stage = "EncodeRequest"
@@ -6869,7 +6883,7 @@ func (c *Client) UnpinChatMessage(ctx context.Context, request UnpinChatMessage)
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeUnpinChatMessageResponse(resp, span)
+	result, err := decodeUnpinChatMessageResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -6903,7 +6917,7 @@ func (c *Client) UploadStickerFile(ctx context.Context, request UploadStickerFil
 	// Start a span for this request.
 	ctx, span := c.cfg.Tracer.Start(ctx, "UploadStickerFile",
 		trace.WithAttributes(otelAttrs...),
-		trace.WithSpanKind(trace.SpanKindClient),
+		clientSpanKind,
 	)
 	// Track stage for error reporting.
 	var stage string
@@ -6917,7 +6931,7 @@ func (c *Client) UploadStickerFile(ctx context.Context, request UploadStickerFil
 	}()
 
 	stage = "BuildURL"
-	u := uri.Clone(c.serverURL)
+	u := uri.Clone(c.requestURL(ctx))
 	u.Path += "/uploadStickerFile"
 
 	stage = "EncodeRequest"
@@ -6937,7 +6951,7 @@ func (c *Client) UploadStickerFile(ctx context.Context, request UploadStickerFil
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeUploadStickerFileResponse(resp, span)
+	result, err := decodeUploadStickerFileResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}

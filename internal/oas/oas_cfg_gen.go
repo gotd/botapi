@@ -7,11 +7,20 @@ import (
 
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/metric"
+	"go.opentelemetry.io/otel/metric/instrument/syncint64"
 	"go.opentelemetry.io/otel/trace"
 
 	ht "github.com/ogen-go/ogen/http"
+	"github.com/ogen-go/ogen/middleware"
 	"github.com/ogen-go/ogen/ogenerrors"
 	"github.com/ogen-go/ogen/otelogen"
+)
+
+var (
+	// Allocate option closure once.
+	clientSpanKind = trace.WithSpanKind(trace.SpanKindClient)
+	// Allocate option closure once.
+	serverSpanKind = trace.WithSpanKind(trace.SpanKindServer)
 )
 
 // ErrorHandler is error handler.
@@ -26,6 +35,8 @@ type config struct {
 	NotFound           http.HandlerFunc
 	MethodNotAllowed   func(w http.ResponseWriter, r *http.Request, allowed string)
 	ErrorHandler       ErrorHandler
+	Prefix             string
+	Middleware         Middleware
 	MaxMultipartMemory int64
 }
 
@@ -40,6 +51,7 @@ func newConfig(opts ...Option) config {
 			w.WriteHeader(http.StatusMethodNotAllowed)
 		},
 		ErrorHandler:       ogenerrors.DefaultErrorHandler,
+		Middleware:         nil,
 		MaxMultipartMemory: 32 << 20, // 32 MB
 	}
 	for _, opt := range opts {
@@ -52,6 +64,57 @@ func newConfig(opts ...Option) config {
 	return cfg
 }
 
+type baseServer struct {
+	cfg      config
+	requests syncint64.Counter
+	errors   syncint64.Counter
+	duration syncint64.Histogram
+}
+
+func (s baseServer) notFound(w http.ResponseWriter, r *http.Request) {
+	s.cfg.NotFound(w, r)
+}
+
+func (s baseServer) notAllowed(w http.ResponseWriter, r *http.Request, allowed string) {
+	s.cfg.MethodNotAllowed(w, r, allowed)
+}
+
+func (cfg config) baseServer() (s baseServer, err error) {
+	s = baseServer{cfg: cfg}
+	if s.requests, err = s.cfg.Meter.SyncInt64().Counter(otelogen.ServerRequestCount); err != nil {
+		return s, err
+	}
+	if s.errors, err = s.cfg.Meter.SyncInt64().Counter(otelogen.ServerErrorsCount); err != nil {
+		return s, err
+	}
+	if s.duration, err = s.cfg.Meter.SyncInt64().Histogram(otelogen.ServerDuration); err != nil {
+		return s, err
+	}
+	return s, nil
+}
+
+type baseClient struct {
+	cfg      config
+	requests syncint64.Counter
+	errors   syncint64.Counter
+	duration syncint64.Histogram
+}
+
+func (cfg config) baseClient() (c baseClient, err error) {
+	c = baseClient{cfg: cfg}
+	if c.requests, err = c.cfg.Meter.SyncInt64().Counter(otelogen.ClientRequestCount); err != nil {
+		return c, err
+	}
+	if c.errors, err = c.cfg.Meter.SyncInt64().Counter(otelogen.ClientErrorsCount); err != nil {
+		return c, err
+	}
+	if c.duration, err = c.cfg.Meter.SyncInt64().Histogram(otelogen.ClientDuration); err != nil {
+		return c, err
+	}
+	return c, nil
+}
+
+// Option is config option.
 type Option interface {
 	apply(*config)
 }
@@ -116,6 +179,27 @@ func WithErrorHandler(h ErrorHandler) Option {
 	return optionFunc(func(cfg *config) {
 		if h != nil {
 			cfg.ErrorHandler = h
+		}
+	})
+}
+
+// WithPathPrefix specifies server path prefix.
+func WithPathPrefix(prefix string) Option {
+	return optionFunc(func(cfg *config) {
+		cfg.Prefix = prefix
+	})
+}
+
+// WithMiddleware specifies middlewares to use.
+func WithMiddleware(m ...Middleware) Option {
+	return optionFunc(func(cfg *config) {
+		switch len(m) {
+		case 0:
+			cfg.Middleware = nil
+		case 1:
+			cfg.Middleware = m[0]
+		default:
+			cfg.Middleware = middleware.ChainMiddlewares(m...)
 		}
 	})
 }
