@@ -775,6 +775,74 @@ func (c *Client) Close(ctx context.Context) (res Result, err error) {
 	return result, nil
 }
 
+// CloseForumTopic invokes closeForumTopic operation.
+//
+// Use this method to close an open topic in a forum supergroup chat. The bot must be an
+// administrator in the chat for this to work and must have the _can_manage_topics_ administrator
+// rights, unless it is the creator of the topic. Returns _True_ on success.
+//
+// POST /closeForumTopic
+func (c *Client) CloseForumTopic(ctx context.Context, request CloseForumTopic) (res Result, err error) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("closeForumTopic"),
+	}
+	// Validate request before sending.
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, otelAttrs...)
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, "CloseForumTopic",
+		trace.WithAttributes(otelAttrs...),
+		trace.WithSpanKind(trace.SpanKindClient),
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, otelAttrs...)
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.serverURL)
+	u.Path += "/closeForumTopic"
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "POST", u, nil)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeCloseForumTopicRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeCloseForumTopicResponse(resp, span)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
 // CopyMessage invokes copyMessage operation.
 //
 // Use this method to copy messages of any kind. Service messages and invoice messages can't be
@@ -925,6 +993,83 @@ func (c *Client) CreateChatInviteLink(ctx context.Context, request CreateChatInv
 
 	stage = "DecodeResponse"
 	result, err := decodeCreateChatInviteLinkResponse(resp, span)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
+// CreateForumTopic invokes createForumTopic operation.
+//
+// Use this method to create a topic in a forum supergroup chat. The bot must be an administrator in
+// the chat for this to work and must have the _can_manage_topics_ administrator rights. Returns
+// information about the created topic as a [ForumTopic](https://core.telegram.
+// org/bots/api#forumtopic) object.
+//
+// POST /createForumTopic
+func (c *Client) CreateForumTopic(ctx context.Context, request CreateForumTopic) (res Result, err error) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("createForumTopic"),
+	}
+	// Validate request before sending.
+	if err := func() error {
+		if err := request.Validate(); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return res, errors.Wrap(err, "validate")
+	}
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, otelAttrs...)
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, "CreateForumTopic",
+		trace.WithAttributes(otelAttrs...),
+		trace.WithSpanKind(trace.SpanKindClient),
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, otelAttrs...)
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.serverURL)
+	u.Path += "/createForumTopic"
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "POST", u, nil)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeCreateForumTopicRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeCreateForumTopicResponse(resp, span)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -1287,14 +1432,83 @@ func (c *Client) DeleteChatStickerSet(ctx context.Context, request DeleteChatSti
 	return result, nil
 }
 
+// DeleteForumTopic invokes deleteForumTopic operation.
+//
+// Use this method to delete a forum topic along with all its messages in a forum supergroup chat.
+// The bot must be an administrator in the chat for this to work and must have the
+// _can_delete_messages_ administrator rights. Returns _True_ on success.
+//
+// POST /deleteForumTopic
+func (c *Client) DeleteForumTopic(ctx context.Context, request DeleteForumTopic) (res Result, err error) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("deleteForumTopic"),
+	}
+	// Validate request before sending.
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, otelAttrs...)
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, "DeleteForumTopic",
+		trace.WithAttributes(otelAttrs...),
+		trace.WithSpanKind(trace.SpanKindClient),
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, otelAttrs...)
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.serverURL)
+	u.Path += "/deleteForumTopic"
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "POST", u, nil)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeDeleteForumTopicRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeDeleteForumTopicResponse(resp, span)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
 // DeleteMessage invokes deleteMessage operation.
 //
 // Use this method to delete a message, including service messages, with the following limitations:-
-// A message can only be deleted if it was sent less than 48 hours ago.- A dice message in a private
-// chat can only be deleted if it was sent more than 24 hours ago.- Bots can delete outgoing messages
-// in private chats, groups, and supergroups.- Bots can delete incoming messages in private chats.-
-// Bots granted _can_post_messages_ permissions can delete outgoing messages in channels.- If the bot
-// is an administrator of a group, it can delete any message there.- If the bot has
+// A message can only be deleted if it was sent less than 48 hours ago.- Service messages about a
+// supergroup, channel, or forum topic creation can't be deleted.- A dice message in a private chat
+// can only be deleted if it was sent more than 24 hours ago.- Bots can delete outgoing messages in
+// private chats, groups, and supergroups.- Bots can delete incoming messages in private chats.- Bots
+// granted _can_post_messages_ permissions can delete outgoing messages in channels.- If the bot is
+// an administrator of a group, it can delete any message there.- If the bot has
 // _can_delete_messages_ permission in a supergroup or a channel, it can delete any message there.
 // Returns _True_ on success.
 //
@@ -1632,6 +1846,82 @@ func (c *Client) EditChatInviteLink(ctx context.Context, request EditChatInviteL
 
 	stage = "DecodeResponse"
 	result, err := decodeEditChatInviteLinkResponse(resp, span)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
+// EditForumTopic invokes editForumTopic operation.
+//
+// Use this method to edit name and icon of a topic in a forum supergroup chat. The bot must be an
+// administrator in the chat for this to work and must have _can_manage_topics_ administrator rights,
+// unless it is the creator of the topic. Returns _True_ on success.
+//
+// POST /editForumTopic
+func (c *Client) EditForumTopic(ctx context.Context, request EditForumTopic) (res Result, err error) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("editForumTopic"),
+	}
+	// Validate request before sending.
+	if err := func() error {
+		if err := request.Validate(); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return res, errors.Wrap(err, "validate")
+	}
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, otelAttrs...)
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, "EditForumTopic",
+		trace.WithAttributes(otelAttrs...),
+		trace.WithSpanKind(trace.SpanKindClient),
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, otelAttrs...)
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.serverURL)
+	u.Path += "/editForumTopic"
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "POST", u, nil)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeEditForumTopicRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeEditForumTopicResponse(resp, span)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -2641,6 +2931,70 @@ func (c *Client) GetFile(ctx context.Context, request GetFile) (res ResultFile, 
 	return result, nil
 }
 
+// GetForumTopicIconStickers invokes getForumTopicIconStickers operation.
+//
+// Use this method to get custom emoji stickers, which can be used as a forum topic icon by any user.
+// Requires no parameters. Returns an Array of [Sticker](https://core.telegram.org/bots/api#sticker)
+// objects.
+//
+// POST /getForumTopicIconStickers
+func (c *Client) GetForumTopicIconStickers(ctx context.Context) (res ResultArrayOfSticker, err error) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("getForumTopicIconStickers"),
+	}
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, otelAttrs...)
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, "GetForumTopicIconStickers",
+		trace.WithAttributes(otelAttrs...),
+		trace.WithSpanKind(trace.SpanKindClient),
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, otelAttrs...)
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.serverURL)
+	u.Path += "/getForumTopicIconStickers"
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "POST", u, nil)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeGetForumTopicIconStickersResponse(resp, span)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
 // GetGameHighScores invokes getGameHighScores operation.
 //
 // Use this method to get data for high score tables. Will return the score of the specified user and
@@ -3459,6 +3813,74 @@ func (c *Client) PromoteChatMember(ctx context.Context, request PromoteChatMembe
 
 	stage = "DecodeResponse"
 	result, err := decodePromoteChatMemberResponse(resp, span)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
+// ReopenForumTopic invokes reopenForumTopic operation.
+//
+// Use this method to reopen a closed topic in a forum supergroup chat. The bot must be an
+// administrator in the chat for this to work and must have the _can_manage_topics_ administrator
+// rights, unless it is the creator of the topic. Returns _True_ on success.
+//
+// POST /reopenForumTopic
+func (c *Client) ReopenForumTopic(ctx context.Context, request ReopenForumTopic) (res Result, err error) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("reopenForumTopic"),
+	}
+	// Validate request before sending.
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, otelAttrs...)
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, "ReopenForumTopic",
+		trace.WithAttributes(otelAttrs...),
+		trace.WithSpanKind(trace.SpanKindClient),
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, otelAttrs...)
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.serverURL)
+	u.Path += "/reopenForumTopic"
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "POST", u, nil)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeReopenForumTopicRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeReopenForumTopicResponse(resp, span)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -6311,6 +6733,74 @@ func (c *Client) UnpinAllChatMessages(ctx context.Context, request UnpinAllChatM
 
 	stage = "DecodeResponse"
 	result, err := decodeUnpinAllChatMessagesResponse(resp, span)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
+// UnpinAllForumTopicMessages invokes unpinAllForumTopicMessages operation.
+//
+// Use this method to clear the list of pinned messages in a forum topic. The bot must be an
+// administrator in the chat for this to work and must have the _can_pin_messages_ administrator
+// right in the supergroup. Returns _True_ on success.
+//
+// POST /unpinAllForumTopicMessages
+func (c *Client) UnpinAllForumTopicMessages(ctx context.Context, request UnpinAllForumTopicMessages) (res Result, err error) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("unpinAllForumTopicMessages"),
+	}
+	// Validate request before sending.
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, otelAttrs...)
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, "UnpinAllForumTopicMessages",
+		trace.WithAttributes(otelAttrs...),
+		trace.WithSpanKind(trace.SpanKindClient),
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, otelAttrs...)
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.serverURL)
+	u.Path += "/unpinAllForumTopicMessages"
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "POST", u, nil)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeUnpinAllForumTopicMessagesRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeUnpinAllForumTopicMessagesResponse(resp, span)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}

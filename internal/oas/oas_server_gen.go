@@ -100,6 +100,14 @@ type Handler interface {
 	//
 	// POST /close
 	Close(ctx context.Context) (Result, error)
+	// CloseForumTopic implements closeForumTopic operation.
+	//
+	// Use this method to close an open topic in a forum supergroup chat. The bot must be an
+	// administrator in the chat for this to work and must have the _can_manage_topics_ administrator
+	// rights, unless it is the creator of the topic. Returns _True_ on success.
+	//
+	// POST /closeForumTopic
+	CloseForumTopic(ctx context.Context, req CloseForumTopic) (Result, error)
 	// CopyMessage implements copyMessage operation.
 	//
 	// Use this method to copy messages of any kind. Service messages and invoice messages can't be
@@ -121,6 +129,15 @@ type Handler interface {
 	//
 	// POST /createChatInviteLink
 	CreateChatInviteLink(ctx context.Context, req CreateChatInviteLink) (ResultChatInviteLink, error)
+	// CreateForumTopic implements createForumTopic operation.
+	//
+	// Use this method to create a topic in a forum supergroup chat. The bot must be an administrator in
+	// the chat for this to work and must have the _can_manage_topics_ administrator rights. Returns
+	// information about the created topic as a [ForumTopic](https://core.telegram.
+	// org/bots/api#forumtopic) object.
+	//
+	// POST /createForumTopic
+	CreateForumTopic(ctx context.Context, req CreateForumTopic) (Result, error)
 	// CreateInvoiceLink implements createInvoiceLink operation.
 	//
 	// Use this method to create a link for an invoice. Returns the created invoice link as _String_ on
@@ -160,14 +177,23 @@ type Handler interface {
 	//
 	// POST /deleteChatStickerSet
 	DeleteChatStickerSet(ctx context.Context, req DeleteChatStickerSet) (Result, error)
+	// DeleteForumTopic implements deleteForumTopic operation.
+	//
+	// Use this method to delete a forum topic along with all its messages in a forum supergroup chat.
+	// The bot must be an administrator in the chat for this to work and must have the
+	// _can_delete_messages_ administrator rights. Returns _True_ on success.
+	//
+	// POST /deleteForumTopic
+	DeleteForumTopic(ctx context.Context, req DeleteForumTopic) (Result, error)
 	// DeleteMessage implements deleteMessage operation.
 	//
 	// Use this method to delete a message, including service messages, with the following limitations:-
-	// A message can only be deleted if it was sent less than 48 hours ago.- A dice message in a private
-	// chat can only be deleted if it was sent more than 24 hours ago.- Bots can delete outgoing messages
-	// in private chats, groups, and supergroups.- Bots can delete incoming messages in private chats.-
-	// Bots granted _can_post_messages_ permissions can delete outgoing messages in channels.- If the bot
-	// is an administrator of a group, it can delete any message there.- If the bot has
+	// A message can only be deleted if it was sent less than 48 hours ago.- Service messages about a
+	// supergroup, channel, or forum topic creation can't be deleted.- A dice message in a private chat
+	// can only be deleted if it was sent more than 24 hours ago.- Bots can delete outgoing messages in
+	// private chats, groups, and supergroups.- Bots can delete incoming messages in private chats.- Bots
+	// granted _can_post_messages_ permissions can delete outgoing messages in channels.- If the bot is
+	// an administrator of a group, it can delete any message there.- If the bot has
 	// _can_delete_messages_ permission in a supergroup or a channel, it can delete any message there.
 	// Returns _True_ on success.
 	//
@@ -204,6 +230,14 @@ type Handler interface {
 	//
 	// POST /editChatInviteLink
 	EditChatInviteLink(ctx context.Context, req EditChatInviteLink) (ResultChatInviteLink, error)
+	// EditForumTopic implements editForumTopic operation.
+	//
+	// Use this method to edit name and icon of a topic in a forum supergroup chat. The bot must be an
+	// administrator in the chat for this to work and must have _can_manage_topics_ administrator rights,
+	// unless it is the creator of the topic. Returns _True_ on success.
+	//
+	// POST /editForumTopic
+	EditForumTopic(ctx context.Context, req EditForumTopic) (Result, error)
 	// EditMessageCaption implements editMessageCaption operation.
 	//
 	// Use this method to edit captions of messages. On success, if the edited message is not an inline
@@ -318,6 +352,14 @@ type Handler interface {
 	//
 	// POST /getFile
 	GetFile(ctx context.Context, req GetFile) (ResultFile, error)
+	// GetForumTopicIconStickers implements getForumTopicIconStickers operation.
+	//
+	// Use this method to get custom emoji stickers, which can be used as a forum topic icon by any user.
+	// Requires no parameters. Returns an Array of [Sticker](https://core.telegram.org/bots/api#sticker)
+	// objects.
+	//
+	// POST /getForumTopicIconStickers
+	GetForumTopicIconStickers(ctx context.Context) (ResultArrayOfSticker, error)
 	// GetGameHighScores implements getGameHighScores operation.
 	//
 	// Use this method to get data for high score tables. Will return the score of the specified user and
@@ -412,6 +454,14 @@ type Handler interface {
 	//
 	// POST /promoteChatMember
 	PromoteChatMember(ctx context.Context, req PromoteChatMember) (Result, error)
+	// ReopenForumTopic implements reopenForumTopic operation.
+	//
+	// Use this method to reopen a closed topic in a forum supergroup chat. The bot must be an
+	// administrator in the chat for this to work and must have the _can_manage_topics_ administrator
+	// rights, unless it is the creator of the topic. Returns _True_ on success.
+	//
+	// POST /reopenForumTopic
+	ReopenForumTopic(ctx context.Context, req ReopenForumTopic) (Result, error)
 	// RestrictChatMember implements restrictChatMember operation.
 	//
 	// Use this method to restrict a user in a supergroup. The bot must be an administrator in the
@@ -720,6 +770,14 @@ type Handler interface {
 	//
 	// POST /unpinAllChatMessages
 	UnpinAllChatMessages(ctx context.Context, req UnpinAllChatMessages) (Result, error)
+	// UnpinAllForumTopicMessages implements unpinAllForumTopicMessages operation.
+	//
+	// Use this method to clear the list of pinned messages in a forum topic. The bot must be an
+	// administrator in the chat for this to work and must have the _can_pin_messages_ administrator
+	// right in the supergroup. Returns _True_ on success.
+	//
+	// POST /unpinAllForumTopicMessages
+	UnpinAllForumTopicMessages(ctx context.Context, req UnpinAllForumTopicMessages) (Result, error)
 	// UnpinChatMessage implements unpinChatMessage operation.
 	//
 	// Use this method to remove a message from the list of pinned messages in a chat. If the chat is not

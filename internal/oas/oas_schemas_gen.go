@@ -526,8 +526,18 @@ type Chat struct {
 	// _Optional_. First name of the other party in a private chat.
 	FirstName OptString "json:\"first_name\""
 	// _Optional_. Last name of the other party in a private chat.
-	LastName OptString    "json:\"last_name\""
-	Photo    OptChatPhoto "json:\"photo\""
+	LastName OptString "json:\"last_name\""
+	// _Optional_. _True_, if the supergroup chat is a forum (has [topics](https://telegram.
+	// org/blog/topics-in-groups-collectible-usernames#topics-in-groups) enabled).
+	IsForum OptBool      "json:\"is_forum\""
+	Photo   OptChatPhoto "json:\"photo\""
+	// _Optional_. If non-empty, the list of all [active chat usernames](https://telegram.
+	// org/blog/topics-in-groups-collectible-usernames#collectible-usernames); for private chats,
+	// supergroups and channels. Returned only in [getChat](https://core.telegram.org/bots/api#getchat).
+	ActiveUsernames []string "json:\"active_usernames\""
+	// _Optional_. Custom emoji identifier of emoji status of the other party in a private chat. Returned
+	// only in [getChat](https://core.telegram.org/bots/api#getchat).
+	EmojiStatusCustomEmojiID OptString "json:\"emoji_status_custom_emoji_id\""
 	// _Optional_. Bio of the other party in a private chat. Returned only in [getChat](https://core.
 	// telegram.org/bots/api#getchat).
 	Bio OptString "json:\"bio\""
@@ -609,6 +619,9 @@ type ChatAdministratorRights struct {
 	CanEditMessages OptBool "json:\"can_edit_messages\""
 	// _Optional_. _True_, if the user is allowed to pin messages; groups and supergroups only.
 	CanPinMessages OptBool "json:\"can_pin_messages\""
+	// _Optional_. _True_, if the user is allowed to create, rename, close, and reopen forum topics;
+	// supergroups only.
+	CanManageTopics OptBool "json:\"can_manage_topics\""
 }
 
 // Represents an invite link for a chat.
@@ -864,6 +877,9 @@ type ChatMemberAdministrator struct {
 	CanEditMessages OptBool "json:\"can_edit_messages\""
 	// _Optional_. _True_, if the user is allowed to pin messages; groups and supergroups only.
 	CanPinMessages OptBool "json:\"can_pin_messages\""
+	// _Optional_. _True_, if the user is allowed to create, rename, close, and reopen forum topics;
+	// supergroups only.
+	CanManageTopics OptBool "json:\"can_manage_topics\""
 	// _Optional_. Custom title for this user.
 	CustomTitle OptString "json:\"custom_title\""
 }
@@ -926,6 +942,8 @@ type ChatMemberRestricted struct {
 	CanInviteUsers bool "json:\"can_invite_users\""
 	// _True_, if the user is allowed to pin messages.
 	CanPinMessages bool "json:\"can_pin_messages\""
+	// _True_, if the user is allowed to create forum topics.
+	CanManageTopics bool "json:\"can_manage_topics\""
 	// _True_, if the user is allowed to send text messages, contacts, locations and venues.
 	CanSendMessages bool "json:\"can_send_messages\""
 	// _True_, if the user is allowed to send audios, documents, photos, videos, video notes and voice
@@ -977,6 +995,9 @@ type ChatPermissions struct {
 	CanInviteUsers OptBool "json:\"can_invite_users\""
 	// _Optional_. _True_, if the user is allowed to pin messages. Ignored in public supergroups.
 	CanPinMessages OptBool "json:\"can_pin_messages\""
+	// _Optional_. _True_, if the user is allowed to create forum topics. If omitted defaults to the
+	// value of can_pin_messages.
+	CanManageTopics OptBool "json:\"can_manage_topics\""
 }
 
 // This object represents a chat photo.
@@ -1023,6 +1044,14 @@ type ChosenInlineResult struct {
 	Query string "json:\"query\""
 }
 
+// Input for closeForumTopic.
+// Ref: #/components/schemas/closeForumTopic
+type CloseForumTopic struct {
+	ChatID ID "json:\"chat_id\""
+	// Unique identifier for the target message thread of the forum topic.
+	MessageThreadID int "json:\"message_thread_id\""
+}
+
 // This object represents a phone contact.
 // Ref: #/components/schemas/Contact
 type Contact struct {
@@ -1045,8 +1074,10 @@ type Contact struct {
 // Input for copyMessage.
 // Ref: #/components/schemas/copyMessage
 type CopyMessage struct {
-	ChatID     ID "json:\"chat_id\""
-	FromChatID ID "json:\"from_chat_id\""
+	ChatID ID "json:\"chat_id\""
+	// Unique identifier for the target message thread (topic) of the forum; for forum supergroups only.
+	MessageThreadID OptInt "json:\"message_thread_id\""
+	FromChatID      ID     "json:\"from_chat_id\""
 	// Message identifier in the chat specified in _from_chat_id_.
 	MessageID int "json:\"message_id\""
 	// New caption for media, 0-1024 characters after entities parsing. If not specified, the original
@@ -1084,6 +1115,21 @@ type CreateChatInviteLink struct {
 	// _True_, if users joining the chat via the link need to be approved by chat administrators. If
 	// _True_, _member_limit_ can't be specified.
 	CreatesJoinRequest OptBool "json:\"creates_join_request\""
+}
+
+// Input for createForumTopic.
+// Ref: #/components/schemas/createForumTopic
+type CreateForumTopic struct {
+	ChatID ID "json:\"chat_id\""
+	// Topic name, 1-128 characters.
+	Name string "json:\"name\""
+	// Color of the topic icon in RGB format. Currently, must be one of 0x6FB9F0, 0xFFD67E, 0xCB86DB,
+	// 0x8EEE98, 0xFF93B2, or 0xFB6F5F.
+	IconColor OptInt "json:\"icon_color\""
+	// Unique identifier of the custom emoji shown as the topic icon. Use
+	// [getForumTopicIconStickers](https://core.telegram.org/bots/api#getforumtopiciconstickers) to get
+	// all allowed custom emoji identifiers.
+	IconCustomEmojiID OptString "json:\"icon_custom_emoji_id\""
 }
 
 // Input for createInvoiceLink.
@@ -1199,6 +1245,14 @@ type DeleteChatStickerSet struct {
 	ChatID ID "json:\"chat_id\""
 }
 
+// Input for deleteForumTopic.
+// Ref: #/components/schemas/deleteForumTopic
+type DeleteForumTopic struct {
+	ChatID ID "json:\"chat_id\""
+	// Unique identifier for the target message thread of the forum topic.
+	MessageThreadID int "json:\"message_thread_id\""
+}
+
 // Input for deleteMessage.
 // Ref: #/components/schemas/deleteMessage
 type DeleteMessage struct {
@@ -1277,6 +1331,20 @@ type EditChatInviteLink struct {
 	// _True_, if users joining the chat via the link need to be approved by chat administrators. If
 	// _True_, _member_limit_ can't be specified.
 	CreatesJoinRequest OptBool "json:\"creates_join_request\""
+}
+
+// Input for editForumTopic.
+// Ref: #/components/schemas/editForumTopic
+type EditForumTopic struct {
+	ChatID ID "json:\"chat_id\""
+	// Unique identifier for the target message thread of the forum topic.
+	MessageThreadID int "json:\"message_thread_id\""
+	// New topic name, 1-128 characters.
+	Name string "json:\"name\""
+	// New unique identifier of the custom emoji shown as the topic icon. Use
+	// [getForumTopicIconStickers](https://core.telegram.org/bots/api#getforumtopiciconstickers) to get
+	// all allowed custom emoji identifiers.
+	IconCustomEmojiID string "json:\"icon_custom_emoji_id\""
 }
 
 // Input for editMessageCaption.
@@ -1494,11 +1562,34 @@ type ForceReply struct {
 	Selective OptBool "json:\"selective\""
 }
 
+// This object represents a service message about a forum topic closed in the chat. Currently holds
+// no information.
+// Ref: #/components/schemas/ForumTopicClosed
+type ForumTopicClosed struct{}
+
+// This object represents a service message about a new forum topic created in the chat.
+// Ref: #/components/schemas/ForumTopicCreated
+type ForumTopicCreated struct {
+	// Name of the topic.
+	Name string "json:\"name\""
+	// Color of the topic icon in RGB format.
+	IconColor int "json:\"icon_color\""
+	// _Optional_. Unique identifier of the custom emoji shown as the topic icon.
+	IconCustomEmojiID OptString "json:\"icon_custom_emoji_id\""
+}
+
+// This object represents a service message about a forum topic reopened in the chat. Currently holds
+// no information.
+// Ref: #/components/schemas/ForumTopicReopened
+type ForumTopicReopened struct{}
+
 // Input for forwardMessage.
 // Ref: #/components/schemas/forwardMessage
 type ForwardMessage struct {
-	ChatID     ID "json:\"chat_id\""
-	FromChatID ID "json:\"from_chat_id\""
+	ChatID ID "json:\"chat_id\""
+	// Unique identifier for the target message thread (topic) of the forum; for forum supergroups only.
+	MessageThreadID OptInt "json:\"message_thread_id\""
+	FromChatID      ID     "json:\"from_chat_id\""
 	// Sends the message [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will
 	// receive a notification with no sound.
 	DisableNotification OptBool "json:\"disable_notification\""
@@ -3800,9 +3891,12 @@ type MenuButtonWebApp struct {
 // Ref: #/components/schemas/Message
 type Message struct {
 	// Unique message identifier inside this chat.
-	MessageID  int     "json:\"message_id\""
-	From       OptUser "json:\"from\""
-	SenderChat OptChat "json:\"sender_chat\""
+	MessageID int "json:\"message_id\""
+	// _Optional_. Unique identifier of a message thread to which the message belongs; for supergroups
+	// only.
+	MessageThreadID OptInt  "json:\"message_thread_id\""
+	From            OptUser "json:\"from\""
+	SenderChat      OptChat "json:\"sender_chat\""
 	// Date the message was sent in Unix time.
 	Date            int     "json:\"date\""
 	Chat            Chat    "json:\"chat\""
@@ -3818,6 +3912,8 @@ type Message struct {
 	ForwardSenderName OptString "json:\"forward_sender_name\""
 	// _Optional_. For forwarded messages, date the original message was sent in Unix time.
 	ForwardDate OptInt "json:\"forward_date\""
+	// _Optional_. _True_, if the message is sent to a forum topic.
+	IsTopicMessage OptBool "json:\"is_topic_message\""
 	// _Optional_. _True_, if the message is a channel post that was automatically forwarded to the
 	// connected discussion group.
 	IsAutomaticForward OptBool  "json:\"is_automatic_forward\""
@@ -3897,6 +3993,9 @@ type Message struct {
 	ConnectedWebsite             OptString                       "json:\"connected_website\""
 	PassportData                 OptPassportData                 "json:\"passport_data\""
 	ProximityAlertTriggered      OptProximityAlertTriggered      "json:\"proximity_alert_triggered\""
+	ForumTopicCreated            OptForumTopicCreated            "json:\"forum_topic_created\""
+	ForumTopicClosed             *ForumTopicClosed               "json:\"forum_topic_closed\""
+	ForumTopicReopened           *ForumTopicReopened             "json:\"forum_topic_reopened\""
 	VideoChatScheduled           OptVideoChatScheduled           "json:\"video_chat_scheduled\""
 	VideoChatStarted             *VideoChatStarted               "json:\"video_chat_started\""
 	VideoChatEnded               OptVideoChatEnded               "json:\"video_chat_ended\""
@@ -4984,6 +5083,52 @@ func (o OptFloat64) Get() (v float64, ok bool) {
 
 // Or returns value if set, or given parameter if does not.
 func (o OptFloat64) Or(d float64) float64 {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
+// NewOptForumTopicCreated returns new OptForumTopicCreated with value set to v.
+func NewOptForumTopicCreated(v ForumTopicCreated) OptForumTopicCreated {
+	return OptForumTopicCreated{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptForumTopicCreated is optional ForumTopicCreated.
+type OptForumTopicCreated struct {
+	Value ForumTopicCreated
+	Set   bool
+}
+
+// IsSet returns true if OptForumTopicCreated was set.
+func (o OptForumTopicCreated) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptForumTopicCreated) Reset() {
+	var v ForumTopicCreated
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptForumTopicCreated) SetTo(v ForumTopicCreated) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptForumTopicCreated) Get() (v ForumTopicCreated, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptForumTopicCreated) Or(d ForumTopicCreated) ForumTopicCreated {
 	if v, ok := o.Get(); ok {
 		return v
 	}
@@ -8040,6 +8185,9 @@ type PromoteChatMember struct {
 	CanInviteUsers OptBool "json:\"can_invite_users\""
 	// Pass _True_ if the administrator can pin messages, supergroups only.
 	CanPinMessages OptBool "json:\"can_pin_messages\""
+	// Pass _True_ if the user is allowed to create, rename, close, and reopen forum topics, supergroups
+	// only.
+	CanManageTopics OptBool "json:\"can_manage_topics\""
 }
 
 // This object represents the content of a service message, sent whenever a user in the chat triggers
@@ -8050,6 +8198,14 @@ type ProximityAlertTriggered struct {
 	Watcher  User "json:\"watcher\""
 	// The distance between the users.
 	Distance int "json:\"distance\""
+}
+
+// Input for reopenForumTopic.
+// Ref: #/components/schemas/reopenForumTopic
+type ReopenForumTopic struct {
+	ChatID ID "json:\"chat_id\""
+	// Unique identifier for the target message thread of the forum topic.
+	MessageThreadID int "json:\"message_thread_id\""
 }
 
 // This object represents a [custom keyboard](https://core.telegram.org/bots/features#keyboards) with
@@ -8333,6 +8489,8 @@ type RevokeChatInviteLink struct {
 // Ref: #/components/schemas/sendAnimation
 type SendAnimation struct {
 	ChatID ID "json:\"chat_id\""
+	// Unique identifier for the target message thread (topic) of the forum; for forum supergroups only.
+	MessageThreadID OptInt "json:\"message_thread_id\""
 	// Animation to send. Pass a file_id as String to send an animation that exists on the Telegram
 	// servers (recommended), pass an HTTP URL as a String for Telegram to get an animation from the
 	// Internet, or upload a new animation using multipart/form-data. [More information on Sending
@@ -8377,6 +8535,8 @@ type SendAnimation struct {
 // Ref: #/components/schemas/sendAudio
 type SendAudio struct {
 	ChatID ID "json:\"chat_id\""
+	// Unique identifier for the target message thread (topic) of the forum; for forum supergroups only.
+	MessageThreadID OptInt "json:\"message_thread_id\""
 	// Audio file to send. Pass a file_id as String to send an audio file that exists on the Telegram
 	// servers (recommended), pass an HTTP URL as a String for Telegram to get an audio file from the
 	// Internet, or upload a new one using multipart/form-data. [More information on Sending
@@ -8436,6 +8596,8 @@ type SendChatAction struct {
 // Ref: #/components/schemas/sendContact
 type SendContact struct {
 	ChatID ID "json:\"chat_id\""
+	// Unique identifier for the target message thread (topic) of the forum; for forum supergroups only.
+	MessageThreadID OptInt "json:\"message_thread_id\""
 	// Contact's phone number.
 	PhoneNumber string "json:\"phone_number\""
 	// Contact's first name.
@@ -8461,6 +8623,8 @@ type SendContact struct {
 // Ref: #/components/schemas/sendDice
 type SendDice struct {
 	ChatID ID "json:\"chat_id\""
+	// Unique identifier for the target message thread (topic) of the forum; for forum supergroups only.
+	MessageThreadID OptInt "json:\"message_thread_id\""
 	// Emoji on which the dice throw animation is based. Currently, must be one of `🎲`, `🎯`, `🏀`,
 	//  `⚽`, `🎳`, or `🎰`. Dice can have values 1-6 for `🎲`, `🎯` and `🎳`, values 1-5 for
 	// `🏀` and `⚽`, and values 1-64 for `🎰`. Defaults to `🎲`.
@@ -8481,6 +8645,8 @@ type SendDice struct {
 // Ref: #/components/schemas/sendDocument
 type SendDocument struct {
 	ChatID ID "json:\"chat_id\""
+	// Unique identifier for the target message thread (topic) of the forum; for forum supergroups only.
+	MessageThreadID OptInt "json:\"message_thread_id\""
 	// File to send. Pass a file_id as String to send a file that exists on the Telegram servers
 	// (recommended), pass an HTTP URL as a String for Telegram to get a file from the Internet, or
 	// upload a new one using multipart/form-data. [More information on Sending Files](https://core.
@@ -8522,6 +8688,8 @@ type SendDocument struct {
 type SendGame struct {
 	// Unique identifier for the target chat.
 	ChatID int64 "json:\"chat_id\""
+	// Unique identifier for the target message thread (topic) of the forum; for forum supergroups only.
+	MessageThreadID OptInt "json:\"message_thread_id\""
 	// Short name of the game, serves as the unique identifier for the game. Set up your games via
 	// [@BotFather](https://t.me/botfather).
 	GameShortName string "json:\"game_short_name\""
@@ -8541,6 +8709,8 @@ type SendGame struct {
 // Ref: #/components/schemas/sendInvoice
 type SendInvoice struct {
 	ChatID ID "json:\"chat_id\""
+	// Unique identifier for the target message thread (topic) of the forum; for forum supergroups only.
+	MessageThreadID OptInt "json:\"message_thread_id\""
 	// Product name, 1-32 characters.
 	Title string "json:\"title\""
 	// Product description, 1-255 characters.
@@ -8614,6 +8784,8 @@ type SendInvoice struct {
 // Ref: #/components/schemas/sendLocation
 type SendLocation struct {
 	ChatID ID "json:\"chat_id\""
+	// Unique identifier for the target message thread (topic) of the forum; for forum supergroups only.
+	MessageThreadID OptInt "json:\"message_thread_id\""
 	// Latitude of the location.
 	Latitude float64 "json:\"latitude\""
 	// Longitude of the location.
@@ -8645,6 +8817,8 @@ type SendLocation struct {
 // Ref: #/components/schemas/sendMediaGroup
 type SendMediaGroup struct {
 	ChatID ID "json:\"chat_id\""
+	// Unique identifier for the target message thread (topic) of the forum; for forum supergroups only.
+	MessageThreadID OptInt "json:\"message_thread_id\""
 	// A JSON-serialized array describing messages to be sent, must include 2-10 items.
 	Media []SendMediaGroupMediaItem "json:\"media\""
 	// Sends messages [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will
@@ -8786,6 +8960,8 @@ func NewInputMediaVideoSendMediaGroupMediaItem(v InputMediaVideo) SendMediaGroup
 // Ref: #/components/schemas/sendMessage
 type SendMessage struct {
 	ChatID ID "json:\"chat_id\""
+	// Unique identifier for the target message thread (topic) of the forum; for forum supergroups only.
+	MessageThreadID OptInt "json:\"message_thread_id\""
 	// Text of the message to be sent, 1-4096 characters after entities parsing.
 	Text string "json:\"text\""
 	// Mode for parsing entities in the message text. See [formatting options](https://core.telegram.
@@ -8812,6 +8988,8 @@ type SendMessage struct {
 // Ref: #/components/schemas/sendPhoto
 type SendPhoto struct {
 	ChatID ID "json:\"chat_id\""
+	// Unique identifier for the target message thread (topic) of the forum; for forum supergroups only.
+	MessageThreadID OptInt "json:\"message_thread_id\""
 	// Photo to send. Pass a file_id as String to send a photo that exists on the Telegram servers
 	// (recommended), pass an HTTP URL as a String for Telegram to get a photo from the Internet, or
 	// upload a new photo using multipart/form-data. The photo must be at most 10 MB in size. The photo's
@@ -8843,6 +9021,8 @@ type SendPhoto struct {
 // Ref: #/components/schemas/sendPoll
 type SendPoll struct {
 	ChatID ID "json:\"chat_id\""
+	// Unique identifier for the target message thread (topic) of the forum; for forum supergroups only.
+	MessageThreadID OptInt "json:\"message_thread_id\""
 	// Poll question, 1-300 characters.
 	Question string "json:\"question\""
 	// A JSON-serialized list of answer options, 2-10 strings 1-100 characters each.
@@ -9011,6 +9191,8 @@ func NewForceReplySendReplyMarkup(v ForceReply) SendReplyMarkup {
 // Ref: #/components/schemas/sendSticker
 type SendSticker struct {
 	ChatID ID "json:\"chat_id\""
+	// Unique identifier for the target message thread (topic) of the forum; for forum supergroups only.
+	MessageThreadID OptInt "json:\"message_thread_id\""
 	// Sticker to send. Pass a file_id as String to send a file that exists on the Telegram servers
 	// (recommended), pass an HTTP URL as a String for Telegram to get a .WEBP file from the Internet, or
 	// upload a new one using multipart/form-data. [More information on Sending Files](https://core.
@@ -9032,6 +9214,8 @@ type SendSticker struct {
 // Ref: #/components/schemas/sendVenue
 type SendVenue struct {
 	ChatID ID "json:\"chat_id\""
+	// Unique identifier for the target message thread (topic) of the forum; for forum supergroups only.
+	MessageThreadID OptInt "json:\"message_thread_id\""
 	// Latitude of the venue.
 	Latitude float64 "json:\"latitude\""
 	// Longitude of the venue.
@@ -9066,6 +9250,8 @@ type SendVenue struct {
 // Ref: #/components/schemas/sendVideo
 type SendVideo struct {
 	ChatID ID "json:\"chat_id\""
+	// Unique identifier for the target message thread (topic) of the forum; for forum supergroups only.
+	MessageThreadID OptInt "json:\"message_thread_id\""
 	// Video to send. Pass a file_id as String to send a video that exists on the Telegram servers
 	// (recommended), pass an HTTP URL as a String for Telegram to get a video from the Internet, or
 	// upload a new video using multipart/form-data. [More information on Sending Files](https://core.
@@ -9112,6 +9298,8 @@ type SendVideo struct {
 // Ref: #/components/schemas/sendVideoNote
 type SendVideoNote struct {
 	ChatID ID "json:\"chat_id\""
+	// Unique identifier for the target message thread (topic) of the forum; for forum supergroups only.
+	MessageThreadID OptInt "json:\"message_thread_id\""
 	// Video note to send. Pass a file_id as String to send a video note that exists on the Telegram
 	// servers (recommended) or upload a new video using multipart/form-data. [More information on
 	// Sending Files](https://core.telegram.org/bots/api#sending-files). Sending video notes by a URL is
@@ -9145,6 +9333,8 @@ type SendVideoNote struct {
 // Ref: #/components/schemas/sendVoice
 type SendVoice struct {
 	ChatID ID "json:\"chat_id\""
+	// Unique identifier for the target message thread (topic) of the forum; for forum supergroups only.
+	MessageThreadID OptInt "json:\"message_thread_id\""
 	// Audio file to send. Pass a file_id as String to send a file that exists on the Telegram servers
 	// (recommended), pass an HTTP URL as a String for Telegram to get a file from the Internet, or
 	// upload a new one using multipart/form-data. [More information on Sending Files](https://core.
@@ -9226,7 +9416,7 @@ type SetChatStickerSet struct {
 // Ref: #/components/schemas/setChatTitle
 type SetChatTitle struct {
 	ChatID ID "json:\"chat_id\""
-	// New chat title, 1-255 characters.
+	// New chat title, 1-128 characters.
 	Title string "json:\"title\""
 }
 
@@ -9509,6 +9699,14 @@ type UnbanChatSenderChat struct {
 // Ref: #/components/schemas/unpinAllChatMessages
 type UnpinAllChatMessages struct {
 	ChatID ID "json:\"chat_id\""
+}
+
+// Input for unpinAllForumTopicMessages.
+// Ref: #/components/schemas/unpinAllForumTopicMessages
+type UnpinAllForumTopicMessages struct {
+	ChatID ID "json:\"chat_id\""
+	// Unique identifier for the target message thread of the forum topic.
+	MessageThreadID int "json:\"message_thread_id\""
 }
 
 // Input for unpinChatMessage.

@@ -128,6 +128,19 @@ func encodeBanChatSenderChatRequest(
 	ht.SetBody(r, bytes.NewReader(encoded), contentType)
 	return nil
 }
+func encodeCloseForumTopicRequest(
+	req CloseForumTopic,
+	r *http.Request,
+) error {
+	const contentType = "application/json"
+	e := jx.GetEncoder()
+	{
+		req.Encode(e)
+	}
+	encoded := e.Bytes()
+	ht.SetBody(r, bytes.NewReader(encoded), contentType)
+	return nil
+}
 func encodeCopyMessageRequest(
 	req CopyMessage,
 	r *http.Request,
@@ -143,6 +156,19 @@ func encodeCopyMessageRequest(
 }
 func encodeCreateChatInviteLinkRequest(
 	req CreateChatInviteLink,
+	r *http.Request,
+) error {
+	const contentType = "application/json"
+	e := jx.GetEncoder()
+	{
+		req.Encode(e)
+	}
+	encoded := e.Bytes()
+	ht.SetBody(r, bytes.NewReader(encoded), contentType)
+	return nil
+}
+func encodeCreateForumTopicRequest(
+	req CreateForumTopic,
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
@@ -208,6 +234,19 @@ func encodeDeleteChatPhotoRequest(
 }
 func encodeDeleteChatStickerSetRequest(
 	req DeleteChatStickerSet,
+	r *http.Request,
+) error {
+	const contentType = "application/json"
+	e := jx.GetEncoder()
+	{
+		req.Encode(e)
+	}
+	encoded := e.Bytes()
+	ht.SetBody(r, bytes.NewReader(encoded), contentType)
+	return nil
+}
+func encodeDeleteForumTopicRequest(
+	req DeleteForumTopic,
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
@@ -285,6 +324,19 @@ func encodeDeleteWebhookRequest(
 }
 func encodeEditChatInviteLinkRequest(
 	req EditChatInviteLink,
+	r *http.Request,
+) error {
+	const contentType = "application/json"
+	e := jx.GetEncoder()
+	{
+		req.Encode(e)
+	}
+	encoded := e.Bytes()
+	ht.SetBody(r, bytes.NewReader(encoded), contentType)
+	return nil
+}
+func encodeEditForumTopicRequest(
+	req EditForumTopic,
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
@@ -608,6 +660,19 @@ func encodePinChatMessageRequest(
 }
 func encodePromoteChatMemberRequest(
 	req PromoteChatMember,
+	r *http.Request,
+) error {
+	const contentType = "application/json"
+	e := jx.GetEncoder()
+	{
+		req.Encode(e)
+	}
+	encoded := e.Bytes()
+	ht.SetBody(r, bytes.NewReader(encoded), contentType)
+	return nil
+}
+func encodeReopenForumTopicRequest(
+	req ReopenForumTopic,
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
@@ -1127,6 +1192,19 @@ func encodeUnbanChatSenderChatRequest(
 }
 func encodeUnpinAllChatMessagesRequest(
 	req UnpinAllChatMessages,
+	r *http.Request,
+) error {
+	const contentType = "application/json"
+	e := jx.GetEncoder()
+	{
+		req.Encode(e)
+	}
+	encoded := e.Bytes()
+	ht.SetBody(r, bytes.NewReader(encoded), contentType)
+	return nil
+}
+func encodeUnpinAllForumTopicMessagesRequest(
+	req UnpinAllForumTopicMessages,
 	r *http.Request,
 ) error {
 	const contentType = "application/json"

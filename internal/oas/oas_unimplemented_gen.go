@@ -133,6 +133,17 @@ func (UnimplementedHandler) Close(ctx context.Context) (r Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
+// CloseForumTopic implements closeForumTopic operation.
+//
+// Use this method to close an open topic in a forum supergroup chat. The bot must be an
+// administrator in the chat for this to work and must have the _can_manage_topics_ administrator
+// rights, unless it is the creator of the topic. Returns _True_ on success.
+//
+// POST /closeForumTopic
+func (UnimplementedHandler) CloseForumTopic(ctx context.Context, req CloseForumTopic) (r Result, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
 // CopyMessage implements copyMessage operation.
 //
 // Use this method to copy messages of any kind. Service messages and invoice messages can't be
@@ -157,6 +168,18 @@ func (UnimplementedHandler) CopyMessage(ctx context.Context, req CopyMessage) (r
 //
 // POST /createChatInviteLink
 func (UnimplementedHandler) CreateChatInviteLink(ctx context.Context, req CreateChatInviteLink) (r ResultChatInviteLink, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// CreateForumTopic implements createForumTopic operation.
+//
+// Use this method to create a topic in a forum supergroup chat. The bot must be an administrator in
+// the chat for this to work and must have the _can_manage_topics_ administrator rights. Returns
+// information about the created topic as a [ForumTopic](https://core.telegram.
+// org/bots/api#forumtopic) object.
+//
+// POST /createForumTopic
+func (UnimplementedHandler) CreateForumTopic(ctx context.Context, req CreateForumTopic) (r Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -214,14 +237,26 @@ func (UnimplementedHandler) DeleteChatStickerSet(ctx context.Context, req Delete
 	return r, ht.ErrNotImplemented
 }
 
+// DeleteForumTopic implements deleteForumTopic operation.
+//
+// Use this method to delete a forum topic along with all its messages in a forum supergroup chat.
+// The bot must be an administrator in the chat for this to work and must have the
+// _can_delete_messages_ administrator rights. Returns _True_ on success.
+//
+// POST /deleteForumTopic
+func (UnimplementedHandler) DeleteForumTopic(ctx context.Context, req DeleteForumTopic) (r Result, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
 // DeleteMessage implements deleteMessage operation.
 //
 // Use this method to delete a message, including service messages, with the following limitations:-
-// A message can only be deleted if it was sent less than 48 hours ago.- A dice message in a private
-// chat can only be deleted if it was sent more than 24 hours ago.- Bots can delete outgoing messages
-// in private chats, groups, and supergroups.- Bots can delete incoming messages in private chats.-
-// Bots granted _can_post_messages_ permissions can delete outgoing messages in channels.- If the bot
-// is an administrator of a group, it can delete any message there.- If the bot has
+// A message can only be deleted if it was sent less than 48 hours ago.- Service messages about a
+// supergroup, channel, or forum topic creation can't be deleted.- A dice message in a private chat
+// can only be deleted if it was sent more than 24 hours ago.- Bots can delete outgoing messages in
+// private chats, groups, and supergroups.- Bots can delete incoming messages in private chats.- Bots
+// granted _can_post_messages_ permissions can delete outgoing messages in channels.- If the bot is
+// an administrator of a group, it can delete any message there.- If the bot has
 // _can_delete_messages_ permission in a supergroup or a channel, it can delete any message there.
 // Returns _True_ on success.
 //
@@ -270,6 +305,17 @@ func (UnimplementedHandler) DeleteWebhook(ctx context.Context, req OptDeleteWebh
 //
 // POST /editChatInviteLink
 func (UnimplementedHandler) EditChatInviteLink(ctx context.Context, req EditChatInviteLink) (r ResultChatInviteLink, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// EditForumTopic implements editForumTopic operation.
+//
+// Use this method to edit name and icon of a topic in a forum supergroup chat. The bot must be an
+// administrator in the chat for this to work and must have _can_manage_topics_ administrator rights,
+// unless it is the creator of the topic. Returns _True_ on success.
+//
+// POST /editForumTopic
+func (UnimplementedHandler) EditForumTopic(ctx context.Context, req EditForumTopic) (r Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -429,6 +475,17 @@ func (UnimplementedHandler) GetFile(ctx context.Context, req GetFile) (r ResultF
 	return r, ht.ErrNotImplemented
 }
 
+// GetForumTopicIconStickers implements getForumTopicIconStickers operation.
+//
+// Use this method to get custom emoji stickers, which can be used as a forum topic icon by any user.
+// Requires no parameters. Returns an Array of [Sticker](https://core.telegram.org/bots/api#sticker)
+// objects.
+//
+// POST /getForumTopicIconStickers
+func (UnimplementedHandler) GetForumTopicIconStickers(ctx context.Context) (r ResultArrayOfSticker, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
 // GetGameHighScores implements getGameHighScores operation.
 //
 // Use this method to get data for high score tables. Will return the score of the specified user and
@@ -556,6 +613,17 @@ func (UnimplementedHandler) PinChatMessage(ctx context.Context, req PinChatMessa
 //
 // POST /promoteChatMember
 func (UnimplementedHandler) PromoteChatMember(ctx context.Context, req PromoteChatMember) (r Result, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// ReopenForumTopic implements reopenForumTopic operation.
+//
+// Use this method to reopen a closed topic in a forum supergroup chat. The bot must be an
+// administrator in the chat for this to work and must have the _can_manage_topics_ administrator
+// rights, unless it is the creator of the topic. Returns _True_ on success.
+//
+// POST /reopenForumTopic
+func (UnimplementedHandler) ReopenForumTopic(ctx context.Context, req ReopenForumTopic) (r Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -985,6 +1053,17 @@ func (UnimplementedHandler) UnbanChatSenderChat(ctx context.Context, req UnbanCh
 //
 // POST /unpinAllChatMessages
 func (UnimplementedHandler) UnpinAllChatMessages(ctx context.Context, req UnpinAllChatMessages) (r Result, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// UnpinAllForumTopicMessages implements unpinAllForumTopicMessages operation.
+//
+// Use this method to clear the list of pinned messages in a forum topic. The bot must be an
+// administrator in the chat for this to work and must have the _can_pin_messages_ administrator
+// right in the supergroup. Returns _True_ on success.
+//
+// POST /unpinAllForumTopicMessages
+func (UnimplementedHandler) UnpinAllForumTopicMessages(ctx context.Context, req UnpinAllForumTopicMessages) (r Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 

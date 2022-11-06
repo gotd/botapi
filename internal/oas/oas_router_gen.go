@@ -258,7 +258,6 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 					}
 
 					if len(elem) == 0 {
-						// Leaf node.
 						switch r.Method {
 						case "POST":
 							s.handleCloseRequest([0]string{}, w, r)
@@ -267,6 +266,26 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 						}
 
 						return
+					}
+					switch elem[0] {
+					case 'F': // Prefix: "ForumTopic"
+						if l := len("ForumTopic"); len(elem) >= l && elem[0:l] == "ForumTopic" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							// Leaf node.
+							switch r.Method {
+							case "POST":
+								s.handleCloseForumTopicRequest([0]string{}, w, r)
+							default:
+								s.notAllowed(w, r, "POST")
+							}
+
+							return
+						}
 					}
 				case 'o': // Prefix: "opyMessage"
 					if l := len("opyMessage"); len(elem) >= l && elem[0:l] == "opyMessage" {
@@ -309,6 +328,24 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 							switch r.Method {
 							case "POST":
 								s.handleCreateChatInviteLinkRequest([0]string{}, w, r)
+							default:
+								s.notAllowed(w, r, "POST")
+							}
+
+							return
+						}
+					case 'F': // Prefix: "ForumTopic"
+						if l := len("ForumTopic"); len(elem) >= l && elem[0:l] == "ForumTopic" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							// Leaf node.
+							switch r.Method {
+							case "POST":
+								s.handleCreateForumTopicRequest([0]string{}, w, r)
 							default:
 								s.notAllowed(w, r, "POST")
 							}
@@ -441,6 +478,24 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 								return
 							}
 						}
+					case 'F': // Prefix: "ForumTopic"
+						if l := len("ForumTopic"); len(elem) >= l && elem[0:l] == "ForumTopic" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							// Leaf node.
+							switch r.Method {
+							case "POST":
+								s.handleDeleteForumTopicRequest([0]string{}, w, r)
+							default:
+								s.notAllowed(w, r, "POST")
+							}
+
+							return
+						}
 					case 'M': // Prefix: "M"
 						if l := len("M"); len(elem) >= l && elem[0:l] == "M" {
 							elem = elem[l:]
@@ -561,6 +616,24 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 							switch r.Method {
 							case "POST":
 								s.handleEditChatInviteLinkRequest([0]string{}, w, r)
+							default:
+								s.notAllowed(w, r, "POST")
+							}
+
+							return
+						}
+					case 'F': // Prefix: "ForumTopic"
+						if l := len("ForumTopic"); len(elem) >= l && elem[0:l] == "ForumTopic" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							// Leaf node.
+							switch r.Method {
+							case "POST":
+								s.handleEditForumTopicRequest([0]string{}, w, r)
 							default:
 								s.notAllowed(w, r, "POST")
 							}
@@ -852,23 +925,53 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 							return
 						}
 					}
-				case 'F': // Prefix: "File"
-					if l := len("File"); len(elem) >= l && elem[0:l] == "File" {
+				case 'F': // Prefix: "F"
+					if l := len("F"); len(elem) >= l && elem[0:l] == "F" {
 						elem = elem[l:]
 					} else {
 						break
 					}
 
 					if len(elem) == 0 {
-						// Leaf node.
-						switch r.Method {
-						case "POST":
-							s.handleGetFileRequest([0]string{}, w, r)
-						default:
-							s.notAllowed(w, r, "POST")
+						break
+					}
+					switch elem[0] {
+					case 'i': // Prefix: "ile"
+						if l := len("ile"); len(elem) >= l && elem[0:l] == "ile" {
+							elem = elem[l:]
+						} else {
+							break
 						}
 
-						return
+						if len(elem) == 0 {
+							// Leaf node.
+							switch r.Method {
+							case "POST":
+								s.handleGetFileRequest([0]string{}, w, r)
+							default:
+								s.notAllowed(w, r, "POST")
+							}
+
+							return
+						}
+					case 'o': // Prefix: "orumTopicIconStickers"
+						if l := len("orumTopicIconStickers"); len(elem) >= l && elem[0:l] == "orumTopicIconStickers" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							// Leaf node.
+							switch r.Method {
+							case "POST":
+								s.handleGetForumTopicIconStickersRequest([0]string{}, w, r)
+							default:
+								s.notAllowed(w, r, "POST")
+							}
+
+							return
+						}
 					}
 				case 'G': // Prefix: "GameHighScores"
 					if l := len("GameHighScores"); len(elem) >= l && elem[0:l] == "GameHighScores" {
@@ -1158,6 +1261,24 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 					break
 				}
 				switch elem[0] {
+				case 'o': // Prefix: "openForumTopic"
+					if l := len("openForumTopic"); len(elem) >= l && elem[0:l] == "openForumTopic" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					if len(elem) == 0 {
+						// Leaf node.
+						switch r.Method {
+						case "POST":
+							s.handleReopenForumTopicRequest([0]string{}, w, r)
+						default:
+							s.notAllowed(w, r, "POST")
+						}
+
+						return
+					}
 				case 's': // Prefix: "strictChatMember"
 					if l := len("strictChatMember"); len(elem) >= l && elem[0:l] == "strictChatMember" {
 						elem = elem[l:]
@@ -2069,23 +2190,53 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 							break
 						}
 						switch elem[0] {
-						case 'A': // Prefix: "AllChatMessages"
-							if l := len("AllChatMessages"); len(elem) >= l && elem[0:l] == "AllChatMessages" {
+						case 'A': // Prefix: "All"
+							if l := len("All"); len(elem) >= l && elem[0:l] == "All" {
 								elem = elem[l:]
 							} else {
 								break
 							}
 
 							if len(elem) == 0 {
-								// Leaf node.
-								switch r.Method {
-								case "POST":
-									s.handleUnpinAllChatMessagesRequest([0]string{}, w, r)
-								default:
-									s.notAllowed(w, r, "POST")
+								break
+							}
+							switch elem[0] {
+							case 'C': // Prefix: "ChatMessages"
+								if l := len("ChatMessages"); len(elem) >= l && elem[0:l] == "ChatMessages" {
+									elem = elem[l:]
+								} else {
+									break
 								}
 
-								return
+								if len(elem) == 0 {
+									// Leaf node.
+									switch r.Method {
+									case "POST":
+										s.handleUnpinAllChatMessagesRequest([0]string{}, w, r)
+									default:
+										s.notAllowed(w, r, "POST")
+									}
+
+									return
+								}
+							case 'F': // Prefix: "ForumTopicMessages"
+								if l := len("ForumTopicMessages"); len(elem) >= l && elem[0:l] == "ForumTopicMessages" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									// Leaf node.
+									switch r.Method {
+									case "POST":
+										s.handleUnpinAllForumTopicMessagesRequest([0]string{}, w, r)
+									default:
+										s.notAllowed(w, r, "POST")
+									}
+
+									return
+								}
 							}
 						case 'C': // Prefix: "ChatMessage"
 							if l := len("ChatMessage"); len(elem) >= l && elem[0:l] == "ChatMessage" {
@@ -2423,7 +2574,6 @@ func (s *Server) FindRoute(method, path string) (r Route, _ bool) {
 					if len(elem) == 0 {
 						switch method {
 						case "POST":
-							// Leaf: Close
 							r.name = "Close"
 							r.operationID = "close"
 							r.args = args
@@ -2431,6 +2581,28 @@ func (s *Server) FindRoute(method, path string) (r Route, _ bool) {
 							return r, true
 						default:
 							return
+						}
+					}
+					switch elem[0] {
+					case 'F': // Prefix: "ForumTopic"
+						if l := len("ForumTopic"); len(elem) >= l && elem[0:l] == "ForumTopic" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							switch method {
+							case "POST":
+								// Leaf: CloseForumTopic
+								r.name = "CloseForumTopic"
+								r.operationID = "closeForumTopic"
+								r.args = args
+								r.count = 0
+								return r, true
+							default:
+								return
+							}
 						}
 					}
 				case 'o': // Prefix: "opyMessage"
@@ -2477,6 +2649,26 @@ func (s *Server) FindRoute(method, path string) (r Route, _ bool) {
 								// Leaf: CreateChatInviteLink
 								r.name = "CreateChatInviteLink"
 								r.operationID = "createChatInviteLink"
+								r.args = args
+								r.count = 0
+								return r, true
+							default:
+								return
+							}
+						}
+					case 'F': // Prefix: "ForumTopic"
+						if l := len("ForumTopic"); len(elem) >= l && elem[0:l] == "ForumTopic" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							switch method {
+							case "POST":
+								// Leaf: CreateForumTopic
+								r.name = "CreateForumTopic"
+								r.operationID = "createForumTopic"
 								r.args = args
 								r.count = 0
 								return r, true
@@ -2620,6 +2812,26 @@ func (s *Server) FindRoute(method, path string) (r Route, _ bool) {
 								}
 							}
 						}
+					case 'F': // Prefix: "ForumTopic"
+						if l := len("ForumTopic"); len(elem) >= l && elem[0:l] == "ForumTopic" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							switch method {
+							case "POST":
+								// Leaf: DeleteForumTopic
+								r.name = "DeleteForumTopic"
+								r.operationID = "deleteForumTopic"
+								r.args = args
+								r.count = 0
+								return r, true
+							default:
+								return
+							}
+						}
 					case 'M': // Prefix: "M"
 						if l := len("M"); len(elem) >= l && elem[0:l] == "M" {
 							elem = elem[l:]
@@ -2749,6 +2961,26 @@ func (s *Server) FindRoute(method, path string) (r Route, _ bool) {
 								// Leaf: EditChatInviteLink
 								r.name = "EditChatInviteLink"
 								r.operationID = "editChatInviteLink"
+								r.args = args
+								r.count = 0
+								return r, true
+							default:
+								return
+							}
+						}
+					case 'F': // Prefix: "ForumTopic"
+						if l := len("ForumTopic"); len(elem) >= l && elem[0:l] == "ForumTopic" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							switch method {
+							case "POST":
+								// Leaf: EditForumTopic
+								r.name = "EditForumTopic"
+								r.operationID = "editForumTopic"
 								r.args = args
 								r.count = 0
 								return r, true
@@ -3067,24 +3299,56 @@ func (s *Server) FindRoute(method, path string) (r Route, _ bool) {
 							}
 						}
 					}
-				case 'F': // Prefix: "File"
-					if l := len("File"); len(elem) >= l && elem[0:l] == "File" {
+				case 'F': // Prefix: "F"
+					if l := len("F"); len(elem) >= l && elem[0:l] == "F" {
 						elem = elem[l:]
 					} else {
 						break
 					}
 
 					if len(elem) == 0 {
-						switch method {
-						case "POST":
-							// Leaf: GetFile
-							r.name = "GetFile"
-							r.operationID = "getFile"
-							r.args = args
-							r.count = 0
-							return r, true
-						default:
-							return
+						break
+					}
+					switch elem[0] {
+					case 'i': // Prefix: "ile"
+						if l := len("ile"); len(elem) >= l && elem[0:l] == "ile" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							switch method {
+							case "POST":
+								// Leaf: GetFile
+								r.name = "GetFile"
+								r.operationID = "getFile"
+								r.args = args
+								r.count = 0
+								return r, true
+							default:
+								return
+							}
+						}
+					case 'o': // Prefix: "orumTopicIconStickers"
+						if l := len("orumTopicIconStickers"); len(elem) >= l && elem[0:l] == "orumTopicIconStickers" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							switch method {
+							case "POST":
+								// Leaf: GetForumTopicIconStickers
+								r.name = "GetForumTopicIconStickers"
+								r.operationID = "getForumTopicIconStickers"
+								r.args = args
+								r.count = 0
+								return r, true
+							default:
+								return
+							}
 						}
 					}
 				case 'G': // Prefix: "GameHighScores"
@@ -3399,6 +3663,26 @@ func (s *Server) FindRoute(method, path string) (r Route, _ bool) {
 					break
 				}
 				switch elem[0] {
+				case 'o': // Prefix: "openForumTopic"
+					if l := len("openForumTopic"); len(elem) >= l && elem[0:l] == "openForumTopic" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					if len(elem) == 0 {
+						switch method {
+						case "POST":
+							// Leaf: ReopenForumTopic
+							r.name = "ReopenForumTopic"
+							r.operationID = "reopenForumTopic"
+							r.args = args
+							r.count = 0
+							return r, true
+						default:
+							return
+						}
+					}
 				case 's': // Prefix: "strictChatMember"
 					if l := len("strictChatMember"); len(elem) >= l && elem[0:l] == "strictChatMember" {
 						elem = elem[l:]
@@ -4386,24 +4670,56 @@ func (s *Server) FindRoute(method, path string) (r Route, _ bool) {
 							break
 						}
 						switch elem[0] {
-						case 'A': // Prefix: "AllChatMessages"
-							if l := len("AllChatMessages"); len(elem) >= l && elem[0:l] == "AllChatMessages" {
+						case 'A': // Prefix: "All"
+							if l := len("All"); len(elem) >= l && elem[0:l] == "All" {
 								elem = elem[l:]
 							} else {
 								break
 							}
 
 							if len(elem) == 0 {
-								switch method {
-								case "POST":
-									// Leaf: UnpinAllChatMessages
-									r.name = "UnpinAllChatMessages"
-									r.operationID = "unpinAllChatMessages"
-									r.args = args
-									r.count = 0
-									return r, true
-								default:
-									return
+								break
+							}
+							switch elem[0] {
+							case 'C': // Prefix: "ChatMessages"
+								if l := len("ChatMessages"); len(elem) >= l && elem[0:l] == "ChatMessages" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									switch method {
+									case "POST":
+										// Leaf: UnpinAllChatMessages
+										r.name = "UnpinAllChatMessages"
+										r.operationID = "unpinAllChatMessages"
+										r.args = args
+										r.count = 0
+										return r, true
+									default:
+										return
+									}
+								}
+							case 'F': // Prefix: "ForumTopicMessages"
+								if l := len("ForumTopicMessages"); len(elem) >= l && elem[0:l] == "ForumTopicMessages" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									switch method {
+									case "POST":
+										// Leaf: UnpinAllForumTopicMessages
+										r.name = "UnpinAllForumTopicMessages"
+										r.operationID = "unpinAllForumTopicMessages"
+										r.args = args
+										r.count = 0
+										return r, true
+									default:
+										return
+									}
 								}
 							}
 						case 'C': // Prefix: "ChatMessage"

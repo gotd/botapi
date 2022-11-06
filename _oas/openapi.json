@@ -4,7 +4,7 @@
     "title": "Telegram Bot API",
     "description": "API for Telegram bots",
     "termsOfService": "https://telegram.org/tos",
-    "version": "6.2"
+    "version": "6.3"
   },
   "servers": [
     {
@@ -289,6 +289,33 @@
         }
       }
     },
+    "/closeForumTopic": {
+      "post": {
+        "description": "Use this method to close an open topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the _can_manage_topics_ administrator rights, unless it is the creator of the topic. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#closeforumtopic"
+        },
+        "operationId": "closeForumTopic",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/closeForumTopic"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Result"
+          },
+          "default": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
     "/copyMessage": {
       "post": {
         "description": "Use this method to copy messages of any kind. Service messages and invoice messages can't be copied. A quiz [poll](https://core.telegram.org/bots/api#poll) can be copied only if the value of the field _correct_option_id_ is known to the bot. The method is analogous to the method [forwardMessage](https://core.telegram.org/bots/api#forwardmessage), but the copied message doesn't have a link to the original message. Returns the [MessageId](https://core.telegram.org/bots/api#messageid) of the sent message on success.",
@@ -336,6 +363,33 @@
         "responses": {
           "200": {
             "$ref": "#/components/responses/ResultChatInviteLink"
+          },
+          "default": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/createForumTopic": {
+      "post": {
+        "description": "Use this method to create a topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the _can_manage_topics_ administrator rights. Returns information about the created topic as a [ForumTopic](https://core.telegram.org/bots/api#forumtopic) object.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#createforumtopic"
+        },
+        "operationId": "createForumTopic",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/createForumTopic"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Result"
           },
           "default": {
             "$ref": "#/components/responses/Error"
@@ -478,9 +532,36 @@
         }
       }
     },
+    "/deleteForumTopic": {
+      "post": {
+        "description": "Use this method to delete a forum topic along with all its messages in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the _can_delete_messages_ administrator rights. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#deleteforumtopic"
+        },
+        "operationId": "deleteForumTopic",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/deleteForumTopic"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Result"
+          },
+          "default": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
     "/deleteMessage": {
       "post": {
-        "description": "Use this method to delete a message, including service messages, with the following limitations:- A message can only be deleted if it was sent less than 48 hours ago.- A dice message in a private chat can only be deleted if it was sent more than 24 hours ago.- Bots can delete outgoing messages in private chats, groups, and supergroups.- Bots can delete incoming messages in private chats.- Bots granted _can_post_messages_ permissions can delete outgoing messages in channels.- If the bot is an administrator of a group, it can delete any message there.- If the bot has _can_delete_messages_ permission in a supergroup or a channel, it can delete any message there.Returns _True_ on success.",
+        "description": "Use this method to delete a message, including service messages, with the following limitations:- A message can only be deleted if it was sent less than 48 hours ago.- Service messages about a supergroup, channel, or forum topic creation can't be deleted.- A dice message in a private chat can only be deleted if it was sent more than 24 hours ago.- Bots can delete outgoing messages in private chats, groups, and supergroups.- Bots can delete incoming messages in private chats.- Bots granted _can_post_messages_ permissions can delete outgoing messages in channels.- If the bot is an administrator of a group, it can delete any message there.- If the bot has _can_delete_messages_ permission in a supergroup or a channel, it can delete any message there.Returns _True_ on success.",
         "externalDocs": {
           "url": "https://core.telegram.org/bots/api#deletemessage"
         },
@@ -604,6 +685,33 @@
         "responses": {
           "200": {
             "$ref": "#/components/responses/ResultChatInviteLink"
+          },
+          "default": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/editForumTopic": {
+      "post": {
+        "description": "Use this method to edit name and icon of a topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have _can_manage_topics_ administrator rights, unless it is the creator of the topic. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#editforumtopic"
+        },
+        "operationId": "editForumTopic",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/editForumTopic"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Result"
           },
           "default": {
             "$ref": "#/components/responses/Error"
@@ -988,6 +1096,23 @@
         }
       }
     },
+    "/getForumTopicIconStickers": {
+      "post": {
+        "description": "Use this method to get custom emoji stickers, which can be used as a forum topic icon by any user. Requires no parameters. Returns an Array of [Sticker](https://core.telegram.org/bots/api#sticker) objects.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#getforumtopiciconstickers"
+        },
+        "operationId": "getForumTopicIconStickers",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ResultArrayOfSticker"
+          },
+          "default": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
     "/getGameHighScores": {
       "post": {
         "description": "Use this method to get data for high score tables. Will return the score of the specified user and several of their neighbors in a game. Returns an Array of [GameHighScore](https://core.telegram.org/bots/api#gamehighscore) objects.",
@@ -1264,6 +1389,33 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/promoteChatMember"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Result"
+          },
+          "default": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/reopenForumTopic": {
+      "post": {
+        "description": "Use this method to reopen a closed topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the _can_manage_topics_ administrator rights, unless it is the creator of the topic. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#reopenforumtopic"
+        },
+        "operationId": "reopenForumTopic",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/reopenForumTopic"
               }
             }
           },
@@ -2330,6 +2482,33 @@
         }
       }
     },
+    "/unpinAllForumTopicMessages": {
+      "post": {
+        "description": "Use this method to clear the list of pinned messages in a forum topic. The bot must be an administrator in the chat for this to work and must have the _can_pin_messages_ administrator right in the supergroup. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#unpinallforumtopicmessages"
+        },
+        "operationId": "unpinAllForumTopicMessages",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/unpinAllForumTopicMessages"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Result"
+          },
+          "default": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
     "/unpinChatMessage": {
       "post": {
         "description": "Use this method to remove a message from the list of pinned messages in a chat. If the chat is not a private chat, the bot must be an administrator in the chat for this to work and must have the 'can_pin_messages' administrator right in a supergroup or 'can_edit_messages' administrator right in a channel. Returns _True_ on success.",
@@ -2783,8 +2962,23 @@
             "description": "_Optional_. Last name of the other party in a private chat",
             "type": "string"
           },
+          "is_forum": {
+            "description": "_Optional_. _True_, if the supergroup chat is a forum (has [topics](https://telegram.org/blog/topics-in-groups-collectible-usernames#topics-in-groups) enabled)",
+            "type": "boolean"
+          },
           "photo": {
             "$ref": "#/components/schemas/ChatPhoto"
+          },
+          "active_usernames": {
+            "description": "_Optional_. If non-empty, the list of all [active chat usernames](https://telegram.org/blog/topics-in-groups-collectible-usernames#collectible-usernames); for private chats, supergroups and channels. Returned only in [getChat](https://core.telegram.org/bots/api#getchat)",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "emoji_status_custom_emoji_id": {
+            "description": "_Optional_. Custom emoji identifier of emoji status of the other party in a private chat. Returned only in [getChat](https://core.telegram.org/bots/api#getchat)",
+            "type": "string"
           },
           "bio": {
             "description": "_Optional_. Bio of the other party in a private chat. Returned only in [getChat](https://core.telegram.org/bots/api#getchat)",
@@ -2906,6 +3100,10 @@
           },
           "can_pin_messages": {
             "description": "_Optional_. _True_, if the user is allowed to pin messages; groups and supergroups only",
+            "type": "boolean"
+          },
+          "can_manage_topics": {
+            "description": "_Optional_. _True_, if the user is allowed to create, rename, close, and reopen forum topics; supergroups only",
             "type": "boolean"
           }
         },
@@ -3117,6 +3315,10 @@
             "description": "_Optional_. _True_, if the user is allowed to pin messages; groups and supergroups only",
             "type": "boolean"
           },
+          "can_manage_topics": {
+            "description": "_Optional_. _True_, if the user is allowed to create, rename, close, and reopen forum topics; supergroups only",
+            "type": "boolean"
+          },
           "custom_title": {
             "description": "_Optional_. Custom title for this user",
             "type": "string"
@@ -3260,6 +3462,10 @@
             "description": "_True_, if the user is allowed to pin messages",
             "type": "boolean"
           },
+          "can_manage_topics": {
+            "description": "_True_, if the user is allowed to create forum topics",
+            "type": "boolean"
+          },
           "can_send_messages": {
             "description": "_True_, if the user is allowed to send text messages, contacts, locations and venues",
             "type": "boolean"
@@ -3292,6 +3498,7 @@
           "can_change_info",
           "can_invite_users",
           "can_pin_messages",
+          "can_manage_topics",
           "can_send_messages",
           "can_send_media_messages",
           "can_send_polls",
@@ -3372,6 +3579,10 @@
           },
           "can_pin_messages": {
             "description": "_Optional_. _True_, if the user is allowed to pin messages. Ignored in public supergroups",
+            "type": "boolean"
+          },
+          "can_manage_topics": {
+            "description": "_Optional_. _True_, if the user is allowed to create forum topics. If omitted defaults to the value of can_pin_messages",
             "type": "boolean"
           }
         }
@@ -3704,6 +3915,75 @@
         "required": [
           "force_reply"
         ]
+      },
+      "ForumTopic": {
+        "description": "This object represents a forum topic.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#forumtopic"
+        },
+        "type": "object",
+        "properties": {
+          "message_thread_id": {
+            "description": "Unique identifier of the forum topic",
+            "type": "integer"
+          },
+          "name": {
+            "description": "Name of the topic",
+            "type": "string"
+          },
+          "icon_color": {
+            "description": "Color of the topic icon in RGB format",
+            "type": "integer"
+          },
+          "icon_custom_emoji_id": {
+            "description": "_Optional_. Unique identifier of the custom emoji shown as the topic icon",
+            "type": "string"
+          }
+        },
+        "required": [
+          "message_thread_id",
+          "name",
+          "icon_color"
+        ]
+      },
+      "ForumTopicClosed": {
+        "description": "This object represents a service message about a forum topic closed in the chat. Currently holds no information.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#forumtopicclosed"
+        },
+        "type": "object"
+      },
+      "ForumTopicCreated": {
+        "description": "This object represents a service message about a new forum topic created in the chat.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#forumtopiccreated"
+        },
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "Name of the topic",
+            "type": "string"
+          },
+          "icon_color": {
+            "description": "Color of the topic icon in RGB format",
+            "type": "integer"
+          },
+          "icon_custom_emoji_id": {
+            "description": "_Optional_. Unique identifier of the custom emoji shown as the topic icon",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "icon_color"
+        ]
+      },
+      "ForumTopicReopened": {
+        "description": "This object represents a service message about a forum topic reopened in the chat. Currently holds no information.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#forumtopicreopened"
+        },
+        "type": "object"
       },
       "Game": {
         "description": "This object represents a game. Use BotFather to create and edit games, their short names will act as unique identifiers.",
@@ -6164,6 +6444,10 @@
             "description": "Unique message identifier inside this chat",
             "type": "integer"
           },
+          "message_thread_id": {
+            "description": "_Optional_. Unique identifier of a message thread to which the message belongs; for supergroups only",
+            "type": "integer"
+          },
           "from": {
             "$ref": "#/components/schemas/User"
           },
@@ -6198,6 +6482,10 @@
           "forward_date": {
             "description": "_Optional_. For forwarded messages, date the original message was sent in Unix time",
             "type": "integer"
+          },
+          "is_topic_message": {
+            "description": "_Optional_. _True_, if the message is sent to a forum topic",
+            "type": "boolean"
           },
           "is_automatic_forward": {
             "description": "_Optional_. _True_, if the message is a channel post that was automatically forwarded to the connected discussion group",
@@ -6361,6 +6649,15 @@
           },
           "proximity_alert_triggered": {
             "$ref": "#/components/schemas/ProximityAlertTriggered"
+          },
+          "forum_topic_created": {
+            "$ref": "#/components/schemas/ForumTopicCreated"
+          },
+          "forum_topic_closed": {
+            "$ref": "#/components/schemas/ForumTopicClosed"
+          },
+          "forum_topic_reopened": {
+            "$ref": "#/components/schemas/ForumTopicReopened"
           },
           "video_chat_scheduled": {
             "$ref": "#/components/schemas/VideoChatScheduled"
@@ -8701,12 +8998,33 @@
           "sender_chat_id"
         ]
       },
+      "closeForumTopic": {
+        "description": "Input for closeForumTopic",
+        "type": "object",
+        "properties": {
+          "chat_id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "message_thread_id": {
+            "description": "Unique identifier for the target message thread of the forum topic",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "chat_id",
+          "message_thread_id"
+        ]
+      },
       "copyMessage": {
         "description": "Input for copyMessage",
         "type": "object",
         "properties": {
           "chat_id": {
             "$ref": "#/components/schemas/ID"
+          },
+          "message_thread_id": {
+            "description": "Unique identifier for the target message thread (topic) of the forum; for forum supergroups only",
+            "type": "integer"
           },
           "from_chat_id": {
             "$ref": "#/components/schemas/ID"
@@ -8786,6 +9104,33 @@
         },
         "required": [
           "chat_id"
+        ]
+      },
+      "createForumTopic": {
+        "description": "Input for createForumTopic",
+        "type": "object",
+        "properties": {
+          "chat_id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "name": {
+            "description": "Topic name, 1-128 characters",
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1
+          },
+          "icon_color": {
+            "description": "Color of the topic icon in RGB format. Currently, must be one of 0x6FB9F0, 0xFFD67E, 0xCB86DB, 0x8EEE98, 0xFF93B2, or 0xFB6F5F",
+            "type": "integer"
+          },
+          "icon_custom_emoji_id": {
+            "description": "Unique identifier of the custom emoji shown as the topic icon. Use [getForumTopicIconStickers](https://core.telegram.org/bots/api#getforumtopiciconstickers) to get all allowed custom emoji identifiers",
+            "type": "string"
+          }
+        },
+        "required": [
+          "chat_id",
+          "name"
         ]
       },
       "createInvoiceLink": {
@@ -8992,6 +9337,23 @@
           "chat_id"
         ]
       },
+      "deleteForumTopic": {
+        "description": "Input for deleteForumTopic",
+        "type": "object",
+        "properties": {
+          "chat_id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "message_thread_id": {
+            "description": "Unique identifier for the target message thread of the forum topic",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "chat_id",
+          "message_thread_id"
+        ]
+      },
       "deleteMessage": {
         "description": "Input for deleteMessage",
         "type": "object",
@@ -9079,6 +9441,35 @@
         "required": [
           "chat_id",
           "invite_link"
+        ]
+      },
+      "editForumTopic": {
+        "description": "Input for editForumTopic",
+        "type": "object",
+        "properties": {
+          "chat_id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "message_thread_id": {
+            "description": "Unique identifier for the target message thread of the forum topic",
+            "type": "integer"
+          },
+          "name": {
+            "description": "New topic name, 1-128 characters",
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1
+          },
+          "icon_custom_emoji_id": {
+            "description": "New unique identifier of the custom emoji shown as the topic icon. Use [getForumTopicIconStickers](https://core.telegram.org/bots/api#getforumtopiciconstickers) to get all allowed custom emoji identifiers",
+            "type": "string"
+          }
+        },
+        "required": [
+          "chat_id",
+          "message_thread_id",
+          "name",
+          "icon_custom_emoji_id"
         ]
       },
       "editMessageCaption": {
@@ -9273,6 +9664,10 @@
         "properties": {
           "chat_id": {
             "$ref": "#/components/schemas/ID"
+          },
+          "message_thread_id": {
+            "description": "Unique identifier for the target message thread (topic) of the forum; for forum supergroups only",
+            "type": "integer"
           },
           "from_chat_id": {
             "$ref": "#/components/schemas/ID"
@@ -9594,11 +9989,32 @@
           "can_pin_messages": {
             "description": "Pass _True_ if the administrator can pin messages, supergroups only",
             "type": "boolean"
+          },
+          "can_manage_topics": {
+            "description": "Pass _True_ if the user is allowed to create, rename, close, and reopen forum topics, supergroups only",
+            "type": "boolean"
           }
         },
         "required": [
           "chat_id",
           "user_id"
+        ]
+      },
+      "reopenForumTopic": {
+        "description": "Input for reopenForumTopic",
+        "type": "object",
+        "properties": {
+          "chat_id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "message_thread_id": {
+            "description": "Unique identifier for the target message thread of the forum topic",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "chat_id",
+          "message_thread_id"
         ]
       },
       "restrictChatMember": {
@@ -9650,6 +10066,10 @@
         "properties": {
           "chat_id": {
             "$ref": "#/components/schemas/ID"
+          },
+          "message_thread_id": {
+            "description": "Unique identifier for the target message thread (topic) of the forum; for forum supergroups only",
+            "type": "integer"
           },
           "animation": {
             "description": "Animation to send. Pass a file_id as String to send an animation that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get an animation from the Internet, or upload a new animation using multipart/form-data. [More information on Sending Files](https://core.telegram.org/bots/api#sending-files)",
@@ -9724,6 +10144,10 @@
         "properties": {
           "chat_id": {
             "$ref": "#/components/schemas/ID"
+          },
+          "message_thread_id": {
+            "description": "Unique identifier for the target message thread (topic) of the forum; for forum supergroups only",
+            "type": "integer"
           },
           "audio": {
             "description": "Audio file to send. Pass a file_id as String to send an audio file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get an audio file from the Internet, or upload a new one using multipart/form-data. [More information on Sending Files](https://core.telegram.org/bots/api#sending-files)",
@@ -9812,6 +10236,10 @@
           "chat_id": {
             "$ref": "#/components/schemas/ID"
           },
+          "message_thread_id": {
+            "description": "Unique identifier for the target message thread (topic) of the forum; for forum supergroups only",
+            "type": "integer"
+          },
           "phone_number": {
             "description": "Contact's phone number",
             "type": "string"
@@ -9862,6 +10290,10 @@
           "chat_id": {
             "$ref": "#/components/schemas/ID"
           },
+          "message_thread_id": {
+            "description": "Unique identifier for the target message thread (topic) of the forum; for forum supergroups only",
+            "type": "integer"
+          },
           "emoji": {
             "description": "Emoji on which the dice throw animation is based. Currently, must be one of `🎲`, `🎯`, `🏀`, `⚽`, `🎳`, or `🎰`. Dice can have values 1-6 for `🎲`, `🎯` and `🎳`, values 1-5 for `🏀` and `⚽`, and values 1-64 for `🎰`. Defaults to `🎲`",
             "type": "string"
@@ -9896,6 +10328,10 @@
         "properties": {
           "chat_id": {
             "$ref": "#/components/schemas/ID"
+          },
+          "message_thread_id": {
+            "description": "Unique identifier for the target message thread (topic) of the forum; for forum supergroups only",
+            "type": "integer"
           },
           "document": {
             "description": "File to send. Pass a file_id as String to send a file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. [More information on Sending Files](https://core.telegram.org/bots/api#sending-files)",
@@ -9959,6 +10395,10 @@
             "type": "integer",
             "format": "int64"
           },
+          "message_thread_id": {
+            "description": "Unique identifier for the target message thread (topic) of the forum; for forum supergroups only",
+            "type": "integer"
+          },
           "game_short_name": {
             "description": "Short name of the game, serves as the unique identifier for the game. Set up your games via [@BotFather](https://t.me/botfather)",
             "type": "string"
@@ -9994,6 +10434,10 @@
         "properties": {
           "chat_id": {
             "$ref": "#/components/schemas/ID"
+          },
+          "message_thread_id": {
+            "description": "Unique identifier for the target message thread (topic) of the forum; for forum supergroups only",
+            "type": "integer"
           },
           "title": {
             "description": "Product name, 1-32 characters",
@@ -10133,6 +10577,10 @@
           "chat_id": {
             "$ref": "#/components/schemas/ID"
           },
+          "message_thread_id": {
+            "description": "Unique identifier for the target message thread (topic) of the forum; for forum supergroups only",
+            "type": "integer"
+          },
           "latitude": {
             "description": "Latitude of the location",
             "type": "number"
@@ -10196,6 +10644,10 @@
           "chat_id": {
             "$ref": "#/components/schemas/ID"
           },
+          "message_thread_id": {
+            "description": "Unique identifier for the target message thread (topic) of the forum; for forum supergroups only",
+            "type": "integer"
+          },
           "media": {
             "description": "A JSON-serialized array describing messages to be sent, must include 2-10 items",
             "type": "array",
@@ -10254,6 +10706,10 @@
           "chat_id": {
             "$ref": "#/components/schemas/ID"
           },
+          "message_thread_id": {
+            "description": "Unique identifier for the target message thread (topic) of the forum; for forum supergroups only",
+            "type": "integer"
+          },
           "text": {
             "description": "Text of the message to be sent, 1-4096 characters after entities parsing",
             "type": "string",
@@ -10307,6 +10763,10 @@
           "chat_id": {
             "$ref": "#/components/schemas/ID"
           },
+          "message_thread_id": {
+            "description": "Unique identifier for the target message thread (topic) of the forum; for forum supergroups only",
+            "type": "integer"
+          },
           "photo": {
             "description": "Photo to send. Pass a file_id as String to send a photo that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a photo from the Internet, or upload a new photo using multipart/form-data. The photo must be at most 10 MB in size. The photo's width and height must not exceed 10000 in total. Width and height ratio must be at most 20. [More information on Sending Files](https://core.telegram.org/bots/api#sending-files)",
             "type": "string"
@@ -10358,6 +10818,10 @@
         "properties": {
           "chat_id": {
             "$ref": "#/components/schemas/ID"
+          },
+          "message_thread_id": {
+            "description": "Unique identifier for the target message thread (topic) of the forum; for forum supergroups only",
+            "type": "integer"
           },
           "question": {
             "description": "Poll question, 1-300 characters",
@@ -10449,6 +10913,10 @@
           "chat_id": {
             "$ref": "#/components/schemas/ID"
           },
+          "message_thread_id": {
+            "description": "Unique identifier for the target message thread (topic) of the forum; for forum supergroups only",
+            "type": "integer"
+          },
           "sticker": {
             "description": "Sticker to send. Pass a file_id as String to send a file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a .WEBP file from the Internet, or upload a new one using multipart/form-data. [More information on Sending Files](https://core.telegram.org/bots/api#sending-files)",
             "type": "string"
@@ -10484,6 +10952,10 @@
         "properties": {
           "chat_id": {
             "$ref": "#/components/schemas/ID"
+          },
+          "message_thread_id": {
+            "description": "Unique identifier for the target message thread (topic) of the forum; for forum supergroups only",
+            "type": "integer"
           },
           "latitude": {
             "description": "Latitude of the venue",
@@ -10551,6 +11023,10 @@
         "properties": {
           "chat_id": {
             "$ref": "#/components/schemas/ID"
+          },
+          "message_thread_id": {
+            "description": "Unique identifier for the target message thread (topic) of the forum; for forum supergroups only",
+            "type": "integer"
           },
           "video": {
             "description": "Video to send. Pass a file_id as String to send a video that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a video from the Internet, or upload a new video using multipart/form-data. [More information on Sending Files](https://core.telegram.org/bots/api#sending-files)",
@@ -10630,6 +11106,10 @@
           "chat_id": {
             "$ref": "#/components/schemas/ID"
           },
+          "message_thread_id": {
+            "description": "Unique identifier for the target message thread (topic) of the forum; for forum supergroups only",
+            "type": "integer"
+          },
           "video_note": {
             "description": "Video note to send. Pass a file_id as String to send a video note that exists on the Telegram servers (recommended) or upload a new video using multipart/form-data. [More information on Sending Files](https://core.telegram.org/bots/api#sending-files). Sending video notes by a URL is currently unsupported",
             "type": "string"
@@ -10679,6 +11159,10 @@
         "properties": {
           "chat_id": {
             "$ref": "#/components/schemas/ID"
+          },
+          "message_thread_id": {
+            "description": "Unique identifier for the target message thread (topic) of the forum; for forum supergroups only",
+            "type": "integer"
           },
           "voice": {
             "description": "Audio file to send. Pass a file_id as String to send a file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. [More information on Sending Files](https://core.telegram.org/bots/api#sending-files)",
@@ -10844,9 +11328,9 @@
             "$ref": "#/components/schemas/ID"
           },
           "title": {
-            "description": "New chat title, 1-255 characters",
+            "description": "New chat title, 1-128 characters",
             "type": "string",
-            "maxLength": 255,
+            "maxLength": 128,
             "minLength": 1
           }
         },
@@ -11126,6 +11610,23 @@
         },
         "required": [
           "chat_id"
+        ]
+      },
+      "unpinAllForumTopicMessages": {
+        "description": "Input for unpinAllForumTopicMessages",
+        "type": "object",
+        "properties": {
+          "chat_id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "message_thread_id": {
+            "description": "Unique identifier for the target message thread of the forum topic",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "chat_id",
+          "message_thread_id"
         ]
       },
       "unpinChatMessage": {
