@@ -3223,8 +3223,8 @@ type CreateForumTopic struct {
 	ChatID ID `json:"chat_id"`
 	// Topic name, 1-128 characters.
 	Name string `json:"name"`
-	// Color of the topic icon in RGB format. Currently, must be one of 0x6FB9F0, 0xFFD67E, 0xCB86DB,
-	// 0x8EEE98, 0xFF93B2, or 0xFB6F5F.
+	// Color of the topic icon in RGB format. Currently, must be one of 7322096 (0x6FB9F0), 16766590
+	// (0xFFD67E), 13338331 (0xCB86DB), 9367192 (0x8EEE98), 16749490 (0xFF93B2), or 16478047 (0xFB6F5F).
 	IconColor OptInt `json:"icon_color"`
 	// Unique identifier of the custom emoji shown as the topic icon. Use
 	// [getForumTopicIconStickers](https://core.telegram.org/bots/api#getforumtopiciconstickers) to get
@@ -11706,9 +11706,10 @@ type MessageEntity struct {
 	// clickable text URLs), `text_mention` (for users [without usernames](https://telegram.
 	// org/blog/edit#new-mentions)), `custom_emoji` (for inline custom emoji stickers).
 	Type MessageEntityType `json:"type"`
-	// Offset in UTF-16 code units to the start of the entity.
+	// Offset in [UTF-16 code units](https://core.telegram.org/api/entities#entity-length) to the start
+	// of the entity.
 	Offset int `json:"offset"`
-	// Length of the entity in UTF-16 code units.
+	// Length of the entity in [UTF-16 code units](https://core.telegram.org/api/entities#entity-length).
 	Length int `json:"length"`
 	// _Optional_. For `text_link` only, URL that will be opened after user taps on the text.
 	URL  OptString `json:"url"`

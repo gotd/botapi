@@ -6740,12 +6740,12 @@
             ]
           },
           "offset": {
-            "description": "Offset in UTF-16 code units to the start of the entity",
+            "description": "Offset in [UTF-16 code units](https://core.telegram.org/api/entities#entity-length) to the start of the entity",
             "type": "integer",
             "default": 0
           },
           "length": {
-            "description": "Length of the entity in UTF-16 code units",
+            "description": "Length of the entity in [UTF-16 code units](https://core.telegram.org/api/entities#entity-length)",
             "type": "integer"
           },
           "url": {
@@ -9120,7 +9120,7 @@
             "minLength": 1
           },
           "icon_color": {
-            "description": "Color of the topic icon in RGB format. Currently, must be one of 0x6FB9F0, 0xFFD67E, 0xCB86DB, 0x8EEE98, 0xFF93B2, or 0xFB6F5F",
+            "description": "Color of the topic icon in RGB format. Currently, must be one of 7322096 (0x6FB9F0), 16766590 (0xFFD67E), 13338331 (0xCB86DB), 9367192 (0x8EEE98), 16749490 (0xFF93B2), or 16478047 (0xFB6F5F)",
             "type": "integer"
           },
           "icon_custom_emoji_id": {
