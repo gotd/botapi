@@ -76,21 +76,21 @@ func (s *Server) handleAddStickerToSetRequest(args [0]string, w http.ResponseWri
 		}
 	}()
 
-	var response Result
+	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "AddStickerToSet",
 			OperationID:   "addStickerToSet",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = AddStickerToSet
+			Request  = *AddStickerToSet
 			Params   = struct{}
-			Response = Result
+			Response = *Result
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -100,8 +100,9 @@ func (s *Server) handleAddStickerToSetRequest(args [0]string, w http.ResponseWri
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.AddStickerToSet(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.AddStickerToSet(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -110,7 +111,7 @@ func (s *Server) handleAddStickerToSetRequest(args [0]string, w http.ResponseWri
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -185,21 +186,21 @@ func (s *Server) handleAnswerCallbackQueryRequest(args [0]string, w http.Respons
 		}
 	}()
 
-	var response Result
+	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "AnswerCallbackQuery",
 			OperationID:   "answerCallbackQuery",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = AnswerCallbackQuery
+			Request  = *AnswerCallbackQuery
 			Params   = struct{}
-			Response = Result
+			Response = *Result
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -209,8 +210,9 @@ func (s *Server) handleAnswerCallbackQueryRequest(args [0]string, w http.Respons
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.AnswerCallbackQuery(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.AnswerCallbackQuery(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -219,7 +221,7 @@ func (s *Server) handleAnswerCallbackQueryRequest(args [0]string, w http.Respons
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -293,21 +295,21 @@ func (s *Server) handleAnswerInlineQueryRequest(args [0]string, w http.ResponseW
 		}
 	}()
 
-	var response Result
+	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "AnswerInlineQuery",
 			OperationID:   "answerInlineQuery",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = AnswerInlineQuery
+			Request  = *AnswerInlineQuery
 			Params   = struct{}
-			Response = Result
+			Response = *Result
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -317,8 +319,9 @@ func (s *Server) handleAnswerInlineQueryRequest(args [0]string, w http.ResponseW
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.AnswerInlineQuery(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.AnswerInlineQuery(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -327,7 +330,7 @@ func (s *Server) handleAnswerInlineQueryRequest(args [0]string, w http.ResponseW
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -404,21 +407,21 @@ func (s *Server) handleAnswerPreCheckoutQueryRequest(args [0]string, w http.Resp
 		}
 	}()
 
-	var response Result
+	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "AnswerPreCheckoutQuery",
 			OperationID:   "answerPreCheckoutQuery",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = AnswerPreCheckoutQuery
+			Request  = *AnswerPreCheckoutQuery
 			Params   = struct{}
-			Response = Result
+			Response = *Result
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -428,8 +431,9 @@ func (s *Server) handleAnswerPreCheckoutQueryRequest(args [0]string, w http.Resp
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.AnswerPreCheckoutQuery(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.AnswerPreCheckoutQuery(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -438,7 +442,7 @@ func (s *Server) handleAnswerPreCheckoutQueryRequest(args [0]string, w http.Resp
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -516,21 +520,21 @@ func (s *Server) handleAnswerShippingQueryRequest(args [0]string, w http.Respons
 		}
 	}()
 
-	var response Result
+	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "AnswerShippingQuery",
 			OperationID:   "answerShippingQuery",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = AnswerShippingQuery
+			Request  = *AnswerShippingQuery
 			Params   = struct{}
-			Response = Result
+			Response = *Result
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -540,8 +544,9 @@ func (s *Server) handleAnswerShippingQueryRequest(args [0]string, w http.Respons
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.AnswerShippingQuery(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.AnswerShippingQuery(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -550,7 +555,7 @@ func (s *Server) handleAnswerShippingQueryRequest(args [0]string, w http.Respons
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -626,21 +631,21 @@ func (s *Server) handleAnswerWebAppQueryRequest(args [0]string, w http.ResponseW
 		}
 	}()
 
-	var response Result
+	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "AnswerWebAppQuery",
 			OperationID:   "answerWebAppQuery",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = AnswerWebAppQuery
+			Request  = *AnswerWebAppQuery
 			Params   = struct{}
-			Response = Result
+			Response = *Result
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -650,8 +655,9 @@ func (s *Server) handleAnswerWebAppQueryRequest(args [0]string, w http.ResponseW
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.AnswerWebAppQuery(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.AnswerWebAppQuery(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -660,7 +666,7 @@ func (s *Server) handleAnswerWebAppQueryRequest(args [0]string, w http.ResponseW
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -734,21 +740,21 @@ func (s *Server) handleApproveChatJoinRequestRequest(args [0]string, w http.Resp
 		}
 	}()
 
-	var response Result
+	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "ApproveChatJoinRequest",
 			OperationID:   "approveChatJoinRequest",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = ApproveChatJoinRequest
+			Request  = *ApproveChatJoinRequest
 			Params   = struct{}
-			Response = Result
+			Response = *Result
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -758,8 +764,9 @@ func (s *Server) handleApproveChatJoinRequestRequest(args [0]string, w http.Resp
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.ApproveChatJoinRequest(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.ApproveChatJoinRequest(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -768,7 +775,7 @@ func (s *Server) handleApproveChatJoinRequestRequest(args [0]string, w http.Resp
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -845,21 +852,21 @@ func (s *Server) handleBanChatMemberRequest(args [0]string, w http.ResponseWrite
 		}
 	}()
 
-	var response Result
+	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "BanChatMember",
 			OperationID:   "banChatMember",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = BanChatMember
+			Request  = *BanChatMember
 			Params   = struct{}
-			Response = Result
+			Response = *Result
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -869,8 +876,9 @@ func (s *Server) handleBanChatMemberRequest(args [0]string, w http.ResponseWrite
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.BanChatMember(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.BanChatMember(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -879,7 +887,7 @@ func (s *Server) handleBanChatMemberRequest(args [0]string, w http.ResponseWrite
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -956,21 +964,21 @@ func (s *Server) handleBanChatSenderChatRequest(args [0]string, w http.ResponseW
 		}
 	}()
 
-	var response Result
+	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "BanChatSenderChat",
 			OperationID:   "banChatSenderChat",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = BanChatSenderChat
+			Request  = *BanChatSenderChat
 			Params   = struct{}
-			Response = Result
+			Response = *Result
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -980,8 +988,9 @@ func (s *Server) handleBanChatSenderChatRequest(args [0]string, w http.ResponseW
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.BanChatSenderChat(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.BanChatSenderChat(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -990,7 +999,7 @@ func (s *Server) handleBanChatSenderChatRequest(args [0]string, w http.ResponseW
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -1047,21 +1056,21 @@ func (s *Server) handleCloseRequest(args [0]string, w http.ResponseWriter, r *ht
 		err error
 	)
 
-	var response Result
+	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "Close",
 			OperationID:   "close",
 			Body:          nil,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
 			Request  = struct{}
 			Params   = struct{}
-			Response = Result
+			Response = *Result
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -1071,8 +1080,9 @@ func (s *Server) handleCloseRequest(args [0]string, w http.ResponseWriter, r *ht
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.Close(ctx)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.Close(ctx)
+				return response, err
 			},
 		)
 	} else {
@@ -1081,7 +1091,7 @@ func (s *Server) handleCloseRequest(args [0]string, w http.ResponseWriter, r *ht
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -1156,21 +1166,21 @@ func (s *Server) handleCloseForumTopicRequest(args [0]string, w http.ResponseWri
 		}
 	}()
 
-	var response Result
+	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "CloseForumTopic",
 			OperationID:   "closeForumTopic",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = CloseForumTopic
+			Request  = *CloseForumTopic
 			Params   = struct{}
-			Response = Result
+			Response = *Result
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -1180,8 +1190,9 @@ func (s *Server) handleCloseForumTopicRequest(args [0]string, w http.ResponseWri
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.CloseForumTopic(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.CloseForumTopic(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -1190,7 +1201,7 @@ func (s *Server) handleCloseForumTopicRequest(args [0]string, w http.ResponseWri
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -1265,21 +1276,21 @@ func (s *Server) handleCloseGeneralForumTopicRequest(args [0]string, w http.Resp
 		}
 	}()
 
-	var response Result
+	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "CloseGeneralForumTopic",
 			OperationID:   "closeGeneralForumTopic",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = CloseGeneralForumTopic
+			Request  = *CloseGeneralForumTopic
 			Params   = struct{}
-			Response = Result
+			Response = *Result
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -1289,8 +1300,9 @@ func (s *Server) handleCloseGeneralForumTopicRequest(args [0]string, w http.Resp
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.CloseGeneralForumTopic(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.CloseGeneralForumTopic(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -1299,7 +1311,7 @@ func (s *Server) handleCloseGeneralForumTopicRequest(args [0]string, w http.Resp
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -1377,21 +1389,21 @@ func (s *Server) handleCopyMessageRequest(args [0]string, w http.ResponseWriter,
 		}
 	}()
 
-	var response ResultMessageId
+	var response *ResultMessageId
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "CopyMessage",
 			OperationID:   "copyMessage",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = CopyMessage
+			Request  = *CopyMessage
 			Params   = struct{}
-			Response = ResultMessageId
+			Response = *ResultMessageId
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -1401,8 +1413,9 @@ func (s *Server) handleCopyMessageRequest(args [0]string, w http.ResponseWriter,
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.CopyMessage(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.CopyMessage(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -1411,7 +1424,7 @@ func (s *Server) handleCopyMessageRequest(args [0]string, w http.ResponseWriter,
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -1488,21 +1501,21 @@ func (s *Server) handleCreateChatInviteLinkRequest(args [0]string, w http.Respon
 		}
 	}()
 
-	var response ResultChatInviteLink
+	var response *ResultChatInviteLink
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "CreateChatInviteLink",
 			OperationID:   "createChatInviteLink",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = CreateChatInviteLink
+			Request  = *CreateChatInviteLink
 			Params   = struct{}
-			Response = ResultChatInviteLink
+			Response = *ResultChatInviteLink
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -1512,8 +1525,9 @@ func (s *Server) handleCreateChatInviteLinkRequest(args [0]string, w http.Respon
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.CreateChatInviteLink(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.CreateChatInviteLink(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -1522,7 +1536,7 @@ func (s *Server) handleCreateChatInviteLinkRequest(args [0]string, w http.Respon
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -1598,21 +1612,21 @@ func (s *Server) handleCreateForumTopicRequest(args [0]string, w http.ResponseWr
 		}
 	}()
 
-	var response Result
+	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "CreateForumTopic",
 			OperationID:   "createForumTopic",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = CreateForumTopic
+			Request  = *CreateForumTopic
 			Params   = struct{}
-			Response = Result
+			Response = *Result
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -1622,8 +1636,9 @@ func (s *Server) handleCreateForumTopicRequest(args [0]string, w http.ResponseWr
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.CreateForumTopic(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.CreateForumTopic(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -1632,7 +1647,7 @@ func (s *Server) handleCreateForumTopicRequest(args [0]string, w http.ResponseWr
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -1706,21 +1721,21 @@ func (s *Server) handleCreateInvoiceLinkRequest(args [0]string, w http.ResponseW
 		}
 	}()
 
-	var response ResultString
+	var response *ResultString
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "CreateInvoiceLink",
 			OperationID:   "createInvoiceLink",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = CreateInvoiceLink
+			Request  = *CreateInvoiceLink
 			Params   = struct{}
-			Response = ResultString
+			Response = *ResultString
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -1730,8 +1745,9 @@ func (s *Server) handleCreateInvoiceLinkRequest(args [0]string, w http.ResponseW
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.CreateInvoiceLink(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.CreateInvoiceLink(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -1740,7 +1756,7 @@ func (s *Server) handleCreateInvoiceLinkRequest(args [0]string, w http.ResponseW
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -1815,21 +1831,21 @@ func (s *Server) handleCreateNewStickerSetRequest(args [0]string, w http.Respons
 		}
 	}()
 
-	var response Result
+	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "CreateNewStickerSet",
 			OperationID:   "createNewStickerSet",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = CreateNewStickerSet
+			Request  = *CreateNewStickerSet
 			Params   = struct{}
-			Response = Result
+			Response = *Result
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -1839,8 +1855,9 @@ func (s *Server) handleCreateNewStickerSetRequest(args [0]string, w http.Respons
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.CreateNewStickerSet(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.CreateNewStickerSet(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -1849,7 +1866,7 @@ func (s *Server) handleCreateNewStickerSetRequest(args [0]string, w http.Respons
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -1923,21 +1940,21 @@ func (s *Server) handleDeclineChatJoinRequestRequest(args [0]string, w http.Resp
 		}
 	}()
 
-	var response Result
+	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "DeclineChatJoinRequest",
 			OperationID:   "declineChatJoinRequest",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = DeclineChatJoinRequest
+			Request  = *DeclineChatJoinRequest
 			Params   = struct{}
-			Response = Result
+			Response = *Result
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -1947,8 +1964,9 @@ func (s *Server) handleDeclineChatJoinRequestRequest(args [0]string, w http.Resp
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.DeclineChatJoinRequest(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.DeclineChatJoinRequest(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -1957,7 +1975,7 @@ func (s *Server) handleDeclineChatJoinRequestRequest(args [0]string, w http.Resp
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -2032,21 +2050,21 @@ func (s *Server) handleDeleteChatPhotoRequest(args [0]string, w http.ResponseWri
 		}
 	}()
 
-	var response Result
+	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "DeleteChatPhoto",
 			OperationID:   "deleteChatPhoto",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = DeleteChatPhoto
+			Request  = *DeleteChatPhoto
 			Params   = struct{}
-			Response = Result
+			Response = *Result
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -2056,8 +2074,9 @@ func (s *Server) handleDeleteChatPhotoRequest(args [0]string, w http.ResponseWri
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.DeleteChatPhoto(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.DeleteChatPhoto(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -2066,7 +2085,7 @@ func (s *Server) handleDeleteChatPhotoRequest(args [0]string, w http.ResponseWri
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -2142,21 +2161,21 @@ func (s *Server) handleDeleteChatStickerSetRequest(args [0]string, w http.Respon
 		}
 	}()
 
-	var response Result
+	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "DeleteChatStickerSet",
 			OperationID:   "deleteChatStickerSet",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = DeleteChatStickerSet
+			Request  = *DeleteChatStickerSet
 			Params   = struct{}
-			Response = Result
+			Response = *Result
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -2166,8 +2185,9 @@ func (s *Server) handleDeleteChatStickerSetRequest(args [0]string, w http.Respon
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.DeleteChatStickerSet(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.DeleteChatStickerSet(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -2176,7 +2196,7 @@ func (s *Server) handleDeleteChatStickerSetRequest(args [0]string, w http.Respon
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -2251,21 +2271,21 @@ func (s *Server) handleDeleteForumTopicRequest(args [0]string, w http.ResponseWr
 		}
 	}()
 
-	var response Result
+	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "DeleteForumTopic",
 			OperationID:   "deleteForumTopic",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = DeleteForumTopic
+			Request  = *DeleteForumTopic
 			Params   = struct{}
-			Response = Result
+			Response = *Result
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -2275,8 +2295,9 @@ func (s *Server) handleDeleteForumTopicRequest(args [0]string, w http.ResponseWr
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.DeleteForumTopic(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.DeleteForumTopic(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -2285,7 +2306,7 @@ func (s *Server) handleDeleteForumTopicRequest(args [0]string, w http.ResponseWr
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -2366,21 +2387,21 @@ func (s *Server) handleDeleteMessageRequest(args [0]string, w http.ResponseWrite
 		}
 	}()
 
-	var response Result
+	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "DeleteMessage",
 			OperationID:   "deleteMessage",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = DeleteMessage
+			Request  = *DeleteMessage
 			Params   = struct{}
-			Response = Result
+			Response = *Result
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -2390,8 +2411,9 @@ func (s *Server) handleDeleteMessageRequest(args [0]string, w http.ResponseWrite
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.DeleteMessage(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.DeleteMessage(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -2400,7 +2422,7 @@ func (s *Server) handleDeleteMessageRequest(args [0]string, w http.ResponseWrite
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -2476,21 +2498,21 @@ func (s *Server) handleDeleteMyCommandsRequest(args [0]string, w http.ResponseWr
 		}
 	}()
 
-	var response Result
+	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "DeleteMyCommands",
 			OperationID:   "deleteMyCommands",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
 			Request  = OptDeleteMyCommands
 			Params   = struct{}
-			Response = Result
+			Response = *Result
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -2500,8 +2522,9 @@ func (s *Server) handleDeleteMyCommandsRequest(args [0]string, w http.ResponseWr
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.DeleteMyCommands(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.DeleteMyCommands(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -2510,7 +2533,7 @@ func (s *Server) handleDeleteMyCommandsRequest(args [0]string, w http.ResponseWr
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -2583,21 +2606,21 @@ func (s *Server) handleDeleteStickerFromSetRequest(args [0]string, w http.Respon
 		}
 	}()
 
-	var response Result
+	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "DeleteStickerFromSet",
 			OperationID:   "deleteStickerFromSet",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = DeleteStickerFromSet
+			Request  = *DeleteStickerFromSet
 			Params   = struct{}
-			Response = Result
+			Response = *Result
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -2607,8 +2630,9 @@ func (s *Server) handleDeleteStickerFromSetRequest(args [0]string, w http.Respon
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.DeleteStickerFromSet(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.DeleteStickerFromSet(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -2617,7 +2641,7 @@ func (s *Server) handleDeleteStickerFromSetRequest(args [0]string, w http.Respon
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -2691,21 +2715,21 @@ func (s *Server) handleDeleteWebhookRequest(args [0]string, w http.ResponseWrite
 		}
 	}()
 
-	var response Result
+	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "DeleteWebhook",
 			OperationID:   "deleteWebhook",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
 			Request  = OptDeleteWebhook
 			Params   = struct{}
-			Response = Result
+			Response = *Result
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -2715,8 +2739,9 @@ func (s *Server) handleDeleteWebhookRequest(args [0]string, w http.ResponseWrite
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.DeleteWebhook(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.DeleteWebhook(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -2725,7 +2750,7 @@ func (s *Server) handleDeleteWebhookRequest(args [0]string, w http.ResponseWrite
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -2801,21 +2826,21 @@ func (s *Server) handleEditChatInviteLinkRequest(args [0]string, w http.Response
 		}
 	}()
 
-	var response ResultChatInviteLink
+	var response *ResultChatInviteLink
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "EditChatInviteLink",
 			OperationID:   "editChatInviteLink",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = EditChatInviteLink
+			Request  = *EditChatInviteLink
 			Params   = struct{}
-			Response = ResultChatInviteLink
+			Response = *ResultChatInviteLink
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -2825,8 +2850,9 @@ func (s *Server) handleEditChatInviteLinkRequest(args [0]string, w http.Response
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.EditChatInviteLink(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.EditChatInviteLink(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -2835,7 +2861,7 @@ func (s *Server) handleEditChatInviteLinkRequest(args [0]string, w http.Response
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -2910,21 +2936,21 @@ func (s *Server) handleEditForumTopicRequest(args [0]string, w http.ResponseWrit
 		}
 	}()
 
-	var response Result
+	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "EditForumTopic",
 			OperationID:   "editForumTopic",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = EditForumTopic
+			Request  = *EditForumTopic
 			Params   = struct{}
-			Response = Result
+			Response = *Result
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -2934,8 +2960,9 @@ func (s *Server) handleEditForumTopicRequest(args [0]string, w http.ResponseWrit
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.EditForumTopic(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.EditForumTopic(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -2944,7 +2971,7 @@ func (s *Server) handleEditForumTopicRequest(args [0]string, w http.ResponseWrit
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -3019,21 +3046,21 @@ func (s *Server) handleEditGeneralForumTopicRequest(args [0]string, w http.Respo
 		}
 	}()
 
-	var response Result
+	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "EditGeneralForumTopic",
 			OperationID:   "editGeneralForumTopic",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = EditGeneralForumTopic
+			Request  = *EditGeneralForumTopic
 			Params   = struct{}
-			Response = Result
+			Response = *Result
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -3043,8 +3070,9 @@ func (s *Server) handleEditGeneralForumTopicRequest(args [0]string, w http.Respo
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.EditGeneralForumTopic(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.EditGeneralForumTopic(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -3053,7 +3081,7 @@ func (s *Server) handleEditGeneralForumTopicRequest(args [0]string, w http.Respo
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -3128,21 +3156,21 @@ func (s *Server) handleEditMessageCaptionRequest(args [0]string, w http.Response
 		}
 	}()
 
-	var response ResultMessageOrBoolean
+	var response *ResultMessageOrBoolean
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "EditMessageCaption",
 			OperationID:   "editMessageCaption",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = EditMessageCaption
+			Request  = *EditMessageCaption
 			Params   = struct{}
-			Response = ResultMessageOrBoolean
+			Response = *ResultMessageOrBoolean
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -3152,8 +3180,9 @@ func (s *Server) handleEditMessageCaptionRequest(args [0]string, w http.Response
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.EditMessageCaption(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.EditMessageCaption(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -3162,7 +3191,7 @@ func (s *Server) handleEditMessageCaptionRequest(args [0]string, w http.Response
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -3239,21 +3268,21 @@ func (s *Server) handleEditMessageLiveLocationRequest(args [0]string, w http.Res
 		}
 	}()
 
-	var response ResultMessageOrBoolean
+	var response *ResultMessageOrBoolean
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "EditMessageLiveLocation",
 			OperationID:   "editMessageLiveLocation",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = EditMessageLiveLocation
+			Request  = *EditMessageLiveLocation
 			Params   = struct{}
-			Response = ResultMessageOrBoolean
+			Response = *ResultMessageOrBoolean
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -3263,8 +3292,9 @@ func (s *Server) handleEditMessageLiveLocationRequest(args [0]string, w http.Res
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.EditMessageLiveLocation(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.EditMessageLiveLocation(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -3273,7 +3303,7 @@ func (s *Server) handleEditMessageLiveLocationRequest(args [0]string, w http.Res
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -3351,21 +3381,21 @@ func (s *Server) handleEditMessageMediaRequest(args [0]string, w http.ResponseWr
 		}
 	}()
 
-	var response ResultMessageOrBoolean
+	var response *ResultMessageOrBoolean
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "EditMessageMedia",
 			OperationID:   "editMessageMedia",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = EditMessageMedia
+			Request  = *EditMessageMedia
 			Params   = struct{}
-			Response = ResultMessageOrBoolean
+			Response = *ResultMessageOrBoolean
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -3375,8 +3405,9 @@ func (s *Server) handleEditMessageMediaRequest(args [0]string, w http.ResponseWr
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.EditMessageMedia(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.EditMessageMedia(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -3385,7 +3416,7 @@ func (s *Server) handleEditMessageMediaRequest(args [0]string, w http.ResponseWr
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -3460,21 +3491,21 @@ func (s *Server) handleEditMessageReplyMarkupRequest(args [0]string, w http.Resp
 		}
 	}()
 
-	var response ResultMessageOrBoolean
+	var response *ResultMessageOrBoolean
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "EditMessageReplyMarkup",
 			OperationID:   "editMessageReplyMarkup",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = EditMessageReplyMarkup
+			Request  = *EditMessageReplyMarkup
 			Params   = struct{}
-			Response = ResultMessageOrBoolean
+			Response = *ResultMessageOrBoolean
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -3484,8 +3515,9 @@ func (s *Server) handleEditMessageReplyMarkupRequest(args [0]string, w http.Resp
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.EditMessageReplyMarkup(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.EditMessageReplyMarkup(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -3494,7 +3526,7 @@ func (s *Server) handleEditMessageReplyMarkupRequest(args [0]string, w http.Resp
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -3569,21 +3601,21 @@ func (s *Server) handleEditMessageTextRequest(args [0]string, w http.ResponseWri
 		}
 	}()
 
-	var response ResultMessageOrBoolean
+	var response *ResultMessageOrBoolean
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "EditMessageText",
 			OperationID:   "editMessageText",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = EditMessageText
+			Request  = *EditMessageText
 			Params   = struct{}
-			Response = ResultMessageOrBoolean
+			Response = *ResultMessageOrBoolean
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -3593,8 +3625,9 @@ func (s *Server) handleEditMessageTextRequest(args [0]string, w http.ResponseWri
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.EditMessageText(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.EditMessageText(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -3603,7 +3636,7 @@ func (s *Server) handleEditMessageTextRequest(args [0]string, w http.ResponseWri
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -3678,21 +3711,21 @@ func (s *Server) handleExportChatInviteLinkRequest(args [0]string, w http.Respon
 		}
 	}()
 
-	var response ResultString
+	var response *ResultString
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "ExportChatInviteLink",
 			OperationID:   "exportChatInviteLink",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = ExportChatInviteLink
+			Request  = *ExportChatInviteLink
 			Params   = struct{}
-			Response = ResultString
+			Response = *ResultString
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -3702,8 +3735,9 @@ func (s *Server) handleExportChatInviteLinkRequest(args [0]string, w http.Respon
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.ExportChatInviteLink(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.ExportChatInviteLink(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -3712,7 +3746,7 @@ func (s *Server) handleExportChatInviteLinkRequest(args [0]string, w http.Respon
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -3786,21 +3820,21 @@ func (s *Server) handleForwardMessageRequest(args [0]string, w http.ResponseWrit
 		}
 	}()
 
-	var response ResultMessage
+	var response *ResultMessage
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "ForwardMessage",
 			OperationID:   "forwardMessage",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = ForwardMessage
+			Request  = *ForwardMessage
 			Params   = struct{}
-			Response = ResultMessage
+			Response = *ResultMessage
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -3810,8 +3844,9 @@ func (s *Server) handleForwardMessageRequest(args [0]string, w http.ResponseWrit
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.ForwardMessage(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.ForwardMessage(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -3820,7 +3855,7 @@ func (s *Server) handleForwardMessageRequest(args [0]string, w http.ResponseWrit
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -3895,21 +3930,21 @@ func (s *Server) handleGetChatRequest(args [0]string, w http.ResponseWriter, r *
 		}
 	}()
 
-	var response ResultChat
+	var response *ResultChat
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "GetChat",
 			OperationID:   "getChat",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = GetChat
+			Request  = *GetChat
 			Params   = struct{}
-			Response = ResultChat
+			Response = *ResultChat
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -3919,8 +3954,9 @@ func (s *Server) handleGetChatRequest(args [0]string, w http.ResponseWriter, r *
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.GetChat(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.GetChat(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -3929,7 +3965,7 @@ func (s *Server) handleGetChatRequest(args [0]string, w http.ResponseWriter, r *
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -4003,21 +4039,21 @@ func (s *Server) handleGetChatAdministratorsRequest(args [0]string, w http.Respo
 		}
 	}()
 
-	var response ResultArrayOfChatMember
+	var response *ResultArrayOfChatMember
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "GetChatAdministrators",
 			OperationID:   "getChatAdministrators",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = GetChatAdministrators
+			Request  = *GetChatAdministrators
 			Params   = struct{}
-			Response = ResultArrayOfChatMember
+			Response = *ResultArrayOfChatMember
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -4027,8 +4063,9 @@ func (s *Server) handleGetChatAdministratorsRequest(args [0]string, w http.Respo
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.GetChatAdministrators(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.GetChatAdministrators(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -4037,7 +4074,7 @@ func (s *Server) handleGetChatAdministratorsRequest(args [0]string, w http.Respo
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -4112,21 +4149,21 @@ func (s *Server) handleGetChatMemberRequest(args [0]string, w http.ResponseWrite
 		}
 	}()
 
-	var response ResultChatMember
+	var response *ResultChatMember
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "GetChatMember",
 			OperationID:   "getChatMember",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = GetChatMember
+			Request  = *GetChatMember
 			Params   = struct{}
-			Response = ResultChatMember
+			Response = *ResultChatMember
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -4136,8 +4173,9 @@ func (s *Server) handleGetChatMemberRequest(args [0]string, w http.ResponseWrite
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.GetChatMember(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.GetChatMember(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -4146,7 +4184,7 @@ func (s *Server) handleGetChatMemberRequest(args [0]string, w http.ResponseWrite
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -4219,21 +4257,21 @@ func (s *Server) handleGetChatMemberCountRequest(args [0]string, w http.Response
 		}
 	}()
 
-	var response ResultInt
+	var response *ResultInt
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "GetChatMemberCount",
 			OperationID:   "getChatMemberCount",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = GetChatMemberCount
+			Request  = *GetChatMemberCount
 			Params   = struct{}
-			Response = ResultInt
+			Response = *ResultInt
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -4243,8 +4281,9 @@ func (s *Server) handleGetChatMemberCountRequest(args [0]string, w http.Response
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.GetChatMemberCount(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.GetChatMemberCount(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -4253,7 +4292,7 @@ func (s *Server) handleGetChatMemberCountRequest(args [0]string, w http.Response
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -4328,21 +4367,21 @@ func (s *Server) handleGetChatMenuButtonRequest(args [0]string, w http.ResponseW
 		}
 	}()
 
-	var response Result
+	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "GetChatMenuButton",
 			OperationID:   "getChatMenuButton",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
 			Request  = OptGetChatMenuButton
 			Params   = struct{}
-			Response = Result
+			Response = *Result
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -4352,8 +4391,9 @@ func (s *Server) handleGetChatMenuButtonRequest(args [0]string, w http.ResponseW
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.GetChatMenuButton(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.GetChatMenuButton(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -4362,7 +4402,7 @@ func (s *Server) handleGetChatMenuButtonRequest(args [0]string, w http.ResponseW
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -4436,21 +4476,21 @@ func (s *Server) handleGetCustomEmojiStickersRequest(args [0]string, w http.Resp
 		}
 	}()
 
-	var response ResultArrayOfSticker
+	var response *ResultArrayOfSticker
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "GetCustomEmojiStickers",
 			OperationID:   "getCustomEmojiStickers",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = GetCustomEmojiStickers
+			Request  = *GetCustomEmojiStickers
 			Params   = struct{}
-			Response = ResultArrayOfSticker
+			Response = *ResultArrayOfSticker
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -4460,8 +4500,9 @@ func (s *Server) handleGetCustomEmojiStickersRequest(args [0]string, w http.Resp
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.GetCustomEmojiStickers(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.GetCustomEmojiStickers(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -4470,7 +4511,7 @@ func (s *Server) handleGetCustomEmojiStickersRequest(args [0]string, w http.Resp
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -4548,21 +4589,21 @@ func (s *Server) handleGetFileRequest(args [0]string, w http.ResponseWriter, r *
 		}
 	}()
 
-	var response ResultFile
+	var response *ResultFile
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "GetFile",
 			OperationID:   "getFile",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = GetFile
+			Request  = *GetFile
 			Params   = struct{}
-			Response = ResultFile
+			Response = *ResultFile
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -4572,8 +4613,9 @@ func (s *Server) handleGetFileRequest(args [0]string, w http.ResponseWriter, r *
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.GetFile(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.GetFile(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -4582,7 +4624,7 @@ func (s *Server) handleGetFileRequest(args [0]string, w http.ResponseWriter, r *
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -4638,21 +4680,21 @@ func (s *Server) handleGetForumTopicIconStickersRequest(args [0]string, w http.R
 		err error
 	)
 
-	var response ResultArrayOfSticker
+	var response *ResultArrayOfSticker
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "GetForumTopicIconStickers",
 			OperationID:   "getForumTopicIconStickers",
 			Body:          nil,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
 			Request  = struct{}
 			Params   = struct{}
-			Response = ResultArrayOfSticker
+			Response = *ResultArrayOfSticker
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -4662,8 +4704,9 @@ func (s *Server) handleGetForumTopicIconStickersRequest(args [0]string, w http.R
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.GetForumTopicIconStickers(ctx)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.GetForumTopicIconStickers(ctx)
+				return response, err
 			},
 		)
 	} else {
@@ -4672,7 +4715,7 @@ func (s *Server) handleGetForumTopicIconStickersRequest(args [0]string, w http.R
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -4747,21 +4790,21 @@ func (s *Server) handleGetGameHighScoresRequest(args [0]string, w http.ResponseW
 		}
 	}()
 
-	var response ResultArrayOfGameHighScore
+	var response *ResultArrayOfGameHighScore
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "GetGameHighScores",
 			OperationID:   "getGameHighScores",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = GetGameHighScores
+			Request  = *GetGameHighScores
 			Params   = struct{}
-			Response = ResultArrayOfGameHighScore
+			Response = *ResultArrayOfGameHighScore
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -4771,8 +4814,9 @@ func (s *Server) handleGetGameHighScoresRequest(args [0]string, w http.ResponseW
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.GetGameHighScores(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.GetGameHighScores(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -4781,7 +4825,7 @@ func (s *Server) handleGetGameHighScoresRequest(args [0]string, w http.ResponseW
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -4836,21 +4880,21 @@ func (s *Server) handleGetMeRequest(args [0]string, w http.ResponseWriter, r *ht
 		err error
 	)
 
-	var response ResultUser
+	var response *ResultUser
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "GetMe",
 			OperationID:   "getMe",
 			Body:          nil,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
 			Request  = struct{}
 			Params   = struct{}
-			Response = ResultUser
+			Response = *ResultUser
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -4860,8 +4904,9 @@ func (s *Server) handleGetMeRequest(args [0]string, w http.ResponseWriter, r *ht
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.GetMe(ctx)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.GetMe(ctx)
+				return response, err
 			},
 		)
 	} else {
@@ -4870,7 +4915,7 @@ func (s *Server) handleGetMeRequest(args [0]string, w http.ResponseWriter, r *ht
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -4945,21 +4990,21 @@ func (s *Server) handleGetMyCommandsRequest(args [0]string, w http.ResponseWrite
 		}
 	}()
 
-	var response ResultArrayOfBotCommand
+	var response *ResultArrayOfBotCommand
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "GetMyCommands",
 			OperationID:   "getMyCommands",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
 			Request  = OptGetMyCommands
 			Params   = struct{}
-			Response = ResultArrayOfBotCommand
+			Response = *ResultArrayOfBotCommand
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -4969,8 +5014,9 @@ func (s *Server) handleGetMyCommandsRequest(args [0]string, w http.ResponseWrite
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.GetMyCommands(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.GetMyCommands(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -4979,7 +5025,7 @@ func (s *Server) handleGetMyCommandsRequest(args [0]string, w http.ResponseWrite
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -5053,21 +5099,21 @@ func (s *Server) handleGetMyDefaultAdministratorRightsRequest(args [0]string, w 
 		}
 	}()
 
-	var response Result
+	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "GetMyDefaultAdministratorRights",
 			OperationID:   "getMyDefaultAdministratorRights",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
 			Request  = OptGetMyDefaultAdministratorRights
 			Params   = struct{}
-			Response = Result
+			Response = *Result
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -5077,8 +5123,9 @@ func (s *Server) handleGetMyDefaultAdministratorRightsRequest(args [0]string, w 
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.GetMyDefaultAdministratorRights(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.GetMyDefaultAdministratorRights(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -5087,7 +5134,7 @@ func (s *Server) handleGetMyDefaultAdministratorRightsRequest(args [0]string, w 
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -5161,21 +5208,21 @@ func (s *Server) handleGetStickerSetRequest(args [0]string, w http.ResponseWrite
 		}
 	}()
 
-	var response ResultStickerSet
+	var response *ResultStickerSet
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "GetStickerSet",
 			OperationID:   "getStickerSet",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = GetStickerSet
+			Request  = *GetStickerSet
 			Params   = struct{}
-			Response = ResultStickerSet
+			Response = *ResultStickerSet
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -5185,8 +5232,9 @@ func (s *Server) handleGetStickerSetRequest(args [0]string, w http.ResponseWrite
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.GetStickerSet(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.GetStickerSet(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -5195,7 +5243,7 @@ func (s *Server) handleGetStickerSetRequest(args [0]string, w http.ResponseWrite
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -5270,21 +5318,21 @@ func (s *Server) handleGetUpdatesRequest(args [0]string, w http.ResponseWriter, 
 		}
 	}()
 
-	var response ResultArrayOfUpdate
+	var response *ResultArrayOfUpdate
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "GetUpdates",
 			OperationID:   "getUpdates",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
 			Request  = OptGetUpdates
 			Params   = struct{}
-			Response = ResultArrayOfUpdate
+			Response = *ResultArrayOfUpdate
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -5294,8 +5342,9 @@ func (s *Server) handleGetUpdatesRequest(args [0]string, w http.ResponseWriter, 
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.GetUpdates(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.GetUpdates(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -5304,7 +5353,7 @@ func (s *Server) handleGetUpdatesRequest(args [0]string, w http.ResponseWriter, 
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -5378,21 +5427,21 @@ func (s *Server) handleGetUserProfilePhotosRequest(args [0]string, w http.Respon
 		}
 	}()
 
-	var response ResultUserProfilePhotos
+	var response *ResultUserProfilePhotos
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "GetUserProfilePhotos",
 			OperationID:   "getUserProfilePhotos",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = GetUserProfilePhotos
+			Request  = *GetUserProfilePhotos
 			Params   = struct{}
-			Response = ResultUserProfilePhotos
+			Response = *ResultUserProfilePhotos
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -5402,8 +5451,9 @@ func (s *Server) handleGetUserProfilePhotosRequest(args [0]string, w http.Respon
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.GetUserProfilePhotos(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.GetUserProfilePhotos(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -5412,7 +5462,7 @@ func (s *Server) handleGetUserProfilePhotosRequest(args [0]string, w http.Respon
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -5469,21 +5519,21 @@ func (s *Server) handleGetWebhookInfoRequest(args [0]string, w http.ResponseWrit
 		err error
 	)
 
-	var response ResultWebhookInfo
+	var response *ResultWebhookInfo
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "GetWebhookInfo",
 			OperationID:   "getWebhookInfo",
 			Body:          nil,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
 			Request  = struct{}
 			Params   = struct{}
-			Response = ResultWebhookInfo
+			Response = *ResultWebhookInfo
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -5493,8 +5543,9 @@ func (s *Server) handleGetWebhookInfoRequest(args [0]string, w http.ResponseWrit
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.GetWebhookInfo(ctx)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.GetWebhookInfo(ctx)
+				return response, err
 			},
 		)
 	} else {
@@ -5503,7 +5554,7 @@ func (s *Server) handleGetWebhookInfoRequest(args [0]string, w http.ResponseWrit
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -5578,21 +5629,21 @@ func (s *Server) handleHideGeneralForumTopicRequest(args [0]string, w http.Respo
 		}
 	}()
 
-	var response Result
+	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "HideGeneralForumTopic",
 			OperationID:   "hideGeneralForumTopic",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = HideGeneralForumTopic
+			Request  = *HideGeneralForumTopic
 			Params   = struct{}
-			Response = Result
+			Response = *Result
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -5602,8 +5653,9 @@ func (s *Server) handleHideGeneralForumTopicRequest(args [0]string, w http.Respo
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.HideGeneralForumTopic(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.HideGeneralForumTopic(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -5612,7 +5664,7 @@ func (s *Server) handleHideGeneralForumTopicRequest(args [0]string, w http.Respo
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -5685,21 +5737,21 @@ func (s *Server) handleLeaveChatRequest(args [0]string, w http.ResponseWriter, r
 		}
 	}()
 
-	var response Result
+	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "LeaveChat",
 			OperationID:   "leaveChat",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = LeaveChat
+			Request  = *LeaveChat
 			Params   = struct{}
-			Response = Result
+			Response = *Result
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -5709,8 +5761,9 @@ func (s *Server) handleLeaveChatRequest(args [0]string, w http.ResponseWriter, r
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.LeaveChat(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.LeaveChat(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -5719,7 +5772,7 @@ func (s *Server) handleLeaveChatRequest(args [0]string, w http.ResponseWriter, r
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -5777,21 +5830,21 @@ func (s *Server) handleLogOutRequest(args [0]string, w http.ResponseWriter, r *h
 		err error
 	)
 
-	var response Result
+	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "LogOut",
 			OperationID:   "logOut",
 			Body:          nil,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
 			Request  = struct{}
 			Params   = struct{}
-			Response = Result
+			Response = *Result
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -5801,8 +5854,9 @@ func (s *Server) handleLogOutRequest(args [0]string, w http.ResponseWriter, r *h
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.LogOut(ctx)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.LogOut(ctx)
+				return response, err
 			},
 		)
 	} else {
@@ -5811,7 +5865,7 @@ func (s *Server) handleLogOutRequest(args [0]string, w http.ResponseWriter, r *h
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -5887,21 +5941,21 @@ func (s *Server) handlePinChatMessageRequest(args [0]string, w http.ResponseWrit
 		}
 	}()
 
-	var response Result
+	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "PinChatMessage",
 			OperationID:   "pinChatMessage",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = PinChatMessage
+			Request  = *PinChatMessage
 			Params   = struct{}
-			Response = Result
+			Response = *Result
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -5911,8 +5965,9 @@ func (s *Server) handlePinChatMessageRequest(args [0]string, w http.ResponseWrit
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.PinChatMessage(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.PinChatMessage(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -5921,7 +5976,7 @@ func (s *Server) handlePinChatMessageRequest(args [0]string, w http.ResponseWrit
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -5996,21 +6051,21 @@ func (s *Server) handlePromoteChatMemberRequest(args [0]string, w http.ResponseW
 		}
 	}()
 
-	var response Result
+	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "PromoteChatMember",
 			OperationID:   "promoteChatMember",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = PromoteChatMember
+			Request  = *PromoteChatMember
 			Params   = struct{}
-			Response = Result
+			Response = *Result
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -6020,8 +6075,9 @@ func (s *Server) handlePromoteChatMemberRequest(args [0]string, w http.ResponseW
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.PromoteChatMember(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.PromoteChatMember(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -6030,7 +6086,7 @@ func (s *Server) handlePromoteChatMemberRequest(args [0]string, w http.ResponseW
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -6105,21 +6161,21 @@ func (s *Server) handleReopenForumTopicRequest(args [0]string, w http.ResponseWr
 		}
 	}()
 
-	var response Result
+	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "ReopenForumTopic",
 			OperationID:   "reopenForumTopic",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = ReopenForumTopic
+			Request  = *ReopenForumTopic
 			Params   = struct{}
-			Response = Result
+			Response = *Result
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -6129,8 +6185,9 @@ func (s *Server) handleReopenForumTopicRequest(args [0]string, w http.ResponseWr
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.ReopenForumTopic(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.ReopenForumTopic(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -6139,7 +6196,7 @@ func (s *Server) handleReopenForumTopicRequest(args [0]string, w http.ResponseWr
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -6214,21 +6271,21 @@ func (s *Server) handleReopenGeneralForumTopicRequest(args [0]string, w http.Res
 		}
 	}()
 
-	var response Result
+	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "ReopenGeneralForumTopic",
 			OperationID:   "reopenGeneralForumTopic",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = ReopenGeneralForumTopic
+			Request  = *ReopenGeneralForumTopic
 			Params   = struct{}
-			Response = Result
+			Response = *Result
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -6238,8 +6295,9 @@ func (s *Server) handleReopenGeneralForumTopicRequest(args [0]string, w http.Res
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.ReopenGeneralForumTopic(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.ReopenGeneralForumTopic(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -6248,7 +6306,7 @@ func (s *Server) handleReopenGeneralForumTopicRequest(args [0]string, w http.Res
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -6323,21 +6381,21 @@ func (s *Server) handleRestrictChatMemberRequest(args [0]string, w http.Response
 		}
 	}()
 
-	var response Result
+	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "RestrictChatMember",
 			OperationID:   "restrictChatMember",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = RestrictChatMember
+			Request  = *RestrictChatMember
 			Params   = struct{}
-			Response = Result
+			Response = *Result
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -6347,8 +6405,9 @@ func (s *Server) handleRestrictChatMemberRequest(args [0]string, w http.Response
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.RestrictChatMember(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.RestrictChatMember(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -6357,7 +6416,7 @@ func (s *Server) handleRestrictChatMemberRequest(args [0]string, w http.Response
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -6433,21 +6492,21 @@ func (s *Server) handleRevokeChatInviteLinkRequest(args [0]string, w http.Respon
 		}
 	}()
 
-	var response ResultChatInviteLink
+	var response *ResultChatInviteLink
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "RevokeChatInviteLink",
 			OperationID:   "revokeChatInviteLink",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = RevokeChatInviteLink
+			Request  = *RevokeChatInviteLink
 			Params   = struct{}
-			Response = ResultChatInviteLink
+			Response = *ResultChatInviteLink
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -6457,8 +6516,9 @@ func (s *Server) handleRevokeChatInviteLinkRequest(args [0]string, w http.Respon
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.RevokeChatInviteLink(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.RevokeChatInviteLink(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -6467,7 +6527,7 @@ func (s *Server) handleRevokeChatInviteLinkRequest(args [0]string, w http.Respon
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -6542,21 +6602,21 @@ func (s *Server) handleSendAnimationRequest(args [0]string, w http.ResponseWrite
 		}
 	}()
 
-	var response ResultMessage
+	var response *ResultMessage
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "SendAnimation",
 			OperationID:   "sendAnimation",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = SendAnimation
+			Request  = *SendAnimation
 			Params   = struct{}
-			Response = ResultMessage
+			Response = *ResultMessage
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -6566,8 +6626,9 @@ func (s *Server) handleSendAnimationRequest(args [0]string, w http.ResponseWrite
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.SendAnimation(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.SendAnimation(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -6576,7 +6637,7 @@ func (s *Server) handleSendAnimationRequest(args [0]string, w http.ResponseWrite
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -6650,21 +6711,21 @@ func (s *Server) handleSendAudioRequest(args [0]string, w http.ResponseWriter, r
 		}
 	}()
 
-	var response ResultMessage
+	var response *ResultMessage
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "SendAudio",
 			OperationID:   "sendAudio",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = SendAudio
+			Request  = *SendAudio
 			Params   = struct{}
-			Response = ResultMessage
+			Response = *ResultMessage
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -6674,8 +6735,9 @@ func (s *Server) handleSendAudioRequest(args [0]string, w http.ResponseWriter, r
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.SendAudio(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.SendAudio(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -6684,7 +6746,7 @@ func (s *Server) handleSendAudioRequest(args [0]string, w http.ResponseWriter, r
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -6758,21 +6820,21 @@ func (s *Server) handleSendChatActionRequest(args [0]string, w http.ResponseWrit
 		}
 	}()
 
-	var response Result
+	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "SendChatAction",
 			OperationID:   "sendChatAction",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = SendChatAction
+			Request  = *SendChatAction
 			Params   = struct{}
-			Response = Result
+			Response = *Result
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -6782,8 +6844,9 @@ func (s *Server) handleSendChatActionRequest(args [0]string, w http.ResponseWrit
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.SendChatAction(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.SendChatAction(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -6792,7 +6855,7 @@ func (s *Server) handleSendChatActionRequest(args [0]string, w http.ResponseWrit
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -6866,21 +6929,21 @@ func (s *Server) handleSendContactRequest(args [0]string, w http.ResponseWriter,
 		}
 	}()
 
-	var response ResultMessage
+	var response *ResultMessage
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "SendContact",
 			OperationID:   "sendContact",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = SendContact
+			Request  = *SendContact
 			Params   = struct{}
-			Response = ResultMessage
+			Response = *ResultMessage
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -6890,8 +6953,9 @@ func (s *Server) handleSendContactRequest(args [0]string, w http.ResponseWriter,
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.SendContact(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.SendContact(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -6900,7 +6964,7 @@ func (s *Server) handleSendContactRequest(args [0]string, w http.ResponseWriter,
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -6974,21 +7038,21 @@ func (s *Server) handleSendDiceRequest(args [0]string, w http.ResponseWriter, r 
 		}
 	}()
 
-	var response ResultMessage
+	var response *ResultMessage
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "SendDice",
 			OperationID:   "sendDice",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = SendDice
+			Request  = *SendDice
 			Params   = struct{}
-			Response = ResultMessage
+			Response = *ResultMessage
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -6998,8 +7062,9 @@ func (s *Server) handleSendDiceRequest(args [0]string, w http.ResponseWriter, r 
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.SendDice(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.SendDice(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -7008,7 +7073,7 @@ func (s *Server) handleSendDiceRequest(args [0]string, w http.ResponseWriter, r 
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -7083,21 +7148,21 @@ func (s *Server) handleSendDocumentRequest(args [0]string, w http.ResponseWriter
 		}
 	}()
 
-	var response ResultMessage
+	var response *ResultMessage
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "SendDocument",
 			OperationID:   "sendDocument",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = SendDocument
+			Request  = *SendDocument
 			Params   = struct{}
-			Response = ResultMessage
+			Response = *ResultMessage
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -7107,8 +7172,9 @@ func (s *Server) handleSendDocumentRequest(args [0]string, w http.ResponseWriter
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.SendDocument(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.SendDocument(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -7117,7 +7183,7 @@ func (s *Server) handleSendDocumentRequest(args [0]string, w http.ResponseWriter
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -7191,21 +7257,21 @@ func (s *Server) handleSendGameRequest(args [0]string, w http.ResponseWriter, r 
 		}
 	}()
 
-	var response ResultMessage
+	var response *ResultMessage
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "SendGame",
 			OperationID:   "sendGame",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = SendGame
+			Request  = *SendGame
 			Params   = struct{}
-			Response = ResultMessage
+			Response = *ResultMessage
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -7215,8 +7281,9 @@ func (s *Server) handleSendGameRequest(args [0]string, w http.ResponseWriter, r 
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.SendGame(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.SendGame(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -7225,7 +7292,7 @@ func (s *Server) handleSendGameRequest(args [0]string, w http.ResponseWriter, r 
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -7299,21 +7366,21 @@ func (s *Server) handleSendInvoiceRequest(args [0]string, w http.ResponseWriter,
 		}
 	}()
 
-	var response ResultMessage
+	var response *ResultMessage
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "SendInvoice",
 			OperationID:   "sendInvoice",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = SendInvoice
+			Request  = *SendInvoice
 			Params   = struct{}
-			Response = ResultMessage
+			Response = *ResultMessage
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -7323,8 +7390,9 @@ func (s *Server) handleSendInvoiceRequest(args [0]string, w http.ResponseWriter,
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.SendInvoice(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.SendInvoice(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -7333,7 +7401,7 @@ func (s *Server) handleSendInvoiceRequest(args [0]string, w http.ResponseWriter,
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -7407,21 +7475,21 @@ func (s *Server) handleSendLocationRequest(args [0]string, w http.ResponseWriter
 		}
 	}()
 
-	var response ResultMessage
+	var response *ResultMessage
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "SendLocation",
 			OperationID:   "sendLocation",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = SendLocation
+			Request  = *SendLocation
 			Params   = struct{}
-			Response = ResultMessage
+			Response = *ResultMessage
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -7431,8 +7499,9 @@ func (s *Server) handleSendLocationRequest(args [0]string, w http.ResponseWriter
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.SendLocation(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.SendLocation(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -7441,7 +7510,7 @@ func (s *Server) handleSendLocationRequest(args [0]string, w http.ResponseWriter
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -7516,21 +7585,21 @@ func (s *Server) handleSendMediaGroupRequest(args [0]string, w http.ResponseWrit
 		}
 	}()
 
-	var response ResultArrayOfMessage
+	var response *ResultArrayOfMessage
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "SendMediaGroup",
 			OperationID:   "sendMediaGroup",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = SendMediaGroup
+			Request  = *SendMediaGroup
 			Params   = struct{}
-			Response = ResultArrayOfMessage
+			Response = *ResultArrayOfMessage
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -7540,8 +7609,9 @@ func (s *Server) handleSendMediaGroupRequest(args [0]string, w http.ResponseWrit
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.SendMediaGroup(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.SendMediaGroup(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -7550,7 +7620,7 @@ func (s *Server) handleSendMediaGroupRequest(args [0]string, w http.ResponseWrit
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -7624,21 +7694,21 @@ func (s *Server) handleSendMessageRequest(args [0]string, w http.ResponseWriter,
 		}
 	}()
 
-	var response ResultMessage
+	var response *ResultMessage
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "SendMessage",
 			OperationID:   "sendMessage",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = SendMessage
+			Request  = *SendMessage
 			Params   = struct{}
-			Response = ResultMessage
+			Response = *ResultMessage
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -7648,8 +7718,9 @@ func (s *Server) handleSendMessageRequest(args [0]string, w http.ResponseWriter,
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.SendMessage(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.SendMessage(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -7658,7 +7729,7 @@ func (s *Server) handleSendMessageRequest(args [0]string, w http.ResponseWriter,
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -7732,21 +7803,21 @@ func (s *Server) handleSendPhotoRequest(args [0]string, w http.ResponseWriter, r
 		}
 	}()
 
-	var response ResultMessage
+	var response *ResultMessage
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "SendPhoto",
 			OperationID:   "sendPhoto",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = SendPhoto
+			Request  = *SendPhoto
 			Params   = struct{}
-			Response = ResultMessage
+			Response = *ResultMessage
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -7756,8 +7827,9 @@ func (s *Server) handleSendPhotoRequest(args [0]string, w http.ResponseWriter, r
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.SendPhoto(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.SendPhoto(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -7766,7 +7838,7 @@ func (s *Server) handleSendPhotoRequest(args [0]string, w http.ResponseWriter, r
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -7840,21 +7912,21 @@ func (s *Server) handleSendPollRequest(args [0]string, w http.ResponseWriter, r 
 		}
 	}()
 
-	var response ResultMessage
+	var response *ResultMessage
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "SendPoll",
 			OperationID:   "sendPoll",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = SendPoll
+			Request  = *SendPoll
 			Params   = struct{}
-			Response = ResultMessage
+			Response = *ResultMessage
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -7864,8 +7936,9 @@ func (s *Server) handleSendPollRequest(args [0]string, w http.ResponseWriter, r 
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.SendPoll(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.SendPoll(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -7874,7 +7947,7 @@ func (s *Server) handleSendPollRequest(args [0]string, w http.ResponseWriter, r 
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -7951,21 +8024,21 @@ func (s *Server) handleSendStickerRequest(args [0]string, w http.ResponseWriter,
 		}
 	}()
 
-	var response ResultMessage
+	var response *ResultMessage
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "SendSticker",
 			OperationID:   "sendSticker",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = SendSticker
+			Request  = *SendSticker
 			Params   = struct{}
-			Response = ResultMessage
+			Response = *ResultMessage
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -7975,8 +8048,9 @@ func (s *Server) handleSendStickerRequest(args [0]string, w http.ResponseWriter,
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.SendSticker(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.SendSticker(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -7985,7 +8059,7 @@ func (s *Server) handleSendStickerRequest(args [0]string, w http.ResponseWriter,
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -8059,21 +8133,21 @@ func (s *Server) handleSendVenueRequest(args [0]string, w http.ResponseWriter, r
 		}
 	}()
 
-	var response ResultMessage
+	var response *ResultMessage
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "SendVenue",
 			OperationID:   "sendVenue",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = SendVenue
+			Request  = *SendVenue
 			Params   = struct{}
-			Response = ResultMessage
+			Response = *ResultMessage
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -8083,8 +8157,9 @@ func (s *Server) handleSendVenueRequest(args [0]string, w http.ResponseWriter, r
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.SendVenue(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.SendVenue(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -8093,7 +8168,7 @@ func (s *Server) handleSendVenueRequest(args [0]string, w http.ResponseWriter, r
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -8169,21 +8244,21 @@ func (s *Server) handleSendVideoRequest(args [0]string, w http.ResponseWriter, r
 		}
 	}()
 
-	var response ResultMessage
+	var response *ResultMessage
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "SendVideo",
 			OperationID:   "sendVideo",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = SendVideo
+			Request  = *SendVideo
 			Params   = struct{}
-			Response = ResultMessage
+			Response = *ResultMessage
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -8193,8 +8268,9 @@ func (s *Server) handleSendVideoRequest(args [0]string, w http.ResponseWriter, r
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.SendVideo(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.SendVideo(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -8203,7 +8279,7 @@ func (s *Server) handleSendVideoRequest(args [0]string, w http.ResponseWriter, r
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -8278,21 +8354,21 @@ func (s *Server) handleSendVideoNoteRequest(args [0]string, w http.ResponseWrite
 		}
 	}()
 
-	var response ResultMessage
+	var response *ResultMessage
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "SendVideoNote",
 			OperationID:   "sendVideoNote",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = SendVideoNote
+			Request  = *SendVideoNote
 			Params   = struct{}
-			Response = ResultMessage
+			Response = *ResultMessage
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -8302,8 +8378,9 @@ func (s *Server) handleSendVideoNoteRequest(args [0]string, w http.ResponseWrite
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.SendVideoNote(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.SendVideoNote(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -8312,7 +8389,7 @@ func (s *Server) handleSendVideoNoteRequest(args [0]string, w http.ResponseWrite
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -8390,21 +8467,21 @@ func (s *Server) handleSendVoiceRequest(args [0]string, w http.ResponseWriter, r
 		}
 	}()
 
-	var response ResultMessage
+	var response *ResultMessage
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "SendVoice",
 			OperationID:   "sendVoice",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = SendVoice
+			Request  = *SendVoice
 			Params   = struct{}
-			Response = ResultMessage
+			Response = *ResultMessage
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -8414,8 +8491,9 @@ func (s *Server) handleSendVoiceRequest(args [0]string, w http.ResponseWriter, r
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.SendVoice(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.SendVoice(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -8424,7 +8502,7 @@ func (s *Server) handleSendVoiceRequest(args [0]string, w http.ResponseWriter, r
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -8498,21 +8576,21 @@ func (s *Server) handleSetChatAdministratorCustomTitleRequest(args [0]string, w 
 		}
 	}()
 
-	var response Result
+	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "SetChatAdministratorCustomTitle",
 			OperationID:   "setChatAdministratorCustomTitle",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = SetChatAdministratorCustomTitle
+			Request  = *SetChatAdministratorCustomTitle
 			Params   = struct{}
-			Response = Result
+			Response = *Result
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -8522,8 +8600,9 @@ func (s *Server) handleSetChatAdministratorCustomTitleRequest(args [0]string, w 
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.SetChatAdministratorCustomTitle(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.SetChatAdministratorCustomTitle(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -8532,7 +8611,7 @@ func (s *Server) handleSetChatAdministratorCustomTitleRequest(args [0]string, w 
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -8607,21 +8686,21 @@ func (s *Server) handleSetChatDescriptionRequest(args [0]string, w http.Response
 		}
 	}()
 
-	var response Result
+	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "SetChatDescription",
 			OperationID:   "setChatDescription",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = SetChatDescription
+			Request  = *SetChatDescription
 			Params   = struct{}
-			Response = Result
+			Response = *Result
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -8631,8 +8710,9 @@ func (s *Server) handleSetChatDescriptionRequest(args [0]string, w http.Response
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.SetChatDescription(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.SetChatDescription(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -8641,7 +8721,7 @@ func (s *Server) handleSetChatDescriptionRequest(args [0]string, w http.Response
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -8715,21 +8795,21 @@ func (s *Server) handleSetChatMenuButtonRequest(args [0]string, w http.ResponseW
 		}
 	}()
 
-	var response Result
+	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "SetChatMenuButton",
 			OperationID:   "setChatMenuButton",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
 			Request  = OptSetChatMenuButton
 			Params   = struct{}
-			Response = Result
+			Response = *Result
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -8739,8 +8819,9 @@ func (s *Server) handleSetChatMenuButtonRequest(args [0]string, w http.ResponseW
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.SetChatMenuButton(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.SetChatMenuButton(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -8749,7 +8830,7 @@ func (s *Server) handleSetChatMenuButtonRequest(args [0]string, w http.ResponseW
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -8824,21 +8905,21 @@ func (s *Server) handleSetChatPermissionsRequest(args [0]string, w http.Response
 		}
 	}()
 
-	var response Result
+	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "SetChatPermissions",
 			OperationID:   "setChatPermissions",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = SetChatPermissions
+			Request  = *SetChatPermissions
 			Params   = struct{}
-			Response = Result
+			Response = *Result
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -8848,8 +8929,9 @@ func (s *Server) handleSetChatPermissionsRequest(args [0]string, w http.Response
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.SetChatPermissions(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.SetChatPermissions(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -8858,7 +8940,7 @@ func (s *Server) handleSetChatPermissionsRequest(args [0]string, w http.Response
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -8935,21 +9017,21 @@ func (s *Server) handleSetChatPhotoRequest(args [0]string, w http.ResponseWriter
 		}
 	}()
 
-	var response Result
+	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "SetChatPhoto",
 			OperationID:   "setChatPhoto",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = SetChatPhoto
+			Request  = *SetChatPhoto
 			Params   = struct{}
-			Response = Result
+			Response = *Result
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -8959,8 +9041,9 @@ func (s *Server) handleSetChatPhotoRequest(args [0]string, w http.ResponseWriter
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.SetChatPhoto(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.SetChatPhoto(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -8969,7 +9052,7 @@ func (s *Server) handleSetChatPhotoRequest(args [0]string, w http.ResponseWriter
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -9045,21 +9128,21 @@ func (s *Server) handleSetChatStickerSetRequest(args [0]string, w http.ResponseW
 		}
 	}()
 
-	var response Result
+	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "SetChatStickerSet",
 			OperationID:   "setChatStickerSet",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = SetChatStickerSet
+			Request  = *SetChatStickerSet
 			Params   = struct{}
-			Response = Result
+			Response = *Result
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -9069,8 +9152,9 @@ func (s *Server) handleSetChatStickerSetRequest(args [0]string, w http.ResponseW
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.SetChatStickerSet(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.SetChatStickerSet(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -9079,7 +9163,7 @@ func (s *Server) handleSetChatStickerSetRequest(args [0]string, w http.ResponseW
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -9154,21 +9238,21 @@ func (s *Server) handleSetChatTitleRequest(args [0]string, w http.ResponseWriter
 		}
 	}()
 
-	var response Result
+	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "SetChatTitle",
 			OperationID:   "setChatTitle",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = SetChatTitle
+			Request  = *SetChatTitle
 			Params   = struct{}
-			Response = Result
+			Response = *Result
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -9178,8 +9262,9 @@ func (s *Server) handleSetChatTitleRequest(args [0]string, w http.ResponseWriter
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.SetChatTitle(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.SetChatTitle(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -9188,7 +9273,7 @@ func (s *Server) handleSetChatTitleRequest(args [0]string, w http.ResponseWriter
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -9264,21 +9349,21 @@ func (s *Server) handleSetGameScoreRequest(args [0]string, w http.ResponseWriter
 		}
 	}()
 
-	var response Result
+	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "SetGameScore",
 			OperationID:   "setGameScore",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = SetGameScore
+			Request  = *SetGameScore
 			Params   = struct{}
-			Response = Result
+			Response = *Result
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -9288,8 +9373,9 @@ func (s *Server) handleSetGameScoreRequest(args [0]string, w http.ResponseWriter
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.SetGameScore(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.SetGameScore(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -9298,7 +9384,7 @@ func (s *Server) handleSetGameScoreRequest(args [0]string, w http.ResponseWriter
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -9372,21 +9458,21 @@ func (s *Server) handleSetMyCommandsRequest(args [0]string, w http.ResponseWrite
 		}
 	}()
 
-	var response Result
+	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "SetMyCommands",
 			OperationID:   "setMyCommands",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = SetMyCommands
+			Request  = *SetMyCommands
 			Params   = struct{}
-			Response = Result
+			Response = *Result
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -9396,8 +9482,9 @@ func (s *Server) handleSetMyCommandsRequest(args [0]string, w http.ResponseWrite
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.SetMyCommands(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.SetMyCommands(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -9406,7 +9493,7 @@ func (s *Server) handleSetMyCommandsRequest(args [0]string, w http.ResponseWrite
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -9481,21 +9568,21 @@ func (s *Server) handleSetMyDefaultAdministratorRightsRequest(args [0]string, w 
 		}
 	}()
 
-	var response Result
+	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "SetMyDefaultAdministratorRights",
 			OperationID:   "setMyDefaultAdministratorRights",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
 			Request  = OptSetMyDefaultAdministratorRights
 			Params   = struct{}
-			Response = Result
+			Response = *Result
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -9505,8 +9592,9 @@ func (s *Server) handleSetMyDefaultAdministratorRightsRequest(args [0]string, w 
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.SetMyDefaultAdministratorRights(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.SetMyDefaultAdministratorRights(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -9515,7 +9603,7 @@ func (s *Server) handleSetMyDefaultAdministratorRightsRequest(args [0]string, w 
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -9591,21 +9679,21 @@ func (s *Server) handleSetPassportDataErrorsRequest(args [0]string, w http.Respo
 		}
 	}()
 
-	var response Result
+	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "SetPassportDataErrors",
 			OperationID:   "setPassportDataErrors",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = SetPassportDataErrors
+			Request  = *SetPassportDataErrors
 			Params   = struct{}
-			Response = Result
+			Response = *Result
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -9615,8 +9703,9 @@ func (s *Server) handleSetPassportDataErrorsRequest(args [0]string, w http.Respo
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.SetPassportDataErrors(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.SetPassportDataErrors(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -9625,7 +9714,7 @@ func (s *Server) handleSetPassportDataErrorsRequest(args [0]string, w http.Respo
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -9699,21 +9788,21 @@ func (s *Server) handleSetStickerPositionInSetRequest(args [0]string, w http.Res
 		}
 	}()
 
-	var response Result
+	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "SetStickerPositionInSet",
 			OperationID:   "setStickerPositionInSet",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = SetStickerPositionInSet
+			Request  = *SetStickerPositionInSet
 			Params   = struct{}
-			Response = Result
+			Response = *Result
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -9723,8 +9812,9 @@ func (s *Server) handleSetStickerPositionInSetRequest(args [0]string, w http.Res
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.SetStickerPositionInSet(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.SetStickerPositionInSet(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -9733,7 +9823,7 @@ func (s *Server) handleSetStickerPositionInSetRequest(args [0]string, w http.Res
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -9808,21 +9898,21 @@ func (s *Server) handleSetStickerSetThumbRequest(args [0]string, w http.Response
 		}
 	}()
 
-	var response Result
+	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "SetStickerSetThumb",
 			OperationID:   "setStickerSetThumb",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = SetStickerSetThumb
+			Request  = *SetStickerSetThumb
 			Params   = struct{}
-			Response = Result
+			Response = *Result
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -9832,8 +9922,9 @@ func (s *Server) handleSetStickerSetThumbRequest(args [0]string, w http.Response
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.SetStickerSetThumb(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.SetStickerSetThumb(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -9842,7 +9933,7 @@ func (s *Server) handleSetStickerSetThumbRequest(args [0]string, w http.Response
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -9917,21 +10008,21 @@ func (s *Server) handleSetWebhookRequest(args [0]string, w http.ResponseWriter, 
 		}
 	}()
 
-	var response Result
+	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "SetWebhook",
 			OperationID:   "setWebhook",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = SetWebhook
+			Request  = *SetWebhook
 			Params   = struct{}
-			Response = Result
+			Response = *Result
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -9941,8 +10032,9 @@ func (s *Server) handleSetWebhookRequest(args [0]string, w http.ResponseWriter, 
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.SetWebhook(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.SetWebhook(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -9951,7 +10043,7 @@ func (s *Server) handleSetWebhookRequest(args [0]string, w http.ResponseWriter, 
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -10026,21 +10118,21 @@ func (s *Server) handleStopMessageLiveLocationRequest(args [0]string, w http.Res
 		}
 	}()
 
-	var response ResultMessageOrBoolean
+	var response *ResultMessageOrBoolean
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "StopMessageLiveLocation",
 			OperationID:   "stopMessageLiveLocation",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = StopMessageLiveLocation
+			Request  = *StopMessageLiveLocation
 			Params   = struct{}
-			Response = ResultMessageOrBoolean
+			Response = *ResultMessageOrBoolean
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -10050,8 +10142,9 @@ func (s *Server) handleStopMessageLiveLocationRequest(args [0]string, w http.Res
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.StopMessageLiveLocation(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.StopMessageLiveLocation(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -10060,7 +10153,7 @@ func (s *Server) handleStopMessageLiveLocationRequest(args [0]string, w http.Res
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -10134,21 +10227,21 @@ func (s *Server) handleStopPollRequest(args [0]string, w http.ResponseWriter, r 
 		}
 	}()
 
-	var response ResultPoll
+	var response *ResultPoll
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "StopPoll",
 			OperationID:   "stopPoll",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = StopPoll
+			Request  = *StopPoll
 			Params   = struct{}
-			Response = ResultPoll
+			Response = *ResultPoll
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -10158,8 +10251,9 @@ func (s *Server) handleStopPollRequest(args [0]string, w http.ResponseWriter, r 
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.StopPoll(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.StopPoll(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -10168,7 +10262,7 @@ func (s *Server) handleStopPollRequest(args [0]string, w http.ResponseWriter, r 
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -10246,21 +10340,21 @@ func (s *Server) handleUnbanChatMemberRequest(args [0]string, w http.ResponseWri
 		}
 	}()
 
-	var response Result
+	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "UnbanChatMember",
 			OperationID:   "unbanChatMember",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = UnbanChatMember
+			Request  = *UnbanChatMember
 			Params   = struct{}
-			Response = Result
+			Response = *Result
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -10270,8 +10364,9 @@ func (s *Server) handleUnbanChatMemberRequest(args [0]string, w http.ResponseWri
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.UnbanChatMember(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.UnbanChatMember(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -10280,7 +10375,7 @@ func (s *Server) handleUnbanChatMemberRequest(args [0]string, w http.ResponseWri
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -10355,21 +10450,21 @@ func (s *Server) handleUnbanChatSenderChatRequest(args [0]string, w http.Respons
 		}
 	}()
 
-	var response Result
+	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "UnbanChatSenderChat",
 			OperationID:   "unbanChatSenderChat",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = UnbanChatSenderChat
+			Request  = *UnbanChatSenderChat
 			Params   = struct{}
-			Response = Result
+			Response = *Result
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -10379,8 +10474,9 @@ func (s *Server) handleUnbanChatSenderChatRequest(args [0]string, w http.Respons
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.UnbanChatSenderChat(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.UnbanChatSenderChat(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -10389,7 +10485,7 @@ func (s *Server) handleUnbanChatSenderChatRequest(args [0]string, w http.Respons
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -10464,21 +10560,21 @@ func (s *Server) handleUnhideGeneralForumTopicRequest(args [0]string, w http.Res
 		}
 	}()
 
-	var response Result
+	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "UnhideGeneralForumTopic",
 			OperationID:   "unhideGeneralForumTopic",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = UnhideGeneralForumTopic
+			Request  = *UnhideGeneralForumTopic
 			Params   = struct{}
-			Response = Result
+			Response = *Result
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -10488,8 +10584,9 @@ func (s *Server) handleUnhideGeneralForumTopicRequest(args [0]string, w http.Res
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.UnhideGeneralForumTopic(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.UnhideGeneralForumTopic(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -10498,7 +10595,7 @@ func (s *Server) handleUnhideGeneralForumTopicRequest(args [0]string, w http.Res
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -10574,21 +10671,21 @@ func (s *Server) handleUnpinAllChatMessagesRequest(args [0]string, w http.Respon
 		}
 	}()
 
-	var response Result
+	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "UnpinAllChatMessages",
 			OperationID:   "unpinAllChatMessages",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = UnpinAllChatMessages
+			Request  = *UnpinAllChatMessages
 			Params   = struct{}
-			Response = Result
+			Response = *Result
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -10598,8 +10695,9 @@ func (s *Server) handleUnpinAllChatMessagesRequest(args [0]string, w http.Respon
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.UnpinAllChatMessages(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.UnpinAllChatMessages(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -10608,7 +10706,7 @@ func (s *Server) handleUnpinAllChatMessagesRequest(args [0]string, w http.Respon
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -10683,21 +10781,21 @@ func (s *Server) handleUnpinAllForumTopicMessagesRequest(args [0]string, w http.
 		}
 	}()
 
-	var response Result
+	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "UnpinAllForumTopicMessages",
 			OperationID:   "unpinAllForumTopicMessages",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = UnpinAllForumTopicMessages
+			Request  = *UnpinAllForumTopicMessages
 			Params   = struct{}
-			Response = Result
+			Response = *Result
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -10707,8 +10805,9 @@ func (s *Server) handleUnpinAllForumTopicMessagesRequest(args [0]string, w http.
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.UnpinAllForumTopicMessages(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.UnpinAllForumTopicMessages(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -10717,7 +10816,7 @@ func (s *Server) handleUnpinAllForumTopicMessagesRequest(args [0]string, w http.
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -10793,21 +10892,21 @@ func (s *Server) handleUnpinChatMessageRequest(args [0]string, w http.ResponseWr
 		}
 	}()
 
-	var response Result
+	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "UnpinChatMessage",
 			OperationID:   "unpinChatMessage",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = UnpinChatMessage
+			Request  = *UnpinChatMessage
 			Params   = struct{}
-			Response = Result
+			Response = *Result
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -10817,8 +10916,9 @@ func (s *Server) handleUnpinChatMessageRequest(args [0]string, w http.ResponseWr
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.UnpinChatMessage(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.UnpinChatMessage(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -10827,7 +10927,7 @@ func (s *Server) handleUnpinChatMessageRequest(args [0]string, w http.ResponseWr
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
@@ -10902,21 +11002,21 @@ func (s *Server) handleUploadStickerFileRequest(args [0]string, w http.ResponseW
 		}
 	}()
 
-	var response ResultFile
+	var response *ResultFile
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
 			OperationName: "UploadStickerFile",
 			OperationID:   "uploadStickerFile",
 			Body:          request,
-			Params:        map[string]any{},
+			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = UploadStickerFile
+			Request  = *UploadStickerFile
 			Params   = struct{}
-			Response = ResultFile
+			Response = *ResultFile
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -10926,8 +11026,9 @@ func (s *Server) handleUploadStickerFileRequest(args [0]string, w http.ResponseW
 			m,
 			mreq,
 			nil,
-			func(ctx context.Context, request Request, params Params) (Response, error) {
-				return s.h.UploadStickerFile(ctx, request)
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.UploadStickerFile(ctx, request)
+				return response, err
 			},
 		)
 	} else {
@@ -10936,7 +11037,7 @@ func (s *Server) handleUploadStickerFileRequest(args [0]string, w http.ResponseW
 	if err != nil {
 		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(*errRes, w, span)
+			encodeErrorResponse(errRes, w, span)
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
