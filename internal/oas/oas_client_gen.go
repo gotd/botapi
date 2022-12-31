@@ -857,6 +857,74 @@ func (c *Client) CloseForumTopic(ctx context.Context, request CloseForumTopic) (
 	return result, nil
 }
 
+// CloseGeneralForumTopic invokes closeGeneralForumTopic operation.
+//
+// Use this method to close an open 'General' topic in a forum supergroup chat. The bot must be an
+// administrator in the chat for this to work and must have the _can_manage_topics_ administrator
+// rights. Returns _True_ on success.
+//
+// POST /closeGeneralForumTopic
+func (c *Client) CloseGeneralForumTopic(ctx context.Context, request CloseGeneralForumTopic) (res Result, err error) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("closeGeneralForumTopic"),
+	}
+	// Validate request before sending.
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, otelAttrs...)
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, "CloseGeneralForumTopic",
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, otelAttrs...)
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	u.Path += "/closeGeneralForumTopic"
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "POST", u, nil)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeCloseGeneralForumTopicRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeCloseGeneralForumTopicResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
 // CopyMessage invokes copyMessage operation.
 //
 // Use this method to copy messages of any kind. Service messages and invoice messages can't be
@@ -1943,6 +2011,82 @@ func (c *Client) EditForumTopic(ctx context.Context, request EditForumTopic) (re
 	return result, nil
 }
 
+// EditGeneralForumTopic invokes editGeneralForumTopic operation.
+//
+// Use this method to edit the name of the 'General' topic in a forum supergroup chat. The bot must
+// be an administrator in the chat for this to work and must have _can_manage_topics_ administrator
+// rights. Returns _True_ on success.
+//
+// POST /editGeneralForumTopic
+func (c *Client) EditGeneralForumTopic(ctx context.Context, request EditGeneralForumTopic) (res Result, err error) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("editGeneralForumTopic"),
+	}
+	// Validate request before sending.
+	if err := func() error {
+		if err := request.Validate(); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return res, errors.Wrap(err, "validate")
+	}
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, otelAttrs...)
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, "EditGeneralForumTopic",
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, otelAttrs...)
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	u.Path += "/editGeneralForumTopic"
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "POST", u, nil)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeEditGeneralForumTopicRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeEditGeneralForumTopicResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
 // EditMessageCaption invokes editMessageCaption operation.
 //
 // Use this method to edit captions of messages. On success, if the edited message is not an inline
@@ -2600,8 +2744,9 @@ func (c *Client) GetChatAdministrators(ctx context.Context, request GetChatAdmin
 
 // GetChatMember invokes getChatMember operation.
 //
-// Use this method to get information about a member of a chat. Returns a [ChatMember](https://core.
-// telegram.org/bots/api#chatmember) object on success.
+// Use this method to get information about a member of a chat. The method is guaranteed to work only
+// if the bot is an administrator in the chat. Returns a [ChatMember](https://core.telegram.
+// org/bots/api#chatmember) object on success.
 //
 // POST /getChatMember
 func (c *Client) GetChatMember(ctx context.Context, request GetChatMember) (res ResultChatMember, err error) {
@@ -3565,6 +3710,74 @@ func (c *Client) GetWebhookInfo(ctx context.Context) (res ResultWebhookInfo, err
 	return result, nil
 }
 
+// HideGeneralForumTopic invokes hideGeneralForumTopic operation.
+//
+// Use this method to hide the 'General' topic in a forum supergroup chat. The bot must be an
+// administrator in the chat for this to work and must have the _can_manage_topics_ administrator
+// rights. The topic will be automatically closed if it was open. Returns _True_ on success.
+//
+// POST /hideGeneralForumTopic
+func (c *Client) HideGeneralForumTopic(ctx context.Context, request HideGeneralForumTopic) (res Result, err error) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("hideGeneralForumTopic"),
+	}
+	// Validate request before sending.
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, otelAttrs...)
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, "HideGeneralForumTopic",
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, otelAttrs...)
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	u.Path += "/hideGeneralForumTopic"
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "POST", u, nil)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeHideGeneralForumTopicRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeHideGeneralForumTopicResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
 // LeaveChat invokes leaveChat operation.
 //
 // Use this method for your bot to leave a group, supergroup or channel. Returns _True_ on success.
@@ -3895,6 +4108,74 @@ func (c *Client) ReopenForumTopic(ctx context.Context, request ReopenForumTopic)
 
 	stage = "DecodeResponse"
 	result, err := decodeReopenForumTopicResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
+// ReopenGeneralForumTopic invokes reopenGeneralForumTopic operation.
+//
+// Use this method to reopen a closed 'General' topic in a forum supergroup chat. The bot must be an
+// administrator in the chat for this to work and must have the _can_manage_topics_ administrator
+// rights. The topic will be automatically unhidden if it was hidden. Returns _True_ on success.
+//
+// POST /reopenGeneralForumTopic
+func (c *Client) ReopenGeneralForumTopic(ctx context.Context, request ReopenGeneralForumTopic) (res Result, err error) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("reopenGeneralForumTopic"),
+	}
+	// Validate request before sending.
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, otelAttrs...)
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, "ReopenGeneralForumTopic",
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, otelAttrs...)
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	u.Path += "/reopenGeneralForumTopic"
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "POST", u, nil)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeReopenGeneralForumTopicRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeReopenGeneralForumTopicResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -6678,6 +6959,74 @@ func (c *Client) UnbanChatSenderChat(ctx context.Context, request UnbanChatSende
 
 	stage = "DecodeResponse"
 	result, err := decodeUnbanChatSenderChatResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
+// UnhideGeneralForumTopic invokes unhideGeneralForumTopic operation.
+//
+// Use this method to unhide the 'General' topic in a forum supergroup chat. The bot must be an
+// administrator in the chat for this to work and must have the _can_manage_topics_ administrator
+// rights. Returns _True_ on success.
+//
+// POST /unhideGeneralForumTopic
+func (c *Client) UnhideGeneralForumTopic(ctx context.Context, request UnhideGeneralForumTopic) (res Result, err error) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("unhideGeneralForumTopic"),
+	}
+	// Validate request before sending.
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, otelAttrs...)
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, "UnhideGeneralForumTopic",
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, otelAttrs...)
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	u.Path += "/unhideGeneralForumTopic"
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "POST", u, nil)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeUnhideGeneralForumTopicRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeUnhideGeneralForumTopicResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}

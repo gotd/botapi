@@ -1240,6 +1240,13 @@ type Chat struct {
 	// _Optional_. The time after which all messages sent to the chat will be automatically deleted; in
 	// seconds. Returned only in [getChat](https://core.telegram.org/bots/api#getchat).
 	MessageAutoDeleteTime OptInt `json:"message_auto_delete_time"`
+	// _Optional_. _True_, if aggressive anti-spam checks are enabled in the supergroup. The field is
+	// only available to chat administrators. Returned only in [getChat](https://core.telegram.
+	// org/bots/api#getchat).
+	HasAggressiveAntiSpamEnabled OptBool `json:"has_aggressive_anti_spam_enabled"`
+	// _Optional_. _True_, if non-administrators can only get the list of bots and administrators in the
+	// chat. Returned only in [getChat](https://core.telegram.org/bots/api#getchat).
+	HasHiddenMembers OptBool `json:"has_hidden_members"`
 	// _Optional_. _True_, if messages from the chat can't be forwarded to other chats. Returned only in
 	// [getChat](https://core.telegram.org/bots/api#getchat).
 	HasProtectedContent OptBool `json:"has_protected_content"`
@@ -1362,6 +1369,16 @@ func (s Chat) GetSlowModeDelay() OptInt {
 // GetMessageAutoDeleteTime returns the value of MessageAutoDeleteTime.
 func (s Chat) GetMessageAutoDeleteTime() OptInt {
 	return s.MessageAutoDeleteTime
+}
+
+// GetHasAggressiveAntiSpamEnabled returns the value of HasAggressiveAntiSpamEnabled.
+func (s Chat) GetHasAggressiveAntiSpamEnabled() OptBool {
+	return s.HasAggressiveAntiSpamEnabled
+}
+
+// GetHasHiddenMembers returns the value of HasHiddenMembers.
+func (s Chat) GetHasHiddenMembers() OptBool {
+	return s.HasHiddenMembers
 }
 
 // GetHasProtectedContent returns the value of HasProtectedContent.
@@ -1497,6 +1514,16 @@ func (s *Chat) SetSlowModeDelay(val OptInt) {
 // SetMessageAutoDeleteTime sets the value of MessageAutoDeleteTime.
 func (s *Chat) SetMessageAutoDeleteTime(val OptInt) {
 	s.MessageAutoDeleteTime = val
+}
+
+// SetHasAggressiveAntiSpamEnabled sets the value of HasAggressiveAntiSpamEnabled.
+func (s *Chat) SetHasAggressiveAntiSpamEnabled(val OptBool) {
+	s.HasAggressiveAntiSpamEnabled = val
+}
+
+// SetHasHiddenMembers sets the value of HasHiddenMembers.
+func (s *Chat) SetHasHiddenMembers(val OptBool) {
+	s.HasHiddenMembers = val
 }
 
 // SetHasProtectedContent sets the value of HasProtectedContent.
@@ -2932,6 +2959,22 @@ func (s *CloseForumTopic) SetMessageThreadID(val int) {
 	s.MessageThreadID = val
 }
 
+// Input for closeGeneralForumTopic.
+// Ref: #/components/schemas/closeGeneralForumTopic
+type CloseGeneralForumTopic struct {
+	ChatID ID `json:"chat_id"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s CloseGeneralForumTopic) GetChatID() ID {
+	return s.ChatID
+}
+
+// SetChatID sets the value of ChatID.
+func (s *CloseGeneralForumTopic) SetChatID(val ID) {
+	s.ChatID = val
+}
+
 // This object represents a phone contact.
 // Ref: #/components/schemas/Contact
 type Contact struct {
@@ -4029,12 +4072,14 @@ type EditForumTopic struct {
 	ChatID ID `json:"chat_id"`
 	// Unique identifier for the target message thread of the forum topic.
 	MessageThreadID int `json:"message_thread_id"`
-	// New topic name, 1-128 characters.
-	Name string `json:"name"`
+	// New topic name, 0-128 characters. If not specified or empty, the current name of the topic will be
+	// kept.
+	Name OptString `json:"name"`
 	// New unique identifier of the custom emoji shown as the topic icon. Use
 	// [getForumTopicIconStickers](https://core.telegram.org/bots/api#getforumtopiciconstickers) to get
-	// all allowed custom emoji identifiers.
-	IconCustomEmojiID string `json:"icon_custom_emoji_id"`
+	// all allowed custom emoji identifiers. Pass an empty string to remove the icon. If not specified,
+	// the current icon will be kept.
+	IconCustomEmojiID OptString `json:"icon_custom_emoji_id"`
 }
 
 // GetChatID returns the value of ChatID.
@@ -4048,12 +4093,12 @@ func (s EditForumTopic) GetMessageThreadID() int {
 }
 
 // GetName returns the value of Name.
-func (s EditForumTopic) GetName() string {
+func (s EditForumTopic) GetName() OptString {
 	return s.Name
 }
 
 // GetIconCustomEmojiID returns the value of IconCustomEmojiID.
-func (s EditForumTopic) GetIconCustomEmojiID() string {
+func (s EditForumTopic) GetIconCustomEmojiID() OptString {
 	return s.IconCustomEmojiID
 }
 
@@ -4068,13 +4113,41 @@ func (s *EditForumTopic) SetMessageThreadID(val int) {
 }
 
 // SetName sets the value of Name.
-func (s *EditForumTopic) SetName(val string) {
+func (s *EditForumTopic) SetName(val OptString) {
 	s.Name = val
 }
 
 // SetIconCustomEmojiID sets the value of IconCustomEmojiID.
-func (s *EditForumTopic) SetIconCustomEmojiID(val string) {
+func (s *EditForumTopic) SetIconCustomEmojiID(val OptString) {
 	s.IconCustomEmojiID = val
+}
+
+// Input for editGeneralForumTopic.
+// Ref: #/components/schemas/editGeneralForumTopic
+type EditGeneralForumTopic struct {
+	ChatID ID `json:"chat_id"`
+	// New topic name, 1-128 characters.
+	Name string `json:"name"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s EditGeneralForumTopic) GetChatID() ID {
+	return s.ChatID
+}
+
+// GetName returns the value of Name.
+func (s EditGeneralForumTopic) GetName() string {
+	return s.Name
+}
+
+// SetChatID sets the value of ChatID.
+func (s *EditGeneralForumTopic) SetChatID(val ID) {
+	s.ChatID = val
+}
+
+// SetName sets the value of Name.
+func (s *EditGeneralForumTopic) SetName(val string) {
+	s.Name = val
 }
 
 // Input for editMessageCaption.
@@ -4938,6 +5011,36 @@ func (s *ForumTopicCreated) SetIconCustomEmojiID(val OptString) {
 	s.IconCustomEmojiID = val
 }
 
+// This object represents a service message about an edited forum topic.
+// Ref: #/components/schemas/ForumTopicEdited
+type ForumTopicEdited struct {
+	// _Optional_. New name of the topic, if it was edited.
+	Name OptString `json:"name"`
+	// _Optional_. New identifier of the custom emoji shown as the topic icon, if it was edited; an empty
+	// string if the icon was removed.
+	IconCustomEmojiID OptString `json:"icon_custom_emoji_id"`
+}
+
+// GetName returns the value of Name.
+func (s ForumTopicEdited) GetName() OptString {
+	return s.Name
+}
+
+// GetIconCustomEmojiID returns the value of IconCustomEmojiID.
+func (s ForumTopicEdited) GetIconCustomEmojiID() OptString {
+	return s.IconCustomEmojiID
+}
+
+// SetName sets the value of Name.
+func (s *ForumTopicEdited) SetName(val OptString) {
+	s.Name = val
+}
+
+// SetIconCustomEmojiID sets the value of IconCustomEmojiID.
+func (s *ForumTopicEdited) SetIconCustomEmojiID(val OptString) {
+	s.IconCustomEmojiID = val
+}
+
 // This object represents a service message about a forum topic reopened in the chat. Currently holds
 // no information.
 // Ref: #/components/schemas/ForumTopicReopened
@@ -5138,6 +5241,16 @@ func (s *GameHighScore) SetUser(val User) {
 func (s *GameHighScore) SetScore(val int) {
 	s.Score = val
 }
+
+// This object represents a service message about General forum topic hidden in the chat. Currently
+// holds no information.
+// Ref: #/components/schemas/GeneralForumTopicHidden
+type GeneralForumTopicHidden struct{}
+
+// This object represents a service message about General forum topic unhidden in the chat. Currently
+// holds no information.
+// Ref: #/components/schemas/GeneralForumTopicUnhidden
+type GeneralForumTopicUnhidden struct{}
 
 // Input for getChat.
 // Ref: #/components/schemas/getChat
@@ -5486,6 +5599,22 @@ func (s *GetUserProfilePhotos) SetOffset(val OptInt) {
 // SetLimit sets the value of Limit.
 func (s *GetUserProfilePhotos) SetLimit(val OptInt) {
 	s.Limit = val
+}
+
+// Input for hideGeneralForumTopic.
+// Ref: #/components/schemas/hideGeneralForumTopic
+type HideGeneralForumTopic struct {
+	ChatID ID `json:"chat_id"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s HideGeneralForumTopic) GetChatID() ID {
+	return s.ChatID
+}
+
+// SetChatID sets the value of ChatID.
+func (s *HideGeneralForumTopic) SetChatID(val ID) {
+	s.ChatID = val
 }
 
 // Ref: #/components/schemas/ID
@@ -9503,6 +9632,8 @@ type InputMediaAnimation struct {
 	Height OptInt `json:"height"`
 	// _Optional_. Animation duration in seconds.
 	Duration OptInt `json:"duration"`
+	// _Optional_. Pass _True_ if the animation needs to be covered with a spoiler animation.
+	HasSpoiler OptBool `json:"has_spoiler"`
 }
 
 // GetMedia returns the value of Media.
@@ -9545,6 +9676,11 @@ func (s InputMediaAnimation) GetDuration() OptInt {
 	return s.Duration
 }
 
+// GetHasSpoiler returns the value of HasSpoiler.
+func (s InputMediaAnimation) GetHasSpoiler() OptBool {
+	return s.HasSpoiler
+}
+
 // SetMedia sets the value of Media.
 func (s *InputMediaAnimation) SetMedia(val string) {
 	s.Media = val
@@ -9583,6 +9719,11 @@ func (s *InputMediaAnimation) SetHeight(val OptInt) {
 // SetDuration sets the value of Duration.
 func (s *InputMediaAnimation) SetDuration(val OptInt) {
 	s.Duration = val
+}
+
+// SetHasSpoiler sets the value of HasSpoiler.
+func (s *InputMediaAnimation) SetHasSpoiler(val OptBool) {
+	s.HasSpoiler = val
 }
 
 // Represents an audio file to be treated as music to be sent.
@@ -9805,6 +9946,8 @@ type InputMediaPhoto struct {
 	// _Optional_. List of special entities that appear in the caption, which can be specified instead of
 	// _parse_mode_.
 	CaptionEntities []MessageEntity `json:"caption_entities"`
+	// _Optional_. Pass _True_ if the photo needs to be covered with a spoiler animation.
+	HasSpoiler OptBool `json:"has_spoiler"`
 }
 
 // GetMedia returns the value of Media.
@@ -9827,6 +9970,11 @@ func (s InputMediaPhoto) GetCaptionEntities() []MessageEntity {
 	return s.CaptionEntities
 }
 
+// GetHasSpoiler returns the value of HasSpoiler.
+func (s InputMediaPhoto) GetHasSpoiler() OptBool {
+	return s.HasSpoiler
+}
+
 // SetMedia sets the value of Media.
 func (s *InputMediaPhoto) SetMedia(val string) {
 	s.Media = val
@@ -9845,6 +9993,11 @@ func (s *InputMediaPhoto) SetParseMode(val OptString) {
 // SetCaptionEntities sets the value of CaptionEntities.
 func (s *InputMediaPhoto) SetCaptionEntities(val []MessageEntity) {
 	s.CaptionEntities = val
+}
+
+// SetHasSpoiler sets the value of HasSpoiler.
+func (s *InputMediaPhoto) SetHasSpoiler(val OptBool) {
+	s.HasSpoiler = val
 }
 
 // Represents a video to be sent.
@@ -9880,6 +10033,8 @@ type InputMediaVideo struct {
 	Duration OptInt `json:"duration"`
 	// _Optional_. Pass _True_ if the uploaded video is suitable for streaming.
 	SupportsStreaming OptBool `json:"supports_streaming"`
+	// _Optional_. Pass _True_ if the video needs to be covered with a spoiler animation.
+	HasSpoiler OptBool `json:"has_spoiler"`
 }
 
 // GetMedia returns the value of Media.
@@ -9927,6 +10082,11 @@ func (s InputMediaVideo) GetSupportsStreaming() OptBool {
 	return s.SupportsStreaming
 }
 
+// GetHasSpoiler returns the value of HasSpoiler.
+func (s InputMediaVideo) GetHasSpoiler() OptBool {
+	return s.HasSpoiler
+}
+
 // SetMedia sets the value of Media.
 func (s *InputMediaVideo) SetMedia(val string) {
 	s.Media = val
@@ -9970,6 +10130,11 @@ func (s *InputMediaVideo) SetDuration(val OptInt) {
 // SetSupportsStreaming sets the value of SupportsStreaming.
 func (s *InputMediaVideo) SetSupportsStreaming(val OptBool) {
 	s.SupportsStreaming = val
+}
+
+// SetHasSpoiler sets the value of HasSpoiler.
+func (s *InputMediaVideo) SetHasSpoiler(val OptBool) {
+	s.HasSpoiler = val
 }
 
 // This object represents the content of a message to be sent as a result of an inline query.
@@ -10947,12 +11112,14 @@ type Message struct {
 	// _Optional_. For messages with a caption, special entities like usernames, URLs, bot commands, etc.
 	// that appear in the caption.
 	CaptionEntities []MessageEntity `json:"caption_entities"`
-	Contact         OptContact      `json:"contact"`
-	Dice            OptDice         `json:"dice"`
-	Game            OptGame         `json:"game"`
-	Poll            OptPoll         `json:"poll"`
-	Venue           OptVenue        `json:"venue"`
-	Location        OptLocation     `json:"location"`
+	// _Optional_. _True_, if the message media is covered by a spoiler animation.
+	HasMediaSpoiler OptBool     `json:"has_media_spoiler"`
+	Contact         OptContact  `json:"contact"`
+	Dice            OptDice     `json:"dice"`
+	Game            OptGame     `json:"game"`
+	Poll            OptPoll     `json:"poll"`
+	Venue           OptVenue    `json:"venue"`
+	Location        OptLocation `json:"location"`
 	// _Optional_. New members that were added to the group or supergroup and information about them (the
 	// bot itself may be one of these members).
 	NewChatMembers []User  `json:"new_chat_members"`
@@ -10991,11 +11158,15 @@ type Message struct {
 	// _Optional_. The domain name of the website on which the user has logged in. [More about Telegram
 	// Login](https://core.telegram.org/widgets/login).
 	ConnectedWebsite             OptString                       `json:"connected_website"`
+	WriteAccessAllowed           *WriteAccessAllowed             `json:"write_access_allowed"`
 	PassportData                 OptPassportData                 `json:"passport_data"`
 	ProximityAlertTriggered      OptProximityAlertTriggered      `json:"proximity_alert_triggered"`
 	ForumTopicCreated            OptForumTopicCreated            `json:"forum_topic_created"`
+	ForumTopicEdited             OptForumTopicEdited             `json:"forum_topic_edited"`
 	ForumTopicClosed             *ForumTopicClosed               `json:"forum_topic_closed"`
 	ForumTopicReopened           *ForumTopicReopened             `json:"forum_topic_reopened"`
+	GeneralForumTopicHidden      *GeneralForumTopicHidden        `json:"general_forum_topic_hidden"`
+	GeneralForumTopicUnhidden    *GeneralForumTopicUnhidden      `json:"general_forum_topic_unhidden"`
 	VideoChatScheduled           OptVideoChatScheduled           `json:"video_chat_scheduled"`
 	VideoChatStarted             *VideoChatStarted               `json:"video_chat_started"`
 	VideoChatEnded               OptVideoChatEnded               `json:"video_chat_ended"`
@@ -11167,6 +11338,11 @@ func (s Message) GetCaptionEntities() []MessageEntity {
 	return s.CaptionEntities
 }
 
+// GetHasMediaSpoiler returns the value of HasMediaSpoiler.
+func (s Message) GetHasMediaSpoiler() OptBool {
+	return s.HasMediaSpoiler
+}
+
 // GetContact returns the value of Contact.
 func (s Message) GetContact() OptContact {
 	return s.Contact
@@ -11272,6 +11448,11 @@ func (s Message) GetConnectedWebsite() OptString {
 	return s.ConnectedWebsite
 }
 
+// GetWriteAccessAllowed returns the value of WriteAccessAllowed.
+func (s Message) GetWriteAccessAllowed() *WriteAccessAllowed {
+	return s.WriteAccessAllowed
+}
+
 // GetPassportData returns the value of PassportData.
 func (s Message) GetPassportData() OptPassportData {
 	return s.PassportData
@@ -11287,6 +11468,11 @@ func (s Message) GetForumTopicCreated() OptForumTopicCreated {
 	return s.ForumTopicCreated
 }
 
+// GetForumTopicEdited returns the value of ForumTopicEdited.
+func (s Message) GetForumTopicEdited() OptForumTopicEdited {
+	return s.ForumTopicEdited
+}
+
 // GetForumTopicClosed returns the value of ForumTopicClosed.
 func (s Message) GetForumTopicClosed() *ForumTopicClosed {
 	return s.ForumTopicClosed
@@ -11295,6 +11481,16 @@ func (s Message) GetForumTopicClosed() *ForumTopicClosed {
 // GetForumTopicReopened returns the value of ForumTopicReopened.
 func (s Message) GetForumTopicReopened() *ForumTopicReopened {
 	return s.ForumTopicReopened
+}
+
+// GetGeneralForumTopicHidden returns the value of GeneralForumTopicHidden.
+func (s Message) GetGeneralForumTopicHidden() *GeneralForumTopicHidden {
+	return s.GeneralForumTopicHidden
+}
+
+// GetGeneralForumTopicUnhidden returns the value of GeneralForumTopicUnhidden.
+func (s Message) GetGeneralForumTopicUnhidden() *GeneralForumTopicUnhidden {
+	return s.GeneralForumTopicUnhidden
 }
 
 // GetVideoChatScheduled returns the value of VideoChatScheduled.
@@ -11502,6 +11698,11 @@ func (s *Message) SetCaptionEntities(val []MessageEntity) {
 	s.CaptionEntities = val
 }
 
+// SetHasMediaSpoiler sets the value of HasMediaSpoiler.
+func (s *Message) SetHasMediaSpoiler(val OptBool) {
+	s.HasMediaSpoiler = val
+}
+
 // SetContact sets the value of Contact.
 func (s *Message) SetContact(val OptContact) {
 	s.Contact = val
@@ -11607,6 +11808,11 @@ func (s *Message) SetConnectedWebsite(val OptString) {
 	s.ConnectedWebsite = val
 }
 
+// SetWriteAccessAllowed sets the value of WriteAccessAllowed.
+func (s *Message) SetWriteAccessAllowed(val *WriteAccessAllowed) {
+	s.WriteAccessAllowed = val
+}
+
 // SetPassportData sets the value of PassportData.
 func (s *Message) SetPassportData(val OptPassportData) {
 	s.PassportData = val
@@ -11622,6 +11828,11 @@ func (s *Message) SetForumTopicCreated(val OptForumTopicCreated) {
 	s.ForumTopicCreated = val
 }
 
+// SetForumTopicEdited sets the value of ForumTopicEdited.
+func (s *Message) SetForumTopicEdited(val OptForumTopicEdited) {
+	s.ForumTopicEdited = val
+}
+
 // SetForumTopicClosed sets the value of ForumTopicClosed.
 func (s *Message) SetForumTopicClosed(val *ForumTopicClosed) {
 	s.ForumTopicClosed = val
@@ -11630,6 +11841,16 @@ func (s *Message) SetForumTopicClosed(val *ForumTopicClosed) {
 // SetForumTopicReopened sets the value of ForumTopicReopened.
 func (s *Message) SetForumTopicReopened(val *ForumTopicReopened) {
 	s.ForumTopicReopened = val
+}
+
+// SetGeneralForumTopicHidden sets the value of GeneralForumTopicHidden.
+func (s *Message) SetGeneralForumTopicHidden(val *GeneralForumTopicHidden) {
+	s.GeneralForumTopicHidden = val
+}
+
+// SetGeneralForumTopicUnhidden sets the value of GeneralForumTopicUnhidden.
+func (s *Message) SetGeneralForumTopicUnhidden(val *GeneralForumTopicUnhidden) {
+	s.GeneralForumTopicUnhidden = val
 }
 
 // SetVideoChatScheduled sets the value of VideoChatScheduled.
@@ -12890,6 +13111,52 @@ func (o OptForumTopicCreated) Get() (v ForumTopicCreated, ok bool) {
 
 // Or returns value if set, or given parameter if does not.
 func (o OptForumTopicCreated) Or(d ForumTopicCreated) ForumTopicCreated {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
+// NewOptForumTopicEdited returns new OptForumTopicEdited with value set to v.
+func NewOptForumTopicEdited(v ForumTopicEdited) OptForumTopicEdited {
+	return OptForumTopicEdited{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptForumTopicEdited is optional ForumTopicEdited.
+type OptForumTopicEdited struct {
+	Value ForumTopicEdited
+	Set   bool
+}
+
+// IsSet returns true if OptForumTopicEdited was set.
+func (o OptForumTopicEdited) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptForumTopicEdited) Reset() {
+	var v ForumTopicEdited
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptForumTopicEdited) SetTo(v ForumTopicEdited) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptForumTopicEdited) Get() (v ForumTopicEdited, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptForumTopicEdited) Or(d ForumTopicEdited) ForumTopicEdited {
 	if v, ok := o.Get(); ok {
 		return v
 	}
@@ -16869,6 +17136,22 @@ func (s *ReopenForumTopic) SetMessageThreadID(val int) {
 	s.MessageThreadID = val
 }
 
+// Input for reopenGeneralForumTopic.
+// Ref: #/components/schemas/reopenGeneralForumTopic
+type ReopenGeneralForumTopic struct {
+	ChatID ID `json:"chat_id"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s ReopenGeneralForumTopic) GetChatID() ID {
+	return s.ChatID
+}
+
+// SetChatID sets the value of ChatID.
+func (s *ReopenGeneralForumTopic) SetChatID(val ID) {
+	s.ChatID = val
+}
+
 // This object represents a [custom keyboard](https://core.telegram.org/bots/features#keyboards) with
 // reply options (see [Introduction to bots](https://core.telegram.org/bots/features#keyboards) for
 // details and examples).
@@ -16877,6 +17160,10 @@ type ReplyKeyboardMarkup struct {
 	// Array of button rows, each represented by an Array of [KeyboardButton](https://core.telegram.
 	// org/bots/api#keyboardbutton) objects.
 	Keyboard [][]KeyboardButton `json:"keyboard"`
+	// _Optional_. Requests clients to always show the keyboard when the regular keyboard is hidden.
+	// Defaults to _false_, in which case the custom keyboard can be hidden and opened with a keyboard
+	// icon.
+	IsPersistent OptBool `json:"is_persistent"`
 	// _Optional_. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the
 	// keyboard smaller if there are just two rows of buttons). Defaults to _false_, in which case the
 	// custom keyboard is always of the same height as the app's standard keyboard.
@@ -16903,6 +17190,11 @@ func (s ReplyKeyboardMarkup) GetKeyboard() [][]KeyboardButton {
 	return s.Keyboard
 }
 
+// GetIsPersistent returns the value of IsPersistent.
+func (s ReplyKeyboardMarkup) GetIsPersistent() OptBool {
+	return s.IsPersistent
+}
+
 // GetResizeKeyboard returns the value of ResizeKeyboard.
 func (s ReplyKeyboardMarkup) GetResizeKeyboard() OptBool {
 	return s.ResizeKeyboard
@@ -16926,6 +17218,11 @@ func (s ReplyKeyboardMarkup) GetSelective() OptBool {
 // SetKeyboard sets the value of Keyboard.
 func (s *ReplyKeyboardMarkup) SetKeyboard(val [][]KeyboardButton) {
 	s.Keyboard = val
+}
+
+// SetIsPersistent sets the value of IsPersistent.
+func (s *ReplyKeyboardMarkup) SetIsPersistent(val OptBool) {
+	s.IsPersistent = val
 }
 
 // SetResizeKeyboard sets the value of ResizeKeyboard.
@@ -17750,6 +18047,8 @@ type SendAnimation struct {
 	// A JSON-serialized list of special entities that appear in the caption, which can be specified
 	// instead of _parse_mode_.
 	CaptionEntities []MessageEntity `json:"caption_entities"`
+	// Pass _True_ if the animation needs to be covered with a spoiler animation.
+	HasSpoiler OptBool `json:"has_spoiler"`
 	// Sends the message [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will
 	// receive a notification with no sound.
 	DisableNotification OptBool `json:"disable_notification"`
@@ -17810,6 +18109,11 @@ func (s SendAnimation) GetParseMode() OptString {
 // GetCaptionEntities returns the value of CaptionEntities.
 func (s SendAnimation) GetCaptionEntities() []MessageEntity {
 	return s.CaptionEntities
+}
+
+// GetHasSpoiler returns the value of HasSpoiler.
+func (s SendAnimation) GetHasSpoiler() OptBool {
+	return s.HasSpoiler
 }
 
 // GetDisableNotification returns the value of DisableNotification.
@@ -17885,6 +18189,11 @@ func (s *SendAnimation) SetParseMode(val OptString) {
 // SetCaptionEntities sets the value of CaptionEntities.
 func (s *SendAnimation) SetCaptionEntities(val []MessageEntity) {
 	s.CaptionEntities = val
+}
+
+// SetHasSpoiler sets the value of HasSpoiler.
+func (s *SendAnimation) SetHasSpoiler(val OptBool) {
+	s.HasSpoiler = val
 }
 
 // SetDisableNotification sets the value of DisableNotification.
@@ -18111,6 +18420,8 @@ func (s *SendAudio) SetReplyMarkup(val OptSendReplyMarkup) {
 // Ref: #/components/schemas/sendChatAction
 type SendChatAction struct {
 	ChatID ID `json:"chat_id"`
+	// Unique identifier for the target message thread; supergroups only.
+	MessageThreadID OptInt `json:"message_thread_id"`
 	// Type of action to broadcast. Choose one, depending on what the user is about to receive: _typing_
 	// for [text messages](https://core.telegram.org/bots/api#sendmessage), _upload_photo_ for
 	// [photos](https://core.telegram.org/bots/api#sendphoto), _record_video_ or _upload_video_ for
@@ -18128,6 +18439,11 @@ func (s SendChatAction) GetChatID() ID {
 	return s.ChatID
 }
 
+// GetMessageThreadID returns the value of MessageThreadID.
+func (s SendChatAction) GetMessageThreadID() OptInt {
+	return s.MessageThreadID
+}
+
 // GetAction returns the value of Action.
 func (s SendChatAction) GetAction() string {
 	return s.Action
@@ -18136,6 +18452,11 @@ func (s SendChatAction) GetAction() string {
 // SetChatID sets the value of ChatID.
 func (s *SendChatAction) SetChatID(val ID) {
 	s.ChatID = val
+}
+
+// SetMessageThreadID sets the value of MessageThreadID.
+func (s *SendChatAction) SetMessageThreadID(val OptInt) {
+	s.MessageThreadID = val
 }
 
 // SetAction sets the value of Action.
@@ -19546,6 +19867,8 @@ type SendPhoto struct {
 	// A JSON-serialized list of special entities that appear in the caption, which can be specified
 	// instead of _parse_mode_.
 	CaptionEntities []MessageEntity `json:"caption_entities"`
+	// Pass _True_ if the photo needs to be covered with a spoiler animation.
+	HasSpoiler OptBool `json:"has_spoiler"`
 	// Sends the message [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will
 	// receive a notification with no sound.
 	DisableNotification OptBool `json:"disable_notification"`
@@ -19586,6 +19909,11 @@ func (s SendPhoto) GetParseMode() OptString {
 // GetCaptionEntities returns the value of CaptionEntities.
 func (s SendPhoto) GetCaptionEntities() []MessageEntity {
 	return s.CaptionEntities
+}
+
+// GetHasSpoiler returns the value of HasSpoiler.
+func (s SendPhoto) GetHasSpoiler() OptBool {
+	return s.HasSpoiler
 }
 
 // GetDisableNotification returns the value of DisableNotification.
@@ -19641,6 +19969,11 @@ func (s *SendPhoto) SetParseMode(val OptString) {
 // SetCaptionEntities sets the value of CaptionEntities.
 func (s *SendPhoto) SetCaptionEntities(val []MessageEntity) {
 	s.CaptionEntities = val
+}
+
+// SetHasSpoiler sets the value of HasSpoiler.
+func (s *SendPhoto) SetHasSpoiler(val OptBool) {
+	s.HasSpoiler = val
 }
 
 // SetDisableNotification sets the value of DisableNotification.
@@ -20351,6 +20684,8 @@ type SendVideo struct {
 	// A JSON-serialized list of special entities that appear in the caption, which can be specified
 	// instead of _parse_mode_.
 	CaptionEntities []MessageEntity `json:"caption_entities"`
+	// Pass _True_ if the video needs to be covered with a spoiler animation.
+	HasSpoiler OptBool `json:"has_spoiler"`
 	// Pass _True_ if the uploaded video is suitable for streaming.
 	SupportsStreaming OptBool `json:"supports_streaming"`
 	// Sends the message [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will
@@ -20413,6 +20748,11 @@ func (s SendVideo) GetParseMode() OptString {
 // GetCaptionEntities returns the value of CaptionEntities.
 func (s SendVideo) GetCaptionEntities() []MessageEntity {
 	return s.CaptionEntities
+}
+
+// GetHasSpoiler returns the value of HasSpoiler.
+func (s SendVideo) GetHasSpoiler() OptBool {
+	return s.HasSpoiler
 }
 
 // GetSupportsStreaming returns the value of SupportsStreaming.
@@ -20493,6 +20833,11 @@ func (s *SendVideo) SetParseMode(val OptString) {
 // SetCaptionEntities sets the value of CaptionEntities.
 func (s *SendVideo) SetCaptionEntities(val []MessageEntity) {
 	s.CaptionEntities = val
+}
+
+// SetHasSpoiler sets the value of HasSpoiler.
+func (s *SendVideo) SetHasSpoiler(val OptBool) {
+	s.HasSpoiler = val
 }
 
 // SetSupportsStreaming sets the value of SupportsStreaming.
@@ -22096,6 +22441,22 @@ func (s *UnbanChatSenderChat) SetSenderChatID(val int64) {
 	s.SenderChatID = val
 }
 
+// Input for unhideGeneralForumTopic.
+// Ref: #/components/schemas/unhideGeneralForumTopic
+type UnhideGeneralForumTopic struct {
+	ChatID ID `json:"chat_id"`
+}
+
+// GetChatID returns the value of ChatID.
+func (s UnhideGeneralForumTopic) GetChatID() ID {
+	return s.ChatID
+}
+
+// SetChatID sets the value of ChatID.
+func (s *UnhideGeneralForumTopic) SetChatID(val ID) {
+	s.ChatID = val
+}
+
 // Input for unpinAllChatMessages.
 // Ref: #/components/schemas/unpinAllChatMessages
 type UnpinAllChatMessages struct {
@@ -23122,3 +23483,8 @@ func (s *WebhookInfo) SetMaxConnections(val OptInt) {
 func (s *WebhookInfo) SetAllowedUpdates(val []string) {
 	s.AllowedUpdates = val
 }
+
+// This object represents a service message about a user allowing a bot added to the attachment menu
+// to write messages. Currently holds no information.
+// Ref: #/components/schemas/WriteAccessAllowed
+type WriteAccessAllowed struct{}

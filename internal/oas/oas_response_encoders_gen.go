@@ -165,6 +165,20 @@ func encodeCloseForumTopicResponse(response Result, w http.ResponseWriter, span 
 
 }
 
+func encodeCloseGeneralForumTopicResponse(response Result, w http.ResponseWriter, span trace.Span) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	span.SetStatus(codes.Ok, http.StatusText(200))
+	e := jx.GetEncoder()
+
+	response.Encode(e)
+	if _, err := e.WriteTo(w); err != nil {
+		return errors.Wrap(err, "write")
+	}
+	return nil
+
+}
+
 func encodeCopyMessageResponse(response ResultMessageId, w http.ResponseWriter, span trace.Span) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
@@ -362,6 +376,20 @@ func encodeEditChatInviteLinkResponse(response ResultChatInviteLink, w http.Resp
 }
 
 func encodeEditForumTopicResponse(response Result, w http.ResponseWriter, span trace.Span) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	span.SetStatus(codes.Ok, http.StatusText(200))
+	e := jx.GetEncoder()
+
+	response.Encode(e)
+	if _, err := e.WriteTo(w); err != nil {
+		return errors.Wrap(err, "write")
+	}
+	return nil
+
+}
+
+func encodeEditGeneralForumTopicResponse(response Result, w http.ResponseWriter, span trace.Span) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 	span.SetStatus(codes.Ok, http.StatusText(200))
@@ -697,6 +725,20 @@ func encodeGetWebhookInfoResponse(response ResultWebhookInfo, w http.ResponseWri
 
 }
 
+func encodeHideGeneralForumTopicResponse(response Result, w http.ResponseWriter, span trace.Span) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	span.SetStatus(codes.Ok, http.StatusText(200))
+	e := jx.GetEncoder()
+
+	response.Encode(e)
+	if _, err := e.WriteTo(w); err != nil {
+		return errors.Wrap(err, "write")
+	}
+	return nil
+
+}
+
 func encodeLeaveChatResponse(response Result, w http.ResponseWriter, span trace.Span) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
@@ -754,6 +796,20 @@ func encodePromoteChatMemberResponse(response Result, w http.ResponseWriter, spa
 }
 
 func encodeReopenForumTopicResponse(response Result, w http.ResponseWriter, span trace.Span) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	span.SetStatus(codes.Ok, http.StatusText(200))
+	e := jx.GetEncoder()
+
+	response.Encode(e)
+	if _, err := e.WriteTo(w); err != nil {
+		return errors.Wrap(err, "write")
+	}
+	return nil
+
+}
+
+func encodeReopenGeneralForumTopicResponse(response Result, w http.ResponseWriter, span trace.Span) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 	span.SetStatus(codes.Ok, http.StatusText(200))
@@ -1286,6 +1342,20 @@ func encodeUnbanChatMemberResponse(response Result, w http.ResponseWriter, span 
 }
 
 func encodeUnbanChatSenderChatResponse(response Result, w http.ResponseWriter, span trace.Span) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	span.SetStatus(codes.Ok, http.StatusText(200))
+	e := jx.GetEncoder()
+
+	response.Encode(e)
+	if _, err := e.WriteTo(w); err != nil {
+		return errors.Wrap(err, "write")
+	}
+	return nil
+
+}
+
+func encodeUnhideGeneralForumTopicResponse(response Result, w http.ResponseWriter, span trace.Span) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 	span.SetStatus(codes.Ok, http.StatusText(200))
