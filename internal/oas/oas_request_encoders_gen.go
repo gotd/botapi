@@ -151,6 +151,20 @@ func encodeCloseForumTopicRequest(
 	return nil
 }
 
+func encodeCloseGeneralForumTopicRequest(
+	req CloseGeneralForumTopic,
+	r *http.Request,
+) error {
+	const contentType = "application/json"
+	e := jx.GetEncoder()
+	{
+		req.Encode(e)
+	}
+	encoded := e.Bytes()
+	ht.SetBody(r, bytes.NewReader(encoded), contentType)
+	return nil
+}
+
 func encodeCopyMessageRequest(
 	req CopyMessage,
 	r *http.Request,
@@ -361,6 +375,20 @@ func encodeEditChatInviteLinkRequest(
 
 func encodeEditForumTopicRequest(
 	req EditForumTopic,
+	r *http.Request,
+) error {
+	const contentType = "application/json"
+	e := jx.GetEncoder()
+	{
+		req.Encode(e)
+	}
+	encoded := e.Bytes()
+	ht.SetBody(r, bytes.NewReader(encoded), contentType)
+	return nil
+}
+
+func encodeEditGeneralForumTopicRequest(
+	req EditGeneralForumTopic,
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
@@ -677,6 +705,20 @@ func encodeGetUserProfilePhotosRequest(
 	return nil
 }
 
+func encodeHideGeneralForumTopicRequest(
+	req HideGeneralForumTopic,
+	r *http.Request,
+) error {
+	const contentType = "application/json"
+	e := jx.GetEncoder()
+	{
+		req.Encode(e)
+	}
+	encoded := e.Bytes()
+	ht.SetBody(r, bytes.NewReader(encoded), contentType)
+	return nil
+}
+
 func encodeLeaveChatRequest(
 	req LeaveChat,
 	r *http.Request,
@@ -721,6 +763,20 @@ func encodePromoteChatMemberRequest(
 
 func encodeReopenForumTopicRequest(
 	req ReopenForumTopic,
+	r *http.Request,
+) error {
+	const contentType = "application/json"
+	e := jx.GetEncoder()
+	{
+		req.Encode(e)
+	}
+	encoded := e.Bytes()
+	ht.SetBody(r, bytes.NewReader(encoded), contentType)
+	return nil
+}
+
+func encodeReopenGeneralForumTopicRequest(
+	req ReopenGeneralForumTopic,
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
@@ -1265,6 +1321,20 @@ func encodeUnbanChatMemberRequest(
 
 func encodeUnbanChatSenderChatRequest(
 	req UnbanChatSenderChat,
+	r *http.Request,
+) error {
+	const contentType = "application/json"
+	e := jx.GetEncoder()
+	{
+		req.Encode(e)
+	}
+	encoded := e.Bytes()
+	ht.SetBody(r, bytes.NewReader(encoded), contentType)
+	return nil
+}
+
+func encodeUnhideGeneralForumTopicRequest(
+	req UnhideGeneralForumTopic,
 	r *http.Request,
 ) error {
 	const contentType = "application/json"

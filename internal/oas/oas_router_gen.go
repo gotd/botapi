@@ -289,6 +289,24 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 							return
 						}
+					case 'G': // Prefix: "GeneralForumTopic"
+						if l := len("GeneralForumTopic"); len(elem) >= l && elem[0:l] == "GeneralForumTopic" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							// Leaf node.
+							switch r.Method {
+							case "POST":
+								s.handleCloseGeneralForumTopicRequest([0]string{}, w, r)
+							default:
+								s.notAllowed(w, r, "POST")
+							}
+
+							return
+						}
 					}
 				case 'o': // Prefix: "opyMessage"
 					if l := len("opyMessage"); len(elem) >= l && elem[0:l] == "opyMessage" {
@@ -637,6 +655,24 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 							switch r.Method {
 							case "POST":
 								s.handleEditForumTopicRequest([0]string{}, w, r)
+							default:
+								s.notAllowed(w, r, "POST")
+							}
+
+							return
+						}
+					case 'G': // Prefix: "GeneralForumTopic"
+						if l := len("GeneralForumTopic"); len(elem) >= l && elem[0:l] == "GeneralForumTopic" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							// Leaf node.
+							switch r.Method {
+							case "POST":
+								s.handleEditGeneralForumTopicRequest([0]string{}, w, r)
 							default:
 								s.notAllowed(w, r, "POST")
 							}
@@ -1157,6 +1193,24 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 						return
 					}
 				}
+			case 'h': // Prefix: "hideGeneralForumTopic"
+				if l := len("hideGeneralForumTopic"); len(elem) >= l && elem[0:l] == "hideGeneralForumTopic" {
+					elem = elem[l:]
+				} else {
+					break
+				}
+
+				if len(elem) == 0 {
+					// Leaf node.
+					switch r.Method {
+					case "POST":
+						s.handleHideGeneralForumTopicRequest([0]string{}, w, r)
+					default:
+						s.notAllowed(w, r, "POST")
+					}
+
+					return
+				}
 			case 'l': // Prefix: "l"
 				if l := len("l"); len(elem) >= l && elem[0:l] == "l" {
 					elem = elem[l:]
@@ -1264,23 +1318,53 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 					break
 				}
 				switch elem[0] {
-				case 'o': // Prefix: "openForumTopic"
-					if l := len("openForumTopic"); len(elem) >= l && elem[0:l] == "openForumTopic" {
+				case 'o': // Prefix: "open"
+					if l := len("open"); len(elem) >= l && elem[0:l] == "open" {
 						elem = elem[l:]
 					} else {
 						break
 					}
 
 					if len(elem) == 0 {
-						// Leaf node.
-						switch r.Method {
-						case "POST":
-							s.handleReopenForumTopicRequest([0]string{}, w, r)
-						default:
-							s.notAllowed(w, r, "POST")
+						break
+					}
+					switch elem[0] {
+					case 'F': // Prefix: "ForumTopic"
+						if l := len("ForumTopic"); len(elem) >= l && elem[0:l] == "ForumTopic" {
+							elem = elem[l:]
+						} else {
+							break
 						}
 
-						return
+						if len(elem) == 0 {
+							// Leaf node.
+							switch r.Method {
+							case "POST":
+								s.handleReopenForumTopicRequest([0]string{}, w, r)
+							default:
+								s.notAllowed(w, r, "POST")
+							}
+
+							return
+						}
+					case 'G': // Prefix: "GeneralForumTopic"
+						if l := len("GeneralForumTopic"); len(elem) >= l && elem[0:l] == "GeneralForumTopic" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							// Leaf node.
+							switch r.Method {
+							case "POST":
+								s.handleReopenGeneralForumTopicRequest([0]string{}, w, r)
+							default:
+								s.notAllowed(w, r, "POST")
+							}
+
+							return
+						}
 					}
 				case 's': // Prefix: "strictChatMember"
 					if l := len("strictChatMember"); len(elem) >= l && elem[0:l] == "strictChatMember" {
@@ -2182,6 +2266,24 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 								return
 							}
 						}
+					case 'h': // Prefix: "hideGeneralForumTopic"
+						if l := len("hideGeneralForumTopic"); len(elem) >= l && elem[0:l] == "hideGeneralForumTopic" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							// Leaf node.
+							switch r.Method {
+							case "POST":
+								s.handleUnhideGeneralForumTopicRequest([0]string{}, w, r)
+							default:
+								s.notAllowed(w, r, "POST")
+							}
+
+							return
+						}
 					case 'p': // Prefix: "pin"
 						if l := len("pin"); len(elem) >= l && elem[0:l] == "pin" {
 							elem = elem[l:]
@@ -2607,6 +2709,26 @@ func (s *Server) FindRoute(method, path string) (r Route, _ bool) {
 								return
 							}
 						}
+					case 'G': // Prefix: "GeneralForumTopic"
+						if l := len("GeneralForumTopic"); len(elem) >= l && elem[0:l] == "GeneralForumTopic" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							switch method {
+							case "POST":
+								// Leaf: CloseGeneralForumTopic
+								r.name = "CloseGeneralForumTopic"
+								r.operationID = "closeGeneralForumTopic"
+								r.args = args
+								r.count = 0
+								return r, true
+							default:
+								return
+							}
+						}
 					}
 				case 'o': // Prefix: "opyMessage"
 					if l := len("opyMessage"); len(elem) >= l && elem[0:l] == "opyMessage" {
@@ -2984,6 +3106,26 @@ func (s *Server) FindRoute(method, path string) (r Route, _ bool) {
 								// Leaf: EditForumTopic
 								r.name = "EditForumTopic"
 								r.operationID = "editForumTopic"
+								r.args = args
+								r.count = 0
+								return r, true
+							default:
+								return
+							}
+						}
+					case 'G': // Prefix: "GeneralForumTopic"
+						if l := len("GeneralForumTopic"); len(elem) >= l && elem[0:l] == "GeneralForumTopic" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							switch method {
+							case "POST":
+								// Leaf: EditGeneralForumTopic
+								r.name = "EditGeneralForumTopic"
+								r.operationID = "editGeneralForumTopic"
 								r.args = args
 								r.count = 0
 								return r, true
@@ -3551,6 +3693,26 @@ func (s *Server) FindRoute(method, path string) (r Route, _ bool) {
 						}
 					}
 				}
+			case 'h': // Prefix: "hideGeneralForumTopic"
+				if l := len("hideGeneralForumTopic"); len(elem) >= l && elem[0:l] == "hideGeneralForumTopic" {
+					elem = elem[l:]
+				} else {
+					break
+				}
+
+				if len(elem) == 0 {
+					switch method {
+					case "POST":
+						// Leaf: HideGeneralForumTopic
+						r.name = "HideGeneralForumTopic"
+						r.operationID = "hideGeneralForumTopic"
+						r.args = args
+						r.count = 0
+						return r, true
+					default:
+						return
+					}
+				}
 			case 'l': // Prefix: "l"
 				if l := len("l"); len(elem) >= l && elem[0:l] == "l" {
 					elem = elem[l:]
@@ -3666,24 +3828,56 @@ func (s *Server) FindRoute(method, path string) (r Route, _ bool) {
 					break
 				}
 				switch elem[0] {
-				case 'o': // Prefix: "openForumTopic"
-					if l := len("openForumTopic"); len(elem) >= l && elem[0:l] == "openForumTopic" {
+				case 'o': // Prefix: "open"
+					if l := len("open"); len(elem) >= l && elem[0:l] == "open" {
 						elem = elem[l:]
 					} else {
 						break
 					}
 
 					if len(elem) == 0 {
-						switch method {
-						case "POST":
-							// Leaf: ReopenForumTopic
-							r.name = "ReopenForumTopic"
-							r.operationID = "reopenForumTopic"
-							r.args = args
-							r.count = 0
-							return r, true
-						default:
-							return
+						break
+					}
+					switch elem[0] {
+					case 'F': // Prefix: "ForumTopic"
+						if l := len("ForumTopic"); len(elem) >= l && elem[0:l] == "ForumTopic" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							switch method {
+							case "POST":
+								// Leaf: ReopenForumTopic
+								r.name = "ReopenForumTopic"
+								r.operationID = "reopenForumTopic"
+								r.args = args
+								r.count = 0
+								return r, true
+							default:
+								return
+							}
+						}
+					case 'G': // Prefix: "GeneralForumTopic"
+						if l := len("GeneralForumTopic"); len(elem) >= l && elem[0:l] == "GeneralForumTopic" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							switch method {
+							case "POST":
+								// Leaf: ReopenGeneralForumTopic
+								r.name = "ReopenGeneralForumTopic"
+								r.operationID = "reopenGeneralForumTopic"
+								r.args = args
+								r.count = 0
+								return r, true
+							default:
+								return
+							}
 						}
 					}
 				case 's': // Prefix: "strictChatMember"
@@ -4660,6 +4854,26 @@ func (s *Server) FindRoute(method, path string) (r Route, _ bool) {
 								default:
 									return
 								}
+							}
+						}
+					case 'h': // Prefix: "hideGeneralForumTopic"
+						if l := len("hideGeneralForumTopic"); len(elem) >= l && elem[0:l] == "hideGeneralForumTopic" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							switch method {
+							case "POST":
+								// Leaf: UnhideGeneralForumTopic
+								r.name = "UnhideGeneralForumTopic"
+								r.operationID = "unhideGeneralForumTopic"
+								r.args = args
+								r.count = 0
+								return r, true
+							default:
+								return
 							}
 						}
 					case 'p': // Prefix: "pin"

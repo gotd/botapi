@@ -1208,6 +1208,115 @@ func (s *Server) handleCloseForumTopicRequest(args [0]string, w http.ResponseWri
 	}
 }
 
+// handleCloseGeneralForumTopicRequest handles closeGeneralForumTopic operation.
+//
+// Use this method to close an open 'General' topic in a forum supergroup chat. The bot must be an
+// administrator in the chat for this to work and must have the _can_manage_topics_ administrator
+// rights. Returns _True_ on success.
+//
+// POST /closeGeneralForumTopic
+func (s *Server) handleCloseGeneralForumTopicRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("closeGeneralForumTopic"),
+	}
+
+	// Start a span for this request.
+	ctx, span := s.cfg.Tracer.Start(r.Context(), "CloseGeneralForumTopic",
+		trace.WithAttributes(otelAttrs...),
+		serverSpanKind,
+	)
+	defer span.End()
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "CloseGeneralForumTopic",
+			ID:   "closeGeneralForumTopic",
+		}
+	)
+	request, close, err := s.decodeCloseGeneralForumTopicRequest(r)
+	if err != nil {
+		err = &ogenerrors.DecodeRequestError{
+			OperationContext: opErrContext,
+			Err:              err,
+		}
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+	defer func() {
+		if err := close(); err != nil {
+			recordError("CloseRequest", err)
+		}
+	}()
+
+	var response Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "CloseGeneralForumTopic",
+			OperationID:   "closeGeneralForumTopic",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = CloseGeneralForumTopic
+			Params   = struct{}
+			Response = Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.CloseGeneralForumTopic(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.CloseGeneralForumTopic(ctx, request)
+	}
+	if err != nil {
+		recordError("Internal", err)
+		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
+			encodeErrorResponse(*errRes, w, span)
+			return
+		}
+		if errors.Is(err, ht.ErrNotImplemented) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+			return
+		}
+		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		return
+	}
+
+	if err := encodeCloseGeneralForumTopicResponse(response, w, span); err != nil {
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+}
+
 // handleCopyMessageRequest handles copyMessage operation.
 //
 // Use this method to copy messages of any kind. Service messages and invoice messages can't be
@@ -2853,6 +2962,115 @@ func (s *Server) handleEditForumTopicRequest(args [0]string, w http.ResponseWrit
 	}
 }
 
+// handleEditGeneralForumTopicRequest handles editGeneralForumTopic operation.
+//
+// Use this method to edit the name of the 'General' topic in a forum supergroup chat. The bot must
+// be an administrator in the chat for this to work and must have _can_manage_topics_ administrator
+// rights. Returns _True_ on success.
+//
+// POST /editGeneralForumTopic
+func (s *Server) handleEditGeneralForumTopicRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("editGeneralForumTopic"),
+	}
+
+	// Start a span for this request.
+	ctx, span := s.cfg.Tracer.Start(r.Context(), "EditGeneralForumTopic",
+		trace.WithAttributes(otelAttrs...),
+		serverSpanKind,
+	)
+	defer span.End()
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "EditGeneralForumTopic",
+			ID:   "editGeneralForumTopic",
+		}
+	)
+	request, close, err := s.decodeEditGeneralForumTopicRequest(r)
+	if err != nil {
+		err = &ogenerrors.DecodeRequestError{
+			OperationContext: opErrContext,
+			Err:              err,
+		}
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+	defer func() {
+		if err := close(); err != nil {
+			recordError("CloseRequest", err)
+		}
+	}()
+
+	var response Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "EditGeneralForumTopic",
+			OperationID:   "editGeneralForumTopic",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = EditGeneralForumTopic
+			Params   = struct{}
+			Response = Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.EditGeneralForumTopic(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.EditGeneralForumTopic(ctx, request)
+	}
+	if err != nil {
+		recordError("Internal", err)
+		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
+			encodeErrorResponse(*errRes, w, span)
+			return
+		}
+		if errors.Is(err, ht.ErrNotImplemented) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+			return
+		}
+		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		return
+	}
+
+	if err := encodeEditGeneralForumTopicResponse(response, w, span); err != nil {
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+}
+
 // handleEditMessageCaptionRequest handles editMessageCaption operation.
 //
 // Use this method to edit captions of messages. On success, if the edited message is not an inline
@@ -3839,8 +4057,9 @@ func (s *Server) handleGetChatAdministratorsRequest(args [0]string, w http.Respo
 
 // handleGetChatMemberRequest handles getChatMember operation.
 //
-// Use this method to get information about a member of a chat. Returns a [ChatMember](https://core.
-// telegram.org/bots/api#chatmember) object on success.
+// Use this method to get information about a member of a chat. The method is guaranteed to work only
+// if the bot is an administrator in the chat. Returns a [ChatMember](https://core.telegram.
+// org/bots/api#chatmember) object on success.
 //
 // POST /getChatMember
 func (s *Server) handleGetChatMemberRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -5302,6 +5521,115 @@ func (s *Server) handleGetWebhookInfoRequest(args [0]string, w http.ResponseWrit
 	}
 }
 
+// handleHideGeneralForumTopicRequest handles hideGeneralForumTopic operation.
+//
+// Use this method to hide the 'General' topic in a forum supergroup chat. The bot must be an
+// administrator in the chat for this to work and must have the _can_manage_topics_ administrator
+// rights. The topic will be automatically closed if it was open. Returns _True_ on success.
+//
+// POST /hideGeneralForumTopic
+func (s *Server) handleHideGeneralForumTopicRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("hideGeneralForumTopic"),
+	}
+
+	// Start a span for this request.
+	ctx, span := s.cfg.Tracer.Start(r.Context(), "HideGeneralForumTopic",
+		trace.WithAttributes(otelAttrs...),
+		serverSpanKind,
+	)
+	defer span.End()
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "HideGeneralForumTopic",
+			ID:   "hideGeneralForumTopic",
+		}
+	)
+	request, close, err := s.decodeHideGeneralForumTopicRequest(r)
+	if err != nil {
+		err = &ogenerrors.DecodeRequestError{
+			OperationContext: opErrContext,
+			Err:              err,
+		}
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+	defer func() {
+		if err := close(); err != nil {
+			recordError("CloseRequest", err)
+		}
+	}()
+
+	var response Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "HideGeneralForumTopic",
+			OperationID:   "hideGeneralForumTopic",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = HideGeneralForumTopic
+			Params   = struct{}
+			Response = Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.HideGeneralForumTopic(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.HideGeneralForumTopic(ctx, request)
+	}
+	if err != nil {
+		recordError("Internal", err)
+		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
+			encodeErrorResponse(*errRes, w, span)
+			return
+		}
+		if errors.Is(err, ht.ErrNotImplemented) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+			return
+		}
+		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		return
+	}
+
+	if err := encodeHideGeneralForumTopicResponse(response, w, span); err != nil {
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+}
+
 // handleLeaveChatRequest handles leaveChat operation.
 //
 // Use this method for your bot to leave a group, supergroup or channel. Returns _True_ on success.
@@ -5823,6 +6151,115 @@ func (s *Server) handleReopenForumTopicRequest(args [0]string, w http.ResponseWr
 	}
 
 	if err := encodeReopenForumTopicResponse(response, w, span); err != nil {
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+}
+
+// handleReopenGeneralForumTopicRequest handles reopenGeneralForumTopic operation.
+//
+// Use this method to reopen a closed 'General' topic in a forum supergroup chat. The bot must be an
+// administrator in the chat for this to work and must have the _can_manage_topics_ administrator
+// rights. The topic will be automatically unhidden if it was hidden. Returns _True_ on success.
+//
+// POST /reopenGeneralForumTopic
+func (s *Server) handleReopenGeneralForumTopicRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("reopenGeneralForumTopic"),
+	}
+
+	// Start a span for this request.
+	ctx, span := s.cfg.Tracer.Start(r.Context(), "ReopenGeneralForumTopic",
+		trace.WithAttributes(otelAttrs...),
+		serverSpanKind,
+	)
+	defer span.End()
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "ReopenGeneralForumTopic",
+			ID:   "reopenGeneralForumTopic",
+		}
+	)
+	request, close, err := s.decodeReopenGeneralForumTopicRequest(r)
+	if err != nil {
+		err = &ogenerrors.DecodeRequestError{
+			OperationContext: opErrContext,
+			Err:              err,
+		}
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+	defer func() {
+		if err := close(); err != nil {
+			recordError("CloseRequest", err)
+		}
+	}()
+
+	var response Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "ReopenGeneralForumTopic",
+			OperationID:   "reopenGeneralForumTopic",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = ReopenGeneralForumTopic
+			Params   = struct{}
+			Response = Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.ReopenGeneralForumTopic(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.ReopenGeneralForumTopic(ctx, request)
+	}
+	if err != nil {
+		recordError("Internal", err)
+		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
+			encodeErrorResponse(*errRes, w, span)
+			return
+		}
+		if errors.Is(err, ht.ErrNotImplemented) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+			return
+		}
+		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		return
+	}
+
+	if err := encodeReopenGeneralForumTopicResponse(response, w, span); err != nil {
 		recordError("EncodeResponse", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
@@ -9964,6 +10401,115 @@ func (s *Server) handleUnbanChatSenderChatRequest(args [0]string, w http.Respons
 	}
 
 	if err := encodeUnbanChatSenderChatResponse(response, w, span); err != nil {
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+}
+
+// handleUnhideGeneralForumTopicRequest handles unhideGeneralForumTopic operation.
+//
+// Use this method to unhide the 'General' topic in a forum supergroup chat. The bot must be an
+// administrator in the chat for this to work and must have the _can_manage_topics_ administrator
+// rights. Returns _True_ on success.
+//
+// POST /unhideGeneralForumTopic
+func (s *Server) handleUnhideGeneralForumTopicRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("unhideGeneralForumTopic"),
+	}
+
+	// Start a span for this request.
+	ctx, span := s.cfg.Tracer.Start(r.Context(), "UnhideGeneralForumTopic",
+		trace.WithAttributes(otelAttrs...),
+		serverSpanKind,
+	)
+	defer span.End()
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "UnhideGeneralForumTopic",
+			ID:   "unhideGeneralForumTopic",
+		}
+	)
+	request, close, err := s.decodeUnhideGeneralForumTopicRequest(r)
+	if err != nil {
+		err = &ogenerrors.DecodeRequestError{
+			OperationContext: opErrContext,
+			Err:              err,
+		}
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+	defer func() {
+		if err := close(); err != nil {
+			recordError("CloseRequest", err)
+		}
+	}()
+
+	var response Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "UnhideGeneralForumTopic",
+			OperationID:   "unhideGeneralForumTopic",
+			Body:          request,
+			Params:        map[string]any{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = UnhideGeneralForumTopic
+			Params   = struct{}
+			Response = Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (Response, error) {
+				return s.h.UnhideGeneralForumTopic(ctx, request)
+			},
+		)
+	} else {
+		response, err = s.h.UnhideGeneralForumTopic(ctx, request)
+	}
+	if err != nil {
+		recordError("Internal", err)
+		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
+			encodeErrorResponse(*errRes, w, span)
+			return
+		}
+		if errors.Is(err, ht.ErrNotImplemented) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+			return
+		}
+		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		return
+	}
+
+	if err := encodeUnhideGeneralForumTopicResponse(response, w, span); err != nil {
 		recordError("EncodeResponse", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return

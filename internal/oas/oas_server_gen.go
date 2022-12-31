@@ -104,6 +104,14 @@ type Handler interface {
 	//
 	// POST /closeForumTopic
 	CloseForumTopic(ctx context.Context, req CloseForumTopic) (Result, error)
+	// CloseGeneralForumTopic implements closeGeneralForumTopic operation.
+	//
+	// Use this method to close an open 'General' topic in a forum supergroup chat. The bot must be an
+	// administrator in the chat for this to work and must have the _can_manage_topics_ administrator
+	// rights. Returns _True_ on success.
+	//
+	// POST /closeGeneralForumTopic
+	CloseGeneralForumTopic(ctx context.Context, req CloseGeneralForumTopic) (Result, error)
 	// CopyMessage implements copyMessage operation.
 	//
 	// Use this method to copy messages of any kind. Service messages and invoice messages can't be
@@ -234,6 +242,14 @@ type Handler interface {
 	//
 	// POST /editForumTopic
 	EditForumTopic(ctx context.Context, req EditForumTopic) (Result, error)
+	// EditGeneralForumTopic implements editGeneralForumTopic operation.
+	//
+	// Use this method to edit the name of the 'General' topic in a forum supergroup chat. The bot must
+	// be an administrator in the chat for this to work and must have _can_manage_topics_ administrator
+	// rights. Returns _True_ on success.
+	//
+	// POST /editGeneralForumTopic
+	EditGeneralForumTopic(ctx context.Context, req EditGeneralForumTopic) (Result, error)
 	// EditMessageCaption implements editMessageCaption operation.
 	//
 	// Use this method to edit captions of messages. On success, if the edited message is not an inline
@@ -311,8 +327,9 @@ type Handler interface {
 	GetChatAdministrators(ctx context.Context, req GetChatAdministrators) (ResultArrayOfChatMember, error)
 	// GetChatMember implements getChatMember operation.
 	//
-	// Use this method to get information about a member of a chat. Returns a [ChatMember](https://core.
-	// telegram.org/bots/api#chatmember) object on success.
+	// Use this method to get information about a member of a chat. The method is guaranteed to work only
+	// if the bot is an administrator in the chat. Returns a [ChatMember](https://core.telegram.
+	// org/bots/api#chatmember) object on success.
 	//
 	// POST /getChatMember
 	GetChatMember(ctx context.Context, req GetChatMember) (ResultChatMember, error)
@@ -417,6 +434,14 @@ type Handler interface {
 	//
 	// POST /getWebhookInfo
 	GetWebhookInfo(ctx context.Context) (ResultWebhookInfo, error)
+	// HideGeneralForumTopic implements hideGeneralForumTopic operation.
+	//
+	// Use this method to hide the 'General' topic in a forum supergroup chat. The bot must be an
+	// administrator in the chat for this to work and must have the _can_manage_topics_ administrator
+	// rights. The topic will be automatically closed if it was open. Returns _True_ on success.
+	//
+	// POST /hideGeneralForumTopic
+	HideGeneralForumTopic(ctx context.Context, req HideGeneralForumTopic) (Result, error)
 	// LeaveChat implements leaveChat operation.
 	//
 	// Use this method for your bot to leave a group, supergroup or channel. Returns _True_ on success.
@@ -458,6 +483,14 @@ type Handler interface {
 	//
 	// POST /reopenForumTopic
 	ReopenForumTopic(ctx context.Context, req ReopenForumTopic) (Result, error)
+	// ReopenGeneralForumTopic implements reopenGeneralForumTopic operation.
+	//
+	// Use this method to reopen a closed 'General' topic in a forum supergroup chat. The bot must be an
+	// administrator in the chat for this to work and must have the _can_manage_topics_ administrator
+	// rights. The topic will be automatically unhidden if it was hidden. Returns _True_ on success.
+	//
+	// POST /reopenGeneralForumTopic
+	ReopenGeneralForumTopic(ctx context.Context, req ReopenGeneralForumTopic) (Result, error)
 	// RestrictChatMember implements restrictChatMember operation.
 	//
 	// Use this method to restrict a user in a supergroup. The bot must be an administrator in the
@@ -757,6 +790,14 @@ type Handler interface {
 	//
 	// POST /unbanChatSenderChat
 	UnbanChatSenderChat(ctx context.Context, req UnbanChatSenderChat) (Result, error)
+	// UnhideGeneralForumTopic implements unhideGeneralForumTopic operation.
+	//
+	// Use this method to unhide the 'General' topic in a forum supergroup chat. The bot must be an
+	// administrator in the chat for this to work and must have the _can_manage_topics_ administrator
+	// rights. Returns _True_ on success.
+	//
+	// POST /unhideGeneralForumTopic
+	UnhideGeneralForumTopic(ctx context.Context, req UnhideGeneralForumTopic) (Result, error)
 	// UnpinAllChatMessages implements unpinAllChatMessages operation.
 	//
 	// Use this method to clear the list of pinned messages in a chat. If the chat is not a private chat,
