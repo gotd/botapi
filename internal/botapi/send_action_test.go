@@ -46,7 +46,7 @@ func TestBotAPI_SendChatAction(t *testing.T) {
 						Action: tt.expect,
 					}).ThenTrue()
 				}
-				_, err := api.SendChatAction(ctx, oas.SendChatAction{
+				_, err := api.SendChatAction(ctx, &oas.SendChatAction{
 					ChatID: oas.NewInt64ID(testChatID()),
 					Action: tt.action,
 				})

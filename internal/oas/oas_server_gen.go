@@ -16,7 +16,7 @@ type Handler interface {
 	// sticker sets can have up to 120 stickers. Returns _True_ on success.
 	//
 	// POST /addStickerToSet
-	AddStickerToSet(ctx context.Context, req AddStickerToSet) (Result, error)
+	AddStickerToSet(ctx context.Context, req *AddStickerToSet) (*Result, error)
 	// AnswerCallbackQuery implements answerCallbackQuery operation.
 	//
 	// Use this method to send answers to callback queries sent from [inline keyboards](https://core.
@@ -24,14 +24,14 @@ type Handler interface {
 	// notification at the top of the chat screen or as an alert. On success, _True_ is returned.
 	//
 	// POST /answerCallbackQuery
-	AnswerCallbackQuery(ctx context.Context, req AnswerCallbackQuery) (Result, error)
+	AnswerCallbackQuery(ctx context.Context, req *AnswerCallbackQuery) (*Result, error)
 	// AnswerInlineQuery implements answerInlineQuery operation.
 	//
 	// Use this method to send answers to an inline query. On success, _True_ is returned.No more than
 	// **50** results per query are allowed.
 	//
 	// POST /answerInlineQuery
-	AnswerInlineQuery(ctx context.Context, req AnswerInlineQuery) (Result, error)
+	AnswerInlineQuery(ctx context.Context, req *AnswerInlineQuery) (*Result, error)
 	// AnswerPreCheckoutQuery implements answerPreCheckoutQuery operation.
 	//
 	// Once the user has confirmed their payment and shipping details, the Bot API sends the final
@@ -41,7 +41,7 @@ type Handler interface {
 	// query was sent.
 	//
 	// POST /answerPreCheckoutQuery
-	AnswerPreCheckoutQuery(ctx context.Context, req AnswerPreCheckoutQuery) (Result, error)
+	AnswerPreCheckoutQuery(ctx context.Context, req *AnswerPreCheckoutQuery) (*Result, error)
 	// AnswerShippingQuery implements answerShippingQuery operation.
 	//
 	// If you sent an invoice requesting a shipping address and the parameter _is_flexible_ was specified,
@@ -50,7 +50,7 @@ type Handler interface {
 	// _True_ is returned.
 	//
 	// POST /answerShippingQuery
-	AnswerShippingQuery(ctx context.Context, req AnswerShippingQuery) (Result, error)
+	AnswerShippingQuery(ctx context.Context, req *AnswerShippingQuery) (*Result, error)
 	// AnswerWebAppQuery implements answerWebAppQuery operation.
 	//
 	// Use this method to set the result of an interaction with a [Web App](https://core.telegram.
@@ -59,14 +59,14 @@ type Handler interface {
 	// org/bots/api#sentwebappmessage) object is returned.
 	//
 	// POST /answerWebAppQuery
-	AnswerWebAppQuery(ctx context.Context, req AnswerWebAppQuery) (Result, error)
+	AnswerWebAppQuery(ctx context.Context, req *AnswerWebAppQuery) (*Result, error)
 	// ApproveChatJoinRequest implements approveChatJoinRequest operation.
 	//
 	// Use this method to approve a chat join request. The bot must be an administrator in the chat for
 	// this to work and must have the _can_invite_users_ administrator right. Returns _True_ on success.
 	//
 	// POST /approveChatJoinRequest
-	ApproveChatJoinRequest(ctx context.Context, req ApproveChatJoinRequest) (Result, error)
+	ApproveChatJoinRequest(ctx context.Context, req *ApproveChatJoinRequest) (*Result, error)
 	// BanChatMember implements banChatMember operation.
 	//
 	// Use this method to ban a user in a group, a supergroup or a channel. In the case of supergroups
@@ -76,7 +76,7 @@ type Handler interface {
 	// Returns _True_ on success.
 	//
 	// POST /banChatMember
-	BanChatMember(ctx context.Context, req BanChatMember) (Result, error)
+	BanChatMember(ctx context.Context, req *BanChatMember) (*Result, error)
 	// BanChatSenderChat implements banChatSenderChat operation.
 	//
 	// Use this method to ban a channel chat in a supergroup or a channel. Until the chat is
@@ -86,7 +86,7 @@ type Handler interface {
 	// administrator rights. Returns _True_ on success.
 	//
 	// POST /banChatSenderChat
-	BanChatSenderChat(ctx context.Context, req BanChatSenderChat) (Result, error)
+	BanChatSenderChat(ctx context.Context, req *BanChatSenderChat) (*Result, error)
 	// Close implements close operation.
 	//
 	// Use this method to close the bot instance before moving it from one local server to another. You
@@ -95,7 +95,7 @@ type Handler interface {
 	// launched. Returns _True_ on success. Requires no parameters.
 	//
 	// POST /close
-	Close(ctx context.Context) (Result, error)
+	Close(ctx context.Context) (*Result, error)
 	// CloseForumTopic implements closeForumTopic operation.
 	//
 	// Use this method to close an open topic in a forum supergroup chat. The bot must be an
@@ -103,7 +103,7 @@ type Handler interface {
 	// rights, unless it is the creator of the topic. Returns _True_ on success.
 	//
 	// POST /closeForumTopic
-	CloseForumTopic(ctx context.Context, req CloseForumTopic) (Result, error)
+	CloseForumTopic(ctx context.Context, req *CloseForumTopic) (*Result, error)
 	// CloseGeneralForumTopic implements closeGeneralForumTopic operation.
 	//
 	// Use this method to close an open 'General' topic in a forum supergroup chat. The bot must be an
@@ -111,7 +111,7 @@ type Handler interface {
 	// rights. Returns _True_ on success.
 	//
 	// POST /closeGeneralForumTopic
-	CloseGeneralForumTopic(ctx context.Context, req CloseGeneralForumTopic) (Result, error)
+	CloseGeneralForumTopic(ctx context.Context, req *CloseGeneralForumTopic) (*Result, error)
 	// CopyMessage implements copyMessage operation.
 	//
 	// Use this method to copy messages of any kind. Service messages and invoice messages can't be
@@ -122,7 +122,7 @@ type Handler interface {
 	// org/bots/api#messageid) of the sent message on success.
 	//
 	// POST /copyMessage
-	CopyMessage(ctx context.Context, req CopyMessage) (ResultMessageId, error)
+	CopyMessage(ctx context.Context, req *CopyMessage) (*ResultMessageId, error)
 	// CreateChatInviteLink implements createChatInviteLink operation.
 	//
 	// Use this method to create an additional invite link for a chat. The bot must be an administrator
@@ -132,7 +132,7 @@ type Handler interface {
 	// telegram.org/bots/api#chatinvitelink) object.
 	//
 	// POST /createChatInviteLink
-	CreateChatInviteLink(ctx context.Context, req CreateChatInviteLink) (ResultChatInviteLink, error)
+	CreateChatInviteLink(ctx context.Context, req *CreateChatInviteLink) (*ResultChatInviteLink, error)
 	// CreateForumTopic implements createForumTopic operation.
 	//
 	// Use this method to create a topic in a forum supergroup chat. The bot must be an administrator in
@@ -141,14 +141,14 @@ type Handler interface {
 	// org/bots/api#forumtopic) object.
 	//
 	// POST /createForumTopic
-	CreateForumTopic(ctx context.Context, req CreateForumTopic) (Result, error)
+	CreateForumTopic(ctx context.Context, req *CreateForumTopic) (*Result, error)
 	// CreateInvoiceLink implements createInvoiceLink operation.
 	//
 	// Use this method to create a link for an invoice. Returns the created invoice link as _String_ on
 	// success.
 	//
 	// POST /createInvoiceLink
-	CreateInvoiceLink(ctx context.Context, req CreateInvoiceLink) (ResultString, error)
+	CreateInvoiceLink(ctx context.Context, req *CreateInvoiceLink) (*ResultString, error)
 	// CreateNewStickerSet implements createNewStickerSet operation.
 	//
 	// Use this method to create a new sticker set owned by a user. The bot will be able to edit the
@@ -156,14 +156,14 @@ type Handler interface {
 	// or _webm_sticker_. Returns _True_ on success.
 	//
 	// POST /createNewStickerSet
-	CreateNewStickerSet(ctx context.Context, req CreateNewStickerSet) (Result, error)
+	CreateNewStickerSet(ctx context.Context, req *CreateNewStickerSet) (*Result, error)
 	// DeclineChatJoinRequest implements declineChatJoinRequest operation.
 	//
 	// Use this method to decline a chat join request. The bot must be an administrator in the chat for
 	// this to work and must have the _can_invite_users_ administrator right. Returns _True_ on success.
 	//
 	// POST /declineChatJoinRequest
-	DeclineChatJoinRequest(ctx context.Context, req DeclineChatJoinRequest) (Result, error)
+	DeclineChatJoinRequest(ctx context.Context, req *DeclineChatJoinRequest) (*Result, error)
 	// DeleteChatPhoto implements deleteChatPhoto operation.
 	//
 	// Use this method to delete a chat photo. Photos can't be changed for private chats. The bot must be
@@ -171,7 +171,7 @@ type Handler interface {
 	// Returns _True_ on success.
 	//
 	// POST /deleteChatPhoto
-	DeleteChatPhoto(ctx context.Context, req DeleteChatPhoto) (Result, error)
+	DeleteChatPhoto(ctx context.Context, req *DeleteChatPhoto) (*Result, error)
 	// DeleteChatStickerSet implements deleteChatStickerSet operation.
 	//
 	// Use this method to delete a group sticker set from a supergroup. The bot must be an administrator
@@ -180,7 +180,7 @@ type Handler interface {
 	// requests to check if the bot can use this method. Returns _True_ on success.
 	//
 	// POST /deleteChatStickerSet
-	DeleteChatStickerSet(ctx context.Context, req DeleteChatStickerSet) (Result, error)
+	DeleteChatStickerSet(ctx context.Context, req *DeleteChatStickerSet) (*Result, error)
 	// DeleteForumTopic implements deleteForumTopic operation.
 	//
 	// Use this method to delete a forum topic along with all its messages in a forum supergroup chat.
@@ -188,7 +188,7 @@ type Handler interface {
 	// _can_delete_messages_ administrator rights. Returns _True_ on success.
 	//
 	// POST /deleteForumTopic
-	DeleteForumTopic(ctx context.Context, req DeleteForumTopic) (Result, error)
+	DeleteForumTopic(ctx context.Context, req *DeleteForumTopic) (*Result, error)
 	// DeleteMessage implements deleteMessage operation.
 	//
 	// Use this method to delete a message, including service messages, with the following limitations:-
@@ -202,7 +202,7 @@ type Handler interface {
 	// Returns _True_ on success.
 	//
 	// POST /deleteMessage
-	DeleteMessage(ctx context.Context, req DeleteMessage) (Result, error)
+	DeleteMessage(ctx context.Context, req *DeleteMessage) (*Result, error)
 	// DeleteMyCommands implements deleteMyCommands operation.
 	//
 	// Use this method to delete the list of the bot's commands for the given scope and user language.
@@ -211,20 +211,20 @@ type Handler interface {
 	// success.
 	//
 	// POST /deleteMyCommands
-	DeleteMyCommands(ctx context.Context, req OptDeleteMyCommands) (Result, error)
+	DeleteMyCommands(ctx context.Context, req OptDeleteMyCommands) (*Result, error)
 	// DeleteStickerFromSet implements deleteStickerFromSet operation.
 	//
 	// Use this method to delete a sticker from a set created by the bot. Returns _True_ on success.
 	//
 	// POST /deleteStickerFromSet
-	DeleteStickerFromSet(ctx context.Context, req DeleteStickerFromSet) (Result, error)
+	DeleteStickerFromSet(ctx context.Context, req *DeleteStickerFromSet) (*Result, error)
 	// DeleteWebhook implements deleteWebhook operation.
 	//
 	// Use this method to remove webhook integration if you decide to switch back to
 	// [getUpdates](https://core.telegram.org/bots/api#getupdates). Returns _True_ on success.
 	//
 	// POST /deleteWebhook
-	DeleteWebhook(ctx context.Context, req OptDeleteWebhook) (Result, error)
+	DeleteWebhook(ctx context.Context, req OptDeleteWebhook) (*Result, error)
 	// EditChatInviteLink implements editChatInviteLink operation.
 	//
 	// Use this method to edit a non-primary invite link created by the bot. The bot must be an
@@ -233,7 +233,7 @@ type Handler interface {
 	// org/bots/api#chatinvitelink) object.
 	//
 	// POST /editChatInviteLink
-	EditChatInviteLink(ctx context.Context, req EditChatInviteLink) (ResultChatInviteLink, error)
+	EditChatInviteLink(ctx context.Context, req *EditChatInviteLink) (*ResultChatInviteLink, error)
 	// EditForumTopic implements editForumTopic operation.
 	//
 	// Use this method to edit name and icon of a topic in a forum supergroup chat. The bot must be an
@@ -241,7 +241,7 @@ type Handler interface {
 	// unless it is the creator of the topic. Returns _True_ on success.
 	//
 	// POST /editForumTopic
-	EditForumTopic(ctx context.Context, req EditForumTopic) (Result, error)
+	EditForumTopic(ctx context.Context, req *EditForumTopic) (*Result, error)
 	// EditGeneralForumTopic implements editGeneralForumTopic operation.
 	//
 	// Use this method to edit the name of the 'General' topic in a forum supergroup chat. The bot must
@@ -249,7 +249,7 @@ type Handler interface {
 	// rights. Returns _True_ on success.
 	//
 	// POST /editGeneralForumTopic
-	EditGeneralForumTopic(ctx context.Context, req EditGeneralForumTopic) (Result, error)
+	EditGeneralForumTopic(ctx context.Context, req *EditGeneralForumTopic) (*Result, error)
 	// EditMessageCaption implements editMessageCaption operation.
 	//
 	// Use this method to edit captions of messages. On success, if the edited message is not an inline
@@ -257,7 +257,7 @@ type Handler interface {
 	// _True_ is returned.
 	//
 	// POST /editMessageCaption
-	EditMessageCaption(ctx context.Context, req EditMessageCaption) (ResultMessageOrBoolean, error)
+	EditMessageCaption(ctx context.Context, req *EditMessageCaption) (*ResultMessageOrBoolean, error)
 	// EditMessageLiveLocation implements editMessageLiveLocation operation.
 	//
 	// Use this method to edit live location messages. A location can be edited until its _live_period_
@@ -267,7 +267,7 @@ type Handler interface {
 	// _True_ is returned.
 	//
 	// POST /editMessageLiveLocation
-	EditMessageLiveLocation(ctx context.Context, req EditMessageLiveLocation) (ResultMessageOrBoolean, error)
+	EditMessageLiveLocation(ctx context.Context, req *EditMessageLiveLocation) (*ResultMessageOrBoolean, error)
 	// EditMessageMedia implements editMessageMedia operation.
 	//
 	// Use this method to edit animation, audio, document, photo, or video messages. If a message is part
@@ -278,7 +278,7 @@ type Handler interface {
 	// telegram.org/bots/api#message) is returned, otherwise _True_ is returned.
 	//
 	// POST /editMessageMedia
-	EditMessageMedia(ctx context.Context, req EditMessageMedia) (ResultMessageOrBoolean, error)
+	EditMessageMedia(ctx context.Context, req *EditMessageMedia) (*ResultMessageOrBoolean, error)
 	// EditMessageReplyMarkup implements editMessageReplyMarkup operation.
 	//
 	// Use this method to edit only the reply markup of messages. On success, if the edited message is
@@ -286,7 +286,7 @@ type Handler interface {
 	// returned, otherwise _True_ is returned.
 	//
 	// POST /editMessageReplyMarkup
-	EditMessageReplyMarkup(ctx context.Context, req EditMessageReplyMarkup) (ResultMessageOrBoolean, error)
+	EditMessageReplyMarkup(ctx context.Context, req *EditMessageReplyMarkup) (*ResultMessageOrBoolean, error)
 	// EditMessageText implements editMessageText operation.
 	//
 	// Use this method to edit text and [game](https://core.telegram.org/bots/api#games) messages. On
@@ -294,7 +294,7 @@ type Handler interface {
 	// telegram.org/bots/api#message) is returned, otherwise _True_ is returned.
 	//
 	// POST /editMessageText
-	EditMessageText(ctx context.Context, req EditMessageText) (ResultMessageOrBoolean, error)
+	EditMessageText(ctx context.Context, req *EditMessageText) (*ResultMessageOrBoolean, error)
 	// ExportChatInviteLink implements exportChatInviteLink operation.
 	//
 	// Use this method to generate a new primary invite link for a chat; any previously generated primary
@@ -302,14 +302,14 @@ type Handler interface {
 	// appropriate administrator rights. Returns the new invite link as _String_ on success.
 	//
 	// POST /exportChatInviteLink
-	ExportChatInviteLink(ctx context.Context, req ExportChatInviteLink) (ResultString, error)
+	ExportChatInviteLink(ctx context.Context, req *ExportChatInviteLink) (*ResultString, error)
 	// ForwardMessage implements forwardMessage operation.
 	//
 	// Use this method to forward messages of any kind. Service messages can't be forwarded. On success,
 	// the sent [Message](https://core.telegram.org/bots/api#message) is returned.
 	//
 	// POST /forwardMessage
-	ForwardMessage(ctx context.Context, req ForwardMessage) (ResultMessage, error)
+	ForwardMessage(ctx context.Context, req *ForwardMessage) (*ResultMessage, error)
 	// GetChat implements getChat operation.
 	//
 	// Use this method to get up to date information about the chat (current name of the user for
@@ -317,14 +317,14 @@ type Handler interface {
 	// [Chat](https://core.telegram.org/bots/api#chat) object on success.
 	//
 	// POST /getChat
-	GetChat(ctx context.Context, req GetChat) (ResultChat, error)
+	GetChat(ctx context.Context, req *GetChat) (*ResultChat, error)
 	// GetChatAdministrators implements getChatAdministrators operation.
 	//
 	// Use this method to get a list of administrators in a chat, which aren't bots. Returns an Array of
 	// [ChatMember](https://core.telegram.org/bots/api#chatmember) objects.
 	//
 	// POST /getChatAdministrators
-	GetChatAdministrators(ctx context.Context, req GetChatAdministrators) (ResultArrayOfChatMember, error)
+	GetChatAdministrators(ctx context.Context, req *GetChatAdministrators) (*ResultArrayOfChatMember, error)
 	// GetChatMember implements getChatMember operation.
 	//
 	// Use this method to get information about a member of a chat. The method is guaranteed to work only
@@ -332,13 +332,13 @@ type Handler interface {
 	// org/bots/api#chatmember) object on success.
 	//
 	// POST /getChatMember
-	GetChatMember(ctx context.Context, req GetChatMember) (ResultChatMember, error)
+	GetChatMember(ctx context.Context, req *GetChatMember) (*ResultChatMember, error)
 	// GetChatMemberCount implements getChatMemberCount operation.
 	//
 	// Use this method to get the number of members in a chat. Returns _Int_ on success.
 	//
 	// POST /getChatMemberCount
-	GetChatMemberCount(ctx context.Context, req GetChatMemberCount) (ResultInt, error)
+	GetChatMemberCount(ctx context.Context, req *GetChatMemberCount) (*ResultInt, error)
 	// GetChatMenuButton implements getChatMenuButton operation.
 	//
 	// Use this method to get the current value of the bot's menu button in a private chat, or the
@@ -346,14 +346,14 @@ type Handler interface {
 	// success.
 	//
 	// POST /getChatMenuButton
-	GetChatMenuButton(ctx context.Context, req OptGetChatMenuButton) (Result, error)
+	GetChatMenuButton(ctx context.Context, req OptGetChatMenuButton) (*Result, error)
 	// GetCustomEmojiStickers implements getCustomEmojiStickers operation.
 	//
 	// Use this method to get information about custom emoji stickers by their identifiers. Returns an
 	// Array of [Sticker](https://core.telegram.org/bots/api#sticker) objects.
 	//
 	// POST /getCustomEmojiStickers
-	GetCustomEmojiStickers(ctx context.Context, req GetCustomEmojiStickers) (ResultArrayOfSticker, error)
+	GetCustomEmojiStickers(ctx context.Context, req *GetCustomEmojiStickers) (*ResultArrayOfSticker, error)
 	// GetFile implements getFile operation.
 	//
 	// Use this method to get basic information about a file and prepare it for downloading. For the
@@ -364,7 +364,7 @@ type Handler interface {
 	// be requested by calling [getFile](https://core.telegram.org/bots/api#getfile) again.
 	//
 	// POST /getFile
-	GetFile(ctx context.Context, req GetFile) (ResultFile, error)
+	GetFile(ctx context.Context, req *GetFile) (*ResultFile, error)
 	// GetForumTopicIconStickers implements getForumTopicIconStickers operation.
 	//
 	// Use this method to get custom emoji stickers, which can be used as a forum topic icon by any user.
@@ -372,7 +372,7 @@ type Handler interface {
 	// objects.
 	//
 	// POST /getForumTopicIconStickers
-	GetForumTopicIconStickers(ctx context.Context) (ResultArrayOfSticker, error)
+	GetForumTopicIconStickers(ctx context.Context) (*ResultArrayOfSticker, error)
 	// GetGameHighScores implements getGameHighScores operation.
 	//
 	// Use this method to get data for high score tables. Will return the score of the specified user and
@@ -380,14 +380,14 @@ type Handler interface {
 	// org/bots/api#gamehighscore) objects.
 	//
 	// POST /getGameHighScores
-	GetGameHighScores(ctx context.Context, req GetGameHighScores) (ResultArrayOfGameHighScore, error)
+	GetGameHighScores(ctx context.Context, req *GetGameHighScores) (*ResultArrayOfGameHighScore, error)
 	// GetMe implements getMe operation.
 	//
 	// A simple method for testing your bot's authentication token. Requires no parameters. Returns basic
 	// information about the bot in form of a [User](https://core.telegram.org/bots/api#user) object.
 	//
 	// POST /getMe
-	GetMe(ctx context.Context) (ResultUser, error)
+	GetMe(ctx context.Context) (*ResultUser, error)
 	// GetMyCommands implements getMyCommands operation.
 	//
 	// Use this method to get the current list of the bot's commands for the given scope and user
@@ -395,21 +395,21 @@ type Handler interface {
 	// If commands aren't set, an empty list is returned.
 	//
 	// POST /getMyCommands
-	GetMyCommands(ctx context.Context, req OptGetMyCommands) (ResultArrayOfBotCommand, error)
+	GetMyCommands(ctx context.Context, req OptGetMyCommands) (*ResultArrayOfBotCommand, error)
 	// GetMyDefaultAdministratorRights implements getMyDefaultAdministratorRights operation.
 	//
 	// Use this method to get the current default administrator rights of the bot. Returns
 	// [ChatAdministratorRights](https://core.telegram.org/bots/api#chatadministratorrights) on success.
 	//
 	// POST /getMyDefaultAdministratorRights
-	GetMyDefaultAdministratorRights(ctx context.Context, req OptGetMyDefaultAdministratorRights) (Result, error)
+	GetMyDefaultAdministratorRights(ctx context.Context, req OptGetMyDefaultAdministratorRights) (*Result, error)
 	// GetStickerSet implements getStickerSet operation.
 	//
 	// Use this method to get a sticker set. On success, a [StickerSet](https://core.telegram.
 	// org/bots/api#stickerset) object is returned.
 	//
 	// POST /getStickerSet
-	GetStickerSet(ctx context.Context, req GetStickerSet) (ResultStickerSet, error)
+	GetStickerSet(ctx context.Context, req *GetStickerSet) (*ResultStickerSet, error)
 	// GetUpdates implements getUpdates operation.
 	//
 	// Use this method to receive incoming updates using long polling ([wiki](https://en.wikipedia.
@@ -417,14 +417,14 @@ type Handler interface {
 	// org/bots/api#update) objects.
 	//
 	// POST /getUpdates
-	GetUpdates(ctx context.Context, req OptGetUpdates) (ResultArrayOfUpdate, error)
+	GetUpdates(ctx context.Context, req OptGetUpdates) (*ResultArrayOfUpdate, error)
 	// GetUserProfilePhotos implements getUserProfilePhotos operation.
 	//
 	// Use this method to get a list of profile pictures for a user. Returns a
 	// [UserProfilePhotos](https://core.telegram.org/bots/api#userprofilephotos) object.
 	//
 	// POST /getUserProfilePhotos
-	GetUserProfilePhotos(ctx context.Context, req GetUserProfilePhotos) (ResultUserProfilePhotos, error)
+	GetUserProfilePhotos(ctx context.Context, req *GetUserProfilePhotos) (*ResultUserProfilePhotos, error)
 	// GetWebhookInfo implements getWebhookInfo operation.
 	//
 	// Use this method to get current webhook status. Requires no parameters. On success, returns a
@@ -433,7 +433,7 @@ type Handler interface {
 	// field empty.
 	//
 	// POST /getWebhookInfo
-	GetWebhookInfo(ctx context.Context) (ResultWebhookInfo, error)
+	GetWebhookInfo(ctx context.Context) (*ResultWebhookInfo, error)
 	// HideGeneralForumTopic implements hideGeneralForumTopic operation.
 	//
 	// Use this method to hide the 'General' topic in a forum supergroup chat. The bot must be an
@@ -441,13 +441,13 @@ type Handler interface {
 	// rights. The topic will be automatically closed if it was open. Returns _True_ on success.
 	//
 	// POST /hideGeneralForumTopic
-	HideGeneralForumTopic(ctx context.Context, req HideGeneralForumTopic) (Result, error)
+	HideGeneralForumTopic(ctx context.Context, req *HideGeneralForumTopic) (*Result, error)
 	// LeaveChat implements leaveChat operation.
 	//
 	// Use this method for your bot to leave a group, supergroup or channel. Returns _True_ on success.
 	//
 	// POST /leaveChat
-	LeaveChat(ctx context.Context, req LeaveChat) (Result, error)
+	LeaveChat(ctx context.Context, req *LeaveChat) (*Result, error)
 	// LogOut implements logOut operation.
 	//
 	// Use this method to log out from the cloud Bot API server before launching the bot locally. You
@@ -457,7 +457,7 @@ type Handler interface {
 	// success. Requires no parameters.
 	//
 	// POST /logOut
-	LogOut(ctx context.Context) (Result, error)
+	LogOut(ctx context.Context) (*Result, error)
 	// PinChatMessage implements pinChatMessage operation.
 	//
 	// Use this method to add a message to the list of pinned messages in a chat. If the chat is not a
@@ -466,7 +466,7 @@ type Handler interface {
 	// in a channel. Returns _True_ on success.
 	//
 	// POST /pinChatMessage
-	PinChatMessage(ctx context.Context, req PinChatMessage) (Result, error)
+	PinChatMessage(ctx context.Context, req *PinChatMessage) (*Result, error)
 	// PromoteChatMember implements promoteChatMember operation.
 	//
 	// Use this method to promote or demote a user in a supergroup or a channel. The bot must be an
@@ -474,7 +474,7 @@ type Handler interface {
 	// Pass _False_ for all boolean parameters to demote a user. Returns _True_ on success.
 	//
 	// POST /promoteChatMember
-	PromoteChatMember(ctx context.Context, req PromoteChatMember) (Result, error)
+	PromoteChatMember(ctx context.Context, req *PromoteChatMember) (*Result, error)
 	// ReopenForumTopic implements reopenForumTopic operation.
 	//
 	// Use this method to reopen a closed topic in a forum supergroup chat. The bot must be an
@@ -482,7 +482,7 @@ type Handler interface {
 	// rights, unless it is the creator of the topic. Returns _True_ on success.
 	//
 	// POST /reopenForumTopic
-	ReopenForumTopic(ctx context.Context, req ReopenForumTopic) (Result, error)
+	ReopenForumTopic(ctx context.Context, req *ReopenForumTopic) (*Result, error)
 	// ReopenGeneralForumTopic implements reopenGeneralForumTopic operation.
 	//
 	// Use this method to reopen a closed 'General' topic in a forum supergroup chat. The bot must be an
@@ -490,7 +490,7 @@ type Handler interface {
 	// rights. The topic will be automatically unhidden if it was hidden. Returns _True_ on success.
 	//
 	// POST /reopenGeneralForumTopic
-	ReopenGeneralForumTopic(ctx context.Context, req ReopenGeneralForumTopic) (Result, error)
+	ReopenGeneralForumTopic(ctx context.Context, req *ReopenGeneralForumTopic) (*Result, error)
 	// RestrictChatMember implements restrictChatMember operation.
 	//
 	// Use this method to restrict a user in a supergroup. The bot must be an administrator in the
@@ -498,7 +498,7 @@ type Handler interface {
 	// all permissions to lift restrictions from a user. Returns _True_ on success.
 	//
 	// POST /restrictChatMember
-	RestrictChatMember(ctx context.Context, req RestrictChatMember) (Result, error)
+	RestrictChatMember(ctx context.Context, req *RestrictChatMember) (*Result, error)
 	// RevokeChatInviteLink implements revokeChatInviteLink operation.
 	//
 	// Use this method to revoke an invite link created by the bot. If the primary link is revoked, a new
@@ -507,7 +507,7 @@ type Handler interface {
 	// [ChatInviteLink](https://core.telegram.org/bots/api#chatinvitelink) object.
 	//
 	// POST /revokeChatInviteLink
-	RevokeChatInviteLink(ctx context.Context, req RevokeChatInviteLink) (ResultChatInviteLink, error)
+	RevokeChatInviteLink(ctx context.Context, req *RevokeChatInviteLink) (*ResultChatInviteLink, error)
 	// SendAnimation implements sendAnimation operation.
 	//
 	// Use this method to send animation files (GIF or H.264/MPEG-4 AVC video without sound). On success,
@@ -515,35 +515,35 @@ type Handler interface {
 	// send animation files of up to 50 MB in size, this limit may be changed in the future.
 	//
 	// POST /sendAnimation
-	SendAnimation(ctx context.Context, req SendAnimation) (ResultMessage, error)
+	SendAnimation(ctx context.Context, req *SendAnimation) (*ResultMessage, error)
 	// SendAudio implements sendAudio operation.
 	//
 	// For sending voice messages, use the [sendVoice](https://core.telegram.org/bots/api#sendvoice)
 	// method instead.
 	//
 	// POST /sendAudio
-	SendAudio(ctx context.Context, req SendAudio) (ResultMessage, error)
+	SendAudio(ctx context.Context, req *SendAudio) (*ResultMessage, error)
 	// SendChatAction implements sendChatAction operation.
 	//
 	// We only recommend using this method when a response from the bot will take a **noticeable** amount
 	// of time to arrive.
 	//
 	// POST /sendChatAction
-	SendChatAction(ctx context.Context, req SendChatAction) (Result, error)
+	SendChatAction(ctx context.Context, req *SendChatAction) (*Result, error)
 	// SendContact implements sendContact operation.
 	//
 	// Use this method to send phone contacts. On success, the sent [Message](https://core.telegram.
 	// org/bots/api#message) is returned.
 	//
 	// POST /sendContact
-	SendContact(ctx context.Context, req SendContact) (ResultMessage, error)
+	SendContact(ctx context.Context, req *SendContact) (*ResultMessage, error)
 	// SendDice implements sendDice operation.
 	//
 	// Use this method to send an animated emoji that will display a random value. On success, the sent
 	// [Message](https://core.telegram.org/bots/api#message) is returned.
 	//
 	// POST /sendDice
-	SendDice(ctx context.Context, req SendDice) (ResultMessage, error)
+	SendDice(ctx context.Context, req *SendDice) (*ResultMessage, error)
 	// SendDocument implements sendDocument operation.
 	//
 	// Use this method to send general files. On success, the sent [Message](https://core.telegram.
@@ -551,28 +551,28 @@ type Handler interface {
 	// size, this limit may be changed in the future.
 	//
 	// POST /sendDocument
-	SendDocument(ctx context.Context, req SendDocument) (ResultMessage, error)
+	SendDocument(ctx context.Context, req *SendDocument) (*ResultMessage, error)
 	// SendGame implements sendGame operation.
 	//
 	// Use this method to send a game. On success, the sent [Message](https://core.telegram.
 	// org/bots/api#message) is returned.
 	//
 	// POST /sendGame
-	SendGame(ctx context.Context, req SendGame) (ResultMessage, error)
+	SendGame(ctx context.Context, req *SendGame) (*ResultMessage, error)
 	// SendInvoice implements sendInvoice operation.
 	//
 	// Use this method to send invoices. On success, the sent [Message](https://core.telegram.
 	// org/bots/api#message) is returned.
 	//
 	// POST /sendInvoice
-	SendInvoice(ctx context.Context, req SendInvoice) (ResultMessage, error)
+	SendInvoice(ctx context.Context, req *SendInvoice) (*ResultMessage, error)
 	// SendLocation implements sendLocation operation.
 	//
 	// Use this method to send point on the map. On success, the sent [Message](https://core.telegram.
 	// org/bots/api#message) is returned.
 	//
 	// POST /sendLocation
-	SendLocation(ctx context.Context, req SendLocation) (ResultMessage, error)
+	SendLocation(ctx context.Context, req *SendLocation) (*ResultMessage, error)
 	// SendMediaGroup implements sendMediaGroup operation.
 	//
 	// Use this method to send a group of photos, videos, documents or audios as an album. Documents and
@@ -580,28 +580,28 @@ type Handler interface {
 	// of [Messages](https://core.telegram.org/bots/api#message) that were sent is returned.
 	//
 	// POST /sendMediaGroup
-	SendMediaGroup(ctx context.Context, req SendMediaGroup) (ResultArrayOfMessage, error)
+	SendMediaGroup(ctx context.Context, req *SendMediaGroup) (*ResultArrayOfMessage, error)
 	// SendMessage implements sendMessage operation.
 	//
 	// Use this method to send text messages. On success, the sent [Message](https://core.telegram.
 	// org/bots/api#message) is returned.
 	//
 	// POST /sendMessage
-	SendMessage(ctx context.Context, req SendMessage) (ResultMessage, error)
+	SendMessage(ctx context.Context, req *SendMessage) (*ResultMessage, error)
 	// SendPhoto implements sendPhoto operation.
 	//
 	// Use this method to send photos. On success, the sent [Message](https://core.telegram.
 	// org/bots/api#message) is returned.
 	//
 	// POST /sendPhoto
-	SendPhoto(ctx context.Context, req SendPhoto) (ResultMessage, error)
+	SendPhoto(ctx context.Context, req *SendPhoto) (*ResultMessage, error)
 	// SendPoll implements sendPoll operation.
 	//
 	// Use this method to send a native poll. On success, the sent [Message](https://core.telegram.
 	// org/bots/api#message) is returned.
 	//
 	// POST /sendPoll
-	SendPoll(ctx context.Context, req SendPoll) (ResultMessage, error)
+	SendPoll(ctx context.Context, req *SendPoll) (*ResultMessage, error)
 	// SendSticker implements sendSticker operation.
 	//
 	// Use this method to send static .WEBP, [animated](https://telegram.org/blog/animated-stickers) .TGS,
@@ -609,14 +609,14 @@ type Handler interface {
 	// the sent [Message](https://core.telegram.org/bots/api#message) is returned.
 	//
 	// POST /sendSticker
-	SendSticker(ctx context.Context, req SendSticker) (ResultMessage, error)
+	SendSticker(ctx context.Context, req *SendSticker) (*ResultMessage, error)
 	// SendVenue implements sendVenue operation.
 	//
 	// Use this method to send information about a venue. On success, the sent [Message](https://core.
 	// telegram.org/bots/api#message) is returned.
 	//
 	// POST /sendVenue
-	SendVenue(ctx context.Context, req SendVenue) (ResultMessage, error)
+	SendVenue(ctx context.Context, req *SendVenue) (*ResultMessage, error)
 	// SendVideo implements sendVideo operation.
 	//
 	// Use this method to send video files, Telegram clients support MPEG4 videos (other formats may be
@@ -625,7 +625,7 @@ type Handler interface {
 	// files of up to 50 MB in size, this limit may be changed in the future.
 	//
 	// POST /sendVideo
-	SendVideo(ctx context.Context, req SendVideo) (ResultMessage, error)
+	SendVideo(ctx context.Context, req *SendVideo) (*ResultMessage, error)
 	// SendVideoNote implements sendVideoNote operation.
 	//
 	// As of [v.4.0](https://telegram.org/blog/video-messages-and-telescope), Telegram clients support
@@ -633,7 +633,7 @@ type Handler interface {
 	// success, the sent [Message](https://core.telegram.org/bots/api#message) is returned.
 	//
 	// POST /sendVideoNote
-	SendVideoNote(ctx context.Context, req SendVideoNote) (ResultMessage, error)
+	SendVideoNote(ctx context.Context, req *SendVideoNote) (*ResultMessage, error)
 	// SendVoice implements sendVoice operation.
 	//
 	// Use this method to send audio files, if you want Telegram clients to display the file as a
@@ -644,14 +644,14 @@ type Handler interface {
 	// messages of up to 50 MB in size, this limit may be changed in the future.
 	//
 	// POST /sendVoice
-	SendVoice(ctx context.Context, req SendVoice) (ResultMessage, error)
+	SendVoice(ctx context.Context, req *SendVoice) (*ResultMessage, error)
 	// SetChatAdministratorCustomTitle implements setChatAdministratorCustomTitle operation.
 	//
 	// Use this method to set a custom title for an administrator in a supergroup promoted by the bot.
 	// Returns _True_ on success.
 	//
 	// POST /setChatAdministratorCustomTitle
-	SetChatAdministratorCustomTitle(ctx context.Context, req SetChatAdministratorCustomTitle) (Result, error)
+	SetChatAdministratorCustomTitle(ctx context.Context, req *SetChatAdministratorCustomTitle) (*Result, error)
 	// SetChatDescription implements setChatDescription operation.
 	//
 	// Use this method to change the description of a group, a supergroup or a channel. The bot must be
@@ -659,14 +659,14 @@ type Handler interface {
 	// Returns _True_ on success.
 	//
 	// POST /setChatDescription
-	SetChatDescription(ctx context.Context, req SetChatDescription) (Result, error)
+	SetChatDescription(ctx context.Context, req *SetChatDescription) (*Result, error)
 	// SetChatMenuButton implements setChatMenuButton operation.
 	//
 	// Use this method to change the bot's menu button in a private chat, or the default menu button.
 	// Returns _True_ on success.
 	//
 	// POST /setChatMenuButton
-	SetChatMenuButton(ctx context.Context, req OptSetChatMenuButton) (Result, error)
+	SetChatMenuButton(ctx context.Context, req OptSetChatMenuButton) (*Result, error)
 	// SetChatPermissions implements setChatPermissions operation.
 	//
 	// Use this method to set default chat permissions for all members. The bot must be an administrator
@@ -674,7 +674,7 @@ type Handler interface {
 	// administrator rights. Returns _True_ on success.
 	//
 	// POST /setChatPermissions
-	SetChatPermissions(ctx context.Context, req SetChatPermissions) (Result, error)
+	SetChatPermissions(ctx context.Context, req *SetChatPermissions) (*Result, error)
 	// SetChatPhoto implements setChatPhoto operation.
 	//
 	// Use this method to set a new profile photo for the chat. Photos can't be changed for private chats.
@@ -682,7 +682,7 @@ type Handler interface {
 	// administrator rights. Returns _True_ on success.
 	//
 	// POST /setChatPhoto
-	SetChatPhoto(ctx context.Context, req SetChatPhoto) (Result, error)
+	SetChatPhoto(ctx context.Context, req *SetChatPhoto) (*Result, error)
 	// SetChatStickerSet implements setChatStickerSet operation.
 	//
 	// Use this method to set a new group sticker set for a supergroup. The bot must be an administrator
@@ -691,7 +691,7 @@ type Handler interface {
 	// requests to check if the bot can use this method. Returns _True_ on success.
 	//
 	// POST /setChatStickerSet
-	SetChatStickerSet(ctx context.Context, req SetChatStickerSet) (Result, error)
+	SetChatStickerSet(ctx context.Context, req *SetChatStickerSet) (*Result, error)
 	// SetChatTitle implements setChatTitle operation.
 	//
 	// Use this method to change the title of a chat. Titles can't be changed for private chats. The bot
@@ -699,7 +699,7 @@ type Handler interface {
 	// rights. Returns _True_ on success.
 	//
 	// POST /setChatTitle
-	SetChatTitle(ctx context.Context, req SetChatTitle) (Result, error)
+	SetChatTitle(ctx context.Context, req *SetChatTitle) (*Result, error)
 	// SetGameScore implements setGameScore operation.
 	//
 	// Use this method to set the score of the specified user in a game message. On success, if the
@@ -708,14 +708,14 @@ type Handler interface {
 	// user's current score in the chat and _force_ is _False_.
 	//
 	// POST /setGameScore
-	SetGameScore(ctx context.Context, req SetGameScore) (Result, error)
+	SetGameScore(ctx context.Context, req *SetGameScore) (*Result, error)
 	// SetMyCommands implements setMyCommands operation.
 	//
 	// Use this method to change the list of the bot's commands. See [this manual](https://core.telegram.
 	// org/bots/features#commands) for more details about bot commands. Returns _True_ on success.
 	//
 	// POST /setMyCommands
-	SetMyCommands(ctx context.Context, req SetMyCommands) (Result, error)
+	SetMyCommands(ctx context.Context, req *SetMyCommands) (*Result, error)
 	// SetMyDefaultAdministratorRights implements setMyDefaultAdministratorRights operation.
 	//
 	// Use this method to change the default administrator rights requested by the bot when it's added as
@@ -723,7 +723,7 @@ type Handler interface {
 	// free to modify the list before adding the bot. Returns _True_ on success.
 	//
 	// POST /setMyDefaultAdministratorRights
-	SetMyDefaultAdministratorRights(ctx context.Context, req OptSetMyDefaultAdministratorRights) (Result, error)
+	SetMyDefaultAdministratorRights(ctx context.Context, req OptSetMyDefaultAdministratorRights) (*Result, error)
 	// SetPassportDataErrors implements setPassportDataErrors operation.
 	//
 	// Use this if the data submitted by the user doesn't satisfy the standards your service requires for
@@ -732,14 +732,14 @@ type Handler interface {
 	// knows how to correct the issues.
 	//
 	// POST /setPassportDataErrors
-	SetPassportDataErrors(ctx context.Context, req SetPassportDataErrors) (Result, error)
+	SetPassportDataErrors(ctx context.Context, req *SetPassportDataErrors) (*Result, error)
 	// SetStickerPositionInSet implements setStickerPositionInSet operation.
 	//
 	// Use this method to move a sticker in a set created by the bot to a specific position. Returns
 	// _True_ on success.
 	//
 	// POST /setStickerPositionInSet
-	SetStickerPositionInSet(ctx context.Context, req SetStickerPositionInSet) (Result, error)
+	SetStickerPositionInSet(ctx context.Context, req *SetStickerPositionInSet) (*Result, error)
 	// SetStickerSetThumb implements setStickerSetThumb operation.
 	//
 	// Use this method to set the thumbnail of a sticker set. Animated thumbnails can be set for animated
@@ -747,7 +747,7 @@ type Handler interface {
 	// success.
 	//
 	// POST /setStickerSetThumb
-	SetStickerSetThumb(ctx context.Context, req SetStickerSetThumb) (Result, error)
+	SetStickerSetThumb(ctx context.Context, req *SetStickerSetThumb) (*Result, error)
 	// SetWebhook implements setWebhook operation.
 	//
 	// If you'd like to make sure that the webhook was set by you, you can specify secret data in the
@@ -755,7 +755,7 @@ type Handler interface {
 	// `X-Telegram-Bot-Api-Secret-Token` with the secret token as content.
 	//
 	// POST /setWebhook
-	SetWebhook(ctx context.Context, req SetWebhook) (Result, error)
+	SetWebhook(ctx context.Context, req *SetWebhook) (*Result, error)
 	// StopMessageLiveLocation implements stopMessageLiveLocation operation.
 	//
 	// Use this method to stop updating a live location message before _live_period_ expires. On success,
@@ -763,14 +763,14 @@ type Handler interface {
 	// org/bots/api#message) is returned, otherwise _True_ is returned.
 	//
 	// POST /stopMessageLiveLocation
-	StopMessageLiveLocation(ctx context.Context, req StopMessageLiveLocation) (ResultMessageOrBoolean, error)
+	StopMessageLiveLocation(ctx context.Context, req *StopMessageLiveLocation) (*ResultMessageOrBoolean, error)
 	// StopPoll implements stopPoll operation.
 	//
 	// Use this method to stop a poll which was sent by the bot. On success, the stopped
 	// [Poll](https://core.telegram.org/bots/api#poll) is returned.
 	//
 	// POST /stopPoll
-	StopPoll(ctx context.Context, req StopPoll) (ResultPoll, error)
+	StopPoll(ctx context.Context, req *StopPoll) (*ResultPoll, error)
 	// UnbanChatMember implements unbanChatMember operation.
 	//
 	// Use this method to unban a previously banned user in a supergroup or channel. The user will
@@ -781,7 +781,7 @@ type Handler interface {
 	// _only_if_banned_. Returns _True_ on success.
 	//
 	// POST /unbanChatMember
-	UnbanChatMember(ctx context.Context, req UnbanChatMember) (Result, error)
+	UnbanChatMember(ctx context.Context, req *UnbanChatMember) (*Result, error)
 	// UnbanChatSenderChat implements unbanChatSenderChat operation.
 	//
 	// Use this method to unban a previously banned channel chat in a supergroup or channel. The bot must
@@ -789,7 +789,7 @@ type Handler interface {
 	// _True_ on success.
 	//
 	// POST /unbanChatSenderChat
-	UnbanChatSenderChat(ctx context.Context, req UnbanChatSenderChat) (Result, error)
+	UnbanChatSenderChat(ctx context.Context, req *UnbanChatSenderChat) (*Result, error)
 	// UnhideGeneralForumTopic implements unhideGeneralForumTopic operation.
 	//
 	// Use this method to unhide the 'General' topic in a forum supergroup chat. The bot must be an
@@ -797,7 +797,7 @@ type Handler interface {
 	// rights. Returns _True_ on success.
 	//
 	// POST /unhideGeneralForumTopic
-	UnhideGeneralForumTopic(ctx context.Context, req UnhideGeneralForumTopic) (Result, error)
+	UnhideGeneralForumTopic(ctx context.Context, req *UnhideGeneralForumTopic) (*Result, error)
 	// UnpinAllChatMessages implements unpinAllChatMessages operation.
 	//
 	// Use this method to clear the list of pinned messages in a chat. If the chat is not a private chat,
@@ -806,7 +806,7 @@ type Handler interface {
 	// Returns _True_ on success.
 	//
 	// POST /unpinAllChatMessages
-	UnpinAllChatMessages(ctx context.Context, req UnpinAllChatMessages) (Result, error)
+	UnpinAllChatMessages(ctx context.Context, req *UnpinAllChatMessages) (*Result, error)
 	// UnpinAllForumTopicMessages implements unpinAllForumTopicMessages operation.
 	//
 	// Use this method to clear the list of pinned messages in a forum topic. The bot must be an
@@ -814,7 +814,7 @@ type Handler interface {
 	// right in the supergroup. Returns _True_ on success.
 	//
 	// POST /unpinAllForumTopicMessages
-	UnpinAllForumTopicMessages(ctx context.Context, req UnpinAllForumTopicMessages) (Result, error)
+	UnpinAllForumTopicMessages(ctx context.Context, req *UnpinAllForumTopicMessages) (*Result, error)
 	// UnpinChatMessage implements unpinChatMessage operation.
 	//
 	// Use this method to remove a message from the list of pinned messages in a chat. If the chat is not
@@ -823,7 +823,7 @@ type Handler interface {
 	// in a channel. Returns _True_ on success.
 	//
 	// POST /unpinChatMessage
-	UnpinChatMessage(ctx context.Context, req UnpinChatMessage) (Result, error)
+	UnpinChatMessage(ctx context.Context, req *UnpinChatMessage) (*Result, error)
 	// UploadStickerFile implements uploadStickerFile operation.
 	//
 	// Use this method to upload a .PNG file with a sticker for later use in _createNewStickerSet_ and
@@ -831,11 +831,11 @@ type Handler interface {
 	// telegram.org/bots/api#file) on success.
 	//
 	// POST /uploadStickerFile
-	UploadStickerFile(ctx context.Context, req UploadStickerFile) (ResultFile, error)
-	// NewError creates ErrorStatusCode from error returned by handler.
+	UploadStickerFile(ctx context.Context, req *UploadStickerFile) (*ResultFile, error)
+	// NewError creates *ErrorStatusCode from error returned by handler.
 	//
 	// Used for common default response.
-	NewError(ctx context.Context, err error) ErrorStatusCode
+	NewError(ctx context.Context, err error) *ErrorStatusCode
 }
 
 // Server implements http server based on OpenAPI v3 specification and
@@ -846,8 +846,8 @@ type Server struct {
 }
 
 // NewServer creates new Server.
-func NewServer(h Handler, opts ...Option) (*Server, error) {
-	s, err := newConfig(opts...).baseServer()
+func NewServer(h Handler, opts ...ServerOption) (*Server, error) {
+	s, err := newServerConfig(opts...).baseServer()
 	if err != nil {
 		return nil, err
 	}

@@ -167,7 +167,7 @@ func TestBotAPI_SetMyCommands(t *testing.T) {
 			LangCode: "ru",
 			Commands: testCommands(),
 		}).ThenTrue()
-		_, err := api.SetMyCommands(ctx, oas.SetMyCommands{
+		_, err := api.SetMyCommands(ctx, &oas.SetMyCommands{
 			Scope:        oas.OptBotCommandScope{},
 			LanguageCode: oas.NewOptString("ru"),
 			Commands:     testCommandsBotAPI(),
@@ -179,7 +179,7 @@ func TestBotAPI_SetMyCommands(t *testing.T) {
 			LangCode: "ru",
 			Commands: testCommands(),
 		}).ThenTrue()
-		_, err = api.SetMyCommands(ctx, oas.SetMyCommands{
+		_, err = api.SetMyCommands(ctx, &oas.SetMyCommands{
 			Scope: oas.NewOptBotCommandScope(oas.BotCommandScope{
 				Type: oas.BotCommandScopeAllPrivateChatsBotCommandScope,
 			}),
@@ -188,6 +188,10 @@ func TestBotAPI_SetMyCommands(t *testing.T) {
 		})
 		a.NoError(err)
 	})
+}
+
+func P[V any](v V) *V {
+	return &v
 }
 
 func TestBotAPI_DeleteMyCommands(t *testing.T) {

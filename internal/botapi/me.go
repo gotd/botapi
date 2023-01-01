@@ -28,28 +28,28 @@ func convertToBotAPIUser(u peers.User) oas.User {
 }
 
 // GetMe implements oas.Handler.
-func (b *BotAPI) GetMe(ctx context.Context) (oas.ResultUser, error) {
+func (b *BotAPI) GetMe(ctx context.Context) (*oas.ResultUser, error) {
 	me, err := b.peers.Self(ctx)
 	if err != nil {
-		return oas.ResultUser{}, err
+		return nil, err
 	}
 
-	return oas.ResultUser{
+	return &oas.ResultUser{
 		Result: oas.NewOptUser(convertToBotAPIUser(me)),
 		Ok:     true,
 	}, nil
 }
 
 // Close implements oas.Handler.
-func (b *BotAPI) Close(ctx context.Context) (oas.Result, error) {
+func (b *BotAPI) Close(ctx context.Context) (*oas.Result, error) {
 	// FIXME(tdakkota): kill BotAPI.
 	return resultOK(true), nil
 }
 
 // LogOut implements oas.Handler.
-func (b *BotAPI) LogOut(ctx context.Context) (oas.Result, error) {
+func (b *BotAPI) LogOut(ctx context.Context) (*oas.Result, error) {
 	if _, err := b.raw.AuthLogOut(ctx); err != nil {
-		return oas.Result{}, err
+		return nil, err
 	}
 
 	return resultOK(true), nil

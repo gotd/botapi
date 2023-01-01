@@ -12,7 +12,7 @@ import (
 )
 
 // SendContact implements oas.Handler.
-func (b *BotAPI) SendContact(ctx context.Context, req oas.SendContact) (oas.ResultMessage, error) {
+func (b *BotAPI) SendContact(ctx context.Context, req *oas.SendContact) (*oas.ResultMessage, error) {
 	s, p, err := b.prepareSend(
 		ctx,
 		sendOpts{
@@ -25,7 +25,7 @@ func (b *BotAPI) SendContact(ctx context.Context, req oas.SendContact) (oas.Resu
 		},
 	)
 	if err != nil {
-		return oas.ResultMessage{}, errors.Wrap(err, "prepare send")
+		return nil, errors.Wrap(err, "prepare send")
 	}
 	resp, err := s.Media(ctx, message.Contact(tg.InputMediaContact{
 		PhoneNumber: req.PhoneNumber,
@@ -37,7 +37,7 @@ func (b *BotAPI) SendContact(ctx context.Context, req oas.SendContact) (oas.Resu
 }
 
 // SendDice implements oas.Handler.
-func (b *BotAPI) SendDice(ctx context.Context, req oas.SendDice) (oas.ResultMessage, error) {
+func (b *BotAPI) SendDice(ctx context.Context, req *oas.SendDice) (*oas.ResultMessage, error) {
 	s, p, err := b.prepareSend(
 		ctx,
 		sendOpts{
@@ -50,7 +50,7 @@ func (b *BotAPI) SendDice(ctx context.Context, req oas.SendDice) (oas.ResultMess
 		},
 	)
 	if err != nil {
-		return oas.ResultMessage{}, errors.Wrap(err, "prepare send")
+		return nil, errors.Wrap(err, "prepare send")
 	}
 	resp, err := s.Media(ctx, message.MediaDice(req.Emoji.Or("🎲")))
 	return b.sentMessage(ctx, p, resp, err)
@@ -68,7 +68,7 @@ func parseInlineKeyboardMarkup(r oas.OptInlineKeyboardMarkup) oas.OptSendReplyMa
 }
 
 // SendGame implements oas.Handler.
-func (b *BotAPI) SendGame(ctx context.Context, req oas.SendGame) (oas.ResultMessage, error) {
+func (b *BotAPI) SendGame(ctx context.Context, req *oas.SendGame) (*oas.ResultMessage, error) {
 	s, p, err := b.prepareSend(
 		ctx,
 		sendOpts{
@@ -81,7 +81,7 @@ func (b *BotAPI) SendGame(ctx context.Context, req oas.SendGame) (oas.ResultMess
 		},
 	)
 	if err != nil {
-		return oas.ResultMessage{}, errors.Wrap(err, "prepare send")
+		return nil, errors.Wrap(err, "prepare send")
 	}
 	resp, err := s.Media(ctx, message.Game(&tg.InputGameShortName{
 		// TDLib uses self user.
@@ -94,7 +94,7 @@ func (b *BotAPI) SendGame(ctx context.Context, req oas.SendGame) (oas.ResultMess
 }
 
 // SendInvoice implements oas.Handler.
-func (b *BotAPI) SendInvoice(ctx context.Context, req oas.SendInvoice) (oas.ResultMessage, error) {
+func (b *BotAPI) SendInvoice(ctx context.Context, req *oas.SendInvoice) (*oas.ResultMessage, error) {
 	s, p, err := b.prepareSend(
 		ctx,
 		sendOpts{
@@ -107,7 +107,7 @@ func (b *BotAPI) SendInvoice(ctx context.Context, req oas.SendInvoice) (oas.Resu
 		},
 	)
 	if err != nil {
-		return oas.ResultMessage{}, errors.Wrap(err, "prepare send")
+		return nil, errors.Wrap(err, "prepare send")
 	}
 	invoice := tg.Invoice{
 		Test:                     false,
@@ -176,7 +176,7 @@ func (b *BotAPI) SendInvoice(ctx context.Context, req oas.SendInvoice) (oas.Resu
 }
 
 // SendLocation implements oas.Handler.
-func (b *BotAPI) SendLocation(ctx context.Context, req oas.SendLocation) (oas.ResultMessage, error) {
+func (b *BotAPI) SendLocation(ctx context.Context, req *oas.SendLocation) (*oas.ResultMessage, error) {
 	s, p, err := b.prepareSend(
 		ctx,
 		sendOpts{
@@ -189,7 +189,7 @@ func (b *BotAPI) SendLocation(ctx context.Context, req oas.SendLocation) (oas.Re
 		},
 	)
 	if err != nil {
-		return oas.ResultMessage{}, errors.Wrap(err, "prepare send")
+		return nil, errors.Wrap(err, "prepare send")
 	}
 
 	point := &tg.InputGeoPoint{
@@ -228,7 +228,7 @@ func (b *BotAPI) SendLocation(ctx context.Context, req oas.SendLocation) (oas.Re
 }
 
 // SendVenue implements oas.Handler.
-func (b *BotAPI) SendVenue(ctx context.Context, req oas.SendVenue) (oas.ResultMessage, error) {
+func (b *BotAPI) SendVenue(ctx context.Context, req *oas.SendVenue) (*oas.ResultMessage, error) {
 	s, p, err := b.prepareSend(
 		ctx,
 		sendOpts{
@@ -241,7 +241,7 @@ func (b *BotAPI) SendVenue(ctx context.Context, req oas.SendVenue) (oas.ResultMe
 		},
 	)
 	if err != nil {
-		return oas.ResultMessage{}, errors.Wrap(err, "prepare send")
+		return nil, errors.Wrap(err, "prepare send")
 	}
 
 	point := &tg.InputGeoPoint{

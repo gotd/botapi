@@ -63,7 +63,7 @@ func (b *BotAPI) convertToBotCommandScopeClass(
 }
 
 // GetMyCommands implements oas.Handler.
-func (b *BotAPI) GetMyCommands(ctx context.Context, req oas.OptGetMyCommands) (oas.ResultArrayOfBotCommand, error) {
+func (b *BotAPI) GetMyCommands(ctx context.Context, req oas.OptGetMyCommands) (*oas.ResultArrayOfBotCommand, error) {
 	var (
 		scope    tg.BotCommandScopeClass = &tg.BotCommandScopeDefault{}
 		langCode string
@@ -72,7 +72,7 @@ func (b *BotAPI) GetMyCommands(ctx context.Context, req oas.OptGetMyCommands) (o
 	if input, ok := req.Get(); ok {
 		s, err := b.convertToBotCommandScopeClass(ctx, input.Scope)
 		if err != nil {
-			return oas.ResultArrayOfBotCommand{}, errors.Wrap(err, "convert scope")
+			return nil, errors.Wrap(err, "convert scope")
 		}
 		scope = s
 		langCode = input.LanguageCode.Value
@@ -83,7 +83,7 @@ func (b *BotAPI) GetMyCommands(ctx context.Context, req oas.OptGetMyCommands) (o
 		LangCode: langCode,
 	})
 	if err != nil {
-		return oas.ResultArrayOfBotCommand{}, err
+		return nil, err
 	}
 
 	r := make([]oas.BotCommand, len(cmds))
@@ -94,17 +94,17 @@ func (b *BotAPI) GetMyCommands(ctx context.Context, req oas.OptGetMyCommands) (o
 		}
 	}
 
-	return oas.ResultArrayOfBotCommand{
+	return &oas.ResultArrayOfBotCommand{
 		Result: r,
 		Ok:     true,
 	}, nil
 }
 
 // SetMyCommands implements oas.Handler.
-func (b *BotAPI) SetMyCommands(ctx context.Context, req oas.SetMyCommands) (oas.Result, error) {
+func (b *BotAPI) SetMyCommands(ctx context.Context, req *oas.SetMyCommands) (*oas.Result, error) {
 	scope, err := b.convertToBotCommandScopeClass(ctx, req.Scope)
 	if err != nil {
-		return oas.Result{}, errors.Wrap(err, "convert scope")
+		return nil, errors.Wrap(err, "convert scope")
 	}
 
 	commands := make([]tg.BotCommand, len(req.Commands))
@@ -121,14 +121,14 @@ func (b *BotAPI) SetMyCommands(ctx context.Context, req oas.SetMyCommands) (oas.
 		Commands: commands,
 	})
 	if err != nil {
-		return oas.Result{}, err
+		return nil, err
 	}
 
 	return resultOK(r), nil
 }
 
 // DeleteMyCommands implements oas.Handler.
-func (b *BotAPI) DeleteMyCommands(ctx context.Context, req oas.OptDeleteMyCommands) (oas.Result, error) {
+func (b *BotAPI) DeleteMyCommands(ctx context.Context, req oas.OptDeleteMyCommands) (*oas.Result, error) {
 	var (
 		scope    tg.BotCommandScopeClass = &tg.BotCommandScopeDefault{}
 		langCode string
@@ -137,7 +137,7 @@ func (b *BotAPI) DeleteMyCommands(ctx context.Context, req oas.OptDeleteMyComman
 	if input, ok := req.Get(); ok {
 		s, err := b.convertToBotCommandScopeClass(ctx, input.Scope)
 		if err != nil {
-			return oas.Result{}, errors.Wrap(err, "convert scope")
+			return nil, errors.Wrap(err, "convert scope")
 		}
 		scope = s
 		langCode = input.LanguageCode.Value
@@ -148,7 +148,7 @@ func (b *BotAPI) DeleteMyCommands(ctx context.Context, req oas.OptDeleteMyComman
 		LangCode: langCode,
 	})
 	if err != nil {
-		return oas.Result{}, err
+		return nil, err
 	}
 
 	return resultOK(r), nil

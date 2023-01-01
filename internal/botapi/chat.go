@@ -28,37 +28,37 @@ func (b *BotAPI) checkJoinRequest(
 	ctx context.Context,
 	chatID oas.ID, userID int64,
 	cb func(p peers.InviteLinks, ctx context.Context, user tg.InputUserClass) error,
-) (oas.Result, error) {
+) (*oas.Result, error) {
 	p, err := b.resolveIDToChat(ctx, chatID)
 	if err != nil {
-		return oas.Result{}, errors.Wrap(err, "resolve chatID")
+		return nil, errors.Wrap(err, "resolve chatID")
 	}
 	user, err := b.resolveUserID(ctx, userID)
 	if err != nil {
-		return oas.Result{}, errors.Wrap(err, "resolve userID")
+		return nil, errors.Wrap(err, "resolve userID")
 	}
 
 	if err := cb(p.InviteLinks(), ctx, user.InputUser()); err != nil {
-		return oas.Result{}, err
+		return nil, err
 	}
 	return resultOK(true), nil
 }
 
 // ApproveChatJoinRequest implements oas.Handler.
-func (b *BotAPI) ApproveChatJoinRequest(ctx context.Context, req oas.ApproveChatJoinRequest) (oas.Result, error) {
+func (b *BotAPI) ApproveChatJoinRequest(ctx context.Context, req *oas.ApproveChatJoinRequest) (*oas.Result, error) {
 	return b.checkJoinRequest(ctx, req.ChatID, req.UserID, peers.InviteLinks.ApproveJoin)
 }
 
 // DeclineChatJoinRequest implements oas.Handler.
-func (b *BotAPI) DeclineChatJoinRequest(ctx context.Context, req oas.DeclineChatJoinRequest) (oas.Result, error) {
+func (b *BotAPI) DeclineChatJoinRequest(ctx context.Context, req *oas.DeclineChatJoinRequest) (*oas.Result, error) {
 	return b.checkJoinRequest(ctx, req.ChatID, req.UserID, peers.InviteLinks.DeclineJoin)
 }
 
 // DeleteChatPhoto implements oas.Handler.
-func (b *BotAPI) DeleteChatPhoto(ctx context.Context, req oas.DeleteChatPhoto) (oas.Result, error) {
+func (b *BotAPI) DeleteChatPhoto(ctx context.Context, req *oas.DeleteChatPhoto) (*oas.Result, error) {
 	p, err := b.resolveIDToChat(ctx, req.ChatID)
 	if err != nil {
-		return oas.Result{}, errors.Wrap(err, "resolve chatID")
+		return nil, errors.Wrap(err, "resolve chatID")
 	}
 
 	switch p := p.(type) {
@@ -73,43 +73,43 @@ func (b *BotAPI) DeleteChatPhoto(ctx context.Context, req oas.DeleteChatPhoto) (
 			Photo:  &tg.InputChatPhotoEmpty{},
 		})
 	default:
-		return oas.Result{}, errors.Errorf("unexpected type %T", p)
+		return nil, errors.Errorf("unexpected type %T", p)
 	}
 	if err != nil {
-		return oas.Result{}, errors.Wrap(err, "delete photo")
+		return nil, errors.Wrap(err, "delete photo")
 	}
 
 	return resultOK(true), nil
 }
 
 // DeleteChatStickerSet implements oas.Handler.
-func (b *BotAPI) DeleteChatStickerSet(ctx context.Context, req oas.DeleteChatStickerSet) (oas.Result, error) {
+func (b *BotAPI) DeleteChatStickerSet(ctx context.Context, req *oas.DeleteChatStickerSet) (*oas.Result, error) {
 	p, err := b.resolveIDToChat(ctx, req.ChatID)
 	if err != nil {
-		return oas.Result{}, errors.Wrap(err, "resolve chatID")
+		return nil, errors.Wrap(err, "resolve chatID")
 	}
 
 	ch, ok := p.(peers.Channel)
 	if !ok {
-		return oas.Result{}, &BadRequestError{Message: "Bad Request: method is available only for supergroups"}
+		return nil, &BadRequestError{Message: "Bad Request: method is available only for supergroups"}
 	}
 
 	s, ok := ch.ToSupergroup()
 	if !ok {
-		return oas.Result{}, &BadRequestError{Message: "Bad Request: method is available only for supergroups"}
+		return nil, &BadRequestError{Message: "Bad Request: method is available only for supergroups"}
 	}
 
 	if err := s.ResetStickerSet(ctx); err != nil {
-		return oas.Result{}, err
+		return nil, err
 	}
 	return resultOK(true), nil
 }
 
 // GetChat implements oas.Handler.
-func (b *BotAPI) GetChat(ctx context.Context, req oas.GetChat) (oas.ResultChat, error) {
+func (b *BotAPI) GetChat(ctx context.Context, req *oas.GetChat) (*oas.ResultChat, error) {
 	p, err := b.resolveID(ctx, req.ChatID)
 	if err != nil {
-		return oas.ResultChat{}, errors.Wrap(err, "resolve chatID")
+		return nil, errors.Wrap(err, "resolve chatID")
 	}
 
 	var (
@@ -122,7 +122,7 @@ func (b *BotAPI) GetChat(ctx context.Context, req oas.GetChat) (oas.ResultChat, 
 		raw := p.Raw()
 		full, err := p.FullRaw(ctx)
 		if err != nil {
-			return oas.ResultChat{}, errors.Wrap(err, "get full")
+			return nil, errors.Wrap(err, "get full")
 		}
 		chat.Photo = b.setUserPhoto(id, raw.AccessHash, raw.Photo)
 		chat.Bio = optString(full.GetAbout)
@@ -133,7 +133,7 @@ func (b *BotAPI) GetChat(ctx context.Context, req oas.GetChat) (oas.ResultChat, 
 		chat = fillBotAPIChatGroup(p)
 		full, err := p.FullRaw(ctx)
 		if err != nil {
-			return oas.ResultChat{}, errors.Wrap(err, "get full")
+			return nil, errors.Wrap(err, "get full")
 		}
 		chat.Photo = b.setChatPhoto(id, 0, p.Raw().Photo)
 		chat.Description = oas.NewOptString(full.GetAbout())
@@ -155,7 +155,7 @@ func (b *BotAPI) GetChat(ctx context.Context, req oas.GetChat) (oas.ResultChat, 
 		raw := p.Raw()
 		full, err := p.FullRaw(ctx)
 		if err != nil {
-			return oas.ResultChat{}, errors.Wrap(err, "get full")
+			return nil, errors.Wrap(err, "get full")
 		}
 		chat.Photo = b.setChatPhoto(id, raw.AccessHash, raw.Photo)
 		chat.Description = oas.NewOptString(full.GetAbout())
@@ -189,65 +189,65 @@ func (b *BotAPI) GetChat(ctx context.Context, req oas.GetChat) (oas.ResultChat, 
 		// TODO(tdakkota): set AllMembersAreAdministrators
 	}
 
-	return oas.ResultChat{
+	return &oas.ResultChat{
 		Result: oas.NewOptChat(chat),
 		Ok:     true,
 	}, nil
 }
 
 // SetChatAdministratorCustomTitle implements oas.Handler.
-func (b *BotAPI) SetChatAdministratorCustomTitle(ctx context.Context, req oas.SetChatAdministratorCustomTitle) (oas.Result, error) {
-	return oas.Result{}, &NotImplementedError{}
+func (b *BotAPI) SetChatAdministratorCustomTitle(ctx context.Context, req *oas.SetChatAdministratorCustomTitle) (*oas.Result, error) {
+	return nil, &NotImplementedError{}
 }
 
 // SetChatDescription implements oas.Handler.
-func (b *BotAPI) SetChatDescription(ctx context.Context, req oas.SetChatDescription) (oas.Result, error) {
+func (b *BotAPI) SetChatDescription(ctx context.Context, req *oas.SetChatDescription) (*oas.Result, error) {
 	p, err := b.resolveIDToChat(ctx, req.ChatID)
 	if err != nil {
-		return oas.Result{}, errors.Wrap(err, "resolve chatID")
+		return nil, errors.Wrap(err, "resolve chatID")
 	}
 	if err := p.SetDescription(ctx, req.Description.Value); err != nil {
-		return oas.Result{}, err
+		return nil, err
 	}
 	return resultOK(true), nil
 }
 
 // SetChatPermissions implements oas.Handler.
-func (b *BotAPI) SetChatPermissions(ctx context.Context, req oas.SetChatPermissions) (oas.Result, error) {
-	return oas.Result{}, &NotImplementedError{}
+func (b *BotAPI) SetChatPermissions(ctx context.Context, req *oas.SetChatPermissions) (*oas.Result, error) {
+	return nil, &NotImplementedError{}
 }
 
 // SetChatPhoto implements oas.Handler.
-func (b *BotAPI) SetChatPhoto(ctx context.Context, req oas.SetChatPhoto) (oas.Result, error) {
-	return oas.Result{}, &NotImplementedError{}
+func (b *BotAPI) SetChatPhoto(ctx context.Context, req *oas.SetChatPhoto) (*oas.Result, error) {
+	return nil, &NotImplementedError{}
 }
 
 // SetChatStickerSet implements oas.Handler.
-func (b *BotAPI) SetChatStickerSet(ctx context.Context, req oas.SetChatStickerSet) (oas.Result, error) {
-	return oas.Result{}, &NotImplementedError{}
+func (b *BotAPI) SetChatStickerSet(ctx context.Context, req *oas.SetChatStickerSet) (*oas.Result, error) {
+	return nil, &NotImplementedError{}
 }
 
 // SetChatTitle implements oas.Handler.
-func (b *BotAPI) SetChatTitle(ctx context.Context, req oas.SetChatTitle) (oas.Result, error) {
+func (b *BotAPI) SetChatTitle(ctx context.Context, req *oas.SetChatTitle) (*oas.Result, error) {
 	p, err := b.resolveIDToChat(ctx, req.ChatID)
 	if err != nil {
-		return oas.Result{}, errors.Wrap(err, "resolve chatID")
+		return nil, errors.Wrap(err, "resolve chatID")
 	}
 	if err := p.SetTitle(ctx, req.Title); err != nil {
-		return oas.Result{}, err
+		return nil, err
 	}
 	return resultOK(true), nil
 }
 
 // LeaveChat implements oas.Handler.
-func (b *BotAPI) LeaveChat(ctx context.Context, req oas.LeaveChat) (oas.Result, error) {
+func (b *BotAPI) LeaveChat(ctx context.Context, req *oas.LeaveChat) (*oas.Result, error) {
 	p, err := b.resolveIDToChat(ctx, req.ChatID)
 	if err != nil {
-		return oas.Result{}, errors.Wrap(err, "resolve chatID")
+		return nil, errors.Wrap(err, "resolve chatID")
 	}
 	if !p.Left() {
 		if err := p.Leave(ctx); err != nil {
-			return oas.Result{}, err
+			return nil, err
 		}
 	}
 	return resultOK(true), nil

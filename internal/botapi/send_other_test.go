@@ -45,7 +45,7 @@ func TestBotAPI_SendContact(t *testing.T) {
 			Vcard:       "aboba",
 		})
 
-		msg, err := api.SendContact(ctx, oas.SendContact{
+		msg, err := api.SendContact(ctx, &oas.SendContact{
 			ChatID:      oas.NewInt64ID(testChatID()),
 			PhoneNumber: "aboba",
 			FirstName:   "aboba",
@@ -65,7 +65,7 @@ func TestBotAPI_SendDice(t *testing.T) {
 				Emoticon: expect,
 			})
 
-			msg, err := api.SendDice(ctx, oas.SendDice{
+			msg, err := api.SendDice(ctx, &oas.SendDice{
 				ChatID: oas.NewInt64ID(testChatID()),
 				Emoji:  input,
 			})
@@ -125,7 +125,7 @@ func TestBotAPI_SendInvoice(t *testing.T) {
 			StartParam: "start parameter",
 		})
 
-		msg, err := api.SendInvoice(ctx, oas.SendInvoice{
+		msg, err := api.SendInvoice(ctx, &oas.SendInvoice{
 			ChatID:        oas.NewInt64ID(testChatID()),
 			Title:         "title",
 			Description:   "description",
@@ -170,7 +170,7 @@ func TestBotAPI_SendLocation(t *testing.T) {
 		testSendLocation := func(expect tg.InputMediaClass, input oas.SendLocation) {
 			testSentMedia(a, mock, expect)
 
-			msg, err := api.SendLocation(ctx, input)
+			msg, err := api.SendLocation(ctx, &input)
 			a.NoError(err)
 			a.Equal(10, msg.Result.Value.MessageID)
 		}
@@ -224,7 +224,7 @@ func TestBotAPI_SendVenue(t *testing.T) {
 		testSendVenue := func(expect *tg.InputMediaVenue, opts testOptions) {
 			testSentMedia(a, mock, expect)
 
-			msg, err := api.SendVenue(ctx, oas.SendVenue{
+			msg, err := api.SendVenue(ctx, &oas.SendVenue{
 				ChatID:                   oas.NewInt64ID(testChatID()),
 				Latitude:                 10,
 				Longitude:                10,

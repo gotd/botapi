@@ -19,15 +19,15 @@ func (b *BotAPI) sentMessage(
 	ctx context.Context,
 	p peers.Peer,
 	resp tg.UpdatesClass, err error,
-) (oas.ResultMessage, error) {
+) (*oas.ResultMessage, error) {
 	m, err := unpack.MessageClass(resp, err)
 	if err != nil {
-		return oas.ResultMessage{}, errors.Wrap(err, "send")
+		return nil, errors.Wrap(err, "send")
 	}
 
 	msg, ok := m.(*tg.Message)
 	if !ok {
-		return oas.ResultMessage{
+		return &oas.ResultMessage{
 			Ok: true,
 		}, nil
 	}
@@ -44,9 +44,9 @@ func (b *BotAPI) sentMessage(
 
 	resultMsg, err := b.convertPlainMessage(ctx, msg)
 	if err != nil {
-		return oas.ResultMessage{}, errors.Wrap(err, "get message")
+		return nil, errors.Wrap(err, "get message")
 	}
-	return oas.ResultMessage{
+	return &oas.ResultMessage{
 		Result: oas.NewOptMessage(resultMsg),
 		Ok:     true,
 	}, nil
@@ -96,10 +96,10 @@ func (b *BotAPI) prepareSend(
 }
 
 // SendMessage implements oas.Handler.
-func (b *BotAPI) SendMessage(ctx context.Context, req oas.SendMessage) (oas.ResultMessage, error) {
+func (b *BotAPI) SendMessage(ctx context.Context, req *oas.SendMessage) (*oas.ResultMessage, error) {
 	parseMode, isParseModeSet := req.ParseMode.Get()
 	if isParseModeSet && parseMode != "HTML" {
-		return oas.ResultMessage{}, &NotImplementedError{Message: "only HTML formatting is supported"}
+		return nil, &NotImplementedError{Message: "only HTML formatting is supported"}
 	}
 
 	s, p, err := b.prepareSend(
@@ -115,7 +115,7 @@ func (b *BotAPI) SendMessage(ctx context.Context, req oas.SendMessage) (oas.Resu
 		},
 	)
 	if err != nil {
-		return oas.ResultMessage{}, errors.Wrap(err, "prepare send")
+		return nil, errors.Wrap(err, "prepare send")
 	}
 
 	var resp tg.UpdatesClass

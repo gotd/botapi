@@ -53,7 +53,7 @@ func TestBotAPI_SendPoll(t *testing.T) {
 			},
 		})
 
-		_, err := api.SendPoll(ctx, oas.SendPoll{
+		_, err := api.SendPoll(ctx, &oas.SendPoll{
 			ChatID:                   oas.NewInt64ID(testChatID()),
 			Question:                 "question",
 			Options:                  []string{"0", "1"},

@@ -7,11 +7,11 @@ import (
 )
 
 // GetGameHighScores implements oas.Handler.
-func (b *BotAPI) GetGameHighScores(ctx context.Context, req oas.GetGameHighScores) (oas.ResultArrayOfGameHighScore, error) {
-	return oas.ResultArrayOfGameHighScore{}, &NotImplementedError{}
+func (b *BotAPI) GetGameHighScores(ctx context.Context, req *oas.GetGameHighScores) (*oas.ResultArrayOfGameHighScore, error) {
+	return nil, &NotImplementedError{}
 }
 
 // SetGameScore implements oas.Handler.
-func (b *BotAPI) SetGameScore(ctx context.Context, req oas.SetGameScore) (oas.Result, error) {
-	return oas.Result{}, &NotImplementedError{}
+func (b *BotAPI) SetGameScore(ctx context.Context, req *oas.SetGameScore) (*oas.Result, error) {
+	return nil, &NotImplementedError{}
 }

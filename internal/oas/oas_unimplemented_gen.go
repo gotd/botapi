@@ -21,7 +21,7 @@ var _ Handler = UnimplementedHandler{}
 // sticker sets can have up to 120 stickers. Returns _True_ on success.
 //
 // POST /addStickerToSet
-func (UnimplementedHandler) AddStickerToSet(ctx context.Context, req AddStickerToSet) (r Result, _ error) {
+func (UnimplementedHandler) AddStickerToSet(ctx context.Context, req *AddStickerToSet) (r *Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -32,7 +32,7 @@ func (UnimplementedHandler) AddStickerToSet(ctx context.Context, req AddStickerT
 // notification at the top of the chat screen or as an alert. On success, _True_ is returned.
 //
 // POST /answerCallbackQuery
-func (UnimplementedHandler) AnswerCallbackQuery(ctx context.Context, req AnswerCallbackQuery) (r Result, _ error) {
+func (UnimplementedHandler) AnswerCallbackQuery(ctx context.Context, req *AnswerCallbackQuery) (r *Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -42,7 +42,7 @@ func (UnimplementedHandler) AnswerCallbackQuery(ctx context.Context, req AnswerC
 // **50** results per query are allowed.
 //
 // POST /answerInlineQuery
-func (UnimplementedHandler) AnswerInlineQuery(ctx context.Context, req AnswerInlineQuery) (r Result, _ error) {
+func (UnimplementedHandler) AnswerInlineQuery(ctx context.Context, req *AnswerInlineQuery) (r *Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -55,7 +55,7 @@ func (UnimplementedHandler) AnswerInlineQuery(ctx context.Context, req AnswerInl
 // query was sent.
 //
 // POST /answerPreCheckoutQuery
-func (UnimplementedHandler) AnswerPreCheckoutQuery(ctx context.Context, req AnswerPreCheckoutQuery) (r Result, _ error) {
+func (UnimplementedHandler) AnswerPreCheckoutQuery(ctx context.Context, req *AnswerPreCheckoutQuery) (r *Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -69,7 +69,7 @@ func (UnimplementedHandler) AnswerPreCheckoutQuery(ctx context.Context, req Answ
 // _True_ is returned.
 //
 // POST /answerShippingQuery
-func (UnimplementedHandler) AnswerShippingQuery(ctx context.Context, req AnswerShippingQuery) (r Result, _ error) {
+func (UnimplementedHandler) AnswerShippingQuery(ctx context.Context, req *AnswerShippingQuery) (r *Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -81,7 +81,7 @@ func (UnimplementedHandler) AnswerShippingQuery(ctx context.Context, req AnswerS
 // org/bots/api#sentwebappmessage) object is returned.
 //
 // POST /answerWebAppQuery
-func (UnimplementedHandler) AnswerWebAppQuery(ctx context.Context, req AnswerWebAppQuery) (r Result, _ error) {
+func (UnimplementedHandler) AnswerWebAppQuery(ctx context.Context, req *AnswerWebAppQuery) (r *Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -91,7 +91,7 @@ func (UnimplementedHandler) AnswerWebAppQuery(ctx context.Context, req AnswerWeb
 // this to work and must have the _can_invite_users_ administrator right. Returns _True_ on success.
 //
 // POST /approveChatJoinRequest
-func (UnimplementedHandler) ApproveChatJoinRequest(ctx context.Context, req ApproveChatJoinRequest) (r Result, _ error) {
+func (UnimplementedHandler) ApproveChatJoinRequest(ctx context.Context, req *ApproveChatJoinRequest) (r *Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -104,7 +104,7 @@ func (UnimplementedHandler) ApproveChatJoinRequest(ctx context.Context, req Appr
 // Returns _True_ on success.
 //
 // POST /banChatMember
-func (UnimplementedHandler) BanChatMember(ctx context.Context, req BanChatMember) (r Result, _ error) {
+func (UnimplementedHandler) BanChatMember(ctx context.Context, req *BanChatMember) (r *Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -117,7 +117,7 @@ func (UnimplementedHandler) BanChatMember(ctx context.Context, req BanChatMember
 // administrator rights. Returns _True_ on success.
 //
 // POST /banChatSenderChat
-func (UnimplementedHandler) BanChatSenderChat(ctx context.Context, req BanChatSenderChat) (r Result, _ error) {
+func (UnimplementedHandler) BanChatSenderChat(ctx context.Context, req *BanChatSenderChat) (r *Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -129,7 +129,7 @@ func (UnimplementedHandler) BanChatSenderChat(ctx context.Context, req BanChatSe
 // launched. Returns _True_ on success. Requires no parameters.
 //
 // POST /close
-func (UnimplementedHandler) Close(ctx context.Context) (r Result, _ error) {
+func (UnimplementedHandler) Close(ctx context.Context) (r *Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -140,7 +140,7 @@ func (UnimplementedHandler) Close(ctx context.Context) (r Result, _ error) {
 // rights, unless it is the creator of the topic. Returns _True_ on success.
 //
 // POST /closeForumTopic
-func (UnimplementedHandler) CloseForumTopic(ctx context.Context, req CloseForumTopic) (r Result, _ error) {
+func (UnimplementedHandler) CloseForumTopic(ctx context.Context, req *CloseForumTopic) (r *Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -151,7 +151,7 @@ func (UnimplementedHandler) CloseForumTopic(ctx context.Context, req CloseForumT
 // rights. Returns _True_ on success.
 //
 // POST /closeGeneralForumTopic
-func (UnimplementedHandler) CloseGeneralForumTopic(ctx context.Context, req CloseGeneralForumTopic) (r Result, _ error) {
+func (UnimplementedHandler) CloseGeneralForumTopic(ctx context.Context, req *CloseGeneralForumTopic) (r *Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -165,7 +165,7 @@ func (UnimplementedHandler) CloseGeneralForumTopic(ctx context.Context, req Clos
 // org/bots/api#messageid) of the sent message on success.
 //
 // POST /copyMessage
-func (UnimplementedHandler) CopyMessage(ctx context.Context, req CopyMessage) (r ResultMessageId, _ error) {
+func (UnimplementedHandler) CopyMessage(ctx context.Context, req *CopyMessage) (r *ResultMessageId, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -178,7 +178,7 @@ func (UnimplementedHandler) CopyMessage(ctx context.Context, req CopyMessage) (r
 // telegram.org/bots/api#chatinvitelink) object.
 //
 // POST /createChatInviteLink
-func (UnimplementedHandler) CreateChatInviteLink(ctx context.Context, req CreateChatInviteLink) (r ResultChatInviteLink, _ error) {
+func (UnimplementedHandler) CreateChatInviteLink(ctx context.Context, req *CreateChatInviteLink) (r *ResultChatInviteLink, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -190,7 +190,7 @@ func (UnimplementedHandler) CreateChatInviteLink(ctx context.Context, req Create
 // org/bots/api#forumtopic) object.
 //
 // POST /createForumTopic
-func (UnimplementedHandler) CreateForumTopic(ctx context.Context, req CreateForumTopic) (r Result, _ error) {
+func (UnimplementedHandler) CreateForumTopic(ctx context.Context, req *CreateForumTopic) (r *Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -200,7 +200,7 @@ func (UnimplementedHandler) CreateForumTopic(ctx context.Context, req CreateForu
 // success.
 //
 // POST /createInvoiceLink
-func (UnimplementedHandler) CreateInvoiceLink(ctx context.Context, req CreateInvoiceLink) (r ResultString, _ error) {
+func (UnimplementedHandler) CreateInvoiceLink(ctx context.Context, req *CreateInvoiceLink) (r *ResultString, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -211,7 +211,7 @@ func (UnimplementedHandler) CreateInvoiceLink(ctx context.Context, req CreateInv
 // or _webm_sticker_. Returns _True_ on success.
 //
 // POST /createNewStickerSet
-func (UnimplementedHandler) CreateNewStickerSet(ctx context.Context, req CreateNewStickerSet) (r Result, _ error) {
+func (UnimplementedHandler) CreateNewStickerSet(ctx context.Context, req *CreateNewStickerSet) (r *Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -221,7 +221,7 @@ func (UnimplementedHandler) CreateNewStickerSet(ctx context.Context, req CreateN
 // this to work and must have the _can_invite_users_ administrator right. Returns _True_ on success.
 //
 // POST /declineChatJoinRequest
-func (UnimplementedHandler) DeclineChatJoinRequest(ctx context.Context, req DeclineChatJoinRequest) (r Result, _ error) {
+func (UnimplementedHandler) DeclineChatJoinRequest(ctx context.Context, req *DeclineChatJoinRequest) (r *Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -232,7 +232,7 @@ func (UnimplementedHandler) DeclineChatJoinRequest(ctx context.Context, req Decl
 // Returns _True_ on success.
 //
 // POST /deleteChatPhoto
-func (UnimplementedHandler) DeleteChatPhoto(ctx context.Context, req DeleteChatPhoto) (r Result, _ error) {
+func (UnimplementedHandler) DeleteChatPhoto(ctx context.Context, req *DeleteChatPhoto) (r *Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -244,7 +244,7 @@ func (UnimplementedHandler) DeleteChatPhoto(ctx context.Context, req DeleteChatP
 // requests to check if the bot can use this method. Returns _True_ on success.
 //
 // POST /deleteChatStickerSet
-func (UnimplementedHandler) DeleteChatStickerSet(ctx context.Context, req DeleteChatStickerSet) (r Result, _ error) {
+func (UnimplementedHandler) DeleteChatStickerSet(ctx context.Context, req *DeleteChatStickerSet) (r *Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -255,7 +255,7 @@ func (UnimplementedHandler) DeleteChatStickerSet(ctx context.Context, req Delete
 // _can_delete_messages_ administrator rights. Returns _True_ on success.
 //
 // POST /deleteForumTopic
-func (UnimplementedHandler) DeleteForumTopic(ctx context.Context, req DeleteForumTopic) (r Result, _ error) {
+func (UnimplementedHandler) DeleteForumTopic(ctx context.Context, req *DeleteForumTopic) (r *Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -272,7 +272,7 @@ func (UnimplementedHandler) DeleteForumTopic(ctx context.Context, req DeleteForu
 // Returns _True_ on success.
 //
 // POST /deleteMessage
-func (UnimplementedHandler) DeleteMessage(ctx context.Context, req DeleteMessage) (r Result, _ error) {
+func (UnimplementedHandler) DeleteMessage(ctx context.Context, req *DeleteMessage) (r *Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -284,7 +284,7 @@ func (UnimplementedHandler) DeleteMessage(ctx context.Context, req DeleteMessage
 // success.
 //
 // POST /deleteMyCommands
-func (UnimplementedHandler) DeleteMyCommands(ctx context.Context, req OptDeleteMyCommands) (r Result, _ error) {
+func (UnimplementedHandler) DeleteMyCommands(ctx context.Context, req OptDeleteMyCommands) (r *Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -293,7 +293,7 @@ func (UnimplementedHandler) DeleteMyCommands(ctx context.Context, req OptDeleteM
 // Use this method to delete a sticker from a set created by the bot. Returns _True_ on success.
 //
 // POST /deleteStickerFromSet
-func (UnimplementedHandler) DeleteStickerFromSet(ctx context.Context, req DeleteStickerFromSet) (r Result, _ error) {
+func (UnimplementedHandler) DeleteStickerFromSet(ctx context.Context, req *DeleteStickerFromSet) (r *Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -303,7 +303,7 @@ func (UnimplementedHandler) DeleteStickerFromSet(ctx context.Context, req Delete
 // [getUpdates](https://core.telegram.org/bots/api#getupdates). Returns _True_ on success.
 //
 // POST /deleteWebhook
-func (UnimplementedHandler) DeleteWebhook(ctx context.Context, req OptDeleteWebhook) (r Result, _ error) {
+func (UnimplementedHandler) DeleteWebhook(ctx context.Context, req OptDeleteWebhook) (r *Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -315,7 +315,7 @@ func (UnimplementedHandler) DeleteWebhook(ctx context.Context, req OptDeleteWebh
 // org/bots/api#chatinvitelink) object.
 //
 // POST /editChatInviteLink
-func (UnimplementedHandler) EditChatInviteLink(ctx context.Context, req EditChatInviteLink) (r ResultChatInviteLink, _ error) {
+func (UnimplementedHandler) EditChatInviteLink(ctx context.Context, req *EditChatInviteLink) (r *ResultChatInviteLink, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -326,7 +326,7 @@ func (UnimplementedHandler) EditChatInviteLink(ctx context.Context, req EditChat
 // unless it is the creator of the topic. Returns _True_ on success.
 //
 // POST /editForumTopic
-func (UnimplementedHandler) EditForumTopic(ctx context.Context, req EditForumTopic) (r Result, _ error) {
+func (UnimplementedHandler) EditForumTopic(ctx context.Context, req *EditForumTopic) (r *Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -337,7 +337,7 @@ func (UnimplementedHandler) EditForumTopic(ctx context.Context, req EditForumTop
 // rights. Returns _True_ on success.
 //
 // POST /editGeneralForumTopic
-func (UnimplementedHandler) EditGeneralForumTopic(ctx context.Context, req EditGeneralForumTopic) (r Result, _ error) {
+func (UnimplementedHandler) EditGeneralForumTopic(ctx context.Context, req *EditGeneralForumTopic) (r *Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -348,7 +348,7 @@ func (UnimplementedHandler) EditGeneralForumTopic(ctx context.Context, req EditG
 // _True_ is returned.
 //
 // POST /editMessageCaption
-func (UnimplementedHandler) EditMessageCaption(ctx context.Context, req EditMessageCaption) (r ResultMessageOrBoolean, _ error) {
+func (UnimplementedHandler) EditMessageCaption(ctx context.Context, req *EditMessageCaption) (r *ResultMessageOrBoolean, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -361,7 +361,7 @@ func (UnimplementedHandler) EditMessageCaption(ctx context.Context, req EditMess
 // _True_ is returned.
 //
 // POST /editMessageLiveLocation
-func (UnimplementedHandler) EditMessageLiveLocation(ctx context.Context, req EditMessageLiveLocation) (r ResultMessageOrBoolean, _ error) {
+func (UnimplementedHandler) EditMessageLiveLocation(ctx context.Context, req *EditMessageLiveLocation) (r *ResultMessageOrBoolean, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -375,7 +375,7 @@ func (UnimplementedHandler) EditMessageLiveLocation(ctx context.Context, req Edi
 // telegram.org/bots/api#message) is returned, otherwise _True_ is returned.
 //
 // POST /editMessageMedia
-func (UnimplementedHandler) EditMessageMedia(ctx context.Context, req EditMessageMedia) (r ResultMessageOrBoolean, _ error) {
+func (UnimplementedHandler) EditMessageMedia(ctx context.Context, req *EditMessageMedia) (r *ResultMessageOrBoolean, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -386,7 +386,7 @@ func (UnimplementedHandler) EditMessageMedia(ctx context.Context, req EditMessag
 // returned, otherwise _True_ is returned.
 //
 // POST /editMessageReplyMarkup
-func (UnimplementedHandler) EditMessageReplyMarkup(ctx context.Context, req EditMessageReplyMarkup) (r ResultMessageOrBoolean, _ error) {
+func (UnimplementedHandler) EditMessageReplyMarkup(ctx context.Context, req *EditMessageReplyMarkup) (r *ResultMessageOrBoolean, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -397,7 +397,7 @@ func (UnimplementedHandler) EditMessageReplyMarkup(ctx context.Context, req Edit
 // telegram.org/bots/api#message) is returned, otherwise _True_ is returned.
 //
 // POST /editMessageText
-func (UnimplementedHandler) EditMessageText(ctx context.Context, req EditMessageText) (r ResultMessageOrBoolean, _ error) {
+func (UnimplementedHandler) EditMessageText(ctx context.Context, req *EditMessageText) (r *ResultMessageOrBoolean, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -408,7 +408,7 @@ func (UnimplementedHandler) EditMessageText(ctx context.Context, req EditMessage
 // appropriate administrator rights. Returns the new invite link as _String_ on success.
 //
 // POST /exportChatInviteLink
-func (UnimplementedHandler) ExportChatInviteLink(ctx context.Context, req ExportChatInviteLink) (r ResultString, _ error) {
+func (UnimplementedHandler) ExportChatInviteLink(ctx context.Context, req *ExportChatInviteLink) (r *ResultString, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -418,7 +418,7 @@ func (UnimplementedHandler) ExportChatInviteLink(ctx context.Context, req Export
 // the sent [Message](https://core.telegram.org/bots/api#message) is returned.
 //
 // POST /forwardMessage
-func (UnimplementedHandler) ForwardMessage(ctx context.Context, req ForwardMessage) (r ResultMessage, _ error) {
+func (UnimplementedHandler) ForwardMessage(ctx context.Context, req *ForwardMessage) (r *ResultMessage, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -429,7 +429,7 @@ func (UnimplementedHandler) ForwardMessage(ctx context.Context, req ForwardMessa
 // [Chat](https://core.telegram.org/bots/api#chat) object on success.
 //
 // POST /getChat
-func (UnimplementedHandler) GetChat(ctx context.Context, req GetChat) (r ResultChat, _ error) {
+func (UnimplementedHandler) GetChat(ctx context.Context, req *GetChat) (r *ResultChat, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -439,7 +439,7 @@ func (UnimplementedHandler) GetChat(ctx context.Context, req GetChat) (r ResultC
 // [ChatMember](https://core.telegram.org/bots/api#chatmember) objects.
 //
 // POST /getChatAdministrators
-func (UnimplementedHandler) GetChatAdministrators(ctx context.Context, req GetChatAdministrators) (r ResultArrayOfChatMember, _ error) {
+func (UnimplementedHandler) GetChatAdministrators(ctx context.Context, req *GetChatAdministrators) (r *ResultArrayOfChatMember, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -450,7 +450,7 @@ func (UnimplementedHandler) GetChatAdministrators(ctx context.Context, req GetCh
 // org/bots/api#chatmember) object on success.
 //
 // POST /getChatMember
-func (UnimplementedHandler) GetChatMember(ctx context.Context, req GetChatMember) (r ResultChatMember, _ error) {
+func (UnimplementedHandler) GetChatMember(ctx context.Context, req *GetChatMember) (r *ResultChatMember, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -459,7 +459,7 @@ func (UnimplementedHandler) GetChatMember(ctx context.Context, req GetChatMember
 // Use this method to get the number of members in a chat. Returns _Int_ on success.
 //
 // POST /getChatMemberCount
-func (UnimplementedHandler) GetChatMemberCount(ctx context.Context, req GetChatMemberCount) (r ResultInt, _ error) {
+func (UnimplementedHandler) GetChatMemberCount(ctx context.Context, req *GetChatMemberCount) (r *ResultInt, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -470,7 +470,7 @@ func (UnimplementedHandler) GetChatMemberCount(ctx context.Context, req GetChatM
 // success.
 //
 // POST /getChatMenuButton
-func (UnimplementedHandler) GetChatMenuButton(ctx context.Context, req OptGetChatMenuButton) (r Result, _ error) {
+func (UnimplementedHandler) GetChatMenuButton(ctx context.Context, req OptGetChatMenuButton) (r *Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -480,7 +480,7 @@ func (UnimplementedHandler) GetChatMenuButton(ctx context.Context, req OptGetCha
 // Array of [Sticker](https://core.telegram.org/bots/api#sticker) objects.
 //
 // POST /getCustomEmojiStickers
-func (UnimplementedHandler) GetCustomEmojiStickers(ctx context.Context, req GetCustomEmojiStickers) (r ResultArrayOfSticker, _ error) {
+func (UnimplementedHandler) GetCustomEmojiStickers(ctx context.Context, req *GetCustomEmojiStickers) (r *ResultArrayOfSticker, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -494,7 +494,7 @@ func (UnimplementedHandler) GetCustomEmojiStickers(ctx context.Context, req GetC
 // be requested by calling [getFile](https://core.telegram.org/bots/api#getfile) again.
 //
 // POST /getFile
-func (UnimplementedHandler) GetFile(ctx context.Context, req GetFile) (r ResultFile, _ error) {
+func (UnimplementedHandler) GetFile(ctx context.Context, req *GetFile) (r *ResultFile, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -505,7 +505,7 @@ func (UnimplementedHandler) GetFile(ctx context.Context, req GetFile) (r ResultF
 // objects.
 //
 // POST /getForumTopicIconStickers
-func (UnimplementedHandler) GetForumTopicIconStickers(ctx context.Context) (r ResultArrayOfSticker, _ error) {
+func (UnimplementedHandler) GetForumTopicIconStickers(ctx context.Context) (r *ResultArrayOfSticker, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -516,7 +516,7 @@ func (UnimplementedHandler) GetForumTopicIconStickers(ctx context.Context) (r Re
 // org/bots/api#gamehighscore) objects.
 //
 // POST /getGameHighScores
-func (UnimplementedHandler) GetGameHighScores(ctx context.Context, req GetGameHighScores) (r ResultArrayOfGameHighScore, _ error) {
+func (UnimplementedHandler) GetGameHighScores(ctx context.Context, req *GetGameHighScores) (r *ResultArrayOfGameHighScore, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -526,7 +526,7 @@ func (UnimplementedHandler) GetGameHighScores(ctx context.Context, req GetGameHi
 // information about the bot in form of a [User](https://core.telegram.org/bots/api#user) object.
 //
 // POST /getMe
-func (UnimplementedHandler) GetMe(ctx context.Context) (r ResultUser, _ error) {
+func (UnimplementedHandler) GetMe(ctx context.Context) (r *ResultUser, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -537,7 +537,7 @@ func (UnimplementedHandler) GetMe(ctx context.Context) (r ResultUser, _ error) {
 // If commands aren't set, an empty list is returned.
 //
 // POST /getMyCommands
-func (UnimplementedHandler) GetMyCommands(ctx context.Context, req OptGetMyCommands) (r ResultArrayOfBotCommand, _ error) {
+func (UnimplementedHandler) GetMyCommands(ctx context.Context, req OptGetMyCommands) (r *ResultArrayOfBotCommand, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -547,7 +547,7 @@ func (UnimplementedHandler) GetMyCommands(ctx context.Context, req OptGetMyComma
 // [ChatAdministratorRights](https://core.telegram.org/bots/api#chatadministratorrights) on success.
 //
 // POST /getMyDefaultAdministratorRights
-func (UnimplementedHandler) GetMyDefaultAdministratorRights(ctx context.Context, req OptGetMyDefaultAdministratorRights) (r Result, _ error) {
+func (UnimplementedHandler) GetMyDefaultAdministratorRights(ctx context.Context, req OptGetMyDefaultAdministratorRights) (r *Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -557,7 +557,7 @@ func (UnimplementedHandler) GetMyDefaultAdministratorRights(ctx context.Context,
 // org/bots/api#stickerset) object is returned.
 //
 // POST /getStickerSet
-func (UnimplementedHandler) GetStickerSet(ctx context.Context, req GetStickerSet) (r ResultStickerSet, _ error) {
+func (UnimplementedHandler) GetStickerSet(ctx context.Context, req *GetStickerSet) (r *ResultStickerSet, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -568,7 +568,7 @@ func (UnimplementedHandler) GetStickerSet(ctx context.Context, req GetStickerSet
 // org/bots/api#update) objects.
 //
 // POST /getUpdates
-func (UnimplementedHandler) GetUpdates(ctx context.Context, req OptGetUpdates) (r ResultArrayOfUpdate, _ error) {
+func (UnimplementedHandler) GetUpdates(ctx context.Context, req OptGetUpdates) (r *ResultArrayOfUpdate, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -578,7 +578,7 @@ func (UnimplementedHandler) GetUpdates(ctx context.Context, req OptGetUpdates) (
 // [UserProfilePhotos](https://core.telegram.org/bots/api#userprofilephotos) object.
 //
 // POST /getUserProfilePhotos
-func (UnimplementedHandler) GetUserProfilePhotos(ctx context.Context, req GetUserProfilePhotos) (r ResultUserProfilePhotos, _ error) {
+func (UnimplementedHandler) GetUserProfilePhotos(ctx context.Context, req *GetUserProfilePhotos) (r *ResultUserProfilePhotos, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -590,7 +590,7 @@ func (UnimplementedHandler) GetUserProfilePhotos(ctx context.Context, req GetUse
 // field empty.
 //
 // POST /getWebhookInfo
-func (UnimplementedHandler) GetWebhookInfo(ctx context.Context) (r ResultWebhookInfo, _ error) {
+func (UnimplementedHandler) GetWebhookInfo(ctx context.Context) (r *ResultWebhookInfo, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -601,7 +601,7 @@ func (UnimplementedHandler) GetWebhookInfo(ctx context.Context) (r ResultWebhook
 // rights. The topic will be automatically closed if it was open. Returns _True_ on success.
 //
 // POST /hideGeneralForumTopic
-func (UnimplementedHandler) HideGeneralForumTopic(ctx context.Context, req HideGeneralForumTopic) (r Result, _ error) {
+func (UnimplementedHandler) HideGeneralForumTopic(ctx context.Context, req *HideGeneralForumTopic) (r *Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -610,7 +610,7 @@ func (UnimplementedHandler) HideGeneralForumTopic(ctx context.Context, req HideG
 // Use this method for your bot to leave a group, supergroup or channel. Returns _True_ on success.
 //
 // POST /leaveChat
-func (UnimplementedHandler) LeaveChat(ctx context.Context, req LeaveChat) (r Result, _ error) {
+func (UnimplementedHandler) LeaveChat(ctx context.Context, req *LeaveChat) (r *Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -623,7 +623,7 @@ func (UnimplementedHandler) LeaveChat(ctx context.Context, req LeaveChat) (r Res
 // success. Requires no parameters.
 //
 // POST /logOut
-func (UnimplementedHandler) LogOut(ctx context.Context) (r Result, _ error) {
+func (UnimplementedHandler) LogOut(ctx context.Context) (r *Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -635,7 +635,7 @@ func (UnimplementedHandler) LogOut(ctx context.Context) (r Result, _ error) {
 // in a channel. Returns _True_ on success.
 //
 // POST /pinChatMessage
-func (UnimplementedHandler) PinChatMessage(ctx context.Context, req PinChatMessage) (r Result, _ error) {
+func (UnimplementedHandler) PinChatMessage(ctx context.Context, req *PinChatMessage) (r *Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -646,7 +646,7 @@ func (UnimplementedHandler) PinChatMessage(ctx context.Context, req PinChatMessa
 // Pass _False_ for all boolean parameters to demote a user. Returns _True_ on success.
 //
 // POST /promoteChatMember
-func (UnimplementedHandler) PromoteChatMember(ctx context.Context, req PromoteChatMember) (r Result, _ error) {
+func (UnimplementedHandler) PromoteChatMember(ctx context.Context, req *PromoteChatMember) (r *Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -657,7 +657,7 @@ func (UnimplementedHandler) PromoteChatMember(ctx context.Context, req PromoteCh
 // rights, unless it is the creator of the topic. Returns _True_ on success.
 //
 // POST /reopenForumTopic
-func (UnimplementedHandler) ReopenForumTopic(ctx context.Context, req ReopenForumTopic) (r Result, _ error) {
+func (UnimplementedHandler) ReopenForumTopic(ctx context.Context, req *ReopenForumTopic) (r *Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -668,7 +668,7 @@ func (UnimplementedHandler) ReopenForumTopic(ctx context.Context, req ReopenForu
 // rights. The topic will be automatically unhidden if it was hidden. Returns _True_ on success.
 //
 // POST /reopenGeneralForumTopic
-func (UnimplementedHandler) ReopenGeneralForumTopic(ctx context.Context, req ReopenGeneralForumTopic) (r Result, _ error) {
+func (UnimplementedHandler) ReopenGeneralForumTopic(ctx context.Context, req *ReopenGeneralForumTopic) (r *Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -679,7 +679,7 @@ func (UnimplementedHandler) ReopenGeneralForumTopic(ctx context.Context, req Reo
 // all permissions to lift restrictions from a user. Returns _True_ on success.
 //
 // POST /restrictChatMember
-func (UnimplementedHandler) RestrictChatMember(ctx context.Context, req RestrictChatMember) (r Result, _ error) {
+func (UnimplementedHandler) RestrictChatMember(ctx context.Context, req *RestrictChatMember) (r *Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -691,7 +691,7 @@ func (UnimplementedHandler) RestrictChatMember(ctx context.Context, req Restrict
 // [ChatInviteLink](https://core.telegram.org/bots/api#chatinvitelink) object.
 //
 // POST /revokeChatInviteLink
-func (UnimplementedHandler) RevokeChatInviteLink(ctx context.Context, req RevokeChatInviteLink) (r ResultChatInviteLink, _ error) {
+func (UnimplementedHandler) RevokeChatInviteLink(ctx context.Context, req *RevokeChatInviteLink) (r *ResultChatInviteLink, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -702,7 +702,7 @@ func (UnimplementedHandler) RevokeChatInviteLink(ctx context.Context, req Revoke
 // send animation files of up to 50 MB in size, this limit may be changed in the future.
 //
 // POST /sendAnimation
-func (UnimplementedHandler) SendAnimation(ctx context.Context, req SendAnimation) (r ResultMessage, _ error) {
+func (UnimplementedHandler) SendAnimation(ctx context.Context, req *SendAnimation) (r *ResultMessage, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -712,7 +712,7 @@ func (UnimplementedHandler) SendAnimation(ctx context.Context, req SendAnimation
 // method instead.
 //
 // POST /sendAudio
-func (UnimplementedHandler) SendAudio(ctx context.Context, req SendAudio) (r ResultMessage, _ error) {
+func (UnimplementedHandler) SendAudio(ctx context.Context, req *SendAudio) (r *ResultMessage, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -722,7 +722,7 @@ func (UnimplementedHandler) SendAudio(ctx context.Context, req SendAudio) (r Res
 // of time to arrive.
 //
 // POST /sendChatAction
-func (UnimplementedHandler) SendChatAction(ctx context.Context, req SendChatAction) (r Result, _ error) {
+func (UnimplementedHandler) SendChatAction(ctx context.Context, req *SendChatAction) (r *Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -732,7 +732,7 @@ func (UnimplementedHandler) SendChatAction(ctx context.Context, req SendChatActi
 // org/bots/api#message) is returned.
 //
 // POST /sendContact
-func (UnimplementedHandler) SendContact(ctx context.Context, req SendContact) (r ResultMessage, _ error) {
+func (UnimplementedHandler) SendContact(ctx context.Context, req *SendContact) (r *ResultMessage, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -742,7 +742,7 @@ func (UnimplementedHandler) SendContact(ctx context.Context, req SendContact) (r
 // [Message](https://core.telegram.org/bots/api#message) is returned.
 //
 // POST /sendDice
-func (UnimplementedHandler) SendDice(ctx context.Context, req SendDice) (r ResultMessage, _ error) {
+func (UnimplementedHandler) SendDice(ctx context.Context, req *SendDice) (r *ResultMessage, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -753,7 +753,7 @@ func (UnimplementedHandler) SendDice(ctx context.Context, req SendDice) (r Resul
 // size, this limit may be changed in the future.
 //
 // POST /sendDocument
-func (UnimplementedHandler) SendDocument(ctx context.Context, req SendDocument) (r ResultMessage, _ error) {
+func (UnimplementedHandler) SendDocument(ctx context.Context, req *SendDocument) (r *ResultMessage, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -763,7 +763,7 @@ func (UnimplementedHandler) SendDocument(ctx context.Context, req SendDocument) 
 // org/bots/api#message) is returned.
 //
 // POST /sendGame
-func (UnimplementedHandler) SendGame(ctx context.Context, req SendGame) (r ResultMessage, _ error) {
+func (UnimplementedHandler) SendGame(ctx context.Context, req *SendGame) (r *ResultMessage, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -773,7 +773,7 @@ func (UnimplementedHandler) SendGame(ctx context.Context, req SendGame) (r Resul
 // org/bots/api#message) is returned.
 //
 // POST /sendInvoice
-func (UnimplementedHandler) SendInvoice(ctx context.Context, req SendInvoice) (r ResultMessage, _ error) {
+func (UnimplementedHandler) SendInvoice(ctx context.Context, req *SendInvoice) (r *ResultMessage, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -783,7 +783,7 @@ func (UnimplementedHandler) SendInvoice(ctx context.Context, req SendInvoice) (r
 // org/bots/api#message) is returned.
 //
 // POST /sendLocation
-func (UnimplementedHandler) SendLocation(ctx context.Context, req SendLocation) (r ResultMessage, _ error) {
+func (UnimplementedHandler) SendLocation(ctx context.Context, req *SendLocation) (r *ResultMessage, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -794,7 +794,7 @@ func (UnimplementedHandler) SendLocation(ctx context.Context, req SendLocation) 
 // of [Messages](https://core.telegram.org/bots/api#message) that were sent is returned.
 //
 // POST /sendMediaGroup
-func (UnimplementedHandler) SendMediaGroup(ctx context.Context, req SendMediaGroup) (r ResultArrayOfMessage, _ error) {
+func (UnimplementedHandler) SendMediaGroup(ctx context.Context, req *SendMediaGroup) (r *ResultArrayOfMessage, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -804,7 +804,7 @@ func (UnimplementedHandler) SendMediaGroup(ctx context.Context, req SendMediaGro
 // org/bots/api#message) is returned.
 //
 // POST /sendMessage
-func (UnimplementedHandler) SendMessage(ctx context.Context, req SendMessage) (r ResultMessage, _ error) {
+func (UnimplementedHandler) SendMessage(ctx context.Context, req *SendMessage) (r *ResultMessage, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -814,7 +814,7 @@ func (UnimplementedHandler) SendMessage(ctx context.Context, req SendMessage) (r
 // org/bots/api#message) is returned.
 //
 // POST /sendPhoto
-func (UnimplementedHandler) SendPhoto(ctx context.Context, req SendPhoto) (r ResultMessage, _ error) {
+func (UnimplementedHandler) SendPhoto(ctx context.Context, req *SendPhoto) (r *ResultMessage, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -824,7 +824,7 @@ func (UnimplementedHandler) SendPhoto(ctx context.Context, req SendPhoto) (r Res
 // org/bots/api#message) is returned.
 //
 // POST /sendPoll
-func (UnimplementedHandler) SendPoll(ctx context.Context, req SendPoll) (r ResultMessage, _ error) {
+func (UnimplementedHandler) SendPoll(ctx context.Context, req *SendPoll) (r *ResultMessage, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -837,7 +837,7 @@ func (UnimplementedHandler) SendPoll(ctx context.Context, req SendPoll) (r Resul
 // the sent [Message](https://core.telegram.org/bots/api#message) is returned.
 //
 // POST /sendSticker
-func (UnimplementedHandler) SendSticker(ctx context.Context, req SendSticker) (r ResultMessage, _ error) {
+func (UnimplementedHandler) SendSticker(ctx context.Context, req *SendSticker) (r *ResultMessage, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -847,7 +847,7 @@ func (UnimplementedHandler) SendSticker(ctx context.Context, req SendSticker) (r
 // telegram.org/bots/api#message) is returned.
 //
 // POST /sendVenue
-func (UnimplementedHandler) SendVenue(ctx context.Context, req SendVenue) (r ResultMessage, _ error) {
+func (UnimplementedHandler) SendVenue(ctx context.Context, req *SendVenue) (r *ResultMessage, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -859,7 +859,7 @@ func (UnimplementedHandler) SendVenue(ctx context.Context, req SendVenue) (r Res
 // files of up to 50 MB in size, this limit may be changed in the future.
 //
 // POST /sendVideo
-func (UnimplementedHandler) SendVideo(ctx context.Context, req SendVideo) (r ResultMessage, _ error) {
+func (UnimplementedHandler) SendVideo(ctx context.Context, req *SendVideo) (r *ResultMessage, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -870,7 +870,7 @@ func (UnimplementedHandler) SendVideo(ctx context.Context, req SendVideo) (r Res
 // success, the sent [Message](https://core.telegram.org/bots/api#message) is returned.
 //
 // POST /sendVideoNote
-func (UnimplementedHandler) SendVideoNote(ctx context.Context, req SendVideoNote) (r ResultMessage, _ error) {
+func (UnimplementedHandler) SendVideoNote(ctx context.Context, req *SendVideoNote) (r *ResultMessage, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -884,7 +884,7 @@ func (UnimplementedHandler) SendVideoNote(ctx context.Context, req SendVideoNote
 // messages of up to 50 MB in size, this limit may be changed in the future.
 //
 // POST /sendVoice
-func (UnimplementedHandler) SendVoice(ctx context.Context, req SendVoice) (r ResultMessage, _ error) {
+func (UnimplementedHandler) SendVoice(ctx context.Context, req *SendVoice) (r *ResultMessage, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -894,7 +894,7 @@ func (UnimplementedHandler) SendVoice(ctx context.Context, req SendVoice) (r Res
 // Returns _True_ on success.
 //
 // POST /setChatAdministratorCustomTitle
-func (UnimplementedHandler) SetChatAdministratorCustomTitle(ctx context.Context, req SetChatAdministratorCustomTitle) (r Result, _ error) {
+func (UnimplementedHandler) SetChatAdministratorCustomTitle(ctx context.Context, req *SetChatAdministratorCustomTitle) (r *Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -905,7 +905,7 @@ func (UnimplementedHandler) SetChatAdministratorCustomTitle(ctx context.Context,
 // Returns _True_ on success.
 //
 // POST /setChatDescription
-func (UnimplementedHandler) SetChatDescription(ctx context.Context, req SetChatDescription) (r Result, _ error) {
+func (UnimplementedHandler) SetChatDescription(ctx context.Context, req *SetChatDescription) (r *Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -915,7 +915,7 @@ func (UnimplementedHandler) SetChatDescription(ctx context.Context, req SetChatD
 // Returns _True_ on success.
 //
 // POST /setChatMenuButton
-func (UnimplementedHandler) SetChatMenuButton(ctx context.Context, req OptSetChatMenuButton) (r Result, _ error) {
+func (UnimplementedHandler) SetChatMenuButton(ctx context.Context, req OptSetChatMenuButton) (r *Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -926,7 +926,7 @@ func (UnimplementedHandler) SetChatMenuButton(ctx context.Context, req OptSetCha
 // administrator rights. Returns _True_ on success.
 //
 // POST /setChatPermissions
-func (UnimplementedHandler) SetChatPermissions(ctx context.Context, req SetChatPermissions) (r Result, _ error) {
+func (UnimplementedHandler) SetChatPermissions(ctx context.Context, req *SetChatPermissions) (r *Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -939,7 +939,7 @@ func (UnimplementedHandler) SetChatPermissions(ctx context.Context, req SetChatP
 // administrator rights. Returns _True_ on success.
 //
 // POST /setChatPhoto
-func (UnimplementedHandler) SetChatPhoto(ctx context.Context, req SetChatPhoto) (r Result, _ error) {
+func (UnimplementedHandler) SetChatPhoto(ctx context.Context, req *SetChatPhoto) (r *Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -951,7 +951,7 @@ func (UnimplementedHandler) SetChatPhoto(ctx context.Context, req SetChatPhoto) 
 // requests to check if the bot can use this method. Returns _True_ on success.
 //
 // POST /setChatStickerSet
-func (UnimplementedHandler) SetChatStickerSet(ctx context.Context, req SetChatStickerSet) (r Result, _ error) {
+func (UnimplementedHandler) SetChatStickerSet(ctx context.Context, req *SetChatStickerSet) (r *Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -962,7 +962,7 @@ func (UnimplementedHandler) SetChatStickerSet(ctx context.Context, req SetChatSt
 // rights. Returns _True_ on success.
 //
 // POST /setChatTitle
-func (UnimplementedHandler) SetChatTitle(ctx context.Context, req SetChatTitle) (r Result, _ error) {
+func (UnimplementedHandler) SetChatTitle(ctx context.Context, req *SetChatTitle) (r *Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -974,7 +974,7 @@ func (UnimplementedHandler) SetChatTitle(ctx context.Context, req SetChatTitle) 
 // user's current score in the chat and _force_ is _False_.
 //
 // POST /setGameScore
-func (UnimplementedHandler) SetGameScore(ctx context.Context, req SetGameScore) (r Result, _ error) {
+func (UnimplementedHandler) SetGameScore(ctx context.Context, req *SetGameScore) (r *Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -984,7 +984,7 @@ func (UnimplementedHandler) SetGameScore(ctx context.Context, req SetGameScore) 
 // org/bots/features#commands) for more details about bot commands. Returns _True_ on success.
 //
 // POST /setMyCommands
-func (UnimplementedHandler) SetMyCommands(ctx context.Context, req SetMyCommands) (r Result, _ error) {
+func (UnimplementedHandler) SetMyCommands(ctx context.Context, req *SetMyCommands) (r *Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -995,7 +995,7 @@ func (UnimplementedHandler) SetMyCommands(ctx context.Context, req SetMyCommands
 // free to modify the list before adding the bot. Returns _True_ on success.
 //
 // POST /setMyDefaultAdministratorRights
-func (UnimplementedHandler) SetMyDefaultAdministratorRights(ctx context.Context, req OptSetMyDefaultAdministratorRights) (r Result, _ error) {
+func (UnimplementedHandler) SetMyDefaultAdministratorRights(ctx context.Context, req OptSetMyDefaultAdministratorRights) (r *Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -1007,7 +1007,7 @@ func (UnimplementedHandler) SetMyDefaultAdministratorRights(ctx context.Context,
 // knows how to correct the issues.
 //
 // POST /setPassportDataErrors
-func (UnimplementedHandler) SetPassportDataErrors(ctx context.Context, req SetPassportDataErrors) (r Result, _ error) {
+func (UnimplementedHandler) SetPassportDataErrors(ctx context.Context, req *SetPassportDataErrors) (r *Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -1017,7 +1017,7 @@ func (UnimplementedHandler) SetPassportDataErrors(ctx context.Context, req SetPa
 // _True_ on success.
 //
 // POST /setStickerPositionInSet
-func (UnimplementedHandler) SetStickerPositionInSet(ctx context.Context, req SetStickerPositionInSet) (r Result, _ error) {
+func (UnimplementedHandler) SetStickerPositionInSet(ctx context.Context, req *SetStickerPositionInSet) (r *Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -1028,7 +1028,7 @@ func (UnimplementedHandler) SetStickerPositionInSet(ctx context.Context, req Set
 // success.
 //
 // POST /setStickerSetThumb
-func (UnimplementedHandler) SetStickerSetThumb(ctx context.Context, req SetStickerSetThumb) (r Result, _ error) {
+func (UnimplementedHandler) SetStickerSetThumb(ctx context.Context, req *SetStickerSetThumb) (r *Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -1039,7 +1039,7 @@ func (UnimplementedHandler) SetStickerSetThumb(ctx context.Context, req SetStick
 // `X-Telegram-Bot-Api-Secret-Token` with the secret token as content.
 //
 // POST /setWebhook
-func (UnimplementedHandler) SetWebhook(ctx context.Context, req SetWebhook) (r Result, _ error) {
+func (UnimplementedHandler) SetWebhook(ctx context.Context, req *SetWebhook) (r *Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -1050,7 +1050,7 @@ func (UnimplementedHandler) SetWebhook(ctx context.Context, req SetWebhook) (r R
 // org/bots/api#message) is returned, otherwise _True_ is returned.
 //
 // POST /stopMessageLiveLocation
-func (UnimplementedHandler) StopMessageLiveLocation(ctx context.Context, req StopMessageLiveLocation) (r ResultMessageOrBoolean, _ error) {
+func (UnimplementedHandler) StopMessageLiveLocation(ctx context.Context, req *StopMessageLiveLocation) (r *ResultMessageOrBoolean, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -1060,7 +1060,7 @@ func (UnimplementedHandler) StopMessageLiveLocation(ctx context.Context, req Sto
 // [Poll](https://core.telegram.org/bots/api#poll) is returned.
 //
 // POST /stopPoll
-func (UnimplementedHandler) StopPoll(ctx context.Context, req StopPoll) (r ResultPoll, _ error) {
+func (UnimplementedHandler) StopPoll(ctx context.Context, req *StopPoll) (r *ResultPoll, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -1074,7 +1074,7 @@ func (UnimplementedHandler) StopPoll(ctx context.Context, req StopPoll) (r Resul
 // _only_if_banned_. Returns _True_ on success.
 //
 // POST /unbanChatMember
-func (UnimplementedHandler) UnbanChatMember(ctx context.Context, req UnbanChatMember) (r Result, _ error) {
+func (UnimplementedHandler) UnbanChatMember(ctx context.Context, req *UnbanChatMember) (r *Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -1085,7 +1085,7 @@ func (UnimplementedHandler) UnbanChatMember(ctx context.Context, req UnbanChatMe
 // _True_ on success.
 //
 // POST /unbanChatSenderChat
-func (UnimplementedHandler) UnbanChatSenderChat(ctx context.Context, req UnbanChatSenderChat) (r Result, _ error) {
+func (UnimplementedHandler) UnbanChatSenderChat(ctx context.Context, req *UnbanChatSenderChat) (r *Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -1096,7 +1096,7 @@ func (UnimplementedHandler) UnbanChatSenderChat(ctx context.Context, req UnbanCh
 // rights. Returns _True_ on success.
 //
 // POST /unhideGeneralForumTopic
-func (UnimplementedHandler) UnhideGeneralForumTopic(ctx context.Context, req UnhideGeneralForumTopic) (r Result, _ error) {
+func (UnimplementedHandler) UnhideGeneralForumTopic(ctx context.Context, req *UnhideGeneralForumTopic) (r *Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -1108,7 +1108,7 @@ func (UnimplementedHandler) UnhideGeneralForumTopic(ctx context.Context, req Unh
 // Returns _True_ on success.
 //
 // POST /unpinAllChatMessages
-func (UnimplementedHandler) UnpinAllChatMessages(ctx context.Context, req UnpinAllChatMessages) (r Result, _ error) {
+func (UnimplementedHandler) UnpinAllChatMessages(ctx context.Context, req *UnpinAllChatMessages) (r *Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -1119,7 +1119,7 @@ func (UnimplementedHandler) UnpinAllChatMessages(ctx context.Context, req UnpinA
 // right in the supergroup. Returns _True_ on success.
 //
 // POST /unpinAllForumTopicMessages
-func (UnimplementedHandler) UnpinAllForumTopicMessages(ctx context.Context, req UnpinAllForumTopicMessages) (r Result, _ error) {
+func (UnimplementedHandler) UnpinAllForumTopicMessages(ctx context.Context, req *UnpinAllForumTopicMessages) (r *Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -1131,7 +1131,7 @@ func (UnimplementedHandler) UnpinAllForumTopicMessages(ctx context.Context, req 
 // in a channel. Returns _True_ on success.
 //
 // POST /unpinChatMessage
-func (UnimplementedHandler) UnpinChatMessage(ctx context.Context, req UnpinChatMessage) (r Result, _ error) {
+func (UnimplementedHandler) UnpinChatMessage(ctx context.Context, req *UnpinChatMessage) (r *Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -1142,13 +1142,14 @@ func (UnimplementedHandler) UnpinChatMessage(ctx context.Context, req UnpinChatM
 // telegram.org/bots/api#file) on success.
 //
 // POST /uploadStickerFile
-func (UnimplementedHandler) UploadStickerFile(ctx context.Context, req UploadStickerFile) (r ResultFile, _ error) {
+func (UnimplementedHandler) UploadStickerFile(ctx context.Context, req *UploadStickerFile) (r *ResultFile, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
-// NewError creates ErrorStatusCode from error returned by handler.
+// NewError creates *ErrorStatusCode from error returned by handler.
 //
 // Used for common default response.
-func (UnimplementedHandler) NewError(ctx context.Context, err error) (r ErrorStatusCode) {
+func (UnimplementedHandler) NewError(ctx context.Context, err error) (r *ErrorStatusCode) {
+	r = new(ErrorStatusCode)
 	return r
 }

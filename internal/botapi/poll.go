@@ -79,7 +79,7 @@ func (b *BotAPI) convertToBotAPIPoll(ctx context.Context, media *tg.MessageMedia
 }
 
 // SendPoll implements oas.Handler.
-func (b *BotAPI) SendPoll(ctx context.Context, req oas.SendPoll) (oas.ResultMessage, error) {
+func (b *BotAPI) SendPoll(ctx context.Context, req *oas.SendPoll) (*oas.ResultMessage, error) {
 	s, p, err := b.prepareSend(
 		ctx,
 		sendOpts{
@@ -92,7 +92,7 @@ func (b *BotAPI) SendPoll(ctx context.Context, req oas.SendPoll) (oas.ResultMess
 		},
 	)
 	if err != nil {
-		return oas.ResultMessage{}, errors.Wrap(err, "prepare send")
+		return nil, errors.Wrap(err, "prepare send")
 	}
 
 	answers := make([]tg.PollAnswer, len(req.Options))
@@ -133,7 +133,7 @@ func (b *BotAPI) SendPoll(ctx context.Context, req oas.SendPoll) (oas.ResultMess
 	if v, ok := req.CorrectOptionID.Get(); ok {
 		if v < 0 || v >= len(answers) {
 			// See https://github.com/tdlib/td/blob/fa8feefed70d64271945e9d5fd010b957d93c8cd/td/telegram/MessageContent.cpp#L1898.
-			return oas.ResultMessage{}, &BadRequestError{Message: "Wrong correct option ID specified"}
+			return nil, &BadRequestError{Message: "Wrong correct option ID specified"}
 		}
 		media.CorrectAnswers = [][]byte{answers[v].Option}
 	}
@@ -141,7 +141,7 @@ func (b *BotAPI) SendPoll(ctx context.Context, req oas.SendPoll) (oas.ResultMess
 		// FIXME(tdakkota): get entities from request.
 		parseMode, isParseModeSet := req.ExplanationParseMode.Get()
 		if isParseModeSet && parseMode != "HTML" {
-			return oas.ResultMessage{}, &NotImplementedError{Message: "only HTML formatting is supported"}
+			return nil, &NotImplementedError{Message: "only HTML formatting is supported"}
 		}
 
 		if isParseModeSet {
@@ -150,7 +150,7 @@ func (b *BotAPI) SendPoll(ctx context.Context, req oas.SendPoll) (oas.ResultMess
 				UserResolver:          b.peers.UserResolveHook(ctx),
 				DisableTelegramEscape: false,
 			}); err != nil {
-				return oas.ResultMessage{}, errors.Wrap(err, "parse explanation")
+				return nil, errors.Wrap(err, "parse explanation")
 			}
 			text, entities := builder.Complete()
 			media.SetSolution(text)
@@ -165,6 +165,6 @@ func (b *BotAPI) SendPoll(ctx context.Context, req oas.SendPoll) (oas.ResultMess
 }
 
 // StopPoll implements oas.Handler.
-func (b *BotAPI) StopPoll(ctx context.Context, req oas.StopPoll) (oas.ResultPoll, error) {
-	return oas.ResultPoll{}, &NotImplementedError{}
+func (b *BotAPI) StopPoll(ctx context.Context, req *oas.StopPoll) (*oas.ResultPoll, error) {
+	return nil, &NotImplementedError{}
 }

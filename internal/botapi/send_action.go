@@ -9,10 +9,10 @@ import (
 )
 
 // SendChatAction implements oas.Handler.
-func (b *BotAPI) SendChatAction(ctx context.Context, req oas.SendChatAction) (oas.Result, error) {
+func (b *BotAPI) SendChatAction(ctx context.Context, req *oas.SendChatAction) (*oas.Result, error) {
 	p, err := b.resolveID(ctx, req.ChatID)
 	if err != nil {
-		return oas.Result{}, errors.Wrap(err, "resolve chatID")
+		return nil, errors.Wrap(err, "resolve chatID")
 	}
 
 	s := b.sender.To(p.InputPeer()).TypingAction()
@@ -43,10 +43,10 @@ func (b *BotAPI) SendChatAction(ctx context.Context, req oas.SendChatAction) (oa
 	case "upload_video_note":
 		err = s.UploadRound(ctx, progress)
 	default:
-		return oas.Result{}, &BadRequestError{"Wrong parameter action in request"}
+		return nil, &BadRequestError{"Wrong parameter action in request"}
 	}
 	if err != nil {
-		return oas.Result{}, errors.Wrap(err, "send action")
+		return nil, errors.Wrap(err, "send action")
 	}
 
 	return resultOK(true), nil

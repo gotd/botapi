@@ -68,11 +68,11 @@ func (b *BotAPI) Init(ctx context.Context) error {
 }
 
 // GetUpdates implements oas.Handler.
-func (b *BotAPI) GetUpdates(ctx context.Context, req oas.OptGetUpdates) (oas.ResultArrayOfUpdate, error) {
-	return oas.ResultArrayOfUpdate{}, &NotImplementedError{}
+func (b *BotAPI) GetUpdates(ctx context.Context, req oas.OptGetUpdates) (*oas.ResultArrayOfUpdate, error) {
+	return nil, &NotImplementedError{}
 }
 
 // SetPassportDataErrors implements oas.Handler.
-func (b *BotAPI) SetPassportDataErrors(ctx context.Context, req oas.SetPassportDataErrors) (oas.Result, error) {
-	return oas.Result{}, &NotImplementedError{}
+func (b *BotAPI) SetPassportDataErrors(ctx context.Context, req *oas.SetPassportDataErrors) (*oas.Result, error) {
+	return nil, &NotImplementedError{}
 }
