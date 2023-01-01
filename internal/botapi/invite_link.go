@@ -36,30 +36,30 @@ func (b *BotAPI) editInviteLinks(
 	ctx context.Context,
 	id oas.ID,
 	cb func(links peers.InviteLinks) (peers.InviteLink, error),
-) (oas.ResultChatInviteLink, error) {
+) (*oas.ResultChatInviteLink, error) {
 	p, err := b.resolveIDToChat(ctx, id)
 	if err != nil {
-		return oas.ResultChatInviteLink{}, errors.Wrap(err, "resolve chatID")
+		return nil, errors.Wrap(err, "resolve chatID")
 	}
 
 	link, err := cb(p.InviteLinks())
 	if err != nil {
-		return oas.ResultChatInviteLink{}, err
+		return nil, err
 	}
 
 	result, err := b.convertInviteLink(ctx, link)
 	if err != nil {
-		return oas.ResultChatInviteLink{}, errors.Wrap(err, "convert link")
+		return nil, errors.Wrap(err, "convert link")
 	}
 
-	return oas.ResultChatInviteLink{
+	return &oas.ResultChatInviteLink{
 		Result: oas.NewOptChatInviteLink(result),
 		Ok:     true,
 	}, nil
 }
 
 // CreateChatInviteLink implements oas.Handler.
-func (b *BotAPI) CreateChatInviteLink(ctx context.Context, req oas.CreateChatInviteLink) (oas.ResultChatInviteLink, error) {
+func (b *BotAPI) CreateChatInviteLink(ctx context.Context, req *oas.CreateChatInviteLink) (*oas.ResultChatInviteLink, error) {
 	return b.editInviteLinks(ctx, req.ChatID, func(links peers.InviteLinks) (peers.InviteLink, error) {
 		opts := peers.ExportLinkOptions{
 			RequestNeeded: req.CreatesJoinRequest.Value,
@@ -80,7 +80,7 @@ func (b *BotAPI) CreateChatInviteLink(ctx context.Context, req oas.CreateChatInv
 }
 
 // EditChatInviteLink implements oas.Handler.
-func (b *BotAPI) EditChatInviteLink(ctx context.Context, req oas.EditChatInviteLink) (oas.ResultChatInviteLink, error) {
+func (b *BotAPI) EditChatInviteLink(ctx context.Context, req *oas.EditChatInviteLink) (*oas.ResultChatInviteLink, error) {
 	return b.editInviteLinks(ctx, req.ChatID, func(links peers.InviteLinks) (peers.InviteLink, error) {
 		opts := peers.ExportLinkOptions{
 			RequestNeeded: req.CreatesJoinRequest.Value,
@@ -102,25 +102,25 @@ func (b *BotAPI) EditChatInviteLink(ctx context.Context, req oas.EditChatInviteL
 }
 
 // ExportChatInviteLink implements oas.Handler.
-func (b *BotAPI) ExportChatInviteLink(ctx context.Context, req oas.ExportChatInviteLink) (oas.ResultString, error) {
+func (b *BotAPI) ExportChatInviteLink(ctx context.Context, req *oas.ExportChatInviteLink) (*oas.ResultString, error) {
 	p, err := b.resolveIDToChat(ctx, req.ChatID)
 	if err != nil {
-		return oas.ResultString{}, errors.Wrap(err, "resolve chatID")
+		return nil, errors.Wrap(err, "resolve chatID")
 	}
 
 	link, err := p.InviteLinks().ExportNew(ctx, peers.ExportLinkOptions{})
 	if err != nil {
-		return oas.ResultString{}, errors.Wrap(err, "export link")
+		return nil, errors.Wrap(err, "export link")
 	}
 
-	return oas.ResultString{
+	return &oas.ResultString{
 		Result: oas.NewOptString(link.Link()),
 		Ok:     true,
 	}, nil
 }
 
 // RevokeChatInviteLink implements oas.Handler.
-func (b *BotAPI) RevokeChatInviteLink(ctx context.Context, req oas.RevokeChatInviteLink) (oas.ResultChatInviteLink, error) {
+func (b *BotAPI) RevokeChatInviteLink(ctx context.Context, req *oas.RevokeChatInviteLink) (*oas.ResultChatInviteLink, error) {
 	return b.editInviteLinks(ctx, req.ChatID, func(links peers.InviteLinks) (peers.InviteLink, error) {
 		link, err := links.Revoke(ctx, req.InviteLink)
 		if err != nil {

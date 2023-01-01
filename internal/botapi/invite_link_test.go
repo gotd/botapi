@@ -27,7 +27,7 @@ func TestBotAPI_RevokeChatInviteLink(t *testing.T) {
 			},
 			Users: []tg.UserClass{testUser()},
 		})
-		_, err := api.RevokeChatInviteLink(ctx, oas.RevokeChatInviteLink{
+		_, err := api.RevokeChatInviteLink(ctx, &oas.RevokeChatInviteLink{
 			ChatID:     oas.NewInt64ID(testChatID()),
 			InviteLink: "aboba",
 		})

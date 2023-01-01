@@ -13,15 +13,15 @@ import (
 	"github.com/gotd/botapi/internal/oas"
 )
 
-func errorOf(code int) oas.ErrorStatusCode {
+func errorOf(code int) *oas.ErrorStatusCode {
 	return errorStatusCode(code, "")
 }
 
-func errorStatusCode(code int, description string) oas.ErrorStatusCode {
+func errorStatusCode(code int, description string) *oas.ErrorStatusCode {
 	if description == "" {
 		description = http.StatusText(code)
 	}
-	return oas.ErrorStatusCode{
+	return &oas.ErrorStatusCode{
 		StatusCode: code,
 		Response: oas.Error{
 			ErrorCode:   code,
@@ -31,7 +31,7 @@ func errorStatusCode(code int, description string) oas.ErrorStatusCode {
 }
 
 // See https://github.com/tdlib/telegram-bot-api/blob/90f52477814a2d8a08c9ffb1d780fd179815d715/telegram-bot-api/Client.cpp#L86.
-func tryMapRPCError(err error) (r oas.ErrorStatusCode, _ bool) {
+func tryMapRPCError(err error) (r *oas.ErrorStatusCode, _ bool) {
 	rpcErr, ok := tgerr.As(err)
 	if !ok || rpcErr.Code != 400 {
 		return r, false
@@ -103,7 +103,7 @@ func mapGotdError(err error) error {
 }
 
 // NewError maps error to status code.
-func (b *BotAPI) NewError(ctx context.Context, err error) (r oas.ErrorStatusCode) {
+func (b *BotAPI) NewError(ctx context.Context, err error) (r *oas.ErrorStatusCode) {
 	// TODO(tdakkota): pass request context info.
 	defer func() {
 		level := zap.DebugLevel

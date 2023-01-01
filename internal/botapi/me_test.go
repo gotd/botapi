@@ -23,7 +23,7 @@ func TestBotAPI_GetMe(t *testing.T) {
 	}).ThenResult(&tg.UserClassVector{Elems: []tg.UserClass{user}})
 	result, err := api.GetMe(ctx)
 	a.NoError(err)
-	a.Equal(oas.ResultUser{
+	a.Equal(&oas.ResultUser{
 		Result: oas.OptUser{
 			Value: oas.User{
 				ID:                      user.ID,

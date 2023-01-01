@@ -53,7 +53,7 @@ func TestBotAPI_GetUserProfilePhotos(t *testing.T) {
 			},
 			Users: nil,
 		})
-		r, err := api.GetUserProfilePhotos(ctx, oas.GetUserProfilePhotos{
+		r, err := api.GetUserProfilePhotos(ctx, &oas.GetUserProfilePhotos{
 			UserID: testUser().ID,
 			Offset: oas.NewOptInt(1),
 		})

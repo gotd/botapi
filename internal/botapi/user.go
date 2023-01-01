@@ -11,10 +11,10 @@ import (
 )
 
 // GetUserProfilePhotos implements oas.Handler.
-func (b *BotAPI) GetUserProfilePhotos(ctx context.Context, req oas.GetUserProfilePhotos) (oas.ResultUserProfilePhotos, error) {
+func (b *BotAPI) GetUserProfilePhotos(ctx context.Context, req *oas.GetUserProfilePhotos) (*oas.ResultUserProfilePhotos, error) {
 	userID, err := b.resolveUserID(ctx, req.UserID)
 	if err != nil {
-		return oas.ResultUserProfilePhotos{}, errors.Wrap(err, "resolve userID")
+		return nil, errors.Wrap(err, "resolve userID")
 	}
 
 	response, err := b.raw.PhotosGetUserPhotos(ctx, &tg.PhotosGetUserPhotosRequest{
@@ -23,7 +23,7 @@ func (b *BotAPI) GetUserProfilePhotos(ctx context.Context, req oas.GetUserProfil
 		Limit:  req.Limit.Or(100),
 	})
 	if err != nil {
-		return oas.ResultUserProfilePhotos{}, errors.Wrap(err, "get photos")
+		return nil, errors.Wrap(err, "get photos")
 	}
 	var totalCount int
 	switch response := response.(type) {
@@ -38,7 +38,7 @@ func (b *BotAPI) GetUserProfilePhotos(ctx context.Context, req oas.GetUserProfil
 		photos = append(photos, b.convertToBotAPIPhotoSizes(p))
 	}
 
-	return oas.ResultUserProfilePhotos{
+	return &oas.ResultUserProfilePhotos{
 		Result: oas.NewOptUserProfilePhotos(oas.UserProfilePhotos{
 			TotalCount: totalCount,
 			Photos:     photos,
