@@ -2947,9 +2947,9 @@ func (c *Client) sendGetChatAdministrators(ctx context.Context, request *GetChat
 
 // GetChatMember invokes getChatMember operation.
 //
-// Use this method to get information about a member of a chat. The method is guaranteed to work only
-// if the bot is an administrator in the chat. Returns a [ChatMember](https://core.telegram.
-// org/bots/api#chatmember) object on success.
+// Use this method to get information about a member of a chat. The method is guaranteed to work for
+// other users, only if the bot is an administrator in the chat. Returns a [ChatMember](https://core.
+// telegram.org/bots/api#chatmember) object on success.
 //
 // POST /getChatMember
 func (c *Client) GetChatMember(ctx context.Context, request *GetChatMember) (*ResultChatMember, error) {
