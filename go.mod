@@ -6,7 +6,7 @@ require (
 	github.com/PuerkitoBio/goquery v1.8.0
 	github.com/go-chi/chi/v5 v5.0.8
 	github.com/go-faster/errors v0.6.1
-	github.com/go-faster/jx v0.40.0
+	github.com/go-faster/jx v0.41.0
 	github.com/gotd/td v0.74.0
 	github.com/ogen-go/ogen v0.56.1
 	github.com/stretchr/testify v1.8.1
@@ -42,7 +42,7 @@ require (
 	github.com/segmentio/asm v1.2.0 // indirect
 	go.uber.org/atomic v1.10.0 // indirect
 	golang.org/x/crypto v0.4.0 // indirect
-	golang.org/x/exp v0.0.0-20221205204356-47842c84f3db // indirect
+	golang.org/x/exp v0.0.0-20230116083435-1de6713980de // indirect
 	golang.org/x/net v0.4.0 // indirect
 	golang.org/x/sys v0.3.0 // indirect
 	golang.org/x/text v0.5.0 // indirect
