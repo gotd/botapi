@@ -323,6 +323,19 @@ func encodeDeleteStickerFromSetResponse(response *Result, w http.ResponseWriter,
 	return nil
 }
 
+func encodeDeleteStickerSetResponse(response *Result, w http.ResponseWriter, span trace.Span) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	span.SetStatus(codes.Ok, http.StatusText(200))
+
+	e := jx.GetEncoder()
+	response.Encode(e)
+	if _, err := e.WriteTo(w); err != nil {
+		return errors.Wrap(err, "write")
+	}
+	return nil
+}
+
 func encodeDeleteWebhookResponse(response *Result, w http.ResponseWriter, span trace.Span) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
@@ -610,6 +623,32 @@ func encodeGetMyCommandsResponse(response *ResultArrayOfBotCommand, w http.Respo
 }
 
 func encodeGetMyDefaultAdministratorRightsResponse(response *Result, w http.ResponseWriter, span trace.Span) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	span.SetStatus(codes.Ok, http.StatusText(200))
+
+	e := jx.GetEncoder()
+	response.Encode(e)
+	if _, err := e.WriteTo(w); err != nil {
+		return errors.Wrap(err, "write")
+	}
+	return nil
+}
+
+func encodeGetMyDescriptionResponse(response *Result, w http.ResponseWriter, span trace.Span) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	span.SetStatus(codes.Ok, http.StatusText(200))
+
+	e := jx.GetEncoder()
+	response.Encode(e)
+	if _, err := e.WriteTo(w); err != nil {
+		return errors.Wrap(err, "write")
+	}
+	return nil
+}
+
+func encodeGetMyShortDescriptionResponse(response *Result, w http.ResponseWriter, span trace.Span) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 	span.SetStatus(codes.Ok, http.StatusText(200))
@@ -1116,6 +1155,19 @@ func encodeSetChatTitleResponse(response *Result, w http.ResponseWriter, span tr
 	return nil
 }
 
+func encodeSetCustomEmojiStickerSetThumbnailResponse(response *Result, w http.ResponseWriter, span trace.Span) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	span.SetStatus(codes.Ok, http.StatusText(200))
+
+	e := jx.GetEncoder()
+	response.Encode(e)
+	if _, err := e.WriteTo(w); err != nil {
+		return errors.Wrap(err, "write")
+	}
+	return nil
+}
+
 func encodeSetGameScoreResponse(response *Result, w http.ResponseWriter, span trace.Span) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
@@ -1155,7 +1207,72 @@ func encodeSetMyDefaultAdministratorRightsResponse(response *Result, w http.Resp
 	return nil
 }
 
+func encodeSetMyDescriptionResponse(response *Result, w http.ResponseWriter, span trace.Span) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	span.SetStatus(codes.Ok, http.StatusText(200))
+
+	e := jx.GetEncoder()
+	response.Encode(e)
+	if _, err := e.WriteTo(w); err != nil {
+		return errors.Wrap(err, "write")
+	}
+	return nil
+}
+
+func encodeSetMyShortDescriptionResponse(response *Result, w http.ResponseWriter, span trace.Span) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	span.SetStatus(codes.Ok, http.StatusText(200))
+
+	e := jx.GetEncoder()
+	response.Encode(e)
+	if _, err := e.WriteTo(w); err != nil {
+		return errors.Wrap(err, "write")
+	}
+	return nil
+}
+
 func encodeSetPassportDataErrorsResponse(response *Result, w http.ResponseWriter, span trace.Span) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	span.SetStatus(codes.Ok, http.StatusText(200))
+
+	e := jx.GetEncoder()
+	response.Encode(e)
+	if _, err := e.WriteTo(w); err != nil {
+		return errors.Wrap(err, "write")
+	}
+	return nil
+}
+
+func encodeSetStickerEmojiListResponse(response *Result, w http.ResponseWriter, span trace.Span) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	span.SetStatus(codes.Ok, http.StatusText(200))
+
+	e := jx.GetEncoder()
+	response.Encode(e)
+	if _, err := e.WriteTo(w); err != nil {
+		return errors.Wrap(err, "write")
+	}
+	return nil
+}
+
+func encodeSetStickerKeywordsResponse(response *Result, w http.ResponseWriter, span trace.Span) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	span.SetStatus(codes.Ok, http.StatusText(200))
+
+	e := jx.GetEncoder()
+	response.Encode(e)
+	if _, err := e.WriteTo(w); err != nil {
+		return errors.Wrap(err, "write")
+	}
+	return nil
+}
+
+func encodeSetStickerMaskPositionResponse(response *Result, w http.ResponseWriter, span trace.Span) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 	span.SetStatus(codes.Ok, http.StatusText(200))
@@ -1181,7 +1298,20 @@ func encodeSetStickerPositionInSetResponse(response *Result, w http.ResponseWrit
 	return nil
 }
 
-func encodeSetStickerSetThumbResponse(response *Result, w http.ResponseWriter, span trace.Span) error {
+func encodeSetStickerSetThumbnailResponse(response *Result, w http.ResponseWriter, span trace.Span) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	span.SetStatus(codes.Ok, http.StatusText(200))
+
+	e := jx.GetEncoder()
+	response.Encode(e)
+	if _, err := e.WriteTo(w); err != nil {
+		return errors.Wrap(err, "write")
+	}
+	return nil
+}
+
+func encodeSetStickerSetTitleResponse(response *Result, w http.ResponseWriter, span trace.Span) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 	span.SetStatus(codes.Ok, http.StatusText(200))

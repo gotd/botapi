@@ -339,6 +339,20 @@ func encodeDeleteStickerFromSetRequest(
 	return nil
 }
 
+func encodeDeleteStickerSetRequest(
+	req *DeleteStickerSet,
+	r *http.Request,
+) error {
+	const contentType = "application/json"
+	e := jx.GetEncoder()
+	{
+		req.Encode(e)
+	}
+	encoded := e.Bytes()
+	ht.SetBody(r, bytes.NewReader(encoded), contentType)
+	return nil
+}
+
 func encodeDeleteWebhookRequest(
 	req OptDeleteWebhook,
 	r *http.Request,
@@ -639,6 +653,46 @@ func encodeGetMyCommandsRequest(
 
 func encodeGetMyDefaultAdministratorRightsRequest(
 	req OptGetMyDefaultAdministratorRights,
+	r *http.Request,
+) error {
+	const contentType = "application/json"
+	if !req.Set {
+		// Keep request with empty body if value is not set.
+		return nil
+	}
+	e := jx.GetEncoder()
+	{
+		if req.Set {
+			req.Encode(e)
+		}
+	}
+	encoded := e.Bytes()
+	ht.SetBody(r, bytes.NewReader(encoded), contentType)
+	return nil
+}
+
+func encodeGetMyDescriptionRequest(
+	req OptGetMyDescription,
+	r *http.Request,
+) error {
+	const contentType = "application/json"
+	if !req.Set {
+		// Keep request with empty body if value is not set.
+		return nil
+	}
+	e := jx.GetEncoder()
+	{
+		if req.Set {
+			req.Encode(e)
+		}
+	}
+	encoded := e.Bytes()
+	ht.SetBody(r, bytes.NewReader(encoded), contentType)
+	return nil
+}
+
+func encodeGetMyShortDescriptionRequest(
+	req OptGetMyShortDescription,
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
@@ -1173,6 +1227,20 @@ func encodeSetChatTitleRequest(
 	return nil
 }
 
+func encodeSetCustomEmojiStickerSetThumbnailRequest(
+	req *SetCustomEmojiStickerSetThumbnail,
+	r *http.Request,
+) error {
+	const contentType = "application/json"
+	e := jx.GetEncoder()
+	{
+		req.Encode(e)
+	}
+	encoded := e.Bytes()
+	ht.SetBody(r, bytes.NewReader(encoded), contentType)
+	return nil
+}
+
 func encodeSetGameScoreRequest(
 	req *SetGameScore,
 	r *http.Request,
@@ -1221,8 +1289,90 @@ func encodeSetMyDefaultAdministratorRightsRequest(
 	return nil
 }
 
+func encodeSetMyDescriptionRequest(
+	req OptSetMyDescription,
+	r *http.Request,
+) error {
+	const contentType = "application/json"
+	if !req.Set {
+		// Keep request with empty body if value is not set.
+		return nil
+	}
+	e := jx.GetEncoder()
+	{
+		if req.Set {
+			req.Encode(e)
+		}
+	}
+	encoded := e.Bytes()
+	ht.SetBody(r, bytes.NewReader(encoded), contentType)
+	return nil
+}
+
+func encodeSetMyShortDescriptionRequest(
+	req OptSetMyShortDescription,
+	r *http.Request,
+) error {
+	const contentType = "application/json"
+	if !req.Set {
+		// Keep request with empty body if value is not set.
+		return nil
+	}
+	e := jx.GetEncoder()
+	{
+		if req.Set {
+			req.Encode(e)
+		}
+	}
+	encoded := e.Bytes()
+	ht.SetBody(r, bytes.NewReader(encoded), contentType)
+	return nil
+}
+
 func encodeSetPassportDataErrorsRequest(
 	req *SetPassportDataErrors,
+	r *http.Request,
+) error {
+	const contentType = "application/json"
+	e := jx.GetEncoder()
+	{
+		req.Encode(e)
+	}
+	encoded := e.Bytes()
+	ht.SetBody(r, bytes.NewReader(encoded), contentType)
+	return nil
+}
+
+func encodeSetStickerEmojiListRequest(
+	req *SetStickerEmojiList,
+	r *http.Request,
+) error {
+	const contentType = "application/json"
+	e := jx.GetEncoder()
+	{
+		req.Encode(e)
+	}
+	encoded := e.Bytes()
+	ht.SetBody(r, bytes.NewReader(encoded), contentType)
+	return nil
+}
+
+func encodeSetStickerKeywordsRequest(
+	req *SetStickerKeywords,
+	r *http.Request,
+) error {
+	const contentType = "application/json"
+	e := jx.GetEncoder()
+	{
+		req.Encode(e)
+	}
+	encoded := e.Bytes()
+	ht.SetBody(r, bytes.NewReader(encoded), contentType)
+	return nil
+}
+
+func encodeSetStickerMaskPositionRequest(
+	req *SetStickerMaskPosition,
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
@@ -1249,8 +1399,22 @@ func encodeSetStickerPositionInSetRequest(
 	return nil
 }
 
-func encodeSetStickerSetThumbRequest(
-	req *SetStickerSetThumb,
+func encodeSetStickerSetThumbnailRequest(
+	req *SetStickerSetThumbnail,
+	r *http.Request,
+) error {
+	const contentType = "application/json"
+	e := jx.GetEncoder()
+	{
+		req.Encode(e)
+	}
+	encoded := e.Bytes()
+	ht.SetBody(r, bytes.NewReader(encoded), contentType)
+	return nil
+}
+
+func encodeSetStickerSetTitleRequest(
+	req *SetStickerSetTitle,
 	r *http.Request,
 ) error {
 	const contentType = "application/json"

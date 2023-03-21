@@ -18,26 +18,8 @@ type AddStickerToSet struct {
 	// User identifier of sticker set owner.
 	UserID int64 `json:"user_id"`
 	// Sticker set name.
-	Name string `json:"name"`
-	// **PNG** image with the sticker, must be up to 512 kilobytes in size, dimensions must not exceed
-	// 512px, and either width or height must be exactly 512px. Pass a _file_id_ as a String to send a
-	// file that already exists on the Telegram servers, pass an HTTP URL as a String for Telegram to get
-	// a file from the Internet, or upload a new one using multipart/form-data. [More information on
-	// Sending Files](https://core.telegram.org/bots/api#sending-files).
-	PNGSticker OptString `json:"png_sticker"`
-	// **TGS** animation with the sticker, uploaded using multipart/form-data. See [](https://core.
-	// telegram.org/stickers#animated-sticker-requirements)[https://core.telegram.
-	// org/stickers#animated-sticker-requirements](https://core.telegram.
-	// org/stickers#animated-sticker-requirements) for technical requirements.
-	TgsSticker OptString `json:"tgs_sticker"`
-	// **WEBM** video with the sticker, uploaded using multipart/form-data. See [](https://core.telegram.
-	// org/stickers#video-sticker-requirements)[https://core.telegram.
-	// org/stickers#video-sticker-requirements](https://core.telegram.
-	// org/stickers#video-sticker-requirements) for technical requirements.
-	WebmSticker OptString `json:"webm_sticker"`
-	// One or more emoji corresponding to the sticker.
-	Emojis       string          `json:"emojis"`
-	MaskPosition OptMaskPosition `json:"mask_position"`
+	Name    string       `json:"name"`
+	Sticker InputSticker `json:"sticker"`
 }
 
 // GetUserID returns the value of UserID.
@@ -50,29 +32,9 @@ func (s *AddStickerToSet) GetName() string {
 	return s.Name
 }
 
-// GetPNGSticker returns the value of PNGSticker.
-func (s *AddStickerToSet) GetPNGSticker() OptString {
-	return s.PNGSticker
-}
-
-// GetTgsSticker returns the value of TgsSticker.
-func (s *AddStickerToSet) GetTgsSticker() OptString {
-	return s.TgsSticker
-}
-
-// GetWebmSticker returns the value of WebmSticker.
-func (s *AddStickerToSet) GetWebmSticker() OptString {
-	return s.WebmSticker
-}
-
-// GetEmojis returns the value of Emojis.
-func (s *AddStickerToSet) GetEmojis() string {
-	return s.Emojis
-}
-
-// GetMaskPosition returns the value of MaskPosition.
-func (s *AddStickerToSet) GetMaskPosition() OptMaskPosition {
-	return s.MaskPosition
+// GetSticker returns the value of Sticker.
+func (s *AddStickerToSet) GetSticker() InputSticker {
+	return s.Sticker
 }
 
 // SetUserID sets the value of UserID.
@@ -85,29 +47,9 @@ func (s *AddStickerToSet) SetName(val string) {
 	s.Name = val
 }
 
-// SetPNGSticker sets the value of PNGSticker.
-func (s *AddStickerToSet) SetPNGSticker(val OptString) {
-	s.PNGSticker = val
-}
-
-// SetTgsSticker sets the value of TgsSticker.
-func (s *AddStickerToSet) SetTgsSticker(val OptString) {
-	s.TgsSticker = val
-}
-
-// SetWebmSticker sets the value of WebmSticker.
-func (s *AddStickerToSet) SetWebmSticker(val OptString) {
-	s.WebmSticker = val
-}
-
-// SetEmojis sets the value of Emojis.
-func (s *AddStickerToSet) SetEmojis(val string) {
-	s.Emojis = val
-}
-
-// SetMaskPosition sets the value of MaskPosition.
-func (s *AddStickerToSet) SetMaskPosition(val OptMaskPosition) {
-	s.MaskPosition = val
+// SetSticker sets the value of Sticker.
+func (s *AddStickerToSet) SetSticker(val InputSticker) {
+	s.Sticker = val
 }
 
 // This object represents an animation file (GIF or H.264/MPEG-4 AVC video without sound).
@@ -123,8 +65,8 @@ type Animation struct {
 	// Video height as defined by sender.
 	Height int `json:"height"`
 	// Duration of the video in seconds as defined by sender.
-	Duration int          `json:"duration"`
-	Thumb    OptPhotoSize `json:"thumb"`
+	Duration  int          `json:"duration"`
+	Thumbnail OptPhotoSize `json:"thumbnail"`
 	// _Optional_. Original animation filename as defined by sender.
 	FileName OptString `json:"file_name"`
 	// _Optional_. MIME type of the file as defined by sender.
@@ -160,9 +102,9 @@ func (s *Animation) GetDuration() int {
 	return s.Duration
 }
 
-// GetThumb returns the value of Thumb.
-func (s *Animation) GetThumb() OptPhotoSize {
-	return s.Thumb
+// GetThumbnail returns the value of Thumbnail.
+func (s *Animation) GetThumbnail() OptPhotoSize {
+	return s.Thumbnail
 }
 
 // GetFileName returns the value of FileName.
@@ -205,9 +147,9 @@ func (s *Animation) SetDuration(val int) {
 	s.Duration = val
 }
 
-// SetThumb sets the value of Thumb.
-func (s *Animation) SetThumb(val OptPhotoSize) {
-	s.Thumb = val
+// SetThumbnail sets the value of Thumbnail.
+func (s *Animation) SetThumbnail(val OptPhotoSize) {
+	s.Thumbnail = val
 }
 
 // SetFileName sets the value of FileName.
@@ -576,8 +518,8 @@ type Audio struct {
 	// _Optional_. File size in bytes. It can be bigger than 2^31 and some programming languages may have
 	// difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed
 	// 64-bit integer or double-precision float type are safe for storing this value.
-	FileSize OptInt       `json:"file_size"`
-	Thumb    OptPhotoSize `json:"thumb"`
+	FileSize  OptInt       `json:"file_size"`
+	Thumbnail OptPhotoSize `json:"thumbnail"`
 }
 
 // GetFileID returns the value of FileID.
@@ -620,9 +562,9 @@ func (s *Audio) GetFileSize() OptInt {
 	return s.FileSize
 }
 
-// GetThumb returns the value of Thumb.
-func (s *Audio) GetThumb() OptPhotoSize {
-	return s.Thumb
+// GetThumbnail returns the value of Thumbnail.
+func (s *Audio) GetThumbnail() OptPhotoSize {
+	return s.Thumbnail
 }
 
 // SetFileID sets the value of FileID.
@@ -665,9 +607,9 @@ func (s *Audio) SetFileSize(val OptInt) {
 	s.FileSize = val
 }
 
-// SetThumb sets the value of Thumb.
-func (s *Audio) SetThumb(val OptPhotoSize) {
-	s.Thumb = val
+// SetThumbnail sets the value of Thumbnail.
+func (s *Audio) SetThumbnail(val OptPhotoSize) {
+	s.Thumbnail = val
 }
 
 // Input for banChatMember.
@@ -1574,7 +1516,7 @@ type ChatAdministratorRights struct {
 	// _True_, if the administrator can restrict, ban or unban chat members.
 	CanRestrictMembers bool `json:"can_restrict_members"`
 	// _True_, if the administrator can add new administrators with a subset of their own privileges or
-	// demote administrators that he has promoted, directly or indirectly (promoted by administrators
+	// demote administrators that they have promoted, directly or indirectly (promoted by administrators
 	// that were appointed by the user).
 	CanPromoteMembers bool `json:"can_promote_members"`
 	// _True_, if the user is allowed to change the chat title, photo and other settings.
@@ -1832,6 +1774,13 @@ func (s *ChatInviteLink) SetPendingJoinRequestCount(val OptInt) {
 type ChatJoinRequest struct {
 	Chat Chat `json:"chat"`
 	From User `json:"from"`
+	// Identifier of a private chat with the user who sent the join request. This number may have more
+	// than 32 significant bits and some programming languages may have difficulty/silent defects in
+	// interpreting it. But it has at most 52 significant bits, so a 64-bit integer or double-precision
+	// float type are safe for storing this identifier. The bot can use this identifier for 24 hours to
+	// send messages until the join request is processed, assuming no other administrator contacted the
+	// user.
+	UserChatID int64 `json:"user_chat_id"`
 	// Date the request was sent in Unix time.
 	Date int `json:"date"`
 	// _Optional_. Bio of the user.
@@ -1847,6 +1796,11 @@ func (s *ChatJoinRequest) GetChat() Chat {
 // GetFrom returns the value of From.
 func (s *ChatJoinRequest) GetFrom() User {
 	return s.From
+}
+
+// GetUserChatID returns the value of UserChatID.
+func (s *ChatJoinRequest) GetUserChatID() int64 {
+	return s.UserChatID
 }
 
 // GetDate returns the value of Date.
@@ -1872,6 +1826,11 @@ func (s *ChatJoinRequest) SetChat(val Chat) {
 // SetFrom sets the value of From.
 func (s *ChatJoinRequest) SetFrom(val User) {
 	s.From = val
+}
+
+// SetUserChatID sets the value of UserChatID.
+func (s *ChatJoinRequest) SetUserChatID(val int64) {
+	s.UserChatID = val
 }
 
 // SetDate sets the value of Date.
@@ -2112,7 +2071,7 @@ type ChatMemberAdministrator struct {
 	// _True_, if the administrator can restrict, ban or unban chat members.
 	CanRestrictMembers bool `json:"can_restrict_members"`
 	// _True_, if the administrator can add new administrators with a subset of their own privileges or
-	// demote administrators that he has promoted, directly or indirectly (promoted by administrators
+	// demote administrators that they have promoted, directly or indirectly (promoted by administrators
 	// that were appointed by the user).
 	CanPromoteMembers bool `json:"can_promote_members"`
 	// _True_, if the user is allowed to change the chat title, photo and other settings.
@@ -2455,6 +2414,26 @@ type ChatMemberRestricted struct {
 	User   User   `json:"user"`
 	// _True_, if the user is a member of the chat at the moment of the request.
 	IsMember bool `json:"is_member"`
+	// _True_, if the user is allowed to send text messages, contacts, invoices, locations and venues.
+	CanSendMessages bool `json:"can_send_messages"`
+	// _True_, if the user is allowed to send audios.
+	CanSendAudios bool `json:"can_send_audios"`
+	// _True_, if the user is allowed to send documents.
+	CanSendDocuments bool `json:"can_send_documents"`
+	// _True_, if the user is allowed to send photos.
+	CanSendPhotos bool `json:"can_send_photos"`
+	// _True_, if the user is allowed to send videos.
+	CanSendVideos bool `json:"can_send_videos"`
+	// _True_, if the user is allowed to send video notes.
+	CanSendVideoNotes bool `json:"can_send_video_notes"`
+	// _True_, if the user is allowed to send voice notes.
+	CanSendVoiceNotes bool `json:"can_send_voice_notes"`
+	// _True_, if the user is allowed to send polls.
+	CanSendPolls bool `json:"can_send_polls"`
+	// _True_, if the user is allowed to send animations, games, stickers and use inline bots.
+	CanSendOtherMessages bool `json:"can_send_other_messages"`
+	// _True_, if the user is allowed to add web page previews to their messages.
+	CanAddWebPagePreviews bool `json:"can_add_web_page_previews"`
 	// _True_, if the user is allowed to change the chat title, photo and other settings.
 	CanChangeInfo bool `json:"can_change_info"`
 	// _True_, if the user is allowed to invite new users to the chat.
@@ -2463,17 +2442,6 @@ type ChatMemberRestricted struct {
 	CanPinMessages bool `json:"can_pin_messages"`
 	// _True_, if the user is allowed to create forum topics.
 	CanManageTopics bool `json:"can_manage_topics"`
-	// _True_, if the user is allowed to send text messages, contacts, locations and venues.
-	CanSendMessages bool `json:"can_send_messages"`
-	// _True_, if the user is allowed to send audios, documents, photos, videos, video notes and voice
-	// notes.
-	CanSendMediaMessages bool `json:"can_send_media_messages"`
-	// _True_, if the user is allowed to send polls.
-	CanSendPolls bool `json:"can_send_polls"`
-	// _True_, if the user is allowed to send animations, games, stickers and use inline bots.
-	CanSendOtherMessages bool `json:"can_send_other_messages"`
-	// _True_, if the user is allowed to add web page previews to their messages.
-	CanAddWebPagePreviews bool `json:"can_add_web_page_previews"`
 	// Date when restrictions will be lifted for this user; unix time. If 0, then the user is restricted
 	// forever.
 	UntilDate int `json:"until_date"`
@@ -2492,6 +2460,56 @@ func (s *ChatMemberRestricted) GetUser() User {
 // GetIsMember returns the value of IsMember.
 func (s *ChatMemberRestricted) GetIsMember() bool {
 	return s.IsMember
+}
+
+// GetCanSendMessages returns the value of CanSendMessages.
+func (s *ChatMemberRestricted) GetCanSendMessages() bool {
+	return s.CanSendMessages
+}
+
+// GetCanSendAudios returns the value of CanSendAudios.
+func (s *ChatMemberRestricted) GetCanSendAudios() bool {
+	return s.CanSendAudios
+}
+
+// GetCanSendDocuments returns the value of CanSendDocuments.
+func (s *ChatMemberRestricted) GetCanSendDocuments() bool {
+	return s.CanSendDocuments
+}
+
+// GetCanSendPhotos returns the value of CanSendPhotos.
+func (s *ChatMemberRestricted) GetCanSendPhotos() bool {
+	return s.CanSendPhotos
+}
+
+// GetCanSendVideos returns the value of CanSendVideos.
+func (s *ChatMemberRestricted) GetCanSendVideos() bool {
+	return s.CanSendVideos
+}
+
+// GetCanSendVideoNotes returns the value of CanSendVideoNotes.
+func (s *ChatMemberRestricted) GetCanSendVideoNotes() bool {
+	return s.CanSendVideoNotes
+}
+
+// GetCanSendVoiceNotes returns the value of CanSendVoiceNotes.
+func (s *ChatMemberRestricted) GetCanSendVoiceNotes() bool {
+	return s.CanSendVoiceNotes
+}
+
+// GetCanSendPolls returns the value of CanSendPolls.
+func (s *ChatMemberRestricted) GetCanSendPolls() bool {
+	return s.CanSendPolls
+}
+
+// GetCanSendOtherMessages returns the value of CanSendOtherMessages.
+func (s *ChatMemberRestricted) GetCanSendOtherMessages() bool {
+	return s.CanSendOtherMessages
+}
+
+// GetCanAddWebPagePreviews returns the value of CanAddWebPagePreviews.
+func (s *ChatMemberRestricted) GetCanAddWebPagePreviews() bool {
+	return s.CanAddWebPagePreviews
 }
 
 // GetCanChangeInfo returns the value of CanChangeInfo.
@@ -2514,31 +2532,6 @@ func (s *ChatMemberRestricted) GetCanManageTopics() bool {
 	return s.CanManageTopics
 }
 
-// GetCanSendMessages returns the value of CanSendMessages.
-func (s *ChatMemberRestricted) GetCanSendMessages() bool {
-	return s.CanSendMessages
-}
-
-// GetCanSendMediaMessages returns the value of CanSendMediaMessages.
-func (s *ChatMemberRestricted) GetCanSendMediaMessages() bool {
-	return s.CanSendMediaMessages
-}
-
-// GetCanSendPolls returns the value of CanSendPolls.
-func (s *ChatMemberRestricted) GetCanSendPolls() bool {
-	return s.CanSendPolls
-}
-
-// GetCanSendOtherMessages returns the value of CanSendOtherMessages.
-func (s *ChatMemberRestricted) GetCanSendOtherMessages() bool {
-	return s.CanSendOtherMessages
-}
-
-// GetCanAddWebPagePreviews returns the value of CanAddWebPagePreviews.
-func (s *ChatMemberRestricted) GetCanAddWebPagePreviews() bool {
-	return s.CanAddWebPagePreviews
-}
-
 // GetUntilDate returns the value of UntilDate.
 func (s *ChatMemberRestricted) GetUntilDate() int {
 	return s.UntilDate
@@ -2559,6 +2552,56 @@ func (s *ChatMemberRestricted) SetIsMember(val bool) {
 	s.IsMember = val
 }
 
+// SetCanSendMessages sets the value of CanSendMessages.
+func (s *ChatMemberRestricted) SetCanSendMessages(val bool) {
+	s.CanSendMessages = val
+}
+
+// SetCanSendAudios sets the value of CanSendAudios.
+func (s *ChatMemberRestricted) SetCanSendAudios(val bool) {
+	s.CanSendAudios = val
+}
+
+// SetCanSendDocuments sets the value of CanSendDocuments.
+func (s *ChatMemberRestricted) SetCanSendDocuments(val bool) {
+	s.CanSendDocuments = val
+}
+
+// SetCanSendPhotos sets the value of CanSendPhotos.
+func (s *ChatMemberRestricted) SetCanSendPhotos(val bool) {
+	s.CanSendPhotos = val
+}
+
+// SetCanSendVideos sets the value of CanSendVideos.
+func (s *ChatMemberRestricted) SetCanSendVideos(val bool) {
+	s.CanSendVideos = val
+}
+
+// SetCanSendVideoNotes sets the value of CanSendVideoNotes.
+func (s *ChatMemberRestricted) SetCanSendVideoNotes(val bool) {
+	s.CanSendVideoNotes = val
+}
+
+// SetCanSendVoiceNotes sets the value of CanSendVoiceNotes.
+func (s *ChatMemberRestricted) SetCanSendVoiceNotes(val bool) {
+	s.CanSendVoiceNotes = val
+}
+
+// SetCanSendPolls sets the value of CanSendPolls.
+func (s *ChatMemberRestricted) SetCanSendPolls(val bool) {
+	s.CanSendPolls = val
+}
+
+// SetCanSendOtherMessages sets the value of CanSendOtherMessages.
+func (s *ChatMemberRestricted) SetCanSendOtherMessages(val bool) {
+	s.CanSendOtherMessages = val
+}
+
+// SetCanAddWebPagePreviews sets the value of CanAddWebPagePreviews.
+func (s *ChatMemberRestricted) SetCanAddWebPagePreviews(val bool) {
+	s.CanAddWebPagePreviews = val
+}
+
 // SetCanChangeInfo sets the value of CanChangeInfo.
 func (s *ChatMemberRestricted) SetCanChangeInfo(val bool) {
 	s.CanChangeInfo = val
@@ -2577,31 +2620,6 @@ func (s *ChatMemberRestricted) SetCanPinMessages(val bool) {
 // SetCanManageTopics sets the value of CanManageTopics.
 func (s *ChatMemberRestricted) SetCanManageTopics(val bool) {
 	s.CanManageTopics = val
-}
-
-// SetCanSendMessages sets the value of CanSendMessages.
-func (s *ChatMemberRestricted) SetCanSendMessages(val bool) {
-	s.CanSendMessages = val
-}
-
-// SetCanSendMediaMessages sets the value of CanSendMediaMessages.
-func (s *ChatMemberRestricted) SetCanSendMediaMessages(val bool) {
-	s.CanSendMediaMessages = val
-}
-
-// SetCanSendPolls sets the value of CanSendPolls.
-func (s *ChatMemberRestricted) SetCanSendPolls(val bool) {
-	s.CanSendPolls = val
-}
-
-// SetCanSendOtherMessages sets the value of CanSendOtherMessages.
-func (s *ChatMemberRestricted) SetCanSendOtherMessages(val bool) {
-	s.CanSendOtherMessages = val
-}
-
-// SetCanAddWebPagePreviews sets the value of CanAddWebPagePreviews.
-func (s *ChatMemberRestricted) SetCanAddWebPagePreviews(val bool) {
-	s.CanAddWebPagePreviews = val
 }
 
 // SetUntilDate sets the value of UntilDate.
@@ -2684,18 +2702,26 @@ func (s *ChatMemberUpdated) SetInviteLink(val OptChatInviteLink) {
 // Describes actions that a non-administrator user is allowed to take in a chat.
 // Ref: #/components/schemas/ChatPermissions
 type ChatPermissions struct {
-	// _Optional_. _True_, if the user is allowed to send text messages, contacts, locations and venues.
+	// _Optional_. _True_, if the user is allowed to send text messages, contacts, invoices, locations
+	// and venues.
 	CanSendMessages OptBool `json:"can_send_messages"`
-	// _Optional_. _True_, if the user is allowed to send audios, documents, photos, videos, video notes
-	// and voice notes, implies can_send_messages.
-	CanSendMediaMessages OptBool `json:"can_send_media_messages"`
-	// _Optional_. _True_, if the user is allowed to send polls, implies can_send_messages.
+	// _Optional_. _True_, if the user is allowed to send audios.
+	CanSendAudios OptBool `json:"can_send_audios"`
+	// _Optional_. _True_, if the user is allowed to send documents.
+	CanSendDocuments OptBool `json:"can_send_documents"`
+	// _Optional_. _True_, if the user is allowed to send photos.
+	CanSendPhotos OptBool `json:"can_send_photos"`
+	// _Optional_. _True_, if the user is allowed to send videos.
+	CanSendVideos OptBool `json:"can_send_videos"`
+	// _Optional_. _True_, if the user is allowed to send video notes.
+	CanSendVideoNotes OptBool `json:"can_send_video_notes"`
+	// _Optional_. _True_, if the user is allowed to send voice notes.
+	CanSendVoiceNotes OptBool `json:"can_send_voice_notes"`
+	// _Optional_. _True_, if the user is allowed to send polls.
 	CanSendPolls OptBool `json:"can_send_polls"`
-	// _Optional_. _True_, if the user is allowed to send animations, games, stickers and use inline bots,
-	//  implies can_send_media_messages.
+	// _Optional_. _True_, if the user is allowed to send animations, games, stickers and use inline bots.
 	CanSendOtherMessages OptBool `json:"can_send_other_messages"`
-	// _Optional_. _True_, if the user is allowed to add web page previews to their messages, implies
-	// can_send_media_messages.
+	// _Optional_. _True_, if the user is allowed to add web page previews to their messages.
 	CanAddWebPagePreviews OptBool `json:"can_add_web_page_previews"`
 	// _Optional_. _True_, if the user is allowed to change the chat title, photo and other settings.
 	// Ignored in public supergroups.
@@ -2714,9 +2740,34 @@ func (s *ChatPermissions) GetCanSendMessages() OptBool {
 	return s.CanSendMessages
 }
 
-// GetCanSendMediaMessages returns the value of CanSendMediaMessages.
-func (s *ChatPermissions) GetCanSendMediaMessages() OptBool {
-	return s.CanSendMediaMessages
+// GetCanSendAudios returns the value of CanSendAudios.
+func (s *ChatPermissions) GetCanSendAudios() OptBool {
+	return s.CanSendAudios
+}
+
+// GetCanSendDocuments returns the value of CanSendDocuments.
+func (s *ChatPermissions) GetCanSendDocuments() OptBool {
+	return s.CanSendDocuments
+}
+
+// GetCanSendPhotos returns the value of CanSendPhotos.
+func (s *ChatPermissions) GetCanSendPhotos() OptBool {
+	return s.CanSendPhotos
+}
+
+// GetCanSendVideos returns the value of CanSendVideos.
+func (s *ChatPermissions) GetCanSendVideos() OptBool {
+	return s.CanSendVideos
+}
+
+// GetCanSendVideoNotes returns the value of CanSendVideoNotes.
+func (s *ChatPermissions) GetCanSendVideoNotes() OptBool {
+	return s.CanSendVideoNotes
+}
+
+// GetCanSendVoiceNotes returns the value of CanSendVoiceNotes.
+func (s *ChatPermissions) GetCanSendVoiceNotes() OptBool {
+	return s.CanSendVoiceNotes
 }
 
 // GetCanSendPolls returns the value of CanSendPolls.
@@ -2759,9 +2810,34 @@ func (s *ChatPermissions) SetCanSendMessages(val OptBool) {
 	s.CanSendMessages = val
 }
 
-// SetCanSendMediaMessages sets the value of CanSendMediaMessages.
-func (s *ChatPermissions) SetCanSendMediaMessages(val OptBool) {
-	s.CanSendMediaMessages = val
+// SetCanSendAudios sets the value of CanSendAudios.
+func (s *ChatPermissions) SetCanSendAudios(val OptBool) {
+	s.CanSendAudios = val
+}
+
+// SetCanSendDocuments sets the value of CanSendDocuments.
+func (s *ChatPermissions) SetCanSendDocuments(val OptBool) {
+	s.CanSendDocuments = val
+}
+
+// SetCanSendPhotos sets the value of CanSendPhotos.
+func (s *ChatPermissions) SetCanSendPhotos(val OptBool) {
+	s.CanSendPhotos = val
+}
+
+// SetCanSendVideos sets the value of CanSendVideos.
+func (s *ChatPermissions) SetCanSendVideos(val OptBool) {
+	s.CanSendVideos = val
+}
+
+// SetCanSendVideoNotes sets the value of CanSendVideoNotes.
+func (s *ChatPermissions) SetCanSendVideoNotes(val OptBool) {
+	s.CanSendVideoNotes = val
+}
+
+// SetCanSendVoiceNotes sets the value of CanSendVoiceNotes.
+func (s *ChatPermissions) SetCanSendVoiceNotes(val OptBool) {
+	s.CanSendVoiceNotes = val
 }
 
 // SetCanSendPolls sets the value of CanSendPolls.
@@ -2854,6 +2930,40 @@ func (s *ChatPhoto) SetBigFileID(val string) {
 // SetBigFileUniqueID sets the value of BigFileUniqueID.
 func (s *ChatPhoto) SetBigFileUniqueID(val string) {
 	s.BigFileUniqueID = val
+}
+
+// This object contains information about the chat whose identifier was shared with the bot using a
+// [KeyboardButtonRequestChat](https://core.telegram.org/bots/api#keyboardbuttonrequestchat) button.
+// Ref: #/components/schemas/ChatShared
+type ChatShared struct {
+	// Identifier of the request.
+	RequestID int `json:"request_id"`
+	// Identifier of the shared chat. This number may have more than 32 significant bits and some
+	// programming languages may have difficulty/silent defects in interpreting it. But it has at most 52
+	// significant bits, so a 64-bit integer or double-precision float type are safe for storing this
+	// identifier. The bot may not have access to the chat and could be unable to use this identifier,
+	// unless the chat is already known to the bot by some other means.
+	ChatID int64 `json:"chat_id"`
+}
+
+// GetRequestID returns the value of RequestID.
+func (s *ChatShared) GetRequestID() int {
+	return s.RequestID
+}
+
+// GetChatID returns the value of ChatID.
+func (s *ChatShared) GetChatID() int64 {
+	return s.ChatID
+}
+
+// SetRequestID sets the value of RequestID.
+func (s *ChatShared) SetRequestID(val int) {
+	s.RequestID = val
+}
+
+// SetChatID sets the value of ChatID.
+func (s *ChatShared) SetChatID(val int64) {
+	s.ChatID = val
 }
 
 // Type of chat, can be either `private`, `group`, `supergroup` or `channel`.
@@ -3622,28 +3732,17 @@ type CreateNewStickerSet struct {
 	Name string `json:"name"`
 	// Sticker set title, 1-64 characters.
 	Title string `json:"title"`
-	// **PNG** image with the sticker, must be up to 512 kilobytes in size, dimensions must not exceed
-	// 512px, and either width or height must be exactly 512px. Pass a _file_id_ as a String to send a
-	// file that already exists on the Telegram servers, pass an HTTP URL as a String for Telegram to get
-	// a file from the Internet, or upload a new one using multipart/form-data. [More information on
-	// Sending Files](https://core.telegram.org/bots/api#sending-files).
-	PNGSticker OptString `json:"png_sticker"`
-	// **TGS** animation with the sticker, uploaded using multipart/form-data. See [](https://core.
-	// telegram.org/stickers#animated-sticker-requirements)[https://core.telegram.
-	// org/stickers#animated-sticker-requirements](https://core.telegram.
-	// org/stickers#animated-sticker-requirements) for technical requirements.
-	TgsSticker OptString `json:"tgs_sticker"`
-	// **WEBM** video with the sticker, uploaded using multipart/form-data. See [](https://core.telegram.
-	// org/stickers#video-sticker-requirements)[https://core.telegram.
-	// org/stickers#video-sticker-requirements](https://core.telegram.
-	// org/stickers#video-sticker-requirements) for technical requirements.
-	WebmSticker OptString `json:"webm_sticker"`
-	// Type of stickers in the set, pass `regular` or `mask`. Custom emoji sticker sets can't be created
-	// via the Bot API at the moment. By default, a regular sticker set is created.
+	// A JSON-serialized list of 1-50 initial stickers to be added to the sticker set.
+	Stickers []InputSticker `json:"stickers"`
+	// Format of stickers in the set, must be one of `static`, `animated`, `video`.
+	StickerFormat string `json:"sticker_format"`
+	// Type of stickers in the set, pass `regular`, `mask`, or `custom_emoji`. By default, a regular
+	// sticker set is created.
 	StickerType OptString `json:"sticker_type"`
-	// One or more emoji corresponding to the sticker.
-	Emojis       string          `json:"emojis"`
-	MaskPosition OptMaskPosition `json:"mask_position"`
+	// Pass _True_ if stickers in the sticker set must be repainted to the color of text when used in
+	// messages, the accent color if used as emoji status, white on chat photos, or another appropriate
+	// color based on context; for custom emoji sticker sets only.
+	NeedsRepainting OptBool `json:"needs_repainting"`
 }
 
 // GetUserID returns the value of UserID.
@@ -3661,19 +3760,14 @@ func (s *CreateNewStickerSet) GetTitle() string {
 	return s.Title
 }
 
-// GetPNGSticker returns the value of PNGSticker.
-func (s *CreateNewStickerSet) GetPNGSticker() OptString {
-	return s.PNGSticker
+// GetStickers returns the value of Stickers.
+func (s *CreateNewStickerSet) GetStickers() []InputSticker {
+	return s.Stickers
 }
 
-// GetTgsSticker returns the value of TgsSticker.
-func (s *CreateNewStickerSet) GetTgsSticker() OptString {
-	return s.TgsSticker
-}
-
-// GetWebmSticker returns the value of WebmSticker.
-func (s *CreateNewStickerSet) GetWebmSticker() OptString {
-	return s.WebmSticker
+// GetStickerFormat returns the value of StickerFormat.
+func (s *CreateNewStickerSet) GetStickerFormat() string {
+	return s.StickerFormat
 }
 
 // GetStickerType returns the value of StickerType.
@@ -3681,14 +3775,9 @@ func (s *CreateNewStickerSet) GetStickerType() OptString {
 	return s.StickerType
 }
 
-// GetEmojis returns the value of Emojis.
-func (s *CreateNewStickerSet) GetEmojis() string {
-	return s.Emojis
-}
-
-// GetMaskPosition returns the value of MaskPosition.
-func (s *CreateNewStickerSet) GetMaskPosition() OptMaskPosition {
-	return s.MaskPosition
+// GetNeedsRepainting returns the value of NeedsRepainting.
+func (s *CreateNewStickerSet) GetNeedsRepainting() OptBool {
+	return s.NeedsRepainting
 }
 
 // SetUserID sets the value of UserID.
@@ -3706,19 +3795,14 @@ func (s *CreateNewStickerSet) SetTitle(val string) {
 	s.Title = val
 }
 
-// SetPNGSticker sets the value of PNGSticker.
-func (s *CreateNewStickerSet) SetPNGSticker(val OptString) {
-	s.PNGSticker = val
+// SetStickers sets the value of Stickers.
+func (s *CreateNewStickerSet) SetStickers(val []InputSticker) {
+	s.Stickers = val
 }
 
-// SetTgsSticker sets the value of TgsSticker.
-func (s *CreateNewStickerSet) SetTgsSticker(val OptString) {
-	s.TgsSticker = val
-}
-
-// SetWebmSticker sets the value of WebmSticker.
-func (s *CreateNewStickerSet) SetWebmSticker(val OptString) {
-	s.WebmSticker = val
+// SetStickerFormat sets the value of StickerFormat.
+func (s *CreateNewStickerSet) SetStickerFormat(val string) {
+	s.StickerFormat = val
 }
 
 // SetStickerType sets the value of StickerType.
@@ -3726,14 +3810,9 @@ func (s *CreateNewStickerSet) SetStickerType(val OptString) {
 	s.StickerType = val
 }
 
-// SetEmojis sets the value of Emojis.
-func (s *CreateNewStickerSet) SetEmojis(val string) {
-	s.Emojis = val
-}
-
-// SetMaskPosition sets the value of MaskPosition.
-func (s *CreateNewStickerSet) SetMaskPosition(val OptMaskPosition) {
-	s.MaskPosition = val
+// SetNeedsRepainting sets the value of NeedsRepainting.
+func (s *CreateNewStickerSet) SetNeedsRepainting(val OptBool) {
+	s.NeedsRepainting = val
 }
 
 // Input for declineChatJoinRequest.
@@ -3898,6 +3977,23 @@ func (s *DeleteStickerFromSet) SetSticker(val string) {
 	s.Sticker = val
 }
 
+// Input for deleteStickerSet.
+// Ref: #/components/schemas/deleteStickerSet
+type DeleteStickerSet struct {
+	// Sticker set name.
+	Name string `json:"name"`
+}
+
+// GetName returns the value of Name.
+func (s *DeleteStickerSet) GetName() string {
+	return s.Name
+}
+
+// SetName sets the value of Name.
+func (s *DeleteStickerSet) SetName(val string) {
+	s.Name = val
+}
+
 // Input for deleteWebhook.
 // Ref: #/components/schemas/deleteWebhook
 type DeleteWebhook struct {
@@ -3955,7 +4051,7 @@ type Document struct {
 	// Unique identifier for this file, which is supposed to be the same over time and for different bots.
 	//  Can't be used to download or reuse the file.
 	FileUniqueID string       `json:"file_unique_id"`
-	Thumb        OptPhotoSize `json:"thumb"`
+	Thumbnail    OptPhotoSize `json:"thumbnail"`
 	// _Optional_. Original filename as defined by sender.
 	FileName OptString `json:"file_name"`
 	// _Optional_. MIME type of the file as defined by sender.
@@ -3976,9 +4072,9 @@ func (s *Document) GetFileUniqueID() string {
 	return s.FileUniqueID
 }
 
-// GetThumb returns the value of Thumb.
-func (s *Document) GetThumb() OptPhotoSize {
-	return s.Thumb
+// GetThumbnail returns the value of Thumbnail.
+func (s *Document) GetThumbnail() OptPhotoSize {
+	return s.Thumbnail
 }
 
 // GetFileName returns the value of FileName.
@@ -4006,9 +4102,9 @@ func (s *Document) SetFileUniqueID(val string) {
 	s.FileUniqueID = val
 }
 
-// SetThumb sets the value of Thumb.
-func (s *Document) SetThumb(val OptPhotoSize) {
-	s.Thumb = val
+// SetThumbnail sets the value of Thumbnail.
+func (s *Document) SetThumbnail(val OptPhotoSize) {
+	s.Thumbnail = val
 }
 
 // SetFileName sets the value of FileName.
@@ -5598,6 +5694,40 @@ func (s *GetMyDefaultAdministratorRights) SetForChannels(val OptBool) {
 	s.ForChannels = val
 }
 
+// Input for getMyDescription.
+// Ref: #/components/schemas/getMyDescription
+type GetMyDescription struct {
+	// A two-letter ISO 639-1 language code or an empty string.
+	LanguageCode OptString `json:"language_code"`
+}
+
+// GetLanguageCode returns the value of LanguageCode.
+func (s *GetMyDescription) GetLanguageCode() OptString {
+	return s.LanguageCode
+}
+
+// SetLanguageCode sets the value of LanguageCode.
+func (s *GetMyDescription) SetLanguageCode(val OptString) {
+	s.LanguageCode = val
+}
+
+// Input for getMyShortDescription.
+// Ref: #/components/schemas/getMyShortDescription
+type GetMyShortDescription struct {
+	// A two-letter ISO 639-1 language code or an empty string.
+	LanguageCode OptString `json:"language_code"`
+}
+
+// GetLanguageCode returns the value of LanguageCode.
+func (s *GetMyShortDescription) GetLanguageCode() OptString {
+	return s.LanguageCode
+}
+
+// SetLanguageCode sets the value of LanguageCode.
+func (s *GetMyShortDescription) SetLanguageCode(val OptString) {
+	s.LanguageCode = val
+}
+
 // Input for getStickerSet.
 // Ref: #/components/schemas/getStickerSet
 type GetStickerSet struct {
@@ -6670,11 +6800,11 @@ type InlineQueryResultArticle struct {
 	// _Optional_. Short description of the result.
 	Description OptString `json:"description"`
 	// _Optional_. URL of the thumbnail for the result.
-	ThumbURL OptString `json:"thumb_url"`
+	ThumbnailURL OptString `json:"thumbnail_url"`
 	// _Optional_. Thumbnail width.
-	ThumbWidth OptInt `json:"thumb_width"`
+	ThumbnailWidth OptInt `json:"thumbnail_width"`
 	// _Optional_. Thumbnail height.
-	ThumbHeight OptInt `json:"thumb_height"`
+	ThumbnailHeight OptInt `json:"thumbnail_height"`
 }
 
 // GetID returns the value of ID.
@@ -6712,19 +6842,19 @@ func (s *InlineQueryResultArticle) GetDescription() OptString {
 	return s.Description
 }
 
-// GetThumbURL returns the value of ThumbURL.
-func (s *InlineQueryResultArticle) GetThumbURL() OptString {
-	return s.ThumbURL
+// GetThumbnailURL returns the value of ThumbnailURL.
+func (s *InlineQueryResultArticle) GetThumbnailURL() OptString {
+	return s.ThumbnailURL
 }
 
-// GetThumbWidth returns the value of ThumbWidth.
-func (s *InlineQueryResultArticle) GetThumbWidth() OptInt {
-	return s.ThumbWidth
+// GetThumbnailWidth returns the value of ThumbnailWidth.
+func (s *InlineQueryResultArticle) GetThumbnailWidth() OptInt {
+	return s.ThumbnailWidth
 }
 
-// GetThumbHeight returns the value of ThumbHeight.
-func (s *InlineQueryResultArticle) GetThumbHeight() OptInt {
-	return s.ThumbHeight
+// GetThumbnailHeight returns the value of ThumbnailHeight.
+func (s *InlineQueryResultArticle) GetThumbnailHeight() OptInt {
+	return s.ThumbnailHeight
 }
 
 // SetID sets the value of ID.
@@ -6762,19 +6892,19 @@ func (s *InlineQueryResultArticle) SetDescription(val OptString) {
 	s.Description = val
 }
 
-// SetThumbURL sets the value of ThumbURL.
-func (s *InlineQueryResultArticle) SetThumbURL(val OptString) {
-	s.ThumbURL = val
+// SetThumbnailURL sets the value of ThumbnailURL.
+func (s *InlineQueryResultArticle) SetThumbnailURL(val OptString) {
+	s.ThumbnailURL = val
 }
 
-// SetThumbWidth sets the value of ThumbWidth.
-func (s *InlineQueryResultArticle) SetThumbWidth(val OptInt) {
-	s.ThumbWidth = val
+// SetThumbnailWidth sets the value of ThumbnailWidth.
+func (s *InlineQueryResultArticle) SetThumbnailWidth(val OptInt) {
+	s.ThumbnailWidth = val
 }
 
-// SetThumbHeight sets the value of ThumbHeight.
-func (s *InlineQueryResultArticle) SetThumbHeight(val OptInt) {
-	s.ThumbHeight = val
+// SetThumbnailHeight sets the value of ThumbnailHeight.
+func (s *InlineQueryResultArticle) SetThumbnailHeight(val OptInt) {
+	s.ThumbnailHeight = val
 }
 
 // Represents a link to an MP3 audio file. By default, this audio file will be sent by the user.
@@ -7806,11 +7936,11 @@ type InlineQueryResultContact struct {
 	ReplyMarkup         OptInlineKeyboardMarkup `json:"reply_markup"`
 	InputMessageContent OptInputMessageContent  `json:"input_message_content"`
 	// _Optional_. URL of the thumbnail for the result.
-	ThumbURL OptString `json:"thumb_url"`
+	ThumbnailURL OptString `json:"thumbnail_url"`
 	// _Optional_. Thumbnail width.
-	ThumbWidth OptInt `json:"thumb_width"`
+	ThumbnailWidth OptInt `json:"thumbnail_width"`
 	// _Optional_. Thumbnail height.
-	ThumbHeight OptInt `json:"thumb_height"`
+	ThumbnailHeight OptInt `json:"thumbnail_height"`
 }
 
 // GetID returns the value of ID.
@@ -7848,19 +7978,19 @@ func (s *InlineQueryResultContact) GetInputMessageContent() OptInputMessageConte
 	return s.InputMessageContent
 }
 
-// GetThumbURL returns the value of ThumbURL.
-func (s *InlineQueryResultContact) GetThumbURL() OptString {
-	return s.ThumbURL
+// GetThumbnailURL returns the value of ThumbnailURL.
+func (s *InlineQueryResultContact) GetThumbnailURL() OptString {
+	return s.ThumbnailURL
 }
 
-// GetThumbWidth returns the value of ThumbWidth.
-func (s *InlineQueryResultContact) GetThumbWidth() OptInt {
-	return s.ThumbWidth
+// GetThumbnailWidth returns the value of ThumbnailWidth.
+func (s *InlineQueryResultContact) GetThumbnailWidth() OptInt {
+	return s.ThumbnailWidth
 }
 
-// GetThumbHeight returns the value of ThumbHeight.
-func (s *InlineQueryResultContact) GetThumbHeight() OptInt {
-	return s.ThumbHeight
+// GetThumbnailHeight returns the value of ThumbnailHeight.
+func (s *InlineQueryResultContact) GetThumbnailHeight() OptInt {
+	return s.ThumbnailHeight
 }
 
 // SetID sets the value of ID.
@@ -7898,19 +8028,19 @@ func (s *InlineQueryResultContact) SetInputMessageContent(val OptInputMessageCon
 	s.InputMessageContent = val
 }
 
-// SetThumbURL sets the value of ThumbURL.
-func (s *InlineQueryResultContact) SetThumbURL(val OptString) {
-	s.ThumbURL = val
+// SetThumbnailURL sets the value of ThumbnailURL.
+func (s *InlineQueryResultContact) SetThumbnailURL(val OptString) {
+	s.ThumbnailURL = val
 }
 
-// SetThumbWidth sets the value of ThumbWidth.
-func (s *InlineQueryResultContact) SetThumbWidth(val OptInt) {
-	s.ThumbWidth = val
+// SetThumbnailWidth sets the value of ThumbnailWidth.
+func (s *InlineQueryResultContact) SetThumbnailWidth(val OptInt) {
+	s.ThumbnailWidth = val
 }
 
-// SetThumbHeight sets the value of ThumbHeight.
-func (s *InlineQueryResultContact) SetThumbHeight(val OptInt) {
-	s.ThumbHeight = val
+// SetThumbnailHeight sets the value of ThumbnailHeight.
+func (s *InlineQueryResultContact) SetThumbnailHeight(val OptInt) {
+	s.ThumbnailHeight = val
 }
 
 // Represents a link to a file. By default, this file will be sent by the user with an optional
@@ -7940,11 +8070,11 @@ type InlineQueryResultDocument struct {
 	ReplyMarkup         OptInlineKeyboardMarkup `json:"reply_markup"`
 	InputMessageContent OptInputMessageContent  `json:"input_message_content"`
 	// _Optional_. URL of the thumbnail (JPEG only) for the file.
-	ThumbURL OptString `json:"thumb_url"`
+	ThumbnailURL OptString `json:"thumbnail_url"`
 	// _Optional_. Thumbnail width.
-	ThumbWidth OptInt `json:"thumb_width"`
+	ThumbnailWidth OptInt `json:"thumbnail_width"`
 	// _Optional_. Thumbnail height.
-	ThumbHeight OptInt `json:"thumb_height"`
+	ThumbnailHeight OptInt `json:"thumbnail_height"`
 }
 
 // GetID returns the value of ID.
@@ -7997,19 +8127,19 @@ func (s *InlineQueryResultDocument) GetInputMessageContent() OptInputMessageCont
 	return s.InputMessageContent
 }
 
-// GetThumbURL returns the value of ThumbURL.
-func (s *InlineQueryResultDocument) GetThumbURL() OptString {
-	return s.ThumbURL
+// GetThumbnailURL returns the value of ThumbnailURL.
+func (s *InlineQueryResultDocument) GetThumbnailURL() OptString {
+	return s.ThumbnailURL
 }
 
-// GetThumbWidth returns the value of ThumbWidth.
-func (s *InlineQueryResultDocument) GetThumbWidth() OptInt {
-	return s.ThumbWidth
+// GetThumbnailWidth returns the value of ThumbnailWidth.
+func (s *InlineQueryResultDocument) GetThumbnailWidth() OptInt {
+	return s.ThumbnailWidth
 }
 
-// GetThumbHeight returns the value of ThumbHeight.
-func (s *InlineQueryResultDocument) GetThumbHeight() OptInt {
-	return s.ThumbHeight
+// GetThumbnailHeight returns the value of ThumbnailHeight.
+func (s *InlineQueryResultDocument) GetThumbnailHeight() OptInt {
+	return s.ThumbnailHeight
 }
 
 // SetID sets the value of ID.
@@ -8062,19 +8192,19 @@ func (s *InlineQueryResultDocument) SetInputMessageContent(val OptInputMessageCo
 	s.InputMessageContent = val
 }
 
-// SetThumbURL sets the value of ThumbURL.
-func (s *InlineQueryResultDocument) SetThumbURL(val OptString) {
-	s.ThumbURL = val
+// SetThumbnailURL sets the value of ThumbnailURL.
+func (s *InlineQueryResultDocument) SetThumbnailURL(val OptString) {
+	s.ThumbnailURL = val
 }
 
-// SetThumbWidth sets the value of ThumbWidth.
-func (s *InlineQueryResultDocument) SetThumbWidth(val OptInt) {
-	s.ThumbWidth = val
+// SetThumbnailWidth sets the value of ThumbnailWidth.
+func (s *InlineQueryResultDocument) SetThumbnailWidth(val OptInt) {
+	s.ThumbnailWidth = val
 }
 
-// SetThumbHeight sets the value of ThumbHeight.
-func (s *InlineQueryResultDocument) SetThumbHeight(val OptInt) {
-	s.ThumbHeight = val
+// SetThumbnailHeight sets the value of ThumbnailHeight.
+func (s *InlineQueryResultDocument) SetThumbnailHeight(val OptInt) {
+	s.ThumbnailHeight = val
 }
 
 // Represents a [Game](https://core.telegram.org/bots/api#games).
@@ -8133,10 +8263,10 @@ type InlineQueryResultGif struct {
 	// _Optional_. Duration of the GIF in seconds.
 	GIFDuration OptInt `json:"gif_duration"`
 	// URL of the static (JPEG or GIF) or animated (MPEG4) thumbnail for the result.
-	ThumbURL string `json:"thumb_url"`
+	ThumbnailURL string `json:"thumbnail_url"`
 	// _Optional_. MIME type of the thumbnail, must be one of `image/jpeg`, `image/gif`, or `video/mp4`.
 	// Defaults to `image/jpeg`.
-	ThumbMimeType OptString `json:"thumb_mime_type"`
+	ThumbnailMimeType OptString `json:"thumbnail_mime_type"`
 	// _Optional_. Title for the result.
 	Title OptString `json:"title"`
 	// _Optional_. Caption of the GIF file to be sent, 0-1024 characters after entities parsing.
@@ -8176,14 +8306,14 @@ func (s *InlineQueryResultGif) GetGIFDuration() OptInt {
 	return s.GIFDuration
 }
 
-// GetThumbURL returns the value of ThumbURL.
-func (s *InlineQueryResultGif) GetThumbURL() string {
-	return s.ThumbURL
+// GetThumbnailURL returns the value of ThumbnailURL.
+func (s *InlineQueryResultGif) GetThumbnailURL() string {
+	return s.ThumbnailURL
 }
 
-// GetThumbMimeType returns the value of ThumbMimeType.
-func (s *InlineQueryResultGif) GetThumbMimeType() OptString {
-	return s.ThumbMimeType
+// GetThumbnailMimeType returns the value of ThumbnailMimeType.
+func (s *InlineQueryResultGif) GetThumbnailMimeType() OptString {
+	return s.ThumbnailMimeType
 }
 
 // GetTitle returns the value of Title.
@@ -8241,14 +8371,14 @@ func (s *InlineQueryResultGif) SetGIFDuration(val OptInt) {
 	s.GIFDuration = val
 }
 
-// SetThumbURL sets the value of ThumbURL.
-func (s *InlineQueryResultGif) SetThumbURL(val string) {
-	s.ThumbURL = val
+// SetThumbnailURL sets the value of ThumbnailURL.
+func (s *InlineQueryResultGif) SetThumbnailURL(val string) {
+	s.ThumbnailURL = val
 }
 
-// SetThumbMimeType sets the value of ThumbMimeType.
-func (s *InlineQueryResultGif) SetThumbMimeType(val OptString) {
-	s.ThumbMimeType = val
+// SetThumbnailMimeType sets the value of ThumbnailMimeType.
+func (s *InlineQueryResultGif) SetThumbnailMimeType(val OptString) {
+	s.ThumbnailMimeType = val
 }
 
 // SetTitle sets the value of Title.
@@ -8307,11 +8437,11 @@ type InlineQueryResultLocation struct {
 	ReplyMarkup          OptInlineKeyboardMarkup `json:"reply_markup"`
 	InputMessageContent  OptInputMessageContent  `json:"input_message_content"`
 	// _Optional_. URL of the thumbnail for the result.
-	ThumbURL OptString `json:"thumb_url"`
+	ThumbnailURL OptString `json:"thumbnail_url"`
 	// _Optional_. Thumbnail width.
-	ThumbWidth OptInt `json:"thumb_width"`
+	ThumbnailWidth OptInt `json:"thumbnail_width"`
 	// _Optional_. Thumbnail height.
-	ThumbHeight OptInt `json:"thumb_height"`
+	ThumbnailHeight OptInt `json:"thumbnail_height"`
 }
 
 // GetID returns the value of ID.
@@ -8364,19 +8494,19 @@ func (s *InlineQueryResultLocation) GetInputMessageContent() OptInputMessageCont
 	return s.InputMessageContent
 }
 
-// GetThumbURL returns the value of ThumbURL.
-func (s *InlineQueryResultLocation) GetThumbURL() OptString {
-	return s.ThumbURL
+// GetThumbnailURL returns the value of ThumbnailURL.
+func (s *InlineQueryResultLocation) GetThumbnailURL() OptString {
+	return s.ThumbnailURL
 }
 
-// GetThumbWidth returns the value of ThumbWidth.
-func (s *InlineQueryResultLocation) GetThumbWidth() OptInt {
-	return s.ThumbWidth
+// GetThumbnailWidth returns the value of ThumbnailWidth.
+func (s *InlineQueryResultLocation) GetThumbnailWidth() OptInt {
+	return s.ThumbnailWidth
 }
 
-// GetThumbHeight returns the value of ThumbHeight.
-func (s *InlineQueryResultLocation) GetThumbHeight() OptInt {
-	return s.ThumbHeight
+// GetThumbnailHeight returns the value of ThumbnailHeight.
+func (s *InlineQueryResultLocation) GetThumbnailHeight() OptInt {
+	return s.ThumbnailHeight
 }
 
 // SetID sets the value of ID.
@@ -8429,19 +8559,19 @@ func (s *InlineQueryResultLocation) SetInputMessageContent(val OptInputMessageCo
 	s.InputMessageContent = val
 }
 
-// SetThumbURL sets the value of ThumbURL.
-func (s *InlineQueryResultLocation) SetThumbURL(val OptString) {
-	s.ThumbURL = val
+// SetThumbnailURL sets the value of ThumbnailURL.
+func (s *InlineQueryResultLocation) SetThumbnailURL(val OptString) {
+	s.ThumbnailURL = val
 }
 
-// SetThumbWidth sets the value of ThumbWidth.
-func (s *InlineQueryResultLocation) SetThumbWidth(val OptInt) {
-	s.ThumbWidth = val
+// SetThumbnailWidth sets the value of ThumbnailWidth.
+func (s *InlineQueryResultLocation) SetThumbnailWidth(val OptInt) {
+	s.ThumbnailWidth = val
 }
 
-// SetThumbHeight sets the value of ThumbHeight.
-func (s *InlineQueryResultLocation) SetThumbHeight(val OptInt) {
-	s.ThumbHeight = val
+// SetThumbnailHeight sets the value of ThumbnailHeight.
+func (s *InlineQueryResultLocation) SetThumbnailHeight(val OptInt) {
+	s.ThumbnailHeight = val
 }
 
 // Represents a link to a video animation (H.264/MPEG-4 AVC video without sound). By default, this
@@ -8460,10 +8590,10 @@ type InlineQueryResultMpeg4Gif struct {
 	// _Optional_. Video duration in seconds.
 	Mpeg4Duration OptInt `json:"mpeg4_duration"`
 	// URL of the static (JPEG or GIF) or animated (MPEG4) thumbnail for the result.
-	ThumbURL string `json:"thumb_url"`
+	ThumbnailURL string `json:"thumbnail_url"`
 	// _Optional_. MIME type of the thumbnail, must be one of `image/jpeg`, `image/gif`, or `video/mp4`.
 	// Defaults to `image/jpeg`.
-	ThumbMimeType OptString `json:"thumb_mime_type"`
+	ThumbnailMimeType OptString `json:"thumbnail_mime_type"`
 	// _Optional_. Title for the result.
 	Title OptString `json:"title"`
 	// _Optional_. Caption of the MPEG-4 file to be sent, 0-1024 characters after entities parsing.
@@ -8503,14 +8633,14 @@ func (s *InlineQueryResultMpeg4Gif) GetMpeg4Duration() OptInt {
 	return s.Mpeg4Duration
 }
 
-// GetThumbURL returns the value of ThumbURL.
-func (s *InlineQueryResultMpeg4Gif) GetThumbURL() string {
-	return s.ThumbURL
+// GetThumbnailURL returns the value of ThumbnailURL.
+func (s *InlineQueryResultMpeg4Gif) GetThumbnailURL() string {
+	return s.ThumbnailURL
 }
 
-// GetThumbMimeType returns the value of ThumbMimeType.
-func (s *InlineQueryResultMpeg4Gif) GetThumbMimeType() OptString {
-	return s.ThumbMimeType
+// GetThumbnailMimeType returns the value of ThumbnailMimeType.
+func (s *InlineQueryResultMpeg4Gif) GetThumbnailMimeType() OptString {
+	return s.ThumbnailMimeType
 }
 
 // GetTitle returns the value of Title.
@@ -8568,14 +8698,14 @@ func (s *InlineQueryResultMpeg4Gif) SetMpeg4Duration(val OptInt) {
 	s.Mpeg4Duration = val
 }
 
-// SetThumbURL sets the value of ThumbURL.
-func (s *InlineQueryResultMpeg4Gif) SetThumbURL(val string) {
-	s.ThumbURL = val
+// SetThumbnailURL sets the value of ThumbnailURL.
+func (s *InlineQueryResultMpeg4Gif) SetThumbnailURL(val string) {
+	s.ThumbnailURL = val
 }
 
-// SetThumbMimeType sets the value of ThumbMimeType.
-func (s *InlineQueryResultMpeg4Gif) SetThumbMimeType(val OptString) {
-	s.ThumbMimeType = val
+// SetThumbnailMimeType sets the value of ThumbnailMimeType.
+func (s *InlineQueryResultMpeg4Gif) SetThumbnailMimeType(val OptString) {
+	s.ThumbnailMimeType = val
 }
 
 // SetTitle sets the value of Title.
@@ -8618,7 +8748,7 @@ type InlineQueryResultPhoto struct {
 	// A valid URL of the photo. Photo must be in **JPEG** format. Photo size must not exceed 5MB.
 	PhotoURL string `json:"photo_url"`
 	// URL of the thumbnail for the photo.
-	ThumbURL string `json:"thumb_url"`
+	ThumbnailURL string `json:"thumbnail_url"`
 	// _Optional_. Width of the photo.
 	PhotoWidth OptInt `json:"photo_width"`
 	// _Optional_. Height of the photo.
@@ -8649,9 +8779,9 @@ func (s *InlineQueryResultPhoto) GetPhotoURL() string {
 	return s.PhotoURL
 }
 
-// GetThumbURL returns the value of ThumbURL.
-func (s *InlineQueryResultPhoto) GetThumbURL() string {
-	return s.ThumbURL
+// GetThumbnailURL returns the value of ThumbnailURL.
+func (s *InlineQueryResultPhoto) GetThumbnailURL() string {
+	return s.ThumbnailURL
 }
 
 // GetPhotoWidth returns the value of PhotoWidth.
@@ -8709,9 +8839,9 @@ func (s *InlineQueryResultPhoto) SetPhotoURL(val string) {
 	s.PhotoURL = val
 }
 
-// SetThumbURL sets the value of ThumbURL.
-func (s *InlineQueryResultPhoto) SetThumbURL(val string) {
-	s.ThumbURL = val
+// SetThumbnailURL sets the value of ThumbnailURL.
+func (s *InlineQueryResultPhoto) SetThumbnailURL(val string) {
+	s.ThumbnailURL = val
 }
 
 // SetPhotoWidth sets the value of PhotoWidth.
@@ -8786,11 +8916,11 @@ type InlineQueryResultVenue struct {
 	ReplyMarkup         OptInlineKeyboardMarkup `json:"reply_markup"`
 	InputMessageContent OptInputMessageContent  `json:"input_message_content"`
 	// _Optional_. URL of the thumbnail for the result.
-	ThumbURL OptString `json:"thumb_url"`
+	ThumbnailURL OptString `json:"thumbnail_url"`
 	// _Optional_. Thumbnail width.
-	ThumbWidth OptInt `json:"thumb_width"`
+	ThumbnailWidth OptInt `json:"thumbnail_width"`
 	// _Optional_. Thumbnail height.
-	ThumbHeight OptInt `json:"thumb_height"`
+	ThumbnailHeight OptInt `json:"thumbnail_height"`
 }
 
 // GetID returns the value of ID.
@@ -8848,19 +8978,19 @@ func (s *InlineQueryResultVenue) GetInputMessageContent() OptInputMessageContent
 	return s.InputMessageContent
 }
 
-// GetThumbURL returns the value of ThumbURL.
-func (s *InlineQueryResultVenue) GetThumbURL() OptString {
-	return s.ThumbURL
+// GetThumbnailURL returns the value of ThumbnailURL.
+func (s *InlineQueryResultVenue) GetThumbnailURL() OptString {
+	return s.ThumbnailURL
 }
 
-// GetThumbWidth returns the value of ThumbWidth.
-func (s *InlineQueryResultVenue) GetThumbWidth() OptInt {
-	return s.ThumbWidth
+// GetThumbnailWidth returns the value of ThumbnailWidth.
+func (s *InlineQueryResultVenue) GetThumbnailWidth() OptInt {
+	return s.ThumbnailWidth
 }
 
-// GetThumbHeight returns the value of ThumbHeight.
-func (s *InlineQueryResultVenue) GetThumbHeight() OptInt {
-	return s.ThumbHeight
+// GetThumbnailHeight returns the value of ThumbnailHeight.
+func (s *InlineQueryResultVenue) GetThumbnailHeight() OptInt {
+	return s.ThumbnailHeight
 }
 
 // SetID sets the value of ID.
@@ -8918,19 +9048,19 @@ func (s *InlineQueryResultVenue) SetInputMessageContent(val OptInputMessageConte
 	s.InputMessageContent = val
 }
 
-// SetThumbURL sets the value of ThumbURL.
-func (s *InlineQueryResultVenue) SetThumbURL(val OptString) {
-	s.ThumbURL = val
+// SetThumbnailURL sets the value of ThumbnailURL.
+func (s *InlineQueryResultVenue) SetThumbnailURL(val OptString) {
+	s.ThumbnailURL = val
 }
 
-// SetThumbWidth sets the value of ThumbWidth.
-func (s *InlineQueryResultVenue) SetThumbWidth(val OptInt) {
-	s.ThumbWidth = val
+// SetThumbnailWidth sets the value of ThumbnailWidth.
+func (s *InlineQueryResultVenue) SetThumbnailWidth(val OptInt) {
+	s.ThumbnailWidth = val
 }
 
-// SetThumbHeight sets the value of ThumbHeight.
-func (s *InlineQueryResultVenue) SetThumbHeight(val OptInt) {
-	s.ThumbHeight = val
+// SetThumbnailHeight sets the value of ThumbnailHeight.
+func (s *InlineQueryResultVenue) SetThumbnailHeight(val OptInt) {
+	s.ThumbnailHeight = val
 }
 
 // Represents a link to a page containing an embedded video player or a video file. By default, this
@@ -8945,7 +9075,7 @@ type InlineQueryResultVideo struct {
 	// MIME type of the content of the video URL, `text/html` or `video/mp4`.
 	MimeType string `json:"mime_type"`
 	// URL of the thumbnail (JPEG only) for the video.
-	ThumbURL string `json:"thumb_url"`
+	ThumbnailURL string `json:"thumbnail_url"`
 	// Title for the result.
 	Title string `json:"title"`
 	// _Optional_. Caption of the video to be sent, 0-1024 characters after entities parsing.
@@ -8983,9 +9113,9 @@ func (s *InlineQueryResultVideo) GetMimeType() string {
 	return s.MimeType
 }
 
-// GetThumbURL returns the value of ThumbURL.
-func (s *InlineQueryResultVideo) GetThumbURL() string {
-	return s.ThumbURL
+// GetThumbnailURL returns the value of ThumbnailURL.
+func (s *InlineQueryResultVideo) GetThumbnailURL() string {
+	return s.ThumbnailURL
 }
 
 // GetTitle returns the value of Title.
@@ -9053,9 +9183,9 @@ func (s *InlineQueryResultVideo) SetMimeType(val string) {
 	s.MimeType = val
 }
 
-// SetThumbURL sets the value of ThumbURL.
-func (s *InlineQueryResultVideo) SetThumbURL(val string) {
-	s.ThumbURL = val
+// SetThumbnailURL sets the value of ThumbnailURL.
+func (s *InlineQueryResultVideo) SetThumbnailURL(val string) {
+	s.ThumbnailURL = val
 }
 
 // SetTitle sets the value of Title.
@@ -9777,7 +9907,7 @@ type InputMediaAnimation struct {
 	// pass `attach://<file_attach_name>` if the thumbnail was uploaded using multipart/form-data under
 	// <file_attach_name>. [More information on Sending Files](https://core.telegram.
 	// org/bots/api#sending-files).
-	Thumb OptString `json:"thumb"`
+	Thumbnail OptString `json:"thumbnail"`
 	// _Optional_. Caption of the animation to be sent, 0-1024 characters after entities parsing.
 	Caption OptString `json:"caption"`
 	// _Optional_. Mode for parsing entities in the animation caption. See [formatting
@@ -9801,9 +9931,9 @@ func (s *InputMediaAnimation) GetMedia() string {
 	return s.Media
 }
 
-// GetThumb returns the value of Thumb.
-func (s *InputMediaAnimation) GetThumb() OptString {
-	return s.Thumb
+// GetThumbnail returns the value of Thumbnail.
+func (s *InputMediaAnimation) GetThumbnail() OptString {
+	return s.Thumbnail
 }
 
 // GetCaption returns the value of Caption.
@@ -9846,9 +9976,9 @@ func (s *InputMediaAnimation) SetMedia(val string) {
 	s.Media = val
 }
 
-// SetThumb sets the value of Thumb.
-func (s *InputMediaAnimation) SetThumb(val OptString) {
-	s.Thumb = val
+// SetThumbnail sets the value of Thumbnail.
+func (s *InputMediaAnimation) SetThumbnail(val OptString) {
+	s.Thumbnail = val
 }
 
 // SetCaption sets the value of Caption.
@@ -9902,7 +10032,7 @@ type InputMediaAudio struct {
 	// pass `attach://<file_attach_name>` if the thumbnail was uploaded using multipart/form-data under
 	// <file_attach_name>. [More information on Sending Files](https://core.telegram.
 	// org/bots/api#sending-files).
-	Thumb OptString `json:"thumb"`
+	Thumbnail OptString `json:"thumbnail"`
 	// _Optional_. Caption of the audio to be sent, 0-1024 characters after entities parsing.
 	Caption OptString `json:"caption"`
 	// _Optional_. Mode for parsing entities in the audio caption. See [formatting options](https://core.
@@ -9924,9 +10054,9 @@ func (s *InputMediaAudio) GetMedia() string {
 	return s.Media
 }
 
-// GetThumb returns the value of Thumb.
-func (s *InputMediaAudio) GetThumb() OptString {
-	return s.Thumb
+// GetThumbnail returns the value of Thumbnail.
+func (s *InputMediaAudio) GetThumbnail() OptString {
+	return s.Thumbnail
 }
 
 // GetCaption returns the value of Caption.
@@ -9964,9 +10094,9 @@ func (s *InputMediaAudio) SetMedia(val string) {
 	s.Media = val
 }
 
-// SetThumb sets the value of Thumb.
-func (s *InputMediaAudio) SetThumb(val OptString) {
-	s.Thumb = val
+// SetThumbnail sets the value of Thumbnail.
+func (s *InputMediaAudio) SetThumbnail(val OptString) {
+	s.Thumbnail = val
 }
 
 // SetCaption sets the value of Caption.
@@ -10015,7 +10145,7 @@ type InputMediaDocument struct {
 	// pass `attach://<file_attach_name>` if the thumbnail was uploaded using multipart/form-data under
 	// <file_attach_name>. [More information on Sending Files](https://core.telegram.
 	// org/bots/api#sending-files).
-	Thumb OptString `json:"thumb"`
+	Thumbnail OptString `json:"thumbnail"`
 	// _Optional_. Caption of the document to be sent, 0-1024 characters after entities parsing.
 	Caption OptString `json:"caption"`
 	// _Optional_. Mode for parsing entities in the document caption. See [formatting
@@ -10034,9 +10164,9 @@ func (s *InputMediaDocument) GetMedia() string {
 	return s.Media
 }
 
-// GetThumb returns the value of Thumb.
-func (s *InputMediaDocument) GetThumb() OptString {
-	return s.Thumb
+// GetThumbnail returns the value of Thumbnail.
+func (s *InputMediaDocument) GetThumbnail() OptString {
+	return s.Thumbnail
 }
 
 // GetCaption returns the value of Caption.
@@ -10064,9 +10194,9 @@ func (s *InputMediaDocument) SetMedia(val string) {
 	s.Media = val
 }
 
-// SetThumb sets the value of Thumb.
-func (s *InputMediaDocument) SetThumb(val OptString) {
-	s.Thumb = val
+// SetThumbnail sets the value of Thumbnail.
+func (s *InputMediaDocument) SetThumbnail(val OptString) {
+	s.Thumbnail = val
 }
 
 // SetCaption sets the value of Caption.
@@ -10176,7 +10306,7 @@ type InputMediaVideo struct {
 	// pass `attach://<file_attach_name>` if the thumbnail was uploaded using multipart/form-data under
 	// <file_attach_name>. [More information on Sending Files](https://core.telegram.
 	// org/bots/api#sending-files).
-	Thumb OptString `json:"thumb"`
+	Thumbnail OptString `json:"thumbnail"`
 	// _Optional_. Caption of the video to be sent, 0-1024 characters after entities parsing.
 	Caption OptString `json:"caption"`
 	// _Optional_. Mode for parsing entities in the video caption. See [formatting options](https://core.
@@ -10202,9 +10332,9 @@ func (s *InputMediaVideo) GetMedia() string {
 	return s.Media
 }
 
-// GetThumb returns the value of Thumb.
-func (s *InputMediaVideo) GetThumb() OptString {
-	return s.Thumb
+// GetThumbnail returns the value of Thumbnail.
+func (s *InputMediaVideo) GetThumbnail() OptString {
+	return s.Thumbnail
 }
 
 // GetCaption returns the value of Caption.
@@ -10252,9 +10382,9 @@ func (s *InputMediaVideo) SetMedia(val string) {
 	s.Media = val
 }
 
-// SetThumb sets the value of Thumb.
-func (s *InputMediaVideo) SetThumb(val OptString) {
-	s.Thumb = val
+// SetThumbnail sets the value of Thumbnail.
+func (s *InputMediaVideo) SetThumbnail(val OptString) {
+	s.Thumbnail = val
 }
 
 // SetCaption sets the value of Caption.
@@ -10450,6 +10580,63 @@ func NewInputInvoiceMessageContentInputMessageContent(v InputInvoiceMessageConte
 	var s InputMessageContent
 	s.SetInputInvoiceMessageContent(v)
 	return s
+}
+
+// This object describes a sticker to be added to a sticker set.
+// Ref: #/components/schemas/InputSticker
+type InputSticker struct {
+	// The added sticker. Pass a _file_id_ as a String to send a file that already exists on the Telegram
+	// servers, pass an HTTP URL as a String for Telegram to get a file from the Internet, upload a new
+	// one using multipart/form-data, or pass `attach://<file_attach_name>` to upload a new one using
+	// multipart/form-data under <file_attach_name> name. Animated and video stickers can't be uploaded
+	// via HTTP URL. [More information on Sending Files](https://core.telegram.org/bots/api#sending-files).
+	Sticker string `json:"sticker"`
+	// List of 1-20 emoji associated with the sticker.
+	EmojiList    []string        `json:"emoji_list"`
+	MaskPosition OptMaskPosition `json:"mask_position"`
+	// _Optional_. List of 0-20 search keywords for the sticker with total length of up to 64 characters.
+	// For `regular` and `custom_emoji` stickers only.
+	Keywords []string `json:"keywords"`
+}
+
+// GetSticker returns the value of Sticker.
+func (s *InputSticker) GetSticker() string {
+	return s.Sticker
+}
+
+// GetEmojiList returns the value of EmojiList.
+func (s *InputSticker) GetEmojiList() []string {
+	return s.EmojiList
+}
+
+// GetMaskPosition returns the value of MaskPosition.
+func (s *InputSticker) GetMaskPosition() OptMaskPosition {
+	return s.MaskPosition
+}
+
+// GetKeywords returns the value of Keywords.
+func (s *InputSticker) GetKeywords() []string {
+	return s.Keywords
+}
+
+// SetSticker sets the value of Sticker.
+func (s *InputSticker) SetSticker(val string) {
+	s.Sticker = val
+}
+
+// SetEmojiList sets the value of EmojiList.
+func (s *InputSticker) SetEmojiList(val []string) {
+	s.EmojiList = val
+}
+
+// SetMaskPosition sets the value of MaskPosition.
+func (s *InputSticker) SetMaskPosition(val OptMaskPosition) {
+	s.MaskPosition = val
+}
+
+// SetKeywords sets the value of Keywords.
+func (s *InputSticker) SetKeywords(val []string) {
+	s.Keywords = val
 }
 
 // Represents the [content](https://core.telegram.org/bots/api#inputmessagecontent) of a text message
@@ -10747,14 +10934,17 @@ func NewKeyboardButtonObjectKeyboardButton(v KeyboardButtonObject) KeyboardButto
 	return s
 }
 
-// This object represents one button of the reply keyboard. For simple text buttons _String_ can be
-// used instead of this object to specify text of the button. Optional fields _web_app_,
-// _request_contact_, _request_location_, and _request_poll_ are mutually exclusive.
+// This object represents one button of the reply keyboard. For simple text buttons, _String_ can be
+// used instead of this object to specify the button text. The optional fields _web_app_,
+// _request_user_, _request_chat_, _request_contact_, _request_location_, and _request_poll_ are
+// mutually exclusive.
 // Ref: #/components/schemas/KeyboardButtonObject
 type KeyboardButtonObject struct {
 	// Text of the button. If none of the optional fields are used, it will be sent as a message when the
 	// button is pressed.
-	Text string `json:"text"`
+	Text        string                       `json:"text"`
+	RequestUser OptKeyboardButtonRequestUser `json:"request_user"`
+	RequestChat OptKeyboardButtonRequestChat `json:"request_chat"`
 	// _Optional_. If _True_, the user's phone number will be sent as a contact when the button is
 	// pressed. Available in private chats only.
 	RequestContact OptBool `json:"request_contact"`
@@ -10768,6 +10958,16 @@ type KeyboardButtonObject struct {
 // GetText returns the value of Text.
 func (s *KeyboardButtonObject) GetText() string {
 	return s.Text
+}
+
+// GetRequestUser returns the value of RequestUser.
+func (s *KeyboardButtonObject) GetRequestUser() OptKeyboardButtonRequestUser {
+	return s.RequestUser
+}
+
+// GetRequestChat returns the value of RequestChat.
+func (s *KeyboardButtonObject) GetRequestChat() OptKeyboardButtonRequestChat {
+	return s.RequestChat
 }
 
 // GetRequestContact returns the value of RequestContact.
@@ -10793,6 +10993,16 @@ func (s *KeyboardButtonObject) GetWebApp() OptWebAppInfo {
 // SetText sets the value of Text.
 func (s *KeyboardButtonObject) SetText(val string) {
 	s.Text = val
+}
+
+// SetRequestUser sets the value of RequestUser.
+func (s *KeyboardButtonObject) SetRequestUser(val OptKeyboardButtonRequestUser) {
+	s.RequestUser = val
+}
+
+// SetRequestChat sets the value of RequestChat.
+func (s *KeyboardButtonObject) SetRequestChat(val OptKeyboardButtonRequestChat) {
+	s.RequestChat = val
 }
 
 // SetRequestContact sets the value of RequestContact.
@@ -10833,6 +11043,160 @@ func (s *KeyboardButtonPollType) GetType() OptString {
 // SetType sets the value of Type.
 func (s *KeyboardButtonPollType) SetType(val OptString) {
 	s.Type = val
+}
+
+// This object defines the criteria used to request a suitable chat. The identifier of the selected
+// chat will be shared with the bot when the corresponding button is pressed. [More about requesting
+// chats](https://core.telegram.org/bots/features#chat-and-user-selection).
+// Ref: #/components/schemas/KeyboardButtonRequestChat
+type KeyboardButtonRequestChat struct {
+	// Signed 32-bit identifier of the request, which will be received back in the
+	// [ChatShared](https://core.telegram.org/bots/api#chatshared) object. Must be unique within the
+	// message.
+	RequestID int `json:"request_id"`
+	// Pass _True_ to request a channel chat, pass _False_ to request a group or a supergroup chat.
+	ChatIsChannel bool `json:"chat_is_channel"`
+	// _Optional_. Pass _True_ to request a forum supergroup, pass _False_ to request a non-forum chat.
+	// If not specified, no additional restrictions are applied.
+	ChatIsForum OptBool `json:"chat_is_forum"`
+	// _Optional_. Pass _True_ to request a supergroup or a channel with a username, pass _False_ to
+	// request a chat without a username. If not specified, no additional restrictions are applied.
+	ChatHasUsername OptBool `json:"chat_has_username"`
+	// _Optional_. Pass _True_ to request a chat owned by the user. Otherwise, no additional restrictions
+	// are applied.
+	ChatIsCreated           OptBool                    `json:"chat_is_created"`
+	UserAdministratorRights OptChatAdministratorRights `json:"user_administrator_rights"`
+	BotAdministratorRights  OptChatAdministratorRights `json:"bot_administrator_rights"`
+	// _Optional_. Pass _True_ to request a chat with the bot as a member. Otherwise, no additional
+	// restrictions are applied.
+	BotIsMember OptBool `json:"bot_is_member"`
+}
+
+// GetRequestID returns the value of RequestID.
+func (s *KeyboardButtonRequestChat) GetRequestID() int {
+	return s.RequestID
+}
+
+// GetChatIsChannel returns the value of ChatIsChannel.
+func (s *KeyboardButtonRequestChat) GetChatIsChannel() bool {
+	return s.ChatIsChannel
+}
+
+// GetChatIsForum returns the value of ChatIsForum.
+func (s *KeyboardButtonRequestChat) GetChatIsForum() OptBool {
+	return s.ChatIsForum
+}
+
+// GetChatHasUsername returns the value of ChatHasUsername.
+func (s *KeyboardButtonRequestChat) GetChatHasUsername() OptBool {
+	return s.ChatHasUsername
+}
+
+// GetChatIsCreated returns the value of ChatIsCreated.
+func (s *KeyboardButtonRequestChat) GetChatIsCreated() OptBool {
+	return s.ChatIsCreated
+}
+
+// GetUserAdministratorRights returns the value of UserAdministratorRights.
+func (s *KeyboardButtonRequestChat) GetUserAdministratorRights() OptChatAdministratorRights {
+	return s.UserAdministratorRights
+}
+
+// GetBotAdministratorRights returns the value of BotAdministratorRights.
+func (s *KeyboardButtonRequestChat) GetBotAdministratorRights() OptChatAdministratorRights {
+	return s.BotAdministratorRights
+}
+
+// GetBotIsMember returns the value of BotIsMember.
+func (s *KeyboardButtonRequestChat) GetBotIsMember() OptBool {
+	return s.BotIsMember
+}
+
+// SetRequestID sets the value of RequestID.
+func (s *KeyboardButtonRequestChat) SetRequestID(val int) {
+	s.RequestID = val
+}
+
+// SetChatIsChannel sets the value of ChatIsChannel.
+func (s *KeyboardButtonRequestChat) SetChatIsChannel(val bool) {
+	s.ChatIsChannel = val
+}
+
+// SetChatIsForum sets the value of ChatIsForum.
+func (s *KeyboardButtonRequestChat) SetChatIsForum(val OptBool) {
+	s.ChatIsForum = val
+}
+
+// SetChatHasUsername sets the value of ChatHasUsername.
+func (s *KeyboardButtonRequestChat) SetChatHasUsername(val OptBool) {
+	s.ChatHasUsername = val
+}
+
+// SetChatIsCreated sets the value of ChatIsCreated.
+func (s *KeyboardButtonRequestChat) SetChatIsCreated(val OptBool) {
+	s.ChatIsCreated = val
+}
+
+// SetUserAdministratorRights sets the value of UserAdministratorRights.
+func (s *KeyboardButtonRequestChat) SetUserAdministratorRights(val OptChatAdministratorRights) {
+	s.UserAdministratorRights = val
+}
+
+// SetBotAdministratorRights sets the value of BotAdministratorRights.
+func (s *KeyboardButtonRequestChat) SetBotAdministratorRights(val OptChatAdministratorRights) {
+	s.BotAdministratorRights = val
+}
+
+// SetBotIsMember sets the value of BotIsMember.
+func (s *KeyboardButtonRequestChat) SetBotIsMember(val OptBool) {
+	s.BotIsMember = val
+}
+
+// This object defines the criteria used to request a suitable user. The identifier of the selected
+// user will be shared with the bot when the corresponding button is pressed. [More about requesting
+// users](https://core.telegram.org/bots/features#chat-and-user-selection).
+// Ref: #/components/schemas/KeyboardButtonRequestUser
+type KeyboardButtonRequestUser struct {
+	// Signed 32-bit identifier of the request, which will be received back in the
+	// [UserShared](https://core.telegram.org/bots/api#usershared) object. Must be unique within the
+	// message.
+	RequestID int `json:"request_id"`
+	// _Optional_. Pass _True_ to request a bot, pass _False_ to request a regular user. If not specified,
+	//  no additional restrictions are applied.
+	UserIsBot OptBool `json:"user_is_bot"`
+	// _Optional_. Pass _True_ to request a premium user, pass _False_ to request a non-premium user. If
+	// not specified, no additional restrictions are applied.
+	UserIsPremium OptBool `json:"user_is_premium"`
+}
+
+// GetRequestID returns the value of RequestID.
+func (s *KeyboardButtonRequestUser) GetRequestID() int {
+	return s.RequestID
+}
+
+// GetUserIsBot returns the value of UserIsBot.
+func (s *KeyboardButtonRequestUser) GetUserIsBot() OptBool {
+	return s.UserIsBot
+}
+
+// GetUserIsPremium returns the value of UserIsPremium.
+func (s *KeyboardButtonRequestUser) GetUserIsPremium() OptBool {
+	return s.UserIsPremium
+}
+
+// SetRequestID sets the value of RequestID.
+func (s *KeyboardButtonRequestUser) SetRequestID(val int) {
+	s.RequestID = val
+}
+
+// SetUserIsBot sets the value of UserIsBot.
+func (s *KeyboardButtonRequestUser) SetUserIsBot(val OptBool) {
+	s.UserIsBot = val
+}
+
+// SetUserIsPremium sets the value of UserIsPremium.
+func (s *KeyboardButtonRequestUser) SetUserIsPremium(val OptBool) {
+	s.UserIsPremium = val
 }
 
 // This object represents a portion of the price for goods or services.
@@ -11315,6 +11679,8 @@ type Message struct {
 	PinnedMessage     *Message             `json:"pinned_message"`
 	Invoice           OptInvoice           `json:"invoice"`
 	SuccessfulPayment OptSuccessfulPayment `json:"successful_payment"`
+	UserShared        OptUserShared        `json:"user_shared"`
+	ChatShared        OptChatShared        `json:"chat_shared"`
 	// _Optional_. The domain name of the website on which the user has logged in. [More about Telegram
 	// Login](https://core.telegram.org/widgets/login).
 	ConnectedWebsite             OptString                       `json:"connected_website"`
@@ -11601,6 +11967,16 @@ func (s *Message) GetInvoice() OptInvoice {
 // GetSuccessfulPayment returns the value of SuccessfulPayment.
 func (s *Message) GetSuccessfulPayment() OptSuccessfulPayment {
 	return s.SuccessfulPayment
+}
+
+// GetUserShared returns the value of UserShared.
+func (s *Message) GetUserShared() OptUserShared {
+	return s.UserShared
+}
+
+// GetChatShared returns the value of ChatShared.
+func (s *Message) GetChatShared() OptChatShared {
+	return s.ChatShared
 }
 
 // GetConnectedWebsite returns the value of ConnectedWebsite.
@@ -11961,6 +12337,16 @@ func (s *Message) SetInvoice(val OptInvoice) {
 // SetSuccessfulPayment sets the value of SuccessfulPayment.
 func (s *Message) SetSuccessfulPayment(val OptSuccessfulPayment) {
 	s.SuccessfulPayment = val
+}
+
+// SetUserShared sets the value of UserShared.
+func (s *Message) SetUserShared(val OptUserShared) {
+	s.UserShared = val
+}
+
+// SetChatShared sets the value of ChatShared.
+func (s *Message) SetChatShared(val OptChatShared) {
+	s.ChatShared = val
 }
 
 // SetConnectedWebsite sets the value of ConnectedWebsite.
@@ -12964,6 +13350,52 @@ func (o OptChatPhoto) Or(d ChatPhoto) ChatPhoto {
 	return d
 }
 
+// NewOptChatShared returns new OptChatShared with value set to v.
+func NewOptChatShared(v ChatShared) OptChatShared {
+	return OptChatShared{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptChatShared is optional ChatShared.
+type OptChatShared struct {
+	Value ChatShared
+	Set   bool
+}
+
+// IsSet returns true if OptChatShared was set.
+func (o OptChatShared) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptChatShared) Reset() {
+	var v ChatShared
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptChatShared) SetTo(v ChatShared) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptChatShared) Get() (v ChatShared, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptChatShared) Or(d ChatShared) ChatShared {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
 // NewOptChosenInlineResult returns new OptChosenInlineResult with value set to v.
 func NewOptChosenInlineResult(v ChosenInlineResult) OptChosenInlineResult {
 	return OptChosenInlineResult{
@@ -13608,6 +14040,98 @@ func (o OptGetMyDefaultAdministratorRights) Or(d GetMyDefaultAdministratorRights
 	return d
 }
 
+// NewOptGetMyDescription returns new OptGetMyDescription with value set to v.
+func NewOptGetMyDescription(v GetMyDescription) OptGetMyDescription {
+	return OptGetMyDescription{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptGetMyDescription is optional GetMyDescription.
+type OptGetMyDescription struct {
+	Value GetMyDescription
+	Set   bool
+}
+
+// IsSet returns true if OptGetMyDescription was set.
+func (o OptGetMyDescription) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptGetMyDescription) Reset() {
+	var v GetMyDescription
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptGetMyDescription) SetTo(v GetMyDescription) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptGetMyDescription) Get() (v GetMyDescription, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptGetMyDescription) Or(d GetMyDescription) GetMyDescription {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
+// NewOptGetMyShortDescription returns new OptGetMyShortDescription with value set to v.
+func NewOptGetMyShortDescription(v GetMyShortDescription) OptGetMyShortDescription {
+	return OptGetMyShortDescription{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptGetMyShortDescription is optional GetMyShortDescription.
+type OptGetMyShortDescription struct {
+	Value GetMyShortDescription
+	Set   bool
+}
+
+// IsSet returns true if OptGetMyShortDescription was set.
+func (o OptGetMyShortDescription) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptGetMyShortDescription) Reset() {
+	var v GetMyShortDescription
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptGetMyShortDescription) SetTo(v GetMyShortDescription) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptGetMyShortDescription) Get() (v GetMyShortDescription, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptGetMyShortDescription) Or(d GetMyShortDescription) GetMyShortDescription {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
 // NewOptGetUpdates returns new OptGetUpdates with value set to v.
 func NewOptGetUpdates(v GetUpdates) OptGetUpdates {
 	return OptGetUpdates{
@@ -14062,6 +14586,98 @@ func (o OptKeyboardButtonPollType) Get() (v KeyboardButtonPollType, ok bool) {
 
 // Or returns value if set, or given parameter if does not.
 func (o OptKeyboardButtonPollType) Or(d KeyboardButtonPollType) KeyboardButtonPollType {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
+// NewOptKeyboardButtonRequestChat returns new OptKeyboardButtonRequestChat with value set to v.
+func NewOptKeyboardButtonRequestChat(v KeyboardButtonRequestChat) OptKeyboardButtonRequestChat {
+	return OptKeyboardButtonRequestChat{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptKeyboardButtonRequestChat is optional KeyboardButtonRequestChat.
+type OptKeyboardButtonRequestChat struct {
+	Value KeyboardButtonRequestChat
+	Set   bool
+}
+
+// IsSet returns true if OptKeyboardButtonRequestChat was set.
+func (o OptKeyboardButtonRequestChat) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptKeyboardButtonRequestChat) Reset() {
+	var v KeyboardButtonRequestChat
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptKeyboardButtonRequestChat) SetTo(v KeyboardButtonRequestChat) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptKeyboardButtonRequestChat) Get() (v KeyboardButtonRequestChat, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptKeyboardButtonRequestChat) Or(d KeyboardButtonRequestChat) KeyboardButtonRequestChat {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
+// NewOptKeyboardButtonRequestUser returns new OptKeyboardButtonRequestUser with value set to v.
+func NewOptKeyboardButtonRequestUser(v KeyboardButtonRequestUser) OptKeyboardButtonRequestUser {
+	return OptKeyboardButtonRequestUser{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptKeyboardButtonRequestUser is optional KeyboardButtonRequestUser.
+type OptKeyboardButtonRequestUser struct {
+	Value KeyboardButtonRequestUser
+	Set   bool
+}
+
+// IsSet returns true if OptKeyboardButtonRequestUser was set.
+func (o OptKeyboardButtonRequestUser) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptKeyboardButtonRequestUser) Reset() {
+	var v KeyboardButtonRequestUser
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptKeyboardButtonRequestUser) SetTo(v KeyboardButtonRequestUser) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptKeyboardButtonRequestUser) Get() (v KeyboardButtonRequestUser, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptKeyboardButtonRequestUser) Or(d KeyboardButtonRequestUser) KeyboardButtonRequestUser {
 	if v, ok := o.Get(); ok {
 		return v
 	}
@@ -14988,6 +15604,98 @@ func (o OptSetMyDefaultAdministratorRights) Or(d SetMyDefaultAdministratorRights
 	return d
 }
 
+// NewOptSetMyDescription returns new OptSetMyDescription with value set to v.
+func NewOptSetMyDescription(v SetMyDescription) OptSetMyDescription {
+	return OptSetMyDescription{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptSetMyDescription is optional SetMyDescription.
+type OptSetMyDescription struct {
+	Value SetMyDescription
+	Set   bool
+}
+
+// IsSet returns true if OptSetMyDescription was set.
+func (o OptSetMyDescription) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptSetMyDescription) Reset() {
+	var v SetMyDescription
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptSetMyDescription) SetTo(v SetMyDescription) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptSetMyDescription) Get() (v SetMyDescription, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptSetMyDescription) Or(d SetMyDescription) SetMyDescription {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
+// NewOptSetMyShortDescription returns new OptSetMyShortDescription with value set to v.
+func NewOptSetMyShortDescription(v SetMyShortDescription) OptSetMyShortDescription {
+	return OptSetMyShortDescription{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptSetMyShortDescription is optional SetMyShortDescription.
+type OptSetMyShortDescription struct {
+	Value SetMyShortDescription
+	Set   bool
+}
+
+// IsSet returns true if OptSetMyShortDescription was set.
+func (o OptSetMyShortDescription) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptSetMyShortDescription) Reset() {
+	var v SetMyShortDescription
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptSetMyShortDescription) SetTo(v SetMyShortDescription) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptSetMyShortDescription) Get() (v SetMyShortDescription, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptSetMyShortDescription) Or(d SetMyShortDescription) SetMyShortDescription {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
 // NewOptShippingAddress returns new OptShippingAddress with value set to v.
 func NewOptShippingAddress(v ShippingAddress) OptShippingAddress {
 	return OptShippingAddress{
@@ -15350,6 +16058,52 @@ func (o OptUserProfilePhotos) Get() (v UserProfilePhotos, ok bool) {
 
 // Or returns value if set, or given parameter if does not.
 func (o OptUserProfilePhotos) Or(d UserProfilePhotos) UserProfilePhotos {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
+// NewOptUserShared returns new OptUserShared with value set to v.
+func NewOptUserShared(v UserShared) OptUserShared {
+	return OptUserShared{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptUserShared is optional UserShared.
+type OptUserShared struct {
+	Value UserShared
+	Set   bool
+}
+
+// IsSet returns true if OptUserShared was set.
+func (o OptUserShared) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptUserShared) Reset() {
+	var v UserShared
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptUserShared) SetTo(v UserShared) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptUserShared) Get() (v UserShared, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptUserShared) Or(d UserShared) UserShared {
 	if v, ok := o.Get(); ok {
 		return v
 	}
@@ -17549,8 +18303,8 @@ type PromoteChatMember struct {
 	// Pass _True_ if the administrator can restrict, ban or unban chat members.
 	CanRestrictMembers OptBool `json:"can_restrict_members"`
 	// Pass _True_ if the administrator can add new administrators with a subset of their own privileges
-	// or demote administrators that he has promoted, directly or indirectly (promoted by administrators
-	// that were appointed by him).
+	// or demote administrators that they have promoted, directly or indirectly (promoted by
+	// administrators that were appointed by him).
 	CanPromoteMembers OptBool `json:"can_promote_members"`
 	// Pass _True_ if the administrator can change chat title, photo and other settings.
 	CanChangeInfo OptBool `json:"can_change_info"`
@@ -17960,6 +18714,12 @@ type RestrictChatMember struct {
 	// Unique identifier of the target user.
 	UserID      int64           `json:"user_id"`
 	Permissions ChatPermissions `json:"permissions"`
+	// Pass _True_ if chat permissions are set independently. Otherwise, the _can_send_other_messages_
+	// and _can_add_web_page_previews_ permissions will imply the _can_send_messages_, _can_send_audios_,
+	// _can_send_documents_, _can_send_photos_, _can_send_videos_, _can_send_video_notes_, and
+	// _can_send_voice_notes_ permissions; the _can_send_polls_ permission will imply the
+	// _can_send_messages_ permission.
+	UseIndependentChatPermissions OptBool `json:"use_independent_chat_permissions"`
 	// Date when restrictions will be lifted for the user, unix time. If user is restricted for more than
 	// 366 days or less than 30 seconds from the current time, they are considered to be restricted
 	// forever.
@@ -17981,6 +18741,11 @@ func (s *RestrictChatMember) GetPermissions() ChatPermissions {
 	return s.Permissions
 }
 
+// GetUseIndependentChatPermissions returns the value of UseIndependentChatPermissions.
+func (s *RestrictChatMember) GetUseIndependentChatPermissions() OptBool {
+	return s.UseIndependentChatPermissions
+}
+
 // GetUntilDate returns the value of UntilDate.
 func (s *RestrictChatMember) GetUntilDate() OptInt {
 	return s.UntilDate
@@ -17999,6 +18764,11 @@ func (s *RestrictChatMember) SetUserID(val int64) {
 // SetPermissions sets the value of Permissions.
 func (s *RestrictChatMember) SetPermissions(val ChatPermissions) {
 	s.Permissions = val
+}
+
+// SetUseIndependentChatPermissions sets the value of UseIndependentChatPermissions.
+func (s *RestrictChatMember) SetUseIndependentChatPermissions(val OptBool) {
+	s.UseIndependentChatPermissions = val
 }
 
 // SetUntilDate sets the value of UntilDate.
@@ -18672,7 +19442,7 @@ type SendAnimation struct {
 	// pass `attach://<file_attach_name>` if the thumbnail was uploaded using multipart/form-data under
 	// <file_attach_name>. [More information on Sending Files](https://core.telegram.
 	// org/bots/api#sending-files).
-	Thumb OptString `json:"thumb"`
+	Thumbnail OptString `json:"thumbnail"`
 	// Animation caption (may also be used when resending animation by _file_id_), 0-1024 characters
 	// after entities parsing.
 	Caption OptString `json:"caption"`
@@ -18726,9 +19496,9 @@ func (s *SendAnimation) GetHeight() OptInt {
 	return s.Height
 }
 
-// GetThumb returns the value of Thumb.
-func (s *SendAnimation) GetThumb() OptString {
-	return s.Thumb
+// GetThumbnail returns the value of Thumbnail.
+func (s *SendAnimation) GetThumbnail() OptString {
+	return s.Thumbnail
 }
 
 // GetCaption returns the value of Caption.
@@ -18806,9 +19576,9 @@ func (s *SendAnimation) SetHeight(val OptInt) {
 	s.Height = val
 }
 
-// SetThumb sets the value of Thumb.
-func (s *SendAnimation) SetThumb(val OptString) {
-	s.Thumb = val
+// SetThumbnail sets the value of Thumbnail.
+func (s *SendAnimation) SetThumbnail(val OptString) {
+	s.Thumbnail = val
 }
 
 // SetCaption sets the value of Caption.
@@ -18888,7 +19658,7 @@ type SendAudio struct {
 	// pass `attach://<file_attach_name>` if the thumbnail was uploaded using multipart/form-data under
 	// <file_attach_name>. [More information on Sending Files](https://core.telegram.
 	// org/bots/api#sending-files).
-	Thumb OptString `json:"thumb"`
+	Thumbnail OptString `json:"thumbnail"`
 	// Sends the message [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will
 	// receive a notification with no sound.
 	DisableNotification OptBool `json:"disable_notification"`
@@ -18946,9 +19716,9 @@ func (s *SendAudio) GetTitle() OptString {
 	return s.Title
 }
 
-// GetThumb returns the value of Thumb.
-func (s *SendAudio) GetThumb() OptString {
-	return s.Thumb
+// GetThumbnail returns the value of Thumbnail.
+func (s *SendAudio) GetThumbnail() OptString {
+	return s.Thumbnail
 }
 
 // GetDisableNotification returns the value of DisableNotification.
@@ -19021,9 +19791,9 @@ func (s *SendAudio) SetTitle(val OptString) {
 	s.Title = val
 }
 
-// SetThumb sets the value of Thumb.
-func (s *SendAudio) SetThumb(val OptString) {
-	s.Thumb = val
+// SetThumbnail sets the value of Thumbnail.
+func (s *SendAudio) SetThumbnail(val OptString) {
+	s.Thumbnail = val
 }
 
 // SetDisableNotification sets the value of DisableNotification.
@@ -19356,7 +20126,7 @@ type SendDocument struct {
 	// pass `attach://<file_attach_name>` if the thumbnail was uploaded using multipart/form-data under
 	// <file_attach_name>. [More information on Sending Files](https://core.telegram.
 	// org/bots/api#sending-files).
-	Thumb OptString `json:"thumb"`
+	Thumbnail OptString `json:"thumbnail"`
 	// Document caption (may also be used when resending documents by _file_id_), 0-1024 characters after
 	// entities parsing.
 	Caption OptString `json:"caption"`
@@ -19395,9 +20165,9 @@ func (s *SendDocument) GetDocument() string {
 	return s.Document
 }
 
-// GetThumb returns the value of Thumb.
-func (s *SendDocument) GetThumb() OptString {
-	return s.Thumb
+// GetThumbnail returns the value of Thumbnail.
+func (s *SendDocument) GetThumbnail() OptString {
+	return s.Thumbnail
 }
 
 // GetCaption returns the value of Caption.
@@ -19460,9 +20230,9 @@ func (s *SendDocument) SetDocument(val string) {
 	s.Document = val
 }
 
-// SetThumb sets the value of Thumb.
-func (s *SendDocument) SetThumb(val OptString) {
-	s.Thumb = val
+// SetThumbnail sets the value of Thumbnail.
+func (s *SendDocument) SetThumbnail(val OptString) {
+	s.Thumbnail = val
 }
 
 // SetCaption sets the value of Caption.
@@ -21003,10 +21773,13 @@ type SendSticker struct {
 	// Unique identifier for the target message thread (topic) of the forum; for forum supergroups only.
 	MessageThreadID OptInt `json:"message_thread_id"`
 	// Sticker to send. Pass a file_id as String to send a file that exists on the Telegram servers
-	// (recommended), pass an HTTP URL as a String for Telegram to get a .WEBP file from the Internet, or
-	// upload a new one using multipart/form-data. [More information on Sending Files](https://core.
-	// telegram.org/bots/api#sending-files).
+	// (recommended), pass an HTTP URL as a String for Telegram to get a .WEBP sticker from the Internet,
+	// or upload a new .WEBP or .TGS sticker using multipart/form-data. [More information on Sending
+	// Files](https://core.telegram.org/bots/api#sending-files). Video stickers can only be sent by a
+	// file_id. Animated stickers can't be sent via an HTTP URL.
 	Sticker string `json:"sticker"`
+	// Emoji associated with the sticker; only for just uploaded stickers.
+	Emoji OptString `json:"emoji"`
 	// Sends the message [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will
 	// receive a notification with no sound.
 	DisableNotification OptBool `json:"disable_notification"`
@@ -21032,6 +21805,11 @@ func (s *SendSticker) GetMessageThreadID() OptInt {
 // GetSticker returns the value of Sticker.
 func (s *SendSticker) GetSticker() string {
 	return s.Sticker
+}
+
+// GetEmoji returns the value of Emoji.
+func (s *SendSticker) GetEmoji() OptString {
+	return s.Emoji
 }
 
 // GetDisableNotification returns the value of DisableNotification.
@@ -21072,6 +21850,11 @@ func (s *SendSticker) SetMessageThreadID(val OptInt) {
 // SetSticker sets the value of Sticker.
 func (s *SendSticker) SetSticker(val string) {
 	s.Sticker = val
+}
+
+// SetEmoji sets the value of Emoji.
+func (s *SendSticker) SetEmoji(val OptString) {
+	s.Emoji = val
 }
 
 // SetDisableNotification sets the value of DisableNotification.
@@ -21309,7 +22092,7 @@ type SendVideo struct {
 	// pass `attach://<file_attach_name>` if the thumbnail was uploaded using multipart/form-data under
 	// <file_attach_name>. [More information on Sending Files](https://core.telegram.
 	// org/bots/api#sending-files).
-	Thumb OptString `json:"thumb"`
+	Thumbnail OptString `json:"thumbnail"`
 	// Video caption (may also be used when resending videos by _file_id_), 0-1024 characters after
 	// entities parsing.
 	Caption OptString `json:"caption"`
@@ -21365,9 +22148,9 @@ func (s *SendVideo) GetHeight() OptInt {
 	return s.Height
 }
 
-// GetThumb returns the value of Thumb.
-func (s *SendVideo) GetThumb() OptString {
-	return s.Thumb
+// GetThumbnail returns the value of Thumbnail.
+func (s *SendVideo) GetThumbnail() OptString {
+	return s.Thumbnail
 }
 
 // GetCaption returns the value of Caption.
@@ -21450,9 +22233,9 @@ func (s *SendVideo) SetHeight(val OptInt) {
 	s.Height = val
 }
 
-// SetThumb sets the value of Thumb.
-func (s *SendVideo) SetThumb(val OptString) {
-	s.Thumb = val
+// SetThumbnail sets the value of Thumbnail.
+func (s *SendVideo) SetThumbnail(val OptString) {
+	s.Thumbnail = val
 }
 
 // SetCaption sets the value of Caption.
@@ -21527,7 +22310,7 @@ type SendVideoNote struct {
 	// pass `attach://<file_attach_name>` if the thumbnail was uploaded using multipart/form-data under
 	// <file_attach_name>. [More information on Sending Files](https://core.telegram.
 	// org/bots/api#sending-files).
-	Thumb OptString `json:"thumb"`
+	Thumbnail OptString `json:"thumbnail"`
 	// Sends the message [silently](https://telegram.org/blog/channels-2-0#silent-messages). Users will
 	// receive a notification with no sound.
 	DisableNotification OptBool `json:"disable_notification"`
@@ -21565,9 +22348,9 @@ func (s *SendVideoNote) GetLength() OptInt {
 	return s.Length
 }
 
-// GetThumb returns the value of Thumb.
-func (s *SendVideoNote) GetThumb() OptString {
-	return s.Thumb
+// GetThumbnail returns the value of Thumbnail.
+func (s *SendVideoNote) GetThumbnail() OptString {
+	return s.Thumbnail
 }
 
 // GetDisableNotification returns the value of DisableNotification.
@@ -21620,9 +22403,9 @@ func (s *SendVideoNote) SetLength(val OptInt) {
 	s.Length = val
 }
 
-// SetThumb sets the value of Thumb.
-func (s *SendVideoNote) SetThumb(val OptString) {
-	s.Thumb = val
+// SetThumbnail sets the value of Thumbnail.
+func (s *SendVideoNote) SetThumbnail(val OptString) {
+	s.Thumbnail = val
 }
 
 // SetDisableNotification sets the value of DisableNotification.
@@ -21905,6 +22688,12 @@ func (s *SetChatMenuButton) SetMenuButton(val OptMenuButton) {
 type SetChatPermissions struct {
 	ChatID      ID              `json:"chat_id"`
 	Permissions ChatPermissions `json:"permissions"`
+	// Pass _True_ if chat permissions are set independently. Otherwise, the _can_send_other_messages_
+	// and _can_add_web_page_previews_ permissions will imply the _can_send_messages_, _can_send_audios_,
+	// _can_send_documents_, _can_send_photos_, _can_send_videos_, _can_send_video_notes_, and
+	// _can_send_voice_notes_ permissions; the _can_send_polls_ permission will imply the
+	// _can_send_messages_ permission.
+	UseIndependentChatPermissions OptBool `json:"use_independent_chat_permissions"`
 }
 
 // GetChatID returns the value of ChatID.
@@ -21917,6 +22706,11 @@ func (s *SetChatPermissions) GetPermissions() ChatPermissions {
 	return s.Permissions
 }
 
+// GetUseIndependentChatPermissions returns the value of UseIndependentChatPermissions.
+func (s *SetChatPermissions) GetUseIndependentChatPermissions() OptBool {
+	return s.UseIndependentChatPermissions
+}
+
 // SetChatID sets the value of ChatID.
 func (s *SetChatPermissions) SetChatID(val ID) {
 	s.ChatID = val
@@ -21925,6 +22719,11 @@ func (s *SetChatPermissions) SetChatID(val ID) {
 // SetPermissions sets the value of Permissions.
 func (s *SetChatPermissions) SetPermissions(val ChatPermissions) {
 	s.Permissions = val
+}
+
+// SetUseIndependentChatPermissions sets the value of UseIndependentChatPermissions.
+func (s *SetChatPermissions) SetUseIndependentChatPermissions(val OptBool) {
+	s.UseIndependentChatPermissions = val
 }
 
 // Input for setChatPhoto.
@@ -22009,6 +22808,36 @@ func (s *SetChatTitle) SetChatID(val ID) {
 // SetTitle sets the value of Title.
 func (s *SetChatTitle) SetTitle(val string) {
 	s.Title = val
+}
+
+// Input for setCustomEmojiStickerSetThumbnail.
+// Ref: #/components/schemas/setCustomEmojiStickerSetThumbnail
+type SetCustomEmojiStickerSetThumbnail struct {
+	// Sticker set name.
+	Name string `json:"name"`
+	// Custom emoji identifier of a sticker from the sticker set; pass an empty string to drop the
+	// thumbnail and use the first sticker as the thumbnail.
+	CustomEmojiID OptString `json:"custom_emoji_id"`
+}
+
+// GetName returns the value of Name.
+func (s *SetCustomEmojiStickerSetThumbnail) GetName() string {
+	return s.Name
+}
+
+// GetCustomEmojiID returns the value of CustomEmojiID.
+func (s *SetCustomEmojiStickerSetThumbnail) GetCustomEmojiID() OptString {
+	return s.CustomEmojiID
+}
+
+// SetName sets the value of Name.
+func (s *SetCustomEmojiStickerSetThumbnail) SetName(val string) {
+	s.Name = val
+}
+
+// SetCustomEmojiID sets the value of CustomEmojiID.
+func (s *SetCustomEmojiStickerSetThumbnail) SetCustomEmojiID(val OptString) {
+	s.CustomEmojiID = val
 }
 
 // Input for setGameScore.
@@ -22173,6 +23002,68 @@ func (s *SetMyDefaultAdministratorRights) SetForChannels(val OptBool) {
 	s.ForChannels = val
 }
 
+// Input for setMyDescription.
+// Ref: #/components/schemas/setMyDescription
+type SetMyDescription struct {
+	// New bot description; 0-512 characters. Pass an empty string to remove the dedicated description
+	// for the given language.
+	Description OptString `json:"description"`
+	// A two-letter ISO 639-1 language code. If empty, the description will be applied to all users for
+	// whose language there is no dedicated description.
+	LanguageCode OptString `json:"language_code"`
+}
+
+// GetDescription returns the value of Description.
+func (s *SetMyDescription) GetDescription() OptString {
+	return s.Description
+}
+
+// GetLanguageCode returns the value of LanguageCode.
+func (s *SetMyDescription) GetLanguageCode() OptString {
+	return s.LanguageCode
+}
+
+// SetDescription sets the value of Description.
+func (s *SetMyDescription) SetDescription(val OptString) {
+	s.Description = val
+}
+
+// SetLanguageCode sets the value of LanguageCode.
+func (s *SetMyDescription) SetLanguageCode(val OptString) {
+	s.LanguageCode = val
+}
+
+// Input for setMyShortDescription.
+// Ref: #/components/schemas/setMyShortDescription
+type SetMyShortDescription struct {
+	// New short description for the bot; 0-120 characters. Pass an empty string to remove the dedicated
+	// short description for the given language.
+	ShortDescription OptString `json:"short_description"`
+	// A two-letter ISO 639-1 language code. If empty, the short description will be applied to all users
+	// for whose language there is no dedicated short description.
+	LanguageCode OptString `json:"language_code"`
+}
+
+// GetShortDescription returns the value of ShortDescription.
+func (s *SetMyShortDescription) GetShortDescription() OptString {
+	return s.ShortDescription
+}
+
+// GetLanguageCode returns the value of LanguageCode.
+func (s *SetMyShortDescription) GetLanguageCode() OptString {
+	return s.LanguageCode
+}
+
+// SetShortDescription sets the value of ShortDescription.
+func (s *SetMyShortDescription) SetShortDescription(val OptString) {
+	s.ShortDescription = val
+}
+
+// SetLanguageCode sets the value of LanguageCode.
+func (s *SetMyShortDescription) SetLanguageCode(val OptString) {
+	s.LanguageCode = val
+}
+
 // Input for setPassportDataErrors.
 // Ref: #/components/schemas/setPassportDataErrors
 type SetPassportDataErrors struct {
@@ -22200,6 +23091,93 @@ func (s *SetPassportDataErrors) SetUserID(val int64) {
 // SetErrors sets the value of Errors.
 func (s *SetPassportDataErrors) SetErrors(val []PassportElementError) {
 	s.Errors = val
+}
+
+// Input for setStickerEmojiList.
+// Ref: #/components/schemas/setStickerEmojiList
+type SetStickerEmojiList struct {
+	// File identifier of the sticker.
+	Sticker string `json:"sticker"`
+	// A JSON-serialized list of 1-20 emoji associated with the sticker.
+	EmojiList []string `json:"emoji_list"`
+}
+
+// GetSticker returns the value of Sticker.
+func (s *SetStickerEmojiList) GetSticker() string {
+	return s.Sticker
+}
+
+// GetEmojiList returns the value of EmojiList.
+func (s *SetStickerEmojiList) GetEmojiList() []string {
+	return s.EmojiList
+}
+
+// SetSticker sets the value of Sticker.
+func (s *SetStickerEmojiList) SetSticker(val string) {
+	s.Sticker = val
+}
+
+// SetEmojiList sets the value of EmojiList.
+func (s *SetStickerEmojiList) SetEmojiList(val []string) {
+	s.EmojiList = val
+}
+
+// Input for setStickerKeywords.
+// Ref: #/components/schemas/setStickerKeywords
+type SetStickerKeywords struct {
+	// File identifier of the sticker.
+	Sticker string `json:"sticker"`
+	// A JSON-serialized list of 0-20 search keywords for the sticker with total length of up to 64
+	// characters.
+	Keywords []string `json:"keywords"`
+}
+
+// GetSticker returns the value of Sticker.
+func (s *SetStickerKeywords) GetSticker() string {
+	return s.Sticker
+}
+
+// GetKeywords returns the value of Keywords.
+func (s *SetStickerKeywords) GetKeywords() []string {
+	return s.Keywords
+}
+
+// SetSticker sets the value of Sticker.
+func (s *SetStickerKeywords) SetSticker(val string) {
+	s.Sticker = val
+}
+
+// SetKeywords sets the value of Keywords.
+func (s *SetStickerKeywords) SetKeywords(val []string) {
+	s.Keywords = val
+}
+
+// Input for setStickerMaskPosition.
+// Ref: #/components/schemas/setStickerMaskPosition
+type SetStickerMaskPosition struct {
+	// File identifier of the sticker.
+	Sticker      string          `json:"sticker"`
+	MaskPosition OptMaskPosition `json:"mask_position"`
+}
+
+// GetSticker returns the value of Sticker.
+func (s *SetStickerMaskPosition) GetSticker() string {
+	return s.Sticker
+}
+
+// GetMaskPosition returns the value of MaskPosition.
+func (s *SetStickerMaskPosition) GetMaskPosition() OptMaskPosition {
+	return s.MaskPosition
+}
+
+// SetSticker sets the value of Sticker.
+func (s *SetStickerMaskPosition) SetSticker(val string) {
+	s.Sticker = val
+}
+
+// SetMaskPosition sets the value of MaskPosition.
+func (s *SetStickerMaskPosition) SetMaskPosition(val OptMaskPosition) {
+	s.MaskPosition = val
 }
 
 // Input for setStickerPositionInSet.
@@ -22231,18 +23209,18 @@ func (s *SetStickerPositionInSet) SetPosition(val int) {
 	s.Position = val
 }
 
-// Input for setStickerSetThumb.
-// Ref: #/components/schemas/setStickerSetThumb
-type SetStickerSetThumb struct {
+// Input for setStickerSetThumbnail.
+// Ref: #/components/schemas/setStickerSetThumbnail
+type SetStickerSetThumbnail struct {
 	// Sticker set name.
 	Name string `json:"name"`
 	// User identifier of the sticker set owner.
 	UserID int64 `json:"user_id"`
-	// A **PNG** image with the thumbnail, must be up to 128 kilobytes in size and have width and height
-	// exactly 100px, or a **TGS** animation with the thumbnail up to 32 kilobytes in size; see
-	// [](https://core.telegram.org/stickers#animated-sticker-requirements)[https://core.telegram.
-	// org/stickers#animated-sticker-requirements](https://core.telegram.
-	// org/stickers#animated-sticker-requirements) for animated sticker technical requirements, or a
+	// A **.WEBP** or **.PNG** image with the thumbnail, must be up to 128 kilobytes in size and have a
+	// width and height of exactly 100px, or a **.TGS** animation with a thumbnail up to 32 kilobytes in
+	// size (see [](https://core.telegram.org/stickers#animated-sticker-requirements)[https://core.
+	// telegram.org/stickers#animated-sticker-requirements](https://core.telegram.
+	// org/stickers#animated-sticker-requirements) for animated sticker technical requirements), or a
 	// **WEBM** video with the thumbnail up to 32 kilobytes in size; see [](https://core.telegram.
 	// org/stickers#video-sticker-requirements)[https://core.telegram.
 	// org/stickers#video-sticker-requirements](https://core.telegram.
@@ -22250,38 +23228,68 @@ type SetStickerSetThumb struct {
 	// _file_id_ as a String to send a file that already exists on the Telegram servers, pass an HTTP URL
 	// as a String for Telegram to get a file from the Internet, or upload a new one using
 	// multipart/form-data. [More information on Sending Files](https://core.telegram.
-	// org/bots/api#sending-files). Animated sticker set thumbnails can't be uploaded via HTTP URL.
-	Thumb OptString `json:"thumb"`
+	// org/bots/api#sending-files). Animated and video sticker set thumbnails can't be uploaded via HTTP
+	// URL. If omitted, then the thumbnail is dropped and the first sticker is used as the thumbnail.
+	Thumbnail OptString `json:"thumbnail"`
 }
 
 // GetName returns the value of Name.
-func (s *SetStickerSetThumb) GetName() string {
+func (s *SetStickerSetThumbnail) GetName() string {
 	return s.Name
 }
 
 // GetUserID returns the value of UserID.
-func (s *SetStickerSetThumb) GetUserID() int64 {
+func (s *SetStickerSetThumbnail) GetUserID() int64 {
 	return s.UserID
 }
 
-// GetThumb returns the value of Thumb.
-func (s *SetStickerSetThumb) GetThumb() OptString {
-	return s.Thumb
+// GetThumbnail returns the value of Thumbnail.
+func (s *SetStickerSetThumbnail) GetThumbnail() OptString {
+	return s.Thumbnail
 }
 
 // SetName sets the value of Name.
-func (s *SetStickerSetThumb) SetName(val string) {
+func (s *SetStickerSetThumbnail) SetName(val string) {
 	s.Name = val
 }
 
 // SetUserID sets the value of UserID.
-func (s *SetStickerSetThumb) SetUserID(val int64) {
+func (s *SetStickerSetThumbnail) SetUserID(val int64) {
 	s.UserID = val
 }
 
-// SetThumb sets the value of Thumb.
-func (s *SetStickerSetThumb) SetThumb(val OptString) {
-	s.Thumb = val
+// SetThumbnail sets the value of Thumbnail.
+func (s *SetStickerSetThumbnail) SetThumbnail(val OptString) {
+	s.Thumbnail = val
+}
+
+// Input for setStickerSetTitle.
+// Ref: #/components/schemas/setStickerSetTitle
+type SetStickerSetTitle struct {
+	// Sticker set name.
+	Name string `json:"name"`
+	// Sticker set title, 1-64 characters.
+	Title string `json:"title"`
+}
+
+// GetName returns the value of Name.
+func (s *SetStickerSetTitle) GetName() string {
+	return s.Name
+}
+
+// GetTitle returns the value of Title.
+func (s *SetStickerSetTitle) GetTitle() string {
+	return s.Title
+}
+
+// SetName sets the value of Name.
+func (s *SetStickerSetTitle) SetName(val string) {
+	s.Name = val
+}
+
+// SetTitle sets the value of Title.
+func (s *SetStickerSetTitle) SetTitle(val string) {
+	s.Title = val
 }
 
 // Input for setWebhook.
@@ -22572,8 +23580,8 @@ type Sticker struct {
 	IsAnimated bool `json:"is_animated"`
 	// _True_, if the sticker is a [video sticker](https://telegram.
 	// org/blog/video-stickers-better-reactions).
-	IsVideo bool         `json:"is_video"`
-	Thumb   OptPhotoSize `json:"thumb"`
+	IsVideo   bool         `json:"is_video"`
+	Thumbnail OptPhotoSize `json:"thumbnail"`
 	// _Optional_. Emoji associated with the sticker.
 	Emoji OptString `json:"emoji"`
 	// _Optional_. Name of the sticker set to which the sticker belongs.
@@ -22582,6 +23590,10 @@ type Sticker struct {
 	MaskPosition     OptMaskPosition `json:"mask_position"`
 	// _Optional_. For custom emoji stickers, unique identifier of the custom emoji.
 	CustomEmojiID OptString `json:"custom_emoji_id"`
+	// _Optional_. _True_, if the sticker must be repainted to a text color in messages, the color of the
+	// Telegram Premium badge in emoji status, white color on chat photos, or another appropriate color
+	// in other places.
+	NeedsRepainting OptBool `json:"needs_repainting"`
 	// _Optional_. File size in bytes.
 	FileSize OptInt `json:"file_size"`
 }
@@ -22621,9 +23633,9 @@ func (s *Sticker) GetIsVideo() bool {
 	return s.IsVideo
 }
 
-// GetThumb returns the value of Thumb.
-func (s *Sticker) GetThumb() OptPhotoSize {
-	return s.Thumb
+// GetThumbnail returns the value of Thumbnail.
+func (s *Sticker) GetThumbnail() OptPhotoSize {
+	return s.Thumbnail
 }
 
 // GetEmoji returns the value of Emoji.
@@ -22649,6 +23661,11 @@ func (s *Sticker) GetMaskPosition() OptMaskPosition {
 // GetCustomEmojiID returns the value of CustomEmojiID.
 func (s *Sticker) GetCustomEmojiID() OptString {
 	return s.CustomEmojiID
+}
+
+// GetNeedsRepainting returns the value of NeedsRepainting.
+func (s *Sticker) GetNeedsRepainting() OptBool {
+	return s.NeedsRepainting
 }
 
 // GetFileSize returns the value of FileSize.
@@ -22691,9 +23708,9 @@ func (s *Sticker) SetIsVideo(val bool) {
 	s.IsVideo = val
 }
 
-// SetThumb sets the value of Thumb.
-func (s *Sticker) SetThumb(val OptPhotoSize) {
-	s.Thumb = val
+// SetThumbnail sets the value of Thumbnail.
+func (s *Sticker) SetThumbnail(val OptPhotoSize) {
+	s.Thumbnail = val
 }
 
 // SetEmoji sets the value of Emoji.
@@ -22721,6 +23738,11 @@ func (s *Sticker) SetCustomEmojiID(val OptString) {
 	s.CustomEmojiID = val
 }
 
+// SetNeedsRepainting sets the value of NeedsRepainting.
+func (s *Sticker) SetNeedsRepainting(val OptBool) {
+	s.NeedsRepainting = val
+}
+
 // SetFileSize sets the value of FileSize.
 func (s *Sticker) SetFileSize(val OptInt) {
 	s.FileSize = val
@@ -22742,8 +23764,8 @@ type StickerSet struct {
 	// org/blog/video-stickers-better-reactions).
 	IsVideo bool `json:"is_video"`
 	// List of all set stickers.
-	Stickers []Sticker    `json:"stickers"`
-	Thumb    OptPhotoSize `json:"thumb"`
+	Stickers  []Sticker    `json:"stickers"`
+	Thumbnail OptPhotoSize `json:"thumbnail"`
 }
 
 // GetName returns the value of Name.
@@ -22776,9 +23798,9 @@ func (s *StickerSet) GetStickers() []Sticker {
 	return s.Stickers
 }
 
-// GetThumb returns the value of Thumb.
-func (s *StickerSet) GetThumb() OptPhotoSize {
-	return s.Thumb
+// GetThumbnail returns the value of Thumbnail.
+func (s *StickerSet) GetThumbnail() OptPhotoSize {
+	return s.Thumbnail
 }
 
 // SetName sets the value of Name.
@@ -22811,9 +23833,9 @@ func (s *StickerSet) SetStickers(val []Sticker) {
 	s.Stickers = val
 }
 
-// SetThumb sets the value of Thumb.
-func (s *StickerSet) SetThumb(val OptPhotoSize) {
-	s.Thumb = val
+// SetThumbnail sets the value of Thumbnail.
+func (s *StickerSet) SetThumbnail(val OptPhotoSize) {
+	s.Thumbnail = val
 }
 
 // Type of the sticker, currently one of `regular`, `mask`, `custom_emoji`. The type of the sticker
@@ -23377,10 +24399,13 @@ func (s *Update) SetChatJoinRequest(val OptChatJoinRequest) {
 type UploadStickerFile struct {
 	// User identifier of sticker file owner.
 	UserID int64 `json:"user_id"`
-	// **PNG** image with the sticker, must be up to 512 kilobytes in size, dimensions must not exceed
-	// 512px, and either width or height must be exactly 512px. [More information on Sending
-	// Files](https://core.telegram.org/bots/api#sending-files).
-	PNGSticker string `json:"png_sticker"`
+	// A file with the sticker in .WEBP, .PNG, .TGS, or .WEBM format. See [](https://core.telegram.
+	// org/stickers)[https://core.telegram.org/stickers](https://core.telegram.org/stickers) for
+	// technical requirements. [More information on Sending Files](https://core.telegram.
+	// org/bots/api#sending-files).
+	Sticker string `json:"sticker"`
+	// Format of the sticker, must be one of `static`, `animated`, `video`.
+	StickerFormat string `json:"sticker_format"`
 }
 
 // GetUserID returns the value of UserID.
@@ -23388,9 +24413,14 @@ func (s *UploadStickerFile) GetUserID() int64 {
 	return s.UserID
 }
 
-// GetPNGSticker returns the value of PNGSticker.
-func (s *UploadStickerFile) GetPNGSticker() string {
-	return s.PNGSticker
+// GetSticker returns the value of Sticker.
+func (s *UploadStickerFile) GetSticker() string {
+	return s.Sticker
+}
+
+// GetStickerFormat returns the value of StickerFormat.
+func (s *UploadStickerFile) GetStickerFormat() string {
+	return s.StickerFormat
 }
 
 // SetUserID sets the value of UserID.
@@ -23398,9 +24428,14 @@ func (s *UploadStickerFile) SetUserID(val int64) {
 	s.UserID = val
 }
 
-// SetPNGSticker sets the value of PNGSticker.
-func (s *UploadStickerFile) SetPNGSticker(val string) {
-	s.PNGSticker = val
+// SetSticker sets the value of Sticker.
+func (s *UploadStickerFile) SetSticker(val string) {
+	s.Sticker = val
+}
+
+// SetStickerFormat sets the value of StickerFormat.
+func (s *UploadStickerFile) SetStickerFormat(val string) {
+	s.StickerFormat = val
 }
 
 // This object represents a Telegram user or bot.
@@ -23576,6 +24611,40 @@ func (s *UserProfilePhotos) SetPhotos(val [][]PhotoSize) {
 	s.Photos = val
 }
 
+// This object contains information about the user whose identifier was shared with the bot using a
+// [KeyboardButtonRequestUser](https://core.telegram.org/bots/api#keyboardbuttonrequestuser) button.
+// Ref: #/components/schemas/UserShared
+type UserShared struct {
+	// Identifier of the request.
+	RequestID int `json:"request_id"`
+	// Identifier of the shared user. This number may have more than 32 significant bits and some
+	// programming languages may have difficulty/silent defects in interpreting it. But it has at most 52
+	// significant bits, so a 64-bit integer or double-precision float type are safe for storing this
+	// identifier. The bot may not have access to the user and could be unable to use this identifier,
+	// unless the user is already known to the bot by some other means.
+	UserID int64 `json:"user_id"`
+}
+
+// GetRequestID returns the value of RequestID.
+func (s *UserShared) GetRequestID() int {
+	return s.RequestID
+}
+
+// GetUserID returns the value of UserID.
+func (s *UserShared) GetUserID() int64 {
+	return s.UserID
+}
+
+// SetRequestID sets the value of RequestID.
+func (s *UserShared) SetRequestID(val int) {
+	s.RequestID = val
+}
+
+// SetUserID sets the value of UserID.
+func (s *UserShared) SetUserID(val int64) {
+	s.UserID = val
+}
+
 // This object represents a venue.
 // Ref: #/components/schemas/Venue
 type Venue struct {
@@ -23679,8 +24748,8 @@ type Video struct {
 	// Video height as defined by sender.
 	Height int `json:"height"`
 	// Duration of the video in seconds as defined by sender.
-	Duration int          `json:"duration"`
-	Thumb    OptPhotoSize `json:"thumb"`
+	Duration  int          `json:"duration"`
+	Thumbnail OptPhotoSize `json:"thumbnail"`
 	// _Optional_. Original filename as defined by sender.
 	FileName OptString `json:"file_name"`
 	// _Optional_. MIME type of the file as defined by sender.
@@ -23716,9 +24785,9 @@ func (s *Video) GetDuration() int {
 	return s.Duration
 }
 
-// GetThumb returns the value of Thumb.
-func (s *Video) GetThumb() OptPhotoSize {
-	return s.Thumb
+// GetThumbnail returns the value of Thumbnail.
+func (s *Video) GetThumbnail() OptPhotoSize {
+	return s.Thumbnail
 }
 
 // GetFileName returns the value of FileName.
@@ -23761,9 +24830,9 @@ func (s *Video) SetDuration(val int) {
 	s.Duration = val
 }
 
-// SetThumb sets the value of Thumb.
-func (s *Video) SetThumb(val OptPhotoSize) {
-	s.Thumb = val
+// SetThumbnail sets the value of Thumbnail.
+func (s *Video) SetThumbnail(val OptPhotoSize) {
+	s.Thumbnail = val
 }
 
 // SetFileName sets the value of FileName.
@@ -23850,8 +24919,8 @@ type VideoNote struct {
 	// Video width and height (diameter of the video message) as defined by sender.
 	Length int `json:"length"`
 	// Duration of the video in seconds as defined by sender.
-	Duration int          `json:"duration"`
-	Thumb    OptPhotoSize `json:"thumb"`
+	Duration  int          `json:"duration"`
+	Thumbnail OptPhotoSize `json:"thumbnail"`
 	// _Optional_. File size in bytes.
 	FileSize OptInt `json:"file_size"`
 }
@@ -23876,9 +24945,9 @@ func (s *VideoNote) GetDuration() int {
 	return s.Duration
 }
 
-// GetThumb returns the value of Thumb.
-func (s *VideoNote) GetThumb() OptPhotoSize {
-	return s.Thumb
+// GetThumbnail returns the value of Thumbnail.
+func (s *VideoNote) GetThumbnail() OptPhotoSize {
+	return s.Thumbnail
 }
 
 // GetFileSize returns the value of FileSize.
@@ -23906,9 +24975,9 @@ func (s *VideoNote) SetDuration(val int) {
 	s.Duration = val
 }
 
-// SetThumb sets the value of Thumb.
-func (s *VideoNote) SetThumb(val OptPhotoSize) {
-	s.Thumb = val
+// SetThumbnail sets the value of Thumbnail.
+func (s *VideoNote) SetThumbnail(val OptPhotoSize) {
+	s.Thumbnail = val
 }
 
 // SetFileSize sets the value of FileSize.

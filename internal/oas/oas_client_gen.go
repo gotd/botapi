@@ -64,10 +64,10 @@ func (c *Client) requestURL(ctx context.Context) *url.URL {
 
 // AddStickerToSet invokes addStickerToSet operation.
 //
-// Use this method to add a new sticker to a set created by the bot. You **must** use exactly one of
-// the fields _png_sticker_, _tgs_sticker_, or _webm_sticker_. Animated stickers can be added to
-// animated sticker sets and only to them. Animated sticker sets can have up to 50 stickers. Static
-// sticker sets can have up to 120 stickers. Returns _True_ on success.
+// Use this method to add a new sticker to a set created by the bot. The format of the added sticker
+// must match the format of the other stickers in the set. Emoji sticker sets can have up to 200
+// stickers. Animated and video sticker sets can have up to 50 stickers. Static sticker sets can have
+// up to 120 stickers. Returns _True_ on success.
 //
 // POST /addStickerToSet
 func (c *Client) AddStickerToSet(ctx context.Context, request *AddStickerToSet) (*Result, error) {
@@ -1326,8 +1326,7 @@ func (c *Client) sendCreateInvoiceLink(ctx context.Context, request *CreateInvoi
 // CreateNewStickerSet invokes createNewStickerSet operation.
 //
 // Use this method to create a new sticker set owned by a user. The bot will be able to edit the
-// sticker set thus created. You **must** use exactly one of the fields _png_sticker_, _tgs_sticker_,
-// or _webm_sticker_. Returns _True_ on success.
+// sticker set thus created. Returns _True_ on success.
 //
 // POST /createNewStickerSet
 func (c *Client) CreateNewStickerSet(ctx context.Context, request *CreateNewStickerSet) (*Result, error) {
@@ -1914,6 +1913,77 @@ func (c *Client) sendDeleteStickerFromSet(ctx context.Context, request *DeleteSt
 
 	stage = "DecodeResponse"
 	result, err := decodeDeleteStickerFromSetResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
+// DeleteStickerSet invokes deleteStickerSet operation.
+//
+// Use this method to delete a sticker set that was created by the bot. Returns _True_ on success.
+//
+// POST /deleteStickerSet
+func (c *Client) DeleteStickerSet(ctx context.Context, request *DeleteStickerSet) (*Result, error) {
+	res, err := c.sendDeleteStickerSet(ctx, request)
+	_ = res
+	return res, err
+}
+
+func (c *Client) sendDeleteStickerSet(ctx context.Context, request *DeleteStickerSet) (res *Result, err error) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("deleteStickerSet"),
+	}
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, otelAttrs...)
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, "DeleteStickerSet",
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, otelAttrs...)
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	u.Path += "/deleteStickerSet"
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "POST", u, nil)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeDeleteStickerSetRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeDeleteStickerSetResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -2947,8 +3017,8 @@ func (c *Client) sendGetChatAdministrators(ctx context.Context, request *GetChat
 
 // GetChatMember invokes getChatMember operation.
 //
-// Use this method to get information about a member of a chat. The method is guaranteed to work for
-// other users, only if the bot is an administrator in the chat. Returns a [ChatMember](https://core.
+// Use this method to get information about a member of a chat. The method is only guaranteed to work
+// for other users if the bot is an administrator in the chat. Returns a [ChatMember](https://core.
 // telegram.org/bots/api#chatmember) object on success.
 //
 // POST /getChatMember
@@ -3669,6 +3739,150 @@ func (c *Client) sendGetMyDefaultAdministratorRights(ctx context.Context, reques
 
 	stage = "DecodeResponse"
 	result, err := decodeGetMyDefaultAdministratorRightsResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
+// GetMyDescription invokes getMyDescription operation.
+//
+// Use this method to get the current bot description for the given user language. Returns
+// [BotDescription](https://core.telegram.org/bots/api#botdescription) on success.
+//
+// POST /getMyDescription
+func (c *Client) GetMyDescription(ctx context.Context, request OptGetMyDescription) (*Result, error) {
+	res, err := c.sendGetMyDescription(ctx, request)
+	_ = res
+	return res, err
+}
+
+func (c *Client) sendGetMyDescription(ctx context.Context, request OptGetMyDescription) (res *Result, err error) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("getMyDescription"),
+	}
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, otelAttrs...)
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, "GetMyDescription",
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, otelAttrs...)
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	u.Path += "/getMyDescription"
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "POST", u, nil)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeGetMyDescriptionRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeGetMyDescriptionResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
+// GetMyShortDescription invokes getMyShortDescription operation.
+//
+// Use this method to get the current bot short description for the given user language. Returns
+// [BotShortDescription](https://core.telegram.org/bots/api#botshortdescription) on success.
+//
+// POST /getMyShortDescription
+func (c *Client) GetMyShortDescription(ctx context.Context, request OptGetMyShortDescription) (*Result, error) {
+	res, err := c.sendGetMyShortDescription(ctx, request)
+	_ = res
+	return res, err
+}
+
+func (c *Client) sendGetMyShortDescription(ctx context.Context, request OptGetMyShortDescription) (res *Result, err error) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("getMyShortDescription"),
+	}
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, otelAttrs...)
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, "GetMyShortDescription",
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, otelAttrs...)
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	u.Path += "/getMyShortDescription"
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "POST", u, nil)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeGetMyShortDescriptionRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeGetMyShortDescriptionResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -6646,6 +6860,77 @@ func (c *Client) sendSetChatTitle(ctx context.Context, request *SetChatTitle) (r
 	return result, nil
 }
 
+// SetCustomEmojiStickerSetThumbnail invokes setCustomEmojiStickerSetThumbnail operation.
+//
+// Use this method to set the thumbnail of a custom emoji sticker set. Returns _True_ on success.
+//
+// POST /setCustomEmojiStickerSetThumbnail
+func (c *Client) SetCustomEmojiStickerSetThumbnail(ctx context.Context, request *SetCustomEmojiStickerSetThumbnail) (*Result, error) {
+	res, err := c.sendSetCustomEmojiStickerSetThumbnail(ctx, request)
+	_ = res
+	return res, err
+}
+
+func (c *Client) sendSetCustomEmojiStickerSetThumbnail(ctx context.Context, request *SetCustomEmojiStickerSetThumbnail) (res *Result, err error) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("setCustomEmojiStickerSetThumbnail"),
+	}
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, otelAttrs...)
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, "SetCustomEmojiStickerSetThumbnail",
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, otelAttrs...)
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	u.Path += "/setCustomEmojiStickerSetThumbnail"
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "POST", u, nil)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeSetCustomEmojiStickerSetThumbnailRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeSetCustomEmojiStickerSetThumbnailResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
 // SetGameScore invokes setGameScore operation.
 //
 // Use this method to set the score of the specified user in a game message. On success, if the
@@ -6804,8 +7089,8 @@ func (c *Client) sendSetMyCommands(ctx context.Context, request *SetMyCommands) 
 // SetMyDefaultAdministratorRights invokes setMyDefaultAdministratorRights operation.
 //
 // Use this method to change the default administrator rights requested by the bot when it's added as
-// an administrator to groups or channels. These rights will be suggested to users, but they are are
-// free to modify the list before adding the bot. Returns _True_ on success.
+// an administrator to groups or channels. These rights will be suggested to users, but they are free
+// to modify the list before adding the bot. Returns _True_ on success.
 //
 // POST /setMyDefaultAdministratorRights
 func (c *Client) SetMyDefaultAdministratorRights(ctx context.Context, request OptSetMyDefaultAdministratorRights) (*Result, error) {
@@ -6867,6 +7152,182 @@ func (c *Client) sendSetMyDefaultAdministratorRights(ctx context.Context, reques
 
 	stage = "DecodeResponse"
 	result, err := decodeSetMyDefaultAdministratorRightsResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
+// SetMyDescription invokes setMyDescription operation.
+//
+// Use this method to change the bot's description, which is shown in the chat with the bot if the
+// chat is empty. Returns _True_ on success.
+//
+// POST /setMyDescription
+func (c *Client) SetMyDescription(ctx context.Context, request OptSetMyDescription) (*Result, error) {
+	res, err := c.sendSetMyDescription(ctx, request)
+	_ = res
+	return res, err
+}
+
+func (c *Client) sendSetMyDescription(ctx context.Context, request OptSetMyDescription) (res *Result, err error) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("setMyDescription"),
+	}
+	// Validate request before sending.
+	if err := func() error {
+		if request.Set {
+			if err := func() error {
+				if err := request.Value.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return err
+			}
+		}
+		return nil
+	}(); err != nil {
+		return res, errors.Wrap(err, "validate")
+	}
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, otelAttrs...)
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, "SetMyDescription",
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, otelAttrs...)
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	u.Path += "/setMyDescription"
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "POST", u, nil)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeSetMyDescriptionRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeSetMyDescriptionResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
+// SetMyShortDescription invokes setMyShortDescription operation.
+//
+// Use this method to change the bot's short description, which is shown on the bot's profile page
+// and is sent together with the link when users share the bot. Returns _True_ on success.
+//
+// POST /setMyShortDescription
+func (c *Client) SetMyShortDescription(ctx context.Context, request OptSetMyShortDescription) (*Result, error) {
+	res, err := c.sendSetMyShortDescription(ctx, request)
+	_ = res
+	return res, err
+}
+
+func (c *Client) sendSetMyShortDescription(ctx context.Context, request OptSetMyShortDescription) (res *Result, err error) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("setMyShortDescription"),
+	}
+	// Validate request before sending.
+	if err := func() error {
+		if request.Set {
+			if err := func() error {
+				if err := request.Value.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return err
+			}
+		}
+		return nil
+	}(); err != nil {
+		return res, errors.Wrap(err, "validate")
+	}
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, otelAttrs...)
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, "SetMyShortDescription",
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, otelAttrs...)
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	u.Path += "/setMyShortDescription"
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "POST", u, nil)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeSetMyShortDescriptionRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeSetMyShortDescriptionResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -6957,6 +7418,241 @@ func (c *Client) sendSetPassportDataErrors(ctx context.Context, request *SetPass
 	return result, nil
 }
 
+// SetStickerEmojiList invokes setStickerEmojiList operation.
+//
+// Use this method to change the list of emoji assigned to a regular or custom emoji sticker. The
+// sticker must belong to a sticker set created by the bot. Returns _True_ on success.
+//
+// POST /setStickerEmojiList
+func (c *Client) SetStickerEmojiList(ctx context.Context, request *SetStickerEmojiList) (*Result, error) {
+	res, err := c.sendSetStickerEmojiList(ctx, request)
+	_ = res
+	return res, err
+}
+
+func (c *Client) sendSetStickerEmojiList(ctx context.Context, request *SetStickerEmojiList) (res *Result, err error) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("setStickerEmojiList"),
+	}
+	// Validate request before sending.
+	if err := func() error {
+		if err := request.Validate(); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return res, errors.Wrap(err, "validate")
+	}
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, otelAttrs...)
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, "SetStickerEmojiList",
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, otelAttrs...)
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	u.Path += "/setStickerEmojiList"
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "POST", u, nil)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeSetStickerEmojiListRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeSetStickerEmojiListResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
+// SetStickerKeywords invokes setStickerKeywords operation.
+//
+// Use this method to change search keywords assigned to a regular or custom emoji sticker. The
+// sticker must belong to a sticker set created by the bot. Returns _True_ on success.
+//
+// POST /setStickerKeywords
+func (c *Client) SetStickerKeywords(ctx context.Context, request *SetStickerKeywords) (*Result, error) {
+	res, err := c.sendSetStickerKeywords(ctx, request)
+	_ = res
+	return res, err
+}
+
+func (c *Client) sendSetStickerKeywords(ctx context.Context, request *SetStickerKeywords) (res *Result, err error) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("setStickerKeywords"),
+	}
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, otelAttrs...)
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, "SetStickerKeywords",
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, otelAttrs...)
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	u.Path += "/setStickerKeywords"
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "POST", u, nil)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeSetStickerKeywordsRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeSetStickerKeywordsResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
+// SetStickerMaskPosition invokes setStickerMaskPosition operation.
+//
+// Use this method to change the [mask position](https://core.telegram.org/bots/api#maskposition) of
+// a mask sticker. The sticker must belong to a sticker set that was created by the bot. Returns
+// _True_ on success.
+//
+// POST /setStickerMaskPosition
+func (c *Client) SetStickerMaskPosition(ctx context.Context, request *SetStickerMaskPosition) (*Result, error) {
+	res, err := c.sendSetStickerMaskPosition(ctx, request)
+	_ = res
+	return res, err
+}
+
+func (c *Client) sendSetStickerMaskPosition(ctx context.Context, request *SetStickerMaskPosition) (res *Result, err error) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("setStickerMaskPosition"),
+	}
+	// Validate request before sending.
+	if err := func() error {
+		if err := request.Validate(); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return res, errors.Wrap(err, "validate")
+	}
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, otelAttrs...)
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, "SetStickerMaskPosition",
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, otelAttrs...)
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	u.Path += "/setStickerMaskPosition"
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "POST", u, nil)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeSetStickerMaskPositionRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeSetStickerMaskPositionResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
 // SetStickerPositionInSet invokes setStickerPositionInSet operation.
 //
 // Use this method to move a sticker in a set created by the bot to a specific position. Returns
@@ -7029,22 +7725,21 @@ func (c *Client) sendSetStickerPositionInSet(ctx context.Context, request *SetSt
 	return result, nil
 }
 
-// SetStickerSetThumb invokes setStickerSetThumb operation.
+// SetStickerSetThumbnail invokes setStickerSetThumbnail operation.
 //
-// Use this method to set the thumbnail of a sticker set. Animated thumbnails can be set for animated
-// sticker sets only. Video thumbnails can be set only for video sticker sets only. Returns _True_ on
-// success.
+// Use this method to set the thumbnail of a regular or mask sticker set. The format of the thumbnail
+// file must match the format of the stickers in the set. Returns _True_ on success.
 //
-// POST /setStickerSetThumb
-func (c *Client) SetStickerSetThumb(ctx context.Context, request *SetStickerSetThumb) (*Result, error) {
-	res, err := c.sendSetStickerSetThumb(ctx, request)
+// POST /setStickerSetThumbnail
+func (c *Client) SetStickerSetThumbnail(ctx context.Context, request *SetStickerSetThumbnail) (*Result, error) {
+	res, err := c.sendSetStickerSetThumbnail(ctx, request)
 	_ = res
 	return res, err
 }
 
-func (c *Client) sendSetStickerSetThumb(ctx context.Context, request *SetStickerSetThumb) (res *Result, err error) {
+func (c *Client) sendSetStickerSetThumbnail(ctx context.Context, request *SetStickerSetThumbnail) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
-		otelogen.OperationID("setStickerSetThumb"),
+		otelogen.OperationID("setStickerSetThumbnail"),
 	}
 
 	// Run stopwatch.
@@ -7058,7 +7753,7 @@ func (c *Client) sendSetStickerSetThumb(ctx context.Context, request *SetSticker
 	c.requests.Add(ctx, 1, otelAttrs...)
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "SetStickerSetThumb",
+	ctx, span := c.cfg.Tracer.Start(ctx, "SetStickerSetThumbnail",
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -7075,14 +7770,14 @@ func (c *Client) sendSetStickerSetThumb(ctx context.Context, request *SetSticker
 
 	stage = "BuildURL"
 	u := uri.Clone(c.requestURL(ctx))
-	u.Path += "/setStickerSetThumb"
+	u.Path += "/setStickerSetThumbnail"
 
 	stage = "EncodeRequest"
 	r, err := ht.NewRequest(ctx, "POST", u, nil)
 	if err != nil {
 		return res, errors.Wrap(err, "create request")
 	}
-	if err := encodeSetStickerSetThumbRequest(request, r); err != nil {
+	if err := encodeSetStickerSetThumbnailRequest(request, r); err != nil {
 		return res, errors.Wrap(err, "encode request")
 	}
 
@@ -7094,7 +7789,87 @@ func (c *Client) sendSetStickerSetThumb(ctx context.Context, request *SetSticker
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeSetStickerSetThumbResponse(resp)
+	result, err := decodeSetStickerSetThumbnailResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
+// SetStickerSetTitle invokes setStickerSetTitle operation.
+//
+// Use this method to set the title of a created sticker set. Returns _True_ on success.
+//
+// POST /setStickerSetTitle
+func (c *Client) SetStickerSetTitle(ctx context.Context, request *SetStickerSetTitle) (*Result, error) {
+	res, err := c.sendSetStickerSetTitle(ctx, request)
+	_ = res
+	return res, err
+}
+
+func (c *Client) sendSetStickerSetTitle(ctx context.Context, request *SetStickerSetTitle) (res *Result, err error) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("setStickerSetTitle"),
+	}
+	// Validate request before sending.
+	if err := func() error {
+		if err := request.Validate(); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return res, errors.Wrap(err, "validate")
+	}
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, otelAttrs...)
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, "SetStickerSetTitle",
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, otelAttrs...)
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	u.Path += "/setStickerSetTitle"
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "POST", u, nil)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeSetStickerSetTitleRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeSetStickerSetTitleResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -7792,9 +8567,11 @@ func (c *Client) sendUnpinChatMessage(ctx context.Context, request *UnpinChatMes
 
 // UploadStickerFile invokes uploadStickerFile operation.
 //
-// Use this method to upload a .PNG file with a sticker for later use in _createNewStickerSet_ and
-// _addStickerToSet_ methods (can be used multiple times). Returns the uploaded [File](https://core.
-// telegram.org/bots/api#file) on success.
+// Use this method to upload a file with a sticker for later use in the
+// [createNewStickerSet](https://core.telegram.org/bots/api#createnewstickerset) and
+// [addStickerToSet](https://core.telegram.org/bots/api#addstickertoset) methods (the file can be
+// used multiple times). Returns the uploaded [File](https://core.telegram.org/bots/api#file) on
+// success.
 //
 // POST /uploadStickerFile
 func (c *Client) UploadStickerFile(ctx context.Context, request *UploadStickerFile) (*ResultFile, error) {

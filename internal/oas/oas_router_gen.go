@@ -573,23 +573,53 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 								return
 							}
 						}
-					case 'S': // Prefix: "StickerFromSet"
-						if l := len("StickerFromSet"); len(elem) >= l && elem[0:l] == "StickerFromSet" {
+					case 'S': // Prefix: "Sticker"
+						if l := len("Sticker"); len(elem) >= l && elem[0:l] == "Sticker" {
 							elem = elem[l:]
 						} else {
 							break
 						}
 
 						if len(elem) == 0 {
-							// Leaf node.
-							switch r.Method {
-							case "POST":
-								s.handleDeleteStickerFromSetRequest([0]string{}, w, r)
-							default:
-								s.notAllowed(w, r, "POST")
+							break
+						}
+						switch elem[0] {
+						case 'F': // Prefix: "FromSet"
+							if l := len("FromSet"); len(elem) >= l && elem[0:l] == "FromSet" {
+								elem = elem[l:]
+							} else {
+								break
 							}
 
-							return
+							if len(elem) == 0 {
+								// Leaf node.
+								switch r.Method {
+								case "POST":
+									s.handleDeleteStickerFromSetRequest([0]string{}, w, r)
+								default:
+									s.notAllowed(w, r, "POST")
+								}
+
+								return
+							}
+						case 'S': // Prefix: "Set"
+							if l := len("Set"); len(elem) >= l && elem[0:l] == "Set" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							if len(elem) == 0 {
+								// Leaf node.
+								switch r.Method {
+								case "POST":
+									s.handleDeleteStickerSetRequest([0]string{}, w, r)
+								default:
+									s.notAllowed(w, r, "POST")
+								}
+
+								return
+							}
 						}
 					case 'W': // Prefix: "Webhook"
 						if l := len("Webhook"); len(elem) >= l && elem[0:l] == "Webhook" {
@@ -1096,8 +1126,56 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 								return
 							}
-						case 'D': // Prefix: "DefaultAdministratorRights"
-							if l := len("DefaultAdministratorRights"); len(elem) >= l && elem[0:l] == "DefaultAdministratorRights" {
+						case 'D': // Prefix: "De"
+							if l := len("De"); len(elem) >= l && elem[0:l] == "De" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							if len(elem) == 0 {
+								break
+							}
+							switch elem[0] {
+							case 'f': // Prefix: "faultAdministratorRights"
+								if l := len("faultAdministratorRights"); len(elem) >= l && elem[0:l] == "faultAdministratorRights" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									// Leaf node.
+									switch r.Method {
+									case "POST":
+										s.handleGetMyDefaultAdministratorRightsRequest([0]string{}, w, r)
+									default:
+										s.notAllowed(w, r, "POST")
+									}
+
+									return
+								}
+							case 's': // Prefix: "scription"
+								if l := len("scription"); len(elem) >= l && elem[0:l] == "scription" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									// Leaf node.
+									switch r.Method {
+									case "POST":
+										s.handleGetMyDescriptionRequest([0]string{}, w, r)
+									default:
+										s.notAllowed(w, r, "POST")
+									}
+
+									return
+								}
+							}
+						case 'S': // Prefix: "ShortDescription"
+							if l := len("ShortDescription"); len(elem) >= l && elem[0:l] == "ShortDescription" {
 								elem = elem[l:]
 							} else {
 								break
@@ -1107,7 +1185,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 								// Leaf node.
 								switch r.Method {
 								case "POST":
-									s.handleGetMyDefaultAdministratorRightsRequest([0]string{}, w, r)
+									s.handleGetMyShortDescriptionRequest([0]string{}, w, r)
 								default:
 									s.notAllowed(w, r, "POST")
 								}
@@ -1853,8 +1931,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 							break
 						}
 						switch elem[0] {
-						case 'C': // Prefix: "Chat"
-							if l := len("Chat"); len(elem) >= l && elem[0:l] == "Chat" {
+						case 'C': // Prefix: "C"
+							if l := len("C"); len(elem) >= l && elem[0:l] == "C" {
 								elem = elem[l:]
 							} else {
 								break
@@ -1864,62 +1942,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 								break
 							}
 							switch elem[0] {
-							case 'A': // Prefix: "AdministratorCustomTitle"
-								if l := len("AdministratorCustomTitle"); len(elem) >= l && elem[0:l] == "AdministratorCustomTitle" {
-									elem = elem[l:]
-								} else {
-									break
-								}
-
-								if len(elem) == 0 {
-									// Leaf node.
-									switch r.Method {
-									case "POST":
-										s.handleSetChatAdministratorCustomTitleRequest([0]string{}, w, r)
-									default:
-										s.notAllowed(w, r, "POST")
-									}
-
-									return
-								}
-							case 'D': // Prefix: "Description"
-								if l := len("Description"); len(elem) >= l && elem[0:l] == "Description" {
-									elem = elem[l:]
-								} else {
-									break
-								}
-
-								if len(elem) == 0 {
-									// Leaf node.
-									switch r.Method {
-									case "POST":
-										s.handleSetChatDescriptionRequest([0]string{}, w, r)
-									default:
-										s.notAllowed(w, r, "POST")
-									}
-
-									return
-								}
-							case 'M': // Prefix: "MenuButton"
-								if l := len("MenuButton"); len(elem) >= l && elem[0:l] == "MenuButton" {
-									elem = elem[l:]
-								} else {
-									break
-								}
-
-								if len(elem) == 0 {
-									// Leaf node.
-									switch r.Method {
-									case "POST":
-										s.handleSetChatMenuButtonRequest([0]string{}, w, r)
-									default:
-										s.notAllowed(w, r, "POST")
-									}
-
-									return
-								}
-							case 'P': // Prefix: "P"
-								if l := len("P"); len(elem) >= l && elem[0:l] == "P" {
+							case 'h': // Prefix: "hat"
+								if l := len("hat"); len(elem) >= l && elem[0:l] == "hat" {
 									elem = elem[l:]
 								} else {
 									break
@@ -1929,8 +1953,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 									break
 								}
 								switch elem[0] {
-								case 'e': // Prefix: "ermissions"
-									if l := len("ermissions"); len(elem) >= l && elem[0:l] == "ermissions" {
+								case 'A': // Prefix: "AdministratorCustomTitle"
+									if l := len("AdministratorCustomTitle"); len(elem) >= l && elem[0:l] == "AdministratorCustomTitle" {
 										elem = elem[l:]
 									} else {
 										break
@@ -1940,15 +1964,15 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 										// Leaf node.
 										switch r.Method {
 										case "POST":
-											s.handleSetChatPermissionsRequest([0]string{}, w, r)
+											s.handleSetChatAdministratorCustomTitleRequest([0]string{}, w, r)
 										default:
 											s.notAllowed(w, r, "POST")
 										}
 
 										return
 									}
-								case 'h': // Prefix: "hoto"
-									if l := len("hoto"); len(elem) >= l && elem[0:l] == "hoto" {
+								case 'D': // Prefix: "Description"
+									if l := len("Description"); len(elem) >= l && elem[0:l] == "Description" {
 										elem = elem[l:]
 									} else {
 										break
@@ -1958,7 +1982,109 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 										// Leaf node.
 										switch r.Method {
 										case "POST":
-											s.handleSetChatPhotoRequest([0]string{}, w, r)
+											s.handleSetChatDescriptionRequest([0]string{}, w, r)
+										default:
+											s.notAllowed(w, r, "POST")
+										}
+
+										return
+									}
+								case 'M': // Prefix: "MenuButton"
+									if l := len("MenuButton"); len(elem) >= l && elem[0:l] == "MenuButton" {
+										elem = elem[l:]
+									} else {
+										break
+									}
+
+									if len(elem) == 0 {
+										// Leaf node.
+										switch r.Method {
+										case "POST":
+											s.handleSetChatMenuButtonRequest([0]string{}, w, r)
+										default:
+											s.notAllowed(w, r, "POST")
+										}
+
+										return
+									}
+								case 'P': // Prefix: "P"
+									if l := len("P"); len(elem) >= l && elem[0:l] == "P" {
+										elem = elem[l:]
+									} else {
+										break
+									}
+
+									if len(elem) == 0 {
+										break
+									}
+									switch elem[0] {
+									case 'e': // Prefix: "ermissions"
+										if l := len("ermissions"); len(elem) >= l && elem[0:l] == "ermissions" {
+											elem = elem[l:]
+										} else {
+											break
+										}
+
+										if len(elem) == 0 {
+											// Leaf node.
+											switch r.Method {
+											case "POST":
+												s.handleSetChatPermissionsRequest([0]string{}, w, r)
+											default:
+												s.notAllowed(w, r, "POST")
+											}
+
+											return
+										}
+									case 'h': // Prefix: "hoto"
+										if l := len("hoto"); len(elem) >= l && elem[0:l] == "hoto" {
+											elem = elem[l:]
+										} else {
+											break
+										}
+
+										if len(elem) == 0 {
+											// Leaf node.
+											switch r.Method {
+											case "POST":
+												s.handleSetChatPhotoRequest([0]string{}, w, r)
+											default:
+												s.notAllowed(w, r, "POST")
+											}
+
+											return
+										}
+									}
+								case 'S': // Prefix: "StickerSet"
+									if l := len("StickerSet"); len(elem) >= l && elem[0:l] == "StickerSet" {
+										elem = elem[l:]
+									} else {
+										break
+									}
+
+									if len(elem) == 0 {
+										// Leaf node.
+										switch r.Method {
+										case "POST":
+											s.handleSetChatStickerSetRequest([0]string{}, w, r)
+										default:
+											s.notAllowed(w, r, "POST")
+										}
+
+										return
+									}
+								case 'T': // Prefix: "Title"
+									if l := len("Title"); len(elem) >= l && elem[0:l] == "Title" {
+										elem = elem[l:]
+									} else {
+										break
+									}
+
+									if len(elem) == 0 {
+										// Leaf node.
+										switch r.Method {
+										case "POST":
+											s.handleSetChatTitleRequest([0]string{}, w, r)
 										default:
 											s.notAllowed(w, r, "POST")
 										}
@@ -1966,8 +2092,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 										return
 									}
 								}
-							case 'S': // Prefix: "StickerSet"
-								if l := len("StickerSet"); len(elem) >= l && elem[0:l] == "StickerSet" {
+							case 'u': // Prefix: "ustomEmojiStickerSetThumbnail"
+								if l := len("ustomEmojiStickerSetThumbnail"); len(elem) >= l && elem[0:l] == "ustomEmojiStickerSetThumbnail" {
 									elem = elem[l:]
 								} else {
 									break
@@ -1977,25 +2103,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 									// Leaf node.
 									switch r.Method {
 									case "POST":
-										s.handleSetChatStickerSetRequest([0]string{}, w, r)
-									default:
-										s.notAllowed(w, r, "POST")
-									}
-
-									return
-								}
-							case 'T': // Prefix: "Title"
-								if l := len("Title"); len(elem) >= l && elem[0:l] == "Title" {
-									elem = elem[l:]
-								} else {
-									break
-								}
-
-								if len(elem) == 0 {
-									// Leaf node.
-									switch r.Method {
-									case "POST":
-										s.handleSetChatTitleRequest([0]string{}, w, r)
+										s.handleSetCustomEmojiStickerSetThumbnailRequest([0]string{}, w, r)
 									default:
 										s.notAllowed(w, r, "POST")
 									}
@@ -2050,8 +2158,56 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 									return
 								}
-							case 'D': // Prefix: "DefaultAdministratorRights"
-								if l := len("DefaultAdministratorRights"); len(elem) >= l && elem[0:l] == "DefaultAdministratorRights" {
+							case 'D': // Prefix: "De"
+								if l := len("De"); len(elem) >= l && elem[0:l] == "De" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									break
+								}
+								switch elem[0] {
+								case 'f': // Prefix: "faultAdministratorRights"
+									if l := len("faultAdministratorRights"); len(elem) >= l && elem[0:l] == "faultAdministratorRights" {
+										elem = elem[l:]
+									} else {
+										break
+									}
+
+									if len(elem) == 0 {
+										// Leaf node.
+										switch r.Method {
+										case "POST":
+											s.handleSetMyDefaultAdministratorRightsRequest([0]string{}, w, r)
+										default:
+											s.notAllowed(w, r, "POST")
+										}
+
+										return
+									}
+								case 's': // Prefix: "scription"
+									if l := len("scription"); len(elem) >= l && elem[0:l] == "scription" {
+										elem = elem[l:]
+									} else {
+										break
+									}
+
+									if len(elem) == 0 {
+										// Leaf node.
+										switch r.Method {
+										case "POST":
+											s.handleSetMyDescriptionRequest([0]string{}, w, r)
+										default:
+											s.notAllowed(w, r, "POST")
+										}
+
+										return
+									}
+								}
+							case 'S': // Prefix: "ShortDescription"
+								if l := len("ShortDescription"); len(elem) >= l && elem[0:l] == "ShortDescription" {
 									elem = elem[l:]
 								} else {
 									break
@@ -2061,7 +2217,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 									// Leaf node.
 									switch r.Method {
 									case "POST":
-										s.handleSetMyDefaultAdministratorRightsRequest([0]string{}, w, r)
+										s.handleSetMyShortDescriptionRequest([0]string{}, w, r)
 									default:
 										s.notAllowed(w, r, "POST")
 									}
@@ -2098,6 +2254,60 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 								break
 							}
 							switch elem[0] {
+							case 'E': // Prefix: "EmojiList"
+								if l := len("EmojiList"); len(elem) >= l && elem[0:l] == "EmojiList" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									// Leaf node.
+									switch r.Method {
+									case "POST":
+										s.handleSetStickerEmojiListRequest([0]string{}, w, r)
+									default:
+										s.notAllowed(w, r, "POST")
+									}
+
+									return
+								}
+							case 'K': // Prefix: "Keywords"
+								if l := len("Keywords"); len(elem) >= l && elem[0:l] == "Keywords" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									// Leaf node.
+									switch r.Method {
+									case "POST":
+										s.handleSetStickerKeywordsRequest([0]string{}, w, r)
+									default:
+										s.notAllowed(w, r, "POST")
+									}
+
+									return
+								}
+							case 'M': // Prefix: "MaskPosition"
+								if l := len("MaskPosition"); len(elem) >= l && elem[0:l] == "MaskPosition" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									// Leaf node.
+									switch r.Method {
+									case "POST":
+										s.handleSetStickerMaskPositionRequest([0]string{}, w, r)
+									default:
+										s.notAllowed(w, r, "POST")
+									}
+
+									return
+								}
 							case 'P': // Prefix: "PositionInSet"
 								if l := len("PositionInSet"); len(elem) >= l && elem[0:l] == "PositionInSet" {
 									elem = elem[l:]
@@ -2116,23 +2326,53 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 									return
 								}
-							case 'S': // Prefix: "SetThumb"
-								if l := len("SetThumb"); len(elem) >= l && elem[0:l] == "SetThumb" {
+							case 'S': // Prefix: "SetT"
+								if l := len("SetT"); len(elem) >= l && elem[0:l] == "SetT" {
 									elem = elem[l:]
 								} else {
 									break
 								}
 
 								if len(elem) == 0 {
-									// Leaf node.
-									switch r.Method {
-									case "POST":
-										s.handleSetStickerSetThumbRequest([0]string{}, w, r)
-									default:
-										s.notAllowed(w, r, "POST")
+									break
+								}
+								switch elem[0] {
+								case 'h': // Prefix: "humbnail"
+									if l := len("humbnail"); len(elem) >= l && elem[0:l] == "humbnail" {
+										elem = elem[l:]
+									} else {
+										break
 									}
 
-									return
+									if len(elem) == 0 {
+										// Leaf node.
+										switch r.Method {
+										case "POST":
+											s.handleSetStickerSetThumbnailRequest([0]string{}, w, r)
+										default:
+											s.notAllowed(w, r, "POST")
+										}
+
+										return
+									}
+								case 'i': // Prefix: "itle"
+									if l := len("itle"); len(elem) >= l && elem[0:l] == "itle" {
+										elem = elem[l:]
+									} else {
+										break
+									}
+
+									if len(elem) == 0 {
+										// Leaf node.
+										switch r.Method {
+										case "POST":
+											s.handleSetStickerSetTitleRequest([0]string{}, w, r)
+										default:
+											s.notAllowed(w, r, "POST")
+										}
+
+										return
+									}
 								}
 							}
 						case 'W': // Prefix: "Webhook"
@@ -3032,24 +3272,56 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								}
 							}
 						}
-					case 'S': // Prefix: "StickerFromSet"
-						if l := len("StickerFromSet"); len(elem) >= l && elem[0:l] == "StickerFromSet" {
+					case 'S': // Prefix: "Sticker"
+						if l := len("Sticker"); len(elem) >= l && elem[0:l] == "Sticker" {
 							elem = elem[l:]
 						} else {
 							break
 						}
 
 						if len(elem) == 0 {
-							switch method {
-							case "POST":
-								// Leaf: DeleteStickerFromSet
-								r.name = "DeleteStickerFromSet"
-								r.operationID = "deleteStickerFromSet"
-								r.args = args
-								r.count = 0
-								return r, true
-							default:
-								return
+							break
+						}
+						switch elem[0] {
+						case 'F': // Prefix: "FromSet"
+							if l := len("FromSet"); len(elem) >= l && elem[0:l] == "FromSet" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							if len(elem) == 0 {
+								switch method {
+								case "POST":
+									// Leaf: DeleteStickerFromSet
+									r.name = "DeleteStickerFromSet"
+									r.operationID = "deleteStickerFromSet"
+									r.args = args
+									r.count = 0
+									return r, true
+								default:
+									return
+								}
+							}
+						case 'S': // Prefix: "Set"
+							if l := len("Set"); len(elem) >= l && elem[0:l] == "Set" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							if len(elem) == 0 {
+								switch method {
+								case "POST":
+									// Leaf: DeleteStickerSet
+									r.name = "DeleteStickerSet"
+									r.operationID = "deleteStickerSet"
+									r.args = args
+									r.count = 0
+									return r, true
+								default:
+									return
+								}
 							}
 						}
 					case 'W': // Prefix: "Webhook"
@@ -3601,8 +3873,60 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									return
 								}
 							}
-						case 'D': // Prefix: "DefaultAdministratorRights"
-							if l := len("DefaultAdministratorRights"); len(elem) >= l && elem[0:l] == "DefaultAdministratorRights" {
+						case 'D': // Prefix: "De"
+							if l := len("De"); len(elem) >= l && elem[0:l] == "De" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							if len(elem) == 0 {
+								break
+							}
+							switch elem[0] {
+							case 'f': // Prefix: "faultAdministratorRights"
+								if l := len("faultAdministratorRights"); len(elem) >= l && elem[0:l] == "faultAdministratorRights" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									switch method {
+									case "POST":
+										// Leaf: GetMyDefaultAdministratorRights
+										r.name = "GetMyDefaultAdministratorRights"
+										r.operationID = "getMyDefaultAdministratorRights"
+										r.args = args
+										r.count = 0
+										return r, true
+									default:
+										return
+									}
+								}
+							case 's': // Prefix: "scription"
+								if l := len("scription"); len(elem) >= l && elem[0:l] == "scription" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									switch method {
+									case "POST":
+										// Leaf: GetMyDescription
+										r.name = "GetMyDescription"
+										r.operationID = "getMyDescription"
+										r.args = args
+										r.count = 0
+										return r, true
+									default:
+										return
+									}
+								}
+							}
+						case 'S': // Prefix: "ShortDescription"
+							if l := len("ShortDescription"); len(elem) >= l && elem[0:l] == "ShortDescription" {
 								elem = elem[l:]
 							} else {
 								break
@@ -3611,9 +3935,9 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							if len(elem) == 0 {
 								switch method {
 								case "POST":
-									// Leaf: GetMyDefaultAdministratorRights
-									r.name = "GetMyDefaultAdministratorRights"
-									r.operationID = "getMyDefaultAdministratorRights"
+									// Leaf: GetMyShortDescription
+									r.name = "GetMyShortDescription"
+									r.operationID = "getMyShortDescription"
 									r.args = args
 									r.count = 0
 									return r, true
@@ -4422,8 +4746,8 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							break
 						}
 						switch elem[0] {
-						case 'C': // Prefix: "Chat"
-							if l := len("Chat"); len(elem) >= l && elem[0:l] == "Chat" {
+						case 'C': // Prefix: "C"
+							if l := len("C"); len(elem) >= l && elem[0:l] == "C" {
 								elem = elem[l:]
 							} else {
 								break
@@ -4433,68 +4757,8 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								break
 							}
 							switch elem[0] {
-							case 'A': // Prefix: "AdministratorCustomTitle"
-								if l := len("AdministratorCustomTitle"); len(elem) >= l && elem[0:l] == "AdministratorCustomTitle" {
-									elem = elem[l:]
-								} else {
-									break
-								}
-
-								if len(elem) == 0 {
-									switch method {
-									case "POST":
-										// Leaf: SetChatAdministratorCustomTitle
-										r.name = "SetChatAdministratorCustomTitle"
-										r.operationID = "setChatAdministratorCustomTitle"
-										r.args = args
-										r.count = 0
-										return r, true
-									default:
-										return
-									}
-								}
-							case 'D': // Prefix: "Description"
-								if l := len("Description"); len(elem) >= l && elem[0:l] == "Description" {
-									elem = elem[l:]
-								} else {
-									break
-								}
-
-								if len(elem) == 0 {
-									switch method {
-									case "POST":
-										// Leaf: SetChatDescription
-										r.name = "SetChatDescription"
-										r.operationID = "setChatDescription"
-										r.args = args
-										r.count = 0
-										return r, true
-									default:
-										return
-									}
-								}
-							case 'M': // Prefix: "MenuButton"
-								if l := len("MenuButton"); len(elem) >= l && elem[0:l] == "MenuButton" {
-									elem = elem[l:]
-								} else {
-									break
-								}
-
-								if len(elem) == 0 {
-									switch method {
-									case "POST":
-										// Leaf: SetChatMenuButton
-										r.name = "SetChatMenuButton"
-										r.operationID = "setChatMenuButton"
-										r.args = args
-										r.count = 0
-										return r, true
-									default:
-										return
-									}
-								}
-							case 'P': // Prefix: "P"
-								if l := len("P"); len(elem) >= l && elem[0:l] == "P" {
+							case 'h': // Prefix: "hat"
+								if l := len("hat"); len(elem) >= l && elem[0:l] == "hat" {
 									elem = elem[l:]
 								} else {
 									break
@@ -4504,8 +4768,8 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									break
 								}
 								switch elem[0] {
-								case 'e': // Prefix: "ermissions"
-									if l := len("ermissions"); len(elem) >= l && elem[0:l] == "ermissions" {
+								case 'A': // Prefix: "AdministratorCustomTitle"
+									if l := len("AdministratorCustomTitle"); len(elem) >= l && elem[0:l] == "AdministratorCustomTitle" {
 										elem = elem[l:]
 									} else {
 										break
@@ -4514,9 +4778,9 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									if len(elem) == 0 {
 										switch method {
 										case "POST":
-											// Leaf: SetChatPermissions
-											r.name = "SetChatPermissions"
-											r.operationID = "setChatPermissions"
+											// Leaf: SetChatAdministratorCustomTitle
+											r.name = "SetChatAdministratorCustomTitle"
+											r.operationID = "setChatAdministratorCustomTitle"
 											r.args = args
 											r.count = 0
 											return r, true
@@ -4524,8 +4788,8 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 											return
 										}
 									}
-								case 'h': // Prefix: "hoto"
-									if l := len("hoto"); len(elem) >= l && elem[0:l] == "hoto" {
+								case 'D': // Prefix: "Description"
+									if l := len("Description"); len(elem) >= l && elem[0:l] == "Description" {
 										elem = elem[l:]
 									} else {
 										break
@@ -4534,9 +4798,121 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									if len(elem) == 0 {
 										switch method {
 										case "POST":
-											// Leaf: SetChatPhoto
-											r.name = "SetChatPhoto"
-											r.operationID = "setChatPhoto"
+											// Leaf: SetChatDescription
+											r.name = "SetChatDescription"
+											r.operationID = "setChatDescription"
+											r.args = args
+											r.count = 0
+											return r, true
+										default:
+											return
+										}
+									}
+								case 'M': // Prefix: "MenuButton"
+									if l := len("MenuButton"); len(elem) >= l && elem[0:l] == "MenuButton" {
+										elem = elem[l:]
+									} else {
+										break
+									}
+
+									if len(elem) == 0 {
+										switch method {
+										case "POST":
+											// Leaf: SetChatMenuButton
+											r.name = "SetChatMenuButton"
+											r.operationID = "setChatMenuButton"
+											r.args = args
+											r.count = 0
+											return r, true
+										default:
+											return
+										}
+									}
+								case 'P': // Prefix: "P"
+									if l := len("P"); len(elem) >= l && elem[0:l] == "P" {
+										elem = elem[l:]
+									} else {
+										break
+									}
+
+									if len(elem) == 0 {
+										break
+									}
+									switch elem[0] {
+									case 'e': // Prefix: "ermissions"
+										if l := len("ermissions"); len(elem) >= l && elem[0:l] == "ermissions" {
+											elem = elem[l:]
+										} else {
+											break
+										}
+
+										if len(elem) == 0 {
+											switch method {
+											case "POST":
+												// Leaf: SetChatPermissions
+												r.name = "SetChatPermissions"
+												r.operationID = "setChatPermissions"
+												r.args = args
+												r.count = 0
+												return r, true
+											default:
+												return
+											}
+										}
+									case 'h': // Prefix: "hoto"
+										if l := len("hoto"); len(elem) >= l && elem[0:l] == "hoto" {
+											elem = elem[l:]
+										} else {
+											break
+										}
+
+										if len(elem) == 0 {
+											switch method {
+											case "POST":
+												// Leaf: SetChatPhoto
+												r.name = "SetChatPhoto"
+												r.operationID = "setChatPhoto"
+												r.args = args
+												r.count = 0
+												return r, true
+											default:
+												return
+											}
+										}
+									}
+								case 'S': // Prefix: "StickerSet"
+									if l := len("StickerSet"); len(elem) >= l && elem[0:l] == "StickerSet" {
+										elem = elem[l:]
+									} else {
+										break
+									}
+
+									if len(elem) == 0 {
+										switch method {
+										case "POST":
+											// Leaf: SetChatStickerSet
+											r.name = "SetChatStickerSet"
+											r.operationID = "setChatStickerSet"
+											r.args = args
+											r.count = 0
+											return r, true
+										default:
+											return
+										}
+									}
+								case 'T': // Prefix: "Title"
+									if l := len("Title"); len(elem) >= l && elem[0:l] == "Title" {
+										elem = elem[l:]
+									} else {
+										break
+									}
+
+									if len(elem) == 0 {
+										switch method {
+										case "POST":
+											// Leaf: SetChatTitle
+											r.name = "SetChatTitle"
+											r.operationID = "setChatTitle"
 											r.args = args
 											r.count = 0
 											return r, true
@@ -4545,8 +4921,8 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 										}
 									}
 								}
-							case 'S': // Prefix: "StickerSet"
-								if l := len("StickerSet"); len(elem) >= l && elem[0:l] == "StickerSet" {
+							case 'u': // Prefix: "ustomEmojiStickerSetThumbnail"
+								if l := len("ustomEmojiStickerSetThumbnail"); len(elem) >= l && elem[0:l] == "ustomEmojiStickerSetThumbnail" {
 									elem = elem[l:]
 								} else {
 									break
@@ -4555,29 +4931,9 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								if len(elem) == 0 {
 									switch method {
 									case "POST":
-										// Leaf: SetChatStickerSet
-										r.name = "SetChatStickerSet"
-										r.operationID = "setChatStickerSet"
-										r.args = args
-										r.count = 0
-										return r, true
-									default:
-										return
-									}
-								}
-							case 'T': // Prefix: "Title"
-								if l := len("Title"); len(elem) >= l && elem[0:l] == "Title" {
-									elem = elem[l:]
-								} else {
-									break
-								}
-
-								if len(elem) == 0 {
-									switch method {
-									case "POST":
-										// Leaf: SetChatTitle
-										r.name = "SetChatTitle"
-										r.operationID = "setChatTitle"
+										// Leaf: SetCustomEmojiStickerSetThumbnail
+										r.name = "SetCustomEmojiStickerSetThumbnail"
+										r.operationID = "setCustomEmojiStickerSetThumbnail"
 										r.args = args
 										r.count = 0
 										return r, true
@@ -4637,8 +4993,60 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 										return
 									}
 								}
-							case 'D': // Prefix: "DefaultAdministratorRights"
-								if l := len("DefaultAdministratorRights"); len(elem) >= l && elem[0:l] == "DefaultAdministratorRights" {
+							case 'D': // Prefix: "De"
+								if l := len("De"); len(elem) >= l && elem[0:l] == "De" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									break
+								}
+								switch elem[0] {
+								case 'f': // Prefix: "faultAdministratorRights"
+									if l := len("faultAdministratorRights"); len(elem) >= l && elem[0:l] == "faultAdministratorRights" {
+										elem = elem[l:]
+									} else {
+										break
+									}
+
+									if len(elem) == 0 {
+										switch method {
+										case "POST":
+											// Leaf: SetMyDefaultAdministratorRights
+											r.name = "SetMyDefaultAdministratorRights"
+											r.operationID = "setMyDefaultAdministratorRights"
+											r.args = args
+											r.count = 0
+											return r, true
+										default:
+											return
+										}
+									}
+								case 's': // Prefix: "scription"
+									if l := len("scription"); len(elem) >= l && elem[0:l] == "scription" {
+										elem = elem[l:]
+									} else {
+										break
+									}
+
+									if len(elem) == 0 {
+										switch method {
+										case "POST":
+											// Leaf: SetMyDescription
+											r.name = "SetMyDescription"
+											r.operationID = "setMyDescription"
+											r.args = args
+											r.count = 0
+											return r, true
+										default:
+											return
+										}
+									}
+								}
+							case 'S': // Prefix: "ShortDescription"
+								if l := len("ShortDescription"); len(elem) >= l && elem[0:l] == "ShortDescription" {
 									elem = elem[l:]
 								} else {
 									break
@@ -4647,9 +5055,9 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								if len(elem) == 0 {
 									switch method {
 									case "POST":
-										// Leaf: SetMyDefaultAdministratorRights
-										r.name = "SetMyDefaultAdministratorRights"
-										r.operationID = "setMyDefaultAdministratorRights"
+										// Leaf: SetMyShortDescription
+										r.name = "SetMyShortDescription"
+										r.operationID = "setMyShortDescription"
 										r.args = args
 										r.count = 0
 										return r, true
@@ -4689,6 +5097,66 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								break
 							}
 							switch elem[0] {
+							case 'E': // Prefix: "EmojiList"
+								if l := len("EmojiList"); len(elem) >= l && elem[0:l] == "EmojiList" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									switch method {
+									case "POST":
+										// Leaf: SetStickerEmojiList
+										r.name = "SetStickerEmojiList"
+										r.operationID = "setStickerEmojiList"
+										r.args = args
+										r.count = 0
+										return r, true
+									default:
+										return
+									}
+								}
+							case 'K': // Prefix: "Keywords"
+								if l := len("Keywords"); len(elem) >= l && elem[0:l] == "Keywords" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									switch method {
+									case "POST":
+										// Leaf: SetStickerKeywords
+										r.name = "SetStickerKeywords"
+										r.operationID = "setStickerKeywords"
+										r.args = args
+										r.count = 0
+										return r, true
+									default:
+										return
+									}
+								}
+							case 'M': // Prefix: "MaskPosition"
+								if l := len("MaskPosition"); len(elem) >= l && elem[0:l] == "MaskPosition" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									switch method {
+									case "POST":
+										// Leaf: SetStickerMaskPosition
+										r.name = "SetStickerMaskPosition"
+										r.operationID = "setStickerMaskPosition"
+										r.args = args
+										r.count = 0
+										return r, true
+									default:
+										return
+									}
+								}
 							case 'P': // Prefix: "PositionInSet"
 								if l := len("PositionInSet"); len(elem) >= l && elem[0:l] == "PositionInSet" {
 									elem = elem[l:]
@@ -4709,24 +5177,56 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 										return
 									}
 								}
-							case 'S': // Prefix: "SetThumb"
-								if l := len("SetThumb"); len(elem) >= l && elem[0:l] == "SetThumb" {
+							case 'S': // Prefix: "SetT"
+								if l := len("SetT"); len(elem) >= l && elem[0:l] == "SetT" {
 									elem = elem[l:]
 								} else {
 									break
 								}
 
 								if len(elem) == 0 {
-									switch method {
-									case "POST":
-										// Leaf: SetStickerSetThumb
-										r.name = "SetStickerSetThumb"
-										r.operationID = "setStickerSetThumb"
-										r.args = args
-										r.count = 0
-										return r, true
-									default:
-										return
+									break
+								}
+								switch elem[0] {
+								case 'h': // Prefix: "humbnail"
+									if l := len("humbnail"); len(elem) >= l && elem[0:l] == "humbnail" {
+										elem = elem[l:]
+									} else {
+										break
+									}
+
+									if len(elem) == 0 {
+										switch method {
+										case "POST":
+											// Leaf: SetStickerSetThumbnail
+											r.name = "SetStickerSetThumbnail"
+											r.operationID = "setStickerSetThumbnail"
+											r.args = args
+											r.count = 0
+											return r, true
+										default:
+											return
+										}
+									}
+								case 'i': // Prefix: "itle"
+									if l := len("itle"); len(elem) >= l && elem[0:l] == "itle" {
+										elem = elem[l:]
+									} else {
+										break
+									}
+
+									if len(elem) == 0 {
+										switch method {
+										case "POST":
+											// Leaf: SetStickerSetTitle
+											r.name = "SetStickerSetTitle"
+											r.operationID = "setStickerSetTitle"
+											r.args = args
+											r.count = 0
+											return r, true
+										default:
+											return
+										}
 									}
 								}
 							}
