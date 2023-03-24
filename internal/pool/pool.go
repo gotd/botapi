@@ -263,7 +263,7 @@ func NewPool(statePath string, opt Options) (*Pool, error) {
 		clients:   map[Token]*client{},
 		statePath: statePath,
 	}
-	if err := os.MkdirAll(statePath, 0o666); err != nil {
+	if err := os.MkdirAll(statePath, 0o750); err != nil {
 		return nil, errors.Wrap(err, "create state dir")
 	}
 	return p, nil

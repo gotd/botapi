@@ -14,7 +14,11 @@ import (
 func convertToBotAPIChatPermissions(p tg.ChatBannedRights) oas.ChatPermissions {
 	return oas.ChatPermissions{
 		CanSendMessages:       oas.NewOptBool(p.SendMessages),
-		CanSendMediaMessages:  oas.NewOptBool(p.SendMedia),
+		CanSendAudios:         oas.NewOptBool(p.SendAudios),
+		CanSendVideos:         oas.NewOptBool(p.SendVideos),
+		CanSendDocuments:      oas.NewOptBool(p.SendDocs),
+		CanSendPhotos:         oas.NewOptBool(p.SendPhotos),
+		CanManageTopics:       oas.NewOptBool(p.ManageTopics),
 		CanSendPolls:          oas.NewOptBool(p.SendPolls),
 		CanSendOtherMessages:  oas.NewOptBool(p.SendGames || p.SendStickers || p.SendInline),
 		CanAddWebPagePreviews: oas.NewOptBool(p.EmbedLinks),

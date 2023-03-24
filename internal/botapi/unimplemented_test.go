@@ -281,7 +281,7 @@ func TestUnimplemented(t *testing.T) {
 	}
 
 	{
-		_, err := b.SetStickerSetThumb(ctx, &oas.SetStickerSetThumb{})
+		_, err := b.SetStickerSetThumb(ctx, &oas.SetStickerSetThumbnail{})
 		var implErr *NotImplementedError
 		a.ErrorAs(err, &implErr)
 	}

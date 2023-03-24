@@ -10,6 +10,7 @@ import (
 	"github.com/go-faster/errors"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
+	semconv "go.opentelemetry.io/otel/semconv/v1.17.0"
 	"go.opentelemetry.io/otel/trace"
 
 	ht "github.com/ogen-go/ogen/http"
@@ -26,9 +27,11 @@ import (
 // up to 120 stickers. Returns _True_ on success.
 //
 // POST /addStickerToSet
-func (s *Server) handleAddStickerToSetRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleAddStickerToSetRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("addStickerToSet"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/addStickerToSet"),
 	}
 
 	// Start a span for this request.
@@ -136,9 +139,11 @@ func (s *Server) handleAddStickerToSetRequest(args [0]string, w http.ResponseWri
 // notification at the top of the chat screen or as an alert. On success, _True_ is returned.
 //
 // POST /answerCallbackQuery
-func (s *Server) handleAnswerCallbackQueryRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleAnswerCallbackQueryRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("answerCallbackQuery"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/answerCallbackQuery"),
 	}
 
 	// Start a span for this request.
@@ -245,9 +250,11 @@ func (s *Server) handleAnswerCallbackQueryRequest(args [0]string, w http.Respons
 // **50** results per query are allowed.
 //
 // POST /answerInlineQuery
-func (s *Server) handleAnswerInlineQueryRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleAnswerInlineQueryRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("answerInlineQuery"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/answerInlineQuery"),
 	}
 
 	// Start a span for this request.
@@ -357,9 +364,11 @@ func (s *Server) handleAnswerInlineQueryRequest(args [0]string, w http.ResponseW
 // query was sent.
 //
 // POST /answerPreCheckoutQuery
-func (s *Server) handleAnswerPreCheckoutQueryRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleAnswerPreCheckoutQueryRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("answerPreCheckoutQuery"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/answerPreCheckoutQuery"),
 	}
 
 	// Start a span for this request.
@@ -470,9 +479,11 @@ func (s *Server) handleAnswerPreCheckoutQueryRequest(args [0]string, w http.Resp
 // _True_ is returned.
 //
 // POST /answerShippingQuery
-func (s *Server) handleAnswerShippingQueryRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleAnswerShippingQueryRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("answerShippingQuery"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/answerShippingQuery"),
 	}
 
 	// Start a span for this request.
@@ -581,9 +592,11 @@ func (s *Server) handleAnswerShippingQueryRequest(args [0]string, w http.Respons
 // org/bots/api#sentwebappmessage) object is returned.
 //
 // POST /answerWebAppQuery
-func (s *Server) handleAnswerWebAppQueryRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleAnswerWebAppQueryRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("answerWebAppQuery"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/answerWebAppQuery"),
 	}
 
 	// Start a span for this request.
@@ -690,9 +703,11 @@ func (s *Server) handleAnswerWebAppQueryRequest(args [0]string, w http.ResponseW
 // this to work and must have the _can_invite_users_ administrator right. Returns _True_ on success.
 //
 // POST /approveChatJoinRequest
-func (s *Server) handleApproveChatJoinRequestRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleApproveChatJoinRequestRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("approveChatJoinRequest"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/approveChatJoinRequest"),
 	}
 
 	// Start a span for this request.
@@ -802,9 +817,11 @@ func (s *Server) handleApproveChatJoinRequestRequest(args [0]string, w http.Resp
 // Returns _True_ on success.
 //
 // POST /banChatMember
-func (s *Server) handleBanChatMemberRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleBanChatMemberRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("banChatMember"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/banChatMember"),
 	}
 
 	// Start a span for this request.
@@ -914,9 +931,11 @@ func (s *Server) handleBanChatMemberRequest(args [0]string, w http.ResponseWrite
 // administrator rights. Returns _True_ on success.
 //
 // POST /banChatSenderChat
-func (s *Server) handleBanChatSenderChatRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleBanChatSenderChatRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("banChatSenderChat"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/banChatSenderChat"),
 	}
 
 	// Start a span for this request.
@@ -1025,9 +1044,11 @@ func (s *Server) handleBanChatSenderChatRequest(args [0]string, w http.ResponseW
 // launched. Returns _True_ on success. Requires no parameters.
 //
 // POST /close
-func (s *Server) handleCloseRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleCloseRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("close"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/close"),
 	}
 
 	// Start a span for this request.
@@ -1116,9 +1137,11 @@ func (s *Server) handleCloseRequest(args [0]string, w http.ResponseWriter, r *ht
 // rights, unless it is the creator of the topic. Returns _True_ on success.
 //
 // POST /closeForumTopic
-func (s *Server) handleCloseForumTopicRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleCloseForumTopicRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("closeForumTopic"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/closeForumTopic"),
 	}
 
 	// Start a span for this request.
@@ -1226,9 +1249,11 @@ func (s *Server) handleCloseForumTopicRequest(args [0]string, w http.ResponseWri
 // rights. Returns _True_ on success.
 //
 // POST /closeGeneralForumTopic
-func (s *Server) handleCloseGeneralForumTopicRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleCloseGeneralForumTopicRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("closeGeneralForumTopic"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/closeGeneralForumTopic"),
 	}
 
 	// Start a span for this request.
@@ -1339,9 +1364,11 @@ func (s *Server) handleCloseGeneralForumTopicRequest(args [0]string, w http.Resp
 // org/bots/api#messageid) of the sent message on success.
 //
 // POST /copyMessage
-func (s *Server) handleCopyMessageRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleCopyMessageRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("copyMessage"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/copyMessage"),
 	}
 
 	// Start a span for this request.
@@ -1451,9 +1478,11 @@ func (s *Server) handleCopyMessageRequest(args [0]string, w http.ResponseWriter,
 // telegram.org/bots/api#chatinvitelink) object.
 //
 // POST /createChatInviteLink
-func (s *Server) handleCreateChatInviteLinkRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleCreateChatInviteLinkRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("createChatInviteLink"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/createChatInviteLink"),
 	}
 
 	// Start a span for this request.
@@ -1562,9 +1591,11 @@ func (s *Server) handleCreateChatInviteLinkRequest(args [0]string, w http.Respon
 // org/bots/api#forumtopic) object.
 //
 // POST /createForumTopic
-func (s *Server) handleCreateForumTopicRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleCreateForumTopicRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("createForumTopic"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/createForumTopic"),
 	}
 
 	// Start a span for this request.
@@ -1671,9 +1702,11 @@ func (s *Server) handleCreateForumTopicRequest(args [0]string, w http.ResponseWr
 // success.
 //
 // POST /createInvoiceLink
-func (s *Server) handleCreateInvoiceLinkRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleCreateInvoiceLinkRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("createInvoiceLink"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/createInvoiceLink"),
 	}
 
 	// Start a span for this request.
@@ -1780,9 +1813,11 @@ func (s *Server) handleCreateInvoiceLinkRequest(args [0]string, w http.ResponseW
 // sticker set thus created. Returns _True_ on success.
 //
 // POST /createNewStickerSet
-func (s *Server) handleCreateNewStickerSetRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleCreateNewStickerSetRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("createNewStickerSet"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/createNewStickerSet"),
 	}
 
 	// Start a span for this request.
@@ -1889,9 +1924,11 @@ func (s *Server) handleCreateNewStickerSetRequest(args [0]string, w http.Respons
 // this to work and must have the _can_invite_users_ administrator right. Returns _True_ on success.
 //
 // POST /declineChatJoinRequest
-func (s *Server) handleDeclineChatJoinRequestRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleDeclineChatJoinRequestRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("declineChatJoinRequest"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/declineChatJoinRequest"),
 	}
 
 	// Start a span for this request.
@@ -1999,9 +2036,11 @@ func (s *Server) handleDeclineChatJoinRequestRequest(args [0]string, w http.Resp
 // Returns _True_ on success.
 //
 // POST /deleteChatPhoto
-func (s *Server) handleDeleteChatPhotoRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleDeleteChatPhotoRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("deleteChatPhoto"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/deleteChatPhoto"),
 	}
 
 	// Start a span for this request.
@@ -2110,9 +2149,11 @@ func (s *Server) handleDeleteChatPhotoRequest(args [0]string, w http.ResponseWri
 // requests to check if the bot can use this method. Returns _True_ on success.
 //
 // POST /deleteChatStickerSet
-func (s *Server) handleDeleteChatStickerSetRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleDeleteChatStickerSetRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("deleteChatStickerSet"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/deleteChatStickerSet"),
 	}
 
 	// Start a span for this request.
@@ -2220,9 +2261,11 @@ func (s *Server) handleDeleteChatStickerSetRequest(args [0]string, w http.Respon
 // _can_delete_messages_ administrator rights. Returns _True_ on success.
 //
 // POST /deleteForumTopic
-func (s *Server) handleDeleteForumTopicRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleDeleteForumTopicRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("deleteForumTopic"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/deleteForumTopic"),
 	}
 
 	// Start a span for this request.
@@ -2336,9 +2379,11 @@ func (s *Server) handleDeleteForumTopicRequest(args [0]string, w http.ResponseWr
 // Returns _True_ on success.
 //
 // POST /deleteMessage
-func (s *Server) handleDeleteMessageRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleDeleteMessageRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("deleteMessage"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/deleteMessage"),
 	}
 
 	// Start a span for this request.
@@ -2447,9 +2492,11 @@ func (s *Server) handleDeleteMessageRequest(args [0]string, w http.ResponseWrite
 // success.
 //
 // POST /deleteMyCommands
-func (s *Server) handleDeleteMyCommandsRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleDeleteMyCommandsRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("deleteMyCommands"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/deleteMyCommands"),
 	}
 
 	// Start a span for this request.
@@ -2555,9 +2602,11 @@ func (s *Server) handleDeleteMyCommandsRequest(args [0]string, w http.ResponseWr
 // Use this method to delete a sticker from a set created by the bot. Returns _True_ on success.
 //
 // POST /deleteStickerFromSet
-func (s *Server) handleDeleteStickerFromSetRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleDeleteStickerFromSetRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("deleteStickerFromSet"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/deleteStickerFromSet"),
 	}
 
 	// Start a span for this request.
@@ -2663,9 +2712,11 @@ func (s *Server) handleDeleteStickerFromSetRequest(args [0]string, w http.Respon
 // Use this method to delete a sticker set that was created by the bot. Returns _True_ on success.
 //
 // POST /deleteStickerSet
-func (s *Server) handleDeleteStickerSetRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleDeleteStickerSetRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("deleteStickerSet"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/deleteStickerSet"),
 	}
 
 	// Start a span for this request.
@@ -2772,9 +2823,11 @@ func (s *Server) handleDeleteStickerSetRequest(args [0]string, w http.ResponseWr
 // [getUpdates](https://core.telegram.org/bots/api#getupdates). Returns _True_ on success.
 //
 // POST /deleteWebhook
-func (s *Server) handleDeleteWebhookRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleDeleteWebhookRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("deleteWebhook"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/deleteWebhook"),
 	}
 
 	// Start a span for this request.
@@ -2883,9 +2936,11 @@ func (s *Server) handleDeleteWebhookRequest(args [0]string, w http.ResponseWrite
 // org/bots/api#chatinvitelink) object.
 //
 // POST /editChatInviteLink
-func (s *Server) handleEditChatInviteLinkRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleEditChatInviteLinkRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("editChatInviteLink"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/editChatInviteLink"),
 	}
 
 	// Start a span for this request.
@@ -2993,9 +3048,11 @@ func (s *Server) handleEditChatInviteLinkRequest(args [0]string, w http.Response
 // unless it is the creator of the topic. Returns _True_ on success.
 //
 // POST /editForumTopic
-func (s *Server) handleEditForumTopicRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleEditForumTopicRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("editForumTopic"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/editForumTopic"),
 	}
 
 	// Start a span for this request.
@@ -3103,9 +3160,11 @@ func (s *Server) handleEditForumTopicRequest(args [0]string, w http.ResponseWrit
 // rights. Returns _True_ on success.
 //
 // POST /editGeneralForumTopic
-func (s *Server) handleEditGeneralForumTopicRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleEditGeneralForumTopicRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("editGeneralForumTopic"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/editGeneralForumTopic"),
 	}
 
 	// Start a span for this request.
@@ -3213,9 +3272,11 @@ func (s *Server) handleEditGeneralForumTopicRequest(args [0]string, w http.Respo
 // _True_ is returned.
 //
 // POST /editMessageCaption
-func (s *Server) handleEditMessageCaptionRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleEditMessageCaptionRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("editMessageCaption"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/editMessageCaption"),
 	}
 
 	// Start a span for this request.
@@ -3325,9 +3386,11 @@ func (s *Server) handleEditMessageCaptionRequest(args [0]string, w http.Response
 // _True_ is returned.
 //
 // POST /editMessageLiveLocation
-func (s *Server) handleEditMessageLiveLocationRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleEditMessageLiveLocationRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("editMessageLiveLocation"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/editMessageLiveLocation"),
 	}
 
 	// Start a span for this request.
@@ -3438,9 +3501,11 @@ func (s *Server) handleEditMessageLiveLocationRequest(args [0]string, w http.Res
 // telegram.org/bots/api#message) is returned, otherwise _True_ is returned.
 //
 // POST /editMessageMedia
-func (s *Server) handleEditMessageMediaRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleEditMessageMediaRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("editMessageMedia"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/editMessageMedia"),
 	}
 
 	// Start a span for this request.
@@ -3548,9 +3613,11 @@ func (s *Server) handleEditMessageMediaRequest(args [0]string, w http.ResponseWr
 // returned, otherwise _True_ is returned.
 //
 // POST /editMessageReplyMarkup
-func (s *Server) handleEditMessageReplyMarkupRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleEditMessageReplyMarkupRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("editMessageReplyMarkup"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/editMessageReplyMarkup"),
 	}
 
 	// Start a span for this request.
@@ -3658,9 +3725,11 @@ func (s *Server) handleEditMessageReplyMarkupRequest(args [0]string, w http.Resp
 // telegram.org/bots/api#message) is returned, otherwise _True_ is returned.
 //
 // POST /editMessageText
-func (s *Server) handleEditMessageTextRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleEditMessageTextRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("editMessageText"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/editMessageText"),
 	}
 
 	// Start a span for this request.
@@ -3768,9 +3837,11 @@ func (s *Server) handleEditMessageTextRequest(args [0]string, w http.ResponseWri
 // appropriate administrator rights. Returns the new invite link as _String_ on success.
 //
 // POST /exportChatInviteLink
-func (s *Server) handleExportChatInviteLinkRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleExportChatInviteLinkRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("exportChatInviteLink"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/exportChatInviteLink"),
 	}
 
 	// Start a span for this request.
@@ -3877,9 +3948,11 @@ func (s *Server) handleExportChatInviteLinkRequest(args [0]string, w http.Respon
 // the sent [Message](https://core.telegram.org/bots/api#message) is returned.
 //
 // POST /forwardMessage
-func (s *Server) handleForwardMessageRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleForwardMessageRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("forwardMessage"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/forwardMessage"),
 	}
 
 	// Start a span for this request.
@@ -3987,9 +4060,11 @@ func (s *Server) handleForwardMessageRequest(args [0]string, w http.ResponseWrit
 // [Chat](https://core.telegram.org/bots/api#chat) object on success.
 //
 // POST /getChat
-func (s *Server) handleGetChatRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleGetChatRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getChat"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/getChat"),
 	}
 
 	// Start a span for this request.
@@ -4096,9 +4171,11 @@ func (s *Server) handleGetChatRequest(args [0]string, w http.ResponseWriter, r *
 // [ChatMember](https://core.telegram.org/bots/api#chatmember) objects.
 //
 // POST /getChatAdministrators
-func (s *Server) handleGetChatAdministratorsRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleGetChatAdministratorsRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getChatAdministrators"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/getChatAdministrators"),
 	}
 
 	// Start a span for this request.
@@ -4206,9 +4283,11 @@ func (s *Server) handleGetChatAdministratorsRequest(args [0]string, w http.Respo
 // telegram.org/bots/api#chatmember) object on success.
 //
 // POST /getChatMember
-func (s *Server) handleGetChatMemberRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleGetChatMemberRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getChatMember"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/getChatMember"),
 	}
 
 	// Start a span for this request.
@@ -4314,9 +4393,11 @@ func (s *Server) handleGetChatMemberRequest(args [0]string, w http.ResponseWrite
 // Use this method to get the number of members in a chat. Returns _Int_ on success.
 //
 // POST /getChatMemberCount
-func (s *Server) handleGetChatMemberCountRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleGetChatMemberCountRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getChatMemberCount"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/getChatMemberCount"),
 	}
 
 	// Start a span for this request.
@@ -4424,9 +4505,11 @@ func (s *Server) handleGetChatMemberCountRequest(args [0]string, w http.Response
 // success.
 //
 // POST /getChatMenuButton
-func (s *Server) handleGetChatMenuButtonRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleGetChatMenuButtonRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getChatMenuButton"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/getChatMenuButton"),
 	}
 
 	// Start a span for this request.
@@ -4533,9 +4616,11 @@ func (s *Server) handleGetChatMenuButtonRequest(args [0]string, w http.ResponseW
 // Array of [Sticker](https://core.telegram.org/bots/api#sticker) objects.
 //
 // POST /getCustomEmojiStickers
-func (s *Server) handleGetCustomEmojiStickersRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleGetCustomEmojiStickersRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getCustomEmojiStickers"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/getCustomEmojiStickers"),
 	}
 
 	// Start a span for this request.
@@ -4646,9 +4731,11 @@ func (s *Server) handleGetCustomEmojiStickersRequest(args [0]string, w http.Resp
 // be requested by calling [getFile](https://core.telegram.org/bots/api#getfile) again.
 //
 // POST /getFile
-func (s *Server) handleGetFileRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleGetFileRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getFile"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/getFile"),
 	}
 
 	// Start a span for this request.
@@ -4756,9 +4843,11 @@ func (s *Server) handleGetFileRequest(args [0]string, w http.ResponseWriter, r *
 // objects.
 //
 // POST /getForumTopicIconStickers
-func (s *Server) handleGetForumTopicIconStickersRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleGetForumTopicIconStickersRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getForumTopicIconStickers"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/getForumTopicIconStickers"),
 	}
 
 	// Start a span for this request.
@@ -4847,9 +4936,11 @@ func (s *Server) handleGetForumTopicIconStickersRequest(args [0]string, w http.R
 // org/bots/api#gamehighscore) objects.
 //
 // POST /getGameHighScores
-func (s *Server) handleGetGameHighScoresRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleGetGameHighScoresRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getGameHighScores"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/getGameHighScores"),
 	}
 
 	// Start a span for this request.
@@ -4956,9 +5047,11 @@ func (s *Server) handleGetGameHighScoresRequest(args [0]string, w http.ResponseW
 // information about the bot in form of a [User](https://core.telegram.org/bots/api#user) object.
 //
 // POST /getMe
-func (s *Server) handleGetMeRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleGetMeRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getMe"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/getMe"),
 	}
 
 	// Start a span for this request.
@@ -5047,9 +5140,11 @@ func (s *Server) handleGetMeRequest(args [0]string, w http.ResponseWriter, r *ht
 // If commands aren't set, an empty list is returned.
 //
 // POST /getMyCommands
-func (s *Server) handleGetMyCommandsRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleGetMyCommandsRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getMyCommands"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/getMyCommands"),
 	}
 
 	// Start a span for this request.
@@ -5156,9 +5251,11 @@ func (s *Server) handleGetMyCommandsRequest(args [0]string, w http.ResponseWrite
 // [ChatAdministratorRights](https://core.telegram.org/bots/api#chatadministratorrights) on success.
 //
 // POST /getMyDefaultAdministratorRights
-func (s *Server) handleGetMyDefaultAdministratorRightsRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleGetMyDefaultAdministratorRightsRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getMyDefaultAdministratorRights"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/getMyDefaultAdministratorRights"),
 	}
 
 	// Start a span for this request.
@@ -5265,9 +5362,11 @@ func (s *Server) handleGetMyDefaultAdministratorRightsRequest(args [0]string, w 
 // [BotDescription](https://core.telegram.org/bots/api#botdescription) on success.
 //
 // POST /getMyDescription
-func (s *Server) handleGetMyDescriptionRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleGetMyDescriptionRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getMyDescription"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/getMyDescription"),
 	}
 
 	// Start a span for this request.
@@ -5374,9 +5473,11 @@ func (s *Server) handleGetMyDescriptionRequest(args [0]string, w http.ResponseWr
 // [BotShortDescription](https://core.telegram.org/bots/api#botshortdescription) on success.
 //
 // POST /getMyShortDescription
-func (s *Server) handleGetMyShortDescriptionRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleGetMyShortDescriptionRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getMyShortDescription"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/getMyShortDescription"),
 	}
 
 	// Start a span for this request.
@@ -5483,9 +5584,11 @@ func (s *Server) handleGetMyShortDescriptionRequest(args [0]string, w http.Respo
 // org/bots/api#stickerset) object is returned.
 //
 // POST /getStickerSet
-func (s *Server) handleGetStickerSetRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleGetStickerSetRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getStickerSet"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/getStickerSet"),
 	}
 
 	// Start a span for this request.
@@ -5593,9 +5696,11 @@ func (s *Server) handleGetStickerSetRequest(args [0]string, w http.ResponseWrite
 // org/bots/api#update) objects.
 //
 // POST /getUpdates
-func (s *Server) handleGetUpdatesRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleGetUpdatesRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getUpdates"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/getUpdates"),
 	}
 
 	// Start a span for this request.
@@ -5702,9 +5807,11 @@ func (s *Server) handleGetUpdatesRequest(args [0]string, w http.ResponseWriter, 
 // [UserProfilePhotos](https://core.telegram.org/bots/api#userprofilephotos) object.
 //
 // POST /getUserProfilePhotos
-func (s *Server) handleGetUserProfilePhotosRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleGetUserProfilePhotosRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getUserProfilePhotos"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/getUserProfilePhotos"),
 	}
 
 	// Start a span for this request.
@@ -5813,9 +5920,11 @@ func (s *Server) handleGetUserProfilePhotosRequest(args [0]string, w http.Respon
 // field empty.
 //
 // POST /getWebhookInfo
-func (s *Server) handleGetWebhookInfoRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleGetWebhookInfoRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getWebhookInfo"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/getWebhookInfo"),
 	}
 
 	// Start a span for this request.
@@ -5904,9 +6013,11 @@ func (s *Server) handleGetWebhookInfoRequest(args [0]string, w http.ResponseWrit
 // rights. The topic will be automatically closed if it was open. Returns _True_ on success.
 //
 // POST /hideGeneralForumTopic
-func (s *Server) handleHideGeneralForumTopicRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleHideGeneralForumTopicRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("hideGeneralForumTopic"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/hideGeneralForumTopic"),
 	}
 
 	// Start a span for this request.
@@ -6012,9 +6123,11 @@ func (s *Server) handleHideGeneralForumTopicRequest(args [0]string, w http.Respo
 // Use this method for your bot to leave a group, supergroup or channel. Returns _True_ on success.
 //
 // POST /leaveChat
-func (s *Server) handleLeaveChatRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleLeaveChatRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("leaveChat"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/leaveChat"),
 	}
 
 	// Start a span for this request.
@@ -6124,9 +6237,11 @@ func (s *Server) handleLeaveChatRequest(args [0]string, w http.ResponseWriter, r
 // success. Requires no parameters.
 //
 // POST /logOut
-func (s *Server) handleLogOutRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleLogOutRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("logOut"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/logOut"),
 	}
 
 	// Start a span for this request.
@@ -6216,9 +6331,11 @@ func (s *Server) handleLogOutRequest(args [0]string, w http.ResponseWriter, r *h
 // in a channel. Returns _True_ on success.
 //
 // POST /pinChatMessage
-func (s *Server) handlePinChatMessageRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handlePinChatMessageRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("pinChatMessage"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/pinChatMessage"),
 	}
 
 	// Start a span for this request.
@@ -6326,9 +6443,11 @@ func (s *Server) handlePinChatMessageRequest(args [0]string, w http.ResponseWrit
 // Pass _False_ for all boolean parameters to demote a user. Returns _True_ on success.
 //
 // POST /promoteChatMember
-func (s *Server) handlePromoteChatMemberRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handlePromoteChatMemberRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("promoteChatMember"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/promoteChatMember"),
 	}
 
 	// Start a span for this request.
@@ -6436,9 +6555,11 @@ func (s *Server) handlePromoteChatMemberRequest(args [0]string, w http.ResponseW
 // rights, unless it is the creator of the topic. Returns _True_ on success.
 //
 // POST /reopenForumTopic
-func (s *Server) handleReopenForumTopicRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleReopenForumTopicRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("reopenForumTopic"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/reopenForumTopic"),
 	}
 
 	// Start a span for this request.
@@ -6546,9 +6667,11 @@ func (s *Server) handleReopenForumTopicRequest(args [0]string, w http.ResponseWr
 // rights. The topic will be automatically unhidden if it was hidden. Returns _True_ on success.
 //
 // POST /reopenGeneralForumTopic
-func (s *Server) handleReopenGeneralForumTopicRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleReopenGeneralForumTopicRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("reopenGeneralForumTopic"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/reopenGeneralForumTopic"),
 	}
 
 	// Start a span for this request.
@@ -6656,9 +6779,11 @@ func (s *Server) handleReopenGeneralForumTopicRequest(args [0]string, w http.Res
 // all permissions to lift restrictions from a user. Returns _True_ on success.
 //
 // POST /restrictChatMember
-func (s *Server) handleRestrictChatMemberRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleRestrictChatMemberRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("restrictChatMember"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/restrictChatMember"),
 	}
 
 	// Start a span for this request.
@@ -6767,9 +6892,11 @@ func (s *Server) handleRestrictChatMemberRequest(args [0]string, w http.Response
 // [ChatInviteLink](https://core.telegram.org/bots/api#chatinvitelink) object.
 //
 // POST /revokeChatInviteLink
-func (s *Server) handleRevokeChatInviteLinkRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleRevokeChatInviteLinkRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("revokeChatInviteLink"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/revokeChatInviteLink"),
 	}
 
 	// Start a span for this request.
@@ -6877,9 +7004,11 @@ func (s *Server) handleRevokeChatInviteLinkRequest(args [0]string, w http.Respon
 // send animation files of up to 50 MB in size, this limit may be changed in the future.
 //
 // POST /sendAnimation
-func (s *Server) handleSendAnimationRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleSendAnimationRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendAnimation"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/sendAnimation"),
 	}
 
 	// Start a span for this request.
@@ -6986,9 +7115,11 @@ func (s *Server) handleSendAnimationRequest(args [0]string, w http.ResponseWrite
 // method instead.
 //
 // POST /sendAudio
-func (s *Server) handleSendAudioRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleSendAudioRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendAudio"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/sendAudio"),
 	}
 
 	// Start a span for this request.
@@ -7095,9 +7226,11 @@ func (s *Server) handleSendAudioRequest(args [0]string, w http.ResponseWriter, r
 // of time to arrive.
 //
 // POST /sendChatAction
-func (s *Server) handleSendChatActionRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleSendChatActionRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendChatAction"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/sendChatAction"),
 	}
 
 	// Start a span for this request.
@@ -7204,9 +7337,11 @@ func (s *Server) handleSendChatActionRequest(args [0]string, w http.ResponseWrit
 // org/bots/api#message) is returned.
 //
 // POST /sendContact
-func (s *Server) handleSendContactRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleSendContactRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendContact"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/sendContact"),
 	}
 
 	// Start a span for this request.
@@ -7313,9 +7448,11 @@ func (s *Server) handleSendContactRequest(args [0]string, w http.ResponseWriter,
 // [Message](https://core.telegram.org/bots/api#message) is returned.
 //
 // POST /sendDice
-func (s *Server) handleSendDiceRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleSendDiceRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendDice"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/sendDice"),
 	}
 
 	// Start a span for this request.
@@ -7423,9 +7560,11 @@ func (s *Server) handleSendDiceRequest(args [0]string, w http.ResponseWriter, r 
 // size, this limit may be changed in the future.
 //
 // POST /sendDocument
-func (s *Server) handleSendDocumentRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleSendDocumentRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendDocument"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/sendDocument"),
 	}
 
 	// Start a span for this request.
@@ -7532,9 +7671,11 @@ func (s *Server) handleSendDocumentRequest(args [0]string, w http.ResponseWriter
 // org/bots/api#message) is returned.
 //
 // POST /sendGame
-func (s *Server) handleSendGameRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleSendGameRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendGame"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/sendGame"),
 	}
 
 	// Start a span for this request.
@@ -7641,9 +7782,11 @@ func (s *Server) handleSendGameRequest(args [0]string, w http.ResponseWriter, r 
 // org/bots/api#message) is returned.
 //
 // POST /sendInvoice
-func (s *Server) handleSendInvoiceRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleSendInvoiceRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendInvoice"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/sendInvoice"),
 	}
 
 	// Start a span for this request.
@@ -7750,9 +7893,11 @@ func (s *Server) handleSendInvoiceRequest(args [0]string, w http.ResponseWriter,
 // org/bots/api#message) is returned.
 //
 // POST /sendLocation
-func (s *Server) handleSendLocationRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleSendLocationRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendLocation"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/sendLocation"),
 	}
 
 	// Start a span for this request.
@@ -7860,9 +8005,11 @@ func (s *Server) handleSendLocationRequest(args [0]string, w http.ResponseWriter
 // of [Messages](https://core.telegram.org/bots/api#message) that were sent is returned.
 //
 // POST /sendMediaGroup
-func (s *Server) handleSendMediaGroupRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleSendMediaGroupRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendMediaGroup"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/sendMediaGroup"),
 	}
 
 	// Start a span for this request.
@@ -7969,9 +8116,11 @@ func (s *Server) handleSendMediaGroupRequest(args [0]string, w http.ResponseWrit
 // org/bots/api#message) is returned.
 //
 // POST /sendMessage
-func (s *Server) handleSendMessageRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleSendMessageRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendMessage"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/sendMessage"),
 	}
 
 	// Start a span for this request.
@@ -8078,9 +8227,11 @@ func (s *Server) handleSendMessageRequest(args [0]string, w http.ResponseWriter,
 // org/bots/api#message) is returned.
 //
 // POST /sendPhoto
-func (s *Server) handleSendPhotoRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleSendPhotoRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendPhoto"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/sendPhoto"),
 	}
 
 	// Start a span for this request.
@@ -8187,9 +8338,11 @@ func (s *Server) handleSendPhotoRequest(args [0]string, w http.ResponseWriter, r
 // org/bots/api#message) is returned.
 //
 // POST /sendPoll
-func (s *Server) handleSendPollRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleSendPollRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendPoll"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/sendPoll"),
 	}
 
 	// Start a span for this request.
@@ -8299,9 +8452,11 @@ func (s *Server) handleSendPollRequest(args [0]string, w http.ResponseWriter, r 
 // the sent [Message](https://core.telegram.org/bots/api#message) is returned.
 //
 // POST /sendSticker
-func (s *Server) handleSendStickerRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleSendStickerRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendSticker"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/sendSticker"),
 	}
 
 	// Start a span for this request.
@@ -8408,9 +8563,11 @@ func (s *Server) handleSendStickerRequest(args [0]string, w http.ResponseWriter,
 // telegram.org/bots/api#message) is returned.
 //
 // POST /sendVenue
-func (s *Server) handleSendVenueRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleSendVenueRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendVenue"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/sendVenue"),
 	}
 
 	// Start a span for this request.
@@ -8519,9 +8676,11 @@ func (s *Server) handleSendVenueRequest(args [0]string, w http.ResponseWriter, r
 // files of up to 50 MB in size, this limit may be changed in the future.
 //
 // POST /sendVideo
-func (s *Server) handleSendVideoRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleSendVideoRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendVideo"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/sendVideo"),
 	}
 
 	// Start a span for this request.
@@ -8629,9 +8788,11 @@ func (s *Server) handleSendVideoRequest(args [0]string, w http.ResponseWriter, r
 // success, the sent [Message](https://core.telegram.org/bots/api#message) is returned.
 //
 // POST /sendVideoNote
-func (s *Server) handleSendVideoNoteRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleSendVideoNoteRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendVideoNote"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/sendVideoNote"),
 	}
 
 	// Start a span for this request.
@@ -8742,9 +8903,11 @@ func (s *Server) handleSendVideoNoteRequest(args [0]string, w http.ResponseWrite
 // messages of up to 50 MB in size, this limit may be changed in the future.
 //
 // POST /sendVoice
-func (s *Server) handleSendVoiceRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleSendVoiceRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendVoice"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/sendVoice"),
 	}
 
 	// Start a span for this request.
@@ -8851,9 +9014,11 @@ func (s *Server) handleSendVoiceRequest(args [0]string, w http.ResponseWriter, r
 // Returns _True_ on success.
 //
 // POST /setChatAdministratorCustomTitle
-func (s *Server) handleSetChatAdministratorCustomTitleRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleSetChatAdministratorCustomTitleRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setChatAdministratorCustomTitle"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/setChatAdministratorCustomTitle"),
 	}
 
 	// Start a span for this request.
@@ -8961,9 +9126,11 @@ func (s *Server) handleSetChatAdministratorCustomTitleRequest(args [0]string, w 
 // Returns _True_ on success.
 //
 // POST /setChatDescription
-func (s *Server) handleSetChatDescriptionRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleSetChatDescriptionRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setChatDescription"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/setChatDescription"),
 	}
 
 	// Start a span for this request.
@@ -9070,9 +9237,11 @@ func (s *Server) handleSetChatDescriptionRequest(args [0]string, w http.Response
 // Returns _True_ on success.
 //
 // POST /setChatMenuButton
-func (s *Server) handleSetChatMenuButtonRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleSetChatMenuButtonRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setChatMenuButton"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/setChatMenuButton"),
 	}
 
 	// Start a span for this request.
@@ -9180,9 +9349,11 @@ func (s *Server) handleSetChatMenuButtonRequest(args [0]string, w http.ResponseW
 // administrator rights. Returns _True_ on success.
 //
 // POST /setChatPermissions
-func (s *Server) handleSetChatPermissionsRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleSetChatPermissionsRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setChatPermissions"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/setChatPermissions"),
 	}
 
 	// Start a span for this request.
@@ -9292,9 +9463,11 @@ func (s *Server) handleSetChatPermissionsRequest(args [0]string, w http.Response
 // administrator rights. Returns _True_ on success.
 //
 // POST /setChatPhoto
-func (s *Server) handleSetChatPhotoRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleSetChatPhotoRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setChatPhoto"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/setChatPhoto"),
 	}
 
 	// Start a span for this request.
@@ -9403,9 +9576,11 @@ func (s *Server) handleSetChatPhotoRequest(args [0]string, w http.ResponseWriter
 // requests to check if the bot can use this method. Returns _True_ on success.
 //
 // POST /setChatStickerSet
-func (s *Server) handleSetChatStickerSetRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleSetChatStickerSetRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setChatStickerSet"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/setChatStickerSet"),
 	}
 
 	// Start a span for this request.
@@ -9513,9 +9688,11 @@ func (s *Server) handleSetChatStickerSetRequest(args [0]string, w http.ResponseW
 // rights. Returns _True_ on success.
 //
 // POST /setChatTitle
-func (s *Server) handleSetChatTitleRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleSetChatTitleRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setChatTitle"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/setChatTitle"),
 	}
 
 	// Start a span for this request.
@@ -9621,9 +9798,11 @@ func (s *Server) handleSetChatTitleRequest(args [0]string, w http.ResponseWriter
 // Use this method to set the thumbnail of a custom emoji sticker set. Returns _True_ on success.
 //
 // POST /setCustomEmojiStickerSetThumbnail
-func (s *Server) handleSetCustomEmojiStickerSetThumbnailRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleSetCustomEmojiStickerSetThumbnailRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setCustomEmojiStickerSetThumbnail"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/setCustomEmojiStickerSetThumbnail"),
 	}
 
 	// Start a span for this request.
@@ -9732,9 +9911,11 @@ func (s *Server) handleSetCustomEmojiStickerSetThumbnailRequest(args [0]string, 
 // user's current score in the chat and _force_ is _False_.
 //
 // POST /setGameScore
-func (s *Server) handleSetGameScoreRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleSetGameScoreRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setGameScore"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/setGameScore"),
 	}
 
 	// Start a span for this request.
@@ -9841,9 +10022,11 @@ func (s *Server) handleSetGameScoreRequest(args [0]string, w http.ResponseWriter
 // org/bots/features#commands) for more details about bot commands. Returns _True_ on success.
 //
 // POST /setMyCommands
-func (s *Server) handleSetMyCommandsRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleSetMyCommandsRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setMyCommands"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/setMyCommands"),
 	}
 
 	// Start a span for this request.
@@ -9951,9 +10134,11 @@ func (s *Server) handleSetMyCommandsRequest(args [0]string, w http.ResponseWrite
 // to modify the list before adding the bot. Returns _True_ on success.
 //
 // POST /setMyDefaultAdministratorRights
-func (s *Server) handleSetMyDefaultAdministratorRightsRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleSetMyDefaultAdministratorRightsRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setMyDefaultAdministratorRights"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/setMyDefaultAdministratorRights"),
 	}
 
 	// Start a span for this request.
@@ -10060,9 +10245,11 @@ func (s *Server) handleSetMyDefaultAdministratorRightsRequest(args [0]string, w 
 // chat is empty. Returns _True_ on success.
 //
 // POST /setMyDescription
-func (s *Server) handleSetMyDescriptionRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleSetMyDescriptionRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setMyDescription"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/setMyDescription"),
 	}
 
 	// Start a span for this request.
@@ -10169,9 +10356,11 @@ func (s *Server) handleSetMyDescriptionRequest(args [0]string, w http.ResponseWr
 // and is sent together with the link when users share the bot. Returns _True_ on success.
 //
 // POST /setMyShortDescription
-func (s *Server) handleSetMyShortDescriptionRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleSetMyShortDescriptionRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setMyShortDescription"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/setMyShortDescription"),
 	}
 
 	// Start a span for this request.
@@ -10280,9 +10469,11 @@ func (s *Server) handleSetMyShortDescriptionRequest(args [0]string, w http.Respo
 // knows how to correct the issues.
 //
 // POST /setPassportDataErrors
-func (s *Server) handleSetPassportDataErrorsRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleSetPassportDataErrorsRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setPassportDataErrors"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/setPassportDataErrors"),
 	}
 
 	// Start a span for this request.
@@ -10389,9 +10580,11 @@ func (s *Server) handleSetPassportDataErrorsRequest(args [0]string, w http.Respo
 // sticker must belong to a sticker set created by the bot. Returns _True_ on success.
 //
 // POST /setStickerEmojiList
-func (s *Server) handleSetStickerEmojiListRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleSetStickerEmojiListRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setStickerEmojiList"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/setStickerEmojiList"),
 	}
 
 	// Start a span for this request.
@@ -10498,9 +10691,11 @@ func (s *Server) handleSetStickerEmojiListRequest(args [0]string, w http.Respons
 // sticker must belong to a sticker set created by the bot. Returns _True_ on success.
 //
 // POST /setStickerKeywords
-func (s *Server) handleSetStickerKeywordsRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleSetStickerKeywordsRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setStickerKeywords"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/setStickerKeywords"),
 	}
 
 	// Start a span for this request.
@@ -10608,9 +10803,11 @@ func (s *Server) handleSetStickerKeywordsRequest(args [0]string, w http.Response
 // _True_ on success.
 //
 // POST /setStickerMaskPosition
-func (s *Server) handleSetStickerMaskPositionRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleSetStickerMaskPositionRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setStickerMaskPosition"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/setStickerMaskPosition"),
 	}
 
 	// Start a span for this request.
@@ -10717,9 +10914,11 @@ func (s *Server) handleSetStickerMaskPositionRequest(args [0]string, w http.Resp
 // _True_ on success.
 //
 // POST /setStickerPositionInSet
-func (s *Server) handleSetStickerPositionInSetRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleSetStickerPositionInSetRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setStickerPositionInSet"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/setStickerPositionInSet"),
 	}
 
 	// Start a span for this request.
@@ -10826,9 +11025,11 @@ func (s *Server) handleSetStickerPositionInSetRequest(args [0]string, w http.Res
 // file must match the format of the stickers in the set. Returns _True_ on success.
 //
 // POST /setStickerSetThumbnail
-func (s *Server) handleSetStickerSetThumbnailRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleSetStickerSetThumbnailRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setStickerSetThumbnail"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/setStickerSetThumbnail"),
 	}
 
 	// Start a span for this request.
@@ -10934,9 +11135,11 @@ func (s *Server) handleSetStickerSetThumbnailRequest(args [0]string, w http.Resp
 // Use this method to set the title of a created sticker set. Returns _True_ on success.
 //
 // POST /setStickerSetTitle
-func (s *Server) handleSetStickerSetTitleRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleSetStickerSetTitleRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setStickerSetTitle"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/setStickerSetTitle"),
 	}
 
 	// Start a span for this request.
@@ -11044,9 +11247,11 @@ func (s *Server) handleSetStickerSetTitleRequest(args [0]string, w http.Response
 // `X-Telegram-Bot-Api-Secret-Token` with the secret token as content.
 //
 // POST /setWebhook
-func (s *Server) handleSetWebhookRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleSetWebhookRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setWebhook"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/setWebhook"),
 	}
 
 	// Start a span for this request.
@@ -11154,9 +11359,11 @@ func (s *Server) handleSetWebhookRequest(args [0]string, w http.ResponseWriter, 
 // org/bots/api#message) is returned, otherwise _True_ is returned.
 //
 // POST /stopMessageLiveLocation
-func (s *Server) handleStopMessageLiveLocationRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleStopMessageLiveLocationRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("stopMessageLiveLocation"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/stopMessageLiveLocation"),
 	}
 
 	// Start a span for this request.
@@ -11263,9 +11470,11 @@ func (s *Server) handleStopMessageLiveLocationRequest(args [0]string, w http.Res
 // [Poll](https://core.telegram.org/bots/api#poll) is returned.
 //
 // POST /stopPoll
-func (s *Server) handleStopPollRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleStopPollRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("stopPoll"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/stopPoll"),
 	}
 
 	// Start a span for this request.
@@ -11376,9 +11585,11 @@ func (s *Server) handleStopPollRequest(args [0]string, w http.ResponseWriter, r 
 // _only_if_banned_. Returns _True_ on success.
 //
 // POST /unbanChatMember
-func (s *Server) handleUnbanChatMemberRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleUnbanChatMemberRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("unbanChatMember"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/unbanChatMember"),
 	}
 
 	// Start a span for this request.
@@ -11486,9 +11697,11 @@ func (s *Server) handleUnbanChatMemberRequest(args [0]string, w http.ResponseWri
 // _True_ on success.
 //
 // POST /unbanChatSenderChat
-func (s *Server) handleUnbanChatSenderChatRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleUnbanChatSenderChatRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("unbanChatSenderChat"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/unbanChatSenderChat"),
 	}
 
 	// Start a span for this request.
@@ -11596,9 +11809,11 @@ func (s *Server) handleUnbanChatSenderChatRequest(args [0]string, w http.Respons
 // rights. Returns _True_ on success.
 //
 // POST /unhideGeneralForumTopic
-func (s *Server) handleUnhideGeneralForumTopicRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleUnhideGeneralForumTopicRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("unhideGeneralForumTopic"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/unhideGeneralForumTopic"),
 	}
 
 	// Start a span for this request.
@@ -11707,9 +11922,11 @@ func (s *Server) handleUnhideGeneralForumTopicRequest(args [0]string, w http.Res
 // Returns _True_ on success.
 //
 // POST /unpinAllChatMessages
-func (s *Server) handleUnpinAllChatMessagesRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleUnpinAllChatMessagesRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("unpinAllChatMessages"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/unpinAllChatMessages"),
 	}
 
 	// Start a span for this request.
@@ -11817,9 +12034,11 @@ func (s *Server) handleUnpinAllChatMessagesRequest(args [0]string, w http.Respon
 // right in the supergroup. Returns _True_ on success.
 //
 // POST /unpinAllForumTopicMessages
-func (s *Server) handleUnpinAllForumTopicMessagesRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleUnpinAllForumTopicMessagesRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("unpinAllForumTopicMessages"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/unpinAllForumTopicMessages"),
 	}
 
 	// Start a span for this request.
@@ -11928,9 +12147,11 @@ func (s *Server) handleUnpinAllForumTopicMessagesRequest(args [0]string, w http.
 // in a channel. Returns _True_ on success.
 //
 // POST /unpinChatMessage
-func (s *Server) handleUnpinChatMessageRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleUnpinChatMessageRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("unpinChatMessage"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/unpinChatMessage"),
 	}
 
 	// Start a span for this request.
@@ -12040,9 +12261,11 @@ func (s *Server) handleUnpinChatMessageRequest(args [0]string, w http.ResponseWr
 // success.
 //
 // POST /uploadStickerFile
-func (s *Server) handleUploadStickerFileRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleUploadStickerFileRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("uploadStickerFile"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/uploadStickerFile"),
 	}
 
 	// Start a span for this request.

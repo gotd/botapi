@@ -14,9 +14,11 @@ import (
 // calling handler that matches the path or returning not found error.
 func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	elem := r.URL.Path
+	elemIsEscaped := false
 	if rawPath := r.URL.RawPath; rawPath != "" {
 		if normalized, ok := uri.NormalizeEscapedPath(rawPath); ok {
 			elem = normalized
+			elemIsEscaped = strings.ContainsRune(elem, '%')
 		}
 	}
 	if prefix := s.cfg.Prefix; len(prefix) > 0 {
@@ -74,7 +76,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 						// Leaf node.
 						switch r.Method {
 						case "POST":
-							s.handleAddStickerToSetRequest([0]string{}, w, r)
+							s.handleAddStickerToSetRequest([0]string{}, elemIsEscaped, w, r)
 						default:
 							s.notAllowed(w, r, "POST")
 						}
@@ -103,7 +105,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 							// Leaf node.
 							switch r.Method {
 							case "POST":
-								s.handleAnswerCallbackQueryRequest([0]string{}, w, r)
+								s.handleAnswerCallbackQueryRequest([0]string{}, elemIsEscaped, w, r)
 							default:
 								s.notAllowed(w, r, "POST")
 							}
@@ -121,7 +123,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 							// Leaf node.
 							switch r.Method {
 							case "POST":
-								s.handleAnswerInlineQueryRequest([0]string{}, w, r)
+								s.handleAnswerInlineQueryRequest([0]string{}, elemIsEscaped, w, r)
 							default:
 								s.notAllowed(w, r, "POST")
 							}
@@ -139,7 +141,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 							// Leaf node.
 							switch r.Method {
 							case "POST":
-								s.handleAnswerPreCheckoutQueryRequest([0]string{}, w, r)
+								s.handleAnswerPreCheckoutQueryRequest([0]string{}, elemIsEscaped, w, r)
 							default:
 								s.notAllowed(w, r, "POST")
 							}
@@ -157,7 +159,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 							// Leaf node.
 							switch r.Method {
 							case "POST":
-								s.handleAnswerShippingQueryRequest([0]string{}, w, r)
+								s.handleAnswerShippingQueryRequest([0]string{}, elemIsEscaped, w, r)
 							default:
 								s.notAllowed(w, r, "POST")
 							}
@@ -175,7 +177,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 							// Leaf node.
 							switch r.Method {
 							case "POST":
-								s.handleAnswerWebAppQueryRequest([0]string{}, w, r)
+								s.handleAnswerWebAppQueryRequest([0]string{}, elemIsEscaped, w, r)
 							default:
 								s.notAllowed(w, r, "POST")
 							}
@@ -194,7 +196,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 						// Leaf node.
 						switch r.Method {
 						case "POST":
-							s.handleApproveChatJoinRequestRequest([0]string{}, w, r)
+							s.handleApproveChatJoinRequestRequest([0]string{}, elemIsEscaped, w, r)
 						default:
 							s.notAllowed(w, r, "POST")
 						}
@@ -224,7 +226,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 						// Leaf node.
 						switch r.Method {
 						case "POST":
-							s.handleBanChatMemberRequest([0]string{}, w, r)
+							s.handleBanChatMemberRequest([0]string{}, elemIsEscaped, w, r)
 						default:
 							s.notAllowed(w, r, "POST")
 						}
@@ -242,7 +244,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 						// Leaf node.
 						switch r.Method {
 						case "POST":
-							s.handleBanChatSenderChatRequest([0]string{}, w, r)
+							s.handleBanChatSenderChatRequest([0]string{}, elemIsEscaped, w, r)
 						default:
 							s.notAllowed(w, r, "POST")
 						}
@@ -271,7 +273,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 					if len(elem) == 0 {
 						switch r.Method {
 						case "POST":
-							s.handleCloseRequest([0]string{}, w, r)
+							s.handleCloseRequest([0]string{}, elemIsEscaped, w, r)
 						default:
 							s.notAllowed(w, r, "POST")
 						}
@@ -290,7 +292,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 							// Leaf node.
 							switch r.Method {
 							case "POST":
-								s.handleCloseForumTopicRequest([0]string{}, w, r)
+								s.handleCloseForumTopicRequest([0]string{}, elemIsEscaped, w, r)
 							default:
 								s.notAllowed(w, r, "POST")
 							}
@@ -308,7 +310,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 							// Leaf node.
 							switch r.Method {
 							case "POST":
-								s.handleCloseGeneralForumTopicRequest([0]string{}, w, r)
+								s.handleCloseGeneralForumTopicRequest([0]string{}, elemIsEscaped, w, r)
 							default:
 								s.notAllowed(w, r, "POST")
 							}
@@ -327,7 +329,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 						// Leaf node.
 						switch r.Method {
 						case "POST":
-							s.handleCopyMessageRequest([0]string{}, w, r)
+							s.handleCopyMessageRequest([0]string{}, elemIsEscaped, w, r)
 						default:
 							s.notAllowed(w, r, "POST")
 						}
@@ -356,7 +358,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 							// Leaf node.
 							switch r.Method {
 							case "POST":
-								s.handleCreateChatInviteLinkRequest([0]string{}, w, r)
+								s.handleCreateChatInviteLinkRequest([0]string{}, elemIsEscaped, w, r)
 							default:
 								s.notAllowed(w, r, "POST")
 							}
@@ -374,7 +376,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 							// Leaf node.
 							switch r.Method {
 							case "POST":
-								s.handleCreateForumTopicRequest([0]string{}, w, r)
+								s.handleCreateForumTopicRequest([0]string{}, elemIsEscaped, w, r)
 							default:
 								s.notAllowed(w, r, "POST")
 							}
@@ -392,7 +394,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 							// Leaf node.
 							switch r.Method {
 							case "POST":
-								s.handleCreateInvoiceLinkRequest([0]string{}, w, r)
+								s.handleCreateInvoiceLinkRequest([0]string{}, elemIsEscaped, w, r)
 							default:
 								s.notAllowed(w, r, "POST")
 							}
@@ -410,7 +412,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 							// Leaf node.
 							switch r.Method {
 							case "POST":
-								s.handleCreateNewStickerSetRequest([0]string{}, w, r)
+								s.handleCreateNewStickerSetRequest([0]string{}, elemIsEscaped, w, r)
 							default:
 								s.notAllowed(w, r, "POST")
 							}
@@ -441,7 +443,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 						// Leaf node.
 						switch r.Method {
 						case "POST":
-							s.handleDeclineChatJoinRequestRequest([0]string{}, w, r)
+							s.handleDeclineChatJoinRequestRequest([0]string{}, elemIsEscaped, w, r)
 						default:
 							s.notAllowed(w, r, "POST")
 						}
@@ -481,7 +483,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 								// Leaf node.
 								switch r.Method {
 								case "POST":
-									s.handleDeleteChatPhotoRequest([0]string{}, w, r)
+									s.handleDeleteChatPhotoRequest([0]string{}, elemIsEscaped, w, r)
 								default:
 									s.notAllowed(w, r, "POST")
 								}
@@ -499,7 +501,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 								// Leaf node.
 								switch r.Method {
 								case "POST":
-									s.handleDeleteChatStickerSetRequest([0]string{}, w, r)
+									s.handleDeleteChatStickerSetRequest([0]string{}, elemIsEscaped, w, r)
 								default:
 									s.notAllowed(w, r, "POST")
 								}
@@ -518,7 +520,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 							// Leaf node.
 							switch r.Method {
 							case "POST":
-								s.handleDeleteForumTopicRequest([0]string{}, w, r)
+								s.handleDeleteForumTopicRequest([0]string{}, elemIsEscaped, w, r)
 							default:
 								s.notAllowed(w, r, "POST")
 							}
@@ -547,7 +549,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 								// Leaf node.
 								switch r.Method {
 								case "POST":
-									s.handleDeleteMessageRequest([0]string{}, w, r)
+									s.handleDeleteMessageRequest([0]string{}, elemIsEscaped, w, r)
 								default:
 									s.notAllowed(w, r, "POST")
 								}
@@ -565,7 +567,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 								// Leaf node.
 								switch r.Method {
 								case "POST":
-									s.handleDeleteMyCommandsRequest([0]string{}, w, r)
+									s.handleDeleteMyCommandsRequest([0]string{}, elemIsEscaped, w, r)
 								default:
 									s.notAllowed(w, r, "POST")
 								}
@@ -595,7 +597,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 								// Leaf node.
 								switch r.Method {
 								case "POST":
-									s.handleDeleteStickerFromSetRequest([0]string{}, w, r)
+									s.handleDeleteStickerFromSetRequest([0]string{}, elemIsEscaped, w, r)
 								default:
 									s.notAllowed(w, r, "POST")
 								}
@@ -613,7 +615,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 								// Leaf node.
 								switch r.Method {
 								case "POST":
-									s.handleDeleteStickerSetRequest([0]string{}, w, r)
+									s.handleDeleteStickerSetRequest([0]string{}, elemIsEscaped, w, r)
 								default:
 									s.notAllowed(w, r, "POST")
 								}
@@ -632,7 +634,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 							// Leaf node.
 							switch r.Method {
 							case "POST":
-								s.handleDeleteWebhookRequest([0]string{}, w, r)
+								s.handleDeleteWebhookRequest([0]string{}, elemIsEscaped, w, r)
 							default:
 								s.notAllowed(w, r, "POST")
 							}
@@ -674,7 +676,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 							// Leaf node.
 							switch r.Method {
 							case "POST":
-								s.handleEditChatInviteLinkRequest([0]string{}, w, r)
+								s.handleEditChatInviteLinkRequest([0]string{}, elemIsEscaped, w, r)
 							default:
 								s.notAllowed(w, r, "POST")
 							}
@@ -692,7 +694,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 							// Leaf node.
 							switch r.Method {
 							case "POST":
-								s.handleEditForumTopicRequest([0]string{}, w, r)
+								s.handleEditForumTopicRequest([0]string{}, elemIsEscaped, w, r)
 							default:
 								s.notAllowed(w, r, "POST")
 							}
@@ -710,7 +712,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 							// Leaf node.
 							switch r.Method {
 							case "POST":
-								s.handleEditGeneralForumTopicRequest([0]string{}, w, r)
+								s.handleEditGeneralForumTopicRequest([0]string{}, elemIsEscaped, w, r)
 							default:
 								s.notAllowed(w, r, "POST")
 							}
@@ -739,7 +741,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 								// Leaf node.
 								switch r.Method {
 								case "POST":
-									s.handleEditMessageCaptionRequest([0]string{}, w, r)
+									s.handleEditMessageCaptionRequest([0]string{}, elemIsEscaped, w, r)
 								default:
 									s.notAllowed(w, r, "POST")
 								}
@@ -757,7 +759,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 								// Leaf node.
 								switch r.Method {
 								case "POST":
-									s.handleEditMessageLiveLocationRequest([0]string{}, w, r)
+									s.handleEditMessageLiveLocationRequest([0]string{}, elemIsEscaped, w, r)
 								default:
 									s.notAllowed(w, r, "POST")
 								}
@@ -775,7 +777,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 								// Leaf node.
 								switch r.Method {
 								case "POST":
-									s.handleEditMessageMediaRequest([0]string{}, w, r)
+									s.handleEditMessageMediaRequest([0]string{}, elemIsEscaped, w, r)
 								default:
 									s.notAllowed(w, r, "POST")
 								}
@@ -793,7 +795,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 								// Leaf node.
 								switch r.Method {
 								case "POST":
-									s.handleEditMessageReplyMarkupRequest([0]string{}, w, r)
+									s.handleEditMessageReplyMarkupRequest([0]string{}, elemIsEscaped, w, r)
 								default:
 									s.notAllowed(w, r, "POST")
 								}
@@ -811,7 +813,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 								// Leaf node.
 								switch r.Method {
 								case "POST":
-									s.handleEditMessageTextRequest([0]string{}, w, r)
+									s.handleEditMessageTextRequest([0]string{}, elemIsEscaped, w, r)
 								default:
 									s.notAllowed(w, r, "POST")
 								}
@@ -831,7 +833,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 						// Leaf node.
 						switch r.Method {
 						case "POST":
-							s.handleExportChatInviteLinkRequest([0]string{}, w, r)
+							s.handleExportChatInviteLinkRequest([0]string{}, elemIsEscaped, w, r)
 						default:
 							s.notAllowed(w, r, "POST")
 						}
@@ -850,7 +852,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 					// Leaf node.
 					switch r.Method {
 					case "POST":
-						s.handleForwardMessageRequest([0]string{}, w, r)
+						s.handleForwardMessageRequest([0]string{}, elemIsEscaped, w, r)
 					default:
 						s.notAllowed(w, r, "POST")
 					}
@@ -889,7 +891,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 						if len(elem) == 0 {
 							switch r.Method {
 							case "POST":
-								s.handleGetChatRequest([0]string{}, w, r)
+								s.handleGetChatRequest([0]string{}, elemIsEscaped, w, r)
 							default:
 								s.notAllowed(w, r, "POST")
 							}
@@ -908,7 +910,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 								// Leaf node.
 								switch r.Method {
 								case "POST":
-									s.handleGetChatAdministratorsRequest([0]string{}, w, r)
+									s.handleGetChatAdministratorsRequest([0]string{}, elemIsEscaped, w, r)
 								default:
 									s.notAllowed(w, r, "POST")
 								}
@@ -936,7 +938,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 								if len(elem) == 0 {
 									switch r.Method {
 									case "POST":
-										s.handleGetChatMemberRequest([0]string{}, w, r)
+										s.handleGetChatMemberRequest([0]string{}, elemIsEscaped, w, r)
 									default:
 										s.notAllowed(w, r, "POST")
 									}
@@ -955,7 +957,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 										// Leaf node.
 										switch r.Method {
 										case "POST":
-											s.handleGetChatMemberCountRequest([0]string{}, w, r)
+											s.handleGetChatMemberCountRequest([0]string{}, elemIsEscaped, w, r)
 										default:
 											s.notAllowed(w, r, "POST")
 										}
@@ -974,7 +976,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 									// Leaf node.
 									switch r.Method {
 									case "POST":
-										s.handleGetChatMenuButtonRequest([0]string{}, w, r)
+										s.handleGetChatMenuButtonRequest([0]string{}, elemIsEscaped, w, r)
 									default:
 										s.notAllowed(w, r, "POST")
 									}
@@ -994,7 +996,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 							// Leaf node.
 							switch r.Method {
 							case "POST":
-								s.handleGetCustomEmojiStickersRequest([0]string{}, w, r)
+								s.handleGetCustomEmojiStickersRequest([0]string{}, elemIsEscaped, w, r)
 							default:
 								s.notAllowed(w, r, "POST")
 							}
@@ -1024,7 +1026,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 							// Leaf node.
 							switch r.Method {
 							case "POST":
-								s.handleGetFileRequest([0]string{}, w, r)
+								s.handleGetFileRequest([0]string{}, elemIsEscaped, w, r)
 							default:
 								s.notAllowed(w, r, "POST")
 							}
@@ -1042,7 +1044,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 							// Leaf node.
 							switch r.Method {
 							case "POST":
-								s.handleGetForumTopicIconStickersRequest([0]string{}, w, r)
+								s.handleGetForumTopicIconStickersRequest([0]string{}, elemIsEscaped, w, r)
 							default:
 								s.notAllowed(w, r, "POST")
 							}
@@ -1061,7 +1063,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 						// Leaf node.
 						switch r.Method {
 						case "POST":
-							s.handleGetGameHighScoresRequest([0]string{}, w, r)
+							s.handleGetGameHighScoresRequest([0]string{}, elemIsEscaped, w, r)
 						default:
 							s.notAllowed(w, r, "POST")
 						}
@@ -1090,7 +1092,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 							// Leaf node.
 							switch r.Method {
 							case "POST":
-								s.handleGetMeRequest([0]string{}, w, r)
+								s.handleGetMeRequest([0]string{}, elemIsEscaped, w, r)
 							default:
 								s.notAllowed(w, r, "POST")
 							}
@@ -1119,7 +1121,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 								// Leaf node.
 								switch r.Method {
 								case "POST":
-									s.handleGetMyCommandsRequest([0]string{}, w, r)
+									s.handleGetMyCommandsRequest([0]string{}, elemIsEscaped, w, r)
 								default:
 									s.notAllowed(w, r, "POST")
 								}
@@ -1148,7 +1150,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 									// Leaf node.
 									switch r.Method {
 									case "POST":
-										s.handleGetMyDefaultAdministratorRightsRequest([0]string{}, w, r)
+										s.handleGetMyDefaultAdministratorRightsRequest([0]string{}, elemIsEscaped, w, r)
 									default:
 										s.notAllowed(w, r, "POST")
 									}
@@ -1166,7 +1168,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 									// Leaf node.
 									switch r.Method {
 									case "POST":
-										s.handleGetMyDescriptionRequest([0]string{}, w, r)
+										s.handleGetMyDescriptionRequest([0]string{}, elemIsEscaped, w, r)
 									default:
 										s.notAllowed(w, r, "POST")
 									}
@@ -1185,7 +1187,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 								// Leaf node.
 								switch r.Method {
 								case "POST":
-									s.handleGetMyShortDescriptionRequest([0]string{}, w, r)
+									s.handleGetMyShortDescriptionRequest([0]string{}, elemIsEscaped, w, r)
 								default:
 									s.notAllowed(w, r, "POST")
 								}
@@ -1205,7 +1207,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 						// Leaf node.
 						switch r.Method {
 						case "POST":
-							s.handleGetStickerSetRequest([0]string{}, w, r)
+							s.handleGetStickerSetRequest([0]string{}, elemIsEscaped, w, r)
 						default:
 							s.notAllowed(w, r, "POST")
 						}
@@ -1234,7 +1236,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 							// Leaf node.
 							switch r.Method {
 							case "POST":
-								s.handleGetUpdatesRequest([0]string{}, w, r)
+								s.handleGetUpdatesRequest([0]string{}, elemIsEscaped, w, r)
 							default:
 								s.notAllowed(w, r, "POST")
 							}
@@ -1252,7 +1254,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 							// Leaf node.
 							switch r.Method {
 							case "POST":
-								s.handleGetUserProfilePhotosRequest([0]string{}, w, r)
+								s.handleGetUserProfilePhotosRequest([0]string{}, elemIsEscaped, w, r)
 							default:
 								s.notAllowed(w, r, "POST")
 							}
@@ -1271,7 +1273,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 						// Leaf node.
 						switch r.Method {
 						case "POST":
-							s.handleGetWebhookInfoRequest([0]string{}, w, r)
+							s.handleGetWebhookInfoRequest([0]string{}, elemIsEscaped, w, r)
 						default:
 							s.notAllowed(w, r, "POST")
 						}
@@ -1290,7 +1292,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 					// Leaf node.
 					switch r.Method {
 					case "POST":
-						s.handleHideGeneralForumTopicRequest([0]string{}, w, r)
+						s.handleHideGeneralForumTopicRequest([0]string{}, elemIsEscaped, w, r)
 					default:
 						s.notAllowed(w, r, "POST")
 					}
@@ -1319,7 +1321,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 						// Leaf node.
 						switch r.Method {
 						case "POST":
-							s.handleLeaveChatRequest([0]string{}, w, r)
+							s.handleLeaveChatRequest([0]string{}, elemIsEscaped, w, r)
 						default:
 							s.notAllowed(w, r, "POST")
 						}
@@ -1337,7 +1339,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 						// Leaf node.
 						switch r.Method {
 						case "POST":
-							s.handleLogOutRequest([0]string{}, w, r)
+							s.handleLogOutRequest([0]string{}, elemIsEscaped, w, r)
 						default:
 							s.notAllowed(w, r, "POST")
 						}
@@ -1367,7 +1369,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 						// Leaf node.
 						switch r.Method {
 						case "POST":
-							s.handlePinChatMessageRequest([0]string{}, w, r)
+							s.handlePinChatMessageRequest([0]string{}, elemIsEscaped, w, r)
 						default:
 							s.notAllowed(w, r, "POST")
 						}
@@ -1385,7 +1387,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 						// Leaf node.
 						switch r.Method {
 						case "POST":
-							s.handlePromoteChatMemberRequest([0]string{}, w, r)
+							s.handlePromoteChatMemberRequest([0]string{}, elemIsEscaped, w, r)
 						default:
 							s.notAllowed(w, r, "POST")
 						}
@@ -1426,7 +1428,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 							// Leaf node.
 							switch r.Method {
 							case "POST":
-								s.handleReopenForumTopicRequest([0]string{}, w, r)
+								s.handleReopenForumTopicRequest([0]string{}, elemIsEscaped, w, r)
 							default:
 								s.notAllowed(w, r, "POST")
 							}
@@ -1444,7 +1446,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 							// Leaf node.
 							switch r.Method {
 							case "POST":
-								s.handleReopenGeneralForumTopicRequest([0]string{}, w, r)
+								s.handleReopenGeneralForumTopicRequest([0]string{}, elemIsEscaped, w, r)
 							default:
 								s.notAllowed(w, r, "POST")
 							}
@@ -1463,7 +1465,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 						// Leaf node.
 						switch r.Method {
 						case "POST":
-							s.handleRestrictChatMemberRequest([0]string{}, w, r)
+							s.handleRestrictChatMemberRequest([0]string{}, elemIsEscaped, w, r)
 						default:
 							s.notAllowed(w, r, "POST")
 						}
@@ -1481,7 +1483,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 						// Leaf node.
 						switch r.Method {
 						case "POST":
-							s.handleRevokeChatInviteLinkRequest([0]string{}, w, r)
+							s.handleRevokeChatInviteLinkRequest([0]string{}, elemIsEscaped, w, r)
 						default:
 							s.notAllowed(w, r, "POST")
 						}
@@ -1544,7 +1546,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 									// Leaf node.
 									switch r.Method {
 									case "POST":
-										s.handleSendAnimationRequest([0]string{}, w, r)
+										s.handleSendAnimationRequest([0]string{}, elemIsEscaped, w, r)
 									default:
 										s.notAllowed(w, r, "POST")
 									}
@@ -1562,7 +1564,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 									// Leaf node.
 									switch r.Method {
 									case "POST":
-										s.handleSendAudioRequest([0]string{}, w, r)
+										s.handleSendAudioRequest([0]string{}, elemIsEscaped, w, r)
 									default:
 										s.notAllowed(w, r, "POST")
 									}
@@ -1592,7 +1594,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 									// Leaf node.
 									switch r.Method {
 									case "POST":
-										s.handleSendChatActionRequest([0]string{}, w, r)
+										s.handleSendChatActionRequest([0]string{}, elemIsEscaped, w, r)
 									default:
 										s.notAllowed(w, r, "POST")
 									}
@@ -1610,7 +1612,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 									// Leaf node.
 									switch r.Method {
 									case "POST":
-										s.handleSendContactRequest([0]string{}, w, r)
+										s.handleSendContactRequest([0]string{}, elemIsEscaped, w, r)
 									default:
 										s.notAllowed(w, r, "POST")
 									}
@@ -1640,7 +1642,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 									// Leaf node.
 									switch r.Method {
 									case "POST":
-										s.handleSendDiceRequest([0]string{}, w, r)
+										s.handleSendDiceRequest([0]string{}, elemIsEscaped, w, r)
 									default:
 										s.notAllowed(w, r, "POST")
 									}
@@ -1658,7 +1660,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 									// Leaf node.
 									switch r.Method {
 									case "POST":
-										s.handleSendDocumentRequest([0]string{}, w, r)
+										s.handleSendDocumentRequest([0]string{}, elemIsEscaped, w, r)
 									default:
 										s.notAllowed(w, r, "POST")
 									}
@@ -1677,7 +1679,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 								// Leaf node.
 								switch r.Method {
 								case "POST":
-									s.handleSendGameRequest([0]string{}, w, r)
+									s.handleSendGameRequest([0]string{}, elemIsEscaped, w, r)
 								default:
 									s.notAllowed(w, r, "POST")
 								}
@@ -1695,7 +1697,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 								// Leaf node.
 								switch r.Method {
 								case "POST":
-									s.handleSendInvoiceRequest([0]string{}, w, r)
+									s.handleSendInvoiceRequest([0]string{}, elemIsEscaped, w, r)
 								default:
 									s.notAllowed(w, r, "POST")
 								}
@@ -1713,7 +1715,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 								// Leaf node.
 								switch r.Method {
 								case "POST":
-									s.handleSendLocationRequest([0]string{}, w, r)
+									s.handleSendLocationRequest([0]string{}, elemIsEscaped, w, r)
 								default:
 									s.notAllowed(w, r, "POST")
 								}
@@ -1742,7 +1744,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 									// Leaf node.
 									switch r.Method {
 									case "POST":
-										s.handleSendMediaGroupRequest([0]string{}, w, r)
+										s.handleSendMediaGroupRequest([0]string{}, elemIsEscaped, w, r)
 									default:
 										s.notAllowed(w, r, "POST")
 									}
@@ -1760,7 +1762,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 									// Leaf node.
 									switch r.Method {
 									case "POST":
-										s.handleSendMessageRequest([0]string{}, w, r)
+										s.handleSendMessageRequest([0]string{}, elemIsEscaped, w, r)
 									default:
 										s.notAllowed(w, r, "POST")
 									}
@@ -1790,7 +1792,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 									// Leaf node.
 									switch r.Method {
 									case "POST":
-										s.handleSendPhotoRequest([0]string{}, w, r)
+										s.handleSendPhotoRequest([0]string{}, elemIsEscaped, w, r)
 									default:
 										s.notAllowed(w, r, "POST")
 									}
@@ -1808,7 +1810,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 									// Leaf node.
 									switch r.Method {
 									case "POST":
-										s.handleSendPollRequest([0]string{}, w, r)
+										s.handleSendPollRequest([0]string{}, elemIsEscaped, w, r)
 									default:
 										s.notAllowed(w, r, "POST")
 									}
@@ -1827,7 +1829,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 								// Leaf node.
 								switch r.Method {
 								case "POST":
-									s.handleSendStickerRequest([0]string{}, w, r)
+									s.handleSendStickerRequest([0]string{}, elemIsEscaped, w, r)
 								default:
 									s.notAllowed(w, r, "POST")
 								}
@@ -1856,7 +1858,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 									// Leaf node.
 									switch r.Method {
 									case "POST":
-										s.handleSendVenueRequest([0]string{}, w, r)
+										s.handleSendVenueRequest([0]string{}, elemIsEscaped, w, r)
 									default:
 										s.notAllowed(w, r, "POST")
 									}
@@ -1873,7 +1875,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 								if len(elem) == 0 {
 									switch r.Method {
 									case "POST":
-										s.handleSendVideoRequest([0]string{}, w, r)
+										s.handleSendVideoRequest([0]string{}, elemIsEscaped, w, r)
 									default:
 										s.notAllowed(w, r, "POST")
 									}
@@ -1892,7 +1894,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 										// Leaf node.
 										switch r.Method {
 										case "POST":
-											s.handleSendVideoNoteRequest([0]string{}, w, r)
+											s.handleSendVideoNoteRequest([0]string{}, elemIsEscaped, w, r)
 										default:
 											s.notAllowed(w, r, "POST")
 										}
@@ -1911,7 +1913,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 									// Leaf node.
 									switch r.Method {
 									case "POST":
-										s.handleSendVoiceRequest([0]string{}, w, r)
+										s.handleSendVoiceRequest([0]string{}, elemIsEscaped, w, r)
 									default:
 										s.notAllowed(w, r, "POST")
 									}
@@ -1964,7 +1966,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 										// Leaf node.
 										switch r.Method {
 										case "POST":
-											s.handleSetChatAdministratorCustomTitleRequest([0]string{}, w, r)
+											s.handleSetChatAdministratorCustomTitleRequest([0]string{}, elemIsEscaped, w, r)
 										default:
 											s.notAllowed(w, r, "POST")
 										}
@@ -1982,7 +1984,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 										// Leaf node.
 										switch r.Method {
 										case "POST":
-											s.handleSetChatDescriptionRequest([0]string{}, w, r)
+											s.handleSetChatDescriptionRequest([0]string{}, elemIsEscaped, w, r)
 										default:
 											s.notAllowed(w, r, "POST")
 										}
@@ -2000,7 +2002,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 										// Leaf node.
 										switch r.Method {
 										case "POST":
-											s.handleSetChatMenuButtonRequest([0]string{}, w, r)
+											s.handleSetChatMenuButtonRequest([0]string{}, elemIsEscaped, w, r)
 										default:
 											s.notAllowed(w, r, "POST")
 										}
@@ -2029,7 +2031,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 											// Leaf node.
 											switch r.Method {
 											case "POST":
-												s.handleSetChatPermissionsRequest([0]string{}, w, r)
+												s.handleSetChatPermissionsRequest([0]string{}, elemIsEscaped, w, r)
 											default:
 												s.notAllowed(w, r, "POST")
 											}
@@ -2047,7 +2049,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 											// Leaf node.
 											switch r.Method {
 											case "POST":
-												s.handleSetChatPhotoRequest([0]string{}, w, r)
+												s.handleSetChatPhotoRequest([0]string{}, elemIsEscaped, w, r)
 											default:
 												s.notAllowed(w, r, "POST")
 											}
@@ -2066,7 +2068,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 										// Leaf node.
 										switch r.Method {
 										case "POST":
-											s.handleSetChatStickerSetRequest([0]string{}, w, r)
+											s.handleSetChatStickerSetRequest([0]string{}, elemIsEscaped, w, r)
 										default:
 											s.notAllowed(w, r, "POST")
 										}
@@ -2084,7 +2086,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 										// Leaf node.
 										switch r.Method {
 										case "POST":
-											s.handleSetChatTitleRequest([0]string{}, w, r)
+											s.handleSetChatTitleRequest([0]string{}, elemIsEscaped, w, r)
 										default:
 											s.notAllowed(w, r, "POST")
 										}
@@ -2103,7 +2105,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 									// Leaf node.
 									switch r.Method {
 									case "POST":
-										s.handleSetCustomEmojiStickerSetThumbnailRequest([0]string{}, w, r)
+										s.handleSetCustomEmojiStickerSetThumbnailRequest([0]string{}, elemIsEscaped, w, r)
 									default:
 										s.notAllowed(w, r, "POST")
 									}
@@ -2122,7 +2124,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 								// Leaf node.
 								switch r.Method {
 								case "POST":
-									s.handleSetGameScoreRequest([0]string{}, w, r)
+									s.handleSetGameScoreRequest([0]string{}, elemIsEscaped, w, r)
 								default:
 									s.notAllowed(w, r, "POST")
 								}
@@ -2151,7 +2153,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 									// Leaf node.
 									switch r.Method {
 									case "POST":
-										s.handleSetMyCommandsRequest([0]string{}, w, r)
+										s.handleSetMyCommandsRequest([0]string{}, elemIsEscaped, w, r)
 									default:
 										s.notAllowed(w, r, "POST")
 									}
@@ -2180,7 +2182,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 										// Leaf node.
 										switch r.Method {
 										case "POST":
-											s.handleSetMyDefaultAdministratorRightsRequest([0]string{}, w, r)
+											s.handleSetMyDefaultAdministratorRightsRequest([0]string{}, elemIsEscaped, w, r)
 										default:
 											s.notAllowed(w, r, "POST")
 										}
@@ -2198,7 +2200,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 										// Leaf node.
 										switch r.Method {
 										case "POST":
-											s.handleSetMyDescriptionRequest([0]string{}, w, r)
+											s.handleSetMyDescriptionRequest([0]string{}, elemIsEscaped, w, r)
 										default:
 											s.notAllowed(w, r, "POST")
 										}
@@ -2217,7 +2219,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 									// Leaf node.
 									switch r.Method {
 									case "POST":
-										s.handleSetMyShortDescriptionRequest([0]string{}, w, r)
+										s.handleSetMyShortDescriptionRequest([0]string{}, elemIsEscaped, w, r)
 									default:
 										s.notAllowed(w, r, "POST")
 									}
@@ -2236,7 +2238,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 								// Leaf node.
 								switch r.Method {
 								case "POST":
-									s.handleSetPassportDataErrorsRequest([0]string{}, w, r)
+									s.handleSetPassportDataErrorsRequest([0]string{}, elemIsEscaped, w, r)
 								default:
 									s.notAllowed(w, r, "POST")
 								}
@@ -2265,7 +2267,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 									// Leaf node.
 									switch r.Method {
 									case "POST":
-										s.handleSetStickerEmojiListRequest([0]string{}, w, r)
+										s.handleSetStickerEmojiListRequest([0]string{}, elemIsEscaped, w, r)
 									default:
 										s.notAllowed(w, r, "POST")
 									}
@@ -2283,7 +2285,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 									// Leaf node.
 									switch r.Method {
 									case "POST":
-										s.handleSetStickerKeywordsRequest([0]string{}, w, r)
+										s.handleSetStickerKeywordsRequest([0]string{}, elemIsEscaped, w, r)
 									default:
 										s.notAllowed(w, r, "POST")
 									}
@@ -2301,7 +2303,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 									// Leaf node.
 									switch r.Method {
 									case "POST":
-										s.handleSetStickerMaskPositionRequest([0]string{}, w, r)
+										s.handleSetStickerMaskPositionRequest([0]string{}, elemIsEscaped, w, r)
 									default:
 										s.notAllowed(w, r, "POST")
 									}
@@ -2319,7 +2321,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 									// Leaf node.
 									switch r.Method {
 									case "POST":
-										s.handleSetStickerPositionInSetRequest([0]string{}, w, r)
+										s.handleSetStickerPositionInSetRequest([0]string{}, elemIsEscaped, w, r)
 									default:
 										s.notAllowed(w, r, "POST")
 									}
@@ -2348,7 +2350,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 										// Leaf node.
 										switch r.Method {
 										case "POST":
-											s.handleSetStickerSetThumbnailRequest([0]string{}, w, r)
+											s.handleSetStickerSetThumbnailRequest([0]string{}, elemIsEscaped, w, r)
 										default:
 											s.notAllowed(w, r, "POST")
 										}
@@ -2366,7 +2368,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 										// Leaf node.
 										switch r.Method {
 										case "POST":
-											s.handleSetStickerSetTitleRequest([0]string{}, w, r)
+											s.handleSetStickerSetTitleRequest([0]string{}, elemIsEscaped, w, r)
 										default:
 											s.notAllowed(w, r, "POST")
 										}
@@ -2386,7 +2388,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 								// Leaf node.
 								switch r.Method {
 								case "POST":
-									s.handleSetWebhookRequest([0]string{}, w, r)
+									s.handleSetWebhookRequest([0]string{}, elemIsEscaped, w, r)
 								default:
 									s.notAllowed(w, r, "POST")
 								}
@@ -2417,7 +2419,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 							// Leaf node.
 							switch r.Method {
 							case "POST":
-								s.handleStopMessageLiveLocationRequest([0]string{}, w, r)
+								s.handleStopMessageLiveLocationRequest([0]string{}, elemIsEscaped, w, r)
 							default:
 								s.notAllowed(w, r, "POST")
 							}
@@ -2435,7 +2437,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 							// Leaf node.
 							switch r.Method {
 							case "POST":
-								s.handleStopPollRequest([0]string{}, w, r)
+								s.handleStopPollRequest([0]string{}, elemIsEscaped, w, r)
 							default:
 								s.notAllowed(w, r, "POST")
 							}
@@ -2488,7 +2490,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 								// Leaf node.
 								switch r.Method {
 								case "POST":
-									s.handleUnbanChatMemberRequest([0]string{}, w, r)
+									s.handleUnbanChatMemberRequest([0]string{}, elemIsEscaped, w, r)
 								default:
 									s.notAllowed(w, r, "POST")
 								}
@@ -2506,7 +2508,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 								// Leaf node.
 								switch r.Method {
 								case "POST":
-									s.handleUnbanChatSenderChatRequest([0]string{}, w, r)
+									s.handleUnbanChatSenderChatRequest([0]string{}, elemIsEscaped, w, r)
 								default:
 									s.notAllowed(w, r, "POST")
 								}
@@ -2525,7 +2527,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 							// Leaf node.
 							switch r.Method {
 							case "POST":
-								s.handleUnhideGeneralForumTopicRequest([0]string{}, w, r)
+								s.handleUnhideGeneralForumTopicRequest([0]string{}, elemIsEscaped, w, r)
 							default:
 								s.notAllowed(w, r, "POST")
 							}
@@ -2565,7 +2567,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 									// Leaf node.
 									switch r.Method {
 									case "POST":
-										s.handleUnpinAllChatMessagesRequest([0]string{}, w, r)
+										s.handleUnpinAllChatMessagesRequest([0]string{}, elemIsEscaped, w, r)
 									default:
 										s.notAllowed(w, r, "POST")
 									}
@@ -2583,7 +2585,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 									// Leaf node.
 									switch r.Method {
 									case "POST":
-										s.handleUnpinAllForumTopicMessagesRequest([0]string{}, w, r)
+										s.handleUnpinAllForumTopicMessagesRequest([0]string{}, elemIsEscaped, w, r)
 									default:
 										s.notAllowed(w, r, "POST")
 									}
@@ -2602,7 +2604,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 								// Leaf node.
 								switch r.Method {
 								case "POST":
-									s.handleUnpinChatMessageRequest([0]string{}, w, r)
+									s.handleUnpinChatMessageRequest([0]string{}, elemIsEscaped, w, r)
 								default:
 									s.notAllowed(w, r, "POST")
 								}
@@ -2622,7 +2624,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 						// Leaf node.
 						switch r.Method {
 						case "POST":
-							s.handleUploadStickerFileRequest([0]string{}, w, r)
+							s.handleUploadStickerFileRequest([0]string{}, elemIsEscaped, w, r)
 						default:
 							s.notAllowed(w, r, "POST")
 						}
@@ -2640,6 +2642,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 type Route struct {
 	name        string
 	operationID string
+	pathPattern string
 	count       int
 	args        [0]string
 }
@@ -2654,6 +2657,11 @@ func (r Route) Name() string {
 // OperationID returns OpenAPI operationId.
 func (r Route) OperationID() string {
 	return r.operationID
+}
+
+// PathPattern returns OpenAPI path.
+func (r Route) PathPattern() string {
+	return r.pathPattern
 }
 
 // Args returns parsed arguments.
@@ -2729,6 +2737,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							// Leaf: AddStickerToSet
 							r.name = "AddStickerToSet"
 							r.operationID = "addStickerToSet"
+							r.pathPattern = "/addStickerToSet"
 							r.args = args
 							r.count = 0
 							return r, true
@@ -2760,6 +2769,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								// Leaf: AnswerCallbackQuery
 								r.name = "AnswerCallbackQuery"
 								r.operationID = "answerCallbackQuery"
+								r.pathPattern = "/answerCallbackQuery"
 								r.args = args
 								r.count = 0
 								return r, true
@@ -2780,6 +2790,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								// Leaf: AnswerInlineQuery
 								r.name = "AnswerInlineQuery"
 								r.operationID = "answerInlineQuery"
+								r.pathPattern = "/answerInlineQuery"
 								r.args = args
 								r.count = 0
 								return r, true
@@ -2800,6 +2811,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								// Leaf: AnswerPreCheckoutQuery
 								r.name = "AnswerPreCheckoutQuery"
 								r.operationID = "answerPreCheckoutQuery"
+								r.pathPattern = "/answerPreCheckoutQuery"
 								r.args = args
 								r.count = 0
 								return r, true
@@ -2820,6 +2832,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								// Leaf: AnswerShippingQuery
 								r.name = "AnswerShippingQuery"
 								r.operationID = "answerShippingQuery"
+								r.pathPattern = "/answerShippingQuery"
 								r.args = args
 								r.count = 0
 								return r, true
@@ -2840,6 +2853,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								// Leaf: AnswerWebAppQuery
 								r.name = "AnswerWebAppQuery"
 								r.operationID = "answerWebAppQuery"
+								r.pathPattern = "/answerWebAppQuery"
 								r.args = args
 								r.count = 0
 								return r, true
@@ -2861,6 +2875,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							// Leaf: ApproveChatJoinRequest
 							r.name = "ApproveChatJoinRequest"
 							r.operationID = "approveChatJoinRequest"
+							r.pathPattern = "/approveChatJoinRequest"
 							r.args = args
 							r.count = 0
 							return r, true
@@ -2893,6 +2908,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							// Leaf: BanChatMember
 							r.name = "BanChatMember"
 							r.operationID = "banChatMember"
+							r.pathPattern = "/banChatMember"
 							r.args = args
 							r.count = 0
 							return r, true
@@ -2913,6 +2929,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							// Leaf: BanChatSenderChat
 							r.name = "BanChatSenderChat"
 							r.operationID = "banChatSenderChat"
+							r.pathPattern = "/banChatSenderChat"
 							r.args = args
 							r.count = 0
 							return r, true
@@ -2944,6 +2961,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						case "POST":
 							r.name = "Close"
 							r.operationID = "close"
+							r.pathPattern = "/close"
 							r.args = args
 							r.count = 0
 							return r, true
@@ -2965,6 +2983,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								// Leaf: CloseForumTopic
 								r.name = "CloseForumTopic"
 								r.operationID = "closeForumTopic"
+								r.pathPattern = "/closeForumTopic"
 								r.args = args
 								r.count = 0
 								return r, true
@@ -2985,6 +3004,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								// Leaf: CloseGeneralForumTopic
 								r.name = "CloseGeneralForumTopic"
 								r.operationID = "closeGeneralForumTopic"
+								r.pathPattern = "/closeGeneralForumTopic"
 								r.args = args
 								r.count = 0
 								return r, true
@@ -3006,6 +3026,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							// Leaf: CopyMessage
 							r.name = "CopyMessage"
 							r.operationID = "copyMessage"
+							r.pathPattern = "/copyMessage"
 							r.args = args
 							r.count = 0
 							return r, true
@@ -3037,6 +3058,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								// Leaf: CreateChatInviteLink
 								r.name = "CreateChatInviteLink"
 								r.operationID = "createChatInviteLink"
+								r.pathPattern = "/createChatInviteLink"
 								r.args = args
 								r.count = 0
 								return r, true
@@ -3057,6 +3079,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								// Leaf: CreateForumTopic
 								r.name = "CreateForumTopic"
 								r.operationID = "createForumTopic"
+								r.pathPattern = "/createForumTopic"
 								r.args = args
 								r.count = 0
 								return r, true
@@ -3077,6 +3100,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								// Leaf: CreateInvoiceLink
 								r.name = "CreateInvoiceLink"
 								r.operationID = "createInvoiceLink"
+								r.pathPattern = "/createInvoiceLink"
 								r.args = args
 								r.count = 0
 								return r, true
@@ -3097,6 +3121,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								// Leaf: CreateNewStickerSet
 								r.name = "CreateNewStickerSet"
 								r.operationID = "createNewStickerSet"
+								r.pathPattern = "/createNewStickerSet"
 								r.args = args
 								r.count = 0
 								return r, true
@@ -3130,6 +3155,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							// Leaf: DeclineChatJoinRequest
 							r.name = "DeclineChatJoinRequest"
 							r.operationID = "declineChatJoinRequest"
+							r.pathPattern = "/declineChatJoinRequest"
 							r.args = args
 							r.count = 0
 							return r, true
@@ -3172,6 +3198,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									// Leaf: DeleteChatPhoto
 									r.name = "DeleteChatPhoto"
 									r.operationID = "deleteChatPhoto"
+									r.pathPattern = "/deleteChatPhoto"
 									r.args = args
 									r.count = 0
 									return r, true
@@ -3192,6 +3219,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									// Leaf: DeleteChatStickerSet
 									r.name = "DeleteChatStickerSet"
 									r.operationID = "deleteChatStickerSet"
+									r.pathPattern = "/deleteChatStickerSet"
 									r.args = args
 									r.count = 0
 									return r, true
@@ -3213,6 +3241,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								// Leaf: DeleteForumTopic
 								r.name = "DeleteForumTopic"
 								r.operationID = "deleteForumTopic"
+								r.pathPattern = "/deleteForumTopic"
 								r.args = args
 								r.count = 0
 								return r, true
@@ -3244,6 +3273,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									// Leaf: DeleteMessage
 									r.name = "DeleteMessage"
 									r.operationID = "deleteMessage"
+									r.pathPattern = "/deleteMessage"
 									r.args = args
 									r.count = 0
 									return r, true
@@ -3264,6 +3294,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									// Leaf: DeleteMyCommands
 									r.name = "DeleteMyCommands"
 									r.operationID = "deleteMyCommands"
+									r.pathPattern = "/deleteMyCommands"
 									r.args = args
 									r.count = 0
 									return r, true
@@ -3296,6 +3327,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									// Leaf: DeleteStickerFromSet
 									r.name = "DeleteStickerFromSet"
 									r.operationID = "deleteStickerFromSet"
+									r.pathPattern = "/deleteStickerFromSet"
 									r.args = args
 									r.count = 0
 									return r, true
@@ -3316,6 +3348,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									// Leaf: DeleteStickerSet
 									r.name = "DeleteStickerSet"
 									r.operationID = "deleteStickerSet"
+									r.pathPattern = "/deleteStickerSet"
 									r.args = args
 									r.count = 0
 									return r, true
@@ -3337,6 +3370,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								// Leaf: DeleteWebhook
 								r.name = "DeleteWebhook"
 								r.operationID = "deleteWebhook"
+								r.pathPattern = "/deleteWebhook"
 								r.args = args
 								r.count = 0
 								return r, true
@@ -3381,6 +3415,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								// Leaf: EditChatInviteLink
 								r.name = "EditChatInviteLink"
 								r.operationID = "editChatInviteLink"
+								r.pathPattern = "/editChatInviteLink"
 								r.args = args
 								r.count = 0
 								return r, true
@@ -3401,6 +3436,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								// Leaf: EditForumTopic
 								r.name = "EditForumTopic"
 								r.operationID = "editForumTopic"
+								r.pathPattern = "/editForumTopic"
 								r.args = args
 								r.count = 0
 								return r, true
@@ -3421,6 +3457,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								// Leaf: EditGeneralForumTopic
 								r.name = "EditGeneralForumTopic"
 								r.operationID = "editGeneralForumTopic"
+								r.pathPattern = "/editGeneralForumTopic"
 								r.args = args
 								r.count = 0
 								return r, true
@@ -3452,6 +3489,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									// Leaf: EditMessageCaption
 									r.name = "EditMessageCaption"
 									r.operationID = "editMessageCaption"
+									r.pathPattern = "/editMessageCaption"
 									r.args = args
 									r.count = 0
 									return r, true
@@ -3472,6 +3510,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									// Leaf: EditMessageLiveLocation
 									r.name = "EditMessageLiveLocation"
 									r.operationID = "editMessageLiveLocation"
+									r.pathPattern = "/editMessageLiveLocation"
 									r.args = args
 									r.count = 0
 									return r, true
@@ -3492,6 +3531,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									// Leaf: EditMessageMedia
 									r.name = "EditMessageMedia"
 									r.operationID = "editMessageMedia"
+									r.pathPattern = "/editMessageMedia"
 									r.args = args
 									r.count = 0
 									return r, true
@@ -3512,6 +3552,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									// Leaf: EditMessageReplyMarkup
 									r.name = "EditMessageReplyMarkup"
 									r.operationID = "editMessageReplyMarkup"
+									r.pathPattern = "/editMessageReplyMarkup"
 									r.args = args
 									r.count = 0
 									return r, true
@@ -3532,6 +3573,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									// Leaf: EditMessageText
 									r.name = "EditMessageText"
 									r.operationID = "editMessageText"
+									r.pathPattern = "/editMessageText"
 									r.args = args
 									r.count = 0
 									return r, true
@@ -3554,6 +3596,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							// Leaf: ExportChatInviteLink
 							r.name = "ExportChatInviteLink"
 							r.operationID = "exportChatInviteLink"
+							r.pathPattern = "/exportChatInviteLink"
 							r.args = args
 							r.count = 0
 							return r, true
@@ -3575,6 +3618,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						// Leaf: ForwardMessage
 						r.name = "ForwardMessage"
 						r.operationID = "forwardMessage"
+						r.pathPattern = "/forwardMessage"
 						r.args = args
 						r.count = 0
 						return r, true
@@ -3616,6 +3660,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							case "POST":
 								r.name = "GetChat"
 								r.operationID = "getChat"
+								r.pathPattern = "/getChat"
 								r.args = args
 								r.count = 0
 								return r, true
@@ -3637,6 +3682,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									// Leaf: GetChatAdministrators
 									r.name = "GetChatAdministrators"
 									r.operationID = "getChatAdministrators"
+									r.pathPattern = "/getChatAdministrators"
 									r.args = args
 									r.count = 0
 									return r, true
@@ -3667,6 +3713,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									case "POST":
 										r.name = "GetChatMember"
 										r.operationID = "getChatMember"
+										r.pathPattern = "/getChatMember"
 										r.args = args
 										r.count = 0
 										return r, true
@@ -3688,6 +3735,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 											// Leaf: GetChatMemberCount
 											r.name = "GetChatMemberCount"
 											r.operationID = "getChatMemberCount"
+											r.pathPattern = "/getChatMemberCount"
 											r.args = args
 											r.count = 0
 											return r, true
@@ -3709,6 +3757,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 										// Leaf: GetChatMenuButton
 										r.name = "GetChatMenuButton"
 										r.operationID = "getChatMenuButton"
+										r.pathPattern = "/getChatMenuButton"
 										r.args = args
 										r.count = 0
 										return r, true
@@ -3731,6 +3780,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								// Leaf: GetCustomEmojiStickers
 								r.name = "GetCustomEmojiStickers"
 								r.operationID = "getCustomEmojiStickers"
+								r.pathPattern = "/getCustomEmojiStickers"
 								r.args = args
 								r.count = 0
 								return r, true
@@ -3763,6 +3813,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								// Leaf: GetFile
 								r.name = "GetFile"
 								r.operationID = "getFile"
+								r.pathPattern = "/getFile"
 								r.args = args
 								r.count = 0
 								return r, true
@@ -3783,6 +3834,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								// Leaf: GetForumTopicIconStickers
 								r.name = "GetForumTopicIconStickers"
 								r.operationID = "getForumTopicIconStickers"
+								r.pathPattern = "/getForumTopicIconStickers"
 								r.args = args
 								r.count = 0
 								return r, true
@@ -3804,6 +3856,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							// Leaf: GetGameHighScores
 							r.name = "GetGameHighScores"
 							r.operationID = "getGameHighScores"
+							r.pathPattern = "/getGameHighScores"
 							r.args = args
 							r.count = 0
 							return r, true
@@ -3835,6 +3888,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								// Leaf: GetMe
 								r.name = "GetMe"
 								r.operationID = "getMe"
+								r.pathPattern = "/getMe"
 								r.args = args
 								r.count = 0
 								return r, true
@@ -3866,6 +3920,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									// Leaf: GetMyCommands
 									r.name = "GetMyCommands"
 									r.operationID = "getMyCommands"
+									r.pathPattern = "/getMyCommands"
 									r.args = args
 									r.count = 0
 									return r, true
@@ -3897,6 +3952,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 										// Leaf: GetMyDefaultAdministratorRights
 										r.name = "GetMyDefaultAdministratorRights"
 										r.operationID = "getMyDefaultAdministratorRights"
+										r.pathPattern = "/getMyDefaultAdministratorRights"
 										r.args = args
 										r.count = 0
 										return r, true
@@ -3917,6 +3973,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 										// Leaf: GetMyDescription
 										r.name = "GetMyDescription"
 										r.operationID = "getMyDescription"
+										r.pathPattern = "/getMyDescription"
 										r.args = args
 										r.count = 0
 										return r, true
@@ -3938,6 +3995,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									// Leaf: GetMyShortDescription
 									r.name = "GetMyShortDescription"
 									r.operationID = "getMyShortDescription"
+									r.pathPattern = "/getMyShortDescription"
 									r.args = args
 									r.count = 0
 									return r, true
@@ -3960,6 +4018,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							// Leaf: GetStickerSet
 							r.name = "GetStickerSet"
 							r.operationID = "getStickerSet"
+							r.pathPattern = "/getStickerSet"
 							r.args = args
 							r.count = 0
 							return r, true
@@ -3991,6 +4050,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								// Leaf: GetUpdates
 								r.name = "GetUpdates"
 								r.operationID = "getUpdates"
+								r.pathPattern = "/getUpdates"
 								r.args = args
 								r.count = 0
 								return r, true
@@ -4011,6 +4071,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								// Leaf: GetUserProfilePhotos
 								r.name = "GetUserProfilePhotos"
 								r.operationID = "getUserProfilePhotos"
+								r.pathPattern = "/getUserProfilePhotos"
 								r.args = args
 								r.count = 0
 								return r, true
@@ -4032,6 +4093,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							// Leaf: GetWebhookInfo
 							r.name = "GetWebhookInfo"
 							r.operationID = "getWebhookInfo"
+							r.pathPattern = "/getWebhookInfo"
 							r.args = args
 							r.count = 0
 							return r, true
@@ -4053,6 +4115,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						// Leaf: HideGeneralForumTopic
 						r.name = "HideGeneralForumTopic"
 						r.operationID = "hideGeneralForumTopic"
+						r.pathPattern = "/hideGeneralForumTopic"
 						r.args = args
 						r.count = 0
 						return r, true
@@ -4084,6 +4147,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							// Leaf: LeaveChat
 							r.name = "LeaveChat"
 							r.operationID = "leaveChat"
+							r.pathPattern = "/leaveChat"
 							r.args = args
 							r.count = 0
 							return r, true
@@ -4104,6 +4168,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							// Leaf: LogOut
 							r.name = "LogOut"
 							r.operationID = "logOut"
+							r.pathPattern = "/logOut"
 							r.args = args
 							r.count = 0
 							return r, true
@@ -4136,6 +4201,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							// Leaf: PinChatMessage
 							r.name = "PinChatMessage"
 							r.operationID = "pinChatMessage"
+							r.pathPattern = "/pinChatMessage"
 							r.args = args
 							r.count = 0
 							return r, true
@@ -4156,6 +4222,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							// Leaf: PromoteChatMember
 							r.name = "PromoteChatMember"
 							r.operationID = "promoteChatMember"
+							r.pathPattern = "/promoteChatMember"
 							r.args = args
 							r.count = 0
 							return r, true
@@ -4199,6 +4266,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								// Leaf: ReopenForumTopic
 								r.name = "ReopenForumTopic"
 								r.operationID = "reopenForumTopic"
+								r.pathPattern = "/reopenForumTopic"
 								r.args = args
 								r.count = 0
 								return r, true
@@ -4219,6 +4287,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								// Leaf: ReopenGeneralForumTopic
 								r.name = "ReopenGeneralForumTopic"
 								r.operationID = "reopenGeneralForumTopic"
+								r.pathPattern = "/reopenGeneralForumTopic"
 								r.args = args
 								r.count = 0
 								return r, true
@@ -4240,6 +4309,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							// Leaf: RestrictChatMember
 							r.name = "RestrictChatMember"
 							r.operationID = "restrictChatMember"
+							r.pathPattern = "/restrictChatMember"
 							r.args = args
 							r.count = 0
 							return r, true
@@ -4260,6 +4330,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							// Leaf: RevokeChatInviteLink
 							r.name = "RevokeChatInviteLink"
 							r.operationID = "revokeChatInviteLink"
+							r.pathPattern = "/revokeChatInviteLink"
 							r.args = args
 							r.count = 0
 							return r, true
@@ -4325,6 +4396,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 										// Leaf: SendAnimation
 										r.name = "SendAnimation"
 										r.operationID = "sendAnimation"
+										r.pathPattern = "/sendAnimation"
 										r.args = args
 										r.count = 0
 										return r, true
@@ -4345,6 +4417,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 										// Leaf: SendAudio
 										r.name = "SendAudio"
 										r.operationID = "sendAudio"
+										r.pathPattern = "/sendAudio"
 										r.args = args
 										r.count = 0
 										return r, true
@@ -4377,6 +4450,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 										// Leaf: SendChatAction
 										r.name = "SendChatAction"
 										r.operationID = "sendChatAction"
+										r.pathPattern = "/sendChatAction"
 										r.args = args
 										r.count = 0
 										return r, true
@@ -4397,6 +4471,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 										// Leaf: SendContact
 										r.name = "SendContact"
 										r.operationID = "sendContact"
+										r.pathPattern = "/sendContact"
 										r.args = args
 										r.count = 0
 										return r, true
@@ -4429,6 +4504,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 										// Leaf: SendDice
 										r.name = "SendDice"
 										r.operationID = "sendDice"
+										r.pathPattern = "/sendDice"
 										r.args = args
 										r.count = 0
 										return r, true
@@ -4449,6 +4525,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 										// Leaf: SendDocument
 										r.name = "SendDocument"
 										r.operationID = "sendDocument"
+										r.pathPattern = "/sendDocument"
 										r.args = args
 										r.count = 0
 										return r, true
@@ -4470,6 +4547,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									// Leaf: SendGame
 									r.name = "SendGame"
 									r.operationID = "sendGame"
+									r.pathPattern = "/sendGame"
 									r.args = args
 									r.count = 0
 									return r, true
@@ -4490,6 +4568,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									// Leaf: SendInvoice
 									r.name = "SendInvoice"
 									r.operationID = "sendInvoice"
+									r.pathPattern = "/sendInvoice"
 									r.args = args
 									r.count = 0
 									return r, true
@@ -4510,6 +4589,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									// Leaf: SendLocation
 									r.name = "SendLocation"
 									r.operationID = "sendLocation"
+									r.pathPattern = "/sendLocation"
 									r.args = args
 									r.count = 0
 									return r, true
@@ -4541,6 +4621,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 										// Leaf: SendMediaGroup
 										r.name = "SendMediaGroup"
 										r.operationID = "sendMediaGroup"
+										r.pathPattern = "/sendMediaGroup"
 										r.args = args
 										r.count = 0
 										return r, true
@@ -4561,6 +4642,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 										// Leaf: SendMessage
 										r.name = "SendMessage"
 										r.operationID = "sendMessage"
+										r.pathPattern = "/sendMessage"
 										r.args = args
 										r.count = 0
 										return r, true
@@ -4593,6 +4675,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 										// Leaf: SendPhoto
 										r.name = "SendPhoto"
 										r.operationID = "sendPhoto"
+										r.pathPattern = "/sendPhoto"
 										r.args = args
 										r.count = 0
 										return r, true
@@ -4613,6 +4696,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 										// Leaf: SendPoll
 										r.name = "SendPoll"
 										r.operationID = "sendPoll"
+										r.pathPattern = "/sendPoll"
 										r.args = args
 										r.count = 0
 										return r, true
@@ -4634,6 +4718,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									// Leaf: SendSticker
 									r.name = "SendSticker"
 									r.operationID = "sendSticker"
+									r.pathPattern = "/sendSticker"
 									r.args = args
 									r.count = 0
 									return r, true
@@ -4665,6 +4750,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 										// Leaf: SendVenue
 										r.name = "SendVenue"
 										r.operationID = "sendVenue"
+										r.pathPattern = "/sendVenue"
 										r.args = args
 										r.count = 0
 										return r, true
@@ -4684,6 +4770,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									case "POST":
 										r.name = "SendVideo"
 										r.operationID = "sendVideo"
+										r.pathPattern = "/sendVideo"
 										r.args = args
 										r.count = 0
 										return r, true
@@ -4705,6 +4792,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 											// Leaf: SendVideoNote
 											r.name = "SendVideoNote"
 											r.operationID = "sendVideoNote"
+											r.pathPattern = "/sendVideoNote"
 											r.args = args
 											r.count = 0
 											return r, true
@@ -4726,6 +4814,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 										// Leaf: SendVoice
 										r.name = "SendVoice"
 										r.operationID = "sendVoice"
+										r.pathPattern = "/sendVoice"
 										r.args = args
 										r.count = 0
 										return r, true
@@ -4781,6 +4870,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 											// Leaf: SetChatAdministratorCustomTitle
 											r.name = "SetChatAdministratorCustomTitle"
 											r.operationID = "setChatAdministratorCustomTitle"
+											r.pathPattern = "/setChatAdministratorCustomTitle"
 											r.args = args
 											r.count = 0
 											return r, true
@@ -4801,6 +4891,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 											// Leaf: SetChatDescription
 											r.name = "SetChatDescription"
 											r.operationID = "setChatDescription"
+											r.pathPattern = "/setChatDescription"
 											r.args = args
 											r.count = 0
 											return r, true
@@ -4821,6 +4912,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 											// Leaf: SetChatMenuButton
 											r.name = "SetChatMenuButton"
 											r.operationID = "setChatMenuButton"
+											r.pathPattern = "/setChatMenuButton"
 											r.args = args
 											r.count = 0
 											return r, true
@@ -4852,6 +4944,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 												// Leaf: SetChatPermissions
 												r.name = "SetChatPermissions"
 												r.operationID = "setChatPermissions"
+												r.pathPattern = "/setChatPermissions"
 												r.args = args
 												r.count = 0
 												return r, true
@@ -4872,6 +4965,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 												// Leaf: SetChatPhoto
 												r.name = "SetChatPhoto"
 												r.operationID = "setChatPhoto"
+												r.pathPattern = "/setChatPhoto"
 												r.args = args
 												r.count = 0
 												return r, true
@@ -4893,6 +4987,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 											// Leaf: SetChatStickerSet
 											r.name = "SetChatStickerSet"
 											r.operationID = "setChatStickerSet"
+											r.pathPattern = "/setChatStickerSet"
 											r.args = args
 											r.count = 0
 											return r, true
@@ -4913,6 +5008,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 											// Leaf: SetChatTitle
 											r.name = "SetChatTitle"
 											r.operationID = "setChatTitle"
+											r.pathPattern = "/setChatTitle"
 											r.args = args
 											r.count = 0
 											return r, true
@@ -4934,6 +5030,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 										// Leaf: SetCustomEmojiStickerSetThumbnail
 										r.name = "SetCustomEmojiStickerSetThumbnail"
 										r.operationID = "setCustomEmojiStickerSetThumbnail"
+										r.pathPattern = "/setCustomEmojiStickerSetThumbnail"
 										r.args = args
 										r.count = 0
 										return r, true
@@ -4955,6 +5052,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									// Leaf: SetGameScore
 									r.name = "SetGameScore"
 									r.operationID = "setGameScore"
+									r.pathPattern = "/setGameScore"
 									r.args = args
 									r.count = 0
 									return r, true
@@ -4986,6 +5084,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 										// Leaf: SetMyCommands
 										r.name = "SetMyCommands"
 										r.operationID = "setMyCommands"
+										r.pathPattern = "/setMyCommands"
 										r.args = args
 										r.count = 0
 										return r, true
@@ -5017,6 +5116,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 											// Leaf: SetMyDefaultAdministratorRights
 											r.name = "SetMyDefaultAdministratorRights"
 											r.operationID = "setMyDefaultAdministratorRights"
+											r.pathPattern = "/setMyDefaultAdministratorRights"
 											r.args = args
 											r.count = 0
 											return r, true
@@ -5037,6 +5137,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 											// Leaf: SetMyDescription
 											r.name = "SetMyDescription"
 											r.operationID = "setMyDescription"
+											r.pathPattern = "/setMyDescription"
 											r.args = args
 											r.count = 0
 											return r, true
@@ -5058,6 +5159,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 										// Leaf: SetMyShortDescription
 										r.name = "SetMyShortDescription"
 										r.operationID = "setMyShortDescription"
+										r.pathPattern = "/setMyShortDescription"
 										r.args = args
 										r.count = 0
 										return r, true
@@ -5079,6 +5181,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									// Leaf: SetPassportDataErrors
 									r.name = "SetPassportDataErrors"
 									r.operationID = "setPassportDataErrors"
+									r.pathPattern = "/setPassportDataErrors"
 									r.args = args
 									r.count = 0
 									return r, true
@@ -5110,6 +5213,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 										// Leaf: SetStickerEmojiList
 										r.name = "SetStickerEmojiList"
 										r.operationID = "setStickerEmojiList"
+										r.pathPattern = "/setStickerEmojiList"
 										r.args = args
 										r.count = 0
 										return r, true
@@ -5130,6 +5234,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 										// Leaf: SetStickerKeywords
 										r.name = "SetStickerKeywords"
 										r.operationID = "setStickerKeywords"
+										r.pathPattern = "/setStickerKeywords"
 										r.args = args
 										r.count = 0
 										return r, true
@@ -5150,6 +5255,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 										// Leaf: SetStickerMaskPosition
 										r.name = "SetStickerMaskPosition"
 										r.operationID = "setStickerMaskPosition"
+										r.pathPattern = "/setStickerMaskPosition"
 										r.args = args
 										r.count = 0
 										return r, true
@@ -5170,6 +5276,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 										// Leaf: SetStickerPositionInSet
 										r.name = "SetStickerPositionInSet"
 										r.operationID = "setStickerPositionInSet"
+										r.pathPattern = "/setStickerPositionInSet"
 										r.args = args
 										r.count = 0
 										return r, true
@@ -5201,6 +5308,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 											// Leaf: SetStickerSetThumbnail
 											r.name = "SetStickerSetThumbnail"
 											r.operationID = "setStickerSetThumbnail"
+											r.pathPattern = "/setStickerSetThumbnail"
 											r.args = args
 											r.count = 0
 											return r, true
@@ -5221,6 +5329,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 											// Leaf: SetStickerSetTitle
 											r.name = "SetStickerSetTitle"
 											r.operationID = "setStickerSetTitle"
+											r.pathPattern = "/setStickerSetTitle"
 											r.args = args
 											r.count = 0
 											return r, true
@@ -5243,6 +5352,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									// Leaf: SetWebhook
 									r.name = "SetWebhook"
 									r.operationID = "setWebhook"
+									r.pathPattern = "/setWebhook"
 									r.args = args
 									r.count = 0
 									return r, true
@@ -5276,6 +5386,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								// Leaf: StopMessageLiveLocation
 								r.name = "StopMessageLiveLocation"
 								r.operationID = "stopMessageLiveLocation"
+								r.pathPattern = "/stopMessageLiveLocation"
 								r.args = args
 								r.count = 0
 								return r, true
@@ -5296,6 +5407,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								// Leaf: StopPoll
 								r.name = "StopPoll"
 								r.operationID = "stopPoll"
+								r.pathPattern = "/stopPoll"
 								r.args = args
 								r.count = 0
 								return r, true
@@ -5351,6 +5463,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									// Leaf: UnbanChatMember
 									r.name = "UnbanChatMember"
 									r.operationID = "unbanChatMember"
+									r.pathPattern = "/unbanChatMember"
 									r.args = args
 									r.count = 0
 									return r, true
@@ -5371,6 +5484,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									// Leaf: UnbanChatSenderChat
 									r.name = "UnbanChatSenderChat"
 									r.operationID = "unbanChatSenderChat"
+									r.pathPattern = "/unbanChatSenderChat"
 									r.args = args
 									r.count = 0
 									return r, true
@@ -5392,6 +5506,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								// Leaf: UnhideGeneralForumTopic
 								r.name = "UnhideGeneralForumTopic"
 								r.operationID = "unhideGeneralForumTopic"
+								r.pathPattern = "/unhideGeneralForumTopic"
 								r.args = args
 								r.count = 0
 								return r, true
@@ -5434,6 +5549,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 										// Leaf: UnpinAllChatMessages
 										r.name = "UnpinAllChatMessages"
 										r.operationID = "unpinAllChatMessages"
+										r.pathPattern = "/unpinAllChatMessages"
 										r.args = args
 										r.count = 0
 										return r, true
@@ -5454,6 +5570,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 										// Leaf: UnpinAllForumTopicMessages
 										r.name = "UnpinAllForumTopicMessages"
 										r.operationID = "unpinAllForumTopicMessages"
+										r.pathPattern = "/unpinAllForumTopicMessages"
 										r.args = args
 										r.count = 0
 										return r, true
@@ -5475,6 +5592,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									// Leaf: UnpinChatMessage
 									r.name = "UnpinChatMessage"
 									r.operationID = "unpinChatMessage"
+									r.pathPattern = "/unpinChatMessage"
 									r.args = args
 									r.count = 0
 									return r, true
@@ -5497,6 +5615,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							// Leaf: UploadStickerFile
 							r.name = "UploadStickerFile"
 							r.operationID = "uploadStickerFile"
+							r.pathPattern = "/uploadStickerFile"
 							r.args = args
 							r.count = 0
 							return r, true

@@ -32,6 +32,6 @@ func (b *BotAPI) SetStickerPositionInSet(ctx context.Context, req *oas.SetSticke
 }
 
 // SetStickerSetThumb implements oas.Handler.
-func (b *BotAPI) SetStickerSetThumb(ctx context.Context, req *oas.SetStickerSetThumb) (*oas.Result, error) {
+func (b *BotAPI) SetStickerSetThumb(ctx context.Context, req *oas.SetStickerSetThumbnail) (*oas.Result, error) {
 	return nil, &NotImplementedError{}
 }

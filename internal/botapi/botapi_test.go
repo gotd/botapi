@@ -6,14 +6,11 @@ import (
 
 	"go.uber.org/zap/zaptest"
 
-	"github.com/gotd/td/tgerr"
-
 	"github.com/gotd/td/bin"
-
 	"github.com/gotd/td/constant"
-
 	"github.com/gotd/td/telegram/peers"
 	"github.com/gotd/td/tg"
+	"github.com/gotd/td/tgerr"
 	"github.com/gotd/td/tgmock"
 
 	"github.com/gotd/botapi/internal/oas"

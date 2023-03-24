@@ -171,7 +171,7 @@ func (b *BotAPI) setDocumentAttachment(ctx context.Context, d *tg.Document, r *o
 				Width:        width,
 				Height:       height,
 				Duration:     duration,
-				Thumb:        thumb,
+				Thumbnail:    thumb,
 				FileName:     fileName,
 				MimeType:     mimeType,
 				FileSize:     oas.NewOptInt(int(d.Size)),
@@ -197,7 +197,7 @@ func (b *BotAPI) setDocumentAttachment(ctx context.Context, d *tg.Document, r *o
 				Width:        width,
 				Height:       height,
 				IsAnimated:   result.Set.Animated,
-				Thumb:        thumb,
+				Thumbnail:    thumb,
 				Emoji:        oas.NewOptString(attr.Alt),
 				SetName:      oas.NewOptString(result.Set.ShortName),
 				MaskPosition: maskPosition,
@@ -214,7 +214,7 @@ func (b *BotAPI) setDocumentAttachment(ctx context.Context, d *tg.Document, r *o
 					FileUniqueID: fileUniqueID,
 					Length:       width,
 					Duration:     duration,
-					Thumb:        thumb,
+					Thumbnail:    thumb,
 					FileSize:     oas.NewOptInt(int(d.Size)),
 				})
 			} else {
@@ -224,7 +224,7 @@ func (b *BotAPI) setDocumentAttachment(ctx context.Context, d *tg.Document, r *o
 					Width:        width,
 					Height:       height,
 					Duration:     duration,
-					Thumb:        thumb,
+					Thumbnail:    thumb,
 					FileName:     fileName,
 					MimeType:     mimeType,
 					FileSize:     oas.NewOptInt(int(d.Size)),
@@ -249,7 +249,7 @@ func (b *BotAPI) setDocumentAttachment(ctx context.Context, d *tg.Document, r *o
 					FileName:     fileName,
 					MimeType:     mimeType,
 					FileSize:     oas.NewOptInt(int(d.Size)),
-					Thumb:        thumb,
+					Thumbnail:    thumb,
 				})
 			}
 		case *tg.DocumentAttributeHasStickers:
@@ -262,7 +262,7 @@ func (b *BotAPI) setDocumentAttachment(ctx context.Context, d *tg.Document, r *o
 		r.Document.SetTo(oas.Document{
 			FileID:       fileID,
 			FileUniqueID: fileUniqueID,
-			Thumb:        thumb,
+			Thumbnail:    thumb,
 			FileName:     fileName,
 			MimeType:     mimeType,
 			FileSize:     oas.NewOptInt(int(d.Size)),
