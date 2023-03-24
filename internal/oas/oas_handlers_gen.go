@@ -20,10 +20,10 @@ import (
 
 // handleAddStickerToSetRequest handles addStickerToSet operation.
 //
-// Use this method to add a new sticker to a set created by the bot. You **must** use exactly one of
-// the fields _png_sticker_, _tgs_sticker_, or _webm_sticker_. Animated stickers can be added to
-// animated sticker sets and only to them. Animated sticker sets can have up to 50 stickers. Static
-// sticker sets can have up to 120 stickers. Returns _True_ on success.
+// Use this method to add a new sticker to a set created by the bot. The format of the added sticker
+// must match the format of the other stickers in the set. Emoji sticker sets can have up to 200
+// stickers. Animated and video sticker sets can have up to 50 stickers. Static sticker sets can have
+// up to 120 stickers. Returns _True_ on success.
 //
 // POST /addStickerToSet
 func (s *Server) handleAddStickerToSetRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -1777,8 +1777,7 @@ func (s *Server) handleCreateInvoiceLinkRequest(args [0]string, w http.ResponseW
 // handleCreateNewStickerSetRequest handles createNewStickerSet operation.
 //
 // Use this method to create a new sticker set owned by a user. The bot will be able to edit the
-// sticker set thus created. You **must** use exactly one of the fields _png_sticker_, _tgs_sticker_,
-// or _webm_sticker_. Returns _True_ on success.
+// sticker set thus created. Returns _True_ on success.
 //
 // POST /createNewStickerSet
 func (s *Server) handleCreateNewStickerSetRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -2653,6 +2652,114 @@ func (s *Server) handleDeleteStickerFromSetRequest(args [0]string, w http.Respon
 	}
 
 	if err := encodeDeleteStickerFromSetResponse(response, w, span); err != nil {
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+}
+
+// handleDeleteStickerSetRequest handles deleteStickerSet operation.
+//
+// Use this method to delete a sticker set that was created by the bot. Returns _True_ on success.
+//
+// POST /deleteStickerSet
+func (s *Server) handleDeleteStickerSetRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("deleteStickerSet"),
+	}
+
+	// Start a span for this request.
+	ctx, span := s.cfg.Tracer.Start(r.Context(), "DeleteStickerSet",
+		trace.WithAttributes(otelAttrs...),
+		serverSpanKind,
+	)
+	defer span.End()
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "DeleteStickerSet",
+			ID:   "deleteStickerSet",
+		}
+	)
+	request, close, err := s.decodeDeleteStickerSetRequest(r)
+	if err != nil {
+		err = &ogenerrors.DecodeRequestError{
+			OperationContext: opErrContext,
+			Err:              err,
+		}
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+	defer func() {
+		if err := close(); err != nil {
+			recordError("CloseRequest", err)
+		}
+	}()
+
+	var response *Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "DeleteStickerSet",
+			OperationID:   "deleteStickerSet",
+			Body:          request,
+			Params:        middleware.Parameters{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = *DeleteStickerSet
+			Params   = struct{}
+			Response = *Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.DeleteStickerSet(ctx, request)
+				return response, err
+			},
+		)
+	} else {
+		response, err = s.h.DeleteStickerSet(ctx, request)
+	}
+	if err != nil {
+		recordError("Internal", err)
+		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
+			encodeErrorResponse(errRes, w, span)
+			return
+		}
+		if errors.Is(err, ht.ErrNotImplemented) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+			return
+		}
+		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		return
+	}
+
+	if err := encodeDeleteStickerSetResponse(response, w, span); err != nil {
 		recordError("EncodeResponse", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
@@ -4094,8 +4201,8 @@ func (s *Server) handleGetChatAdministratorsRequest(args [0]string, w http.Respo
 
 // handleGetChatMemberRequest handles getChatMember operation.
 //
-// Use this method to get information about a member of a chat. The method is guaranteed to work for
-// other users, only if the bot is an administrator in the chat. Returns a [ChatMember](https://core.
+// Use this method to get information about a member of a chat. The method is only guaranteed to work
+// for other users if the bot is an administrator in the chat. Returns a [ChatMember](https://core.
 // telegram.org/bots/api#chatmember) object on success.
 //
 // POST /getChatMember
@@ -5146,6 +5253,224 @@ func (s *Server) handleGetMyDefaultAdministratorRightsRequest(args [0]string, w 
 	}
 
 	if err := encodeGetMyDefaultAdministratorRightsResponse(response, w, span); err != nil {
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+}
+
+// handleGetMyDescriptionRequest handles getMyDescription operation.
+//
+// Use this method to get the current bot description for the given user language. Returns
+// [BotDescription](https://core.telegram.org/bots/api#botdescription) on success.
+//
+// POST /getMyDescription
+func (s *Server) handleGetMyDescriptionRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("getMyDescription"),
+	}
+
+	// Start a span for this request.
+	ctx, span := s.cfg.Tracer.Start(r.Context(), "GetMyDescription",
+		trace.WithAttributes(otelAttrs...),
+		serverSpanKind,
+	)
+	defer span.End()
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "GetMyDescription",
+			ID:   "getMyDescription",
+		}
+	)
+	request, close, err := s.decodeGetMyDescriptionRequest(r)
+	if err != nil {
+		err = &ogenerrors.DecodeRequestError{
+			OperationContext: opErrContext,
+			Err:              err,
+		}
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+	defer func() {
+		if err := close(); err != nil {
+			recordError("CloseRequest", err)
+		}
+	}()
+
+	var response *Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "GetMyDescription",
+			OperationID:   "getMyDescription",
+			Body:          request,
+			Params:        middleware.Parameters{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = OptGetMyDescription
+			Params   = struct{}
+			Response = *Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.GetMyDescription(ctx, request)
+				return response, err
+			},
+		)
+	} else {
+		response, err = s.h.GetMyDescription(ctx, request)
+	}
+	if err != nil {
+		recordError("Internal", err)
+		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
+			encodeErrorResponse(errRes, w, span)
+			return
+		}
+		if errors.Is(err, ht.ErrNotImplemented) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+			return
+		}
+		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		return
+	}
+
+	if err := encodeGetMyDescriptionResponse(response, w, span); err != nil {
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+}
+
+// handleGetMyShortDescriptionRequest handles getMyShortDescription operation.
+//
+// Use this method to get the current bot short description for the given user language. Returns
+// [BotShortDescription](https://core.telegram.org/bots/api#botshortdescription) on success.
+//
+// POST /getMyShortDescription
+func (s *Server) handleGetMyShortDescriptionRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("getMyShortDescription"),
+	}
+
+	// Start a span for this request.
+	ctx, span := s.cfg.Tracer.Start(r.Context(), "GetMyShortDescription",
+		trace.WithAttributes(otelAttrs...),
+		serverSpanKind,
+	)
+	defer span.End()
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "GetMyShortDescription",
+			ID:   "getMyShortDescription",
+		}
+	)
+	request, close, err := s.decodeGetMyShortDescriptionRequest(r)
+	if err != nil {
+		err = &ogenerrors.DecodeRequestError{
+			OperationContext: opErrContext,
+			Err:              err,
+		}
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+	defer func() {
+		if err := close(); err != nil {
+			recordError("CloseRequest", err)
+		}
+	}()
+
+	var response *Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "GetMyShortDescription",
+			OperationID:   "getMyShortDescription",
+			Body:          request,
+			Params:        middleware.Parameters{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = OptGetMyShortDescription
+			Params   = struct{}
+			Response = *Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.GetMyShortDescription(ctx, request)
+				return response, err
+			},
+		)
+	} else {
+		response, err = s.h.GetMyShortDescription(ctx, request)
+	}
+	if err != nil {
+		recordError("Internal", err)
+		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
+			encodeErrorResponse(errRes, w, span)
+			return
+		}
+		if errors.Is(err, ht.ErrNotImplemented) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+			return
+		}
+		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		return
+	}
+
+	if err := encodeGetMyShortDescriptionResponse(response, w, span); err != nil {
 		recordError("EncodeResponse", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
@@ -9291,6 +9616,114 @@ func (s *Server) handleSetChatTitleRequest(args [0]string, w http.ResponseWriter
 	}
 }
 
+// handleSetCustomEmojiStickerSetThumbnailRequest handles setCustomEmojiStickerSetThumbnail operation.
+//
+// Use this method to set the thumbnail of a custom emoji sticker set. Returns _True_ on success.
+//
+// POST /setCustomEmojiStickerSetThumbnail
+func (s *Server) handleSetCustomEmojiStickerSetThumbnailRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("setCustomEmojiStickerSetThumbnail"),
+	}
+
+	// Start a span for this request.
+	ctx, span := s.cfg.Tracer.Start(r.Context(), "SetCustomEmojiStickerSetThumbnail",
+		trace.WithAttributes(otelAttrs...),
+		serverSpanKind,
+	)
+	defer span.End()
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "SetCustomEmojiStickerSetThumbnail",
+			ID:   "setCustomEmojiStickerSetThumbnail",
+		}
+	)
+	request, close, err := s.decodeSetCustomEmojiStickerSetThumbnailRequest(r)
+	if err != nil {
+		err = &ogenerrors.DecodeRequestError{
+			OperationContext: opErrContext,
+			Err:              err,
+		}
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+	defer func() {
+		if err := close(); err != nil {
+			recordError("CloseRequest", err)
+		}
+	}()
+
+	var response *Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "SetCustomEmojiStickerSetThumbnail",
+			OperationID:   "setCustomEmojiStickerSetThumbnail",
+			Body:          request,
+			Params:        middleware.Parameters{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = *SetCustomEmojiStickerSetThumbnail
+			Params   = struct{}
+			Response = *Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.SetCustomEmojiStickerSetThumbnail(ctx, request)
+				return response, err
+			},
+		)
+	} else {
+		response, err = s.h.SetCustomEmojiStickerSetThumbnail(ctx, request)
+	}
+	if err != nil {
+		recordError("Internal", err)
+		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
+			encodeErrorResponse(errRes, w, span)
+			return
+		}
+		if errors.Is(err, ht.ErrNotImplemented) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+			return
+		}
+		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		return
+	}
+
+	if err := encodeSetCustomEmojiStickerSetThumbnailResponse(response, w, span); err != nil {
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+}
+
 // handleSetGameScoreRequest handles setGameScore operation.
 //
 // Use this method to set the score of the specified user in a game message. On success, if the
@@ -9514,8 +9947,8 @@ func (s *Server) handleSetMyCommandsRequest(args [0]string, w http.ResponseWrite
 // handleSetMyDefaultAdministratorRightsRequest handles setMyDefaultAdministratorRights operation.
 //
 // Use this method to change the default administrator rights requested by the bot when it's added as
-// an administrator to groups or channels. These rights will be suggested to users, but they are are
-// free to modify the list before adding the bot. Returns _True_ on success.
+// an administrator to groups or channels. These rights will be suggested to users, but they are free
+// to modify the list before adding the bot. Returns _True_ on success.
 //
 // POST /setMyDefaultAdministratorRights
 func (s *Server) handleSetMyDefaultAdministratorRightsRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
@@ -9615,6 +10048,224 @@ func (s *Server) handleSetMyDefaultAdministratorRightsRequest(args [0]string, w 
 	}
 
 	if err := encodeSetMyDefaultAdministratorRightsResponse(response, w, span); err != nil {
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+}
+
+// handleSetMyDescriptionRequest handles setMyDescription operation.
+//
+// Use this method to change the bot's description, which is shown in the chat with the bot if the
+// chat is empty. Returns _True_ on success.
+//
+// POST /setMyDescription
+func (s *Server) handleSetMyDescriptionRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("setMyDescription"),
+	}
+
+	// Start a span for this request.
+	ctx, span := s.cfg.Tracer.Start(r.Context(), "SetMyDescription",
+		trace.WithAttributes(otelAttrs...),
+		serverSpanKind,
+	)
+	defer span.End()
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "SetMyDescription",
+			ID:   "setMyDescription",
+		}
+	)
+	request, close, err := s.decodeSetMyDescriptionRequest(r)
+	if err != nil {
+		err = &ogenerrors.DecodeRequestError{
+			OperationContext: opErrContext,
+			Err:              err,
+		}
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+	defer func() {
+		if err := close(); err != nil {
+			recordError("CloseRequest", err)
+		}
+	}()
+
+	var response *Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "SetMyDescription",
+			OperationID:   "setMyDescription",
+			Body:          request,
+			Params:        middleware.Parameters{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = OptSetMyDescription
+			Params   = struct{}
+			Response = *Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.SetMyDescription(ctx, request)
+				return response, err
+			},
+		)
+	} else {
+		response, err = s.h.SetMyDescription(ctx, request)
+	}
+	if err != nil {
+		recordError("Internal", err)
+		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
+			encodeErrorResponse(errRes, w, span)
+			return
+		}
+		if errors.Is(err, ht.ErrNotImplemented) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+			return
+		}
+		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		return
+	}
+
+	if err := encodeSetMyDescriptionResponse(response, w, span); err != nil {
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+}
+
+// handleSetMyShortDescriptionRequest handles setMyShortDescription operation.
+//
+// Use this method to change the bot's short description, which is shown on the bot's profile page
+// and is sent together with the link when users share the bot. Returns _True_ on success.
+//
+// POST /setMyShortDescription
+func (s *Server) handleSetMyShortDescriptionRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("setMyShortDescription"),
+	}
+
+	// Start a span for this request.
+	ctx, span := s.cfg.Tracer.Start(r.Context(), "SetMyShortDescription",
+		trace.WithAttributes(otelAttrs...),
+		serverSpanKind,
+	)
+	defer span.End()
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "SetMyShortDescription",
+			ID:   "setMyShortDescription",
+		}
+	)
+	request, close, err := s.decodeSetMyShortDescriptionRequest(r)
+	if err != nil {
+		err = &ogenerrors.DecodeRequestError{
+			OperationContext: opErrContext,
+			Err:              err,
+		}
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+	defer func() {
+		if err := close(); err != nil {
+			recordError("CloseRequest", err)
+		}
+	}()
+
+	var response *Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "SetMyShortDescription",
+			OperationID:   "setMyShortDescription",
+			Body:          request,
+			Params:        middleware.Parameters{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = OptSetMyShortDescription
+			Params   = struct{}
+			Response = *Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.SetMyShortDescription(ctx, request)
+				return response, err
+			},
+		)
+	} else {
+		response, err = s.h.SetMyShortDescription(ctx, request)
+	}
+	if err != nil {
+		recordError("Internal", err)
+		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
+			encodeErrorResponse(errRes, w, span)
+			return
+		}
+		if errors.Is(err, ht.ErrNotImplemented) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+			return
+		}
+		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		return
+	}
+
+	if err := encodeSetMyShortDescriptionResponse(response, w, span); err != nil {
 		recordError("EncodeResponse", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
@@ -9732,6 +10383,334 @@ func (s *Server) handleSetPassportDataErrorsRequest(args [0]string, w http.Respo
 	}
 }
 
+// handleSetStickerEmojiListRequest handles setStickerEmojiList operation.
+//
+// Use this method to change the list of emoji assigned to a regular or custom emoji sticker. The
+// sticker must belong to a sticker set created by the bot. Returns _True_ on success.
+//
+// POST /setStickerEmojiList
+func (s *Server) handleSetStickerEmojiListRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("setStickerEmojiList"),
+	}
+
+	// Start a span for this request.
+	ctx, span := s.cfg.Tracer.Start(r.Context(), "SetStickerEmojiList",
+		trace.WithAttributes(otelAttrs...),
+		serverSpanKind,
+	)
+	defer span.End()
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "SetStickerEmojiList",
+			ID:   "setStickerEmojiList",
+		}
+	)
+	request, close, err := s.decodeSetStickerEmojiListRequest(r)
+	if err != nil {
+		err = &ogenerrors.DecodeRequestError{
+			OperationContext: opErrContext,
+			Err:              err,
+		}
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+	defer func() {
+		if err := close(); err != nil {
+			recordError("CloseRequest", err)
+		}
+	}()
+
+	var response *Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "SetStickerEmojiList",
+			OperationID:   "setStickerEmojiList",
+			Body:          request,
+			Params:        middleware.Parameters{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = *SetStickerEmojiList
+			Params   = struct{}
+			Response = *Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.SetStickerEmojiList(ctx, request)
+				return response, err
+			},
+		)
+	} else {
+		response, err = s.h.SetStickerEmojiList(ctx, request)
+	}
+	if err != nil {
+		recordError("Internal", err)
+		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
+			encodeErrorResponse(errRes, w, span)
+			return
+		}
+		if errors.Is(err, ht.ErrNotImplemented) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+			return
+		}
+		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		return
+	}
+
+	if err := encodeSetStickerEmojiListResponse(response, w, span); err != nil {
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+}
+
+// handleSetStickerKeywordsRequest handles setStickerKeywords operation.
+//
+// Use this method to change search keywords assigned to a regular or custom emoji sticker. The
+// sticker must belong to a sticker set created by the bot. Returns _True_ on success.
+//
+// POST /setStickerKeywords
+func (s *Server) handleSetStickerKeywordsRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("setStickerKeywords"),
+	}
+
+	// Start a span for this request.
+	ctx, span := s.cfg.Tracer.Start(r.Context(), "SetStickerKeywords",
+		trace.WithAttributes(otelAttrs...),
+		serverSpanKind,
+	)
+	defer span.End()
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "SetStickerKeywords",
+			ID:   "setStickerKeywords",
+		}
+	)
+	request, close, err := s.decodeSetStickerKeywordsRequest(r)
+	if err != nil {
+		err = &ogenerrors.DecodeRequestError{
+			OperationContext: opErrContext,
+			Err:              err,
+		}
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+	defer func() {
+		if err := close(); err != nil {
+			recordError("CloseRequest", err)
+		}
+	}()
+
+	var response *Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "SetStickerKeywords",
+			OperationID:   "setStickerKeywords",
+			Body:          request,
+			Params:        middleware.Parameters{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = *SetStickerKeywords
+			Params   = struct{}
+			Response = *Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.SetStickerKeywords(ctx, request)
+				return response, err
+			},
+		)
+	} else {
+		response, err = s.h.SetStickerKeywords(ctx, request)
+	}
+	if err != nil {
+		recordError("Internal", err)
+		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
+			encodeErrorResponse(errRes, w, span)
+			return
+		}
+		if errors.Is(err, ht.ErrNotImplemented) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+			return
+		}
+		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		return
+	}
+
+	if err := encodeSetStickerKeywordsResponse(response, w, span); err != nil {
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+}
+
+// handleSetStickerMaskPositionRequest handles setStickerMaskPosition operation.
+//
+// Use this method to change the [mask position](https://core.telegram.org/bots/api#maskposition) of
+// a mask sticker. The sticker must belong to a sticker set that was created by the bot. Returns
+// _True_ on success.
+//
+// POST /setStickerMaskPosition
+func (s *Server) handleSetStickerMaskPositionRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("setStickerMaskPosition"),
+	}
+
+	// Start a span for this request.
+	ctx, span := s.cfg.Tracer.Start(r.Context(), "SetStickerMaskPosition",
+		trace.WithAttributes(otelAttrs...),
+		serverSpanKind,
+	)
+	defer span.End()
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "SetStickerMaskPosition",
+			ID:   "setStickerMaskPosition",
+		}
+	)
+	request, close, err := s.decodeSetStickerMaskPositionRequest(r)
+	if err != nil {
+		err = &ogenerrors.DecodeRequestError{
+			OperationContext: opErrContext,
+			Err:              err,
+		}
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+	defer func() {
+		if err := close(); err != nil {
+			recordError("CloseRequest", err)
+		}
+	}()
+
+	var response *Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "SetStickerMaskPosition",
+			OperationID:   "setStickerMaskPosition",
+			Body:          request,
+			Params:        middleware.Parameters{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = *SetStickerMaskPosition
+			Params   = struct{}
+			Response = *Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.SetStickerMaskPosition(ctx, request)
+				return response, err
+			},
+		)
+	} else {
+		response, err = s.h.SetStickerMaskPosition(ctx, request)
+	}
+	if err != nil {
+		recordError("Internal", err)
+		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
+			encodeErrorResponse(errRes, w, span)
+			return
+		}
+		if errors.Is(err, ht.ErrNotImplemented) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+			return
+		}
+		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		return
+	}
+
+	if err := encodeSetStickerMaskPositionResponse(response, w, span); err != nil {
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+}
+
 // handleSetStickerPositionInSetRequest handles setStickerPositionInSet operation.
 //
 // Use this method to move a sticker in a set created by the bot to a specific position. Returns
@@ -9841,20 +10820,19 @@ func (s *Server) handleSetStickerPositionInSetRequest(args [0]string, w http.Res
 	}
 }
 
-// handleSetStickerSetThumbRequest handles setStickerSetThumb operation.
+// handleSetStickerSetThumbnailRequest handles setStickerSetThumbnail operation.
 //
-// Use this method to set the thumbnail of a sticker set. Animated thumbnails can be set for animated
-// sticker sets only. Video thumbnails can be set only for video sticker sets only. Returns _True_ on
-// success.
+// Use this method to set the thumbnail of a regular or mask sticker set. The format of the thumbnail
+// file must match the format of the stickers in the set. Returns _True_ on success.
 //
-// POST /setStickerSetThumb
-func (s *Server) handleSetStickerSetThumbRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+// POST /setStickerSetThumbnail
+func (s *Server) handleSetStickerSetThumbnailRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
-		otelogen.OperationID("setStickerSetThumb"),
+		otelogen.OperationID("setStickerSetThumbnail"),
 	}
 
 	// Start a span for this request.
-	ctx, span := s.cfg.Tracer.Start(r.Context(), "SetStickerSetThumb",
+	ctx, span := s.cfg.Tracer.Start(r.Context(), "SetStickerSetThumbnail",
 		trace.WithAttributes(otelAttrs...),
 		serverSpanKind,
 	)
@@ -9878,11 +10856,11 @@ func (s *Server) handleSetStickerSetThumbRequest(args [0]string, w http.Response
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
-			Name: "SetStickerSetThumb",
-			ID:   "setStickerSetThumb",
+			Name: "SetStickerSetThumbnail",
+			ID:   "setStickerSetThumbnail",
 		}
 	)
-	request, close, err := s.decodeSetStickerSetThumbRequest(r)
+	request, close, err := s.decodeSetStickerSetThumbnailRequest(r)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
@@ -9902,15 +10880,15 @@ func (s *Server) handleSetStickerSetThumbRequest(args [0]string, w http.Response
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:       ctx,
-			OperationName: "SetStickerSetThumb",
-			OperationID:   "setStickerSetThumb",
+			OperationName: "SetStickerSetThumbnail",
+			OperationID:   "setStickerSetThumbnail",
 			Body:          request,
 			Params:        middleware.Parameters{},
 			Raw:           r,
 		}
 
 		type (
-			Request  = *SetStickerSetThumb
+			Request  = *SetStickerSetThumbnail
 			Params   = struct{}
 			Response = *Result
 		)
@@ -9923,12 +10901,12 @@ func (s *Server) handleSetStickerSetThumbRequest(args [0]string, w http.Response
 			mreq,
 			nil,
 			func(ctx context.Context, request Request, params Params) (response Response, err error) {
-				response, err = s.h.SetStickerSetThumb(ctx, request)
+				response, err = s.h.SetStickerSetThumbnail(ctx, request)
 				return response, err
 			},
 		)
 	} else {
-		response, err = s.h.SetStickerSetThumb(ctx, request)
+		response, err = s.h.SetStickerSetThumbnail(ctx, request)
 	}
 	if err != nil {
 		recordError("Internal", err)
@@ -9944,7 +10922,115 @@ func (s *Server) handleSetStickerSetThumbRequest(args [0]string, w http.Response
 		return
 	}
 
-	if err := encodeSetStickerSetThumbResponse(response, w, span); err != nil {
+	if err := encodeSetStickerSetThumbnailResponse(response, w, span); err != nil {
+		recordError("EncodeResponse", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+}
+
+// handleSetStickerSetTitleRequest handles setStickerSetTitle operation.
+//
+// Use this method to set the title of a created sticker set. Returns _True_ on success.
+//
+// POST /setStickerSetTitle
+func (s *Server) handleSetStickerSetTitleRequest(args [0]string, w http.ResponseWriter, r *http.Request) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("setStickerSetTitle"),
+	}
+
+	// Start a span for this request.
+	ctx, span := s.cfg.Tracer.Start(r.Context(), "SetStickerSetTitle",
+		trace.WithAttributes(otelAttrs...),
+		serverSpanKind,
+	)
+	defer span.End()
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		s.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	s.requests.Add(ctx, 1, otelAttrs...)
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, otelAttrs...)
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "SetStickerSetTitle",
+			ID:   "setStickerSetTitle",
+		}
+	)
+	request, close, err := s.decodeSetStickerSetTitleRequest(r)
+	if err != nil {
+		err = &ogenerrors.DecodeRequestError{
+			OperationContext: opErrContext,
+			Err:              err,
+		}
+		recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+	defer func() {
+		if err := close(); err != nil {
+			recordError("CloseRequest", err)
+		}
+	}()
+
+	var response *Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:       ctx,
+			OperationName: "SetStickerSetTitle",
+			OperationID:   "setStickerSetTitle",
+			Body:          request,
+			Params:        middleware.Parameters{},
+			Raw:           r,
+		}
+
+		type (
+			Request  = *SetStickerSetTitle
+			Params   = struct{}
+			Response = *Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.SetStickerSetTitle(ctx, request)
+				return response, err
+			},
+		)
+	} else {
+		response, err = s.h.SetStickerSetTitle(ctx, request)
+	}
+	if err != nil {
+		recordError("Internal", err)
+		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
+			encodeErrorResponse(errRes, w, span)
+			return
+		}
+		if errors.Is(err, ht.ErrNotImplemented) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+			return
+		}
+		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		return
+	}
+
+	if err := encodeSetStickerSetTitleResponse(response, w, span); err != nil {
 		recordError("EncodeResponse", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
@@ -10947,9 +12033,11 @@ func (s *Server) handleUnpinChatMessageRequest(args [0]string, w http.ResponseWr
 
 // handleUploadStickerFileRequest handles uploadStickerFile operation.
 //
-// Use this method to upload a .PNG file with a sticker for later use in _createNewStickerSet_ and
-// _addStickerToSet_ methods (can be used multiple times). Returns the uploaded [File](https://core.
-// telegram.org/bots/api#file) on success.
+// Use this method to upload a file with a sticker for later use in the
+// [createNewStickerSet](https://core.telegram.org/bots/api#createnewstickerset) and
+// [addStickerToSet](https://core.telegram.org/bots/api#addstickertoset) methods (the file can be
+// used multiple times). Returns the uploaded [File](https://core.telegram.org/bots/api#file) on
+// success.
 //
 // POST /uploadStickerFile
 func (s *Server) handleUploadStickerFileRequest(args [0]string, w http.ResponseWriter, r *http.Request) {

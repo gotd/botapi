@@ -4,7 +4,7 @@
     "title": "Telegram Bot API",
     "description": "API for Telegram bots",
     "termsOfService": "https://telegram.org/tos",
-    "version": "6.4"
+    "version": "6.6"
   },
   "servers": [
     {
@@ -31,7 +31,7 @@
   "paths": {
     "/addStickerToSet": {
       "post": {
-        "description": "Use this method to add a new sticker to a set created by the bot. You **must** use exactly one of the fields _png_sticker_, _tgs_sticker_, or _webm_sticker_. Animated stickers can be added to animated sticker sets and only to them. Animated sticker sets can have up to 50 stickers. Static sticker sets can have up to 120 stickers. Returns _True_ on success.",
+        "description": "Use this method to add a new sticker to a set created by the bot. The format of the added sticker must match the format of the other stickers in the set. Emoji sticker sets can have up to 200 stickers. Animated and video sticker sets can have up to 50 stickers. Static sticker sets can have up to 120 stickers. Returns _True_ on success.",
         "externalDocs": {
           "url": "https://core.telegram.org/bots/api#addstickertoset"
         },
@@ -453,7 +453,7 @@
     },
     "/createNewStickerSet": {
       "post": {
-        "description": "Use this method to create a new sticker set owned by a user. The bot will be able to edit the sticker set thus created. You **must** use exactly one of the fields _png_sticker_, _tgs_sticker_, or _webm_sticker_. Returns _True_ on success.",
+        "description": "Use this method to create a new sticker set owned by a user. The bot will be able to edit the sticker set thus created. Returns _True_ on success.",
         "externalDocs": {
           "url": "https://core.telegram.org/bots/api#createnewstickerset"
         },
@@ -651,6 +651,33 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/deleteStickerFromSet"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Result"
+          },
+          "default": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/deleteStickerSet": {
+      "post": {
+        "description": "Use this method to delete a sticker set that was created by the bot. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#deletestickerset"
+        },
+        "operationId": "deleteStickerSet",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/deleteStickerSet"
               }
             }
           },
@@ -1018,7 +1045,7 @@
     },
     "/getChatMember": {
       "post": {
-        "description": "Use this method to get information about a member of a chat. The method is guaranteed to work for other users, only if the bot is an administrator in the chat. Returns a [ChatMember](https://core.telegram.org/bots/api#chatmember) object on success.",
+        "description": "Use this method to get information about a member of a chat. The method is only guaranteed to work for other users if the bot is an administrator in the chat. Returns a [ChatMember](https://core.telegram.org/bots/api#chatmember) object on success.",
         "externalDocs": {
           "url": "https://core.telegram.org/bots/api#getchatmember"
         },
@@ -1249,6 +1276,58 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/getMyDefaultAdministratorRights"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Result"
+          },
+          "default": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/getMyDescription": {
+      "post": {
+        "description": "Use this method to get the current bot description for the given user language. Returns [BotDescription](https://core.telegram.org/bots/api#botdescription) on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#getmydescription"
+        },
+        "operationId": "getMyDescription",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/getMyDescription"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Result"
+          },
+          "default": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/getMyShortDescription": {
+      "post": {
+        "description": "Use this method to get the current bot short description for the given user language. Returns [BotShortDescription](https://core.telegram.org/bots/api#botshortdescription) on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#getmyshortdescription"
+        },
+        "operationId": "getMyShortDescription",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/getMyShortDescription"
               }
             }
           }
@@ -2267,6 +2346,33 @@
         }
       }
     },
+    "/setCustomEmojiStickerSetThumbnail": {
+      "post": {
+        "description": "Use this method to set the thumbnail of a custom emoji sticker set. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#setcustomemojistickersetthumbnail"
+        },
+        "operationId": "setCustomEmojiStickerSetThumbnail",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/setCustomEmojiStickerSetThumbnail"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Result"
+          },
+          "default": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
     "/setGameScore": {
       "post": {
         "description": "Use this method to set the score of the specified user in a game message. On success, if the message is not an inline message, the [Message](https://core.telegram.org/bots/api#message) is returned, otherwise _True_ is returned. Returns an error, if the new score is not greater than the user's current score in the chat and _force_ is _False_.",
@@ -2323,7 +2429,7 @@
     },
     "/setMyDefaultAdministratorRights": {
       "post": {
-        "description": "Use this method to change the default administrator rights requested by the bot when it's added as an administrator to groups or channels. These rights will be suggested to users, but they are are free to modify the list before adding the bot. Returns _True_ on success.",
+        "description": "Use this method to change the default administrator rights requested by the bot when it's added as an administrator to groups or channels. These rights will be suggested to users, but they are free to modify the list before adding the bot. Returns _True_ on success.",
         "externalDocs": {
           "url": "https://core.telegram.org/bots/api#setmydefaultadministratorrights"
         },
@@ -2333,6 +2439,58 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/setMyDefaultAdministratorRights"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Result"
+          },
+          "default": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/setMyDescription": {
+      "post": {
+        "description": "Use this method to change the bot's description, which is shown in the chat with the bot if the chat is empty. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#setmydescription"
+        },
+        "operationId": "setMyDescription",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/setMyDescription"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Result"
+          },
+          "default": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/setMyShortDescription": {
+      "post": {
+        "description": "Use this method to change the bot's short description, which is shown on the bot's profile page and is sent together with the link when users share the bot. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#setmyshortdescription"
+        },
+        "operationId": "setMyShortDescription",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/setMyShortDescription"
               }
             }
           }
@@ -2359,6 +2517,87 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/setPassportDataErrors"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Result"
+          },
+          "default": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/setStickerEmojiList": {
+      "post": {
+        "description": "Use this method to change the list of emoji assigned to a regular or custom emoji sticker. The sticker must belong to a sticker set created by the bot. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#setstickeremojilist"
+        },
+        "operationId": "setStickerEmojiList",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/setStickerEmojiList"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Result"
+          },
+          "default": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/setStickerKeywords": {
+      "post": {
+        "description": "Use this method to change search keywords assigned to a regular or custom emoji sticker. The sticker must belong to a sticker set created by the bot. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#setstickerkeywords"
+        },
+        "operationId": "setStickerKeywords",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/setStickerKeywords"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Result"
+          },
+          "default": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/setStickerMaskPosition": {
+      "post": {
+        "description": "Use this method to change the [mask position](https://core.telegram.org/bots/api#maskposition) of a mask sticker. The sticker must belong to a sticker set that was created by the bot. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#setstickermaskposition"
+        },
+        "operationId": "setStickerMaskPosition",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/setStickerMaskPosition"
               }
             }
           },
@@ -2401,18 +2640,45 @@
         }
       }
     },
-    "/setStickerSetThumb": {
+    "/setStickerSetThumbnail": {
       "post": {
-        "description": "Use this method to set the thumbnail of a sticker set. Animated thumbnails can be set for animated sticker sets only. Video thumbnails can be set only for video sticker sets only. Returns _True_ on success.",
+        "description": "Use this method to set the thumbnail of a regular or mask sticker set. The format of the thumbnail file must match the format of the stickers in the set. Returns _True_ on success.",
         "externalDocs": {
-          "url": "https://core.telegram.org/bots/api#setstickersetthumb"
+          "url": "https://core.telegram.org/bots/api#setstickersetthumbnail"
         },
-        "operationId": "setStickerSetThumb",
+        "operationId": "setStickerSetThumbnail",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/setStickerSetThumb"
+                "$ref": "#/components/schemas/setStickerSetThumbnail"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Result"
+          },
+          "default": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/setStickerSetTitle": {
+      "post": {
+        "description": "Use this method to set the title of a created sticker set. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#setstickersettitle"
+        },
+        "operationId": "setStickerSetTitle",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/setStickerSetTitle"
               }
             }
           },
@@ -2673,7 +2939,7 @@
     },
     "/uploadStickerFile": {
       "post": {
-        "description": "Use this method to upload a .PNG file with a sticker for later use in _createNewStickerSet_ and _addStickerToSet_ methods (can be used multiple times). Returns the uploaded [File](https://core.telegram.org/bots/api#file) on success.",
+        "description": "Use this method to upload a file with a sticker for later use in the [createNewStickerSet](https://core.telegram.org/bots/api#createnewstickerset) and [addStickerToSet](https://core.telegram.org/bots/api#addstickertoset) methods (the file can be used multiple times). Returns the uploaded [File](https://core.telegram.org/bots/api#file) on success.",
         "externalDocs": {
           "url": "https://core.telegram.org/bots/api#uploadstickerfile"
         },
@@ -2734,7 +3000,7 @@
             "minimum": 0,
             "exclusiveMinimum": true
           },
-          "thumb": {
+          "thumbnail": {
             "$ref": "#/components/schemas/PhotoSize"
           },
           "file_name": {
@@ -2799,7 +3065,7 @@
             "description": "_Optional_. File size in bytes. It can be bigger than 2^31 and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this value",
             "type": "integer"
           },
-          "thumb": {
+          "thumbnail": {
             "$ref": "#/components/schemas/PhotoSize"
           }
         },
@@ -3012,6 +3278,38 @@
           "type"
         ]
       },
+      "BotDescription": {
+        "description": "This object represents the bot's description.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#botdescription"
+        },
+        "type": "object",
+        "properties": {
+          "description": {
+            "description": "The bot's description",
+            "type": "string"
+          }
+        },
+        "required": [
+          "description"
+        ]
+      },
+      "BotShortDescription": {
+        "description": "This object represents the bot's short description.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#botshortdescription"
+        },
+        "type": "object",
+        "properties": {
+          "short_description": {
+            "description": "The bot's short description",
+            "type": "string"
+          }
+        },
+        "required": [
+          "short_description"
+        ]
+      },
       "CallbackGame": {
         "description": "A placeholder, currently holds no information. Use [BotFather](https://t.me/botfather) to set up your game.",
         "externalDocs": {
@@ -3222,7 +3520,7 @@
             "type": "boolean"
           },
           "can_promote_members": {
-            "description": "_True_, if the administrator can add new administrators with a subset of their own privileges or demote administrators that he has promoted, directly or indirectly (promoted by administrators that were appointed by the user)",
+            "description": "_True_, if the administrator can add new administrators with a subset of their own privileges or demote administrators that they have promoted, directly or indirectly (promoted by administrators that were appointed by the user)",
             "type": "boolean"
           },
           "can_change_info": {
@@ -3327,6 +3625,11 @@
           "from": {
             "$ref": "#/components/schemas/User"
           },
+          "user_chat_id": {
+            "description": "Identifier of a private chat with the user who sent the join request. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a 64-bit integer or double-precision float type are safe for storing this identifier. The bot can use this identifier for 24 hours to send messages until the join request is processed, assuming no other administrator contacted the user",
+            "type": "integer",
+            "format": "int64"
+          },
           "date": {
             "description": "Date the request was sent in Unix time",
             "type": "integer"
@@ -3342,6 +3645,7 @@
         "required": [
           "chat",
           "from",
+          "user_chat_id",
           "date"
         ]
       },
@@ -3435,7 +3739,7 @@
             "type": "boolean"
           },
           "can_promote_members": {
-            "description": "_True_, if the administrator can add new administrators with a subset of their own privileges or demote administrators that he has promoted, directly or indirectly (promoted by administrators that were appointed by the user)",
+            "description": "_True_, if the administrator can add new administrators with a subset of their own privileges or demote administrators that they have promoted, directly or indirectly (promoted by administrators that were appointed by the user)",
             "type": "boolean"
           },
           "can_change_info": {
@@ -3593,6 +3897,46 @@
             "description": "_True_, if the user is a member of the chat at the moment of the request",
             "type": "boolean"
           },
+          "can_send_messages": {
+            "description": "_True_, if the user is allowed to send text messages, contacts, invoices, locations and venues",
+            "type": "boolean"
+          },
+          "can_send_audios": {
+            "description": "_True_, if the user is allowed to send audios",
+            "type": "boolean"
+          },
+          "can_send_documents": {
+            "description": "_True_, if the user is allowed to send documents",
+            "type": "boolean"
+          },
+          "can_send_photos": {
+            "description": "_True_, if the user is allowed to send photos",
+            "type": "boolean"
+          },
+          "can_send_videos": {
+            "description": "_True_, if the user is allowed to send videos",
+            "type": "boolean"
+          },
+          "can_send_video_notes": {
+            "description": "_True_, if the user is allowed to send video notes",
+            "type": "boolean"
+          },
+          "can_send_voice_notes": {
+            "description": "_True_, if the user is allowed to send voice notes",
+            "type": "boolean"
+          },
+          "can_send_polls": {
+            "description": "_True_, if the user is allowed to send polls",
+            "type": "boolean"
+          },
+          "can_send_other_messages": {
+            "description": "_True_, if the user is allowed to send animations, games, stickers and use inline bots",
+            "type": "boolean"
+          },
+          "can_add_web_page_previews": {
+            "description": "_True_, if the user is allowed to add web page previews to their messages",
+            "type": "boolean"
+          },
           "can_change_info": {
             "description": "_True_, if the user is allowed to change the chat title, photo and other settings",
             "type": "boolean"
@@ -3609,26 +3953,6 @@
             "description": "_True_, if the user is allowed to create forum topics",
             "type": "boolean"
           },
-          "can_send_messages": {
-            "description": "_True_, if the user is allowed to send text messages, contacts, locations and venues",
-            "type": "boolean"
-          },
-          "can_send_media_messages": {
-            "description": "_True_, if the user is allowed to send audios, documents, photos, videos, video notes and voice notes",
-            "type": "boolean"
-          },
-          "can_send_polls": {
-            "description": "_True_, if the user is allowed to send polls",
-            "type": "boolean"
-          },
-          "can_send_other_messages": {
-            "description": "_True_, if the user is allowed to send animations, games, stickers and use inline bots",
-            "type": "boolean"
-          },
-          "can_add_web_page_previews": {
-            "description": "_True_, if the user is allowed to add web page previews to their messages",
-            "type": "boolean"
-          },
           "until_date": {
             "description": "Date when restrictions will be lifted for this user; unix time. If 0, then the user is restricted forever",
             "type": "integer"
@@ -3638,15 +3962,20 @@
           "status",
           "user",
           "is_member",
+          "can_send_messages",
+          "can_send_audios",
+          "can_send_documents",
+          "can_send_photos",
+          "can_send_videos",
+          "can_send_video_notes",
+          "can_send_voice_notes",
+          "can_send_polls",
+          "can_send_other_messages",
+          "can_add_web_page_previews",
           "can_change_info",
           "can_invite_users",
           "can_pin_messages",
           "can_manage_topics",
-          "can_send_messages",
-          "can_send_media_messages",
-          "can_send_polls",
-          "can_send_other_messages",
-          "can_add_web_page_previews",
           "until_date"
         ]
       },
@@ -3693,23 +4022,43 @@
         "type": "object",
         "properties": {
           "can_send_messages": {
-            "description": "_Optional_. _True_, if the user is allowed to send text messages, contacts, locations and venues",
+            "description": "_Optional_. _True_, if the user is allowed to send text messages, contacts, invoices, locations and venues",
             "type": "boolean"
           },
-          "can_send_media_messages": {
-            "description": "_Optional_. _True_, if the user is allowed to send audios, documents, photos, videos, video notes and voice notes, implies can_send_messages",
+          "can_send_audios": {
+            "description": "_Optional_. _True_, if the user is allowed to send audios",
+            "type": "boolean"
+          },
+          "can_send_documents": {
+            "description": "_Optional_. _True_, if the user is allowed to send documents",
+            "type": "boolean"
+          },
+          "can_send_photos": {
+            "description": "_Optional_. _True_, if the user is allowed to send photos",
+            "type": "boolean"
+          },
+          "can_send_videos": {
+            "description": "_Optional_. _True_, if the user is allowed to send videos",
+            "type": "boolean"
+          },
+          "can_send_video_notes": {
+            "description": "_Optional_. _True_, if the user is allowed to send video notes",
+            "type": "boolean"
+          },
+          "can_send_voice_notes": {
+            "description": "_Optional_. _True_, if the user is allowed to send voice notes",
             "type": "boolean"
           },
           "can_send_polls": {
-            "description": "_Optional_. _True_, if the user is allowed to send polls, implies can_send_messages",
+            "description": "_Optional_. _True_, if the user is allowed to send polls",
             "type": "boolean"
           },
           "can_send_other_messages": {
-            "description": "_Optional_. _True_, if the user is allowed to send animations, games, stickers and use inline bots, implies can_send_media_messages",
+            "description": "_Optional_. _True_, if the user is allowed to send animations, games, stickers and use inline bots",
             "type": "boolean"
           },
           "can_add_web_page_previews": {
-            "description": "_Optional_. _True_, if the user is allowed to add web page previews to their messages, implies can_send_media_messages",
+            "description": "_Optional_. _True_, if the user is allowed to add web page previews to their messages",
             "type": "boolean"
           },
           "can_change_info": {
@@ -3759,6 +4108,28 @@
           "small_file_unique_id",
           "big_file_id",
           "big_file_unique_id"
+        ]
+      },
+      "ChatShared": {
+        "description": "This object contains information about the chat whose identifier was shared with the bot using a [KeyboardButtonRequestChat](https://core.telegram.org/bots/api#keyboardbuttonrequestchat) button.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#chatshared"
+        },
+        "type": "object",
+        "properties": {
+          "request_id": {
+            "description": "Identifier of the request",
+            "type": "integer"
+          },
+          "chat_id": {
+            "description": "Identifier of the shared chat. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a 64-bit integer or double-precision float type are safe for storing this identifier. The bot may not have access to the chat and could be unable to use this identifier, unless the chat is already known to the bot by some other means",
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        "required": [
+          "request_id",
+          "chat_id"
         ]
       },
       "ChosenInlineResult": {
@@ -3863,7 +4234,7 @@
             "description": "Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file",
             "type": "string"
           },
-          "thumb": {
+          "thumbnail": {
             "$ref": "#/components/schemas/PhotoSize"
           },
           "file_name": {
@@ -4476,17 +4847,17 @@
             "description": "_Optional_. Short description of the result",
             "type": "string"
           },
-          "thumb_url": {
+          "thumbnail_url": {
             "description": "_Optional_. URL of the thumbnail for the result",
             "type": "string"
           },
-          "thumb_width": {
+          "thumbnail_width": {
             "description": "_Optional_. Thumbnail width",
             "type": "integer",
             "minimum": 0,
             "exclusiveMinimum": true
           },
-          "thumb_height": {
+          "thumbnail_height": {
             "description": "_Optional_. Thumbnail height",
             "type": "integer",
             "minimum": 0,
@@ -5036,17 +5407,17 @@
           "input_message_content": {
             "$ref": "#/components/schemas/InputMessageContent"
           },
-          "thumb_url": {
+          "thumbnail_url": {
             "description": "_Optional_. URL of the thumbnail for the result",
             "type": "string"
           },
-          "thumb_width": {
+          "thumbnail_width": {
             "description": "_Optional_. Thumbnail width",
             "type": "integer",
             "minimum": 0,
             "exclusiveMinimum": true
           },
-          "thumb_height": {
+          "thumbnail_height": {
             "description": "_Optional_. Thumbnail height",
             "type": "integer",
             "minimum": 0,
@@ -5116,17 +5487,17 @@
           "input_message_content": {
             "$ref": "#/components/schemas/InputMessageContent"
           },
-          "thumb_url": {
+          "thumbnail_url": {
             "description": "_Optional_. URL of the thumbnail (JPEG only) for the file",
             "type": "string"
           },
-          "thumb_width": {
+          "thumbnail_width": {
             "description": "_Optional_. Thumbnail width",
             "type": "integer",
             "minimum": 0,
             "exclusiveMinimum": true
           },
-          "thumb_height": {
+          "thumbnail_height": {
             "description": "_Optional_. Thumbnail height",
             "type": "integer",
             "minimum": 0,
@@ -5213,11 +5584,11 @@
             "minimum": 0,
             "exclusiveMinimum": true
           },
-          "thumb_url": {
+          "thumbnail_url": {
             "description": "URL of the static (JPEG or GIF) or animated (MPEG4) thumbnail for the result",
             "type": "string"
           },
-          "thumb_mime_type": {
+          "thumbnail_mime_type": {
             "description": "_Optional_. MIME type of the thumbnail, must be one of `image/jpeg`, `image/gif`, or `video/mp4`. Defaults to `image/jpeg`",
             "type": "string"
           },
@@ -5252,7 +5623,7 @@
           "type",
           "id",
           "gif_url",
-          "thumb_url"
+          "thumbnail_url"
         ]
       },
       "InlineQueryResultLocation": {
@@ -5311,17 +5682,17 @@
           "input_message_content": {
             "$ref": "#/components/schemas/InputMessageContent"
           },
-          "thumb_url": {
+          "thumbnail_url": {
             "description": "_Optional_. URL of the thumbnail for the result",
             "type": "string"
           },
-          "thumb_width": {
+          "thumbnail_width": {
             "description": "_Optional_. Thumbnail width",
             "type": "integer",
             "minimum": 0,
             "exclusiveMinimum": true
           },
-          "thumb_height": {
+          "thumbnail_height": {
             "description": "_Optional_. Thumbnail height",
             "type": "integer",
             "minimum": 0,
@@ -5376,11 +5747,11 @@
             "minimum": 0,
             "exclusiveMinimum": true
           },
-          "thumb_url": {
+          "thumbnail_url": {
             "description": "URL of the static (JPEG or GIF) or animated (MPEG4) thumbnail for the result",
             "type": "string"
           },
-          "thumb_mime_type": {
+          "thumbnail_mime_type": {
             "description": "_Optional_. MIME type of the thumbnail, must be one of `image/jpeg`, `image/gif`, or `video/mp4`. Defaults to `image/jpeg`",
             "type": "string"
           },
@@ -5415,7 +5786,7 @@
           "type",
           "id",
           "mpeg4_url",
-          "thumb_url"
+          "thumbnail_url"
         ]
       },
       "InlineQueryResultPhoto": {
@@ -5440,7 +5811,7 @@
             "description": "A valid URL of the photo. Photo must be in **JPEG** format. Photo size must not exceed 5MB",
             "type": "string"
           },
-          "thumb_url": {
+          "thumbnail_url": {
             "description": "URL of the thumbnail for the photo",
             "type": "string"
           },
@@ -5491,7 +5862,7 @@
           "type",
           "id",
           "photo_url",
-          "thumb_url"
+          "thumbnail_url"
         ]
       },
       "InlineQueryResultVenue": {
@@ -5548,17 +5919,17 @@
           "input_message_content": {
             "$ref": "#/components/schemas/InputMessageContent"
           },
-          "thumb_url": {
+          "thumbnail_url": {
             "description": "_Optional_. URL of the thumbnail for the result",
             "type": "string"
           },
-          "thumb_width": {
+          "thumbnail_width": {
             "description": "_Optional_. Thumbnail width",
             "type": "integer",
             "minimum": 0,
             "exclusiveMinimum": true
           },
-          "thumb_height": {
+          "thumbnail_height": {
             "description": "_Optional_. Thumbnail height",
             "type": "integer",
             "minimum": 0,
@@ -5600,7 +5971,7 @@
             "description": "MIME type of the content of the video URL, `text/html` or `video/mp4`",
             "type": "string"
           },
-          "thumb_url": {
+          "thumbnail_url": {
             "description": "URL of the thumbnail (JPEG only) for the video",
             "type": "string"
           },
@@ -5658,7 +6029,7 @@
           "id",
           "video_url",
           "mime_type",
-          "thumb_url",
+          "thumbnail_url",
           "title"
         ]
       },
@@ -5960,7 +6331,7 @@
             "description": "File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass `attach://\u003cfile_attach_name\u003e` to upload a new one using multipart/form-data under \u003cfile_attach_name\u003e name. [More information on Sending Files](https://core.telegram.org/bots/api#sending-files)",
             "type": "string"
           },
-          "thumb": {
+          "thumbnail": {
             "description": "_Optional_. Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass `attach://\u003cfile_attach_name\u003e` if the thumbnail was uploaded using multipart/form-data under \u003cfile_attach_name\u003e. [More information on Sending Files](https://core.telegram.org/bots/api#sending-files)",
             "type": "string"
           },
@@ -6024,7 +6395,7 @@
             "description": "File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass `attach://\u003cfile_attach_name\u003e` to upload a new one using multipart/form-data under \u003cfile_attach_name\u003e name. [More information on Sending Files](https://core.telegram.org/bots/api#sending-files)",
             "type": "string"
           },
-          "thumb": {
+          "thumbnail": {
             "description": "_Optional_. Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass `attach://\u003cfile_attach_name\u003e` if the thumbnail was uploaded using multipart/form-data under \u003cfile_attach_name\u003e. [More information on Sending Files](https://core.telegram.org/bots/api#sending-files)",
             "type": "string"
           },
@@ -6080,7 +6451,7 @@
             "description": "File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass `attach://\u003cfile_attach_name\u003e` to upload a new one using multipart/form-data under \u003cfile_attach_name\u003e name. [More information on Sending Files](https://core.telegram.org/bots/api#sending-files)",
             "type": "string"
           },
-          "thumb": {
+          "thumbnail": {
             "description": "_Optional_. Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass `attach://\u003cfile_attach_name\u003e` if the thumbnail was uploaded using multipart/form-data under \u003cfile_attach_name\u003e. [More information on Sending Files](https://core.telegram.org/bots/api#sending-files)",
             "type": "string"
           },
@@ -6168,7 +6539,7 @@
             "description": "File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass `attach://\u003cfile_attach_name\u003e` to upload a new one using multipart/form-data under \u003cfile_attach_name\u003e name. [More information on Sending Files](https://core.telegram.org/bots/api#sending-files)",
             "type": "string"
           },
-          "thumb": {
+          "thumbnail": {
             "description": "_Optional_. Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass `attach://\u003cfile_attach_name\u003e` if the thumbnail was uploaded using multipart/form-data under \u003cfile_attach_name\u003e. [More information on Sending Files](https://core.telegram.org/bots/api#sending-files)",
             "type": "string"
           },
@@ -6241,6 +6612,40 @@
           {
             "$ref": "#/components/schemas/InputInvoiceMessageContent"
           }
+        ]
+      },
+      "InputSticker": {
+        "description": "This object describes a sticker to be added to a sticker set.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#inputsticker"
+        },
+        "type": "object",
+        "properties": {
+          "sticker": {
+            "description": "The added sticker. Pass a _file_id_ as a String to send a file that already exists on the Telegram servers, pass an HTTP URL as a String for Telegram to get a file from the Internet, upload a new one using multipart/form-data, or pass `attach://\u003cfile_attach_name\u003e` to upload a new one using multipart/form-data under \u003cfile_attach_name\u003e name. Animated and video stickers can't be uploaded via HTTP URL. [More information on Sending Files](https://core.telegram.org/bots/api#sending-files)",
+            "type": "string"
+          },
+          "emoji_list": {
+            "description": "List of 1-20 emoji associated with the sticker",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "mask_position": {
+            "$ref": "#/components/schemas/MaskPosition"
+          },
+          "keywords": {
+            "description": "_Optional_. List of 0-20 search keywords for the sticker with total length of up to 64 characters. For `regular` and `custom_emoji` stickers only",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "sticker",
+          "emoji_list"
         ]
       },
       "InputTextMessageContent": {
@@ -6373,7 +6778,7 @@
         ]
       },
       "KeyboardButtonObject": {
-        "description": "This object represents one button of the reply keyboard. For simple text buttons _String_ can be used instead of this object to specify text of the button. Optional fields _web_app_, _request_contact_, _request_location_, and _request_poll_ are mutually exclusive.",
+        "description": "This object represents one button of the reply keyboard. For simple text buttons, _String_ can be used instead of this object to specify the button text. The optional fields _web_app_, _request_user_, _request_chat_, _request_contact_, _request_location_, and _request_poll_ are mutually exclusive.",
         "externalDocs": {
           "url": "https://core.telegram.org/bots/api#keyboardbuttonobject"
         },
@@ -6382,6 +6787,12 @@
           "text": {
             "description": "Text of the button. If none of the optional fields are used, it will be sent as a message when the button is pressed",
             "type": "string"
+          },
+          "request_user": {
+            "$ref": "#/components/schemas/KeyboardButtonRequestUser"
+          },
+          "request_chat": {
+            "$ref": "#/components/schemas/KeyboardButtonRequestChat"
           },
           "request_contact": {
             "description": "_Optional_. If _True_, the user's phone number will be sent as a contact when the button is pressed. Available in private chats only",
@@ -6414,6 +6825,73 @@
             "type": "string"
           }
         }
+      },
+      "KeyboardButtonRequestChat": {
+        "description": "This object defines the criteria used to request a suitable chat. The identifier of the selected chat will be shared with the bot when the corresponding button is pressed. [More about requesting chats](https://core.telegram.org/bots/features#chat-and-user-selection)",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#keyboardbuttonrequestchat"
+        },
+        "type": "object",
+        "properties": {
+          "request_id": {
+            "description": "Signed 32-bit identifier of the request, which will be received back in the [ChatShared](https://core.telegram.org/bots/api#chatshared) object. Must be unique within the message",
+            "type": "integer"
+          },
+          "chat_is_channel": {
+            "description": "Pass _True_ to request a channel chat, pass _False_ to request a group or a supergroup chat",
+            "type": "boolean"
+          },
+          "chat_is_forum": {
+            "description": "_Optional_. Pass _True_ to request a forum supergroup, pass _False_ to request a non-forum chat. If not specified, no additional restrictions are applied",
+            "type": "boolean"
+          },
+          "chat_has_username": {
+            "description": "_Optional_. Pass _True_ to request a supergroup or a channel with a username, pass _False_ to request a chat without a username. If not specified, no additional restrictions are applied",
+            "type": "boolean"
+          },
+          "chat_is_created": {
+            "description": "_Optional_. Pass _True_ to request a chat owned by the user. Otherwise, no additional restrictions are applied",
+            "type": "boolean"
+          },
+          "user_administrator_rights": {
+            "$ref": "#/components/schemas/ChatAdministratorRights"
+          },
+          "bot_administrator_rights": {
+            "$ref": "#/components/schemas/ChatAdministratorRights"
+          },
+          "bot_is_member": {
+            "description": "_Optional_. Pass _True_ to request a chat with the bot as a member. Otherwise, no additional restrictions are applied",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "request_id",
+          "chat_is_channel"
+        ]
+      },
+      "KeyboardButtonRequestUser": {
+        "description": "This object defines the criteria used to request a suitable user. The identifier of the selected user will be shared with the bot when the corresponding button is pressed. [More about requesting users](https://core.telegram.org/bots/features#chat-and-user-selection)",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#keyboardbuttonrequestuser"
+        },
+        "type": "object",
+        "properties": {
+          "request_id": {
+            "description": "Signed 32-bit identifier of the request, which will be received back in the [UserShared](https://core.telegram.org/bots/api#usershared) object. Must be unique within the message",
+            "type": "integer"
+          },
+          "user_is_bot": {
+            "description": "_Optional_. Pass _True_ to request a bot, pass _False_ to request a regular user. If not specified, no additional restrictions are applied",
+            "type": "boolean"
+          },
+          "user_is_premium": {
+            "description": "_Optional_. Pass _True_ to request a premium user, pass _False_ to request a non-premium user. If not specified, no additional restrictions are applied",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "request_id"
+        ]
       },
       "LabeledPrice": {
         "description": "This object represents a portion of the price for goods or services.",
@@ -6829,6 +7307,12 @@
           },
           "successful_payment": {
             "$ref": "#/components/schemas/SuccessfulPayment"
+          },
+          "user_shared": {
+            "$ref": "#/components/schemas/UserShared"
+          },
+          "chat_shared": {
+            "$ref": "#/components/schemas/ChatShared"
           },
           "connected_website": {
             "description": "_Optional_. The domain name of the website on which the user has logged in. [More about Telegram Login](https://core.telegram.org/widgets/login)",
@@ -8368,7 +8852,7 @@
             "description": "_True_, if the sticker is a [video sticker](https://telegram.org/blog/video-stickers-better-reactions)",
             "type": "boolean"
           },
-          "thumb": {
+          "thumbnail": {
             "$ref": "#/components/schemas/PhotoSize"
           },
           "emoji": {
@@ -8388,6 +8872,10 @@
           "custom_emoji_id": {
             "description": "_Optional_. For custom emoji stickers, unique identifier of the custom emoji",
             "type": "string"
+          },
+          "needs_repainting": {
+            "description": "_Optional_. _True_, if the sticker must be repainted to a text color in messages, the color of the Telegram Premium badge in emoji status, white color on chat photos, or another appropriate color in other places",
+            "type": "boolean"
           },
           "file_size": {
             "description": "_Optional_. File size in bytes",
@@ -8438,7 +8926,7 @@
               "$ref": "#/components/schemas/Sticker"
             }
           },
-          "thumb": {
+          "thumbnail": {
             "$ref": "#/components/schemas/PhotoSize"
           }
         },
@@ -8638,6 +9126,28 @@
           "photos"
         ]
       },
+      "UserShared": {
+        "description": "This object contains information about the user whose identifier was shared with the bot using a [KeyboardButtonRequestUser](https://core.telegram.org/bots/api#keyboardbuttonrequestuser) button.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#usershared"
+        },
+        "type": "object",
+        "properties": {
+          "request_id": {
+            "description": "Identifier of the request",
+            "type": "integer"
+          },
+          "user_id": {
+            "description": "Identifier of the shared user. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a 64-bit integer or double-precision float type are safe for storing this identifier. The bot may not have access to the user and could be unable to use this identifier, unless the user is already known to the bot by some other means",
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        "required": [
+          "request_id",
+          "user_id"
+        ]
+      },
       "Venue": {
         "description": "This object represents a venue.",
         "externalDocs": {
@@ -8712,7 +9222,7 @@
             "minimum": 0,
             "exclusiveMinimum": true
           },
-          "thumb": {
+          "thumbnail": {
             "$ref": "#/components/schemas/PhotoSize"
           },
           "file_name": {
@@ -8821,7 +9331,7 @@
             "minimum": 0,
             "exclusiveMinimum": true
           },
-          "thumb": {
+          "thumbnail": {
             "$ref": "#/components/schemas/PhotoSize"
           },
           "file_size": {
@@ -8982,30 +9492,14 @@
             "description": "Sticker set name",
             "type": "string"
           },
-          "png_sticker": {
-            "description": "**PNG** image with the sticker, must be up to 512 kilobytes in size, dimensions must not exceed 512px, and either width or height must be exactly 512px. Pass a _file_id_ as a String to send a file that already exists on the Telegram servers, pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. [More information on Sending Files](https://core.telegram.org/bots/api#sending-files)",
-            "type": "string"
-          },
-          "tgs_sticker": {
-            "description": "**TGS** animation with the sticker, uploaded using multipart/form-data. See [](https://core.telegram.org/stickers#animated-sticker-requirements)[https://core.telegram.org/stickers#animated-sticker-requirements](https://core.telegram.org/stickers#animated-sticker-requirements) for technical requirements",
-            "type": "string"
-          },
-          "webm_sticker": {
-            "description": "**WEBM** video with the sticker, uploaded using multipart/form-data. See [](https://core.telegram.org/stickers#video-sticker-requirements)[https://core.telegram.org/stickers#video-sticker-requirements](https://core.telegram.org/stickers#video-sticker-requirements) for technical requirements",
-            "type": "string"
-          },
-          "emojis": {
-            "description": "One or more emoji corresponding to the sticker",
-            "type": "string"
-          },
-          "mask_position": {
-            "$ref": "#/components/schemas/MaskPosition"
+          "sticker": {
+            "$ref": "#/components/schemas/InputSticker"
           }
         },
         "required": [
           "user_id",
           "name",
-          "emojis"
+          "sticker"
         ]
       },
       "answerCallbackQuery": {
@@ -9489,35 +9983,32 @@
             "maxLength": 64,
             "minLength": 1
           },
-          "png_sticker": {
-            "description": "**PNG** image with the sticker, must be up to 512 kilobytes in size, dimensions must not exceed 512px, and either width or height must be exactly 512px. Pass a _file_id_ as a String to send a file that already exists on the Telegram servers, pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. [More information on Sending Files](https://core.telegram.org/bots/api#sending-files)",
-            "type": "string"
+          "stickers": {
+            "description": "A JSON-serialized list of 1-50 initial stickers to be added to the sticker set",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InputSticker"
+            }
           },
-          "tgs_sticker": {
-            "description": "**TGS** animation with the sticker, uploaded using multipart/form-data. See [](https://core.telegram.org/stickers#animated-sticker-requirements)[https://core.telegram.org/stickers#animated-sticker-requirements](https://core.telegram.org/stickers#animated-sticker-requirements) for technical requirements",
-            "type": "string"
-          },
-          "webm_sticker": {
-            "description": "**WEBM** video with the sticker, uploaded using multipart/form-data. See [](https://core.telegram.org/stickers#video-sticker-requirements)[https://core.telegram.org/stickers#video-sticker-requirements](https://core.telegram.org/stickers#video-sticker-requirements) for technical requirements",
+          "sticker_format": {
+            "description": "Format of stickers in the set, must be one of `static`, `animated`, `video`",
             "type": "string"
           },
           "sticker_type": {
-            "description": "Type of stickers in the set, pass `regular` or `mask`. Custom emoji sticker sets can't be created via the Bot API at the moment. By default, a regular sticker set is created",
+            "description": "Type of stickers in the set, pass `regular`, `mask`, or `custom_emoji`. By default, a regular sticker set is created",
             "type": "string"
           },
-          "emojis": {
-            "description": "One or more emoji corresponding to the sticker",
-            "type": "string"
-          },
-          "mask_position": {
-            "$ref": "#/components/schemas/MaskPosition"
+          "needs_repainting": {
+            "description": "Pass _True_ if stickers in the sticker set must be repainted to the color of text when used in messages, the accent color if used as emoji status, white on chat photos, or another appropriate color based on context; for custom emoji sticker sets only",
+            "type": "boolean"
           }
         },
         "required": [
           "user_id",
           "name",
           "title",
-          "emojis"
+          "stickers",
+          "sticker_format"
         ]
       },
       "declineChatJoinRequest": {
@@ -9620,6 +10111,19 @@
         },
         "required": [
           "sticker"
+        ]
+      },
+      "deleteStickerSet": {
+        "description": "Input for deleteStickerSet",
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "Sticker set name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
         ]
       },
       "deleteWebhook": {
@@ -10076,6 +10580,26 @@
           }
         }
       },
+      "getMyDescription": {
+        "description": "Input for getMyDescription",
+        "type": "object",
+        "properties": {
+          "language_code": {
+            "description": "A two-letter ISO 639-1 language code or an empty string",
+            "type": "string"
+          }
+        }
+      },
+      "getMyShortDescription": {
+        "description": "Input for getMyShortDescription",
+        "type": "object",
+        "properties": {
+          "language_code": {
+            "description": "A two-letter ISO 639-1 language code or an empty string",
+            "type": "string"
+          }
+        }
+      },
       "getStickerSet": {
         "description": "Input for getStickerSet",
         "type": "object",
@@ -10228,7 +10752,7 @@
             "type": "boolean"
           },
           "can_promote_members": {
-            "description": "Pass _True_ if the administrator can add new administrators with a subset of their own privileges or demote administrators that he has promoted, directly or indirectly (promoted by administrators that were appointed by him)",
+            "description": "Pass _True_ if the administrator can add new administrators with a subset of their own privileges or demote administrators that they have promoted, directly or indirectly (promoted by administrators that were appointed by him)",
             "type": "boolean"
           },
           "can_change_info": {
@@ -10297,6 +10821,10 @@
           "permissions": {
             "$ref": "#/components/schemas/ChatPermissions"
           },
+          "use_independent_chat_permissions": {
+            "description": "Pass _True_ if chat permissions are set independently. Otherwise, the _can_send_other_messages_ and _can_add_web_page_previews_ permissions will imply the _can_send_messages_, _can_send_audios_, _can_send_documents_, _can_send_photos_, _can_send_videos_, _can_send_video_notes_, and _can_send_voice_notes_ permissions; the _can_send_polls_ permission will imply the _can_send_messages_ permission",
+            "type": "boolean"
+          },
           "until_date": {
             "description": "Date when restrictions will be lifted for the user, unix time. If user is restricted for more than 366 days or less than 30 seconds from the current time, they are considered to be restricted forever",
             "type": "integer"
@@ -10358,7 +10886,7 @@
             "minimum": 0,
             "exclusiveMinimum": true
           },
-          "thumb": {
+          "thumbnail": {
             "description": "Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass `attach://\u003cfile_attach_name\u003e` if the thumbnail was uploaded using multipart/form-data under \u003cfile_attach_name\u003e. [More information on Sending Files](https://core.telegram.org/bots/api#sending-files)",
             "type": "string"
           },
@@ -10452,7 +10980,7 @@
             "description": "Track name",
             "type": "string"
           },
-          "thumb": {
+          "thumbnail": {
             "description": "Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass `attach://\u003cfile_attach_name\u003e` if the thumbnail was uploaded using multipart/form-data under \u003cfile_attach_name\u003e. [More information on Sending Files](https://core.telegram.org/bots/api#sending-files)",
             "type": "string"
           },
@@ -10610,7 +11138,7 @@
             "description": "File to send. Pass a file_id as String to send a file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. [More information on Sending Files](https://core.telegram.org/bots/api#sending-files)",
             "type": "string"
           },
-          "thumb": {
+          "thumbnail": {
             "description": "Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass `attach://\u003cfile_attach_name\u003e` if the thumbnail was uploaded using multipart/form-data under \u003cfile_attach_name\u003e. [More information on Sending Files](https://core.telegram.org/bots/api#sending-files)",
             "type": "string"
           },
@@ -11195,7 +11723,11 @@
             "type": "integer"
           },
           "sticker": {
-            "description": "Sticker to send. Pass a file_id as String to send a file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a .WEBP file from the Internet, or upload a new one using multipart/form-data. [More information on Sending Files](https://core.telegram.org/bots/api#sending-files)",
+            "description": "Sticker to send. Pass a file_id as String to send a file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a .WEBP sticker from the Internet, or upload a new .WEBP or .TGS sticker using multipart/form-data. [More information on Sending Files](https://core.telegram.org/bots/api#sending-files). Video stickers can only be sent by a file_id. Animated stickers can't be sent via an HTTP URL",
+            "type": "string"
+          },
+          "emoji": {
+            "description": "Emoji associated with the sticker; only for just uploaded stickers",
             "type": "string"
           },
           "disable_notification": {
@@ -11327,7 +11859,7 @@
             "minimum": 0,
             "exclusiveMinimum": true
           },
-          "thumb": {
+          "thumbnail": {
             "description": "Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass `attach://\u003cfile_attach_name\u003e` if the thumbnail was uploaded using multipart/form-data under \u003cfile_attach_name\u003e. [More information on Sending Files](https://core.telegram.org/bots/api#sending-files)",
             "type": "string"
           },
@@ -11405,7 +11937,7 @@
             "description": "Video width and height, i.e. diameter of the video message",
             "type": "integer"
           },
-          "thumb": {
+          "thumbnail": {
             "description": "Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass `attach://\u003cfile_attach_name\u003e` if the thumbnail was uploaded using multipart/form-data under \u003cfile_attach_name\u003e. [More information on Sending Files](https://core.telegram.org/bots/api#sending-files)",
             "type": "string"
           },
@@ -11560,6 +12092,10 @@
           },
           "permissions": {
             "$ref": "#/components/schemas/ChatPermissions"
+          },
+          "use_independent_chat_permissions": {
+            "description": "Pass _True_ if chat permissions are set independently. Otherwise, the _can_send_other_messages_ and _can_add_web_page_previews_ permissions will imply the _can_send_messages_, _can_send_audios_, _can_send_documents_, _can_send_photos_, _can_send_videos_, _can_send_video_notes_, and _can_send_voice_notes_ permissions; the _can_send_polls_ permission will imply the _can_send_messages_ permission",
+            "type": "boolean"
           }
         },
         "required": [
@@ -11618,6 +12154,23 @@
         "required": [
           "chat_id",
           "title"
+        ]
+      },
+      "setCustomEmojiStickerSetThumbnail": {
+        "description": "Input for setCustomEmojiStickerSetThumbnail",
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "Sticker set name",
+            "type": "string"
+          },
+          "custom_emoji_id": {
+            "description": "Custom emoji identifier of a sticker from the sticker set; pass an empty string to drop the thumbnail and use the first sticker as the thumbnail",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
         ]
       },
       "setGameScore": {
@@ -11696,6 +12249,36 @@
           }
         }
       },
+      "setMyDescription": {
+        "description": "Input for setMyDescription",
+        "type": "object",
+        "properties": {
+          "description": {
+            "description": "New bot description; 0-512 characters. Pass an empty string to remove the dedicated description for the given language",
+            "type": "string",
+            "maxLength": 512
+          },
+          "language_code": {
+            "description": "A two-letter ISO 639-1 language code. If empty, the description will be applied to all users for whose language there is no dedicated description",
+            "type": "string"
+          }
+        }
+      },
+      "setMyShortDescription": {
+        "description": "Input for setMyShortDescription",
+        "type": "object",
+        "properties": {
+          "short_description": {
+            "description": "New short description for the bot; 0-120 characters. Pass an empty string to remove the dedicated short description for the given language",
+            "type": "string",
+            "maxLength": 120
+          },
+          "language_code": {
+            "description": "A two-letter ISO 639-1 language code. If empty, the short description will be applied to all users for whose language there is no dedicated short description",
+            "type": "string"
+          }
+        }
+      },
       "setPassportDataErrors": {
         "description": "Input for setPassportDataErrors",
         "type": "object",
@@ -11718,6 +12301,63 @@
           "errors"
         ]
       },
+      "setStickerEmojiList": {
+        "description": "Input for setStickerEmojiList",
+        "type": "object",
+        "properties": {
+          "sticker": {
+            "description": "File identifier of the sticker",
+            "type": "string"
+          },
+          "emoji_list": {
+            "description": "A JSON-serialized list of 1-20 emoji associated with the sticker",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "sticker",
+          "emoji_list"
+        ]
+      },
+      "setStickerKeywords": {
+        "description": "Input for setStickerKeywords",
+        "type": "object",
+        "properties": {
+          "sticker": {
+            "description": "File identifier of the sticker",
+            "type": "string"
+          },
+          "keywords": {
+            "description": "A JSON-serialized list of 0-20 search keywords for the sticker with total length of up to 64 characters",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "sticker"
+        ]
+      },
+      "setStickerMaskPosition": {
+        "description": "Input for setStickerMaskPosition",
+        "type": "object",
+        "properties": {
+          "sticker": {
+            "description": "File identifier of the sticker",
+            "type": "string"
+          },
+          "mask_position": {
+            "$ref": "#/components/schemas/MaskPosition"
+          }
+        },
+        "required": [
+          "sticker"
+        ]
+      },
       "setStickerPositionInSet": {
         "description": "Input for setStickerPositionInSet",
         "type": "object",
@@ -11736,8 +12376,8 @@
           "position"
         ]
       },
-      "setStickerSetThumb": {
-        "description": "Input for setStickerSetThumb",
+      "setStickerSetThumbnail": {
+        "description": "Input for setStickerSetThumbnail",
         "type": "object",
         "properties": {
           "name": {
@@ -11749,14 +12389,34 @@
             "type": "integer",
             "format": "int64"
           },
-          "thumb": {
-            "description": "A **PNG** image with the thumbnail, must be up to 128 kilobytes in size and have width and height exactly 100px, or a **TGS** animation with the thumbnail up to 32 kilobytes in size; see [](https://core.telegram.org/stickers#animated-sticker-requirements)[https://core.telegram.org/stickers#animated-sticker-requirements](https://core.telegram.org/stickers#animated-sticker-requirements) for animated sticker technical requirements, or a **WEBM** video with the thumbnail up to 32 kilobytes in size; see [](https://core.telegram.org/stickers#video-sticker-requirements)[https://core.telegram.org/stickers#video-sticker-requirements](https://core.telegram.org/stickers#video-sticker-requirements) for video sticker technical requirements. Pass a _file_id_ as a String to send a file that already exists on the Telegram servers, pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. [More information on Sending Files](https://core.telegram.org/bots/api#sending-files). Animated sticker set thumbnails can't be uploaded via HTTP URL",
+          "thumbnail": {
+            "description": "A **.WEBP** or **.PNG** image with the thumbnail, must be up to 128 kilobytes in size and have a width and height of exactly 100px, or a **.TGS** animation with a thumbnail up to 32 kilobytes in size (see [](https://core.telegram.org/stickers#animated-sticker-requirements)[https://core.telegram.org/stickers#animated-sticker-requirements](https://core.telegram.org/stickers#animated-sticker-requirements) for animated sticker technical requirements), or a **WEBM** video with the thumbnail up to 32 kilobytes in size; see [](https://core.telegram.org/stickers#video-sticker-requirements)[https://core.telegram.org/stickers#video-sticker-requirements](https://core.telegram.org/stickers#video-sticker-requirements) for video sticker technical requirements. Pass a _file_id_ as a String to send a file that already exists on the Telegram servers, pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. [More information on Sending Files](https://core.telegram.org/bots/api#sending-files). Animated and video sticker set thumbnails can't be uploaded via HTTP URL. If omitted, then the thumbnail is dropped and the first sticker is used as the thumbnail",
             "type": "string"
           }
         },
         "required": [
           "name",
           "user_id"
+        ]
+      },
+      "setStickerSetTitle": {
+        "description": "Input for setStickerSetTitle",
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "Sticker set name",
+            "type": "string"
+          },
+          "title": {
+            "description": "Sticker set title, 1-64 characters",
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
+          }
+        },
+        "required": [
+          "name",
+          "title"
         ]
       },
       "setWebhook": {
@@ -11947,14 +12607,19 @@
             "type": "integer",
             "format": "int64"
           },
-          "png_sticker": {
-            "description": "**PNG** image with the sticker, must be up to 512 kilobytes in size, dimensions must not exceed 512px, and either width or height must be exactly 512px. [More information on Sending Files](https://core.telegram.org/bots/api#sending-files)",
+          "sticker": {
+            "description": "A file with the sticker in .WEBP, .PNG, .TGS, or .WEBM format. See [](https://core.telegram.org/stickers)[https://core.telegram.org/stickers](https://core.telegram.org/stickers) for technical requirements. [More information on Sending Files](https://core.telegram.org/bots/api#sending-files)",
+            "type": "string"
+          },
+          "sticker_format": {
+            "description": "Format of the sticker, must be one of `static`, `animated`, `video`",
             "type": "string"
           }
         },
         "required": [
           "user_id",
-          "png_sticker"
+          "sticker",
+          "sticker_format"
         ]
       }
     },

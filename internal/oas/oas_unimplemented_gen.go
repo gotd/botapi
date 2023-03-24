@@ -15,10 +15,10 @@ var _ Handler = UnimplementedHandler{}
 
 // AddStickerToSet implements addStickerToSet operation.
 //
-// Use this method to add a new sticker to a set created by the bot. You **must** use exactly one of
-// the fields _png_sticker_, _tgs_sticker_, or _webm_sticker_. Animated stickers can be added to
-// animated sticker sets and only to them. Animated sticker sets can have up to 50 stickers. Static
-// sticker sets can have up to 120 stickers. Returns _True_ on success.
+// Use this method to add a new sticker to a set created by the bot. The format of the added sticker
+// must match the format of the other stickers in the set. Emoji sticker sets can have up to 200
+// stickers. Animated and video sticker sets can have up to 50 stickers. Static sticker sets can have
+// up to 120 stickers. Returns _True_ on success.
 //
 // POST /addStickerToSet
 func (UnimplementedHandler) AddStickerToSet(ctx context.Context, req *AddStickerToSet) (r *Result, _ error) {
@@ -207,8 +207,7 @@ func (UnimplementedHandler) CreateInvoiceLink(ctx context.Context, req *CreateIn
 // CreateNewStickerSet implements createNewStickerSet operation.
 //
 // Use this method to create a new sticker set owned by a user. The bot will be able to edit the
-// sticker set thus created. You **must** use exactly one of the fields _png_sticker_, _tgs_sticker_,
-// or _webm_sticker_. Returns _True_ on success.
+// sticker set thus created. Returns _True_ on success.
 //
 // POST /createNewStickerSet
 func (UnimplementedHandler) CreateNewStickerSet(ctx context.Context, req *CreateNewStickerSet) (r *Result, _ error) {
@@ -294,6 +293,15 @@ func (UnimplementedHandler) DeleteMyCommands(ctx context.Context, req OptDeleteM
 //
 // POST /deleteStickerFromSet
 func (UnimplementedHandler) DeleteStickerFromSet(ctx context.Context, req *DeleteStickerFromSet) (r *Result, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// DeleteStickerSet implements deleteStickerSet operation.
+//
+// Use this method to delete a sticker set that was created by the bot. Returns _True_ on success.
+//
+// POST /deleteStickerSet
+func (UnimplementedHandler) DeleteStickerSet(ctx context.Context, req *DeleteStickerSet) (r *Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -445,8 +453,8 @@ func (UnimplementedHandler) GetChatAdministrators(ctx context.Context, req *GetC
 
 // GetChatMember implements getChatMember operation.
 //
-// Use this method to get information about a member of a chat. The method is guaranteed to work for
-// other users, only if the bot is an administrator in the chat. Returns a [ChatMember](https://core.
+// Use this method to get information about a member of a chat. The method is only guaranteed to work
+// for other users if the bot is an administrator in the chat. Returns a [ChatMember](https://core.
 // telegram.org/bots/api#chatmember) object on success.
 //
 // POST /getChatMember
@@ -548,6 +556,26 @@ func (UnimplementedHandler) GetMyCommands(ctx context.Context, req OptGetMyComma
 //
 // POST /getMyDefaultAdministratorRights
 func (UnimplementedHandler) GetMyDefaultAdministratorRights(ctx context.Context, req OptGetMyDefaultAdministratorRights) (r *Result, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// GetMyDescription implements getMyDescription operation.
+//
+// Use this method to get the current bot description for the given user language. Returns
+// [BotDescription](https://core.telegram.org/bots/api#botdescription) on success.
+//
+// POST /getMyDescription
+func (UnimplementedHandler) GetMyDescription(ctx context.Context, req OptGetMyDescription) (r *Result, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// GetMyShortDescription implements getMyShortDescription operation.
+//
+// Use this method to get the current bot short description for the given user language. Returns
+// [BotShortDescription](https://core.telegram.org/bots/api#botshortdescription) on success.
+//
+// POST /getMyShortDescription
+func (UnimplementedHandler) GetMyShortDescription(ctx context.Context, req OptGetMyShortDescription) (r *Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -966,6 +994,15 @@ func (UnimplementedHandler) SetChatTitle(ctx context.Context, req *SetChatTitle)
 	return r, ht.ErrNotImplemented
 }
 
+// SetCustomEmojiStickerSetThumbnail implements setCustomEmojiStickerSetThumbnail operation.
+//
+// Use this method to set the thumbnail of a custom emoji sticker set. Returns _True_ on success.
+//
+// POST /setCustomEmojiStickerSetThumbnail
+func (UnimplementedHandler) SetCustomEmojiStickerSetThumbnail(ctx context.Context, req *SetCustomEmojiStickerSetThumbnail) (r *Result, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
 // SetGameScore implements setGameScore operation.
 //
 // Use this method to set the score of the specified user in a game message. On success, if the
@@ -991,11 +1028,31 @@ func (UnimplementedHandler) SetMyCommands(ctx context.Context, req *SetMyCommand
 // SetMyDefaultAdministratorRights implements setMyDefaultAdministratorRights operation.
 //
 // Use this method to change the default administrator rights requested by the bot when it's added as
-// an administrator to groups or channels. These rights will be suggested to users, but they are are
-// free to modify the list before adding the bot. Returns _True_ on success.
+// an administrator to groups or channels. These rights will be suggested to users, but they are free
+// to modify the list before adding the bot. Returns _True_ on success.
 //
 // POST /setMyDefaultAdministratorRights
 func (UnimplementedHandler) SetMyDefaultAdministratorRights(ctx context.Context, req OptSetMyDefaultAdministratorRights) (r *Result, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// SetMyDescription implements setMyDescription operation.
+//
+// Use this method to change the bot's description, which is shown in the chat with the bot if the
+// chat is empty. Returns _True_ on success.
+//
+// POST /setMyDescription
+func (UnimplementedHandler) SetMyDescription(ctx context.Context, req OptSetMyDescription) (r *Result, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// SetMyShortDescription implements setMyShortDescription operation.
+//
+// Use this method to change the bot's short description, which is shown on the bot's profile page
+// and is sent together with the link when users share the bot. Returns _True_ on success.
+//
+// POST /setMyShortDescription
+func (UnimplementedHandler) SetMyShortDescription(ctx context.Context, req OptSetMyShortDescription) (r *Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -1011,6 +1068,37 @@ func (UnimplementedHandler) SetPassportDataErrors(ctx context.Context, req *SetP
 	return r, ht.ErrNotImplemented
 }
 
+// SetStickerEmojiList implements setStickerEmojiList operation.
+//
+// Use this method to change the list of emoji assigned to a regular or custom emoji sticker. The
+// sticker must belong to a sticker set created by the bot. Returns _True_ on success.
+//
+// POST /setStickerEmojiList
+func (UnimplementedHandler) SetStickerEmojiList(ctx context.Context, req *SetStickerEmojiList) (r *Result, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// SetStickerKeywords implements setStickerKeywords operation.
+//
+// Use this method to change search keywords assigned to a regular or custom emoji sticker. The
+// sticker must belong to a sticker set created by the bot. Returns _True_ on success.
+//
+// POST /setStickerKeywords
+func (UnimplementedHandler) SetStickerKeywords(ctx context.Context, req *SetStickerKeywords) (r *Result, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// SetStickerMaskPosition implements setStickerMaskPosition operation.
+//
+// Use this method to change the [mask position](https://core.telegram.org/bots/api#maskposition) of
+// a mask sticker. The sticker must belong to a sticker set that was created by the bot. Returns
+// _True_ on success.
+//
+// POST /setStickerMaskPosition
+func (UnimplementedHandler) SetStickerMaskPosition(ctx context.Context, req *SetStickerMaskPosition) (r *Result, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
 // SetStickerPositionInSet implements setStickerPositionInSet operation.
 //
 // Use this method to move a sticker in a set created by the bot to a specific position. Returns
@@ -1021,14 +1109,22 @@ func (UnimplementedHandler) SetStickerPositionInSet(ctx context.Context, req *Se
 	return r, ht.ErrNotImplemented
 }
 
-// SetStickerSetThumb implements setStickerSetThumb operation.
+// SetStickerSetThumbnail implements setStickerSetThumbnail operation.
 //
-// Use this method to set the thumbnail of a sticker set. Animated thumbnails can be set for animated
-// sticker sets only. Video thumbnails can be set only for video sticker sets only. Returns _True_ on
-// success.
+// Use this method to set the thumbnail of a regular or mask sticker set. The format of the thumbnail
+// file must match the format of the stickers in the set. Returns _True_ on success.
 //
-// POST /setStickerSetThumb
-func (UnimplementedHandler) SetStickerSetThumb(ctx context.Context, req *SetStickerSetThumb) (r *Result, _ error) {
+// POST /setStickerSetThumbnail
+func (UnimplementedHandler) SetStickerSetThumbnail(ctx context.Context, req *SetStickerSetThumbnail) (r *Result, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// SetStickerSetTitle implements setStickerSetTitle operation.
+//
+// Use this method to set the title of a created sticker set. Returns _True_ on success.
+//
+// POST /setStickerSetTitle
+func (UnimplementedHandler) SetStickerSetTitle(ctx context.Context, req *SetStickerSetTitle) (r *Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -1137,9 +1233,11 @@ func (UnimplementedHandler) UnpinChatMessage(ctx context.Context, req *UnpinChat
 
 // UploadStickerFile implements uploadStickerFile operation.
 //
-// Use this method to upload a .PNG file with a sticker for later use in _createNewStickerSet_ and
-// _addStickerToSet_ methods (can be used multiple times). Returns the uploaded [File](https://core.
-// telegram.org/bots/api#file) on success.
+// Use this method to upload a file with a sticker for later use in the
+// [createNewStickerSet](https://core.telegram.org/bots/api#createnewstickerset) and
+// [addStickerToSet](https://core.telegram.org/bots/api#addstickertoset) methods (the file can be
+// used multiple times). Returns the uploaded [File](https://core.telegram.org/bots/api#file) on
+// success.
 //
 // POST /uploadStickerFile
 func (UnimplementedHandler) UploadStickerFile(ctx context.Context, req *UploadStickerFile) (r *ResultFile, _ error) {

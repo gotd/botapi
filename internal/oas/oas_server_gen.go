@@ -10,10 +10,10 @@ import (
 type Handler interface {
 	// AddStickerToSet implements addStickerToSet operation.
 	//
-	// Use this method to add a new sticker to a set created by the bot. You **must** use exactly one of
-	// the fields _png_sticker_, _tgs_sticker_, or _webm_sticker_. Animated stickers can be added to
-	// animated sticker sets and only to them. Animated sticker sets can have up to 50 stickers. Static
-	// sticker sets can have up to 120 stickers. Returns _True_ on success.
+	// Use this method to add a new sticker to a set created by the bot. The format of the added sticker
+	// must match the format of the other stickers in the set. Emoji sticker sets can have up to 200
+	// stickers. Animated and video sticker sets can have up to 50 stickers. Static sticker sets can have
+	// up to 120 stickers. Returns _True_ on success.
 	//
 	// POST /addStickerToSet
 	AddStickerToSet(ctx context.Context, req *AddStickerToSet) (*Result, error)
@@ -152,8 +152,7 @@ type Handler interface {
 	// CreateNewStickerSet implements createNewStickerSet operation.
 	//
 	// Use this method to create a new sticker set owned by a user. The bot will be able to edit the
-	// sticker set thus created. You **must** use exactly one of the fields _png_sticker_, _tgs_sticker_,
-	// or _webm_sticker_. Returns _True_ on success.
+	// sticker set thus created. Returns _True_ on success.
 	//
 	// POST /createNewStickerSet
 	CreateNewStickerSet(ctx context.Context, req *CreateNewStickerSet) (*Result, error)
@@ -218,6 +217,12 @@ type Handler interface {
 	//
 	// POST /deleteStickerFromSet
 	DeleteStickerFromSet(ctx context.Context, req *DeleteStickerFromSet) (*Result, error)
+	// DeleteStickerSet implements deleteStickerSet operation.
+	//
+	// Use this method to delete a sticker set that was created by the bot. Returns _True_ on success.
+	//
+	// POST /deleteStickerSet
+	DeleteStickerSet(ctx context.Context, req *DeleteStickerSet) (*Result, error)
 	// DeleteWebhook implements deleteWebhook operation.
 	//
 	// Use this method to remove webhook integration if you decide to switch back to
@@ -327,8 +332,8 @@ type Handler interface {
 	GetChatAdministrators(ctx context.Context, req *GetChatAdministrators) (*ResultArrayOfChatMember, error)
 	// GetChatMember implements getChatMember operation.
 	//
-	// Use this method to get information about a member of a chat. The method is guaranteed to work for
-	// other users, only if the bot is an administrator in the chat. Returns a [ChatMember](https://core.
+	// Use this method to get information about a member of a chat. The method is only guaranteed to work
+	// for other users if the bot is an administrator in the chat. Returns a [ChatMember](https://core.
 	// telegram.org/bots/api#chatmember) object on success.
 	//
 	// POST /getChatMember
@@ -403,6 +408,20 @@ type Handler interface {
 	//
 	// POST /getMyDefaultAdministratorRights
 	GetMyDefaultAdministratorRights(ctx context.Context, req OptGetMyDefaultAdministratorRights) (*Result, error)
+	// GetMyDescription implements getMyDescription operation.
+	//
+	// Use this method to get the current bot description for the given user language. Returns
+	// [BotDescription](https://core.telegram.org/bots/api#botdescription) on success.
+	//
+	// POST /getMyDescription
+	GetMyDescription(ctx context.Context, req OptGetMyDescription) (*Result, error)
+	// GetMyShortDescription implements getMyShortDescription operation.
+	//
+	// Use this method to get the current bot short description for the given user language. Returns
+	// [BotShortDescription](https://core.telegram.org/bots/api#botshortdescription) on success.
+	//
+	// POST /getMyShortDescription
+	GetMyShortDescription(ctx context.Context, req OptGetMyShortDescription) (*Result, error)
 	// GetStickerSet implements getStickerSet operation.
 	//
 	// Use this method to get a sticker set. On success, a [StickerSet](https://core.telegram.
@@ -700,6 +719,12 @@ type Handler interface {
 	//
 	// POST /setChatTitle
 	SetChatTitle(ctx context.Context, req *SetChatTitle) (*Result, error)
+	// SetCustomEmojiStickerSetThumbnail implements setCustomEmojiStickerSetThumbnail operation.
+	//
+	// Use this method to set the thumbnail of a custom emoji sticker set. Returns _True_ on success.
+	//
+	// POST /setCustomEmojiStickerSetThumbnail
+	SetCustomEmojiStickerSetThumbnail(ctx context.Context, req *SetCustomEmojiStickerSetThumbnail) (*Result, error)
 	// SetGameScore implements setGameScore operation.
 	//
 	// Use this method to set the score of the specified user in a game message. On success, if the
@@ -719,11 +744,25 @@ type Handler interface {
 	// SetMyDefaultAdministratorRights implements setMyDefaultAdministratorRights operation.
 	//
 	// Use this method to change the default administrator rights requested by the bot when it's added as
-	// an administrator to groups or channels. These rights will be suggested to users, but they are are
-	// free to modify the list before adding the bot. Returns _True_ on success.
+	// an administrator to groups or channels. These rights will be suggested to users, but they are free
+	// to modify the list before adding the bot. Returns _True_ on success.
 	//
 	// POST /setMyDefaultAdministratorRights
 	SetMyDefaultAdministratorRights(ctx context.Context, req OptSetMyDefaultAdministratorRights) (*Result, error)
+	// SetMyDescription implements setMyDescription operation.
+	//
+	// Use this method to change the bot's description, which is shown in the chat with the bot if the
+	// chat is empty. Returns _True_ on success.
+	//
+	// POST /setMyDescription
+	SetMyDescription(ctx context.Context, req OptSetMyDescription) (*Result, error)
+	// SetMyShortDescription implements setMyShortDescription operation.
+	//
+	// Use this method to change the bot's short description, which is shown on the bot's profile page
+	// and is sent together with the link when users share the bot. Returns _True_ on success.
+	//
+	// POST /setMyShortDescription
+	SetMyShortDescription(ctx context.Context, req OptSetMyShortDescription) (*Result, error)
 	// SetPassportDataErrors implements setPassportDataErrors operation.
 	//
 	// Use this if the data submitted by the user doesn't satisfy the standards your service requires for
@@ -733,6 +772,28 @@ type Handler interface {
 	//
 	// POST /setPassportDataErrors
 	SetPassportDataErrors(ctx context.Context, req *SetPassportDataErrors) (*Result, error)
+	// SetStickerEmojiList implements setStickerEmojiList operation.
+	//
+	// Use this method to change the list of emoji assigned to a regular or custom emoji sticker. The
+	// sticker must belong to a sticker set created by the bot. Returns _True_ on success.
+	//
+	// POST /setStickerEmojiList
+	SetStickerEmojiList(ctx context.Context, req *SetStickerEmojiList) (*Result, error)
+	// SetStickerKeywords implements setStickerKeywords operation.
+	//
+	// Use this method to change search keywords assigned to a regular or custom emoji sticker. The
+	// sticker must belong to a sticker set created by the bot. Returns _True_ on success.
+	//
+	// POST /setStickerKeywords
+	SetStickerKeywords(ctx context.Context, req *SetStickerKeywords) (*Result, error)
+	// SetStickerMaskPosition implements setStickerMaskPosition operation.
+	//
+	// Use this method to change the [mask position](https://core.telegram.org/bots/api#maskposition) of
+	// a mask sticker. The sticker must belong to a sticker set that was created by the bot. Returns
+	// _True_ on success.
+	//
+	// POST /setStickerMaskPosition
+	SetStickerMaskPosition(ctx context.Context, req *SetStickerMaskPosition) (*Result, error)
 	// SetStickerPositionInSet implements setStickerPositionInSet operation.
 	//
 	// Use this method to move a sticker in a set created by the bot to a specific position. Returns
@@ -740,14 +801,19 @@ type Handler interface {
 	//
 	// POST /setStickerPositionInSet
 	SetStickerPositionInSet(ctx context.Context, req *SetStickerPositionInSet) (*Result, error)
-	// SetStickerSetThumb implements setStickerSetThumb operation.
+	// SetStickerSetThumbnail implements setStickerSetThumbnail operation.
 	//
-	// Use this method to set the thumbnail of a sticker set. Animated thumbnails can be set for animated
-	// sticker sets only. Video thumbnails can be set only for video sticker sets only. Returns _True_ on
-	// success.
+	// Use this method to set the thumbnail of a regular or mask sticker set. The format of the thumbnail
+	// file must match the format of the stickers in the set. Returns _True_ on success.
 	//
-	// POST /setStickerSetThumb
-	SetStickerSetThumb(ctx context.Context, req *SetStickerSetThumb) (*Result, error)
+	// POST /setStickerSetThumbnail
+	SetStickerSetThumbnail(ctx context.Context, req *SetStickerSetThumbnail) (*Result, error)
+	// SetStickerSetTitle implements setStickerSetTitle operation.
+	//
+	// Use this method to set the title of a created sticker set. Returns _True_ on success.
+	//
+	// POST /setStickerSetTitle
+	SetStickerSetTitle(ctx context.Context, req *SetStickerSetTitle) (*Result, error)
 	// SetWebhook implements setWebhook operation.
 	//
 	// If you'd like to make sure that the webhook was set by you, you can specify secret data in the
@@ -826,9 +892,11 @@ type Handler interface {
 	UnpinChatMessage(ctx context.Context, req *UnpinChatMessage) (*Result, error)
 	// UploadStickerFile implements uploadStickerFile operation.
 	//
-	// Use this method to upload a .PNG file with a sticker for later use in _createNewStickerSet_ and
-	// _addStickerToSet_ methods (can be used multiple times). Returns the uploaded [File](https://core.
-	// telegram.org/bots/api#file) on success.
+	// Use this method to upload a file with a sticker for later use in the
+	// [createNewStickerSet](https://core.telegram.org/bots/api#createnewstickerset) and
+	// [addStickerToSet](https://core.telegram.org/bots/api#addstickertoset) methods (the file can be
+	// used multiple times). Returns the uploaded [File](https://core.telegram.org/bots/api#file) on
+	// success.
 	//
 	// POST /uploadStickerFile
 	UploadStickerFile(ctx context.Context, req *UploadStickerFile) (*ResultFile, error)
