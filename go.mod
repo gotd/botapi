@@ -8,7 +8,7 @@ require (
 	github.com/go-faster/errors v0.6.1
 	github.com/go-faster/jx v1.0.0
 	github.com/gotd/td v0.79.0
-	github.com/ogen-go/ogen v0.60.1
+	github.com/ogen-go/ogen v0.60.2
 	github.com/stretchr/testify v1.8.2
 	go.etcd.io/bbolt v1.3.7
 	go.opentelemetry.io/otel v1.14.0
@@ -28,7 +28,7 @@ require (
 	github.com/fatih/color v1.15.0 // indirect
 	github.com/ghodss/yaml v1.0.0 // indirect
 	github.com/go-faster/xor v0.3.0 // indirect
-	github.com/go-faster/yamlx v0.4.1 // indirect
+	github.com/go-faster/yamlx v0.4.2 // indirect
 	github.com/go-logr/logr v1.2.3 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-playground/validator/v10 v10.4.1 // indirect
