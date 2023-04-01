@@ -5753,7 +5753,7 @@ type GetUpdates struct {
 	// unconfirmed update are returned. An update is considered confirmed as soon as
 	// [getUpdates](https://core.telegram.org/bots/api#getupdates) is called with an _offset_ higher than
 	// its _update_id_. The negative offset can be specified to retrieve updates starting from _-offset_
-	// update from the end of the updates queue. All previous updates will forgotten.
+	// update from the end of the updates queue. All previous updates will be forgotten.
 	Offset OptInt `json:"offset"`
 	// Limits the number of updates to be retrieved. Values between 1-100 are accepted. Defaults to 100.
 	Limit OptInt `json:"limit"`
