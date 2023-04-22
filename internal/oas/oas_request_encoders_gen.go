@@ -691,6 +691,26 @@ func encodeGetMyDescriptionRequest(
 	return nil
 }
 
+func encodeGetMyNameRequest(
+	req OptGetMyName,
+	r *http.Request,
+) error {
+	const contentType = "application/json"
+	if !req.Set {
+		// Keep request with empty body if value is not set.
+		return nil
+	}
+	e := jx.GetEncoder()
+	{
+		if req.Set {
+			req.Encode(e)
+		}
+	}
+	encoded := e.Bytes()
+	ht.SetBody(r, bytes.NewReader(encoded), contentType)
+	return nil
+}
+
 func encodeGetMyShortDescriptionRequest(
 	req OptGetMyShortDescription,
 	r *http.Request,
@@ -1291,6 +1311,26 @@ func encodeSetMyDefaultAdministratorRightsRequest(
 
 func encodeSetMyDescriptionRequest(
 	req OptSetMyDescription,
+	r *http.Request,
+) error {
+	const contentType = "application/json"
+	if !req.Set {
+		// Keep request with empty body if value is not set.
+		return nil
+	}
+	e := jx.GetEncoder()
+	{
+		if req.Set {
+			req.Encode(e)
+		}
+	}
+	encoded := e.Bytes()
+	ht.SetBody(r, bytes.NewReader(encoded), contentType)
+	return nil
+}
+
+func encodeSetMyNameRequest(
+	req OptSetMyName,
 	r *http.Request,
 ) error {
 	const contentType = "application/json"

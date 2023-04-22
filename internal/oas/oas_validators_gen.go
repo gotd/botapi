@@ -177,18 +177,10 @@ func (s *AnswerInlineQuery) Validate() error {
 		})
 	}
 	if err := func() error {
-		if s.SwitchPmParameter.Set {
+		if s.Button.Set {
 			if err := func() error {
-				if err := (validate.String{
-					MinLength:    1,
-					MinLengthSet: true,
-					MaxLength:    64,
-					MaxLengthSet: true,
-					Email:        false,
-					Hostname:     false,
-					Regex:        nil,
-				}).Validate(string(s.SwitchPmParameter.Value)); err != nil {
-					return errors.Wrap(err, "string")
+				if err := s.Button.Value.Validate(); err != nil {
+					return err
 				}
 				return nil
 			}(); err != nil {
@@ -198,7 +190,7 @@ func (s *AnswerInlineQuery) Validate() error {
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
-			Name:  "switch_pm_parameter",
+			Name:  "button",
 			Error: err,
 		})
 	}
@@ -4609,6 +4601,39 @@ func (s *InlineQueryResultVoice) Validate() error {
 	}
 	return nil
 }
+func (s *InlineQueryResultsButton) Validate() error {
+	var failures []validate.FieldError
+	if err := func() error {
+		if s.StartParameter.Set {
+			if err := func() error {
+				if err := (validate.String{
+					MinLength:    1,
+					MinLengthSet: true,
+					MaxLength:    64,
+					MaxLengthSet: true,
+					Email:        false,
+					Hostname:     false,
+					Regex:        nil,
+				}).Validate(string(s.StartParameter.Value)); err != nil {
+					return errors.Wrap(err, "string")
+				}
+				return nil
+			}(); err != nil {
+				return err
+			}
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "start_parameter",
+			Error: err,
+		})
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+	return nil
+}
 func (s *InputContactMessageContent) Validate() error {
 	var failures []validate.FieldError
 	if err := func() error {
@@ -8622,6 +8647,39 @@ func (s *SetMyDescription) Validate() error {
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
 			Name:  "description",
+			Error: err,
+		})
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+	return nil
+}
+func (s *SetMyName) Validate() error {
+	var failures []validate.FieldError
+	if err := func() error {
+		if s.Name.Set {
+			if err := func() error {
+				if err := (validate.String{
+					MinLength:    0,
+					MinLengthSet: false,
+					MaxLength:    64,
+					MaxLengthSet: true,
+					Email:        false,
+					Hostname:     false,
+					Regex:        nil,
+				}).Validate(string(s.Name.Value)); err != nil {
+					return errors.Wrap(err, "string")
+				}
+				return nil
+			}(); err != nil {
+				return err
+			}
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "name",
 			Error: err,
 		})
 	}

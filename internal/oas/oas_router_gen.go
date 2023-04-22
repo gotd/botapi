@@ -1176,6 +1176,24 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 									return
 								}
 							}
+						case 'N': // Prefix: "Name"
+							if l := len("Name"); len(elem) >= l && elem[0:l] == "Name" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							if len(elem) == 0 {
+								// Leaf node.
+								switch r.Method {
+								case "POST":
+									s.handleGetMyNameRequest([0]string{}, elemIsEscaped, w, r)
+								default:
+									s.notAllowed(w, r, "POST")
+								}
+
+								return
+							}
 						case 'S': // Prefix: "ShortDescription"
 							if l := len("ShortDescription"); len(elem) >= l && elem[0:l] == "ShortDescription" {
 								elem = elem[l:]
@@ -2207,6 +2225,24 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 										return
 									}
+								}
+							case 'N': // Prefix: "Name"
+								if l := len("Name"); len(elem) >= l && elem[0:l] == "Name" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									// Leaf node.
+									switch r.Method {
+									case "POST":
+										s.handleSetMyNameRequest([0]string{}, elemIsEscaped, w, r)
+									default:
+										s.notAllowed(w, r, "POST")
+									}
+
+									return
 								}
 							case 'S': // Prefix: "ShortDescription"
 								if l := len("ShortDescription"); len(elem) >= l && elem[0:l] == "ShortDescription" {
@@ -3982,6 +4018,27 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									}
 								}
 							}
+						case 'N': // Prefix: "Name"
+							if l := len("Name"); len(elem) >= l && elem[0:l] == "Name" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							if len(elem) == 0 {
+								switch method {
+								case "POST":
+									// Leaf: GetMyName
+									r.name = "GetMyName"
+									r.operationID = "getMyName"
+									r.pathPattern = "/getMyName"
+									r.args = args
+									r.count = 0
+									return r, true
+								default:
+									return
+								}
+							}
 						case 'S': // Prefix: "ShortDescription"
 							if l := len("ShortDescription"); len(elem) >= l && elem[0:l] == "ShortDescription" {
 								elem = elem[l:]
@@ -5144,6 +5201,27 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 										default:
 											return
 										}
+									}
+								}
+							case 'N': // Prefix: "Name"
+								if l := len("Name"); len(elem) >= l && elem[0:l] == "Name" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									switch method {
+									case "POST":
+										// Leaf: SetMyName
+										r.name = "SetMyName"
+										r.operationID = "setMyName"
+										r.pathPattern = "/setMyName"
+										r.args = args
+										r.count = 0
+										return r, true
+									default:
+										return
 									}
 								}
 							case 'S': // Prefix: "ShortDescription"

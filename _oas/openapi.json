@@ -4,7 +4,7 @@
     "title": "Telegram Bot API",
     "description": "API for Telegram bots",
     "termsOfService": "https://telegram.org/tos",
-    "version": "6.6"
+    "version": "6.7"
   },
   "servers": [
     {
@@ -1316,6 +1316,32 @@
         }
       }
     },
+    "/getMyName": {
+      "post": {
+        "description": "Use this method to get the current bot name for the given user language. Returns [BotName](https://core.telegram.org/bots/api#botname) on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#getmyname"
+        },
+        "operationId": "getMyName",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/getMyName"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Result"
+          },
+          "default": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
     "/getMyShortDescription": {
       "post": {
         "description": "Use this method to get the current bot short description for the given user language. Returns [BotShortDescription](https://core.telegram.org/bots/api#botshortdescription) on success.",
@@ -2479,6 +2505,32 @@
         }
       }
     },
+    "/setMyName": {
+      "post": {
+        "description": "Use this method to change the bot's name. Returns _True_ on success.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#setmyname"
+        },
+        "operationId": "setMyName",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/setMyName"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Result"
+          },
+          "default": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
     "/setMyShortDescription": {
       "post": {
         "description": "Use this method to change the bot's short description, which is shown on the bot's profile page and is sent together with the link when users share the bot. Returns _True_ on success.",
@@ -3294,6 +3346,22 @@
           "description"
         ]
       },
+      "BotName": {
+        "description": "This object represents the bot's name.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#botname"
+        },
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "The bot's name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
       "BotShortDescription": {
         "description": "This object represents the bot's short description.",
         "externalDocs": {
@@ -4004,6 +4072,10 @@
           },
           "invite_link": {
             "$ref": "#/components/schemas/ChatInviteLink"
+          },
+          "via_chat_folder_invite_link": {
+            "description": "_Optional_. True, if the user joined the chat via a chat folder invite link",
+            "type": "boolean"
           }
         },
         "required": [
@@ -4644,6 +4716,9 @@
           "switch_inline_query_current_chat": {
             "description": "_Optional_. If set, pressing the button will insert the bot's username and the specified inline query in the current chat's input field. May be empty, in which case only the bot's username will be inserted.This offers a quick way for the user to open your bot in inline mode in the same chat - good for selecting something from multiple options",
             "type": "string"
+          },
+          "switch_inline_query_chosen_chat": {
+            "$ref": "#/components/schemas/SwitchInlineQueryChosenChat"
           },
           "callback_game": {
             "$ref": "#/components/schemas/CallbackGame"
@@ -6093,6 +6168,31 @@
           "id",
           "voice_url",
           "title"
+        ]
+      },
+      "InlineQueryResultsButton": {
+        "description": "This object represents a button to be shown above inline query results. You **must** use exactly one of the optional fields.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#inlinequeryresultsbutton"
+        },
+        "type": "object",
+        "properties": {
+          "text": {
+            "description": "Label text on the button",
+            "type": "string"
+          },
+          "web_app": {
+            "$ref": "#/components/schemas/WebAppInfo"
+          },
+          "start_parameter": {
+            "description": "_Optional_. [Deep-linking](https://core.telegram.org/bots/features#deep-linking) parameter for the /start message sent to the bot when a user presses the button. 1-64 characters, only `A-Z`, `a-z`, `0-9`, `_` and `-` are allowed._Example:_ An inline bot that sends YouTube videos can ask the user to connect the bot to their YouTube account to adapt search results accordingly. To do this, it displays a 'Connect your YouTube account' button above the results, or even before showing any. The user presses the button, switches to a private chat with the bot and, in doing so, passes a start parameter that instructs the bot to return an OAuth link. Once done, the bot can offer a [_switch_inline_](https://core.telegram.org/bots/api#inlinekeyboardmarkup) button so that the user can easily return to the chat where they wanted to use the bot's inline capabilities",
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
+          }
+        },
+        "required": [
+          "text"
         ]
       },
       "InputContactMessageContent": {
@@ -8982,6 +9082,35 @@
           "provider_payment_charge_id"
         ]
       },
+      "SwitchInlineQueryChosenChat": {
+        "description": "This object represents an inline button that switches the current user to inline mode in a chosen chat, with an optional default inline query.",
+        "externalDocs": {
+          "url": "https://core.telegram.org/bots/api#switchinlinequerychosenchat"
+        },
+        "type": "object",
+        "properties": {
+          "query": {
+            "description": "_Optional_. The default inline query to be inserted in the input field. If left empty, only the bot's username will be inserted",
+            "type": "string"
+          },
+          "allow_user_chats": {
+            "description": "_Optional_. True, if private chats with users can be chosen",
+            "type": "boolean"
+          },
+          "allow_bot_chats": {
+            "description": "_Optional_. True, if private chats with bots can be chosen",
+            "type": "boolean"
+          },
+          "allow_group_chats": {
+            "description": "_Optional_. True, if group and supergroup chats can be chosen",
+            "type": "boolean"
+          },
+          "allow_channel_chats": {
+            "description": "_Optional_. True, if channel chats can be chosen",
+            "type": "boolean"
+          }
+        }
+      },
       "Update": {
         "description": "This [object](https://core.telegram.org/bots/api#available-types) represents an incoming update.At most **one** of the optional parameters can be present in any given update.",
         "externalDocs": {
@@ -9473,11 +9602,17 @@
         ]
       },
       "WriteAccessAllowed": {
-        "description": "This object represents a service message about a user allowing a bot added to the attachment menu to write messages. Currently holds no information.",
+        "description": "This object represents a service message about a user allowing a bot to write messages after adding the bot to the attachment menu or launching a Web App from a link.",
         "externalDocs": {
           "url": "https://core.telegram.org/bots/api#writeaccessallowed"
         },
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "web_app_name": {
+            "description": "_Optional_. Name of the Web App which was launched from a link",
+            "type": "string"
+          }
+        }
       },
       "addStickerToSet": {
         "description": "Input for addStickerToSet",
@@ -9559,15 +9694,8 @@
             "description": "Pass the offset that a client should send in the next query with the same text to receive more results. Pass an empty string if there are no more results or if you don't support pagination. Offset length can't exceed 64 bytes",
             "type": "string"
           },
-          "switch_pm_text": {
-            "description": "If passed, clients will display a button with specified text that switches the user to a private chat with the bot and sends the bot a start message with the parameter _switch_pm_parameter_",
-            "type": "string"
-          },
-          "switch_pm_parameter": {
-            "description": "[Deep-linking](https://core.telegram.org/bots/features#deep-linking) parameter for the /start message sent to the bot when user presses the switch button. 1-64 characters, only `A-Z`, `a-z`, `0-9`, `_` and `-` are allowed._Example:_ An inline bot that sends YouTube videos can ask the user to connect the bot to their YouTube account to adapt search results accordingly. To do this, it displays a 'Connect your YouTube account' button above the results, or even before showing any. The user presses the button, switches to a private chat with the bot and, in doing so, passes a start parameter that instructs the bot to return an OAuth link. Once done, the bot can offer a [_switch_inline_](https://core.telegram.org/bots/api#inlinekeyboardmarkup) button so that the user can easily return to the chat where they wanted to use the bot's inline capabilities",
-            "type": "string",
-            "maxLength": 64,
-            "minLength": 1
+          "button": {
+            "$ref": "#/components/schemas/InlineQueryResultsButton"
           }
         },
         "required": [
@@ -10582,6 +10710,16 @@
       },
       "getMyDescription": {
         "description": "Input for getMyDescription",
+        "type": "object",
+        "properties": {
+          "language_code": {
+            "description": "A two-letter ISO 639-1 language code or an empty string",
+            "type": "string"
+          }
+        }
+      },
+      "getMyName": {
+        "description": "Input for getMyName",
         "type": "object",
         "properties": {
           "language_code": {
@@ -12260,6 +12398,21 @@
           },
           "language_code": {
             "description": "A two-letter ISO 639-1 language code. If empty, the description will be applied to all users for whose language there is no dedicated description",
+            "type": "string"
+          }
+        }
+      },
+      "setMyName": {
+        "description": "Input for setMyName",
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "New bot name; 0-64 characters. Pass an empty string to remove the dedicated name for the given language",
+            "type": "string",
+            "maxLength": 64
+          },
+          "language_code": {
+            "description": "A two-letter ISO 639-1 language code. If empty, the name will be shown to all users for whose language there is no dedicated name",
             "type": "string"
           }
         }
