@@ -415,6 +415,13 @@ type Handler interface {
 	//
 	// POST /getMyDescription
 	GetMyDescription(ctx context.Context, req OptGetMyDescription) (*Result, error)
+	// GetMyName implements getMyName operation.
+	//
+	// Use this method to get the current bot name for the given user language. Returns
+	// [BotName](https://core.telegram.org/bots/api#botname) on success.
+	//
+	// POST /getMyName
+	GetMyName(ctx context.Context, req OptGetMyName) (*Result, error)
 	// GetMyShortDescription implements getMyShortDescription operation.
 	//
 	// Use this method to get the current bot short description for the given user language. Returns
@@ -756,6 +763,12 @@ type Handler interface {
 	//
 	// POST /setMyDescription
 	SetMyDescription(ctx context.Context, req OptSetMyDescription) (*Result, error)
+	// SetMyName implements setMyName operation.
+	//
+	// Use this method to change the bot's name. Returns _True_ on success.
+	//
+	// POST /setMyName
+	SetMyName(ctx context.Context, req OptSetMyName) (*Result, error)
 	// SetMyShortDescription implements setMyShortDescription operation.
 	//
 	// Use this method to change the bot's short description, which is shown on the bot's profile page

@@ -577,27 +577,20 @@ func (s *AnswerInlineQuery) encodeFields(e *jx.Encoder) {
 		}
 	}
 	{
-		if s.SwitchPmText.Set {
-			e.FieldStart("switch_pm_text")
-			s.SwitchPmText.Encode(e)
-		}
-	}
-	{
-		if s.SwitchPmParameter.Set {
-			e.FieldStart("switch_pm_parameter")
-			s.SwitchPmParameter.Encode(e)
+		if s.Button.Set {
+			e.FieldStart("button")
+			s.Button.Encode(e)
 		}
 	}
 }
 
-var jsonFieldsNameOfAnswerInlineQuery = [7]string{
+var jsonFieldsNameOfAnswerInlineQuery = [6]string{
 	0: "inline_query_id",
 	1: "results",
 	2: "cache_time",
 	3: "is_personal",
 	4: "next_offset",
-	5: "switch_pm_text",
-	6: "switch_pm_parameter",
+	5: "button",
 }
 
 // Decode decodes AnswerInlineQuery from json.
@@ -669,25 +662,15 @@ func (s *AnswerInlineQuery) Decode(d *jx.Decoder) error {
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"next_offset\"")
 			}
-		case "switch_pm_text":
+		case "button":
 			if err := func() error {
-				s.SwitchPmText.Reset()
-				if err := s.SwitchPmText.Decode(d); err != nil {
+				s.Button.Reset()
+				if err := s.Button.Decode(d); err != nil {
 					return err
 				}
 				return nil
 			}(); err != nil {
-				return errors.Wrap(err, "decode field \"switch_pm_text\"")
-			}
-		case "switch_pm_parameter":
-			if err := func() error {
-				s.SwitchPmParameter.Reset()
-				if err := s.SwitchPmParameter.Decode(d); err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"switch_pm_parameter\"")
+				return errors.Wrap(err, "decode field \"button\"")
 			}
 		default:
 			return d.Skip()
@@ -5526,15 +5509,22 @@ func (s *ChatMemberUpdated) encodeFields(e *jx.Encoder) {
 			s.InviteLink.Encode(e)
 		}
 	}
+	{
+		if s.ViaChatFolderInviteLink.Set {
+			e.FieldStart("via_chat_folder_invite_link")
+			s.ViaChatFolderInviteLink.Encode(e)
+		}
+	}
 }
 
-var jsonFieldsNameOfChatMemberUpdated = [6]string{
+var jsonFieldsNameOfChatMemberUpdated = [7]string{
 	0: "chat",
 	1: "from",
 	2: "date",
 	3: "old_chat_member",
 	4: "new_chat_member",
 	5: "invite_link",
+	6: "via_chat_folder_invite_link",
 }
 
 // Decode decodes ChatMemberUpdated from json.
@@ -5607,6 +5597,16 @@ func (s *ChatMemberUpdated) Decode(d *jx.Decoder) error {
 				return nil
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"invite_link\"")
+			}
+		case "via_chat_folder_invite_link":
+			if err := func() error {
+				s.ViaChatFolderInviteLink.Reset()
+				if err := s.ViaChatFolderInviteLink.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"via_chat_folder_invite_link\"")
 			}
 		default:
 			return d.Skip()
@@ -13421,6 +13421,69 @@ func (s *GetMyDescription) UnmarshalJSON(data []byte) error {
 }
 
 // Encode implements json.Marshaler.
+func (s *GetMyName) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	s.encodeFields(e)
+	e.ObjEnd()
+}
+
+// encodeFields encodes fields.
+func (s *GetMyName) encodeFields(e *jx.Encoder) {
+	{
+		if s.LanguageCode.Set {
+			e.FieldStart("language_code")
+			s.LanguageCode.Encode(e)
+		}
+	}
+}
+
+var jsonFieldsNameOfGetMyName = [1]string{
+	0: "language_code",
+}
+
+// Decode decodes GetMyName from json.
+func (s *GetMyName) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode GetMyName to nil")
+	}
+
+	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "language_code":
+			if err := func() error {
+				s.LanguageCode.Reset()
+				if err := s.LanguageCode.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"language_code\"")
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	}); err != nil {
+		return errors.Wrap(err, "decode GetMyName")
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *GetMyName) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *GetMyName) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode implements json.Marshaler.
 func (s *GetMyShortDescription) Encode(e *jx.Encoder) {
 	e.ObjStart()
 	s.encodeFields(e)
@@ -14032,6 +14095,12 @@ func (s *InlineKeyboardButton) encodeFields(e *jx.Encoder) {
 		}
 	}
 	{
+		if s.SwitchInlineQueryChosenChat.Set {
+			e.FieldStart("switch_inline_query_chosen_chat")
+			s.SwitchInlineQueryChosenChat.Encode(e)
+		}
+	}
+	{
 		if s.CallbackGame != nil {
 			e.FieldStart("callback_game")
 			s.CallbackGame.Encode(e)
@@ -14045,7 +14114,7 @@ func (s *InlineKeyboardButton) encodeFields(e *jx.Encoder) {
 	}
 }
 
-var jsonFieldsNameOfInlineKeyboardButton = [9]string{
+var jsonFieldsNameOfInlineKeyboardButton = [10]string{
 	0: "text",
 	1: "url",
 	2: "callback_data",
@@ -14053,8 +14122,9 @@ var jsonFieldsNameOfInlineKeyboardButton = [9]string{
 	4: "login_url",
 	5: "switch_inline_query",
 	6: "switch_inline_query_current_chat",
-	7: "callback_game",
-	8: "pay",
+	7: "switch_inline_query_chosen_chat",
+	8: "callback_game",
+	9: "pay",
 }
 
 // Decode decodes InlineKeyboardButton from json.
@@ -14137,6 +14207,16 @@ func (s *InlineKeyboardButton) Decode(d *jx.Decoder) error {
 				return nil
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"switch_inline_query_current_chat\"")
+			}
+		case "switch_inline_query_chosen_chat":
+			if err := func() error {
+				s.SwitchInlineQueryChosenChat.Reset()
+				if err := s.SwitchInlineQueryChosenChat.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"switch_inline_query_chosen_chat\"")
 			}
 		case "callback_game":
 			if err := func() error {
@@ -20027,6 +20107,136 @@ func (s *InlineQueryResultVoice) UnmarshalJSON(data []byte) error {
 }
 
 // Encode implements json.Marshaler.
+func (s *InlineQueryResultsButton) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	s.encodeFields(e)
+	e.ObjEnd()
+}
+
+// encodeFields encodes fields.
+func (s *InlineQueryResultsButton) encodeFields(e *jx.Encoder) {
+	{
+		e.FieldStart("text")
+		e.Str(s.Text)
+	}
+	{
+		if s.WebApp.Set {
+			e.FieldStart("web_app")
+			s.WebApp.Encode(e)
+		}
+	}
+	{
+		if s.StartParameter.Set {
+			e.FieldStart("start_parameter")
+			s.StartParameter.Encode(e)
+		}
+	}
+}
+
+var jsonFieldsNameOfInlineQueryResultsButton = [3]string{
+	0: "text",
+	1: "web_app",
+	2: "start_parameter",
+}
+
+// Decode decodes InlineQueryResultsButton from json.
+func (s *InlineQueryResultsButton) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode InlineQueryResultsButton to nil")
+	}
+	var requiredBitSet [1]uint8
+
+	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "text":
+			requiredBitSet[0] |= 1 << 0
+			if err := func() error {
+				v, err := d.Str()
+				s.Text = string(v)
+				if err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"text\"")
+			}
+		case "web_app":
+			if err := func() error {
+				s.WebApp.Reset()
+				if err := s.WebApp.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"web_app\"")
+			}
+		case "start_parameter":
+			if err := func() error {
+				s.StartParameter.Reset()
+				if err := s.StartParameter.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"start_parameter\"")
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	}); err != nil {
+		return errors.Wrap(err, "decode InlineQueryResultsButton")
+	}
+	// Validate required fields.
+	var failures []validate.FieldError
+	for i, mask := range [1]uint8{
+		0b00000001,
+	} {
+		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
+			// Mask only required fields and check equality to mask using XOR.
+			//
+			// If XOR result is not zero, result is not equal to expected, so some fields are missed.
+			// Bits of fields which would be set are actually bits of missed fields.
+			missed := bits.OnesCount8(result)
+			for bitN := 0; bitN < missed; bitN++ {
+				bitIdx := bits.TrailingZeros8(result)
+				fieldIdx := i*8 + bitIdx
+				var name string
+				if fieldIdx < len(jsonFieldsNameOfInlineQueryResultsButton) {
+					name = jsonFieldsNameOfInlineQueryResultsButton[fieldIdx]
+				} else {
+					name = strconv.Itoa(fieldIdx)
+				}
+				failures = append(failures, validate.FieldError{
+					Name:  name,
+					Error: validate.ErrFieldRequired,
+				})
+				// Reset bit.
+				result &^= 1 << bitIdx
+			}
+		}
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *InlineQueryResultsButton) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *InlineQueryResultsButton) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode implements json.Marshaler.
 func (s *InputContactMessageContent) Encode(e *jx.Encoder) {
 	e.ObjStart()
 	s.encodeFields(e)
@@ -25097,7 +25307,7 @@ func (s *Message) encodeFields(e *jx.Encoder) {
 		}
 	}
 	{
-		if s.WriteAccessAllowed != nil {
+		if s.WriteAccessAllowed.Set {
 			e.FieldStart("write_access_allowed")
 			s.WriteAccessAllowed.Encode(e)
 		}
@@ -25897,12 +26107,10 @@ func (s *Message) Decode(d *jx.Decoder) error {
 			}
 		case "write_access_allowed":
 			if err := func() error {
-				s.WriteAccessAllowed = nil
-				var elem WriteAccessAllowed
-				if err := elem.Decode(d); err != nil {
+				s.WriteAccessAllowed.Reset()
+				if err := s.WriteAccessAllowed.Decode(d); err != nil {
 					return err
 				}
-				s.WriteAccessAllowed = &elem
 				return nil
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"write_access_allowed\"")
@@ -27605,6 +27813,39 @@ func (s *OptGetMyDescription) UnmarshalJSON(data []byte) error {
 	return s.Decode(d)
 }
 
+// Encode encodes GetMyName as json.
+func (o OptGetMyName) Encode(e *jx.Encoder) {
+	if !o.Set {
+		return
+	}
+	o.Value.Encode(e)
+}
+
+// Decode decodes GetMyName from json.
+func (o *OptGetMyName) Decode(d *jx.Decoder) error {
+	if o == nil {
+		return errors.New("invalid: unable to decode OptGetMyName to nil")
+	}
+	o.Set = true
+	if err := o.Value.Decode(d); err != nil {
+		return err
+	}
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s OptGetMyName) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *OptGetMyName) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
 // Encode encodes GetMyShortDescription as json.
 func (o OptGetMyShortDescription) Encode(e *jx.Encoder) {
 	if !o.Set {
@@ -27799,6 +28040,39 @@ func (s OptInlineQueryChatType) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
 func (s *OptInlineQueryChatType) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes InlineQueryResultsButton as json.
+func (o OptInlineQueryResultsButton) Encode(e *jx.Encoder) {
+	if !o.Set {
+		return
+	}
+	o.Value.Encode(e)
+}
+
+// Decode decodes InlineQueryResultsButton from json.
+func (o *OptInlineQueryResultsButton) Decode(d *jx.Decoder) error {
+	if o == nil {
+		return errors.New("invalid: unable to decode OptInlineQueryResultsButton to nil")
+	}
+	o.Set = true
+	if err := o.Value.Decode(d); err != nil {
+		return err
+	}
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s OptInlineQueryResultsButton) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *OptInlineQueryResultsButton) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
@@ -28731,6 +29005,39 @@ func (s *OptSetMyDescription) UnmarshalJSON(data []byte) error {
 	return s.Decode(d)
 }
 
+// Encode encodes SetMyName as json.
+func (o OptSetMyName) Encode(e *jx.Encoder) {
+	if !o.Set {
+		return
+	}
+	o.Value.Encode(e)
+}
+
+// Decode decodes SetMyName from json.
+func (o *OptSetMyName) Decode(d *jx.Decoder) error {
+	if o == nil {
+		return errors.New("invalid: unable to decode OptSetMyName to nil")
+	}
+	o.Set = true
+	if err := o.Value.Decode(d); err != nil {
+		return err
+	}
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s OptSetMyName) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *OptSetMyName) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
 // Encode encodes SetMyShortDescription as json.
 func (o OptSetMyShortDescription) Encode(e *jx.Encoder) {
 	if !o.Set {
@@ -28960,6 +29267,39 @@ func (s OptSuccessfulPayment) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
 func (s *OptSuccessfulPayment) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes SwitchInlineQueryChosenChat as json.
+func (o OptSwitchInlineQueryChosenChat) Encode(e *jx.Encoder) {
+	if !o.Set {
+		return
+	}
+	o.Value.Encode(e)
+}
+
+// Decode decodes SwitchInlineQueryChosenChat from json.
+func (o *OptSwitchInlineQueryChosenChat) Decode(d *jx.Decoder) error {
+	if o == nil {
+		return errors.New("invalid: unable to decode OptSwitchInlineQueryChosenChat to nil")
+	}
+	o.Set = true
+	if err := o.Value.Decode(d); err != nil {
+		return err
+	}
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s OptSwitchInlineQueryChosenChat) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *OptSwitchInlineQueryChosenChat) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
@@ -29389,6 +29729,39 @@ func (s OptWebhookInfo) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
 func (s *OptWebhookInfo) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes WriteAccessAllowed as json.
+func (o OptWriteAccessAllowed) Encode(e *jx.Encoder) {
+	if !o.Set {
+		return
+	}
+	o.Value.Encode(e)
+}
+
+// Decode decodes WriteAccessAllowed from json.
+func (o *OptWriteAccessAllowed) Decode(d *jx.Decoder) error {
+	if o == nil {
+		return errors.New("invalid: unable to decode OptWriteAccessAllowed to nil")
+	}
+	o.Set = true
+	if err := o.Value.Decode(d); err != nil {
+		return err
+	}
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s OptWriteAccessAllowed) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *OptWriteAccessAllowed) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
@@ -43145,6 +43518,86 @@ func (s *SetMyDescription) UnmarshalJSON(data []byte) error {
 }
 
 // Encode implements json.Marshaler.
+func (s *SetMyName) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	s.encodeFields(e)
+	e.ObjEnd()
+}
+
+// encodeFields encodes fields.
+func (s *SetMyName) encodeFields(e *jx.Encoder) {
+	{
+		if s.Name.Set {
+			e.FieldStart("name")
+			s.Name.Encode(e)
+		}
+	}
+	{
+		if s.LanguageCode.Set {
+			e.FieldStart("language_code")
+			s.LanguageCode.Encode(e)
+		}
+	}
+}
+
+var jsonFieldsNameOfSetMyName = [2]string{
+	0: "name",
+	1: "language_code",
+}
+
+// Decode decodes SetMyName from json.
+func (s *SetMyName) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode SetMyName to nil")
+	}
+
+	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "name":
+			if err := func() error {
+				s.Name.Reset()
+				if err := s.Name.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"name\"")
+			}
+		case "language_code":
+			if err := func() error {
+				s.LanguageCode.Reset()
+				if err := s.LanguageCode.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"language_code\"")
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	}); err != nil {
+		return errors.Wrap(err, "decode SetMyName")
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *SetMyName) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *SetMyName) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode implements json.Marshaler.
 func (s *SetMyShortDescription) Encode(e *jx.Encoder) {
 	e.ObjStart()
 	s.encodeFields(e)
@@ -45761,6 +46214,137 @@ func (s *SuccessfulPayment) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
 func (s *SuccessfulPayment) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode implements json.Marshaler.
+func (s *SwitchInlineQueryChosenChat) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	s.encodeFields(e)
+	e.ObjEnd()
+}
+
+// encodeFields encodes fields.
+func (s *SwitchInlineQueryChosenChat) encodeFields(e *jx.Encoder) {
+	{
+		if s.Query.Set {
+			e.FieldStart("query")
+			s.Query.Encode(e)
+		}
+	}
+	{
+		if s.AllowUserChats.Set {
+			e.FieldStart("allow_user_chats")
+			s.AllowUserChats.Encode(e)
+		}
+	}
+	{
+		if s.AllowBotChats.Set {
+			e.FieldStart("allow_bot_chats")
+			s.AllowBotChats.Encode(e)
+		}
+	}
+	{
+		if s.AllowGroupChats.Set {
+			e.FieldStart("allow_group_chats")
+			s.AllowGroupChats.Encode(e)
+		}
+	}
+	{
+		if s.AllowChannelChats.Set {
+			e.FieldStart("allow_channel_chats")
+			s.AllowChannelChats.Encode(e)
+		}
+	}
+}
+
+var jsonFieldsNameOfSwitchInlineQueryChosenChat = [5]string{
+	0: "query",
+	1: "allow_user_chats",
+	2: "allow_bot_chats",
+	3: "allow_group_chats",
+	4: "allow_channel_chats",
+}
+
+// Decode decodes SwitchInlineQueryChosenChat from json.
+func (s *SwitchInlineQueryChosenChat) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode SwitchInlineQueryChosenChat to nil")
+	}
+
+	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "query":
+			if err := func() error {
+				s.Query.Reset()
+				if err := s.Query.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"query\"")
+			}
+		case "allow_user_chats":
+			if err := func() error {
+				s.AllowUserChats.Reset()
+				if err := s.AllowUserChats.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"allow_user_chats\"")
+			}
+		case "allow_bot_chats":
+			if err := func() error {
+				s.AllowBotChats.Reset()
+				if err := s.AllowBotChats.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"allow_bot_chats\"")
+			}
+		case "allow_group_chats":
+			if err := func() error {
+				s.AllowGroupChats.Reset()
+				if err := s.AllowGroupChats.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"allow_group_chats\"")
+			}
+		case "allow_channel_chats":
+			if err := func() error {
+				s.AllowChannelChats.Reset()
+				if err := s.AllowChannelChats.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"allow_channel_chats\"")
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	}); err != nil {
+		return errors.Wrap(err, "decode SwitchInlineQueryChosenChat")
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *SwitchInlineQueryChosenChat) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *SwitchInlineQueryChosenChat) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
@@ -48975,9 +49559,17 @@ func (s *WriteAccessAllowed) Encode(e *jx.Encoder) {
 
 // encodeFields encodes fields.
 func (s *WriteAccessAllowed) encodeFields(e *jx.Encoder) {
+	{
+		if s.WebAppName.Set {
+			e.FieldStart("web_app_name")
+			s.WebAppName.Encode(e)
+		}
+	}
 }
 
-var jsonFieldsNameOfWriteAccessAllowed = [0]string{}
+var jsonFieldsNameOfWriteAccessAllowed = [1]string{
+	0: "web_app_name",
+}
 
 // Decode decodes WriteAccessAllowed from json.
 func (s *WriteAccessAllowed) Decode(d *jx.Decoder) error {
@@ -48987,6 +49579,16 @@ func (s *WriteAccessAllowed) Decode(d *jx.Decoder) error {
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
+		case "web_app_name":
+			if err := func() error {
+				s.WebAppName.Reset()
+				if err := s.WebAppName.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"web_app_name\"")
+			}
 		default:
 			return d.Skip()
 		}

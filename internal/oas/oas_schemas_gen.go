@@ -254,20 +254,8 @@ type AnswerInlineQuery struct {
 	// Pass the offset that a client should send in the next query with the same text to receive more
 	// results. Pass an empty string if there are no more results or if you don't support pagination.
 	// Offset length can't exceed 64 bytes.
-	NextOffset OptString `json:"next_offset"`
-	// If passed, clients will display a button with specified text that switches the user to a private
-	// chat with the bot and sends the bot a start message with the parameter _switch_pm_parameter_.
-	SwitchPmText OptString `json:"switch_pm_text"`
-	// [Deep-linking](https://core.telegram.org/bots/features#deep-linking) parameter for the /start
-	// message sent to the bot when user presses the switch button. 1-64 characters, only `A-Z`, `a-z`,
-	// `0-9`, `_` and `-` are allowed._Example:_ An inline bot that sends YouTube videos can ask the user
-	// to connect the bot to their YouTube account to adapt search results accordingly. To do this, it
-	// displays a 'Connect your YouTube account' button above the results, or even before showing any.
-	// The user presses the button, switches to a private chat with the bot and, in doing so, passes a
-	// start parameter that instructs the bot to return an OAuth link. Once done, the bot can offer a
-	// [_switch_inline_](https://core.telegram.org/bots/api#inlinekeyboardmarkup) button so that the user
-	// can easily return to the chat where they wanted to use the bot's inline capabilities.
-	SwitchPmParameter OptString `json:"switch_pm_parameter"`
+	NextOffset OptString                   `json:"next_offset"`
+	Button     OptInlineQueryResultsButton `json:"button"`
 }
 
 // GetInlineQueryID returns the value of InlineQueryID.
@@ -295,14 +283,9 @@ func (s *AnswerInlineQuery) GetNextOffset() OptString {
 	return s.NextOffset
 }
 
-// GetSwitchPmText returns the value of SwitchPmText.
-func (s *AnswerInlineQuery) GetSwitchPmText() OptString {
-	return s.SwitchPmText
-}
-
-// GetSwitchPmParameter returns the value of SwitchPmParameter.
-func (s *AnswerInlineQuery) GetSwitchPmParameter() OptString {
-	return s.SwitchPmParameter
+// GetButton returns the value of Button.
+func (s *AnswerInlineQuery) GetButton() OptInlineQueryResultsButton {
+	return s.Button
 }
 
 // SetInlineQueryID sets the value of InlineQueryID.
@@ -330,14 +313,9 @@ func (s *AnswerInlineQuery) SetNextOffset(val OptString) {
 	s.NextOffset = val
 }
 
-// SetSwitchPmText sets the value of SwitchPmText.
-func (s *AnswerInlineQuery) SetSwitchPmText(val OptString) {
-	s.SwitchPmText = val
-}
-
-// SetSwitchPmParameter sets the value of SwitchPmParameter.
-func (s *AnswerInlineQuery) SetSwitchPmParameter(val OptString) {
-	s.SwitchPmParameter = val
+// SetButton sets the value of Button.
+func (s *AnswerInlineQuery) SetButton(val OptInlineQueryResultsButton) {
+	s.Button = val
 }
 
 // Input for answerPreCheckoutQuery.
@@ -2637,6 +2615,8 @@ type ChatMemberUpdated struct {
 	OldChatMember ChatMember        `json:"old_chat_member"`
 	NewChatMember ChatMember        `json:"new_chat_member"`
 	InviteLink    OptChatInviteLink `json:"invite_link"`
+	// _Optional_. True, if the user joined the chat via a chat folder invite link.
+	ViaChatFolderInviteLink OptBool `json:"via_chat_folder_invite_link"`
 }
 
 // GetChat returns the value of Chat.
@@ -2669,6 +2649,11 @@ func (s *ChatMemberUpdated) GetInviteLink() OptChatInviteLink {
 	return s.InviteLink
 }
 
+// GetViaChatFolderInviteLink returns the value of ViaChatFolderInviteLink.
+func (s *ChatMemberUpdated) GetViaChatFolderInviteLink() OptBool {
+	return s.ViaChatFolderInviteLink
+}
+
 // SetChat sets the value of Chat.
 func (s *ChatMemberUpdated) SetChat(val Chat) {
 	s.Chat = val
@@ -2697,6 +2682,11 @@ func (s *ChatMemberUpdated) SetNewChatMember(val ChatMember) {
 // SetInviteLink sets the value of InviteLink.
 func (s *ChatMemberUpdated) SetInviteLink(val OptChatInviteLink) {
 	s.InviteLink = val
+}
+
+// SetViaChatFolderInviteLink sets the value of ViaChatFolderInviteLink.
+func (s *ChatMemberUpdated) SetViaChatFolderInviteLink(val OptBool) {
+	s.ViaChatFolderInviteLink = val
 }
 
 // Describes actions that a non-administrator user is allowed to take in a chat.
@@ -5711,6 +5701,23 @@ func (s *GetMyDescription) SetLanguageCode(val OptString) {
 	s.LanguageCode = val
 }
 
+// Input for getMyName.
+// Ref: #/components/schemas/getMyName
+type GetMyName struct {
+	// A two-letter ISO 639-1 language code or an empty string.
+	LanguageCode OptString `json:"language_code"`
+}
+
+// GetLanguageCode returns the value of LanguageCode.
+func (s *GetMyName) GetLanguageCode() OptString {
+	return s.LanguageCode
+}
+
+// SetLanguageCode sets the value of LanguageCode.
+func (s *GetMyName) SetLanguageCode(val OptString) {
+	s.LanguageCode = val
+}
+
 // Input for getMyShortDescription.
 // Ref: #/components/schemas/getMyShortDescription
 type GetMyShortDescription struct {
@@ -5958,8 +5965,9 @@ type InlineKeyboardButton struct {
 	// query in the current chat's input field. May be empty, in which case only the bot's username will
 	// be inserted.This offers a quick way for the user to open your bot in inline mode in the same chat
 	// - good for selecting something from multiple options.
-	SwitchInlineQueryCurrentChat OptString     `json:"switch_inline_query_current_chat"`
-	CallbackGame                 *CallbackGame `json:"callback_game"`
+	SwitchInlineQueryCurrentChat OptString                      `json:"switch_inline_query_current_chat"`
+	SwitchInlineQueryChosenChat  OptSwitchInlineQueryChosenChat `json:"switch_inline_query_chosen_chat"`
+	CallbackGame                 *CallbackGame                  `json:"callback_game"`
 	// _Optional_. Specify _True_, to send a [Pay button](https://core.telegram.org/bots/api#payments).
 	// **NOTE:** This type of button **must** always be the first button in the first row and can only be
 	// used in invoice messages.
@@ -5999,6 +6007,11 @@ func (s *InlineKeyboardButton) GetSwitchInlineQuery() OptString {
 // GetSwitchInlineQueryCurrentChat returns the value of SwitchInlineQueryCurrentChat.
 func (s *InlineKeyboardButton) GetSwitchInlineQueryCurrentChat() OptString {
 	return s.SwitchInlineQueryCurrentChat
+}
+
+// GetSwitchInlineQueryChosenChat returns the value of SwitchInlineQueryChosenChat.
+func (s *InlineKeyboardButton) GetSwitchInlineQueryChosenChat() OptSwitchInlineQueryChosenChat {
+	return s.SwitchInlineQueryChosenChat
 }
 
 // GetCallbackGame returns the value of CallbackGame.
@@ -6044,6 +6057,11 @@ func (s *InlineKeyboardButton) SetSwitchInlineQuery(val OptString) {
 // SetSwitchInlineQueryCurrentChat sets the value of SwitchInlineQueryCurrentChat.
 func (s *InlineKeyboardButton) SetSwitchInlineQueryCurrentChat(val OptString) {
 	s.SwitchInlineQueryCurrentChat = val
+}
+
+// SetSwitchInlineQueryChosenChat sets the value of SwitchInlineQueryChosenChat.
+func (s *InlineKeyboardButton) SetSwitchInlineQueryChosenChat(val OptSwitchInlineQueryChosenChat) {
+	s.SwitchInlineQueryChosenChat = val
 }
 
 // SetCallbackGame sets the value of CallbackGame.
@@ -9353,6 +9371,55 @@ func (s *InlineQueryResultVoice) SetInputMessageContent(val OptInputMessageConte
 	s.InputMessageContent = val
 }
 
+// This object represents a button to be shown above inline query results. You **must** use exactly
+// one of the optional fields.
+// Ref: #/components/schemas/InlineQueryResultsButton
+type InlineQueryResultsButton struct {
+	// Label text on the button.
+	Text   string        `json:"text"`
+	WebApp OptWebAppInfo `json:"web_app"`
+	// _Optional_. [Deep-linking](https://core.telegram.org/bots/features#deep-linking) parameter for the
+	// /start message sent to the bot when a user presses the button. 1-64 characters, only `A-Z`, `a-z`,
+	// `0-9`, `_` and `-` are allowed._Example:_ An inline bot that sends YouTube videos can ask the user
+	// to connect the bot to their YouTube account to adapt search results accordingly. To do this, it
+	// displays a 'Connect your YouTube account' button above the results, or even before showing any.
+	// The user presses the button, switches to a private chat with the bot and, in doing so, passes a
+	// start parameter that instructs the bot to return an OAuth link. Once done, the bot can offer a
+	// [_switch_inline_](https://core.telegram.org/bots/api#inlinekeyboardmarkup) button so that the user
+	// can easily return to the chat where they wanted to use the bot's inline capabilities.
+	StartParameter OptString `json:"start_parameter"`
+}
+
+// GetText returns the value of Text.
+func (s *InlineQueryResultsButton) GetText() string {
+	return s.Text
+}
+
+// GetWebApp returns the value of WebApp.
+func (s *InlineQueryResultsButton) GetWebApp() OptWebAppInfo {
+	return s.WebApp
+}
+
+// GetStartParameter returns the value of StartParameter.
+func (s *InlineQueryResultsButton) GetStartParameter() OptString {
+	return s.StartParameter
+}
+
+// SetText sets the value of Text.
+func (s *InlineQueryResultsButton) SetText(val string) {
+	s.Text = val
+}
+
+// SetWebApp sets the value of WebApp.
+func (s *InlineQueryResultsButton) SetWebApp(val OptWebAppInfo) {
+	s.WebApp = val
+}
+
+// SetStartParameter sets the value of StartParameter.
+func (s *InlineQueryResultsButton) SetStartParameter(val OptString) {
+	s.StartParameter = val
+}
+
 // Represents the [content](https://core.telegram.org/bots/api#inputmessagecontent) of a contact
 // message to be sent as the result of an inline query.
 // Ref: #/components/schemas/InputContactMessageContent
@@ -11684,7 +11751,7 @@ type Message struct {
 	// _Optional_. The domain name of the website on which the user has logged in. [More about Telegram
 	// Login](https://core.telegram.org/widgets/login).
 	ConnectedWebsite             OptString                       `json:"connected_website"`
-	WriteAccessAllowed           *WriteAccessAllowed             `json:"write_access_allowed"`
+	WriteAccessAllowed           OptWriteAccessAllowed           `json:"write_access_allowed"`
 	PassportData                 OptPassportData                 `json:"passport_data"`
 	ProximityAlertTriggered      OptProximityAlertTriggered      `json:"proximity_alert_triggered"`
 	ForumTopicCreated            OptForumTopicCreated            `json:"forum_topic_created"`
@@ -11985,7 +12052,7 @@ func (s *Message) GetConnectedWebsite() OptString {
 }
 
 // GetWriteAccessAllowed returns the value of WriteAccessAllowed.
-func (s *Message) GetWriteAccessAllowed() *WriteAccessAllowed {
+func (s *Message) GetWriteAccessAllowed() OptWriteAccessAllowed {
 	return s.WriteAccessAllowed
 }
 
@@ -12355,7 +12422,7 @@ func (s *Message) SetConnectedWebsite(val OptString) {
 }
 
 // SetWriteAccessAllowed sets the value of WriteAccessAllowed.
-func (s *Message) SetWriteAccessAllowed(val *WriteAccessAllowed) {
+func (s *Message) SetWriteAccessAllowed(val OptWriteAccessAllowed) {
 	s.WriteAccessAllowed = val
 }
 
@@ -14086,6 +14153,52 @@ func (o OptGetMyDescription) Or(d GetMyDescription) GetMyDescription {
 	return d
 }
 
+// NewOptGetMyName returns new OptGetMyName with value set to v.
+func NewOptGetMyName(v GetMyName) OptGetMyName {
+	return OptGetMyName{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptGetMyName is optional GetMyName.
+type OptGetMyName struct {
+	Value GetMyName
+	Set   bool
+}
+
+// IsSet returns true if OptGetMyName was set.
+func (o OptGetMyName) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptGetMyName) Reset() {
+	var v GetMyName
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptGetMyName) SetTo(v GetMyName) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptGetMyName) Get() (v GetMyName, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptGetMyName) Or(d GetMyName) GetMyName {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
 // NewOptGetMyShortDescription returns new OptGetMyShortDescription with value set to v.
 func NewOptGetMyShortDescription(v GetMyShortDescription) OptGetMyShortDescription {
 	return OptGetMyShortDescription{
@@ -14356,6 +14469,52 @@ func (o OptInlineQueryChatType) Get() (v InlineQueryChatType, ok bool) {
 
 // Or returns value if set, or given parameter if does not.
 func (o OptInlineQueryChatType) Or(d InlineQueryChatType) InlineQueryChatType {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
+// NewOptInlineQueryResultsButton returns new OptInlineQueryResultsButton with value set to v.
+func NewOptInlineQueryResultsButton(v InlineQueryResultsButton) OptInlineQueryResultsButton {
+	return OptInlineQueryResultsButton{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptInlineQueryResultsButton is optional InlineQueryResultsButton.
+type OptInlineQueryResultsButton struct {
+	Value InlineQueryResultsButton
+	Set   bool
+}
+
+// IsSet returns true if OptInlineQueryResultsButton was set.
+func (o OptInlineQueryResultsButton) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptInlineQueryResultsButton) Reset() {
+	var v InlineQueryResultsButton
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptInlineQueryResultsButton) SetTo(v InlineQueryResultsButton) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptInlineQueryResultsButton) Get() (v InlineQueryResultsButton, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptInlineQueryResultsButton) Or(d InlineQueryResultsButton) InlineQueryResultsButton {
 	if v, ok := o.Get(); ok {
 		return v
 	}
@@ -15650,6 +15809,52 @@ func (o OptSetMyDescription) Or(d SetMyDescription) SetMyDescription {
 	return d
 }
 
+// NewOptSetMyName returns new OptSetMyName with value set to v.
+func NewOptSetMyName(v SetMyName) OptSetMyName {
+	return OptSetMyName{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptSetMyName is optional SetMyName.
+type OptSetMyName struct {
+	Value SetMyName
+	Set   bool
+}
+
+// IsSet returns true if OptSetMyName was set.
+func (o OptSetMyName) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptSetMyName) Reset() {
+	var v SetMyName
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptSetMyName) SetTo(v SetMyName) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptSetMyName) Get() (v SetMyName, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptSetMyName) Or(d SetMyName) SetMyName {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
 // NewOptSetMyShortDescription returns new OptSetMyShortDescription with value set to v.
 func NewOptSetMyShortDescription(v SetMyShortDescription) OptSetMyShortDescription {
 	return OptSetMyShortDescription{
@@ -15966,6 +16171,52 @@ func (o OptSuccessfulPayment) Get() (v SuccessfulPayment, ok bool) {
 
 // Or returns value if set, or given parameter if does not.
 func (o OptSuccessfulPayment) Or(d SuccessfulPayment) SuccessfulPayment {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
+// NewOptSwitchInlineQueryChosenChat returns new OptSwitchInlineQueryChosenChat with value set to v.
+func NewOptSwitchInlineQueryChosenChat(v SwitchInlineQueryChosenChat) OptSwitchInlineQueryChosenChat {
+	return OptSwitchInlineQueryChosenChat{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptSwitchInlineQueryChosenChat is optional SwitchInlineQueryChosenChat.
+type OptSwitchInlineQueryChosenChat struct {
+	Value SwitchInlineQueryChosenChat
+	Set   bool
+}
+
+// IsSet returns true if OptSwitchInlineQueryChosenChat was set.
+func (o OptSwitchInlineQueryChosenChat) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptSwitchInlineQueryChosenChat) Reset() {
+	var v SwitchInlineQueryChosenChat
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptSwitchInlineQueryChosenChat) SetTo(v SwitchInlineQueryChosenChat) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptSwitchInlineQueryChosenChat) Get() (v SwitchInlineQueryChosenChat, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptSwitchInlineQueryChosenChat) Or(d SwitchInlineQueryChosenChat) SwitchInlineQueryChosenChat {
 	if v, ok := o.Get(); ok {
 		return v
 	}
@@ -16564,6 +16815,52 @@ func (o OptWebhookInfo) Get() (v WebhookInfo, ok bool) {
 
 // Or returns value if set, or given parameter if does not.
 func (o OptWebhookInfo) Or(d WebhookInfo) WebhookInfo {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
+// NewOptWriteAccessAllowed returns new OptWriteAccessAllowed with value set to v.
+func NewOptWriteAccessAllowed(v WriteAccessAllowed) OptWriteAccessAllowed {
+	return OptWriteAccessAllowed{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptWriteAccessAllowed is optional WriteAccessAllowed.
+type OptWriteAccessAllowed struct {
+	Value WriteAccessAllowed
+	Set   bool
+}
+
+// IsSet returns true if OptWriteAccessAllowed was set.
+func (o OptWriteAccessAllowed) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptWriteAccessAllowed) Reset() {
+	var v WriteAccessAllowed
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptWriteAccessAllowed) SetTo(v WriteAccessAllowed) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptWriteAccessAllowed) Get() (v WriteAccessAllowed, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptWriteAccessAllowed) Or(d WriteAccessAllowed) WriteAccessAllowed {
 	if v, ok := o.Get(); ok {
 		return v
 	}
@@ -23033,6 +23330,37 @@ func (s *SetMyDescription) SetLanguageCode(val OptString) {
 	s.LanguageCode = val
 }
 
+// Input for setMyName.
+// Ref: #/components/schemas/setMyName
+type SetMyName struct {
+	// New bot name; 0-64 characters. Pass an empty string to remove the dedicated name for the given
+	// language.
+	Name OptString `json:"name"`
+	// A two-letter ISO 639-1 language code. If empty, the name will be shown to all users for whose
+	// language there is no dedicated name.
+	LanguageCode OptString `json:"language_code"`
+}
+
+// GetName returns the value of Name.
+func (s *SetMyName) GetName() OptString {
+	return s.Name
+}
+
+// GetLanguageCode returns the value of LanguageCode.
+func (s *SetMyName) GetLanguageCode() OptString {
+	return s.LanguageCode
+}
+
+// SetName sets the value of Name.
+func (s *SetMyName) SetName(val OptString) {
+	s.Name = val
+}
+
+// SetLanguageCode sets the value of LanguageCode.
+func (s *SetMyName) SetLanguageCode(val OptString) {
+	s.LanguageCode = val
+}
+
 // Input for setMyShortDescription.
 // Ref: #/components/schemas/setMyShortDescription
 type SetMyShortDescription struct {
@@ -24059,6 +24387,73 @@ func (s *SuccessfulPayment) SetTelegramPaymentChargeID(val string) {
 // SetProviderPaymentChargeID sets the value of ProviderPaymentChargeID.
 func (s *SuccessfulPayment) SetProviderPaymentChargeID(val string) {
 	s.ProviderPaymentChargeID = val
+}
+
+// This object represents an inline button that switches the current user to inline mode in a chosen
+// chat, with an optional default inline query.
+// Ref: #/components/schemas/SwitchInlineQueryChosenChat
+type SwitchInlineQueryChosenChat struct {
+	// _Optional_. The default inline query to be inserted in the input field. If left empty, only the
+	// bot's username will be inserted.
+	Query OptString `json:"query"`
+	// _Optional_. True, if private chats with users can be chosen.
+	AllowUserChats OptBool `json:"allow_user_chats"`
+	// _Optional_. True, if private chats with bots can be chosen.
+	AllowBotChats OptBool `json:"allow_bot_chats"`
+	// _Optional_. True, if group and supergroup chats can be chosen.
+	AllowGroupChats OptBool `json:"allow_group_chats"`
+	// _Optional_. True, if channel chats can be chosen.
+	AllowChannelChats OptBool `json:"allow_channel_chats"`
+}
+
+// GetQuery returns the value of Query.
+func (s *SwitchInlineQueryChosenChat) GetQuery() OptString {
+	return s.Query
+}
+
+// GetAllowUserChats returns the value of AllowUserChats.
+func (s *SwitchInlineQueryChosenChat) GetAllowUserChats() OptBool {
+	return s.AllowUserChats
+}
+
+// GetAllowBotChats returns the value of AllowBotChats.
+func (s *SwitchInlineQueryChosenChat) GetAllowBotChats() OptBool {
+	return s.AllowBotChats
+}
+
+// GetAllowGroupChats returns the value of AllowGroupChats.
+func (s *SwitchInlineQueryChosenChat) GetAllowGroupChats() OptBool {
+	return s.AllowGroupChats
+}
+
+// GetAllowChannelChats returns the value of AllowChannelChats.
+func (s *SwitchInlineQueryChosenChat) GetAllowChannelChats() OptBool {
+	return s.AllowChannelChats
+}
+
+// SetQuery sets the value of Query.
+func (s *SwitchInlineQueryChosenChat) SetQuery(val OptString) {
+	s.Query = val
+}
+
+// SetAllowUserChats sets the value of AllowUserChats.
+func (s *SwitchInlineQueryChosenChat) SetAllowUserChats(val OptBool) {
+	s.AllowUserChats = val
+}
+
+// SetAllowBotChats sets the value of AllowBotChats.
+func (s *SwitchInlineQueryChosenChat) SetAllowBotChats(val OptBool) {
+	s.AllowBotChats = val
+}
+
+// SetAllowGroupChats sets the value of AllowGroupChats.
+func (s *SwitchInlineQueryChosenChat) SetAllowGroupChats(val OptBool) {
+	s.AllowGroupChats = val
+}
+
+// SetAllowChannelChats sets the value of AllowChannelChats.
+func (s *SwitchInlineQueryChosenChat) SetAllowChannelChats(val OptBool) {
+	s.AllowChannelChats = val
 }
 
 // Input for unbanChatMember.
@@ -25219,7 +25614,20 @@ func (s *WebhookInfo) SetAllowedUpdates(val []string) {
 	s.AllowedUpdates = val
 }
 
-// This object represents a service message about a user allowing a bot added to the attachment menu
-// to write messages. Currently holds no information.
+// This object represents a service message about a user allowing a bot to write messages after
+// adding the bot to the attachment menu or launching a Web App from a link.
 // Ref: #/components/schemas/WriteAccessAllowed
-type WriteAccessAllowed struct{}
+type WriteAccessAllowed struct {
+	// _Optional_. Name of the Web App which was launched from a link.
+	WebAppName OptString `json:"web_app_name"`
+}
+
+// GetWebAppName returns the value of WebAppName.
+func (s *WriteAccessAllowed) GetWebAppName() OptString {
+	return s.WebAppName
+}
+
+// SetWebAppName sets the value of WebAppName.
+func (s *WriteAccessAllowed) SetWebAppName(val OptString) {
+	s.WebAppName = val
+}

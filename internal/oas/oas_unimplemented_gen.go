@@ -569,6 +569,16 @@ func (UnimplementedHandler) GetMyDescription(ctx context.Context, req OptGetMyDe
 	return r, ht.ErrNotImplemented
 }
 
+// GetMyName implements getMyName operation.
+//
+// Use this method to get the current bot name for the given user language. Returns
+// [BotName](https://core.telegram.org/bots/api#botname) on success.
+//
+// POST /getMyName
+func (UnimplementedHandler) GetMyName(ctx context.Context, req OptGetMyName) (r *Result, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
 // GetMyShortDescription implements getMyShortDescription operation.
 //
 // Use this method to get the current bot short description for the given user language. Returns
@@ -1043,6 +1053,15 @@ func (UnimplementedHandler) SetMyDefaultAdministratorRights(ctx context.Context,
 //
 // POST /setMyDescription
 func (UnimplementedHandler) SetMyDescription(ctx context.Context, req OptSetMyDescription) (r *Result, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// SetMyName implements setMyName operation.
+//
+// Use this method to change the bot's name. Returns _True_ on success.
+//
+// POST /setMyName
+func (UnimplementedHandler) SetMyName(ctx context.Context, req OptSetMyName) (r *Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 

@@ -3924,6 +3924,80 @@ func (c *Client) sendGetMyDescription(ctx context.Context, request OptGetMyDescr
 	return result, nil
 }
 
+// GetMyName invokes getMyName operation.
+//
+// Use this method to get the current bot name for the given user language. Returns
+// [BotName](https://core.telegram.org/bots/api#botname) on success.
+//
+// POST /getMyName
+func (c *Client) GetMyName(ctx context.Context, request OptGetMyName) (*Result, error) {
+	res, err := c.sendGetMyName(ctx, request)
+	_ = res
+	return res, err
+}
+
+func (c *Client) sendGetMyName(ctx context.Context, request OptGetMyName) (res *Result, err error) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("getMyName"),
+	}
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, otelAttrs...)
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, "GetMyName",
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, otelAttrs...)
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	var pathParts [1]string
+	pathParts[0] = "/getMyName"
+	uri.AddPathParts(u, pathParts[:]...)
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "POST", u)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeGetMyNameRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeGetMyNameResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
 // GetMyShortDescription invokes getMyShortDescription operation.
 //
 // Use this method to get the current bot short description for the given user language. Returns
@@ -7434,6 +7508,95 @@ func (c *Client) sendSetMyDescription(ctx context.Context, request OptSetMyDescr
 
 	stage = "DecodeResponse"
 	result, err := decodeSetMyDescriptionResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
+// SetMyName invokes setMyName operation.
+//
+// Use this method to change the bot's name. Returns _True_ on success.
+//
+// POST /setMyName
+func (c *Client) SetMyName(ctx context.Context, request OptSetMyName) (*Result, error) {
+	res, err := c.sendSetMyName(ctx, request)
+	_ = res
+	return res, err
+}
+
+func (c *Client) sendSetMyName(ctx context.Context, request OptSetMyName) (res *Result, err error) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("setMyName"),
+	}
+	// Validate request before sending.
+	if err := func() error {
+		if request.Set {
+			if err := func() error {
+				if err := request.Value.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return err
+			}
+		}
+		return nil
+	}(); err != nil {
+		return res, errors.Wrap(err, "validate")
+	}
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, elapsedDuration.Microseconds(), otelAttrs...)
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, otelAttrs...)
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, "SetMyName",
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, otelAttrs...)
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	var pathParts [1]string
+	pathParts[0] = "/setMyName"
+	uri.AddPathParts(u, pathParts[:]...)
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "POST", u)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeSetMyNameRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeSetMyNameResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
