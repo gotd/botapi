@@ -84,8 +84,8 @@ github.com/modern-go/concurrent v0.0.0-20180228061459-e0a39a4cb421 h1:ZqeYNhU3OH
 github.com/modern-go/concurrent v0.0.0-20180228061459-e0a39a4cb421/go.mod h1:6dJC0mAP4ikYIbvyc7fijjWJddQyLn8Ig3JB5CqoB9Q=
 github.com/modern-go/reflect2 v0.0.0-20180701023420-4b7aa43c6742 h1:Esafd1046DLDQ0W1YjYsBW+p8U2u7vzgW2SQVmlNazg=
 github.com/modern-go/reflect2 v0.0.0-20180701023420-4b7aa43c6742/go.mod h1:bx2lNnkwVCuqBIxFjflWJWanXIb3RllmbCylyMrvgv0=
-github.com/ogen-go/ogen v0.64.0 h1:3PNcJd3XSEGp5S+nOipVVa3ViwSwrOw0LpIIciJ6yaE=
-github.com/ogen-go/ogen v0.64.0/go.mod h1:8cZvkJSu85xWMKKgVACenk+bdItsiId46NgA/C+Tp2E=
+github.com/ogen-go/ogen v0.65.0 h1:nzmtw8eBO5xKkSNwhlV34KRGDKNE4B5aT634wUV7sKg=
+github.com/ogen-go/ogen v0.65.0/go.mod h1:9uvExgQaMXGjnee5OFBWRHYvhVyLLix4dyJDw+uAXM4=
 github.com/pkg/errors v0.9.1 h1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
