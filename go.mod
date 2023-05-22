@@ -9,7 +9,7 @@ require (
 	github.com/go-faster/jx v1.0.0
 	github.com/gotd/td v0.79.0
 	github.com/ogen-go/ogen v0.65.0
-	github.com/stretchr/testify v1.8.2
+	github.com/stretchr/testify v1.8.3
 	go.etcd.io/bbolt v1.3.7
 	go.opentelemetry.io/otel v1.15.1
 	go.opentelemetry.io/otel/metric v0.37.0
