@@ -21,7 +21,7 @@ linters-settings:
   lll:
     line-length: 140
   goimports:
-    local-prefixes: github.com/gotd/
+    local-prefixes: github.com/gotd/botapi
   gocritic:
     enabled-tags:
       - diagnostic
@@ -40,7 +40,6 @@ linters-settings:
 linters:
   disable-all: true
   enable:
-    - depguard
     - dogsled
     # False positive: botapi has a lot of similar unimplemented methods
     # - dupl
