@@ -21,7 +21,7 @@ linters-settings:
   lll:
     line-length: 140
   goimports:
-    local-prefixes: github.com/gotd/
+    local-prefixes: github.com/gotd/botapi
   gocritic:
     enabled-tags:
       - diagnostic
