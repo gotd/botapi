@@ -331,7 +331,7 @@ func getStateField(b *bbolt.Bucket, key string, v *int) (bool, error) {
 }
 
 // GetState implements updates.StateStorage.
-func (b *BBoltStorage) GetState(_ int64) (state updates.State, found bool, err error) {
+func (b *BBoltStorage) GetState(_ context.Context, _ int64) (state updates.State, found bool, err error) {
 	err = b.viewBucket(statePrefix, func(b *bbolt.Bucket, tx *bbolt.Tx) error {
 		if ok, err := getStateField(b, ptsKey, &state.Pts); err != nil || !ok {
 			return err
@@ -356,7 +356,7 @@ func setStateField(b *bbolt.Bucket, key string, v int) error {
 }
 
 // SetState implements updates.StateStorage.
-func (b *BBoltStorage) SetState(_ int64, state updates.State) error {
+func (b *BBoltStorage) SetState(_ context.Context, _ int64, state updates.State) error {
 	return b.batchBucket(statePrefix, func(b *bbolt.Bucket, tx *bbolt.Tx) error {
 		if err := setStateField(b, ptsKey, state.Pts); err != nil {
 			return err
@@ -375,7 +375,7 @@ func (b *BBoltStorage) SetState(_ int64, state updates.State) error {
 }
 
 // SetPts implements updates.StateStorage.
-func (b *BBoltStorage) SetPts(_ int64, pts int) error {
+func (b *BBoltStorage) SetPts(_ context.Context, _ int64, pts int) error {
 	return b.batchBucket(statePrefix, func(b *bbolt.Bucket, tx *bbolt.Tx) error {
 		if err := setStateField(b, ptsKey, pts); err != nil {
 			return err
@@ -385,7 +385,7 @@ func (b *BBoltStorage) SetPts(_ int64, pts int) error {
 }
 
 // SetQts implements updates.StateStorage.
-func (b *BBoltStorage) SetQts(_ int64, qts int) error {
+func (b *BBoltStorage) SetQts(_ context.Context, _ int64, qts int) error {
 	return b.batchBucket(statePrefix, func(b *bbolt.Bucket, tx *bbolt.Tx) error {
 		if err := setStateField(b, qtsKey, qts); err != nil {
 			return err
@@ -395,7 +395,7 @@ func (b *BBoltStorage) SetQts(_ int64, qts int) error {
 }
 
 // SetDate implements updates.StateStorage.
-func (b *BBoltStorage) SetDate(_ int64, date int) error {
+func (b *BBoltStorage) SetDate(_ context.Context, _ int64, date int) error {
 	return b.batchBucket(statePrefix, func(b *bbolt.Bucket, tx *bbolt.Tx) error {
 		if err := setStateField(b, dateKey, date); err != nil {
 			return err
@@ -405,7 +405,7 @@ func (b *BBoltStorage) SetDate(_ int64, date int) error {
 }
 
 // SetSeq implements updates.StateStorage.
-func (b *BBoltStorage) SetSeq(_ int64, seq int) error {
+func (b *BBoltStorage) SetSeq(_ context.Context, _ int64, seq int) error {
 	return b.batchBucket(statePrefix, func(b *bbolt.Bucket, tx *bbolt.Tx) error {
 		if err := setStateField(b, seqKey, seq); err != nil {
 			return err
@@ -415,7 +415,7 @@ func (b *BBoltStorage) SetSeq(_ int64, seq int) error {
 }
 
 // SetDateSeq implements updates.StateStorage.
-func (b *BBoltStorage) SetDateSeq(_ int64, date, seq int) error {
+func (b *BBoltStorage) SetDateSeq(_ context.Context, _ int64, date, seq int) error {
 	return b.batchBucket(statePrefix, func(b *bbolt.Bucket, tx *bbolt.Tx) error {
 		if err := setStateField(b, dateKey, date); err != nil {
 			return err
@@ -428,7 +428,7 @@ func (b *BBoltStorage) SetDateSeq(_ int64, date, seq int) error {
 }
 
 // GetChannelPts implements updates.StateStorage.
-func (b *BBoltStorage) GetChannelPts(_, channelID int64) (pts int, found bool, err error) {
+func (b *BBoltStorage) GetChannelPts(_ context.Context, _, channelID int64) (pts int, found bool, err error) {
 	err = b.viewBucket(channelsPtsPrefix, func(b *bbolt.Bucket, tx *bbolt.Tx) error {
 		v, ok := parseInt(b.Get(formatInt(channelID)))
 		pts, found = int(v), ok
@@ -438,14 +438,14 @@ func (b *BBoltStorage) GetChannelPts(_, channelID int64) (pts int, found bool, e
 }
 
 // SetChannelPts implements updates.StateStorage.
-func (b *BBoltStorage) SetChannelPts(_, channelID int64, pts int) error {
+func (b *BBoltStorage) SetChannelPts(_ context.Context, _, channelID int64, pts int) error {
 	return b.batchBucket(channelsPtsPrefix, func(b *bbolt.Bucket, tx *bbolt.Tx) error {
 		return b.Put(formatInt(channelID), formatInt(int64(pts)))
 	})
 }
 
 // ForEachChannels implements updates.StateStorage.
-func (b *BBoltStorage) ForEachChannels(_ int64, f func(channelID int64, pts int) error) error {
+func (b *BBoltStorage) ForEachChannels(ctx context.Context, _ int64, f func(_ context.Context, channelID int64, pts int) error) error {
 	return b.viewBucket(channelsPtsPrefix, func(b *bbolt.Bucket, tx *bbolt.Tx) error {
 		return b.ForEach(func(k, v []byte) error {
 			channelID, ok := parseInt(k)
@@ -458,7 +458,7 @@ func (b *BBoltStorage) ForEachChannels(_ int64, f func(channelID int64, pts int)
 				// Ignore invalid entries.
 				return nil
 			}
-			return f(channelID, int(pts))
+			return f(ctx, channelID, int(pts))
 		})
 	})
 }

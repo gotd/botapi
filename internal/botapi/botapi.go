@@ -54,16 +54,6 @@ func (b *BotAPI) Init(ctx context.Context) error {
 		return errors.Wrap(err, "init peers")
 	}
 
-	me, err := b.peers.Self(ctx)
-	if err != nil {
-		return errors.Wrap(err, "get self")
-	}
-
-	_, isBot := me.ToBot()
-	if err := b.gaps.Auth(ctx, b.raw, me.ID(), isBot, false); err != nil {
-		return errors.Wrap(err, "init gaps")
-	}
-
 	return nil
 }
 

@@ -40,7 +40,6 @@ linters-settings:
 linters:
   disable-all: true
   enable:
-    - depguard
     - dogsled
     # False positive: botapi has a lot of similar unimplemented methods
     # - dupl

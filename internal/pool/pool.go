@@ -10,15 +10,14 @@ import (
 	"time"
 
 	"github.com/go-faster/errors"
-	"go.etcd.io/bbolt"
-	"go.uber.org/multierr"
-	"go.uber.org/zap"
-
 	"github.com/gotd/td/telegram"
 	"github.com/gotd/td/telegram/peers"
 	"github.com/gotd/td/telegram/updates"
 	updhook "github.com/gotd/td/telegram/updates/hook"
 	"github.com/gotd/td/tg"
+	"go.etcd.io/bbolt"
+	"go.uber.org/multierr"
+	"go.uber.org/zap"
 
 	"github.com/gotd/botapi/internal/botapi"
 	"github.com/gotd/botapi/internal/botstorage"
@@ -216,24 +215,28 @@ func (p *Pool) createClient(token Token, initializationResult chan<- error) (_ *
 					return err
 				}
 			}
-
 			if err := c.api.Init(ctx); err != nil {
 				return errors.Wrap(err, "init BotAPI")
 			}
-			defer func() {
-				_ = gaps.Logout()
-			}()
-
-			// Done.
-			select {
-			case initializationResult <- nil:
-				// Update lastUsed, because it is zero during initialization.
-				c.Use(p.now())
-			default:
+			me, err := c.client.Self(ctx)
+			if err != nil {
+				return errors.Wrap(err, "get self")
 			}
-
-			<-ctx.Done()
-			return ctx.Err()
+			if !me.Bot {
+				return errors.New("not a bot")
+			}
+			return gaps.Run(ctx, c.client.API(), me.ID, updates.AuthOptions{
+				IsBot: true,
+				OnStart: func(ctx context.Context) {
+					// Done.
+					select {
+					case initializationResult <- nil:
+						// Update lastUsed, because it is zero during initialization.
+						c.Use(p.now())
+					default:
+					}
+				},
+			})
 		}); err != nil {
 			// Failed.
 			select {
