@@ -15,13 +15,12 @@ require (
 	go.opentelemetry.io/otel/metric v1.18.0
 	go.opentelemetry.io/otel/trace v1.18.0
 	go.uber.org/multierr v1.11.0
-	go.uber.org/zap v1.25.0
+	go.uber.org/zap v1.26.0
 	golang.org/x/sync v0.3.0
 )
 
 require (
 	github.com/andybalholm/cascadia v1.3.1 // indirect
-	github.com/benbjohnson/clock v1.3.0 // indirect
 	github.com/cenkalti/backoff/v4 v4.2.1 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/dlclark/regexp2 v1.10.0 // indirect
