@@ -12,12 +12,1013 @@ import (
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/metric"
+	semconv "go.opentelemetry.io/otel/semconv/v1.19.0"
 	"go.opentelemetry.io/otel/trace"
 
 	ht "github.com/ogen-go/ogen/http"
 	"github.com/ogen-go/ogen/otelogen"
 	"github.com/ogen-go/ogen/uri"
 )
+
+// Invoker invokes operations described by OpenAPI v3 specification.
+type Invoker interface {
+	// AddStickerToSet invokes addStickerToSet operation.
+	//
+	// Use this method to add a new sticker to a set created by the bot. Emoji sticker sets can have up
+	// to 200 stickers. Other sticker sets can have up to 120 stickers. Returns _True_ on success.
+	//
+	// POST /addStickerToSet
+	AddStickerToSet(ctx context.Context, request *AddStickerToSet) (*Result, error)
+	// AnswerCallbackQuery invokes answerCallbackQuery operation.
+	//
+	// Use this method to send answers to callback queries sent from [inline keyboards](https://core.
+	// telegram.org/bots/features#inline-keyboards). The answer will be displayed to the user as a
+	// notification at the top of the chat screen or as an alert. On success, _True_ is returned.
+	//
+	// POST /answerCallbackQuery
+	AnswerCallbackQuery(ctx context.Context, request *AnswerCallbackQuery) (*Result, error)
+	// AnswerInlineQuery invokes answerInlineQuery operation.
+	//
+	// Use this method to send answers to an inline query. On success, _True_ is returned.No more than
+	// **50** results per query are allowed.
+	//
+	// POST /answerInlineQuery
+	AnswerInlineQuery(ctx context.Context, request *AnswerInlineQuery) (*Result, error)
+	// AnswerPreCheckoutQuery invokes answerPreCheckoutQuery operation.
+	//
+	// Once the user has confirmed their payment and shipping details, the Bot API sends the final
+	// confirmation in the form of an [Update](https://core.telegram.org/bots/api#update) with the field
+	// _pre_checkout_query_. Use this method to respond to such pre-checkout queries. On success, _True_
+	// is returned. **Note:** The Bot API must receive an answer within 10 seconds after the pre-checkout
+	// query was sent.
+	//
+	// POST /answerPreCheckoutQuery
+	AnswerPreCheckoutQuery(ctx context.Context, request *AnswerPreCheckoutQuery) (*Result, error)
+	// AnswerShippingQuery invokes answerShippingQuery operation.
+	//
+	// If you sent an invoice requesting a shipping address and the parameter _is_flexible_ was specified,
+	//  the Bot API will send an [Update](https://core.telegram.org/bots/api#update) with a
+	// _shipping_query_ field to the bot. Use this method to reply to shipping queries. On success,
+	// _True_ is returned.
+	//
+	// POST /answerShippingQuery
+	AnswerShippingQuery(ctx context.Context, request *AnswerShippingQuery) (*Result, error)
+	// AnswerWebAppQuery invokes answerWebAppQuery operation.
+	//
+	// Use this method to set the result of an interaction with a [Web App](https://core.telegram.
+	// org/bots/webapps) and send a corresponding message on behalf of the user to the chat from which
+	// the query originated. On success, a [SentWebAppMessage](https://core.telegram.
+	// org/bots/api#sentwebappmessage) object is returned.
+	//
+	// POST /answerWebAppQuery
+	AnswerWebAppQuery(ctx context.Context, request *AnswerWebAppQuery) (*Result, error)
+	// ApproveChatJoinRequest invokes approveChatJoinRequest operation.
+	//
+	// Use this method to approve a chat join request. The bot must be an administrator in the chat for
+	// this to work and must have the _can_invite_users_ administrator right. Returns _True_ on success.
+	//
+	// POST /approveChatJoinRequest
+	ApproveChatJoinRequest(ctx context.Context, request *ApproveChatJoinRequest) (*Result, error)
+	// BanChatMember invokes banChatMember operation.
+	//
+	// Use this method to ban a user in a group, a supergroup or a channel. In the case of supergroups
+	// and channels, the user will not be able to return to the chat on their own using invite links, etc.
+	// , unless [unbanned](https://core.telegram.org/bots/api#unbanchatmember) first. The bot must be an
+	// administrator in the chat for this to work and must have the appropriate administrator rights.
+	// Returns _True_ on success.
+	//
+	// POST /banChatMember
+	BanChatMember(ctx context.Context, request *BanChatMember) (*Result, error)
+	// BanChatSenderChat invokes banChatSenderChat operation.
+	//
+	// Use this method to ban a channel chat in a supergroup or a channel. Until the chat is
+	// [unbanned](https://core.telegram.org/bots/api#unbanchatsenderchat), the owner of the banned chat
+	// won't be able to send messages on behalf of **any of their channels**. The bot must be an
+	// administrator in the supergroup or channel for this to work and must have the appropriate
+	// administrator rights. Returns _True_ on success.
+	//
+	// POST /banChatSenderChat
+	BanChatSenderChat(ctx context.Context, request *BanChatSenderChat) (*Result, error)
+	// Close invokes close operation.
+	//
+	// Use this method to close the bot instance before moving it from one local server to another. You
+	// need to delete the webhook before calling this method to ensure that the bot isn't launched again
+	// after server restart. The method will return error 429 in the first 10 minutes after the bot is
+	// launched. Returns _True_ on success. Requires no parameters.
+	//
+	// POST /close
+	Close(ctx context.Context) (*Result, error)
+	// CloseForumTopic invokes closeForumTopic operation.
+	//
+	// Use this method to close an open topic in a forum supergroup chat. The bot must be an
+	// administrator in the chat for this to work and must have the _can_manage_topics_ administrator
+	// rights, unless it is the creator of the topic. Returns _True_ on success.
+	//
+	// POST /closeForumTopic
+	CloseForumTopic(ctx context.Context, request *CloseForumTopic) (*Result, error)
+	// CloseGeneralForumTopic invokes closeGeneralForumTopic operation.
+	//
+	// Use this method to close an open 'General' topic in a forum supergroup chat. The bot must be an
+	// administrator in the chat for this to work and must have the _can_manage_topics_ administrator
+	// rights. Returns _True_ on success.
+	//
+	// POST /closeGeneralForumTopic
+	CloseGeneralForumTopic(ctx context.Context, request *CloseGeneralForumTopic) (*Result, error)
+	// CopyMessage invokes copyMessage operation.
+	//
+	// Use this method to copy messages of any kind. Service messages, giveaway messages, giveaway
+	// winners messages, and invoice messages can't be copied. A quiz [poll](https://core.telegram.
+	// org/bots/api#poll) can be copied only if the value of the field _correct_option_id_ is known to
+	// the bot. The method is analogous to the method [forwardMessage](https://core.telegram.
+	// org/bots/api#forwardmessage), but the copied message doesn't have a link to the original message.
+	// Returns the [MessageId](https://core.telegram.org/bots/api#messageid) of the sent message on
+	// success.
+	//
+	// POST /copyMessage
+	CopyMessage(ctx context.Context, request *CopyMessage) (*ResultMessageId, error)
+	// CopyMessages invokes copyMessages operation.
+	//
+	// Use this method to copy messages of any kind. If some of the specified messages can't be found or
+	// copied, they are skipped. Service messages, giveaway messages, giveaway winners messages, and
+	// invoice messages can't be copied. A quiz [poll](https://core.telegram.org/bots/api#poll) can be
+	// copied only if the value of the field _correct_option_id_ is known to the bot. The method is
+	// analogous to the method [forwardMessages](https://core.telegram.org/bots/api#forwardmessages), but
+	// the copied messages don't have a link to the original message. Album grouping is kept for copied
+	// messages. On success, an array of [MessageId](https://core.telegram.org/bots/api#messageid) of the
+	// sent messages is returned.
+	//
+	// POST /copyMessages
+	CopyMessages(ctx context.Context, request *CopyMessages) (*ResultArrayOfMessageId, error)
+	// CreateChatInviteLink invokes createChatInviteLink operation.
+	//
+	// Use this method to create an additional invite link for a chat. The bot must be an administrator
+	// in the chat for this to work and must have the appropriate administrator rights. The link can be
+	// revoked using the method [revokeChatInviteLink](https://core.telegram.
+	// org/bots/api#revokechatinvitelink). Returns the new invite link as [ChatInviteLink](https://core.
+	// telegram.org/bots/api#chatinvitelink) object.
+	//
+	// POST /createChatInviteLink
+	CreateChatInviteLink(ctx context.Context, request *CreateChatInviteLink) (*ResultChatInviteLink, error)
+	// CreateForumTopic invokes createForumTopic operation.
+	//
+	// Use this method to create a topic in a forum supergroup chat. The bot must be an administrator in
+	// the chat for this to work and must have the _can_manage_topics_ administrator rights. Returns
+	// information about the created topic as a [ForumTopic](https://core.telegram.
+	// org/bots/api#forumtopic) object.
+	//
+	// POST /createForumTopic
+	CreateForumTopic(ctx context.Context, request *CreateForumTopic) (*Result, error)
+	// CreateInvoiceLink invokes createInvoiceLink operation.
+	//
+	// Use this method to create a link for an invoice. Returns the created invoice link as _String_ on
+	// success.
+	//
+	// POST /createInvoiceLink
+	CreateInvoiceLink(ctx context.Context, request *CreateInvoiceLink) (*ResultString, error)
+	// CreateNewStickerSet invokes createNewStickerSet operation.
+	//
+	// Use this method to create a new sticker set owned by a user. The bot will be able to edit the
+	// sticker set thus created. Returns _True_ on success.
+	//
+	// POST /createNewStickerSet
+	CreateNewStickerSet(ctx context.Context, request *CreateNewStickerSet) (*Result, error)
+	// DeclineChatJoinRequest invokes declineChatJoinRequest operation.
+	//
+	// Use this method to decline a chat join request. The bot must be an administrator in the chat for
+	// this to work and must have the _can_invite_users_ administrator right. Returns _True_ on success.
+	//
+	// POST /declineChatJoinRequest
+	DeclineChatJoinRequest(ctx context.Context, request *DeclineChatJoinRequest) (*Result, error)
+	// DeleteChatPhoto invokes deleteChatPhoto operation.
+	//
+	// Use this method to delete a chat photo. Photos can't be changed for private chats. The bot must be
+	// an administrator in the chat for this to work and must have the appropriate administrator rights.
+	// Returns _True_ on success.
+	//
+	// POST /deleteChatPhoto
+	DeleteChatPhoto(ctx context.Context, request *DeleteChatPhoto) (*Result, error)
+	// DeleteChatStickerSet invokes deleteChatStickerSet operation.
+	//
+	// Use this method to delete a group sticker set from a supergroup. The bot must be an administrator
+	// in the chat for this to work and must have the appropriate administrator rights. Use the field
+	// _can_set_sticker_set_ optionally returned in [getChat](https://core.telegram.org/bots/api#getchat)
+	// requests to check if the bot can use this method. Returns _True_ on success.
+	//
+	// POST /deleteChatStickerSet
+	DeleteChatStickerSet(ctx context.Context, request *DeleteChatStickerSet) (*Result, error)
+	// DeleteForumTopic invokes deleteForumTopic operation.
+	//
+	// Use this method to delete a forum topic along with all its messages in a forum supergroup chat.
+	// The bot must be an administrator in the chat for this to work and must have the
+	// _can_delete_messages_ administrator rights. Returns _True_ on success.
+	//
+	// POST /deleteForumTopic
+	DeleteForumTopic(ctx context.Context, request *DeleteForumTopic) (*Result, error)
+	// DeleteMessage invokes deleteMessage operation.
+	//
+	// Use this method to delete a message, including service messages, with the following limitations:-
+	// A message can only be deleted if it was sent less than 48 hours ago.- Service messages about a
+	// supergroup, channel, or forum topic creation can't be deleted.- A dice message in a private chat
+	// can only be deleted if it was sent more than 24 hours ago.- Bots can delete outgoing messages in
+	// private chats, groups, and supergroups.- Bots can delete incoming messages in private chats.- Bots
+	// granted _can_post_messages_ permissions can delete outgoing messages in channels.- If the bot is
+	// an administrator of a group, it can delete any message there.- If the bot has
+	// _can_delete_messages_ permission in a supergroup or a channel, it can delete any message there.
+	// Returns _True_ on success.
+	//
+	// POST /deleteMessage
+	DeleteMessage(ctx context.Context, request *DeleteMessage) (*Result, error)
+	// DeleteMessages invokes deleteMessages operation.
+	//
+	// Use this method to delete multiple messages simultaneously. If some of the specified messages
+	// can't be found, they are skipped. Returns _True_ on success.
+	//
+	// POST /deleteMessages
+	DeleteMessages(ctx context.Context, request *DeleteMessages) (*Result, error)
+	// DeleteMyCommands invokes deleteMyCommands operation.
+	//
+	// Use this method to delete the list of the bot's commands for the given scope and user language.
+	// After deletion, [higher level commands](https://core.telegram.
+	// org/bots/api#determining-list-of-commands) will be shown to affected users. Returns _True_ on
+	// success.
+	//
+	// POST /deleteMyCommands
+	DeleteMyCommands(ctx context.Context, request OptDeleteMyCommands) (*Result, error)
+	// DeleteStickerFromSet invokes deleteStickerFromSet operation.
+	//
+	// Use this method to delete a sticker from a set created by the bot. Returns _True_ on success.
+	//
+	// POST /deleteStickerFromSet
+	DeleteStickerFromSet(ctx context.Context, request *DeleteStickerFromSet) (*Result, error)
+	// DeleteStickerSet invokes deleteStickerSet operation.
+	//
+	// Use this method to delete a sticker set that was created by the bot. Returns _True_ on success.
+	//
+	// POST /deleteStickerSet
+	DeleteStickerSet(ctx context.Context, request *DeleteStickerSet) (*Result, error)
+	// DeleteWebhook invokes deleteWebhook operation.
+	//
+	// Use this method to remove webhook integration if you decide to switch back to
+	// [getUpdates](https://core.telegram.org/bots/api#getupdates). Returns _True_ on success.
+	//
+	// POST /deleteWebhook
+	DeleteWebhook(ctx context.Context, request OptDeleteWebhook) (*Result, error)
+	// EditChatInviteLink invokes editChatInviteLink operation.
+	//
+	// Use this method to edit a non-primary invite link created by the bot. The bot must be an
+	// administrator in the chat for this to work and must have the appropriate administrator rights.
+	// Returns the edited invite link as a [ChatInviteLink](https://core.telegram.
+	// org/bots/api#chatinvitelink) object.
+	//
+	// POST /editChatInviteLink
+	EditChatInviteLink(ctx context.Context, request *EditChatInviteLink) (*ResultChatInviteLink, error)
+	// EditForumTopic invokes editForumTopic operation.
+	//
+	// Use this method to edit name and icon of a topic in a forum supergroup chat. The bot must be an
+	// administrator in the chat for this to work and must have _can_manage_topics_ administrator rights,
+	// unless it is the creator of the topic. Returns _True_ on success.
+	//
+	// POST /editForumTopic
+	EditForumTopic(ctx context.Context, request *EditForumTopic) (*Result, error)
+	// EditGeneralForumTopic invokes editGeneralForumTopic operation.
+	//
+	// Use this method to edit the name of the 'General' topic in a forum supergroup chat. The bot must
+	// be an administrator in the chat for this to work and must have _can_manage_topics_ administrator
+	// rights. Returns _True_ on success.
+	//
+	// POST /editGeneralForumTopic
+	EditGeneralForumTopic(ctx context.Context, request *EditGeneralForumTopic) (*Result, error)
+	// EditMessageCaption invokes editMessageCaption operation.
+	//
+	// Use this method to edit captions of messages. On success, if the edited message is not an inline
+	// message, the edited [Message](https://core.telegram.org/bots/api#message) is returned, otherwise
+	// _True_ is returned. Note that business messages that were not sent by the bot and do not contain
+	// an inline keyboard can only be edited within **48 hours** from the time they were sent.
+	//
+	// POST /editMessageCaption
+	EditMessageCaption(ctx context.Context, request *EditMessageCaption) (*ResultMessageOrBoolean, error)
+	// EditMessageLiveLocation invokes editMessageLiveLocation operation.
+	//
+	// Use this method to edit live location messages. A location can be edited until its _live_period_
+	// expires or editing is explicitly disabled by a call to [stopMessageLiveLocation](https://core.
+	// telegram.org/bots/api#stopmessagelivelocation). On success, if the edited message is not an inline
+	// message, the edited [Message](https://core.telegram.org/bots/api#message) is returned, otherwise
+	// _True_ is returned.
+	//
+	// POST /editMessageLiveLocation
+	EditMessageLiveLocation(ctx context.Context, request *EditMessageLiveLocation) (*ResultMessageOrBoolean, error)
+	// EditMessageMedia invokes editMessageMedia operation.
+	//
+	// Use this method to edit animation, audio, document, photo, or video messages. If a message is part
+	// of a message album, then it can be edited only to an audio for audio albums, only to a document
+	// for document albums and to a photo or a video otherwise. When an inline message is edited, a new
+	// file can't be uploaded; use a previously uploaded file via its file_id or specify a URL. On
+	// success, if the edited message is not an inline message, the edited [Message](https://core.
+	// telegram.org/bots/api#message) is returned, otherwise _True_ is returned. Note that business
+	// messages that were not sent by the bot and do not contain an inline keyboard can only be edited
+	// within **48 hours** from the time they were sent.
+	//
+	// POST /editMessageMedia
+	EditMessageMedia(ctx context.Context, request *EditMessageMedia) (*ResultMessageOrBoolean, error)
+	// EditMessageReplyMarkup invokes editMessageReplyMarkup operation.
+	//
+	// Use this method to edit only the reply markup of messages. On success, if the edited message is
+	// not an inline message, the edited [Message](https://core.telegram.org/bots/api#message) is
+	// returned, otherwise _True_ is returned. Note that business messages that were not sent by the bot
+	// and do not contain an inline keyboard can only be edited within **48 hours** from the time they
+	// were sent.
+	//
+	// POST /editMessageReplyMarkup
+	EditMessageReplyMarkup(ctx context.Context, request *EditMessageReplyMarkup) (*ResultMessageOrBoolean, error)
+	// EditMessageText invokes editMessageText operation.
+	//
+	// Use this method to edit text and [game](https://core.telegram.org/bots/api#games) messages. On
+	// success, if the edited message is not an inline message, the edited [Message](https://core.
+	// telegram.org/bots/api#message) is returned, otherwise _True_ is returned. Note that business
+	// messages that were not sent by the bot and do not contain an inline keyboard can only be edited
+	// within **48 hours** from the time they were sent.
+	//
+	// POST /editMessageText
+	EditMessageText(ctx context.Context, request *EditMessageText) (*ResultMessageOrBoolean, error)
+	// ExportChatInviteLink invokes exportChatInviteLink operation.
+	//
+	// Use this method to generate a new primary invite link for a chat; any previously generated primary
+	// link is revoked. The bot must be an administrator in the chat for this to work and must have the
+	// appropriate administrator rights. Returns the new invite link as _String_ on success.
+	//
+	// POST /exportChatInviteLink
+	ExportChatInviteLink(ctx context.Context, request *ExportChatInviteLink) (*ResultString, error)
+	// ForwardMessage invokes forwardMessage operation.
+	//
+	// Use this method to forward messages of any kind. Service messages and messages with protected
+	// content can't be forwarded. On success, the sent [Message](https://core.telegram.
+	// org/bots/api#message) is returned.
+	//
+	// POST /forwardMessage
+	ForwardMessage(ctx context.Context, request *ForwardMessage) (*ResultMessage, error)
+	// ForwardMessages invokes forwardMessages operation.
+	//
+	// Use this method to forward multiple messages of any kind. If some of the specified messages can't
+	// be found or forwarded, they are skipped. Service messages and messages with protected content
+	// can't be forwarded. Album grouping is kept for forwarded messages. On success, an array of
+	// [MessageId](https://core.telegram.org/bots/api#messageid) of the sent messages is returned.
+	//
+	// POST /forwardMessages
+	ForwardMessages(ctx context.Context, request *ForwardMessages) (*ResultArrayOfMessageId, error)
+	// GetBusinessConnection invokes getBusinessConnection operation.
+	//
+	// Use this method to get information about the connection of the bot with a business account.
+	// Returns a [BusinessConnection](https://core.telegram.org/bots/api#businessconnection) object on
+	// success.
+	//
+	// POST /getBusinessConnection
+	GetBusinessConnection(ctx context.Context, request *GetBusinessConnection) (*Result, error)
+	// GetChat invokes getChat operation.
+	//
+	// Use this method to get up-to-date information about the chat. Returns a
+	// [ChatFullInfo](https://core.telegram.org/bots/api#chatfullinfo) object on success.
+	//
+	// POST /getChat
+	GetChat(ctx context.Context, request *GetChat) (*Result, error)
+	// GetChatAdministrators invokes getChatAdministrators operation.
+	//
+	// Use this method to get a list of administrators in a chat, which aren't bots. Returns an Array of
+	// [ChatMember](https://core.telegram.org/bots/api#chatmember) objects.
+	//
+	// POST /getChatAdministrators
+	GetChatAdministrators(ctx context.Context, request *GetChatAdministrators) (*ResultArrayOfChatMember, error)
+	// GetChatMember invokes getChatMember operation.
+	//
+	// Use this method to get information about a member of a chat. The method is only guaranteed to work
+	// for other users if the bot is an administrator in the chat. Returns a [ChatMember](https://core.
+	// telegram.org/bots/api#chatmember) object on success.
+	//
+	// POST /getChatMember
+	GetChatMember(ctx context.Context, request *GetChatMember) (*ResultChatMember, error)
+	// GetChatMemberCount invokes getChatMemberCount operation.
+	//
+	// Use this method to get the number of members in a chat. Returns _Int_ on success.
+	//
+	// POST /getChatMemberCount
+	GetChatMemberCount(ctx context.Context, request *GetChatMemberCount) (*ResultInt, error)
+	// GetChatMenuButton invokes getChatMenuButton operation.
+	//
+	// Use this method to get the current value of the bot's menu button in a private chat, or the
+	// default menu button. Returns [MenuButton](https://core.telegram.org/bots/api#menubutton) on
+	// success.
+	//
+	// POST /getChatMenuButton
+	GetChatMenuButton(ctx context.Context, request OptGetChatMenuButton) (*Result, error)
+	// GetCustomEmojiStickers invokes getCustomEmojiStickers operation.
+	//
+	// Use this method to get information about custom emoji stickers by their identifiers. Returns an
+	// Array of [Sticker](https://core.telegram.org/bots/api#sticker) objects.
+	//
+	// POST /getCustomEmojiStickers
+	GetCustomEmojiStickers(ctx context.Context, request *GetCustomEmojiStickers) (*ResultArrayOfSticker, error)
+	// GetFile invokes getFile operation.
+	//
+	// Use this method to get basic information about a file and prepare it for downloading. For the
+	// moment, bots can download files of up to 20MB in size. On success, a [File](https://core.telegram.
+	// org/bots/api#file) object is returned. The file can then be downloaded via the link `https://api.
+	// telegram.org/file/bot<token>/<file_path>`, where `<file_path>` is taken from the response. It is
+	// guaranteed that the link will be valid for at least 1 hour. When the link expires, a new one can
+	// be requested by calling [getFile](https://core.telegram.org/bots/api#getfile) again.
+	//
+	// POST /getFile
+	GetFile(ctx context.Context, request *GetFile) (*ResultFile, error)
+	// GetForumTopicIconStickers invokes getForumTopicIconStickers operation.
+	//
+	// Use this method to get custom emoji stickers, which can be used as a forum topic icon by any user.
+	// Requires no parameters. Returns an Array of [Sticker](https://core.telegram.org/bots/api#sticker)
+	// objects.
+	//
+	// POST /getForumTopicIconStickers
+	GetForumTopicIconStickers(ctx context.Context) (*ResultArrayOfSticker, error)
+	// GetGameHighScores invokes getGameHighScores operation.
+	//
+	// Use this method to get data for high score tables. Will return the score of the specified user and
+	// several of their neighbors in a game. Returns an Array of [GameHighScore](https://core.telegram.
+	// org/bots/api#gamehighscore) objects.
+	//
+	// POST /getGameHighScores
+	GetGameHighScores(ctx context.Context, request *GetGameHighScores) (*ResultArrayOfGameHighScore, error)
+	// GetMe invokes getMe operation.
+	//
+	// A simple method for testing your bot's authentication token. Requires no parameters. Returns basic
+	// information about the bot in form of a [User](https://core.telegram.org/bots/api#user) object.
+	//
+	// POST /getMe
+	GetMe(ctx context.Context) (*ResultUser, error)
+	// GetMyCommands invokes getMyCommands operation.
+	//
+	// Use this method to get the current list of the bot's commands for the given scope and user
+	// language. Returns an Array of [BotCommand](https://core.telegram.org/bots/api#botcommand) objects.
+	// If commands aren't set, an empty list is returned.
+	//
+	// POST /getMyCommands
+	GetMyCommands(ctx context.Context, request OptGetMyCommands) (*ResultArrayOfBotCommand, error)
+	// GetMyDefaultAdministratorRights invokes getMyDefaultAdministratorRights operation.
+	//
+	// Use this method to get the current default administrator rights of the bot. Returns
+	// [ChatAdministratorRights](https://core.telegram.org/bots/api#chatadministratorrights) on success.
+	//
+	// POST /getMyDefaultAdministratorRights
+	GetMyDefaultAdministratorRights(ctx context.Context, request OptGetMyDefaultAdministratorRights) (*Result, error)
+	// GetMyDescription invokes getMyDescription operation.
+	//
+	// Use this method to get the current bot description for the given user language. Returns
+	// [BotDescription](https://core.telegram.org/bots/api#botdescription) on success.
+	//
+	// POST /getMyDescription
+	GetMyDescription(ctx context.Context, request OptGetMyDescription) (*Result, error)
+	// GetMyName invokes getMyName operation.
+	//
+	// Use this method to get the current bot name for the given user language. Returns
+	// [BotName](https://core.telegram.org/bots/api#botname) on success.
+	//
+	// POST /getMyName
+	GetMyName(ctx context.Context, request OptGetMyName) (*Result, error)
+	// GetMyShortDescription invokes getMyShortDescription operation.
+	//
+	// Use this method to get the current bot short description for the given user language. Returns
+	// [BotShortDescription](https://core.telegram.org/bots/api#botshortdescription) on success.
+	//
+	// POST /getMyShortDescription
+	GetMyShortDescription(ctx context.Context, request OptGetMyShortDescription) (*Result, error)
+	// GetStarTransactions invokes getStarTransactions operation.
+	//
+	// Returns the bot's Telegram Star transactions in chronological order. On success, returns a
+	// [StarTransactions](https://core.telegram.org/bots/api#startransactions) object.
+	//
+	// POST /getStarTransactions
+	GetStarTransactions(ctx context.Context, request OptGetStarTransactions) (*Result, error)
+	// GetStickerSet invokes getStickerSet operation.
+	//
+	// Use this method to get a sticker set. On success, a [StickerSet](https://core.telegram.
+	// org/bots/api#stickerset) object is returned.
+	//
+	// POST /getStickerSet
+	GetStickerSet(ctx context.Context, request *GetStickerSet) (*ResultStickerSet, error)
+	// GetUpdates invokes getUpdates operation.
+	//
+	// Use this method to receive incoming updates using long polling ([wiki](https://en.wikipedia.
+	// org/wiki/Push_technology#Long_polling)). Returns an Array of [Update](https://core.telegram.
+	// org/bots/api#update) objects.
+	//
+	// POST /getUpdates
+	GetUpdates(ctx context.Context, request OptGetUpdates) (*ResultArrayOfUpdate, error)
+	// GetUserChatBoosts invokes getUserChatBoosts operation.
+	//
+	// Use this method to get the list of boosts added to a chat by a user. Requires administrator rights
+	// in the chat. Returns a [UserChatBoosts](https://core.telegram.org/bots/api#userchatboosts) object.
+	//
+	// POST /getUserChatBoosts
+	GetUserChatBoosts(ctx context.Context, request *GetUserChatBoosts) (*Result, error)
+	// GetUserProfilePhotos invokes getUserProfilePhotos operation.
+	//
+	// Use this method to get a list of profile pictures for a user. Returns a
+	// [UserProfilePhotos](https://core.telegram.org/bots/api#userprofilephotos) object.
+	//
+	// POST /getUserProfilePhotos
+	GetUserProfilePhotos(ctx context.Context, request *GetUserProfilePhotos) (*ResultUserProfilePhotos, error)
+	// GetWebhookInfo invokes getWebhookInfo operation.
+	//
+	// Use this method to get current webhook status. Requires no parameters. On success, returns a
+	// [WebhookInfo](https://core.telegram.org/bots/api#webhookinfo) object. If the bot is using
+	// [getUpdates](https://core.telegram.org/bots/api#getupdates), will return an object with the _url_
+	// field empty.
+	//
+	// POST /getWebhookInfo
+	GetWebhookInfo(ctx context.Context) (*ResultWebhookInfo, error)
+	// HideGeneralForumTopic invokes hideGeneralForumTopic operation.
+	//
+	// Use this method to hide the 'General' topic in a forum supergroup chat. The bot must be an
+	// administrator in the chat for this to work and must have the _can_manage_topics_ administrator
+	// rights. The topic will be automatically closed if it was open. Returns _True_ on success.
+	//
+	// POST /hideGeneralForumTopic
+	HideGeneralForumTopic(ctx context.Context, request *HideGeneralForumTopic) (*Result, error)
+	// LeaveChat invokes leaveChat operation.
+	//
+	// Use this method for your bot to leave a group, supergroup or channel. Returns _True_ on success.
+	//
+	// POST /leaveChat
+	LeaveChat(ctx context.Context, request *LeaveChat) (*Result, error)
+	// LogOut invokes logOut operation.
+	//
+	// Use this method to log out from the cloud Bot API server before launching the bot locally. You
+	// **must** log out the bot before running it locally, otherwise there is no guarantee that the bot
+	// will receive updates. After a successful call, you can immediately log in on a local server, but
+	// will not be able to log in back to the cloud Bot API server for 10 minutes. Returns _True_ on
+	// success. Requires no parameters.
+	//
+	// POST /logOut
+	LogOut(ctx context.Context) (*Result, error)
+	// PinChatMessage invokes pinChatMessage operation.
+	//
+	// Use this method to add a message to the list of pinned messages in a chat. If the chat is not a
+	// private chat, the bot must be an administrator in the chat for this to work and must have the
+	// 'can_pin_messages' administrator right in a supergroup or 'can_edit_messages' administrator right
+	// in a channel. Returns _True_ on success.
+	//
+	// POST /pinChatMessage
+	PinChatMessage(ctx context.Context, request *PinChatMessage) (*Result, error)
+	// PromoteChatMember invokes promoteChatMember operation.
+	//
+	// Use this method to promote or demote a user in a supergroup or a channel. The bot must be an
+	// administrator in the chat for this to work and must have the appropriate administrator rights.
+	// Pass _False_ for all boolean parameters to demote a user. Returns _True_ on success.
+	//
+	// POST /promoteChatMember
+	PromoteChatMember(ctx context.Context, request *PromoteChatMember) (*Result, error)
+	// RefundStarPayment invokes refundStarPayment operation.
+	//
+	// Refunds a successful payment in [Telegram Stars](https://t.me/BotNews/90). Returns _True_ on
+	// success.
+	//
+	// POST /refundStarPayment
+	RefundStarPayment(ctx context.Context, request *RefundStarPayment) (*Result, error)
+	// ReopenForumTopic invokes reopenForumTopic operation.
+	//
+	// Use this method to reopen a closed topic in a forum supergroup chat. The bot must be an
+	// administrator in the chat for this to work and must have the _can_manage_topics_ administrator
+	// rights, unless it is the creator of the topic. Returns _True_ on success.
+	//
+	// POST /reopenForumTopic
+	ReopenForumTopic(ctx context.Context, request *ReopenForumTopic) (*Result, error)
+	// ReopenGeneralForumTopic invokes reopenGeneralForumTopic operation.
+	//
+	// Use this method to reopen a closed 'General' topic in a forum supergroup chat. The bot must be an
+	// administrator in the chat for this to work and must have the _can_manage_topics_ administrator
+	// rights. The topic will be automatically unhidden if it was hidden. Returns _True_ on success.
+	//
+	// POST /reopenGeneralForumTopic
+	ReopenGeneralForumTopic(ctx context.Context, request *ReopenGeneralForumTopic) (*Result, error)
+	// ReplaceStickerInSet invokes replaceStickerInSet operation.
+	//
+	// Use this method to replace an existing sticker in a sticker set with a new one. The method is
+	// equivalent to calling [deleteStickerFromSet](https://core.telegram.
+	// org/bots/api#deletestickerfromset), then [addStickerToSet](https://core.telegram.
+	// org/bots/api#addstickertoset), then [setStickerPositionInSet](https://core.telegram.
+	// org/bots/api#setstickerpositioninset). Returns _True_ on success.
+	//
+	// POST /replaceStickerInSet
+	ReplaceStickerInSet(ctx context.Context, request *ReplaceStickerInSet) (*Result, error)
+	// RestrictChatMember invokes restrictChatMember operation.
+	//
+	// Use this method to restrict a user in a supergroup. The bot must be an administrator in the
+	// supergroup for this to work and must have the appropriate administrator rights. Pass _True_ for
+	// all permissions to lift restrictions from a user. Returns _True_ on success.
+	//
+	// POST /restrictChatMember
+	RestrictChatMember(ctx context.Context, request *RestrictChatMember) (*Result, error)
+	// RevokeChatInviteLink invokes revokeChatInviteLink operation.
+	//
+	// Use this method to revoke an invite link created by the bot. If the primary link is revoked, a new
+	// link is automatically generated. The bot must be an administrator in the chat for this to work and
+	// must have the appropriate administrator rights. Returns the revoked invite link as
+	// [ChatInviteLink](https://core.telegram.org/bots/api#chatinvitelink) object.
+	//
+	// POST /revokeChatInviteLink
+	RevokeChatInviteLink(ctx context.Context, request *RevokeChatInviteLink) (*ResultChatInviteLink, error)
+	// SendAnimation invokes sendAnimation operation.
+	//
+	// Use this method to send animation files (GIF or H.264/MPEG-4 AVC video without sound). On success,
+	// the sent [Message](https://core.telegram.org/bots/api#message) is returned. Bots can currently
+	// send animation files of up to 50 MB in size, this limit may be changed in the future.
+	//
+	// POST /sendAnimation
+	SendAnimation(ctx context.Context, request *SendAnimation) (*ResultMessage, error)
+	// SendAudio invokes sendAudio operation.
+	//
+	// For sending voice messages, use the [sendVoice](https://core.telegram.org/bots/api#sendvoice)
+	// method instead.
+	//
+	// POST /sendAudio
+	SendAudio(ctx context.Context, request *SendAudio) (*ResultMessage, error)
+	// SendChatAction invokes sendChatAction operation.
+	//
+	// We only recommend using this method when a response from the bot will take a **noticeable** amount
+	// of time to arrive.
+	//
+	// POST /sendChatAction
+	SendChatAction(ctx context.Context, request *SendChatAction) (*Result, error)
+	// SendContact invokes sendContact operation.
+	//
+	// Use this method to send phone contacts. On success, the sent [Message](https://core.telegram.
+	// org/bots/api#message) is returned.
+	//
+	// POST /sendContact
+	SendContact(ctx context.Context, request *SendContact) (*ResultMessage, error)
+	// SendDice invokes sendDice operation.
+	//
+	// Use this method to send an animated emoji that will display a random value. On success, the sent
+	// [Message](https://core.telegram.org/bots/api#message) is returned.
+	//
+	// POST /sendDice
+	SendDice(ctx context.Context, request *SendDice) (*ResultMessage, error)
+	// SendDocument invokes sendDocument operation.
+	//
+	// Use this method to send general files. On success, the sent [Message](https://core.telegram.
+	// org/bots/api#message) is returned. Bots can currently send files of any type of up to 50 MB in
+	// size, this limit may be changed in the future.
+	//
+	// POST /sendDocument
+	SendDocument(ctx context.Context, request *SendDocument) (*ResultMessage, error)
+	// SendGame invokes sendGame operation.
+	//
+	// Use this method to send a game. On success, the sent [Message](https://core.telegram.
+	// org/bots/api#message) is returned.
+	//
+	// POST /sendGame
+	SendGame(ctx context.Context, request *SendGame) (*ResultMessage, error)
+	// SendInvoice invokes sendInvoice operation.
+	//
+	// Use this method to send invoices. On success, the sent [Message](https://core.telegram.
+	// org/bots/api#message) is returned.
+	//
+	// POST /sendInvoice
+	SendInvoice(ctx context.Context, request *SendInvoice) (*ResultMessage, error)
+	// SendLocation invokes sendLocation operation.
+	//
+	// Use this method to send point on the map. On success, the sent [Message](https://core.telegram.
+	// org/bots/api#message) is returned.
+	//
+	// POST /sendLocation
+	SendLocation(ctx context.Context, request *SendLocation) (*ResultMessage, error)
+	// SendMediaGroup invokes sendMediaGroup operation.
+	//
+	// Use this method to send a group of photos, videos, documents or audios as an album. Documents and
+	// audio files can be only grouped in an album with messages of the same type. On success, an array
+	// of [Messages](https://core.telegram.org/bots/api#message) that were sent is returned.
+	//
+	// POST /sendMediaGroup
+	SendMediaGroup(ctx context.Context, request *SendMediaGroup) (*ResultArrayOfMessage, error)
+	// SendMessage invokes sendMessage operation.
+	//
+	// Use this method to send text messages. On success, the sent [Message](https://core.telegram.
+	// org/bots/api#message) is returned.
+	//
+	// POST /sendMessage
+	SendMessage(ctx context.Context, request *SendMessage) (*ResultMessage, error)
+	// SendPhoto invokes sendPhoto operation.
+	//
+	// Use this method to send photos. On success, the sent [Message](https://core.telegram.
+	// org/bots/api#message) is returned.
+	//
+	// POST /sendPhoto
+	SendPhoto(ctx context.Context, request *SendPhoto) (*ResultMessage, error)
+	// SendPoll invokes sendPoll operation.
+	//
+	// Use this method to send a native poll. On success, the sent [Message](https://core.telegram.
+	// org/bots/api#message) is returned.
+	//
+	// POST /sendPoll
+	SendPoll(ctx context.Context, request *SendPoll) (*ResultMessage, error)
+	// SendSticker invokes sendSticker operation.
+	//
+	// Use this method to send static .WEBP, [animated](https://telegram.org/blog/animated-stickers) .TGS,
+	//  or [video](https://telegram.org/blog/video-stickers-better-reactions) .WEBM stickers. On success,
+	// the sent [Message](https://core.telegram.org/bots/api#message) is returned.
+	//
+	// POST /sendSticker
+	SendSticker(ctx context.Context, request *SendSticker) (*ResultMessage, error)
+	// SendVenue invokes sendVenue operation.
+	//
+	// Use this method to send information about a venue. On success, the sent [Message](https://core.
+	// telegram.org/bots/api#message) is returned.
+	//
+	// POST /sendVenue
+	SendVenue(ctx context.Context, request *SendVenue) (*ResultMessage, error)
+	// SendVideo invokes sendVideo operation.
+	//
+	// Use this method to send video files, Telegram clients support MPEG4 videos (other formats may be
+	// sent as [Document](https://core.telegram.org/bots/api#document)). On success, the sent
+	// [Message](https://core.telegram.org/bots/api#message) is returned. Bots can currently send video
+	// files of up to 50 MB in size, this limit may be changed in the future.
+	//
+	// POST /sendVideo
+	SendVideo(ctx context.Context, request *SendVideo) (*ResultMessage, error)
+	// SendVideoNote invokes sendVideoNote operation.
+	//
+	// As of [v.4.0](https://telegram.org/blog/video-messages-and-telescope), Telegram clients support
+	// rounded square MPEG4 videos of up to 1 minute long. Use this method to send video messages. On
+	// success, the sent [Message](https://core.telegram.org/bots/api#message) is returned.
+	//
+	// POST /sendVideoNote
+	SendVideoNote(ctx context.Context, request *SendVideoNote) (*ResultMessage, error)
+	// SendVoice invokes sendVoice operation.
+	//
+	// Use this method to send audio files, if you want Telegram clients to display the file as a
+	// playable voice message. For this to work, your audio must be in an .OGG file encoded with OPUS, or
+	// in .MP3 format, or in .M4A format (other formats may be sent as [Audio](https://core.telegram.
+	// org/bots/api#audio) or [Document](https://core.telegram.org/bots/api#document)). On success, the
+	// sent [Message](https://core.telegram.org/bots/api#message) is returned. Bots can currently send
+	// voice messages of up to 50 MB in size, this limit may be changed in the future.
+	//
+	// POST /sendVoice
+	SendVoice(ctx context.Context, request *SendVoice) (*ResultMessage, error)
+	// SetChatAdministratorCustomTitle invokes setChatAdministratorCustomTitle operation.
+	//
+	// Use this method to set a custom title for an administrator in a supergroup promoted by the bot.
+	// Returns _True_ on success.
+	//
+	// POST /setChatAdministratorCustomTitle
+	SetChatAdministratorCustomTitle(ctx context.Context, request *SetChatAdministratorCustomTitle) (*Result, error)
+	// SetChatDescription invokes setChatDescription operation.
+	//
+	// Use this method to change the description of a group, a supergroup or a channel. The bot must be
+	// an administrator in the chat for this to work and must have the appropriate administrator rights.
+	// Returns _True_ on success.
+	//
+	// POST /setChatDescription
+	SetChatDescription(ctx context.Context, request *SetChatDescription) (*Result, error)
+	// SetChatMenuButton invokes setChatMenuButton operation.
+	//
+	// Use this method to change the bot's menu button in a private chat, or the default menu button.
+	// Returns _True_ on success.
+	//
+	// POST /setChatMenuButton
+	SetChatMenuButton(ctx context.Context, request OptSetChatMenuButton) (*Result, error)
+	// SetChatPermissions invokes setChatPermissions operation.
+	//
+	// Use this method to set default chat permissions for all members. The bot must be an administrator
+	// in the group or a supergroup for this to work and must have the _can_restrict_members_
+	// administrator rights. Returns _True_ on success.
+	//
+	// POST /setChatPermissions
+	SetChatPermissions(ctx context.Context, request *SetChatPermissions) (*Result, error)
+	// SetChatPhoto invokes setChatPhoto operation.
+	//
+	// Use this method to set a new profile photo for the chat. Photos can't be changed for private chats.
+	//  The bot must be an administrator in the chat for this to work and must have the appropriate
+	// administrator rights. Returns _True_ on success.
+	//
+	// POST /setChatPhoto
+	SetChatPhoto(ctx context.Context, request *SetChatPhoto) (*Result, error)
+	// SetChatStickerSet invokes setChatStickerSet operation.
+	//
+	// Use this method to set a new group sticker set for a supergroup. The bot must be an administrator
+	// in the chat for this to work and must have the appropriate administrator rights. Use the field
+	// _can_set_sticker_set_ optionally returned in [getChat](https://core.telegram.org/bots/api#getchat)
+	// requests to check if the bot can use this method. Returns _True_ on success.
+	//
+	// POST /setChatStickerSet
+	SetChatStickerSet(ctx context.Context, request *SetChatStickerSet) (*Result, error)
+	// SetChatTitle invokes setChatTitle operation.
+	//
+	// Use this method to change the title of a chat. Titles can't be changed for private chats. The bot
+	// must be an administrator in the chat for this to work and must have the appropriate administrator
+	// rights. Returns _True_ on success.
+	//
+	// POST /setChatTitle
+	SetChatTitle(ctx context.Context, request *SetChatTitle) (*Result, error)
+	// SetCustomEmojiStickerSetThumbnail invokes setCustomEmojiStickerSetThumbnail operation.
+	//
+	// Use this method to set the thumbnail of a custom emoji sticker set. Returns _True_ on success.
+	//
+	// POST /setCustomEmojiStickerSetThumbnail
+	SetCustomEmojiStickerSetThumbnail(ctx context.Context, request *SetCustomEmojiStickerSetThumbnail) (*Result, error)
+	// SetGameScore invokes setGameScore operation.
+	//
+	// Use this method to set the score of the specified user in a game message. On success, if the
+	// message is not an inline message, the [Message](https://core.telegram.org/bots/api#message) is
+	// returned, otherwise _True_ is returned. Returns an error, if the new score is not greater than the
+	// user's current score in the chat and _force_ is _False_.
+	//
+	// POST /setGameScore
+	SetGameScore(ctx context.Context, request *SetGameScore) (*Result, error)
+	// SetMessageReaction invokes setMessageReaction operation.
+	//
+	// Use this method to change the chosen reactions on a message. Service messages can't be reacted to.
+	// Automatically forwarded messages from a channel to its discussion group have the same available
+	// reactions as messages in the channel. Returns _True_ on success.
+	//
+	// POST /setMessageReaction
+	SetMessageReaction(ctx context.Context, request *SetMessageReaction) (*Result, error)
+	// SetMyCommands invokes setMyCommands operation.
+	//
+	// Use this method to change the list of the bot's commands. See [this manual](https://core.telegram.
+	// org/bots/features#commands) for more details about bot commands. Returns _True_ on success.
+	//
+	// POST /setMyCommands
+	SetMyCommands(ctx context.Context, request *SetMyCommands) (*Result, error)
+	// SetMyDefaultAdministratorRights invokes setMyDefaultAdministratorRights operation.
+	//
+	// Use this method to change the default administrator rights requested by the bot when it's added as
+	// an administrator to groups or channels. These rights will be suggested to users, but they are free
+	// to modify the list before adding the bot. Returns _True_ on success.
+	//
+	// POST /setMyDefaultAdministratorRights
+	SetMyDefaultAdministratorRights(ctx context.Context, request OptSetMyDefaultAdministratorRights) (*Result, error)
+	// SetMyDescription invokes setMyDescription operation.
+	//
+	// Use this method to change the bot's description, which is shown in the chat with the bot if the
+	// chat is empty. Returns _True_ on success.
+	//
+	// POST /setMyDescription
+	SetMyDescription(ctx context.Context, request OptSetMyDescription) (*Result, error)
+	// SetMyName invokes setMyName operation.
+	//
+	// Use this method to change the bot's name. Returns _True_ on success.
+	//
+	// POST /setMyName
+	SetMyName(ctx context.Context, request OptSetMyName) (*Result, error)
+	// SetMyShortDescription invokes setMyShortDescription operation.
+	//
+	// Use this method to change the bot's short description, which is shown on the bot's profile page
+	// and is sent together with the link when users share the bot. Returns _True_ on success.
+	//
+	// POST /setMyShortDescription
+	SetMyShortDescription(ctx context.Context, request OptSetMyShortDescription) (*Result, error)
+	// SetPassportDataErrors invokes setPassportDataErrors operation.
+	//
+	// Use this if the data submitted by the user doesn't satisfy the standards your service requires for
+	// any reason. For example, if a birthday date seems invalid, a submitted document is blurry, a scan
+	// shows evidence of tampering, etc. Supply some details in the error message to make sure the user
+	// knows how to correct the issues.
+	//
+	// POST /setPassportDataErrors
+	SetPassportDataErrors(ctx context.Context, request *SetPassportDataErrors) (*Result, error)
+	// SetStickerEmojiList invokes setStickerEmojiList operation.
+	//
+	// Use this method to change the list of emoji assigned to a regular or custom emoji sticker. The
+	// sticker must belong to a sticker set created by the bot. Returns _True_ on success.
+	//
+	// POST /setStickerEmojiList
+	SetStickerEmojiList(ctx context.Context, request *SetStickerEmojiList) (*Result, error)
+	// SetStickerKeywords invokes setStickerKeywords operation.
+	//
+	// Use this method to change search keywords assigned to a regular or custom emoji sticker. The
+	// sticker must belong to a sticker set created by the bot. Returns _True_ on success.
+	//
+	// POST /setStickerKeywords
+	SetStickerKeywords(ctx context.Context, request *SetStickerKeywords) (*Result, error)
+	// SetStickerMaskPosition invokes setStickerMaskPosition operation.
+	//
+	// Use this method to change the [mask position](https://core.telegram.org/bots/api#maskposition) of
+	// a mask sticker. The sticker must belong to a sticker set that was created by the bot. Returns
+	// _True_ on success.
+	//
+	// POST /setStickerMaskPosition
+	SetStickerMaskPosition(ctx context.Context, request *SetStickerMaskPosition) (*Result, error)
+	// SetStickerPositionInSet invokes setStickerPositionInSet operation.
+	//
+	// Use this method to move a sticker in a set created by the bot to a specific position. Returns
+	// _True_ on success.
+	//
+	// POST /setStickerPositionInSet
+	SetStickerPositionInSet(ctx context.Context, request *SetStickerPositionInSet) (*Result, error)
+	// SetStickerSetThumbnail invokes setStickerSetThumbnail operation.
+	//
+	// Use this method to set the thumbnail of a regular or mask sticker set. The format of the thumbnail
+	// file must match the format of the stickers in the set. Returns _True_ on success.
+	//
+	// POST /setStickerSetThumbnail
+	SetStickerSetThumbnail(ctx context.Context, request *SetStickerSetThumbnail) (*Result, error)
+	// SetStickerSetTitle invokes setStickerSetTitle operation.
+	//
+	// Use this method to set the title of a created sticker set. Returns _True_ on success.
+	//
+	// POST /setStickerSetTitle
+	SetStickerSetTitle(ctx context.Context, request *SetStickerSetTitle) (*Result, error)
+	// SetWebhook invokes setWebhook operation.
+	//
+	// If you'd like to make sure that the webhook was set by you, you can specify secret data in the
+	// parameter _secret_token_. If specified, the request will contain a header
+	// `X-Telegram-Bot-Api-Secret-Token` with the secret token as content.
+	//
+	// POST /setWebhook
+	SetWebhook(ctx context.Context, request *SetWebhook) (*Result, error)
+	// StopMessageLiveLocation invokes stopMessageLiveLocation operation.
+	//
+	// Use this method to stop updating a live location message before _live_period_ expires. On success,
+	// if the message is not an inline message, the edited [Message](https://core.telegram.
+	// org/bots/api#message) is returned, otherwise _True_ is returned.
+	//
+	// POST /stopMessageLiveLocation
+	StopMessageLiveLocation(ctx context.Context, request *StopMessageLiveLocation) (*ResultMessageOrBoolean, error)
+	// StopPoll invokes stopPoll operation.
+	//
+	// Use this method to stop a poll which was sent by the bot. On success, the stopped
+	// [Poll](https://core.telegram.org/bots/api#poll) is returned.
+	//
+	// POST /stopPoll
+	StopPoll(ctx context.Context, request *StopPoll) (*ResultPoll, error)
+	// UnbanChatMember invokes unbanChatMember operation.
+	//
+	// Use this method to unban a previously banned user in a supergroup or channel. The user will
+	// **not** return to the group or channel automatically, but will be able to join via link, etc. The
+	// bot must be an administrator for this to work. By default, this method guarantees that after the
+	// call the user is not a member of the chat, but will be able to join it. So if the user is a member
+	// of the chat they will also be **removed** from the chat. If you don't want this, use the parameter
+	// _only_if_banned_. Returns _True_ on success.
+	//
+	// POST /unbanChatMember
+	UnbanChatMember(ctx context.Context, request *UnbanChatMember) (*Result, error)
+	// UnbanChatSenderChat invokes unbanChatSenderChat operation.
+	//
+	// Use this method to unban a previously banned channel chat in a supergroup or channel. The bot must
+	// be an administrator for this to work and must have the appropriate administrator rights. Returns
+	// _True_ on success.
+	//
+	// POST /unbanChatSenderChat
+	UnbanChatSenderChat(ctx context.Context, request *UnbanChatSenderChat) (*Result, error)
+	// UnhideGeneralForumTopic invokes unhideGeneralForumTopic operation.
+	//
+	// Use this method to unhide the 'General' topic in a forum supergroup chat. The bot must be an
+	// administrator in the chat for this to work and must have the _can_manage_topics_ administrator
+	// rights. Returns _True_ on success.
+	//
+	// POST /unhideGeneralForumTopic
+	UnhideGeneralForumTopic(ctx context.Context, request *UnhideGeneralForumTopic) (*Result, error)
+	// UnpinAllChatMessages invokes unpinAllChatMessages operation.
+	//
+	// Use this method to clear the list of pinned messages in a chat. If the chat is not a private chat,
+	// the bot must be an administrator in the chat for this to work and must have the 'can_pin_messages'
+	// administrator right in a supergroup or 'can_edit_messages' administrator right in a channel.
+	// Returns _True_ on success.
+	//
+	// POST /unpinAllChatMessages
+	UnpinAllChatMessages(ctx context.Context, request *UnpinAllChatMessages) (*Result, error)
+	// UnpinAllForumTopicMessages invokes unpinAllForumTopicMessages operation.
+	//
+	// Use this method to clear the list of pinned messages in a forum topic. The bot must be an
+	// administrator in the chat for this to work and must have the _can_pin_messages_ administrator
+	// right in the supergroup. Returns _True_ on success.
+	//
+	// POST /unpinAllForumTopicMessages
+	UnpinAllForumTopicMessages(ctx context.Context, request *UnpinAllForumTopicMessages) (*Result, error)
+	// UnpinAllGeneralForumTopicMessages invokes unpinAllGeneralForumTopicMessages operation.
+	//
+	// Use this method to clear the list of pinned messages in a General forum topic. The bot must be an
+	// administrator in the chat for this to work and must have the _can_pin_messages_ administrator
+	// right in the supergroup. Returns _True_ on success.
+	//
+	// POST /unpinAllGeneralForumTopicMessages
+	UnpinAllGeneralForumTopicMessages(ctx context.Context, request *UnpinAllGeneralForumTopicMessages) (*Result, error)
+	// UnpinChatMessage invokes unpinChatMessage operation.
+	//
+	// Use this method to remove a message from the list of pinned messages in a chat. If the chat is not
+	// a private chat, the bot must be an administrator in the chat for this to work and must have the
+	// 'can_pin_messages' administrator right in a supergroup or 'can_edit_messages' administrator right
+	// in a channel. Returns _True_ on success.
+	//
+	// POST /unpinChatMessage
+	UnpinChatMessage(ctx context.Context, request *UnpinChatMessage) (*Result, error)
+	// UploadStickerFile invokes uploadStickerFile operation.
+	//
+	// Use this method to upload a file with a sticker for later use in the
+	// [createNewStickerSet](https://core.telegram.org/bots/api#createnewstickerset),
+	// [addStickerToSet](https://core.telegram.org/bots/api#addstickertoset), or
+	// [replaceStickerInSet](https://core.telegram.org/bots/api#replacestickerinset) methods (the file
+	// can be used multiple times). Returns the uploaded [File](https://core.telegram.org/bots/api#file)
+	// on success.
+	//
+	// POST /uploadStickerFile
+	UploadStickerFile(ctx context.Context, request *UploadStickerFile) (*ResultFile, error)
+}
 
 // Client implements OAS client.
 type Client struct {
@@ -73,30 +1074,20 @@ func (c *Client) requestURL(ctx context.Context) *url.URL {
 
 // AddStickerToSet invokes addStickerToSet operation.
 //
-// Use this method to add a new sticker to a set created by the bot. The format of the added sticker
-// must match the format of the other stickers in the set. Emoji sticker sets can have up to 200
-// stickers. Animated and video sticker sets can have up to 50 stickers. Static sticker sets can have
-// up to 120 stickers. Returns _True_ on success.
+// Use this method to add a new sticker to a set created by the bot. Emoji sticker sets can have up
+// to 200 stickers. Other sticker sets can have up to 120 stickers. Returns _True_ on success.
 //
 // POST /addStickerToSet
 func (c *Client) AddStickerToSet(ctx context.Context, request *AddStickerToSet) (*Result, error) {
 	res, err := c.sendAddStickerToSet(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendAddStickerToSet(ctx context.Context, request *AddStickerToSet) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("addStickerToSet"),
-	}
-	// Validate request before sending.
-	if err := func() error {
-		if err := request.Validate(); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return res, errors.Wrap(err, "validate")
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/addStickerToSet"),
 	}
 
 	// Run stopwatch.
@@ -166,22 +1157,14 @@ func (c *Client) sendAddStickerToSet(ctx context.Context, request *AddStickerToS
 // POST /answerCallbackQuery
 func (c *Client) AnswerCallbackQuery(ctx context.Context, request *AnswerCallbackQuery) (*Result, error) {
 	res, err := c.sendAnswerCallbackQuery(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendAnswerCallbackQuery(ctx context.Context, request *AnswerCallbackQuery) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("answerCallbackQuery"),
-	}
-	// Validate request before sending.
-	if err := func() error {
-		if err := request.Validate(); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return res, errors.Wrap(err, "validate")
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/answerCallbackQuery"),
 	}
 
 	// Run stopwatch.
@@ -250,22 +1233,14 @@ func (c *Client) sendAnswerCallbackQuery(ctx context.Context, request *AnswerCal
 // POST /answerInlineQuery
 func (c *Client) AnswerInlineQuery(ctx context.Context, request *AnswerInlineQuery) (*Result, error) {
 	res, err := c.sendAnswerInlineQuery(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendAnswerInlineQuery(ctx context.Context, request *AnswerInlineQuery) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("answerInlineQuery"),
-	}
-	// Validate request before sending.
-	if err := func() error {
-		if err := request.Validate(); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return res, errors.Wrap(err, "validate")
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/answerInlineQuery"),
 	}
 
 	// Run stopwatch.
@@ -337,13 +1312,14 @@ func (c *Client) sendAnswerInlineQuery(ctx context.Context, request *AnswerInlin
 // POST /answerPreCheckoutQuery
 func (c *Client) AnswerPreCheckoutQuery(ctx context.Context, request *AnswerPreCheckoutQuery) (*Result, error) {
 	res, err := c.sendAnswerPreCheckoutQuery(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendAnswerPreCheckoutQuery(ctx context.Context, request *AnswerPreCheckoutQuery) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("answerPreCheckoutQuery"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/answerPreCheckoutQuery"),
 	}
 
 	// Run stopwatch.
@@ -416,22 +1392,14 @@ func (c *Client) sendAnswerPreCheckoutQuery(ctx context.Context, request *Answer
 // POST /answerShippingQuery
 func (c *Client) AnswerShippingQuery(ctx context.Context, request *AnswerShippingQuery) (*Result, error) {
 	res, err := c.sendAnswerShippingQuery(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendAnswerShippingQuery(ctx context.Context, request *AnswerShippingQuery) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("answerShippingQuery"),
-	}
-	// Validate request before sending.
-	if err := func() error {
-		if err := request.Validate(); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return res, errors.Wrap(err, "validate")
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/answerShippingQuery"),
 	}
 
 	// Run stopwatch.
@@ -502,22 +1470,14 @@ func (c *Client) sendAnswerShippingQuery(ctx context.Context, request *AnswerShi
 // POST /answerWebAppQuery
 func (c *Client) AnswerWebAppQuery(ctx context.Context, request *AnswerWebAppQuery) (*Result, error) {
 	res, err := c.sendAnswerWebAppQuery(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendAnswerWebAppQuery(ctx context.Context, request *AnswerWebAppQuery) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("answerWebAppQuery"),
-	}
-	// Validate request before sending.
-	if err := func() error {
-		if err := request.Validate(); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return res, errors.Wrap(err, "validate")
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/answerWebAppQuery"),
 	}
 
 	// Run stopwatch.
@@ -586,13 +1546,14 @@ func (c *Client) sendAnswerWebAppQuery(ctx context.Context, request *AnswerWebAp
 // POST /approveChatJoinRequest
 func (c *Client) ApproveChatJoinRequest(ctx context.Context, request *ApproveChatJoinRequest) (*Result, error) {
 	res, err := c.sendApproveChatJoinRequest(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendApproveChatJoinRequest(ctx context.Context, request *ApproveChatJoinRequest) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("approveChatJoinRequest"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/approveChatJoinRequest"),
 	}
 
 	// Run stopwatch.
@@ -664,13 +1625,14 @@ func (c *Client) sendApproveChatJoinRequest(ctx context.Context, request *Approv
 // POST /banChatMember
 func (c *Client) BanChatMember(ctx context.Context, request *BanChatMember) (*Result, error) {
 	res, err := c.sendBanChatMember(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendBanChatMember(ctx context.Context, request *BanChatMember) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("banChatMember"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/banChatMember"),
 	}
 
 	// Run stopwatch.
@@ -742,13 +1704,14 @@ func (c *Client) sendBanChatMember(ctx context.Context, request *BanChatMember) 
 // POST /banChatSenderChat
 func (c *Client) BanChatSenderChat(ctx context.Context, request *BanChatSenderChat) (*Result, error) {
 	res, err := c.sendBanChatSenderChat(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendBanChatSenderChat(ctx context.Context, request *BanChatSenderChat) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("banChatSenderChat"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/banChatSenderChat"),
 	}
 
 	// Run stopwatch.
@@ -819,13 +1782,14 @@ func (c *Client) sendBanChatSenderChat(ctx context.Context, request *BanChatSend
 // POST /close
 func (c *Client) Close(ctx context.Context) (*Result, error) {
 	res, err := c.sendClose(ctx)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendClose(ctx context.Context) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("close"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/close"),
 	}
 
 	// Run stopwatch.
@@ -892,13 +1856,14 @@ func (c *Client) sendClose(ctx context.Context) (res *Result, err error) {
 // POST /closeForumTopic
 func (c *Client) CloseForumTopic(ctx context.Context, request *CloseForumTopic) (*Result, error) {
 	res, err := c.sendCloseForumTopic(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendCloseForumTopic(ctx context.Context, request *CloseForumTopic) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("closeForumTopic"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/closeForumTopic"),
 	}
 
 	// Run stopwatch.
@@ -968,13 +1933,14 @@ func (c *Client) sendCloseForumTopic(ctx context.Context, request *CloseForumTop
 // POST /closeGeneralForumTopic
 func (c *Client) CloseGeneralForumTopic(ctx context.Context, request *CloseGeneralForumTopic) (*Result, error) {
 	res, err := c.sendCloseGeneralForumTopic(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendCloseGeneralForumTopic(ctx context.Context, request *CloseGeneralForumTopic) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("closeGeneralForumTopic"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/closeGeneralForumTopic"),
 	}
 
 	// Run stopwatch.
@@ -1037,32 +2003,25 @@ func (c *Client) sendCloseGeneralForumTopic(ctx context.Context, request *CloseG
 
 // CopyMessage invokes copyMessage operation.
 //
-// Use this method to copy messages of any kind. Service messages and invoice messages can't be
-// copied. A quiz [poll](https://core.telegram.org/bots/api#poll) can be copied only if the value of
-// the field _correct_option_id_ is known to the bot. The method is analogous to the method
-// [forwardMessage](https://core.telegram.org/bots/api#forwardmessage), but the copied message
-// doesn't have a link to the original message. Returns the [MessageId](https://core.telegram.
-// org/bots/api#messageid) of the sent message on success.
+// Use this method to copy messages of any kind. Service messages, giveaway messages, giveaway
+// winners messages, and invoice messages can't be copied. A quiz [poll](https://core.telegram.
+// org/bots/api#poll) can be copied only if the value of the field _correct_option_id_ is known to
+// the bot. The method is analogous to the method [forwardMessage](https://core.telegram.
+// org/bots/api#forwardmessage), but the copied message doesn't have a link to the original message.
+// Returns the [MessageId](https://core.telegram.org/bots/api#messageid) of the sent message on
+// success.
 //
 // POST /copyMessage
 func (c *Client) CopyMessage(ctx context.Context, request *CopyMessage) (*ResultMessageId, error) {
 	res, err := c.sendCopyMessage(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendCopyMessage(ctx context.Context, request *CopyMessage) (res *ResultMessageId, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("copyMessage"),
-	}
-	// Validate request before sending.
-	if err := func() error {
-		if err := request.Validate(); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return res, errors.Wrap(err, "validate")
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/copyMessage"),
 	}
 
 	// Run stopwatch.
@@ -1123,6 +2082,88 @@ func (c *Client) sendCopyMessage(ctx context.Context, request *CopyMessage) (res
 	return result, nil
 }
 
+// CopyMessages invokes copyMessages operation.
+//
+// Use this method to copy messages of any kind. If some of the specified messages can't be found or
+// copied, they are skipped. Service messages, giveaway messages, giveaway winners messages, and
+// invoice messages can't be copied. A quiz [poll](https://core.telegram.org/bots/api#poll) can be
+// copied only if the value of the field _correct_option_id_ is known to the bot. The method is
+// analogous to the method [forwardMessages](https://core.telegram.org/bots/api#forwardmessages), but
+// the copied messages don't have a link to the original message. Album grouping is kept for copied
+// messages. On success, an array of [MessageId](https://core.telegram.org/bots/api#messageid) of the
+// sent messages is returned.
+//
+// POST /copyMessages
+func (c *Client) CopyMessages(ctx context.Context, request *CopyMessages) (*ResultArrayOfMessageId, error) {
+	res, err := c.sendCopyMessages(ctx, request)
+	return res, err
+}
+
+func (c *Client) sendCopyMessages(ctx context.Context, request *CopyMessages) (res *ResultArrayOfMessageId, err error) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("copyMessages"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/copyMessages"),
+	}
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, "CopyMessages",
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	var pathParts [1]string
+	pathParts[0] = "/copyMessages"
+	uri.AddPathParts(u, pathParts[:]...)
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "POST", u)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeCopyMessagesRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeCopyMessagesResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
 // CreateChatInviteLink invokes createChatInviteLink operation.
 //
 // Use this method to create an additional invite link for a chat. The bot must be an administrator
@@ -1134,22 +2175,14 @@ func (c *Client) sendCopyMessage(ctx context.Context, request *CopyMessage) (res
 // POST /createChatInviteLink
 func (c *Client) CreateChatInviteLink(ctx context.Context, request *CreateChatInviteLink) (*ResultChatInviteLink, error) {
 	res, err := c.sendCreateChatInviteLink(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendCreateChatInviteLink(ctx context.Context, request *CreateChatInviteLink) (res *ResultChatInviteLink, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("createChatInviteLink"),
-	}
-	// Validate request before sending.
-	if err := func() error {
-		if err := request.Validate(); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return res, errors.Wrap(err, "validate")
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/createChatInviteLink"),
 	}
 
 	// Run stopwatch.
@@ -1220,22 +2253,14 @@ func (c *Client) sendCreateChatInviteLink(ctx context.Context, request *CreateCh
 // POST /createForumTopic
 func (c *Client) CreateForumTopic(ctx context.Context, request *CreateForumTopic) (*Result, error) {
 	res, err := c.sendCreateForumTopic(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendCreateForumTopic(ctx context.Context, request *CreateForumTopic) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("createForumTopic"),
-	}
-	// Validate request before sending.
-	if err := func() error {
-		if err := request.Validate(); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return res, errors.Wrap(err, "validate")
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/createForumTopic"),
 	}
 
 	// Run stopwatch.
@@ -1304,22 +2329,14 @@ func (c *Client) sendCreateForumTopic(ctx context.Context, request *CreateForumT
 // POST /createInvoiceLink
 func (c *Client) CreateInvoiceLink(ctx context.Context, request *CreateInvoiceLink) (*ResultString, error) {
 	res, err := c.sendCreateInvoiceLink(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendCreateInvoiceLink(ctx context.Context, request *CreateInvoiceLink) (res *ResultString, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("createInvoiceLink"),
-	}
-	// Validate request before sending.
-	if err := func() error {
-		if err := request.Validate(); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return res, errors.Wrap(err, "validate")
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/createInvoiceLink"),
 	}
 
 	// Run stopwatch.
@@ -1388,22 +2405,14 @@ func (c *Client) sendCreateInvoiceLink(ctx context.Context, request *CreateInvoi
 // POST /createNewStickerSet
 func (c *Client) CreateNewStickerSet(ctx context.Context, request *CreateNewStickerSet) (*Result, error) {
 	res, err := c.sendCreateNewStickerSet(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendCreateNewStickerSet(ctx context.Context, request *CreateNewStickerSet) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("createNewStickerSet"),
-	}
-	// Validate request before sending.
-	if err := func() error {
-		if err := request.Validate(); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return res, errors.Wrap(err, "validate")
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/createNewStickerSet"),
 	}
 
 	// Run stopwatch.
@@ -1472,13 +2481,14 @@ func (c *Client) sendCreateNewStickerSet(ctx context.Context, request *CreateNew
 // POST /declineChatJoinRequest
 func (c *Client) DeclineChatJoinRequest(ctx context.Context, request *DeclineChatJoinRequest) (*Result, error) {
 	res, err := c.sendDeclineChatJoinRequest(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendDeclineChatJoinRequest(ctx context.Context, request *DeclineChatJoinRequest) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("declineChatJoinRequest"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/declineChatJoinRequest"),
 	}
 
 	// Run stopwatch.
@@ -1548,13 +2558,14 @@ func (c *Client) sendDeclineChatJoinRequest(ctx context.Context, request *Declin
 // POST /deleteChatPhoto
 func (c *Client) DeleteChatPhoto(ctx context.Context, request *DeleteChatPhoto) (*Result, error) {
 	res, err := c.sendDeleteChatPhoto(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendDeleteChatPhoto(ctx context.Context, request *DeleteChatPhoto) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("deleteChatPhoto"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/deleteChatPhoto"),
 	}
 
 	// Run stopwatch.
@@ -1625,13 +2636,14 @@ func (c *Client) sendDeleteChatPhoto(ctx context.Context, request *DeleteChatPho
 // POST /deleteChatStickerSet
 func (c *Client) DeleteChatStickerSet(ctx context.Context, request *DeleteChatStickerSet) (*Result, error) {
 	res, err := c.sendDeleteChatStickerSet(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendDeleteChatStickerSet(ctx context.Context, request *DeleteChatStickerSet) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("deleteChatStickerSet"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/deleteChatStickerSet"),
 	}
 
 	// Run stopwatch.
@@ -1701,13 +2713,14 @@ func (c *Client) sendDeleteChatStickerSet(ctx context.Context, request *DeleteCh
 // POST /deleteForumTopic
 func (c *Client) DeleteForumTopic(ctx context.Context, request *DeleteForumTopic) (*Result, error) {
 	res, err := c.sendDeleteForumTopic(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendDeleteForumTopic(ctx context.Context, request *DeleteForumTopic) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("deleteForumTopic"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/deleteForumTopic"),
 	}
 
 	// Run stopwatch.
@@ -1783,13 +2796,14 @@ func (c *Client) sendDeleteForumTopic(ctx context.Context, request *DeleteForumT
 // POST /deleteMessage
 func (c *Client) DeleteMessage(ctx context.Context, request *DeleteMessage) (*Result, error) {
 	res, err := c.sendDeleteMessage(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendDeleteMessage(ctx context.Context, request *DeleteMessage) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("deleteMessage"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/deleteMessage"),
 	}
 
 	// Run stopwatch.
@@ -1850,6 +2864,82 @@ func (c *Client) sendDeleteMessage(ctx context.Context, request *DeleteMessage) 
 	return result, nil
 }
 
+// DeleteMessages invokes deleteMessages operation.
+//
+// Use this method to delete multiple messages simultaneously. If some of the specified messages
+// can't be found, they are skipped. Returns _True_ on success.
+//
+// POST /deleteMessages
+func (c *Client) DeleteMessages(ctx context.Context, request *DeleteMessages) (*Result, error) {
+	res, err := c.sendDeleteMessages(ctx, request)
+	return res, err
+}
+
+func (c *Client) sendDeleteMessages(ctx context.Context, request *DeleteMessages) (res *Result, err error) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("deleteMessages"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/deleteMessages"),
+	}
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, "DeleteMessages",
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	var pathParts [1]string
+	pathParts[0] = "/deleteMessages"
+	uri.AddPathParts(u, pathParts[:]...)
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "POST", u)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeDeleteMessagesRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeDeleteMessagesResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
 // DeleteMyCommands invokes deleteMyCommands operation.
 //
 // Use this method to delete the list of the bot's commands for the given scope and user language.
@@ -1860,13 +2950,14 @@ func (c *Client) sendDeleteMessage(ctx context.Context, request *DeleteMessage) 
 // POST /deleteMyCommands
 func (c *Client) DeleteMyCommands(ctx context.Context, request OptDeleteMyCommands) (*Result, error) {
 	res, err := c.sendDeleteMyCommands(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendDeleteMyCommands(ctx context.Context, request OptDeleteMyCommands) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("deleteMyCommands"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/deleteMyCommands"),
 	}
 
 	// Run stopwatch.
@@ -1934,13 +3025,14 @@ func (c *Client) sendDeleteMyCommands(ctx context.Context, request OptDeleteMyCo
 // POST /deleteStickerFromSet
 func (c *Client) DeleteStickerFromSet(ctx context.Context, request *DeleteStickerFromSet) (*Result, error) {
 	res, err := c.sendDeleteStickerFromSet(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendDeleteStickerFromSet(ctx context.Context, request *DeleteStickerFromSet) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("deleteStickerFromSet"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/deleteStickerFromSet"),
 	}
 
 	// Run stopwatch.
@@ -2008,13 +3100,14 @@ func (c *Client) sendDeleteStickerFromSet(ctx context.Context, request *DeleteSt
 // POST /deleteStickerSet
 func (c *Client) DeleteStickerSet(ctx context.Context, request *DeleteStickerSet) (*Result, error) {
 	res, err := c.sendDeleteStickerSet(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendDeleteStickerSet(ctx context.Context, request *DeleteStickerSet) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("deleteStickerSet"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/deleteStickerSet"),
 	}
 
 	// Run stopwatch.
@@ -2083,13 +3176,14 @@ func (c *Client) sendDeleteStickerSet(ctx context.Context, request *DeleteSticke
 // POST /deleteWebhook
 func (c *Client) DeleteWebhook(ctx context.Context, request OptDeleteWebhook) (*Result, error) {
 	res, err := c.sendDeleteWebhook(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendDeleteWebhook(ctx context.Context, request OptDeleteWebhook) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("deleteWebhook"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/deleteWebhook"),
 	}
 
 	// Run stopwatch.
@@ -2160,22 +3254,14 @@ func (c *Client) sendDeleteWebhook(ctx context.Context, request OptDeleteWebhook
 // POST /editChatInviteLink
 func (c *Client) EditChatInviteLink(ctx context.Context, request *EditChatInviteLink) (*ResultChatInviteLink, error) {
 	res, err := c.sendEditChatInviteLink(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendEditChatInviteLink(ctx context.Context, request *EditChatInviteLink) (res *ResultChatInviteLink, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("editChatInviteLink"),
-	}
-	// Validate request before sending.
-	if err := func() error {
-		if err := request.Validate(); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return res, errors.Wrap(err, "validate")
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/editChatInviteLink"),
 	}
 
 	// Run stopwatch.
@@ -2245,22 +3331,14 @@ func (c *Client) sendEditChatInviteLink(ctx context.Context, request *EditChatIn
 // POST /editForumTopic
 func (c *Client) EditForumTopic(ctx context.Context, request *EditForumTopic) (*Result, error) {
 	res, err := c.sendEditForumTopic(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendEditForumTopic(ctx context.Context, request *EditForumTopic) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("editForumTopic"),
-	}
-	// Validate request before sending.
-	if err := func() error {
-		if err := request.Validate(); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return res, errors.Wrap(err, "validate")
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/editForumTopic"),
 	}
 
 	// Run stopwatch.
@@ -2330,22 +3408,14 @@ func (c *Client) sendEditForumTopic(ctx context.Context, request *EditForumTopic
 // POST /editGeneralForumTopic
 func (c *Client) EditGeneralForumTopic(ctx context.Context, request *EditGeneralForumTopic) (*Result, error) {
 	res, err := c.sendEditGeneralForumTopic(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendEditGeneralForumTopic(ctx context.Context, request *EditGeneralForumTopic) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("editGeneralForumTopic"),
-	}
-	// Validate request before sending.
-	if err := func() error {
-		if err := request.Validate(); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return res, errors.Wrap(err, "validate")
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/editGeneralForumTopic"),
 	}
 
 	// Run stopwatch.
@@ -2410,27 +3480,20 @@ func (c *Client) sendEditGeneralForumTopic(ctx context.Context, request *EditGen
 //
 // Use this method to edit captions of messages. On success, if the edited message is not an inline
 // message, the edited [Message](https://core.telegram.org/bots/api#message) is returned, otherwise
-// _True_ is returned.
+// _True_ is returned. Note that business messages that were not sent by the bot and do not contain
+// an inline keyboard can only be edited within **48 hours** from the time they were sent.
 //
 // POST /editMessageCaption
 func (c *Client) EditMessageCaption(ctx context.Context, request *EditMessageCaption) (*ResultMessageOrBoolean, error) {
 	res, err := c.sendEditMessageCaption(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendEditMessageCaption(ctx context.Context, request *EditMessageCaption) (res *ResultMessageOrBoolean, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("editMessageCaption"),
-	}
-	// Validate request before sending.
-	if err := func() error {
-		if err := request.Validate(); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return res, errors.Wrap(err, "validate")
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/editMessageCaption"),
 	}
 
 	// Run stopwatch.
@@ -2502,22 +3565,14 @@ func (c *Client) sendEditMessageCaption(ctx context.Context, request *EditMessag
 // POST /editMessageLiveLocation
 func (c *Client) EditMessageLiveLocation(ctx context.Context, request *EditMessageLiveLocation) (*ResultMessageOrBoolean, error) {
 	res, err := c.sendEditMessageLiveLocation(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendEditMessageLiveLocation(ctx context.Context, request *EditMessageLiveLocation) (res *ResultMessageOrBoolean, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("editMessageLiveLocation"),
-	}
-	// Validate request before sending.
-	if err := func() error {
-		if err := request.Validate(); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return res, errors.Wrap(err, "validate")
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/editMessageLiveLocation"),
 	}
 
 	// Run stopwatch.
@@ -2585,27 +3640,21 @@ func (c *Client) sendEditMessageLiveLocation(ctx context.Context, request *EditM
 // for document albums and to a photo or a video otherwise. When an inline message is edited, a new
 // file can't be uploaded; use a previously uploaded file via its file_id or specify a URL. On
 // success, if the edited message is not an inline message, the edited [Message](https://core.
-// telegram.org/bots/api#message) is returned, otherwise _True_ is returned.
+// telegram.org/bots/api#message) is returned, otherwise _True_ is returned. Note that business
+// messages that were not sent by the bot and do not contain an inline keyboard can only be edited
+// within **48 hours** from the time they were sent.
 //
 // POST /editMessageMedia
 func (c *Client) EditMessageMedia(ctx context.Context, request *EditMessageMedia) (*ResultMessageOrBoolean, error) {
 	res, err := c.sendEditMessageMedia(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendEditMessageMedia(ctx context.Context, request *EditMessageMedia) (res *ResultMessageOrBoolean, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("editMessageMedia"),
-	}
-	// Validate request before sending.
-	if err := func() error {
-		if err := request.Validate(); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return res, errors.Wrap(err, "validate")
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/editMessageMedia"),
 	}
 
 	// Run stopwatch.
@@ -2670,27 +3719,21 @@ func (c *Client) sendEditMessageMedia(ctx context.Context, request *EditMessageM
 //
 // Use this method to edit only the reply markup of messages. On success, if the edited message is
 // not an inline message, the edited [Message](https://core.telegram.org/bots/api#message) is
-// returned, otherwise _True_ is returned.
+// returned, otherwise _True_ is returned. Note that business messages that were not sent by the bot
+// and do not contain an inline keyboard can only be edited within **48 hours** from the time they
+// were sent.
 //
 // POST /editMessageReplyMarkup
 func (c *Client) EditMessageReplyMarkup(ctx context.Context, request *EditMessageReplyMarkup) (*ResultMessageOrBoolean, error) {
 	res, err := c.sendEditMessageReplyMarkup(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendEditMessageReplyMarkup(ctx context.Context, request *EditMessageReplyMarkup) (res *ResultMessageOrBoolean, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("editMessageReplyMarkup"),
-	}
-	// Validate request before sending.
-	if err := func() error {
-		if err := request.Validate(); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return res, errors.Wrap(err, "validate")
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/editMessageReplyMarkup"),
 	}
 
 	// Run stopwatch.
@@ -2755,27 +3798,21 @@ func (c *Client) sendEditMessageReplyMarkup(ctx context.Context, request *EditMe
 //
 // Use this method to edit text and [game](https://core.telegram.org/bots/api#games) messages. On
 // success, if the edited message is not an inline message, the edited [Message](https://core.
-// telegram.org/bots/api#message) is returned, otherwise _True_ is returned.
+// telegram.org/bots/api#message) is returned, otherwise _True_ is returned. Note that business
+// messages that were not sent by the bot and do not contain an inline keyboard can only be edited
+// within **48 hours** from the time they were sent.
 //
 // POST /editMessageText
 func (c *Client) EditMessageText(ctx context.Context, request *EditMessageText) (*ResultMessageOrBoolean, error) {
 	res, err := c.sendEditMessageText(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendEditMessageText(ctx context.Context, request *EditMessageText) (res *ResultMessageOrBoolean, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("editMessageText"),
-	}
-	// Validate request before sending.
-	if err := func() error {
-		if err := request.Validate(); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return res, errors.Wrap(err, "validate")
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/editMessageText"),
 	}
 
 	// Run stopwatch.
@@ -2845,13 +3882,14 @@ func (c *Client) sendEditMessageText(ctx context.Context, request *EditMessageTe
 // POST /exportChatInviteLink
 func (c *Client) ExportChatInviteLink(ctx context.Context, request *ExportChatInviteLink) (*ResultString, error) {
 	res, err := c.sendExportChatInviteLink(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendExportChatInviteLink(ctx context.Context, request *ExportChatInviteLink) (res *ResultString, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("exportChatInviteLink"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/exportChatInviteLink"),
 	}
 
 	// Run stopwatch.
@@ -2914,19 +3952,21 @@ func (c *Client) sendExportChatInviteLink(ctx context.Context, request *ExportCh
 
 // ForwardMessage invokes forwardMessage operation.
 //
-// Use this method to forward messages of any kind. Service messages can't be forwarded. On success,
-// the sent [Message](https://core.telegram.org/bots/api#message) is returned.
+// Use this method to forward messages of any kind. Service messages and messages with protected
+// content can't be forwarded. On success, the sent [Message](https://core.telegram.
+// org/bots/api#message) is returned.
 //
 // POST /forwardMessage
 func (c *Client) ForwardMessage(ctx context.Context, request *ForwardMessage) (*ResultMessage, error) {
 	res, err := c.sendForwardMessage(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendForwardMessage(ctx context.Context, request *ForwardMessage) (res *ResultMessage, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("forwardMessage"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/forwardMessage"),
 	}
 
 	// Run stopwatch.
@@ -2987,22 +4027,177 @@ func (c *Client) sendForwardMessage(ctx context.Context, request *ForwardMessage
 	return result, nil
 }
 
-// GetChat invokes getChat operation.
+// ForwardMessages invokes forwardMessages operation.
 //
-// Use this method to get up to date information about the chat (current name of the user for
-// one-on-one conversations, current username of a user, group or channel, etc.). Returns a
-// [Chat](https://core.telegram.org/bots/api#chat) object on success.
+// Use this method to forward multiple messages of any kind. If some of the specified messages can't
+// be found or forwarded, they are skipped. Service messages and messages with protected content
+// can't be forwarded. Album grouping is kept for forwarded messages. On success, an array of
+// [MessageId](https://core.telegram.org/bots/api#messageid) of the sent messages is returned.
 //
-// POST /getChat
-func (c *Client) GetChat(ctx context.Context, request *GetChat) (*ResultChat, error) {
-	res, err := c.sendGetChat(ctx, request)
-	_ = res
+// POST /forwardMessages
+func (c *Client) ForwardMessages(ctx context.Context, request *ForwardMessages) (*ResultArrayOfMessageId, error) {
+	res, err := c.sendForwardMessages(ctx, request)
 	return res, err
 }
 
-func (c *Client) sendGetChat(ctx context.Context, request *GetChat) (res *ResultChat, err error) {
+func (c *Client) sendForwardMessages(ctx context.Context, request *ForwardMessages) (res *ResultArrayOfMessageId, err error) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("forwardMessages"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/forwardMessages"),
+	}
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, "ForwardMessages",
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	var pathParts [1]string
+	pathParts[0] = "/forwardMessages"
+	uri.AddPathParts(u, pathParts[:]...)
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "POST", u)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeForwardMessagesRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeForwardMessagesResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
+// GetBusinessConnection invokes getBusinessConnection operation.
+//
+// Use this method to get information about the connection of the bot with a business account.
+// Returns a [BusinessConnection](https://core.telegram.org/bots/api#businessconnection) object on
+// success.
+//
+// POST /getBusinessConnection
+func (c *Client) GetBusinessConnection(ctx context.Context, request *GetBusinessConnection) (*Result, error) {
+	res, err := c.sendGetBusinessConnection(ctx, request)
+	return res, err
+}
+
+func (c *Client) sendGetBusinessConnection(ctx context.Context, request *GetBusinessConnection) (res *Result, err error) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("getBusinessConnection"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/getBusinessConnection"),
+	}
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, "GetBusinessConnection",
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	var pathParts [1]string
+	pathParts[0] = "/getBusinessConnection"
+	uri.AddPathParts(u, pathParts[:]...)
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "POST", u)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeGetBusinessConnectionRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeGetBusinessConnectionResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
+// GetChat invokes getChat operation.
+//
+// Use this method to get up-to-date information about the chat. Returns a
+// [ChatFullInfo](https://core.telegram.org/bots/api#chatfullinfo) object on success.
+//
+// POST /getChat
+func (c *Client) GetChat(ctx context.Context, request *GetChat) (*Result, error) {
+	res, err := c.sendGetChat(ctx, request)
+	return res, err
+}
+
+func (c *Client) sendGetChat(ctx context.Context, request *GetChat) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getChat"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/getChat"),
 	}
 
 	// Run stopwatch.
@@ -3071,13 +4266,14 @@ func (c *Client) sendGetChat(ctx context.Context, request *GetChat) (res *Result
 // POST /getChatAdministrators
 func (c *Client) GetChatAdministrators(ctx context.Context, request *GetChatAdministrators) (*ResultArrayOfChatMember, error) {
 	res, err := c.sendGetChatAdministrators(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendGetChatAdministrators(ctx context.Context, request *GetChatAdministrators) (res *ResultArrayOfChatMember, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getChatAdministrators"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/getChatAdministrators"),
 	}
 
 	// Run stopwatch.
@@ -3147,13 +4343,14 @@ func (c *Client) sendGetChatAdministrators(ctx context.Context, request *GetChat
 // POST /getChatMember
 func (c *Client) GetChatMember(ctx context.Context, request *GetChatMember) (*ResultChatMember, error) {
 	res, err := c.sendGetChatMember(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendGetChatMember(ctx context.Context, request *GetChatMember) (res *ResultChatMember, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getChatMember"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/getChatMember"),
 	}
 
 	// Run stopwatch.
@@ -3221,13 +4418,14 @@ func (c *Client) sendGetChatMember(ctx context.Context, request *GetChatMember) 
 // POST /getChatMemberCount
 func (c *Client) GetChatMemberCount(ctx context.Context, request *GetChatMemberCount) (*ResultInt, error) {
 	res, err := c.sendGetChatMemberCount(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendGetChatMemberCount(ctx context.Context, request *GetChatMemberCount) (res *ResultInt, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getChatMemberCount"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/getChatMemberCount"),
 	}
 
 	// Run stopwatch.
@@ -3297,13 +4495,14 @@ func (c *Client) sendGetChatMemberCount(ctx context.Context, request *GetChatMem
 // POST /getChatMenuButton
 func (c *Client) GetChatMenuButton(ctx context.Context, request OptGetChatMenuButton) (*Result, error) {
 	res, err := c.sendGetChatMenuButton(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendGetChatMenuButton(ctx context.Context, request OptGetChatMenuButton) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getChatMenuButton"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/getChatMenuButton"),
 	}
 
 	// Run stopwatch.
@@ -3372,22 +4571,14 @@ func (c *Client) sendGetChatMenuButton(ctx context.Context, request OptGetChatMe
 // POST /getCustomEmojiStickers
 func (c *Client) GetCustomEmojiStickers(ctx context.Context, request *GetCustomEmojiStickers) (*ResultArrayOfSticker, error) {
 	res, err := c.sendGetCustomEmojiStickers(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendGetCustomEmojiStickers(ctx context.Context, request *GetCustomEmojiStickers) (res *ResultArrayOfSticker, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getCustomEmojiStickers"),
-	}
-	// Validate request before sending.
-	if err := func() error {
-		if err := request.Validate(); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return res, errors.Wrap(err, "validate")
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/getCustomEmojiStickers"),
 	}
 
 	// Run stopwatch.
@@ -3460,13 +4651,14 @@ func (c *Client) sendGetCustomEmojiStickers(ctx context.Context, request *GetCus
 // POST /getFile
 func (c *Client) GetFile(ctx context.Context, request *GetFile) (*ResultFile, error) {
 	res, err := c.sendGetFile(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendGetFile(ctx context.Context, request *GetFile) (res *ResultFile, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getFile"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/getFile"),
 	}
 
 	// Run stopwatch.
@@ -3536,13 +4728,14 @@ func (c *Client) sendGetFile(ctx context.Context, request *GetFile) (res *Result
 // POST /getForumTopicIconStickers
 func (c *Client) GetForumTopicIconStickers(ctx context.Context) (*ResultArrayOfSticker, error) {
 	res, err := c.sendGetForumTopicIconStickers(ctx)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendGetForumTopicIconStickers(ctx context.Context) (res *ResultArrayOfSticker, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getForumTopicIconStickers"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/getForumTopicIconStickers"),
 	}
 
 	// Run stopwatch.
@@ -3609,13 +4802,14 @@ func (c *Client) sendGetForumTopicIconStickers(ctx context.Context) (res *Result
 // POST /getGameHighScores
 func (c *Client) GetGameHighScores(ctx context.Context, request *GetGameHighScores) (*ResultArrayOfGameHighScore, error) {
 	res, err := c.sendGetGameHighScores(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendGetGameHighScores(ctx context.Context, request *GetGameHighScores) (res *ResultArrayOfGameHighScore, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getGameHighScores"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/getGameHighScores"),
 	}
 
 	// Run stopwatch.
@@ -3684,13 +4878,14 @@ func (c *Client) sendGetGameHighScores(ctx context.Context, request *GetGameHigh
 // POST /getMe
 func (c *Client) GetMe(ctx context.Context) (*ResultUser, error) {
 	res, err := c.sendGetMe(ctx)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendGetMe(ctx context.Context) (res *ResultUser, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getMe"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/getMe"),
 	}
 
 	// Run stopwatch.
@@ -3757,13 +4952,14 @@ func (c *Client) sendGetMe(ctx context.Context) (res *ResultUser, err error) {
 // POST /getMyCommands
 func (c *Client) GetMyCommands(ctx context.Context, request OptGetMyCommands) (*ResultArrayOfBotCommand, error) {
 	res, err := c.sendGetMyCommands(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendGetMyCommands(ctx context.Context, request OptGetMyCommands) (res *ResultArrayOfBotCommand, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getMyCommands"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/getMyCommands"),
 	}
 
 	// Run stopwatch.
@@ -3832,13 +5028,14 @@ func (c *Client) sendGetMyCommands(ctx context.Context, request OptGetMyCommands
 // POST /getMyDefaultAdministratorRights
 func (c *Client) GetMyDefaultAdministratorRights(ctx context.Context, request OptGetMyDefaultAdministratorRights) (*Result, error) {
 	res, err := c.sendGetMyDefaultAdministratorRights(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendGetMyDefaultAdministratorRights(ctx context.Context, request OptGetMyDefaultAdministratorRights) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getMyDefaultAdministratorRights"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/getMyDefaultAdministratorRights"),
 	}
 
 	// Run stopwatch.
@@ -3907,13 +5104,14 @@ func (c *Client) sendGetMyDefaultAdministratorRights(ctx context.Context, reques
 // POST /getMyDescription
 func (c *Client) GetMyDescription(ctx context.Context, request OptGetMyDescription) (*Result, error) {
 	res, err := c.sendGetMyDescription(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendGetMyDescription(ctx context.Context, request OptGetMyDescription) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getMyDescription"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/getMyDescription"),
 	}
 
 	// Run stopwatch.
@@ -3982,13 +5180,14 @@ func (c *Client) sendGetMyDescription(ctx context.Context, request OptGetMyDescr
 // POST /getMyName
 func (c *Client) GetMyName(ctx context.Context, request OptGetMyName) (*Result, error) {
 	res, err := c.sendGetMyName(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendGetMyName(ctx context.Context, request OptGetMyName) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getMyName"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/getMyName"),
 	}
 
 	// Run stopwatch.
@@ -4057,13 +5256,14 @@ func (c *Client) sendGetMyName(ctx context.Context, request OptGetMyName) (res *
 // POST /getMyShortDescription
 func (c *Client) GetMyShortDescription(ctx context.Context, request OptGetMyShortDescription) (*Result, error) {
 	res, err := c.sendGetMyShortDescription(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendGetMyShortDescription(ctx context.Context, request OptGetMyShortDescription) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getMyShortDescription"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/getMyShortDescription"),
 	}
 
 	// Run stopwatch.
@@ -4124,6 +5324,82 @@ func (c *Client) sendGetMyShortDescription(ctx context.Context, request OptGetMy
 	return result, nil
 }
 
+// GetStarTransactions invokes getStarTransactions operation.
+//
+// Returns the bot's Telegram Star transactions in chronological order. On success, returns a
+// [StarTransactions](https://core.telegram.org/bots/api#startransactions) object.
+//
+// POST /getStarTransactions
+func (c *Client) GetStarTransactions(ctx context.Context, request OptGetStarTransactions) (*Result, error) {
+	res, err := c.sendGetStarTransactions(ctx, request)
+	return res, err
+}
+
+func (c *Client) sendGetStarTransactions(ctx context.Context, request OptGetStarTransactions) (res *Result, err error) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("getStarTransactions"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/getStarTransactions"),
+	}
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, "GetStarTransactions",
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	var pathParts [1]string
+	pathParts[0] = "/getStarTransactions"
+	uri.AddPathParts(u, pathParts[:]...)
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "POST", u)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeGetStarTransactionsRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeGetStarTransactionsResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
 // GetStickerSet invokes getStickerSet operation.
 //
 // Use this method to get a sticker set. On success, a [StickerSet](https://core.telegram.
@@ -4132,13 +5408,14 @@ func (c *Client) sendGetMyShortDescription(ctx context.Context, request OptGetMy
 // POST /getStickerSet
 func (c *Client) GetStickerSet(ctx context.Context, request *GetStickerSet) (*ResultStickerSet, error) {
 	res, err := c.sendGetStickerSet(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendGetStickerSet(ctx context.Context, request *GetStickerSet) (res *ResultStickerSet, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getStickerSet"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/getStickerSet"),
 	}
 
 	// Run stopwatch.
@@ -4208,29 +5485,14 @@ func (c *Client) sendGetStickerSet(ctx context.Context, request *GetStickerSet) 
 // POST /getUpdates
 func (c *Client) GetUpdates(ctx context.Context, request OptGetUpdates) (*ResultArrayOfUpdate, error) {
 	res, err := c.sendGetUpdates(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendGetUpdates(ctx context.Context, request OptGetUpdates) (res *ResultArrayOfUpdate, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getUpdates"),
-	}
-	// Validate request before sending.
-	if err := func() error {
-		if request.Set {
-			if err := func() error {
-				if err := request.Value.Validate(); err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return err
-			}
-		}
-		return nil
-	}(); err != nil {
-		return res, errors.Wrap(err, "validate")
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/getUpdates"),
 	}
 
 	// Run stopwatch.
@@ -4291,6 +5553,82 @@ func (c *Client) sendGetUpdates(ctx context.Context, request OptGetUpdates) (res
 	return result, nil
 }
 
+// GetUserChatBoosts invokes getUserChatBoosts operation.
+//
+// Use this method to get the list of boosts added to a chat by a user. Requires administrator rights
+// in the chat. Returns a [UserChatBoosts](https://core.telegram.org/bots/api#userchatboosts) object.
+//
+// POST /getUserChatBoosts
+func (c *Client) GetUserChatBoosts(ctx context.Context, request *GetUserChatBoosts) (*Result, error) {
+	res, err := c.sendGetUserChatBoosts(ctx, request)
+	return res, err
+}
+
+func (c *Client) sendGetUserChatBoosts(ctx context.Context, request *GetUserChatBoosts) (res *Result, err error) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("getUserChatBoosts"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/getUserChatBoosts"),
+	}
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, "GetUserChatBoosts",
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	var pathParts [1]string
+	pathParts[0] = "/getUserChatBoosts"
+	uri.AddPathParts(u, pathParts[:]...)
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "POST", u)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeGetUserChatBoostsRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeGetUserChatBoostsResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
 // GetUserProfilePhotos invokes getUserProfilePhotos operation.
 //
 // Use this method to get a list of profile pictures for a user. Returns a
@@ -4299,22 +5637,14 @@ func (c *Client) sendGetUpdates(ctx context.Context, request OptGetUpdates) (res
 // POST /getUserProfilePhotos
 func (c *Client) GetUserProfilePhotos(ctx context.Context, request *GetUserProfilePhotos) (*ResultUserProfilePhotos, error) {
 	res, err := c.sendGetUserProfilePhotos(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendGetUserProfilePhotos(ctx context.Context, request *GetUserProfilePhotos) (res *ResultUserProfilePhotos, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getUserProfilePhotos"),
-	}
-	// Validate request before sending.
-	if err := func() error {
-		if err := request.Validate(); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return res, errors.Wrap(err, "validate")
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/getUserProfilePhotos"),
 	}
 
 	// Run stopwatch.
@@ -4385,13 +5715,14 @@ func (c *Client) sendGetUserProfilePhotos(ctx context.Context, request *GetUserP
 // POST /getWebhookInfo
 func (c *Client) GetWebhookInfo(ctx context.Context) (*ResultWebhookInfo, error) {
 	res, err := c.sendGetWebhookInfo(ctx)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendGetWebhookInfo(ctx context.Context) (res *ResultWebhookInfo, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getWebhookInfo"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/getWebhookInfo"),
 	}
 
 	// Run stopwatch.
@@ -4458,13 +5789,14 @@ func (c *Client) sendGetWebhookInfo(ctx context.Context) (res *ResultWebhookInfo
 // POST /hideGeneralForumTopic
 func (c *Client) HideGeneralForumTopic(ctx context.Context, request *HideGeneralForumTopic) (*Result, error) {
 	res, err := c.sendHideGeneralForumTopic(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendHideGeneralForumTopic(ctx context.Context, request *HideGeneralForumTopic) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("hideGeneralForumTopic"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/hideGeneralForumTopic"),
 	}
 
 	// Run stopwatch.
@@ -4532,13 +5864,14 @@ func (c *Client) sendHideGeneralForumTopic(ctx context.Context, request *HideGen
 // POST /leaveChat
 func (c *Client) LeaveChat(ctx context.Context, request *LeaveChat) (*Result, error) {
 	res, err := c.sendLeaveChat(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendLeaveChat(ctx context.Context, request *LeaveChat) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("leaveChat"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/leaveChat"),
 	}
 
 	// Run stopwatch.
@@ -4610,13 +5943,14 @@ func (c *Client) sendLeaveChat(ctx context.Context, request *LeaveChat) (res *Re
 // POST /logOut
 func (c *Client) LogOut(ctx context.Context) (*Result, error) {
 	res, err := c.sendLogOut(ctx)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendLogOut(ctx context.Context) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("logOut"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/logOut"),
 	}
 
 	// Run stopwatch.
@@ -4684,13 +6018,14 @@ func (c *Client) sendLogOut(ctx context.Context) (res *Result, err error) {
 // POST /pinChatMessage
 func (c *Client) PinChatMessage(ctx context.Context, request *PinChatMessage) (*Result, error) {
 	res, err := c.sendPinChatMessage(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendPinChatMessage(ctx context.Context, request *PinChatMessage) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("pinChatMessage"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/pinChatMessage"),
 	}
 
 	// Run stopwatch.
@@ -4760,13 +6095,14 @@ func (c *Client) sendPinChatMessage(ctx context.Context, request *PinChatMessage
 // POST /promoteChatMember
 func (c *Client) PromoteChatMember(ctx context.Context, request *PromoteChatMember) (*Result, error) {
 	res, err := c.sendPromoteChatMember(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendPromoteChatMember(ctx context.Context, request *PromoteChatMember) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("promoteChatMember"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/promoteChatMember"),
 	}
 
 	// Run stopwatch.
@@ -4827,6 +6163,82 @@ func (c *Client) sendPromoteChatMember(ctx context.Context, request *PromoteChat
 	return result, nil
 }
 
+// RefundStarPayment invokes refundStarPayment operation.
+//
+// Refunds a successful payment in [Telegram Stars](https://t.me/BotNews/90). Returns _True_ on
+// success.
+//
+// POST /refundStarPayment
+func (c *Client) RefundStarPayment(ctx context.Context, request *RefundStarPayment) (*Result, error) {
+	res, err := c.sendRefundStarPayment(ctx, request)
+	return res, err
+}
+
+func (c *Client) sendRefundStarPayment(ctx context.Context, request *RefundStarPayment) (res *Result, err error) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("refundStarPayment"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/refundStarPayment"),
+	}
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, "RefundStarPayment",
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	var pathParts [1]string
+	pathParts[0] = "/refundStarPayment"
+	uri.AddPathParts(u, pathParts[:]...)
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "POST", u)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeRefundStarPaymentRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeRefundStarPaymentResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
 // ReopenForumTopic invokes reopenForumTopic operation.
 //
 // Use this method to reopen a closed topic in a forum supergroup chat. The bot must be an
@@ -4836,13 +6248,14 @@ func (c *Client) sendPromoteChatMember(ctx context.Context, request *PromoteChat
 // POST /reopenForumTopic
 func (c *Client) ReopenForumTopic(ctx context.Context, request *ReopenForumTopic) (*Result, error) {
 	res, err := c.sendReopenForumTopic(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendReopenForumTopic(ctx context.Context, request *ReopenForumTopic) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("reopenForumTopic"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/reopenForumTopic"),
 	}
 
 	// Run stopwatch.
@@ -4912,13 +6325,14 @@ func (c *Client) sendReopenForumTopic(ctx context.Context, request *ReopenForumT
 // POST /reopenGeneralForumTopic
 func (c *Client) ReopenGeneralForumTopic(ctx context.Context, request *ReopenGeneralForumTopic) (*Result, error) {
 	res, err := c.sendReopenGeneralForumTopic(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendReopenGeneralForumTopic(ctx context.Context, request *ReopenGeneralForumTopic) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("reopenGeneralForumTopic"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/reopenGeneralForumTopic"),
 	}
 
 	// Run stopwatch.
@@ -4979,6 +6393,85 @@ func (c *Client) sendReopenGeneralForumTopic(ctx context.Context, request *Reope
 	return result, nil
 }
 
+// ReplaceStickerInSet invokes replaceStickerInSet operation.
+//
+// Use this method to replace an existing sticker in a sticker set with a new one. The method is
+// equivalent to calling [deleteStickerFromSet](https://core.telegram.
+// org/bots/api#deletestickerfromset), then [addStickerToSet](https://core.telegram.
+// org/bots/api#addstickertoset), then [setStickerPositionInSet](https://core.telegram.
+// org/bots/api#setstickerpositioninset). Returns _True_ on success.
+//
+// POST /replaceStickerInSet
+func (c *Client) ReplaceStickerInSet(ctx context.Context, request *ReplaceStickerInSet) (*Result, error) {
+	res, err := c.sendReplaceStickerInSet(ctx, request)
+	return res, err
+}
+
+func (c *Client) sendReplaceStickerInSet(ctx context.Context, request *ReplaceStickerInSet) (res *Result, err error) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("replaceStickerInSet"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/replaceStickerInSet"),
+	}
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, "ReplaceStickerInSet",
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	var pathParts [1]string
+	pathParts[0] = "/replaceStickerInSet"
+	uri.AddPathParts(u, pathParts[:]...)
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "POST", u)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeReplaceStickerInSetRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeReplaceStickerInSetResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
 // RestrictChatMember invokes restrictChatMember operation.
 //
 // Use this method to restrict a user in a supergroup. The bot must be an administrator in the
@@ -4988,13 +6481,14 @@ func (c *Client) sendReopenGeneralForumTopic(ctx context.Context, request *Reope
 // POST /restrictChatMember
 func (c *Client) RestrictChatMember(ctx context.Context, request *RestrictChatMember) (*Result, error) {
 	res, err := c.sendRestrictChatMember(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendRestrictChatMember(ctx context.Context, request *RestrictChatMember) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("restrictChatMember"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/restrictChatMember"),
 	}
 
 	// Run stopwatch.
@@ -5065,13 +6559,14 @@ func (c *Client) sendRestrictChatMember(ctx context.Context, request *RestrictCh
 // POST /revokeChatInviteLink
 func (c *Client) RevokeChatInviteLink(ctx context.Context, request *RevokeChatInviteLink) (*ResultChatInviteLink, error) {
 	res, err := c.sendRevokeChatInviteLink(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendRevokeChatInviteLink(ctx context.Context, request *RevokeChatInviteLink) (res *ResultChatInviteLink, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("revokeChatInviteLink"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/revokeChatInviteLink"),
 	}
 
 	// Run stopwatch.
@@ -5141,22 +6636,14 @@ func (c *Client) sendRevokeChatInviteLink(ctx context.Context, request *RevokeCh
 // POST /sendAnimation
 func (c *Client) SendAnimation(ctx context.Context, request *SendAnimation) (*ResultMessage, error) {
 	res, err := c.sendSendAnimation(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendSendAnimation(ctx context.Context, request *SendAnimation) (res *ResultMessage, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendAnimation"),
-	}
-	// Validate request before sending.
-	if err := func() error {
-		if err := request.Validate(); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return res, errors.Wrap(err, "validate")
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/sendAnimation"),
 	}
 
 	// Run stopwatch.
@@ -5225,22 +6712,14 @@ func (c *Client) sendSendAnimation(ctx context.Context, request *SendAnimation) 
 // POST /sendAudio
 func (c *Client) SendAudio(ctx context.Context, request *SendAudio) (*ResultMessage, error) {
 	res, err := c.sendSendAudio(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendSendAudio(ctx context.Context, request *SendAudio) (res *ResultMessage, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendAudio"),
-	}
-	// Validate request before sending.
-	if err := func() error {
-		if err := request.Validate(); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return res, errors.Wrap(err, "validate")
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/sendAudio"),
 	}
 
 	// Run stopwatch.
@@ -5309,13 +6788,14 @@ func (c *Client) sendSendAudio(ctx context.Context, request *SendAudio) (res *Re
 // POST /sendChatAction
 func (c *Client) SendChatAction(ctx context.Context, request *SendChatAction) (*Result, error) {
 	res, err := c.sendSendChatAction(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendSendChatAction(ctx context.Context, request *SendChatAction) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendChatAction"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/sendChatAction"),
 	}
 
 	// Run stopwatch.
@@ -5384,22 +6864,14 @@ func (c *Client) sendSendChatAction(ctx context.Context, request *SendChatAction
 // POST /sendContact
 func (c *Client) SendContact(ctx context.Context, request *SendContact) (*ResultMessage, error) {
 	res, err := c.sendSendContact(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendSendContact(ctx context.Context, request *SendContact) (res *ResultMessage, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendContact"),
-	}
-	// Validate request before sending.
-	if err := func() error {
-		if err := request.Validate(); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return res, errors.Wrap(err, "validate")
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/sendContact"),
 	}
 
 	// Run stopwatch.
@@ -5468,22 +6940,14 @@ func (c *Client) sendSendContact(ctx context.Context, request *SendContact) (res
 // POST /sendDice
 func (c *Client) SendDice(ctx context.Context, request *SendDice) (*ResultMessage, error) {
 	res, err := c.sendSendDice(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendSendDice(ctx context.Context, request *SendDice) (res *ResultMessage, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendDice"),
-	}
-	// Validate request before sending.
-	if err := func() error {
-		if err := request.Validate(); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return res, errors.Wrap(err, "validate")
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/sendDice"),
 	}
 
 	// Run stopwatch.
@@ -5553,22 +7017,14 @@ func (c *Client) sendSendDice(ctx context.Context, request *SendDice) (res *Resu
 // POST /sendDocument
 func (c *Client) SendDocument(ctx context.Context, request *SendDocument) (*ResultMessage, error) {
 	res, err := c.sendSendDocument(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendSendDocument(ctx context.Context, request *SendDocument) (res *ResultMessage, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendDocument"),
-	}
-	// Validate request before sending.
-	if err := func() error {
-		if err := request.Validate(); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return res, errors.Wrap(err, "validate")
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/sendDocument"),
 	}
 
 	// Run stopwatch.
@@ -5637,22 +7093,14 @@ func (c *Client) sendSendDocument(ctx context.Context, request *SendDocument) (r
 // POST /sendGame
 func (c *Client) SendGame(ctx context.Context, request *SendGame) (*ResultMessage, error) {
 	res, err := c.sendSendGame(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendSendGame(ctx context.Context, request *SendGame) (res *ResultMessage, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendGame"),
-	}
-	// Validate request before sending.
-	if err := func() error {
-		if err := request.Validate(); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return res, errors.Wrap(err, "validate")
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/sendGame"),
 	}
 
 	// Run stopwatch.
@@ -5721,22 +7169,14 @@ func (c *Client) sendSendGame(ctx context.Context, request *SendGame) (res *Resu
 // POST /sendInvoice
 func (c *Client) SendInvoice(ctx context.Context, request *SendInvoice) (*ResultMessage, error) {
 	res, err := c.sendSendInvoice(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendSendInvoice(ctx context.Context, request *SendInvoice) (res *ResultMessage, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendInvoice"),
-	}
-	// Validate request before sending.
-	if err := func() error {
-		if err := request.Validate(); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return res, errors.Wrap(err, "validate")
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/sendInvoice"),
 	}
 
 	// Run stopwatch.
@@ -5805,22 +7245,14 @@ func (c *Client) sendSendInvoice(ctx context.Context, request *SendInvoice) (res
 // POST /sendLocation
 func (c *Client) SendLocation(ctx context.Context, request *SendLocation) (*ResultMessage, error) {
 	res, err := c.sendSendLocation(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendSendLocation(ctx context.Context, request *SendLocation) (res *ResultMessage, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendLocation"),
-	}
-	// Validate request before sending.
-	if err := func() error {
-		if err := request.Validate(); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return res, errors.Wrap(err, "validate")
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/sendLocation"),
 	}
 
 	// Run stopwatch.
@@ -5890,22 +7322,14 @@ func (c *Client) sendSendLocation(ctx context.Context, request *SendLocation) (r
 // POST /sendMediaGroup
 func (c *Client) SendMediaGroup(ctx context.Context, request *SendMediaGroup) (*ResultArrayOfMessage, error) {
 	res, err := c.sendSendMediaGroup(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendSendMediaGroup(ctx context.Context, request *SendMediaGroup) (res *ResultArrayOfMessage, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendMediaGroup"),
-	}
-	// Validate request before sending.
-	if err := func() error {
-		if err := request.Validate(); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return res, errors.Wrap(err, "validate")
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/sendMediaGroup"),
 	}
 
 	// Run stopwatch.
@@ -5974,22 +7398,14 @@ func (c *Client) sendSendMediaGroup(ctx context.Context, request *SendMediaGroup
 // POST /sendMessage
 func (c *Client) SendMessage(ctx context.Context, request *SendMessage) (*ResultMessage, error) {
 	res, err := c.sendSendMessage(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendSendMessage(ctx context.Context, request *SendMessage) (res *ResultMessage, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendMessage"),
-	}
-	// Validate request before sending.
-	if err := func() error {
-		if err := request.Validate(); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return res, errors.Wrap(err, "validate")
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/sendMessage"),
 	}
 
 	// Run stopwatch.
@@ -6058,22 +7474,14 @@ func (c *Client) sendSendMessage(ctx context.Context, request *SendMessage) (res
 // POST /sendPhoto
 func (c *Client) SendPhoto(ctx context.Context, request *SendPhoto) (*ResultMessage, error) {
 	res, err := c.sendSendPhoto(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendSendPhoto(ctx context.Context, request *SendPhoto) (res *ResultMessage, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendPhoto"),
-	}
-	// Validate request before sending.
-	if err := func() error {
-		if err := request.Validate(); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return res, errors.Wrap(err, "validate")
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/sendPhoto"),
 	}
 
 	// Run stopwatch.
@@ -6142,22 +7550,14 @@ func (c *Client) sendSendPhoto(ctx context.Context, request *SendPhoto) (res *Re
 // POST /sendPoll
 func (c *Client) SendPoll(ctx context.Context, request *SendPoll) (*ResultMessage, error) {
 	res, err := c.sendSendPoll(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendSendPoll(ctx context.Context, request *SendPoll) (res *ResultMessage, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendPoll"),
-	}
-	// Validate request before sending.
-	if err := func() error {
-		if err := request.Validate(); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return res, errors.Wrap(err, "validate")
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/sendPoll"),
 	}
 
 	// Run stopwatch.
@@ -6229,22 +7629,14 @@ func (c *Client) sendSendPoll(ctx context.Context, request *SendPoll) (res *Resu
 // POST /sendSticker
 func (c *Client) SendSticker(ctx context.Context, request *SendSticker) (*ResultMessage, error) {
 	res, err := c.sendSendSticker(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendSendSticker(ctx context.Context, request *SendSticker) (res *ResultMessage, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendSticker"),
-	}
-	// Validate request before sending.
-	if err := func() error {
-		if err := request.Validate(); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return res, errors.Wrap(err, "validate")
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/sendSticker"),
 	}
 
 	// Run stopwatch.
@@ -6313,22 +7705,14 @@ func (c *Client) sendSendSticker(ctx context.Context, request *SendSticker) (res
 // POST /sendVenue
 func (c *Client) SendVenue(ctx context.Context, request *SendVenue) (*ResultMessage, error) {
 	res, err := c.sendSendVenue(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendSendVenue(ctx context.Context, request *SendVenue) (res *ResultMessage, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendVenue"),
-	}
-	// Validate request before sending.
-	if err := func() error {
-		if err := request.Validate(); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return res, errors.Wrap(err, "validate")
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/sendVenue"),
 	}
 
 	// Run stopwatch.
@@ -6399,22 +7783,14 @@ func (c *Client) sendSendVenue(ctx context.Context, request *SendVenue) (res *Re
 // POST /sendVideo
 func (c *Client) SendVideo(ctx context.Context, request *SendVideo) (*ResultMessage, error) {
 	res, err := c.sendSendVideo(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendSendVideo(ctx context.Context, request *SendVideo) (res *ResultMessage, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendVideo"),
-	}
-	// Validate request before sending.
-	if err := func() error {
-		if err := request.Validate(); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return res, errors.Wrap(err, "validate")
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/sendVideo"),
 	}
 
 	// Run stopwatch.
@@ -6484,22 +7860,14 @@ func (c *Client) sendSendVideo(ctx context.Context, request *SendVideo) (res *Re
 // POST /sendVideoNote
 func (c *Client) SendVideoNote(ctx context.Context, request *SendVideoNote) (*ResultMessage, error) {
 	res, err := c.sendSendVideoNote(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendSendVideoNote(ctx context.Context, request *SendVideoNote) (res *ResultMessage, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendVideoNote"),
-	}
-	// Validate request before sending.
-	if err := func() error {
-		if err := request.Validate(); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return res, errors.Wrap(err, "validate")
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/sendVideoNote"),
 	}
 
 	// Run stopwatch.
@@ -6563,31 +7931,23 @@ func (c *Client) sendSendVideoNote(ctx context.Context, request *SendVideoNote) 
 // SendVoice invokes sendVoice operation.
 //
 // Use this method to send audio files, if you want Telegram clients to display the file as a
-// playable voice message. For this to work, your audio must be in an .OGG file encoded with OPUS
-// (other formats may be sent as [Audio](https://core.telegram.org/bots/api#audio) or
-// [Document](https://core.telegram.org/bots/api#document)). On success, the sent
-// [Message](https://core.telegram.org/bots/api#message) is returned. Bots can currently send voice
-// messages of up to 50 MB in size, this limit may be changed in the future.
+// playable voice message. For this to work, your audio must be in an .OGG file encoded with OPUS, or
+// in .MP3 format, or in .M4A format (other formats may be sent as [Audio](https://core.telegram.
+// org/bots/api#audio) or [Document](https://core.telegram.org/bots/api#document)). On success, the
+// sent [Message](https://core.telegram.org/bots/api#message) is returned. Bots can currently send
+// voice messages of up to 50 MB in size, this limit may be changed in the future.
 //
 // POST /sendVoice
 func (c *Client) SendVoice(ctx context.Context, request *SendVoice) (*ResultMessage, error) {
 	res, err := c.sendSendVoice(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendSendVoice(ctx context.Context, request *SendVoice) (res *ResultMessage, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendVoice"),
-	}
-	// Validate request before sending.
-	if err := func() error {
-		if err := request.Validate(); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return res, errors.Wrap(err, "validate")
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/sendVoice"),
 	}
 
 	// Run stopwatch.
@@ -6656,22 +8016,14 @@ func (c *Client) sendSendVoice(ctx context.Context, request *SendVoice) (res *Re
 // POST /setChatAdministratorCustomTitle
 func (c *Client) SetChatAdministratorCustomTitle(ctx context.Context, request *SetChatAdministratorCustomTitle) (*Result, error) {
 	res, err := c.sendSetChatAdministratorCustomTitle(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendSetChatAdministratorCustomTitle(ctx context.Context, request *SetChatAdministratorCustomTitle) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setChatAdministratorCustomTitle"),
-	}
-	// Validate request before sending.
-	if err := func() error {
-		if err := request.Validate(); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return res, errors.Wrap(err, "validate")
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/setChatAdministratorCustomTitle"),
 	}
 
 	// Run stopwatch.
@@ -6741,22 +8093,14 @@ func (c *Client) sendSetChatAdministratorCustomTitle(ctx context.Context, reques
 // POST /setChatDescription
 func (c *Client) SetChatDescription(ctx context.Context, request *SetChatDescription) (*Result, error) {
 	res, err := c.sendSetChatDescription(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendSetChatDescription(ctx context.Context, request *SetChatDescription) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setChatDescription"),
-	}
-	// Validate request before sending.
-	if err := func() error {
-		if err := request.Validate(); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return res, errors.Wrap(err, "validate")
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/setChatDescription"),
 	}
 
 	// Run stopwatch.
@@ -6825,13 +8169,14 @@ func (c *Client) sendSetChatDescription(ctx context.Context, request *SetChatDes
 // POST /setChatMenuButton
 func (c *Client) SetChatMenuButton(ctx context.Context, request OptSetChatMenuButton) (*Result, error) {
 	res, err := c.sendSetChatMenuButton(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendSetChatMenuButton(ctx context.Context, request OptSetChatMenuButton) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setChatMenuButton"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/setChatMenuButton"),
 	}
 
 	// Run stopwatch.
@@ -6901,13 +8246,14 @@ func (c *Client) sendSetChatMenuButton(ctx context.Context, request OptSetChatMe
 // POST /setChatPermissions
 func (c *Client) SetChatPermissions(ctx context.Context, request *SetChatPermissions) (*Result, error) {
 	res, err := c.sendSetChatPermissions(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendSetChatPermissions(ctx context.Context, request *SetChatPermissions) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setChatPermissions"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/setChatPermissions"),
 	}
 
 	// Run stopwatch.
@@ -6979,13 +8325,14 @@ func (c *Client) sendSetChatPermissions(ctx context.Context, request *SetChatPer
 // POST /setChatPhoto
 func (c *Client) SetChatPhoto(ctx context.Context, request *SetChatPhoto) (*Result, error) {
 	res, err := c.sendSetChatPhoto(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendSetChatPhoto(ctx context.Context, request *SetChatPhoto) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setChatPhoto"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/setChatPhoto"),
 	}
 
 	// Run stopwatch.
@@ -7056,13 +8403,14 @@ func (c *Client) sendSetChatPhoto(ctx context.Context, request *SetChatPhoto) (r
 // POST /setChatStickerSet
 func (c *Client) SetChatStickerSet(ctx context.Context, request *SetChatStickerSet) (*Result, error) {
 	res, err := c.sendSetChatStickerSet(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendSetChatStickerSet(ctx context.Context, request *SetChatStickerSet) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setChatStickerSet"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/setChatStickerSet"),
 	}
 
 	// Run stopwatch.
@@ -7132,22 +8480,14 @@ func (c *Client) sendSetChatStickerSet(ctx context.Context, request *SetChatStic
 // POST /setChatTitle
 func (c *Client) SetChatTitle(ctx context.Context, request *SetChatTitle) (*Result, error) {
 	res, err := c.sendSetChatTitle(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendSetChatTitle(ctx context.Context, request *SetChatTitle) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setChatTitle"),
-	}
-	// Validate request before sending.
-	if err := func() error {
-		if err := request.Validate(); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return res, errors.Wrap(err, "validate")
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/setChatTitle"),
 	}
 
 	// Run stopwatch.
@@ -7215,13 +8555,14 @@ func (c *Client) sendSetChatTitle(ctx context.Context, request *SetChatTitle) (r
 // POST /setCustomEmojiStickerSetThumbnail
 func (c *Client) SetCustomEmojiStickerSetThumbnail(ctx context.Context, request *SetCustomEmojiStickerSetThumbnail) (*Result, error) {
 	res, err := c.sendSetCustomEmojiStickerSetThumbnail(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendSetCustomEmojiStickerSetThumbnail(ctx context.Context, request *SetCustomEmojiStickerSetThumbnail) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setCustomEmojiStickerSetThumbnail"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/setCustomEmojiStickerSetThumbnail"),
 	}
 
 	// Run stopwatch.
@@ -7292,13 +8633,14 @@ func (c *Client) sendSetCustomEmojiStickerSetThumbnail(ctx context.Context, requ
 // POST /setGameScore
 func (c *Client) SetGameScore(ctx context.Context, request *SetGameScore) (*Result, error) {
 	res, err := c.sendSetGameScore(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendSetGameScore(ctx context.Context, request *SetGameScore) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setGameScore"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/setGameScore"),
 	}
 
 	// Run stopwatch.
@@ -7359,6 +8701,83 @@ func (c *Client) sendSetGameScore(ctx context.Context, request *SetGameScore) (r
 	return result, nil
 }
 
+// SetMessageReaction invokes setMessageReaction operation.
+//
+// Use this method to change the chosen reactions on a message. Service messages can't be reacted to.
+// Automatically forwarded messages from a channel to its discussion group have the same available
+// reactions as messages in the channel. Returns _True_ on success.
+//
+// POST /setMessageReaction
+func (c *Client) SetMessageReaction(ctx context.Context, request *SetMessageReaction) (*Result, error) {
+	res, err := c.sendSetMessageReaction(ctx, request)
+	return res, err
+}
+
+func (c *Client) sendSetMessageReaction(ctx context.Context, request *SetMessageReaction) (res *Result, err error) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("setMessageReaction"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/setMessageReaction"),
+	}
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, "SetMessageReaction",
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	var pathParts [1]string
+	pathParts[0] = "/setMessageReaction"
+	uri.AddPathParts(u, pathParts[:]...)
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "POST", u)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeSetMessageReactionRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeSetMessageReactionResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
 // SetMyCommands invokes setMyCommands operation.
 //
 // Use this method to change the list of the bot's commands. See [this manual](https://core.telegram.
@@ -7367,22 +8786,14 @@ func (c *Client) sendSetGameScore(ctx context.Context, request *SetGameScore) (r
 // POST /setMyCommands
 func (c *Client) SetMyCommands(ctx context.Context, request *SetMyCommands) (*Result, error) {
 	res, err := c.sendSetMyCommands(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendSetMyCommands(ctx context.Context, request *SetMyCommands) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setMyCommands"),
-	}
-	// Validate request before sending.
-	if err := func() error {
-		if err := request.Validate(); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return res, errors.Wrap(err, "validate")
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/setMyCommands"),
 	}
 
 	// Run stopwatch.
@@ -7452,13 +8863,14 @@ func (c *Client) sendSetMyCommands(ctx context.Context, request *SetMyCommands) 
 // POST /setMyDefaultAdministratorRights
 func (c *Client) SetMyDefaultAdministratorRights(ctx context.Context, request OptSetMyDefaultAdministratorRights) (*Result, error) {
 	res, err := c.sendSetMyDefaultAdministratorRights(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendSetMyDefaultAdministratorRights(ctx context.Context, request OptSetMyDefaultAdministratorRights) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setMyDefaultAdministratorRights"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/setMyDefaultAdministratorRights"),
 	}
 
 	// Run stopwatch.
@@ -7527,29 +8939,14 @@ func (c *Client) sendSetMyDefaultAdministratorRights(ctx context.Context, reques
 // POST /setMyDescription
 func (c *Client) SetMyDescription(ctx context.Context, request OptSetMyDescription) (*Result, error) {
 	res, err := c.sendSetMyDescription(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendSetMyDescription(ctx context.Context, request OptSetMyDescription) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setMyDescription"),
-	}
-	// Validate request before sending.
-	if err := func() error {
-		if request.Set {
-			if err := func() error {
-				if err := request.Value.Validate(); err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return err
-			}
-		}
-		return nil
-	}(); err != nil {
-		return res, errors.Wrap(err, "validate")
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/setMyDescription"),
 	}
 
 	// Run stopwatch.
@@ -7617,29 +9014,14 @@ func (c *Client) sendSetMyDescription(ctx context.Context, request OptSetMyDescr
 // POST /setMyName
 func (c *Client) SetMyName(ctx context.Context, request OptSetMyName) (*Result, error) {
 	res, err := c.sendSetMyName(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendSetMyName(ctx context.Context, request OptSetMyName) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setMyName"),
-	}
-	// Validate request before sending.
-	if err := func() error {
-		if request.Set {
-			if err := func() error {
-				if err := request.Value.Validate(); err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return err
-			}
-		}
-		return nil
-	}(); err != nil {
-		return res, errors.Wrap(err, "validate")
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/setMyName"),
 	}
 
 	// Run stopwatch.
@@ -7708,29 +9090,14 @@ func (c *Client) sendSetMyName(ctx context.Context, request OptSetMyName) (res *
 // POST /setMyShortDescription
 func (c *Client) SetMyShortDescription(ctx context.Context, request OptSetMyShortDescription) (*Result, error) {
 	res, err := c.sendSetMyShortDescription(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendSetMyShortDescription(ctx context.Context, request OptSetMyShortDescription) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setMyShortDescription"),
-	}
-	// Validate request before sending.
-	if err := func() error {
-		if request.Set {
-			if err := func() error {
-				if err := request.Value.Validate(); err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return err
-			}
-		}
-		return nil
-	}(); err != nil {
-		return res, errors.Wrap(err, "validate")
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/setMyShortDescription"),
 	}
 
 	// Run stopwatch.
@@ -7801,22 +9168,14 @@ func (c *Client) sendSetMyShortDescription(ctx context.Context, request OptSetMy
 // POST /setPassportDataErrors
 func (c *Client) SetPassportDataErrors(ctx context.Context, request *SetPassportDataErrors) (*Result, error) {
 	res, err := c.sendSetPassportDataErrors(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendSetPassportDataErrors(ctx context.Context, request *SetPassportDataErrors) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setPassportDataErrors"),
-	}
-	// Validate request before sending.
-	if err := func() error {
-		if err := request.Validate(); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return res, errors.Wrap(err, "validate")
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/setPassportDataErrors"),
 	}
 
 	// Run stopwatch.
@@ -7885,22 +9244,14 @@ func (c *Client) sendSetPassportDataErrors(ctx context.Context, request *SetPass
 // POST /setStickerEmojiList
 func (c *Client) SetStickerEmojiList(ctx context.Context, request *SetStickerEmojiList) (*Result, error) {
 	res, err := c.sendSetStickerEmojiList(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendSetStickerEmojiList(ctx context.Context, request *SetStickerEmojiList) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setStickerEmojiList"),
-	}
-	// Validate request before sending.
-	if err := func() error {
-		if err := request.Validate(); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return res, errors.Wrap(err, "validate")
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/setStickerEmojiList"),
 	}
 
 	// Run stopwatch.
@@ -7969,13 +9320,14 @@ func (c *Client) sendSetStickerEmojiList(ctx context.Context, request *SetSticke
 // POST /setStickerKeywords
 func (c *Client) SetStickerKeywords(ctx context.Context, request *SetStickerKeywords) (*Result, error) {
 	res, err := c.sendSetStickerKeywords(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendSetStickerKeywords(ctx context.Context, request *SetStickerKeywords) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setStickerKeywords"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/setStickerKeywords"),
 	}
 
 	// Run stopwatch.
@@ -8045,22 +9397,14 @@ func (c *Client) sendSetStickerKeywords(ctx context.Context, request *SetSticker
 // POST /setStickerMaskPosition
 func (c *Client) SetStickerMaskPosition(ctx context.Context, request *SetStickerMaskPosition) (*Result, error) {
 	res, err := c.sendSetStickerMaskPosition(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendSetStickerMaskPosition(ctx context.Context, request *SetStickerMaskPosition) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setStickerMaskPosition"),
-	}
-	// Validate request before sending.
-	if err := func() error {
-		if err := request.Validate(); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return res, errors.Wrap(err, "validate")
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/setStickerMaskPosition"),
 	}
 
 	// Run stopwatch.
@@ -8129,13 +9473,14 @@ func (c *Client) sendSetStickerMaskPosition(ctx context.Context, request *SetSti
 // POST /setStickerPositionInSet
 func (c *Client) SetStickerPositionInSet(ctx context.Context, request *SetStickerPositionInSet) (*Result, error) {
 	res, err := c.sendSetStickerPositionInSet(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendSetStickerPositionInSet(ctx context.Context, request *SetStickerPositionInSet) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setStickerPositionInSet"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/setStickerPositionInSet"),
 	}
 
 	// Run stopwatch.
@@ -8204,13 +9549,14 @@ func (c *Client) sendSetStickerPositionInSet(ctx context.Context, request *SetSt
 // POST /setStickerSetThumbnail
 func (c *Client) SetStickerSetThumbnail(ctx context.Context, request *SetStickerSetThumbnail) (*Result, error) {
 	res, err := c.sendSetStickerSetThumbnail(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendSetStickerSetThumbnail(ctx context.Context, request *SetStickerSetThumbnail) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setStickerSetThumbnail"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/setStickerSetThumbnail"),
 	}
 
 	// Run stopwatch.
@@ -8278,22 +9624,14 @@ func (c *Client) sendSetStickerSetThumbnail(ctx context.Context, request *SetSti
 // POST /setStickerSetTitle
 func (c *Client) SetStickerSetTitle(ctx context.Context, request *SetStickerSetTitle) (*Result, error) {
 	res, err := c.sendSetStickerSetTitle(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendSetStickerSetTitle(ctx context.Context, request *SetStickerSetTitle) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setStickerSetTitle"),
-	}
-	// Validate request before sending.
-	if err := func() error {
-		if err := request.Validate(); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return res, errors.Wrap(err, "validate")
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/setStickerSetTitle"),
 	}
 
 	// Run stopwatch.
@@ -8363,22 +9701,14 @@ func (c *Client) sendSetStickerSetTitle(ctx context.Context, request *SetSticker
 // POST /setWebhook
 func (c *Client) SetWebhook(ctx context.Context, request *SetWebhook) (*Result, error) {
 	res, err := c.sendSetWebhook(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendSetWebhook(ctx context.Context, request *SetWebhook) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setWebhook"),
-	}
-	// Validate request before sending.
-	if err := func() error {
-		if err := request.Validate(); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return res, errors.Wrap(err, "validate")
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/setWebhook"),
 	}
 
 	// Run stopwatch.
@@ -8448,22 +9778,14 @@ func (c *Client) sendSetWebhook(ctx context.Context, request *SetWebhook) (res *
 // POST /stopMessageLiveLocation
 func (c *Client) StopMessageLiveLocation(ctx context.Context, request *StopMessageLiveLocation) (*ResultMessageOrBoolean, error) {
 	res, err := c.sendStopMessageLiveLocation(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendStopMessageLiveLocation(ctx context.Context, request *StopMessageLiveLocation) (res *ResultMessageOrBoolean, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("stopMessageLiveLocation"),
-	}
-	// Validate request before sending.
-	if err := func() error {
-		if err := request.Validate(); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return res, errors.Wrap(err, "validate")
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/stopMessageLiveLocation"),
 	}
 
 	// Run stopwatch.
@@ -8532,22 +9854,14 @@ func (c *Client) sendStopMessageLiveLocation(ctx context.Context, request *StopM
 // POST /stopPoll
 func (c *Client) StopPoll(ctx context.Context, request *StopPoll) (*ResultPoll, error) {
 	res, err := c.sendStopPoll(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendStopPoll(ctx context.Context, request *StopPoll) (res *ResultPoll, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("stopPoll"),
-	}
-	// Validate request before sending.
-	if err := func() error {
-		if err := request.Validate(); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return res, errors.Wrap(err, "validate")
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/stopPoll"),
 	}
 
 	// Run stopwatch.
@@ -8620,13 +9934,14 @@ func (c *Client) sendStopPoll(ctx context.Context, request *StopPoll) (res *Resu
 // POST /unbanChatMember
 func (c *Client) UnbanChatMember(ctx context.Context, request *UnbanChatMember) (*Result, error) {
 	res, err := c.sendUnbanChatMember(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendUnbanChatMember(ctx context.Context, request *UnbanChatMember) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("unbanChatMember"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/unbanChatMember"),
 	}
 
 	// Run stopwatch.
@@ -8696,13 +10011,14 @@ func (c *Client) sendUnbanChatMember(ctx context.Context, request *UnbanChatMemb
 // POST /unbanChatSenderChat
 func (c *Client) UnbanChatSenderChat(ctx context.Context, request *UnbanChatSenderChat) (*Result, error) {
 	res, err := c.sendUnbanChatSenderChat(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendUnbanChatSenderChat(ctx context.Context, request *UnbanChatSenderChat) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("unbanChatSenderChat"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/unbanChatSenderChat"),
 	}
 
 	// Run stopwatch.
@@ -8772,13 +10088,14 @@ func (c *Client) sendUnbanChatSenderChat(ctx context.Context, request *UnbanChat
 // POST /unhideGeneralForumTopic
 func (c *Client) UnhideGeneralForumTopic(ctx context.Context, request *UnhideGeneralForumTopic) (*Result, error) {
 	res, err := c.sendUnhideGeneralForumTopic(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendUnhideGeneralForumTopic(ctx context.Context, request *UnhideGeneralForumTopic) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("unhideGeneralForumTopic"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/unhideGeneralForumTopic"),
 	}
 
 	// Run stopwatch.
@@ -8849,13 +10166,14 @@ func (c *Client) sendUnhideGeneralForumTopic(ctx context.Context, request *Unhid
 // POST /unpinAllChatMessages
 func (c *Client) UnpinAllChatMessages(ctx context.Context, request *UnpinAllChatMessages) (*Result, error) {
 	res, err := c.sendUnpinAllChatMessages(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendUnpinAllChatMessages(ctx context.Context, request *UnpinAllChatMessages) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("unpinAllChatMessages"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/unpinAllChatMessages"),
 	}
 
 	// Run stopwatch.
@@ -8925,13 +10243,14 @@ func (c *Client) sendUnpinAllChatMessages(ctx context.Context, request *UnpinAll
 // POST /unpinAllForumTopicMessages
 func (c *Client) UnpinAllForumTopicMessages(ctx context.Context, request *UnpinAllForumTopicMessages) (*Result, error) {
 	res, err := c.sendUnpinAllForumTopicMessages(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendUnpinAllForumTopicMessages(ctx context.Context, request *UnpinAllForumTopicMessages) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("unpinAllForumTopicMessages"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/unpinAllForumTopicMessages"),
 	}
 
 	// Run stopwatch.
@@ -8992,6 +10311,83 @@ func (c *Client) sendUnpinAllForumTopicMessages(ctx context.Context, request *Un
 	return result, nil
 }
 
+// UnpinAllGeneralForumTopicMessages invokes unpinAllGeneralForumTopicMessages operation.
+//
+// Use this method to clear the list of pinned messages in a General forum topic. The bot must be an
+// administrator in the chat for this to work and must have the _can_pin_messages_ administrator
+// right in the supergroup. Returns _True_ on success.
+//
+// POST /unpinAllGeneralForumTopicMessages
+func (c *Client) UnpinAllGeneralForumTopicMessages(ctx context.Context, request *UnpinAllGeneralForumTopicMessages) (*Result, error) {
+	res, err := c.sendUnpinAllGeneralForumTopicMessages(ctx, request)
+	return res, err
+}
+
+func (c *Client) sendUnpinAllGeneralForumTopicMessages(ctx context.Context, request *UnpinAllGeneralForumTopicMessages) (res *Result, err error) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("unpinAllGeneralForumTopicMessages"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/unpinAllGeneralForumTopicMessages"),
+	}
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, "UnpinAllGeneralForumTopicMessages",
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	var pathParts [1]string
+	pathParts[0] = "/unpinAllGeneralForumTopicMessages"
+	uri.AddPathParts(u, pathParts[:]...)
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "POST", u)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeUnpinAllGeneralForumTopicMessagesRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeUnpinAllGeneralForumTopicMessagesResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
 // UnpinChatMessage invokes unpinChatMessage operation.
 //
 // Use this method to remove a message from the list of pinned messages in a chat. If the chat is not
@@ -9002,13 +10398,14 @@ func (c *Client) sendUnpinAllForumTopicMessages(ctx context.Context, request *Un
 // POST /unpinChatMessage
 func (c *Client) UnpinChatMessage(ctx context.Context, request *UnpinChatMessage) (*Result, error) {
 	res, err := c.sendUnpinChatMessage(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendUnpinChatMessage(ctx context.Context, request *UnpinChatMessage) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("unpinChatMessage"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/unpinChatMessage"),
 	}
 
 	// Run stopwatch.
@@ -9072,21 +10469,23 @@ func (c *Client) sendUnpinChatMessage(ctx context.Context, request *UnpinChatMes
 // UploadStickerFile invokes uploadStickerFile operation.
 //
 // Use this method to upload a file with a sticker for later use in the
-// [createNewStickerSet](https://core.telegram.org/bots/api#createnewstickerset) and
-// [addStickerToSet](https://core.telegram.org/bots/api#addstickertoset) methods (the file can be
-// used multiple times). Returns the uploaded [File](https://core.telegram.org/bots/api#file) on
-// success.
+// [createNewStickerSet](https://core.telegram.org/bots/api#createnewstickerset),
+// [addStickerToSet](https://core.telegram.org/bots/api#addstickertoset), or
+// [replaceStickerInSet](https://core.telegram.org/bots/api#replacestickerinset) methods (the file
+// can be used multiple times). Returns the uploaded [File](https://core.telegram.org/bots/api#file)
+// on success.
 //
 // POST /uploadStickerFile
 func (c *Client) UploadStickerFile(ctx context.Context, request *UploadStickerFile) (*ResultFile, error) {
 	res, err := c.sendUploadStickerFile(ctx, request)
-	_ = res
 	return res, err
 }
 
 func (c *Client) sendUploadStickerFile(ctx context.Context, request *UploadStickerFile) (res *ResultFile, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("uploadStickerFile"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/uploadStickerFile"),
 	}
 
 	// Run stopwatch.

@@ -22,10 +22,8 @@ import (
 
 // handleAddStickerToSetRequest handles addStickerToSet operation.
 //
-// Use this method to add a new sticker to a set created by the bot. The format of the added sticker
-// must match the format of the other stickers in the set. Emoji sticker sets can have up to 200
-// stickers. Animated and video sticker sets can have up to 50 stickers. Static sticker sets can have
-// up to 120 stickers. Returns _True_ on success.
+// Use this method to add a new sticker to a set created by the bot. Emoji sticker sets can have up
+// to 200 stickers. Other sticker sets can have up to 120 stickers. Returns _True_ on success.
 //
 // POST /addStickerToSet
 func (s *Server) handleAddStickerToSetRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
@@ -42,22 +40,28 @@ func (s *Server) handleAddStickerToSetRequest(args [0]string, argsEscaped bool, 
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -71,7 +75,7 @@ func (s *Server) handleAddStickerToSetRequest(args [0]string, argsEscaped bool, 
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -84,12 +88,13 @@ func (s *Server) handleAddStickerToSetRequest(args [0]string, argsEscaped bool, 
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "AddStickerToSet",
-			OperationID:   "addStickerToSet",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "AddStickerToSet",
+			OperationSummary: "",
+			OperationID:      "addStickerToSet",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -114,22 +119,27 @@ func (s *Server) handleAddStickerToSetRequest(args [0]string, argsEscaped bool, 
 		response, err = s.h.AddStickerToSet(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeAddStickerToSetResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -155,22 +165,28 @@ func (s *Server) handleAnswerCallbackQueryRequest(args [0]string, argsEscaped bo
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -184,7 +200,7 @@ func (s *Server) handleAnswerCallbackQueryRequest(args [0]string, argsEscaped bo
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -197,12 +213,13 @@ func (s *Server) handleAnswerCallbackQueryRequest(args [0]string, argsEscaped bo
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "AnswerCallbackQuery",
-			OperationID:   "answerCallbackQuery",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "AnswerCallbackQuery",
+			OperationSummary: "",
+			OperationID:      "answerCallbackQuery",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -227,22 +244,27 @@ func (s *Server) handleAnswerCallbackQueryRequest(args [0]string, argsEscaped bo
 		response, err = s.h.AnswerCallbackQuery(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeAnswerCallbackQueryResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -267,22 +289,28 @@ func (s *Server) handleAnswerInlineQueryRequest(args [0]string, argsEscaped bool
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -296,7 +324,7 @@ func (s *Server) handleAnswerInlineQueryRequest(args [0]string, argsEscaped bool
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -309,12 +337,13 @@ func (s *Server) handleAnswerInlineQueryRequest(args [0]string, argsEscaped bool
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "AnswerInlineQuery",
-			OperationID:   "answerInlineQuery",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "AnswerInlineQuery",
+			OperationSummary: "",
+			OperationID:      "answerInlineQuery",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -339,22 +368,27 @@ func (s *Server) handleAnswerInlineQueryRequest(args [0]string, argsEscaped bool
 		response, err = s.h.AnswerInlineQuery(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeAnswerInlineQueryResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -382,22 +416,28 @@ func (s *Server) handleAnswerPreCheckoutQueryRequest(args [0]string, argsEscaped
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -411,7 +451,7 @@ func (s *Server) handleAnswerPreCheckoutQueryRequest(args [0]string, argsEscaped
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -424,12 +464,13 @@ func (s *Server) handleAnswerPreCheckoutQueryRequest(args [0]string, argsEscaped
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "AnswerPreCheckoutQuery",
-			OperationID:   "answerPreCheckoutQuery",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "AnswerPreCheckoutQuery",
+			OperationSummary: "",
+			OperationID:      "answerPreCheckoutQuery",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -454,22 +495,27 @@ func (s *Server) handleAnswerPreCheckoutQueryRequest(args [0]string, argsEscaped
 		response, err = s.h.AnswerPreCheckoutQuery(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeAnswerPreCheckoutQueryResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -498,22 +544,28 @@ func (s *Server) handleAnswerShippingQueryRequest(args [0]string, argsEscaped bo
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -527,7 +579,7 @@ func (s *Server) handleAnswerShippingQueryRequest(args [0]string, argsEscaped bo
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -540,12 +592,13 @@ func (s *Server) handleAnswerShippingQueryRequest(args [0]string, argsEscaped bo
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "AnswerShippingQuery",
-			OperationID:   "answerShippingQuery",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "AnswerShippingQuery",
+			OperationSummary: "",
+			OperationID:      "answerShippingQuery",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -570,22 +623,27 @@ func (s *Server) handleAnswerShippingQueryRequest(args [0]string, argsEscaped bo
 		response, err = s.h.AnswerShippingQuery(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeAnswerShippingQueryResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -612,22 +670,28 @@ func (s *Server) handleAnswerWebAppQueryRequest(args [0]string, argsEscaped bool
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -641,7 +705,7 @@ func (s *Server) handleAnswerWebAppQueryRequest(args [0]string, argsEscaped bool
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -654,12 +718,13 @@ func (s *Server) handleAnswerWebAppQueryRequest(args [0]string, argsEscaped bool
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "AnswerWebAppQuery",
-			OperationID:   "answerWebAppQuery",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "AnswerWebAppQuery",
+			OperationSummary: "",
+			OperationID:      "answerWebAppQuery",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -684,22 +749,27 @@ func (s *Server) handleAnswerWebAppQueryRequest(args [0]string, argsEscaped bool
 		response, err = s.h.AnswerWebAppQuery(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeAnswerWebAppQueryResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -724,22 +794,28 @@ func (s *Server) handleApproveChatJoinRequestRequest(args [0]string, argsEscaped
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -753,7 +829,7 @@ func (s *Server) handleApproveChatJoinRequestRequest(args [0]string, argsEscaped
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -766,12 +842,13 @@ func (s *Server) handleApproveChatJoinRequestRequest(args [0]string, argsEscaped
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "ApproveChatJoinRequest",
-			OperationID:   "approveChatJoinRequest",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "ApproveChatJoinRequest",
+			OperationSummary: "",
+			OperationID:      "approveChatJoinRequest",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -796,22 +873,27 @@ func (s *Server) handleApproveChatJoinRequestRequest(args [0]string, argsEscaped
 		response, err = s.h.ApproveChatJoinRequest(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeApproveChatJoinRequestResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -839,22 +921,28 @@ func (s *Server) handleBanChatMemberRequest(args [0]string, argsEscaped bool, w 
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -868,7 +956,7 @@ func (s *Server) handleBanChatMemberRequest(args [0]string, argsEscaped bool, w 
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -881,12 +969,13 @@ func (s *Server) handleBanChatMemberRequest(args [0]string, argsEscaped bool, w 
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "BanChatMember",
-			OperationID:   "banChatMember",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "BanChatMember",
+			OperationSummary: "",
+			OperationID:      "banChatMember",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -911,22 +1000,27 @@ func (s *Server) handleBanChatMemberRequest(args [0]string, argsEscaped bool, w 
 		response, err = s.h.BanChatMember(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeBanChatMemberResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -954,22 +1048,28 @@ func (s *Server) handleBanChatSenderChatRequest(args [0]string, argsEscaped bool
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -983,7 +1083,7 @@ func (s *Server) handleBanChatSenderChatRequest(args [0]string, argsEscaped bool
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -996,12 +1096,13 @@ func (s *Server) handleBanChatSenderChatRequest(args [0]string, argsEscaped bool
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "BanChatSenderChat",
-			OperationID:   "banChatSenderChat",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "BanChatSenderChat",
+			OperationSummary: "",
+			OperationID:      "banChatSenderChat",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -1026,22 +1127,27 @@ func (s *Server) handleBanChatSenderChatRequest(args [0]string, argsEscaped bool
 		response, err = s.h.BanChatSenderChat(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeBanChatSenderChatResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -1068,22 +1174,28 @@ func (s *Server) handleCloseRequest(args [0]string, argsEscaped bool, w http.Res
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err error
 	)
@@ -1091,12 +1203,13 @@ func (s *Server) handleCloseRequest(args [0]string, argsEscaped bool, w http.Res
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "Close",
-			OperationID:   "close",
-			Body:          nil,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "Close",
+			OperationSummary: "",
+			OperationID:      "close",
+			Body:             nil,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -1121,22 +1234,27 @@ func (s *Server) handleCloseRequest(args [0]string, argsEscaped bool, w http.Res
 		response, err = s.h.Close(ctx)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeCloseResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -1162,22 +1280,28 @@ func (s *Server) handleCloseForumTopicRequest(args [0]string, argsEscaped bool, 
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -1191,7 +1315,7 @@ func (s *Server) handleCloseForumTopicRequest(args [0]string, argsEscaped bool, 
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -1204,12 +1328,13 @@ func (s *Server) handleCloseForumTopicRequest(args [0]string, argsEscaped bool, 
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "CloseForumTopic",
-			OperationID:   "closeForumTopic",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "CloseForumTopic",
+			OperationSummary: "",
+			OperationID:      "closeForumTopic",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -1234,22 +1359,27 @@ func (s *Server) handleCloseForumTopicRequest(args [0]string, argsEscaped bool, 
 		response, err = s.h.CloseForumTopic(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeCloseForumTopicResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -1275,22 +1405,28 @@ func (s *Server) handleCloseGeneralForumTopicRequest(args [0]string, argsEscaped
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -1304,7 +1440,7 @@ func (s *Server) handleCloseGeneralForumTopicRequest(args [0]string, argsEscaped
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -1317,12 +1453,13 @@ func (s *Server) handleCloseGeneralForumTopicRequest(args [0]string, argsEscaped
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "CloseGeneralForumTopic",
-			OperationID:   "closeGeneralForumTopic",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "CloseGeneralForumTopic",
+			OperationSummary: "",
+			OperationID:      "closeGeneralForumTopic",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -1347,34 +1484,40 @@ func (s *Server) handleCloseGeneralForumTopicRequest(args [0]string, argsEscaped
 		response, err = s.h.CloseGeneralForumTopic(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeCloseGeneralForumTopicResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
 
 // handleCopyMessageRequest handles copyMessage operation.
 //
-// Use this method to copy messages of any kind. Service messages and invoice messages can't be
-// copied. A quiz [poll](https://core.telegram.org/bots/api#poll) can be copied only if the value of
-// the field _correct_option_id_ is known to the bot. The method is analogous to the method
-// [forwardMessage](https://core.telegram.org/bots/api#forwardmessage), but the copied message
-// doesn't have a link to the original message. Returns the [MessageId](https://core.telegram.
-// org/bots/api#messageid) of the sent message on success.
+// Use this method to copy messages of any kind. Service messages, giveaway messages, giveaway
+// winners messages, and invoice messages can't be copied. A quiz [poll](https://core.telegram.
+// org/bots/api#poll) can be copied only if the value of the field _correct_option_id_ is known to
+// the bot. The method is analogous to the method [forwardMessage](https://core.telegram.
+// org/bots/api#forwardmessage), but the copied message doesn't have a link to the original message.
+// Returns the [MessageId](https://core.telegram.org/bots/api#messageid) of the sent message on
+// success.
 //
 // POST /copyMessage
 func (s *Server) handleCopyMessageRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
@@ -1391,22 +1534,28 @@ func (s *Server) handleCopyMessageRequest(args [0]string, argsEscaped bool, w ht
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -1420,7 +1569,7 @@ func (s *Server) handleCopyMessageRequest(args [0]string, argsEscaped bool, w ht
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -1433,12 +1582,13 @@ func (s *Server) handleCopyMessageRequest(args [0]string, argsEscaped bool, w ht
 	var response *ResultMessageId
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "CopyMessage",
-			OperationID:   "copyMessage",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "CopyMessage",
+			OperationSummary: "",
+			OperationID:      "copyMessage",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -1463,22 +1613,157 @@ func (s *Server) handleCopyMessageRequest(args [0]string, argsEscaped bool, w ht
 		response, err = s.h.CopyMessage(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeCopyMessageResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
+		return
+	}
+}
+
+// handleCopyMessagesRequest handles copyMessages operation.
+//
+// Use this method to copy messages of any kind. If some of the specified messages can't be found or
+// copied, they are skipped. Service messages, giveaway messages, giveaway winners messages, and
+// invoice messages can't be copied. A quiz [poll](https://core.telegram.org/bots/api#poll) can be
+// copied only if the value of the field _correct_option_id_ is known to the bot. The method is
+// analogous to the method [forwardMessages](https://core.telegram.org/bots/api#forwardmessages), but
+// the copied messages don't have a link to the original message. Album grouping is kept for copied
+// messages. On success, an array of [MessageId](https://core.telegram.org/bots/api#messageid) of the
+// sent messages is returned.
+//
+// POST /copyMessages
+func (s *Server) handleCopyMessagesRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("copyMessages"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/copyMessages"),
+	}
+
+	// Start a span for this request.
+	ctx, span := s.cfg.Tracer.Start(r.Context(), "CopyMessages",
+		trace.WithAttributes(otelAttrs...),
+		serverSpanKind,
+	)
+	defer span.End()
+
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
+
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "CopyMessages",
+			ID:   "copyMessages",
+		}
+	)
+	request, close, err := s.decodeCopyMessagesRequest(r)
+	if err != nil {
+		err = &ogenerrors.DecodeRequestError{
+			OperationContext: opErrContext,
+			Err:              err,
+		}
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+	defer func() {
+		if err := close(); err != nil {
+			recordError("CloseRequest", err)
+		}
+	}()
+
+	var response *ResultArrayOfMessageId
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:          ctx,
+			OperationName:    "CopyMessages",
+			OperationSummary: "",
+			OperationID:      "copyMessages",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
+		}
+
+		type (
+			Request  = *CopyMessages
+			Params   = struct{}
+			Response = *ResultArrayOfMessageId
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.CopyMessages(ctx, request)
+				return response, err
+			},
+		)
+	} else {
+		response, err = s.h.CopyMessages(ctx, request)
+	}
+	if err != nil {
+		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
+			return
+		}
+		if errors.Is(err, ht.ErrNotImplemented) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+			return
+		}
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
+		return
+	}
+
+	if err := encodeCopyMessagesResponse(response, w, span); err != nil {
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -1506,22 +1791,28 @@ func (s *Server) handleCreateChatInviteLinkRequest(args [0]string, argsEscaped b
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -1535,7 +1826,7 @@ func (s *Server) handleCreateChatInviteLinkRequest(args [0]string, argsEscaped b
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -1548,12 +1839,13 @@ func (s *Server) handleCreateChatInviteLinkRequest(args [0]string, argsEscaped b
 	var response *ResultChatInviteLink
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "CreateChatInviteLink",
-			OperationID:   "createChatInviteLink",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "CreateChatInviteLink",
+			OperationSummary: "",
+			OperationID:      "createChatInviteLink",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -1578,22 +1870,27 @@ func (s *Server) handleCreateChatInviteLinkRequest(args [0]string, argsEscaped b
 		response, err = s.h.CreateChatInviteLink(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeCreateChatInviteLinkResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -1620,22 +1917,28 @@ func (s *Server) handleCreateForumTopicRequest(args [0]string, argsEscaped bool,
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -1649,7 +1952,7 @@ func (s *Server) handleCreateForumTopicRequest(args [0]string, argsEscaped bool,
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -1662,12 +1965,13 @@ func (s *Server) handleCreateForumTopicRequest(args [0]string, argsEscaped bool,
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "CreateForumTopic",
-			OperationID:   "createForumTopic",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "CreateForumTopic",
+			OperationSummary: "",
+			OperationID:      "createForumTopic",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -1692,22 +1996,27 @@ func (s *Server) handleCreateForumTopicRequest(args [0]string, argsEscaped bool,
 		response, err = s.h.CreateForumTopic(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeCreateForumTopicResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -1732,22 +2041,28 @@ func (s *Server) handleCreateInvoiceLinkRequest(args [0]string, argsEscaped bool
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -1761,7 +2076,7 @@ func (s *Server) handleCreateInvoiceLinkRequest(args [0]string, argsEscaped bool
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -1774,12 +2089,13 @@ func (s *Server) handleCreateInvoiceLinkRequest(args [0]string, argsEscaped bool
 	var response *ResultString
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "CreateInvoiceLink",
-			OperationID:   "createInvoiceLink",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "CreateInvoiceLink",
+			OperationSummary: "",
+			OperationID:      "createInvoiceLink",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -1804,22 +2120,27 @@ func (s *Server) handleCreateInvoiceLinkRequest(args [0]string, argsEscaped bool
 		response, err = s.h.CreateInvoiceLink(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeCreateInvoiceLinkResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -1844,22 +2165,28 @@ func (s *Server) handleCreateNewStickerSetRequest(args [0]string, argsEscaped bo
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -1873,7 +2200,7 @@ func (s *Server) handleCreateNewStickerSetRequest(args [0]string, argsEscaped bo
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -1886,12 +2213,13 @@ func (s *Server) handleCreateNewStickerSetRequest(args [0]string, argsEscaped bo
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "CreateNewStickerSet",
-			OperationID:   "createNewStickerSet",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "CreateNewStickerSet",
+			OperationSummary: "",
+			OperationID:      "createNewStickerSet",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -1916,22 +2244,27 @@ func (s *Server) handleCreateNewStickerSetRequest(args [0]string, argsEscaped bo
 		response, err = s.h.CreateNewStickerSet(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeCreateNewStickerSetResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -1956,22 +2289,28 @@ func (s *Server) handleDeclineChatJoinRequestRequest(args [0]string, argsEscaped
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -1985,7 +2324,7 @@ func (s *Server) handleDeclineChatJoinRequestRequest(args [0]string, argsEscaped
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -1998,12 +2337,13 @@ func (s *Server) handleDeclineChatJoinRequestRequest(args [0]string, argsEscaped
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "DeclineChatJoinRequest",
-			OperationID:   "declineChatJoinRequest",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "DeclineChatJoinRequest",
+			OperationSummary: "",
+			OperationID:      "declineChatJoinRequest",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -2028,22 +2368,27 @@ func (s *Server) handleDeclineChatJoinRequestRequest(args [0]string, argsEscaped
 		response, err = s.h.DeclineChatJoinRequest(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeDeclineChatJoinRequestResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -2069,22 +2414,28 @@ func (s *Server) handleDeleteChatPhotoRequest(args [0]string, argsEscaped bool, 
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -2098,7 +2449,7 @@ func (s *Server) handleDeleteChatPhotoRequest(args [0]string, argsEscaped bool, 
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -2111,12 +2462,13 @@ func (s *Server) handleDeleteChatPhotoRequest(args [0]string, argsEscaped bool, 
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "DeleteChatPhoto",
-			OperationID:   "deleteChatPhoto",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "DeleteChatPhoto",
+			OperationSummary: "",
+			OperationID:      "deleteChatPhoto",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -2141,22 +2493,27 @@ func (s *Server) handleDeleteChatPhotoRequest(args [0]string, argsEscaped bool, 
 		response, err = s.h.DeleteChatPhoto(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeDeleteChatPhotoResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -2183,22 +2540,28 @@ func (s *Server) handleDeleteChatStickerSetRequest(args [0]string, argsEscaped b
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -2212,7 +2575,7 @@ func (s *Server) handleDeleteChatStickerSetRequest(args [0]string, argsEscaped b
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -2225,12 +2588,13 @@ func (s *Server) handleDeleteChatStickerSetRequest(args [0]string, argsEscaped b
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "DeleteChatStickerSet",
-			OperationID:   "deleteChatStickerSet",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "DeleteChatStickerSet",
+			OperationSummary: "",
+			OperationID:      "deleteChatStickerSet",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -2255,22 +2619,27 @@ func (s *Server) handleDeleteChatStickerSetRequest(args [0]string, argsEscaped b
 		response, err = s.h.DeleteChatStickerSet(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeDeleteChatStickerSetResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -2296,22 +2665,28 @@ func (s *Server) handleDeleteForumTopicRequest(args [0]string, argsEscaped bool,
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -2325,7 +2700,7 @@ func (s *Server) handleDeleteForumTopicRequest(args [0]string, argsEscaped bool,
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -2338,12 +2713,13 @@ func (s *Server) handleDeleteForumTopicRequest(args [0]string, argsEscaped bool,
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "DeleteForumTopic",
-			OperationID:   "deleteForumTopic",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "DeleteForumTopic",
+			OperationSummary: "",
+			OperationID:      "deleteForumTopic",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -2368,22 +2744,27 @@ func (s *Server) handleDeleteForumTopicRequest(args [0]string, argsEscaped bool,
 		response, err = s.h.DeleteForumTopic(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeDeleteForumTopicResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -2415,22 +2796,28 @@ func (s *Server) handleDeleteMessageRequest(args [0]string, argsEscaped bool, w 
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -2444,7 +2831,7 @@ func (s *Server) handleDeleteMessageRequest(args [0]string, argsEscaped bool, w 
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -2457,12 +2844,13 @@ func (s *Server) handleDeleteMessageRequest(args [0]string, argsEscaped bool, w 
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "DeleteMessage",
-			OperationID:   "deleteMessage",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "DeleteMessage",
+			OperationSummary: "",
+			OperationID:      "deleteMessage",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -2487,22 +2875,151 @@ func (s *Server) handleDeleteMessageRequest(args [0]string, argsEscaped bool, w 
 		response, err = s.h.DeleteMessage(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeDeleteMessageResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
+		return
+	}
+}
+
+// handleDeleteMessagesRequest handles deleteMessages operation.
+//
+// Use this method to delete multiple messages simultaneously. If some of the specified messages
+// can't be found, they are skipped. Returns _True_ on success.
+//
+// POST /deleteMessages
+func (s *Server) handleDeleteMessagesRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("deleteMessages"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/deleteMessages"),
+	}
+
+	// Start a span for this request.
+	ctx, span := s.cfg.Tracer.Start(r.Context(), "DeleteMessages",
+		trace.WithAttributes(otelAttrs...),
+		serverSpanKind,
+	)
+	defer span.End()
+
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
+
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "DeleteMessages",
+			ID:   "deleteMessages",
+		}
+	)
+	request, close, err := s.decodeDeleteMessagesRequest(r)
+	if err != nil {
+		err = &ogenerrors.DecodeRequestError{
+			OperationContext: opErrContext,
+			Err:              err,
+		}
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+	defer func() {
+		if err := close(); err != nil {
+			recordError("CloseRequest", err)
+		}
+	}()
+
+	var response *Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:          ctx,
+			OperationName:    "DeleteMessages",
+			OperationSummary: "",
+			OperationID:      "deleteMessages",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
+		}
+
+		type (
+			Request  = *DeleteMessages
+			Params   = struct{}
+			Response = *Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.DeleteMessages(ctx, request)
+				return response, err
+			},
+		)
+	} else {
+		response, err = s.h.DeleteMessages(ctx, request)
+	}
+	if err != nil {
+		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
+			return
+		}
+		if errors.Is(err, ht.ErrNotImplemented) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+			return
+		}
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
+		return
+	}
+
+	if err := encodeDeleteMessagesResponse(response, w, span); err != nil {
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -2529,22 +3046,28 @@ func (s *Server) handleDeleteMyCommandsRequest(args [0]string, argsEscaped bool,
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -2558,7 +3081,7 @@ func (s *Server) handleDeleteMyCommandsRequest(args [0]string, argsEscaped bool,
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -2571,12 +3094,13 @@ func (s *Server) handleDeleteMyCommandsRequest(args [0]string, argsEscaped bool,
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "DeleteMyCommands",
-			OperationID:   "deleteMyCommands",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "DeleteMyCommands",
+			OperationSummary: "",
+			OperationID:      "deleteMyCommands",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -2601,22 +3125,27 @@ func (s *Server) handleDeleteMyCommandsRequest(args [0]string, argsEscaped bool,
 		response, err = s.h.DeleteMyCommands(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeDeleteMyCommandsResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -2640,22 +3169,28 @@ func (s *Server) handleDeleteStickerFromSetRequest(args [0]string, argsEscaped b
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -2669,7 +3204,7 @@ func (s *Server) handleDeleteStickerFromSetRequest(args [0]string, argsEscaped b
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -2682,12 +3217,13 @@ func (s *Server) handleDeleteStickerFromSetRequest(args [0]string, argsEscaped b
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "DeleteStickerFromSet",
-			OperationID:   "deleteStickerFromSet",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "DeleteStickerFromSet",
+			OperationSummary: "",
+			OperationID:      "deleteStickerFromSet",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -2712,22 +3248,27 @@ func (s *Server) handleDeleteStickerFromSetRequest(args [0]string, argsEscaped b
 		response, err = s.h.DeleteStickerFromSet(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeDeleteStickerFromSetResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -2751,22 +3292,28 @@ func (s *Server) handleDeleteStickerSetRequest(args [0]string, argsEscaped bool,
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -2780,7 +3327,7 @@ func (s *Server) handleDeleteStickerSetRequest(args [0]string, argsEscaped bool,
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -2793,12 +3340,13 @@ func (s *Server) handleDeleteStickerSetRequest(args [0]string, argsEscaped bool,
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "DeleteStickerSet",
-			OperationID:   "deleteStickerSet",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "DeleteStickerSet",
+			OperationSummary: "",
+			OperationID:      "deleteStickerSet",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -2823,22 +3371,27 @@ func (s *Server) handleDeleteStickerSetRequest(args [0]string, argsEscaped bool,
 		response, err = s.h.DeleteStickerSet(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeDeleteStickerSetResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -2863,22 +3416,28 @@ func (s *Server) handleDeleteWebhookRequest(args [0]string, argsEscaped bool, w 
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -2892,7 +3451,7 @@ func (s *Server) handleDeleteWebhookRequest(args [0]string, argsEscaped bool, w 
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -2905,12 +3464,13 @@ func (s *Server) handleDeleteWebhookRequest(args [0]string, argsEscaped bool, w 
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "DeleteWebhook",
-			OperationID:   "deleteWebhook",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "DeleteWebhook",
+			OperationSummary: "",
+			OperationID:      "deleteWebhook",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -2935,22 +3495,27 @@ func (s *Server) handleDeleteWebhookRequest(args [0]string, argsEscaped bool, w 
 		response, err = s.h.DeleteWebhook(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeDeleteWebhookResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -2977,22 +3542,28 @@ func (s *Server) handleEditChatInviteLinkRequest(args [0]string, argsEscaped boo
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -3006,7 +3577,7 @@ func (s *Server) handleEditChatInviteLinkRequest(args [0]string, argsEscaped boo
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -3019,12 +3590,13 @@ func (s *Server) handleEditChatInviteLinkRequest(args [0]string, argsEscaped boo
 	var response *ResultChatInviteLink
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "EditChatInviteLink",
-			OperationID:   "editChatInviteLink",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "EditChatInviteLink",
+			OperationSummary: "",
+			OperationID:      "editChatInviteLink",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -3049,22 +3621,27 @@ func (s *Server) handleEditChatInviteLinkRequest(args [0]string, argsEscaped boo
 		response, err = s.h.EditChatInviteLink(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeEditChatInviteLinkResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -3090,22 +3667,28 @@ func (s *Server) handleEditForumTopicRequest(args [0]string, argsEscaped bool, w
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -3119,7 +3702,7 @@ func (s *Server) handleEditForumTopicRequest(args [0]string, argsEscaped bool, w
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -3132,12 +3715,13 @@ func (s *Server) handleEditForumTopicRequest(args [0]string, argsEscaped bool, w
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "EditForumTopic",
-			OperationID:   "editForumTopic",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "EditForumTopic",
+			OperationSummary: "",
+			OperationID:      "editForumTopic",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -3162,22 +3746,27 @@ func (s *Server) handleEditForumTopicRequest(args [0]string, argsEscaped bool, w
 		response, err = s.h.EditForumTopic(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeEditForumTopicResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -3203,22 +3792,28 @@ func (s *Server) handleEditGeneralForumTopicRequest(args [0]string, argsEscaped 
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -3232,7 +3827,7 @@ func (s *Server) handleEditGeneralForumTopicRequest(args [0]string, argsEscaped 
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -3245,12 +3840,13 @@ func (s *Server) handleEditGeneralForumTopicRequest(args [0]string, argsEscaped 
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "EditGeneralForumTopic",
-			OperationID:   "editGeneralForumTopic",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "EditGeneralForumTopic",
+			OperationSummary: "",
+			OperationID:      "editGeneralForumTopic",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -3275,22 +3871,27 @@ func (s *Server) handleEditGeneralForumTopicRequest(args [0]string, argsEscaped 
 		response, err = s.h.EditGeneralForumTopic(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeEditGeneralForumTopicResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -3299,7 +3900,8 @@ func (s *Server) handleEditGeneralForumTopicRequest(args [0]string, argsEscaped 
 //
 // Use this method to edit captions of messages. On success, if the edited message is not an inline
 // message, the edited [Message](https://core.telegram.org/bots/api#message) is returned, otherwise
-// _True_ is returned.
+// _True_ is returned. Note that business messages that were not sent by the bot and do not contain
+// an inline keyboard can only be edited within **48 hours** from the time they were sent.
 //
 // POST /editMessageCaption
 func (s *Server) handleEditMessageCaptionRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
@@ -3316,22 +3918,28 @@ func (s *Server) handleEditMessageCaptionRequest(args [0]string, argsEscaped boo
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -3345,7 +3953,7 @@ func (s *Server) handleEditMessageCaptionRequest(args [0]string, argsEscaped boo
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -3358,12 +3966,13 @@ func (s *Server) handleEditMessageCaptionRequest(args [0]string, argsEscaped boo
 	var response *ResultMessageOrBoolean
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "EditMessageCaption",
-			OperationID:   "editMessageCaption",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "EditMessageCaption",
+			OperationSummary: "",
+			OperationID:      "editMessageCaption",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -3388,22 +3997,27 @@ func (s *Server) handleEditMessageCaptionRequest(args [0]string, argsEscaped boo
 		response, err = s.h.EditMessageCaption(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeEditMessageCaptionResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -3431,22 +4045,28 @@ func (s *Server) handleEditMessageLiveLocationRequest(args [0]string, argsEscape
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -3460,7 +4080,7 @@ func (s *Server) handleEditMessageLiveLocationRequest(args [0]string, argsEscape
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -3473,12 +4093,13 @@ func (s *Server) handleEditMessageLiveLocationRequest(args [0]string, argsEscape
 	var response *ResultMessageOrBoolean
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "EditMessageLiveLocation",
-			OperationID:   "editMessageLiveLocation",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "EditMessageLiveLocation",
+			OperationSummary: "",
+			OperationID:      "editMessageLiveLocation",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -3503,22 +4124,27 @@ func (s *Server) handleEditMessageLiveLocationRequest(args [0]string, argsEscape
 		response, err = s.h.EditMessageLiveLocation(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeEditMessageLiveLocationResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -3530,7 +4156,9 @@ func (s *Server) handleEditMessageLiveLocationRequest(args [0]string, argsEscape
 // for document albums and to a photo or a video otherwise. When an inline message is edited, a new
 // file can't be uploaded; use a previously uploaded file via its file_id or specify a URL. On
 // success, if the edited message is not an inline message, the edited [Message](https://core.
-// telegram.org/bots/api#message) is returned, otherwise _True_ is returned.
+// telegram.org/bots/api#message) is returned, otherwise _True_ is returned. Note that business
+// messages that were not sent by the bot and do not contain an inline keyboard can only be edited
+// within **48 hours** from the time they were sent.
 //
 // POST /editMessageMedia
 func (s *Server) handleEditMessageMediaRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
@@ -3547,22 +4175,28 @@ func (s *Server) handleEditMessageMediaRequest(args [0]string, argsEscaped bool,
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -3576,7 +4210,7 @@ func (s *Server) handleEditMessageMediaRequest(args [0]string, argsEscaped bool,
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -3589,12 +4223,13 @@ func (s *Server) handleEditMessageMediaRequest(args [0]string, argsEscaped bool,
 	var response *ResultMessageOrBoolean
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "EditMessageMedia",
-			OperationID:   "editMessageMedia",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "EditMessageMedia",
+			OperationSummary: "",
+			OperationID:      "editMessageMedia",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -3619,22 +4254,27 @@ func (s *Server) handleEditMessageMediaRequest(args [0]string, argsEscaped bool,
 		response, err = s.h.EditMessageMedia(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeEditMessageMediaResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -3643,7 +4283,9 @@ func (s *Server) handleEditMessageMediaRequest(args [0]string, argsEscaped bool,
 //
 // Use this method to edit only the reply markup of messages. On success, if the edited message is
 // not an inline message, the edited [Message](https://core.telegram.org/bots/api#message) is
-// returned, otherwise _True_ is returned.
+// returned, otherwise _True_ is returned. Note that business messages that were not sent by the bot
+// and do not contain an inline keyboard can only be edited within **48 hours** from the time they
+// were sent.
 //
 // POST /editMessageReplyMarkup
 func (s *Server) handleEditMessageReplyMarkupRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
@@ -3660,22 +4302,28 @@ func (s *Server) handleEditMessageReplyMarkupRequest(args [0]string, argsEscaped
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -3689,7 +4337,7 @@ func (s *Server) handleEditMessageReplyMarkupRequest(args [0]string, argsEscaped
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -3702,12 +4350,13 @@ func (s *Server) handleEditMessageReplyMarkupRequest(args [0]string, argsEscaped
 	var response *ResultMessageOrBoolean
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "EditMessageReplyMarkup",
-			OperationID:   "editMessageReplyMarkup",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "EditMessageReplyMarkup",
+			OperationSummary: "",
+			OperationID:      "editMessageReplyMarkup",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -3732,22 +4381,27 @@ func (s *Server) handleEditMessageReplyMarkupRequest(args [0]string, argsEscaped
 		response, err = s.h.EditMessageReplyMarkup(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeEditMessageReplyMarkupResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -3756,7 +4410,9 @@ func (s *Server) handleEditMessageReplyMarkupRequest(args [0]string, argsEscaped
 //
 // Use this method to edit text and [game](https://core.telegram.org/bots/api#games) messages. On
 // success, if the edited message is not an inline message, the edited [Message](https://core.
-// telegram.org/bots/api#message) is returned, otherwise _True_ is returned.
+// telegram.org/bots/api#message) is returned, otherwise _True_ is returned. Note that business
+// messages that were not sent by the bot and do not contain an inline keyboard can only be edited
+// within **48 hours** from the time they were sent.
 //
 // POST /editMessageText
 func (s *Server) handleEditMessageTextRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
@@ -3773,22 +4429,28 @@ func (s *Server) handleEditMessageTextRequest(args [0]string, argsEscaped bool, 
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -3802,7 +4464,7 @@ func (s *Server) handleEditMessageTextRequest(args [0]string, argsEscaped bool, 
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -3815,12 +4477,13 @@ func (s *Server) handleEditMessageTextRequest(args [0]string, argsEscaped bool, 
 	var response *ResultMessageOrBoolean
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "EditMessageText",
-			OperationID:   "editMessageText",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "EditMessageText",
+			OperationSummary: "",
+			OperationID:      "editMessageText",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -3845,22 +4508,27 @@ func (s *Server) handleEditMessageTextRequest(args [0]string, argsEscaped bool, 
 		response, err = s.h.EditMessageText(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeEditMessageTextResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -3886,22 +4554,28 @@ func (s *Server) handleExportChatInviteLinkRequest(args [0]string, argsEscaped b
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -3915,7 +4589,7 @@ func (s *Server) handleExportChatInviteLinkRequest(args [0]string, argsEscaped b
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -3928,12 +4602,13 @@ func (s *Server) handleExportChatInviteLinkRequest(args [0]string, argsEscaped b
 	var response *ResultString
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "ExportChatInviteLink",
-			OperationID:   "exportChatInviteLink",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "ExportChatInviteLink",
+			OperationSummary: "",
+			OperationID:      "exportChatInviteLink",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -3958,30 +4633,36 @@ func (s *Server) handleExportChatInviteLinkRequest(args [0]string, argsEscaped b
 		response, err = s.h.ExportChatInviteLink(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeExportChatInviteLinkResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
 
 // handleForwardMessageRequest handles forwardMessage operation.
 //
-// Use this method to forward messages of any kind. Service messages can't be forwarded. On success,
-// the sent [Message](https://core.telegram.org/bots/api#message) is returned.
+// Use this method to forward messages of any kind. Service messages and messages with protected
+// content can't be forwarded. On success, the sent [Message](https://core.telegram.
+// org/bots/api#message) is returned.
 //
 // POST /forwardMessage
 func (s *Server) handleForwardMessageRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
@@ -3998,22 +4679,28 @@ func (s *Server) handleForwardMessageRequest(args [0]string, argsEscaped bool, w
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -4027,7 +4714,7 @@ func (s *Server) handleForwardMessageRequest(args [0]string, argsEscaped bool, w
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -4040,12 +4727,13 @@ func (s *Server) handleForwardMessageRequest(args [0]string, argsEscaped bool, w
 	var response *ResultMessage
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "ForwardMessage",
-			OperationID:   "forwardMessage",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "ForwardMessage",
+			OperationSummary: "",
+			OperationID:      "forwardMessage",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -4070,31 +4758,286 @@ func (s *Server) handleForwardMessageRequest(args [0]string, argsEscaped bool, w
 		response, err = s.h.ForwardMessage(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeForwardMessageResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
+		return
+	}
+}
+
+// handleForwardMessagesRequest handles forwardMessages operation.
+//
+// Use this method to forward multiple messages of any kind. If some of the specified messages can't
+// be found or forwarded, they are skipped. Service messages and messages with protected content
+// can't be forwarded. Album grouping is kept for forwarded messages. On success, an array of
+// [MessageId](https://core.telegram.org/bots/api#messageid) of the sent messages is returned.
+//
+// POST /forwardMessages
+func (s *Server) handleForwardMessagesRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("forwardMessages"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/forwardMessages"),
+	}
+
+	// Start a span for this request.
+	ctx, span := s.cfg.Tracer.Start(r.Context(), "ForwardMessages",
+		trace.WithAttributes(otelAttrs...),
+		serverSpanKind,
+	)
+	defer span.End()
+
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
+
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "ForwardMessages",
+			ID:   "forwardMessages",
+		}
+	)
+	request, close, err := s.decodeForwardMessagesRequest(r)
+	if err != nil {
+		err = &ogenerrors.DecodeRequestError{
+			OperationContext: opErrContext,
+			Err:              err,
+		}
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+	defer func() {
+		if err := close(); err != nil {
+			recordError("CloseRequest", err)
+		}
+	}()
+
+	var response *ResultArrayOfMessageId
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:          ctx,
+			OperationName:    "ForwardMessages",
+			OperationSummary: "",
+			OperationID:      "forwardMessages",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
+		}
+
+		type (
+			Request  = *ForwardMessages
+			Params   = struct{}
+			Response = *ResultArrayOfMessageId
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.ForwardMessages(ctx, request)
+				return response, err
+			},
+		)
+	} else {
+		response, err = s.h.ForwardMessages(ctx, request)
+	}
+	if err != nil {
+		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
+			return
+		}
+		if errors.Is(err, ht.ErrNotImplemented) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+			return
+		}
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
+		return
+	}
+
+	if err := encodeForwardMessagesResponse(response, w, span); err != nil {
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
+		return
+	}
+}
+
+// handleGetBusinessConnectionRequest handles getBusinessConnection operation.
+//
+// Use this method to get information about the connection of the bot with a business account.
+// Returns a [BusinessConnection](https://core.telegram.org/bots/api#businessconnection) object on
+// success.
+//
+// POST /getBusinessConnection
+func (s *Server) handleGetBusinessConnectionRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("getBusinessConnection"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/getBusinessConnection"),
+	}
+
+	// Start a span for this request.
+	ctx, span := s.cfg.Tracer.Start(r.Context(), "GetBusinessConnection",
+		trace.WithAttributes(otelAttrs...),
+		serverSpanKind,
+	)
+	defer span.End()
+
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
+
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "GetBusinessConnection",
+			ID:   "getBusinessConnection",
+		}
+	)
+	request, close, err := s.decodeGetBusinessConnectionRequest(r)
+	if err != nil {
+		err = &ogenerrors.DecodeRequestError{
+			OperationContext: opErrContext,
+			Err:              err,
+		}
+		defer recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+	defer func() {
+		if err := close(); err != nil {
+			recordError("CloseRequest", err)
+		}
+	}()
+
+	var response *Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:          ctx,
+			OperationName:    "GetBusinessConnection",
+			OperationSummary: "",
+			OperationID:      "getBusinessConnection",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
+		}
+
+		type (
+			Request  = *GetBusinessConnection
+			Params   = struct{}
+			Response = *Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.GetBusinessConnection(ctx, request)
+				return response, err
+			},
+		)
+	} else {
+		response, err = s.h.GetBusinessConnection(ctx, request)
+	}
+	if err != nil {
+		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
+			return
+		}
+		if errors.Is(err, ht.ErrNotImplemented) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+			return
+		}
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
+		return
+	}
+
+	if err := encodeGetBusinessConnectionResponse(response, w, span); err != nil {
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
 
 // handleGetChatRequest handles getChat operation.
 //
-// Use this method to get up to date information about the chat (current name of the user for
-// one-on-one conversations, current username of a user, group or channel, etc.). Returns a
-// [Chat](https://core.telegram.org/bots/api#chat) object on success.
+// Use this method to get up-to-date information about the chat. Returns a
+// [ChatFullInfo](https://core.telegram.org/bots/api#chatfullinfo) object on success.
 //
 // POST /getChat
 func (s *Server) handleGetChatRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
@@ -4111,22 +5054,28 @@ func (s *Server) handleGetChatRequest(args [0]string, argsEscaped bool, w http.R
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -4140,7 +5089,7 @@ func (s *Server) handleGetChatRequest(args [0]string, argsEscaped bool, w http.R
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -4150,21 +5099,22 @@ func (s *Server) handleGetChatRequest(args [0]string, argsEscaped bool, w http.R
 		}
 	}()
 
-	var response *ResultChat
+	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "GetChat",
-			OperationID:   "getChat",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "GetChat",
+			OperationSummary: "",
+			OperationID:      "getChat",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
 			Request  = *GetChat
 			Params   = struct{}
-			Response = *ResultChat
+			Response = *Result
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -4183,22 +5133,27 @@ func (s *Server) handleGetChatRequest(args [0]string, argsEscaped bool, w http.R
 		response, err = s.h.GetChat(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeGetChatResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -4223,22 +5178,28 @@ func (s *Server) handleGetChatAdministratorsRequest(args [0]string, argsEscaped 
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -4252,7 +5213,7 @@ func (s *Server) handleGetChatAdministratorsRequest(args [0]string, argsEscaped 
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -4265,12 +5226,13 @@ func (s *Server) handleGetChatAdministratorsRequest(args [0]string, argsEscaped 
 	var response *ResultArrayOfChatMember
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "GetChatAdministrators",
-			OperationID:   "getChatAdministrators",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "GetChatAdministrators",
+			OperationSummary: "",
+			OperationID:      "getChatAdministrators",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -4295,22 +5257,27 @@ func (s *Server) handleGetChatAdministratorsRequest(args [0]string, argsEscaped 
 		response, err = s.h.GetChatAdministrators(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeGetChatAdministratorsResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -4336,22 +5303,28 @@ func (s *Server) handleGetChatMemberRequest(args [0]string, argsEscaped bool, w 
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -4365,7 +5338,7 @@ func (s *Server) handleGetChatMemberRequest(args [0]string, argsEscaped bool, w 
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -4378,12 +5351,13 @@ func (s *Server) handleGetChatMemberRequest(args [0]string, argsEscaped bool, w 
 	var response *ResultChatMember
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "GetChatMember",
-			OperationID:   "getChatMember",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "GetChatMember",
+			OperationSummary: "",
+			OperationID:      "getChatMember",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -4408,22 +5382,27 @@ func (s *Server) handleGetChatMemberRequest(args [0]string, argsEscaped bool, w 
 		response, err = s.h.GetChatMember(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeGetChatMemberResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -4447,22 +5426,28 @@ func (s *Server) handleGetChatMemberCountRequest(args [0]string, argsEscaped boo
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -4476,7 +5461,7 @@ func (s *Server) handleGetChatMemberCountRequest(args [0]string, argsEscaped boo
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -4489,12 +5474,13 @@ func (s *Server) handleGetChatMemberCountRequest(args [0]string, argsEscaped boo
 	var response *ResultInt
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "GetChatMemberCount",
-			OperationID:   "getChatMemberCount",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "GetChatMemberCount",
+			OperationSummary: "",
+			OperationID:      "getChatMemberCount",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -4519,22 +5505,27 @@ func (s *Server) handleGetChatMemberCountRequest(args [0]string, argsEscaped boo
 		response, err = s.h.GetChatMemberCount(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeGetChatMemberCountResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -4560,22 +5551,28 @@ func (s *Server) handleGetChatMenuButtonRequest(args [0]string, argsEscaped bool
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -4589,7 +5586,7 @@ func (s *Server) handleGetChatMenuButtonRequest(args [0]string, argsEscaped bool
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -4602,12 +5599,13 @@ func (s *Server) handleGetChatMenuButtonRequest(args [0]string, argsEscaped bool
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "GetChatMenuButton",
-			OperationID:   "getChatMenuButton",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "GetChatMenuButton",
+			OperationSummary: "",
+			OperationID:      "getChatMenuButton",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -4632,22 +5630,27 @@ func (s *Server) handleGetChatMenuButtonRequest(args [0]string, argsEscaped bool
 		response, err = s.h.GetChatMenuButton(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeGetChatMenuButtonResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -4672,22 +5675,28 @@ func (s *Server) handleGetCustomEmojiStickersRequest(args [0]string, argsEscaped
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -4701,7 +5710,7 @@ func (s *Server) handleGetCustomEmojiStickersRequest(args [0]string, argsEscaped
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -4714,12 +5723,13 @@ func (s *Server) handleGetCustomEmojiStickersRequest(args [0]string, argsEscaped
 	var response *ResultArrayOfSticker
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "GetCustomEmojiStickers",
-			OperationID:   "getCustomEmojiStickers",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "GetCustomEmojiStickers",
+			OperationSummary: "",
+			OperationID:      "getCustomEmojiStickers",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -4744,22 +5754,27 @@ func (s *Server) handleGetCustomEmojiStickersRequest(args [0]string, argsEscaped
 		response, err = s.h.GetCustomEmojiStickers(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeGetCustomEmojiStickersResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -4788,22 +5803,28 @@ func (s *Server) handleGetFileRequest(args [0]string, argsEscaped bool, w http.R
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -4817,7 +5838,7 @@ func (s *Server) handleGetFileRequest(args [0]string, argsEscaped bool, w http.R
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -4830,12 +5851,13 @@ func (s *Server) handleGetFileRequest(args [0]string, argsEscaped bool, w http.R
 	var response *ResultFile
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "GetFile",
-			OperationID:   "getFile",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "GetFile",
+			OperationSummary: "",
+			OperationID:      "getFile",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -4860,22 +5882,27 @@ func (s *Server) handleGetFileRequest(args [0]string, argsEscaped bool, w http.R
 		response, err = s.h.GetFile(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeGetFileResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -4901,22 +5928,28 @@ func (s *Server) handleGetForumTopicIconStickersRequest(args [0]string, argsEsca
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err error
 	)
@@ -4924,12 +5957,13 @@ func (s *Server) handleGetForumTopicIconStickersRequest(args [0]string, argsEsca
 	var response *ResultArrayOfSticker
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "GetForumTopicIconStickers",
-			OperationID:   "getForumTopicIconStickers",
-			Body:          nil,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "GetForumTopicIconStickers",
+			OperationSummary: "",
+			OperationID:      "getForumTopicIconStickers",
+			Body:             nil,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -4954,22 +5988,27 @@ func (s *Server) handleGetForumTopicIconStickersRequest(args [0]string, argsEsca
 		response, err = s.h.GetForumTopicIconStickers(ctx)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeGetForumTopicIconStickersResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -4995,22 +6034,28 @@ func (s *Server) handleGetGameHighScoresRequest(args [0]string, argsEscaped bool
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -5024,7 +6069,7 @@ func (s *Server) handleGetGameHighScoresRequest(args [0]string, argsEscaped bool
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -5037,12 +6082,13 @@ func (s *Server) handleGetGameHighScoresRequest(args [0]string, argsEscaped bool
 	var response *ResultArrayOfGameHighScore
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "GetGameHighScores",
-			OperationID:   "getGameHighScores",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "GetGameHighScores",
+			OperationSummary: "",
+			OperationID:      "getGameHighScores",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -5067,22 +6113,27 @@ func (s *Server) handleGetGameHighScoresRequest(args [0]string, argsEscaped bool
 		response, err = s.h.GetGameHighScores(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeGetGameHighScoresResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -5107,22 +6158,28 @@ func (s *Server) handleGetMeRequest(args [0]string, argsEscaped bool, w http.Res
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err error
 	)
@@ -5130,12 +6187,13 @@ func (s *Server) handleGetMeRequest(args [0]string, argsEscaped bool, w http.Res
 	var response *ResultUser
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "GetMe",
-			OperationID:   "getMe",
-			Body:          nil,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "GetMe",
+			OperationSummary: "",
+			OperationID:      "getMe",
+			Body:             nil,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -5160,22 +6218,27 @@ func (s *Server) handleGetMeRequest(args [0]string, argsEscaped bool, w http.Res
 		response, err = s.h.GetMe(ctx)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeGetMeResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -5201,22 +6264,28 @@ func (s *Server) handleGetMyCommandsRequest(args [0]string, argsEscaped bool, w 
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -5230,7 +6299,7 @@ func (s *Server) handleGetMyCommandsRequest(args [0]string, argsEscaped bool, w 
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -5243,12 +6312,13 @@ func (s *Server) handleGetMyCommandsRequest(args [0]string, argsEscaped bool, w 
 	var response *ResultArrayOfBotCommand
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "GetMyCommands",
-			OperationID:   "getMyCommands",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "GetMyCommands",
+			OperationSummary: "",
+			OperationID:      "getMyCommands",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -5273,22 +6343,27 @@ func (s *Server) handleGetMyCommandsRequest(args [0]string, argsEscaped bool, w 
 		response, err = s.h.GetMyCommands(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeGetMyCommandsResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -5313,22 +6388,28 @@ func (s *Server) handleGetMyDefaultAdministratorRightsRequest(args [0]string, ar
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -5342,7 +6423,7 @@ func (s *Server) handleGetMyDefaultAdministratorRightsRequest(args [0]string, ar
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -5355,12 +6436,13 @@ func (s *Server) handleGetMyDefaultAdministratorRightsRequest(args [0]string, ar
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "GetMyDefaultAdministratorRights",
-			OperationID:   "getMyDefaultAdministratorRights",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "GetMyDefaultAdministratorRights",
+			OperationSummary: "",
+			OperationID:      "getMyDefaultAdministratorRights",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -5385,22 +6467,27 @@ func (s *Server) handleGetMyDefaultAdministratorRightsRequest(args [0]string, ar
 		response, err = s.h.GetMyDefaultAdministratorRights(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeGetMyDefaultAdministratorRightsResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -5425,22 +6512,28 @@ func (s *Server) handleGetMyDescriptionRequest(args [0]string, argsEscaped bool,
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -5454,7 +6547,7 @@ func (s *Server) handleGetMyDescriptionRequest(args [0]string, argsEscaped bool,
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -5467,12 +6560,13 @@ func (s *Server) handleGetMyDescriptionRequest(args [0]string, argsEscaped bool,
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "GetMyDescription",
-			OperationID:   "getMyDescription",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "GetMyDescription",
+			OperationSummary: "",
+			OperationID:      "getMyDescription",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -5497,22 +6591,27 @@ func (s *Server) handleGetMyDescriptionRequest(args [0]string, argsEscaped bool,
 		response, err = s.h.GetMyDescription(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeGetMyDescriptionResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -5537,22 +6636,28 @@ func (s *Server) handleGetMyNameRequest(args [0]string, argsEscaped bool, w http
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -5566,7 +6671,7 @@ func (s *Server) handleGetMyNameRequest(args [0]string, argsEscaped bool, w http
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -5579,12 +6684,13 @@ func (s *Server) handleGetMyNameRequest(args [0]string, argsEscaped bool, w http
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "GetMyName",
-			OperationID:   "getMyName",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "GetMyName",
+			OperationSummary: "",
+			OperationID:      "getMyName",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -5609,22 +6715,27 @@ func (s *Server) handleGetMyNameRequest(args [0]string, argsEscaped bool, w http
 		response, err = s.h.GetMyName(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeGetMyNameResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -5649,22 +6760,28 @@ func (s *Server) handleGetMyShortDescriptionRequest(args [0]string, argsEscaped 
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -5678,7 +6795,7 @@ func (s *Server) handleGetMyShortDescriptionRequest(args [0]string, argsEscaped 
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -5691,12 +6808,13 @@ func (s *Server) handleGetMyShortDescriptionRequest(args [0]string, argsEscaped 
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "GetMyShortDescription",
-			OperationID:   "getMyShortDescription",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "GetMyShortDescription",
+			OperationSummary: "",
+			OperationID:      "getMyShortDescription",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -5721,22 +6839,151 @@ func (s *Server) handleGetMyShortDescriptionRequest(args [0]string, argsEscaped 
 		response, err = s.h.GetMyShortDescription(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeGetMyShortDescriptionResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
+		return
+	}
+}
+
+// handleGetStarTransactionsRequest handles getStarTransactions operation.
+//
+// Returns the bot's Telegram Star transactions in chronological order. On success, returns a
+// [StarTransactions](https://core.telegram.org/bots/api#startransactions) object.
+//
+// POST /getStarTransactions
+func (s *Server) handleGetStarTransactionsRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("getStarTransactions"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/getStarTransactions"),
+	}
+
+	// Start a span for this request.
+	ctx, span := s.cfg.Tracer.Start(r.Context(), "GetStarTransactions",
+		trace.WithAttributes(otelAttrs...),
+		serverSpanKind,
+	)
+	defer span.End()
+
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
+
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "GetStarTransactions",
+			ID:   "getStarTransactions",
+		}
+	)
+	request, close, err := s.decodeGetStarTransactionsRequest(r)
+	if err != nil {
+		err = &ogenerrors.DecodeRequestError{
+			OperationContext: opErrContext,
+			Err:              err,
+		}
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+	defer func() {
+		if err := close(); err != nil {
+			recordError("CloseRequest", err)
+		}
+	}()
+
+	var response *Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:          ctx,
+			OperationName:    "GetStarTransactions",
+			OperationSummary: "",
+			OperationID:      "getStarTransactions",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
+		}
+
+		type (
+			Request  = OptGetStarTransactions
+			Params   = struct{}
+			Response = *Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.GetStarTransactions(ctx, request)
+				return response, err
+			},
+		)
+	} else {
+		response, err = s.h.GetStarTransactions(ctx, request)
+	}
+	if err != nil {
+		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
+			return
+		}
+		if errors.Is(err, ht.ErrNotImplemented) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+			return
+		}
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
+		return
+	}
+
+	if err := encodeGetStarTransactionsResponse(response, w, span); err != nil {
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -5761,22 +7008,28 @@ func (s *Server) handleGetStickerSetRequest(args [0]string, argsEscaped bool, w 
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -5790,7 +7043,7 @@ func (s *Server) handleGetStickerSetRequest(args [0]string, argsEscaped bool, w 
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -5803,12 +7056,13 @@ func (s *Server) handleGetStickerSetRequest(args [0]string, argsEscaped bool, w 
 	var response *ResultStickerSet
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "GetStickerSet",
-			OperationID:   "getStickerSet",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "GetStickerSet",
+			OperationSummary: "",
+			OperationID:      "getStickerSet",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -5833,22 +7087,27 @@ func (s *Server) handleGetStickerSetRequest(args [0]string, argsEscaped bool, w 
 		response, err = s.h.GetStickerSet(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeGetStickerSetResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -5874,22 +7133,28 @@ func (s *Server) handleGetUpdatesRequest(args [0]string, argsEscaped bool, w htt
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -5903,7 +7168,7 @@ func (s *Server) handleGetUpdatesRequest(args [0]string, argsEscaped bool, w htt
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -5916,12 +7181,13 @@ func (s *Server) handleGetUpdatesRequest(args [0]string, argsEscaped bool, w htt
 	var response *ResultArrayOfUpdate
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "GetUpdates",
-			OperationID:   "getUpdates",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "GetUpdates",
+			OperationSummary: "",
+			OperationID:      "getUpdates",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -5946,22 +7212,151 @@ func (s *Server) handleGetUpdatesRequest(args [0]string, argsEscaped bool, w htt
 		response, err = s.h.GetUpdates(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeGetUpdatesResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
+		return
+	}
+}
+
+// handleGetUserChatBoostsRequest handles getUserChatBoosts operation.
+//
+// Use this method to get the list of boosts added to a chat by a user. Requires administrator rights
+// in the chat. Returns a [UserChatBoosts](https://core.telegram.org/bots/api#userchatboosts) object.
+//
+// POST /getUserChatBoosts
+func (s *Server) handleGetUserChatBoostsRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("getUserChatBoosts"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/getUserChatBoosts"),
+	}
+
+	// Start a span for this request.
+	ctx, span := s.cfg.Tracer.Start(r.Context(), "GetUserChatBoosts",
+		trace.WithAttributes(otelAttrs...),
+		serverSpanKind,
+	)
+	defer span.End()
+
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
+
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "GetUserChatBoosts",
+			ID:   "getUserChatBoosts",
+		}
+	)
+	request, close, err := s.decodeGetUserChatBoostsRequest(r)
+	if err != nil {
+		err = &ogenerrors.DecodeRequestError{
+			OperationContext: opErrContext,
+			Err:              err,
+		}
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+	defer func() {
+		if err := close(); err != nil {
+			recordError("CloseRequest", err)
+		}
+	}()
+
+	var response *Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:          ctx,
+			OperationName:    "GetUserChatBoosts",
+			OperationSummary: "",
+			OperationID:      "getUserChatBoosts",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
+		}
+
+		type (
+			Request  = *GetUserChatBoosts
+			Params   = struct{}
+			Response = *Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.GetUserChatBoosts(ctx, request)
+				return response, err
+			},
+		)
+	} else {
+		response, err = s.h.GetUserChatBoosts(ctx, request)
+	}
+	if err != nil {
+		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
+			return
+		}
+		if errors.Is(err, ht.ErrNotImplemented) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+			return
+		}
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
+		return
+	}
+
+	if err := encodeGetUserChatBoostsResponse(response, w, span); err != nil {
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -5986,22 +7381,28 @@ func (s *Server) handleGetUserProfilePhotosRequest(args [0]string, argsEscaped b
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -6015,7 +7416,7 @@ func (s *Server) handleGetUserProfilePhotosRequest(args [0]string, argsEscaped b
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -6028,12 +7429,13 @@ func (s *Server) handleGetUserProfilePhotosRequest(args [0]string, argsEscaped b
 	var response *ResultUserProfilePhotos
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "GetUserProfilePhotos",
-			OperationID:   "getUserProfilePhotos",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "GetUserProfilePhotos",
+			OperationSummary: "",
+			OperationID:      "getUserProfilePhotos",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -6058,22 +7460,27 @@ func (s *Server) handleGetUserProfilePhotosRequest(args [0]string, argsEscaped b
 		response, err = s.h.GetUserProfilePhotos(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeGetUserProfilePhotosResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -6100,22 +7507,28 @@ func (s *Server) handleGetWebhookInfoRequest(args [0]string, argsEscaped bool, w
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err error
 	)
@@ -6123,12 +7536,13 @@ func (s *Server) handleGetWebhookInfoRequest(args [0]string, argsEscaped bool, w
 	var response *ResultWebhookInfo
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "GetWebhookInfo",
-			OperationID:   "getWebhookInfo",
-			Body:          nil,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "GetWebhookInfo",
+			OperationSummary: "",
+			OperationID:      "getWebhookInfo",
+			Body:             nil,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -6153,22 +7567,27 @@ func (s *Server) handleGetWebhookInfoRequest(args [0]string, argsEscaped bool, w
 		response, err = s.h.GetWebhookInfo(ctx)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeGetWebhookInfoResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -6194,22 +7613,28 @@ func (s *Server) handleHideGeneralForumTopicRequest(args [0]string, argsEscaped 
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -6223,7 +7648,7 @@ func (s *Server) handleHideGeneralForumTopicRequest(args [0]string, argsEscaped 
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -6236,12 +7661,13 @@ func (s *Server) handleHideGeneralForumTopicRequest(args [0]string, argsEscaped 
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "HideGeneralForumTopic",
-			OperationID:   "hideGeneralForumTopic",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "HideGeneralForumTopic",
+			OperationSummary: "",
+			OperationID:      "hideGeneralForumTopic",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -6266,22 +7692,27 @@ func (s *Server) handleHideGeneralForumTopicRequest(args [0]string, argsEscaped 
 		response, err = s.h.HideGeneralForumTopic(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeHideGeneralForumTopicResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -6305,22 +7736,28 @@ func (s *Server) handleLeaveChatRequest(args [0]string, argsEscaped bool, w http
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -6334,7 +7771,7 @@ func (s *Server) handleLeaveChatRequest(args [0]string, argsEscaped bool, w http
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -6347,12 +7784,13 @@ func (s *Server) handleLeaveChatRequest(args [0]string, argsEscaped bool, w http
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "LeaveChat",
-			OperationID:   "leaveChat",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "LeaveChat",
+			OperationSummary: "",
+			OperationID:      "leaveChat",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -6377,22 +7815,27 @@ func (s *Server) handleLeaveChatRequest(args [0]string, argsEscaped bool, w http
 		response, err = s.h.LeaveChat(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeLeaveChatResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -6420,22 +7863,28 @@ func (s *Server) handleLogOutRequest(args [0]string, argsEscaped bool, w http.Re
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err error
 	)
@@ -6443,12 +7892,13 @@ func (s *Server) handleLogOutRequest(args [0]string, argsEscaped bool, w http.Re
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "LogOut",
-			OperationID:   "logOut",
-			Body:          nil,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "LogOut",
+			OperationSummary: "",
+			OperationID:      "logOut",
+			Body:             nil,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -6473,22 +7923,27 @@ func (s *Server) handleLogOutRequest(args [0]string, argsEscaped bool, w http.Re
 		response, err = s.h.LogOut(ctx)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeLogOutResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -6515,22 +7970,28 @@ func (s *Server) handlePinChatMessageRequest(args [0]string, argsEscaped bool, w
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -6544,7 +8005,7 @@ func (s *Server) handlePinChatMessageRequest(args [0]string, argsEscaped bool, w
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -6557,12 +8018,13 @@ func (s *Server) handlePinChatMessageRequest(args [0]string, argsEscaped bool, w
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "PinChatMessage",
-			OperationID:   "pinChatMessage",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "PinChatMessage",
+			OperationSummary: "",
+			OperationID:      "pinChatMessage",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -6587,22 +8049,27 @@ func (s *Server) handlePinChatMessageRequest(args [0]string, argsEscaped bool, w
 		response, err = s.h.PinChatMessage(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodePinChatMessageResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -6628,22 +8095,28 @@ func (s *Server) handlePromoteChatMemberRequest(args [0]string, argsEscaped bool
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -6657,7 +8130,7 @@ func (s *Server) handlePromoteChatMemberRequest(args [0]string, argsEscaped bool
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -6670,12 +8143,13 @@ func (s *Server) handlePromoteChatMemberRequest(args [0]string, argsEscaped bool
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "PromoteChatMember",
-			OperationID:   "promoteChatMember",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "PromoteChatMember",
+			OperationSummary: "",
+			OperationID:      "promoteChatMember",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -6700,22 +8174,151 @@ func (s *Server) handlePromoteChatMemberRequest(args [0]string, argsEscaped bool
 		response, err = s.h.PromoteChatMember(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodePromoteChatMemberResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
+		return
+	}
+}
+
+// handleRefundStarPaymentRequest handles refundStarPayment operation.
+//
+// Refunds a successful payment in [Telegram Stars](https://t.me/BotNews/90). Returns _True_ on
+// success.
+//
+// POST /refundStarPayment
+func (s *Server) handleRefundStarPaymentRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("refundStarPayment"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/refundStarPayment"),
+	}
+
+	// Start a span for this request.
+	ctx, span := s.cfg.Tracer.Start(r.Context(), "RefundStarPayment",
+		trace.WithAttributes(otelAttrs...),
+		serverSpanKind,
+	)
+	defer span.End()
+
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
+
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "RefundStarPayment",
+			ID:   "refundStarPayment",
+		}
+	)
+	request, close, err := s.decodeRefundStarPaymentRequest(r)
+	if err != nil {
+		err = &ogenerrors.DecodeRequestError{
+			OperationContext: opErrContext,
+			Err:              err,
+		}
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+	defer func() {
+		if err := close(); err != nil {
+			recordError("CloseRequest", err)
+		}
+	}()
+
+	var response *Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:          ctx,
+			OperationName:    "RefundStarPayment",
+			OperationSummary: "",
+			OperationID:      "refundStarPayment",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
+		}
+
+		type (
+			Request  = *RefundStarPayment
+			Params   = struct{}
+			Response = *Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.RefundStarPayment(ctx, request)
+				return response, err
+			},
+		)
+	} else {
+		response, err = s.h.RefundStarPayment(ctx, request)
+	}
+	if err != nil {
+		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
+			return
+		}
+		if errors.Is(err, ht.ErrNotImplemented) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+			return
+		}
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
+		return
+	}
+
+	if err := encodeRefundStarPaymentResponse(response, w, span); err != nil {
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -6741,22 +8344,28 @@ func (s *Server) handleReopenForumTopicRequest(args [0]string, argsEscaped bool,
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -6770,7 +8379,7 @@ func (s *Server) handleReopenForumTopicRequest(args [0]string, argsEscaped bool,
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -6783,12 +8392,13 @@ func (s *Server) handleReopenForumTopicRequest(args [0]string, argsEscaped bool,
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "ReopenForumTopic",
-			OperationID:   "reopenForumTopic",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "ReopenForumTopic",
+			OperationSummary: "",
+			OperationID:      "reopenForumTopic",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -6813,22 +8423,27 @@ func (s *Server) handleReopenForumTopicRequest(args [0]string, argsEscaped bool,
 		response, err = s.h.ReopenForumTopic(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeReopenForumTopicResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -6854,22 +8469,28 @@ func (s *Server) handleReopenGeneralForumTopicRequest(args [0]string, argsEscape
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -6883,7 +8504,7 @@ func (s *Server) handleReopenGeneralForumTopicRequest(args [0]string, argsEscape
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -6896,12 +8517,13 @@ func (s *Server) handleReopenGeneralForumTopicRequest(args [0]string, argsEscape
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "ReopenGeneralForumTopic",
-			OperationID:   "reopenGeneralForumTopic",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "ReopenGeneralForumTopic",
+			OperationSummary: "",
+			OperationID:      "reopenGeneralForumTopic",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -6926,22 +8548,154 @@ func (s *Server) handleReopenGeneralForumTopicRequest(args [0]string, argsEscape
 		response, err = s.h.ReopenGeneralForumTopic(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeReopenGeneralForumTopicResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
+		return
+	}
+}
+
+// handleReplaceStickerInSetRequest handles replaceStickerInSet operation.
+//
+// Use this method to replace an existing sticker in a sticker set with a new one. The method is
+// equivalent to calling [deleteStickerFromSet](https://core.telegram.
+// org/bots/api#deletestickerfromset), then [addStickerToSet](https://core.telegram.
+// org/bots/api#addstickertoset), then [setStickerPositionInSet](https://core.telegram.
+// org/bots/api#setstickerpositioninset). Returns _True_ on success.
+//
+// POST /replaceStickerInSet
+func (s *Server) handleReplaceStickerInSetRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("replaceStickerInSet"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/replaceStickerInSet"),
+	}
+
+	// Start a span for this request.
+	ctx, span := s.cfg.Tracer.Start(r.Context(), "ReplaceStickerInSet",
+		trace.WithAttributes(otelAttrs...),
+		serverSpanKind,
+	)
+	defer span.End()
+
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
+
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "ReplaceStickerInSet",
+			ID:   "replaceStickerInSet",
+		}
+	)
+	request, close, err := s.decodeReplaceStickerInSetRequest(r)
+	if err != nil {
+		err = &ogenerrors.DecodeRequestError{
+			OperationContext: opErrContext,
+			Err:              err,
+		}
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+	defer func() {
+		if err := close(); err != nil {
+			recordError("CloseRequest", err)
+		}
+	}()
+
+	var response *Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:          ctx,
+			OperationName:    "ReplaceStickerInSet",
+			OperationSummary: "",
+			OperationID:      "replaceStickerInSet",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
+		}
+
+		type (
+			Request  = *ReplaceStickerInSet
+			Params   = struct{}
+			Response = *Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.ReplaceStickerInSet(ctx, request)
+				return response, err
+			},
+		)
+	} else {
+		response, err = s.h.ReplaceStickerInSet(ctx, request)
+	}
+	if err != nil {
+		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
+			return
+		}
+		if errors.Is(err, ht.ErrNotImplemented) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+			return
+		}
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
+		return
+	}
+
+	if err := encodeReplaceStickerInSetResponse(response, w, span); err != nil {
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -6967,22 +8721,28 @@ func (s *Server) handleRestrictChatMemberRequest(args [0]string, argsEscaped boo
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -6996,7 +8756,7 @@ func (s *Server) handleRestrictChatMemberRequest(args [0]string, argsEscaped boo
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -7009,12 +8769,13 @@ func (s *Server) handleRestrictChatMemberRequest(args [0]string, argsEscaped boo
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "RestrictChatMember",
-			OperationID:   "restrictChatMember",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "RestrictChatMember",
+			OperationSummary: "",
+			OperationID:      "restrictChatMember",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -7039,22 +8800,27 @@ func (s *Server) handleRestrictChatMemberRequest(args [0]string, argsEscaped boo
 		response, err = s.h.RestrictChatMember(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeRestrictChatMemberResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -7081,22 +8847,28 @@ func (s *Server) handleRevokeChatInviteLinkRequest(args [0]string, argsEscaped b
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -7110,7 +8882,7 @@ func (s *Server) handleRevokeChatInviteLinkRequest(args [0]string, argsEscaped b
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -7123,12 +8895,13 @@ func (s *Server) handleRevokeChatInviteLinkRequest(args [0]string, argsEscaped b
 	var response *ResultChatInviteLink
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "RevokeChatInviteLink",
-			OperationID:   "revokeChatInviteLink",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "RevokeChatInviteLink",
+			OperationSummary: "",
+			OperationID:      "revokeChatInviteLink",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -7153,22 +8926,27 @@ func (s *Server) handleRevokeChatInviteLinkRequest(args [0]string, argsEscaped b
 		response, err = s.h.RevokeChatInviteLink(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeRevokeChatInviteLinkResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -7194,22 +8972,28 @@ func (s *Server) handleSendAnimationRequest(args [0]string, argsEscaped bool, w 
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -7223,7 +9007,7 @@ func (s *Server) handleSendAnimationRequest(args [0]string, argsEscaped bool, w 
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -7236,12 +9020,13 @@ func (s *Server) handleSendAnimationRequest(args [0]string, argsEscaped bool, w 
 	var response *ResultMessage
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "SendAnimation",
-			OperationID:   "sendAnimation",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "SendAnimation",
+			OperationSummary: "",
+			OperationID:      "sendAnimation",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -7266,22 +9051,27 @@ func (s *Server) handleSendAnimationRequest(args [0]string, argsEscaped bool, w 
 		response, err = s.h.SendAnimation(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeSendAnimationResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -7306,22 +9096,28 @@ func (s *Server) handleSendAudioRequest(args [0]string, argsEscaped bool, w http
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -7335,7 +9131,7 @@ func (s *Server) handleSendAudioRequest(args [0]string, argsEscaped bool, w http
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -7348,12 +9144,13 @@ func (s *Server) handleSendAudioRequest(args [0]string, argsEscaped bool, w http
 	var response *ResultMessage
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "SendAudio",
-			OperationID:   "sendAudio",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "SendAudio",
+			OperationSummary: "",
+			OperationID:      "sendAudio",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -7378,22 +9175,27 @@ func (s *Server) handleSendAudioRequest(args [0]string, argsEscaped bool, w http
 		response, err = s.h.SendAudio(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeSendAudioResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -7418,22 +9220,28 @@ func (s *Server) handleSendChatActionRequest(args [0]string, argsEscaped bool, w
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -7447,7 +9255,7 @@ func (s *Server) handleSendChatActionRequest(args [0]string, argsEscaped bool, w
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -7460,12 +9268,13 @@ func (s *Server) handleSendChatActionRequest(args [0]string, argsEscaped bool, w
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "SendChatAction",
-			OperationID:   "sendChatAction",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "SendChatAction",
+			OperationSummary: "",
+			OperationID:      "sendChatAction",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -7490,22 +9299,27 @@ func (s *Server) handleSendChatActionRequest(args [0]string, argsEscaped bool, w
 		response, err = s.h.SendChatAction(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeSendChatActionResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -7530,22 +9344,28 @@ func (s *Server) handleSendContactRequest(args [0]string, argsEscaped bool, w ht
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -7559,7 +9379,7 @@ func (s *Server) handleSendContactRequest(args [0]string, argsEscaped bool, w ht
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -7572,12 +9392,13 @@ func (s *Server) handleSendContactRequest(args [0]string, argsEscaped bool, w ht
 	var response *ResultMessage
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "SendContact",
-			OperationID:   "sendContact",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "SendContact",
+			OperationSummary: "",
+			OperationID:      "sendContact",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -7602,22 +9423,27 @@ func (s *Server) handleSendContactRequest(args [0]string, argsEscaped bool, w ht
 		response, err = s.h.SendContact(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeSendContactResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -7642,22 +9468,28 @@ func (s *Server) handleSendDiceRequest(args [0]string, argsEscaped bool, w http.
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -7671,7 +9503,7 @@ func (s *Server) handleSendDiceRequest(args [0]string, argsEscaped bool, w http.
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -7684,12 +9516,13 @@ func (s *Server) handleSendDiceRequest(args [0]string, argsEscaped bool, w http.
 	var response *ResultMessage
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "SendDice",
-			OperationID:   "sendDice",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "SendDice",
+			OperationSummary: "",
+			OperationID:      "sendDice",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -7714,22 +9547,27 @@ func (s *Server) handleSendDiceRequest(args [0]string, argsEscaped bool, w http.
 		response, err = s.h.SendDice(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeSendDiceResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -7755,22 +9593,28 @@ func (s *Server) handleSendDocumentRequest(args [0]string, argsEscaped bool, w h
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -7784,7 +9628,7 @@ func (s *Server) handleSendDocumentRequest(args [0]string, argsEscaped bool, w h
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -7797,12 +9641,13 @@ func (s *Server) handleSendDocumentRequest(args [0]string, argsEscaped bool, w h
 	var response *ResultMessage
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "SendDocument",
-			OperationID:   "sendDocument",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "SendDocument",
+			OperationSummary: "",
+			OperationID:      "sendDocument",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -7827,22 +9672,27 @@ func (s *Server) handleSendDocumentRequest(args [0]string, argsEscaped bool, w h
 		response, err = s.h.SendDocument(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeSendDocumentResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -7867,22 +9717,28 @@ func (s *Server) handleSendGameRequest(args [0]string, argsEscaped bool, w http.
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -7896,7 +9752,7 @@ func (s *Server) handleSendGameRequest(args [0]string, argsEscaped bool, w http.
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -7909,12 +9765,13 @@ func (s *Server) handleSendGameRequest(args [0]string, argsEscaped bool, w http.
 	var response *ResultMessage
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "SendGame",
-			OperationID:   "sendGame",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "SendGame",
+			OperationSummary: "",
+			OperationID:      "sendGame",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -7939,22 +9796,27 @@ func (s *Server) handleSendGameRequest(args [0]string, argsEscaped bool, w http.
 		response, err = s.h.SendGame(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeSendGameResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -7979,22 +9841,28 @@ func (s *Server) handleSendInvoiceRequest(args [0]string, argsEscaped bool, w ht
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -8008,7 +9876,7 @@ func (s *Server) handleSendInvoiceRequest(args [0]string, argsEscaped bool, w ht
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -8021,12 +9889,13 @@ func (s *Server) handleSendInvoiceRequest(args [0]string, argsEscaped bool, w ht
 	var response *ResultMessage
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "SendInvoice",
-			OperationID:   "sendInvoice",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "SendInvoice",
+			OperationSummary: "",
+			OperationID:      "sendInvoice",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -8051,22 +9920,27 @@ func (s *Server) handleSendInvoiceRequest(args [0]string, argsEscaped bool, w ht
 		response, err = s.h.SendInvoice(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeSendInvoiceResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -8091,22 +9965,28 @@ func (s *Server) handleSendLocationRequest(args [0]string, argsEscaped bool, w h
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -8120,7 +10000,7 @@ func (s *Server) handleSendLocationRequest(args [0]string, argsEscaped bool, w h
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -8133,12 +10013,13 @@ func (s *Server) handleSendLocationRequest(args [0]string, argsEscaped bool, w h
 	var response *ResultMessage
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "SendLocation",
-			OperationID:   "sendLocation",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "SendLocation",
+			OperationSummary: "",
+			OperationID:      "sendLocation",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -8163,22 +10044,27 @@ func (s *Server) handleSendLocationRequest(args [0]string, argsEscaped bool, w h
 		response, err = s.h.SendLocation(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeSendLocationResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -8204,22 +10090,28 @@ func (s *Server) handleSendMediaGroupRequest(args [0]string, argsEscaped bool, w
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -8233,7 +10125,7 @@ func (s *Server) handleSendMediaGroupRequest(args [0]string, argsEscaped bool, w
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -8246,12 +10138,13 @@ func (s *Server) handleSendMediaGroupRequest(args [0]string, argsEscaped bool, w
 	var response *ResultArrayOfMessage
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "SendMediaGroup",
-			OperationID:   "sendMediaGroup",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "SendMediaGroup",
+			OperationSummary: "",
+			OperationID:      "sendMediaGroup",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -8276,22 +10169,27 @@ func (s *Server) handleSendMediaGroupRequest(args [0]string, argsEscaped bool, w
 		response, err = s.h.SendMediaGroup(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeSendMediaGroupResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -8316,22 +10214,28 @@ func (s *Server) handleSendMessageRequest(args [0]string, argsEscaped bool, w ht
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -8345,7 +10249,7 @@ func (s *Server) handleSendMessageRequest(args [0]string, argsEscaped bool, w ht
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -8358,12 +10262,13 @@ func (s *Server) handleSendMessageRequest(args [0]string, argsEscaped bool, w ht
 	var response *ResultMessage
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "SendMessage",
-			OperationID:   "sendMessage",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "SendMessage",
+			OperationSummary: "",
+			OperationID:      "sendMessage",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -8388,22 +10293,27 @@ func (s *Server) handleSendMessageRequest(args [0]string, argsEscaped bool, w ht
 		response, err = s.h.SendMessage(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeSendMessageResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -8428,22 +10338,28 @@ func (s *Server) handleSendPhotoRequest(args [0]string, argsEscaped bool, w http
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -8457,7 +10373,7 @@ func (s *Server) handleSendPhotoRequest(args [0]string, argsEscaped bool, w http
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -8470,12 +10386,13 @@ func (s *Server) handleSendPhotoRequest(args [0]string, argsEscaped bool, w http
 	var response *ResultMessage
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "SendPhoto",
-			OperationID:   "sendPhoto",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "SendPhoto",
+			OperationSummary: "",
+			OperationID:      "sendPhoto",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -8500,22 +10417,27 @@ func (s *Server) handleSendPhotoRequest(args [0]string, argsEscaped bool, w http
 		response, err = s.h.SendPhoto(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeSendPhotoResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -8540,22 +10462,28 @@ func (s *Server) handleSendPollRequest(args [0]string, argsEscaped bool, w http.
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -8569,7 +10497,7 @@ func (s *Server) handleSendPollRequest(args [0]string, argsEscaped bool, w http.
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -8582,12 +10510,13 @@ func (s *Server) handleSendPollRequest(args [0]string, argsEscaped bool, w http.
 	var response *ResultMessage
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "SendPoll",
-			OperationID:   "sendPoll",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "SendPoll",
+			OperationSummary: "",
+			OperationID:      "sendPoll",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -8612,22 +10541,27 @@ func (s *Server) handleSendPollRequest(args [0]string, argsEscaped bool, w http.
 		response, err = s.h.SendPoll(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeSendPollResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -8655,22 +10589,28 @@ func (s *Server) handleSendStickerRequest(args [0]string, argsEscaped bool, w ht
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -8684,7 +10624,7 @@ func (s *Server) handleSendStickerRequest(args [0]string, argsEscaped bool, w ht
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -8697,12 +10637,13 @@ func (s *Server) handleSendStickerRequest(args [0]string, argsEscaped bool, w ht
 	var response *ResultMessage
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "SendSticker",
-			OperationID:   "sendSticker",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "SendSticker",
+			OperationSummary: "",
+			OperationID:      "sendSticker",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -8727,22 +10668,27 @@ func (s *Server) handleSendStickerRequest(args [0]string, argsEscaped bool, w ht
 		response, err = s.h.SendSticker(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeSendStickerResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -8767,22 +10713,28 @@ func (s *Server) handleSendVenueRequest(args [0]string, argsEscaped bool, w http
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -8796,7 +10748,7 @@ func (s *Server) handleSendVenueRequest(args [0]string, argsEscaped bool, w http
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -8809,12 +10761,13 @@ func (s *Server) handleSendVenueRequest(args [0]string, argsEscaped bool, w http
 	var response *ResultMessage
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "SendVenue",
-			OperationID:   "sendVenue",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "SendVenue",
+			OperationSummary: "",
+			OperationID:      "sendVenue",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -8839,22 +10792,27 @@ func (s *Server) handleSendVenueRequest(args [0]string, argsEscaped bool, w http
 		response, err = s.h.SendVenue(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeSendVenueResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -8881,22 +10839,28 @@ func (s *Server) handleSendVideoRequest(args [0]string, argsEscaped bool, w http
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -8910,7 +10874,7 @@ func (s *Server) handleSendVideoRequest(args [0]string, argsEscaped bool, w http
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -8923,12 +10887,13 @@ func (s *Server) handleSendVideoRequest(args [0]string, argsEscaped bool, w http
 	var response *ResultMessage
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "SendVideo",
-			OperationID:   "sendVideo",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "SendVideo",
+			OperationSummary: "",
+			OperationID:      "sendVideo",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -8953,22 +10918,27 @@ func (s *Server) handleSendVideoRequest(args [0]string, argsEscaped bool, w http
 		response, err = s.h.SendVideo(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeSendVideoResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -8994,22 +10964,28 @@ func (s *Server) handleSendVideoNoteRequest(args [0]string, argsEscaped bool, w 
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -9023,7 +10999,7 @@ func (s *Server) handleSendVideoNoteRequest(args [0]string, argsEscaped bool, w 
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -9036,12 +11012,13 @@ func (s *Server) handleSendVideoNoteRequest(args [0]string, argsEscaped bool, w 
 	var response *ResultMessage
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "SendVideoNote",
-			OperationID:   "sendVideoNote",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "SendVideoNote",
+			OperationSummary: "",
+			OperationID:      "sendVideoNote",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -9066,22 +11043,27 @@ func (s *Server) handleSendVideoNoteRequest(args [0]string, argsEscaped bool, w 
 		response, err = s.h.SendVideoNote(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeSendVideoNoteResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -9089,11 +11071,11 @@ func (s *Server) handleSendVideoNoteRequest(args [0]string, argsEscaped bool, w 
 // handleSendVoiceRequest handles sendVoice operation.
 //
 // Use this method to send audio files, if you want Telegram clients to display the file as a
-// playable voice message. For this to work, your audio must be in an .OGG file encoded with OPUS
-// (other formats may be sent as [Audio](https://core.telegram.org/bots/api#audio) or
-// [Document](https://core.telegram.org/bots/api#document)). On success, the sent
-// [Message](https://core.telegram.org/bots/api#message) is returned. Bots can currently send voice
-// messages of up to 50 MB in size, this limit may be changed in the future.
+// playable voice message. For this to work, your audio must be in an .OGG file encoded with OPUS, or
+// in .MP3 format, or in .M4A format (other formats may be sent as [Audio](https://core.telegram.
+// org/bots/api#audio) or [Document](https://core.telegram.org/bots/api#document)). On success, the
+// sent [Message](https://core.telegram.org/bots/api#message) is returned. Bots can currently send
+// voice messages of up to 50 MB in size, this limit may be changed in the future.
 //
 // POST /sendVoice
 func (s *Server) handleSendVoiceRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
@@ -9110,22 +11092,28 @@ func (s *Server) handleSendVoiceRequest(args [0]string, argsEscaped bool, w http
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -9139,7 +11127,7 @@ func (s *Server) handleSendVoiceRequest(args [0]string, argsEscaped bool, w http
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -9152,12 +11140,13 @@ func (s *Server) handleSendVoiceRequest(args [0]string, argsEscaped bool, w http
 	var response *ResultMessage
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "SendVoice",
-			OperationID:   "sendVoice",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "SendVoice",
+			OperationSummary: "",
+			OperationID:      "sendVoice",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -9182,22 +11171,27 @@ func (s *Server) handleSendVoiceRequest(args [0]string, argsEscaped bool, w http
 		response, err = s.h.SendVoice(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeSendVoiceResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -9222,22 +11216,28 @@ func (s *Server) handleSetChatAdministratorCustomTitleRequest(args [0]string, ar
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -9251,7 +11251,7 @@ func (s *Server) handleSetChatAdministratorCustomTitleRequest(args [0]string, ar
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -9264,12 +11264,13 @@ func (s *Server) handleSetChatAdministratorCustomTitleRequest(args [0]string, ar
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "SetChatAdministratorCustomTitle",
-			OperationID:   "setChatAdministratorCustomTitle",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "SetChatAdministratorCustomTitle",
+			OperationSummary: "",
+			OperationID:      "setChatAdministratorCustomTitle",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -9294,22 +11295,27 @@ func (s *Server) handleSetChatAdministratorCustomTitleRequest(args [0]string, ar
 		response, err = s.h.SetChatAdministratorCustomTitle(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeSetChatAdministratorCustomTitleResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -9335,22 +11341,28 @@ func (s *Server) handleSetChatDescriptionRequest(args [0]string, argsEscaped boo
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -9364,7 +11376,7 @@ func (s *Server) handleSetChatDescriptionRequest(args [0]string, argsEscaped boo
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -9377,12 +11389,13 @@ func (s *Server) handleSetChatDescriptionRequest(args [0]string, argsEscaped boo
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "SetChatDescription",
-			OperationID:   "setChatDescription",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "SetChatDescription",
+			OperationSummary: "",
+			OperationID:      "setChatDescription",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -9407,22 +11420,27 @@ func (s *Server) handleSetChatDescriptionRequest(args [0]string, argsEscaped boo
 		response, err = s.h.SetChatDescription(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeSetChatDescriptionResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -9447,22 +11465,28 @@ func (s *Server) handleSetChatMenuButtonRequest(args [0]string, argsEscaped bool
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -9476,7 +11500,7 @@ func (s *Server) handleSetChatMenuButtonRequest(args [0]string, argsEscaped bool
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -9489,12 +11513,13 @@ func (s *Server) handleSetChatMenuButtonRequest(args [0]string, argsEscaped bool
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "SetChatMenuButton",
-			OperationID:   "setChatMenuButton",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "SetChatMenuButton",
+			OperationSummary: "",
+			OperationID:      "setChatMenuButton",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -9519,22 +11544,27 @@ func (s *Server) handleSetChatMenuButtonRequest(args [0]string, argsEscaped bool
 		response, err = s.h.SetChatMenuButton(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeSetChatMenuButtonResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -9560,22 +11590,28 @@ func (s *Server) handleSetChatPermissionsRequest(args [0]string, argsEscaped boo
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -9589,7 +11625,7 @@ func (s *Server) handleSetChatPermissionsRequest(args [0]string, argsEscaped boo
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -9602,12 +11638,13 @@ func (s *Server) handleSetChatPermissionsRequest(args [0]string, argsEscaped boo
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "SetChatPermissions",
-			OperationID:   "setChatPermissions",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "SetChatPermissions",
+			OperationSummary: "",
+			OperationID:      "setChatPermissions",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -9632,22 +11669,27 @@ func (s *Server) handleSetChatPermissionsRequest(args [0]string, argsEscaped boo
 		response, err = s.h.SetChatPermissions(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeSetChatPermissionsResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -9675,22 +11717,28 @@ func (s *Server) handleSetChatPhotoRequest(args [0]string, argsEscaped bool, w h
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -9704,7 +11752,7 @@ func (s *Server) handleSetChatPhotoRequest(args [0]string, argsEscaped bool, w h
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -9717,12 +11765,13 @@ func (s *Server) handleSetChatPhotoRequest(args [0]string, argsEscaped bool, w h
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "SetChatPhoto",
-			OperationID:   "setChatPhoto",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "SetChatPhoto",
+			OperationSummary: "",
+			OperationID:      "setChatPhoto",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -9747,22 +11796,27 @@ func (s *Server) handleSetChatPhotoRequest(args [0]string, argsEscaped bool, w h
 		response, err = s.h.SetChatPhoto(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeSetChatPhotoResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -9789,22 +11843,28 @@ func (s *Server) handleSetChatStickerSetRequest(args [0]string, argsEscaped bool
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -9818,7 +11878,7 @@ func (s *Server) handleSetChatStickerSetRequest(args [0]string, argsEscaped bool
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -9831,12 +11891,13 @@ func (s *Server) handleSetChatStickerSetRequest(args [0]string, argsEscaped bool
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "SetChatStickerSet",
-			OperationID:   "setChatStickerSet",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "SetChatStickerSet",
+			OperationSummary: "",
+			OperationID:      "setChatStickerSet",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -9861,22 +11922,27 @@ func (s *Server) handleSetChatStickerSetRequest(args [0]string, argsEscaped bool
 		response, err = s.h.SetChatStickerSet(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeSetChatStickerSetResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -9902,22 +11968,28 @@ func (s *Server) handleSetChatTitleRequest(args [0]string, argsEscaped bool, w h
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -9931,7 +12003,7 @@ func (s *Server) handleSetChatTitleRequest(args [0]string, argsEscaped bool, w h
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -9944,12 +12016,13 @@ func (s *Server) handleSetChatTitleRequest(args [0]string, argsEscaped bool, w h
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "SetChatTitle",
-			OperationID:   "setChatTitle",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "SetChatTitle",
+			OperationSummary: "",
+			OperationID:      "setChatTitle",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -9974,22 +12047,27 @@ func (s *Server) handleSetChatTitleRequest(args [0]string, argsEscaped bool, w h
 		response, err = s.h.SetChatTitle(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeSetChatTitleResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -10013,22 +12091,28 @@ func (s *Server) handleSetCustomEmojiStickerSetThumbnailRequest(args [0]string, 
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -10042,7 +12126,7 @@ func (s *Server) handleSetCustomEmojiStickerSetThumbnailRequest(args [0]string, 
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -10055,12 +12139,13 @@ func (s *Server) handleSetCustomEmojiStickerSetThumbnailRequest(args [0]string, 
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "SetCustomEmojiStickerSetThumbnail",
-			OperationID:   "setCustomEmojiStickerSetThumbnail",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "SetCustomEmojiStickerSetThumbnail",
+			OperationSummary: "",
+			OperationID:      "setCustomEmojiStickerSetThumbnail",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -10085,22 +12170,27 @@ func (s *Server) handleSetCustomEmojiStickerSetThumbnailRequest(args [0]string, 
 		response, err = s.h.SetCustomEmojiStickerSetThumbnail(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeSetCustomEmojiStickerSetThumbnailResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -10127,22 +12217,28 @@ func (s *Server) handleSetGameScoreRequest(args [0]string, argsEscaped bool, w h
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -10156,7 +12252,7 @@ func (s *Server) handleSetGameScoreRequest(args [0]string, argsEscaped bool, w h
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -10169,12 +12265,13 @@ func (s *Server) handleSetGameScoreRequest(args [0]string, argsEscaped bool, w h
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "SetGameScore",
-			OperationID:   "setGameScore",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "SetGameScore",
+			OperationSummary: "",
+			OperationID:      "setGameScore",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -10199,22 +12296,152 @@ func (s *Server) handleSetGameScoreRequest(args [0]string, argsEscaped bool, w h
 		response, err = s.h.SetGameScore(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeSetGameScoreResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
+		return
+	}
+}
+
+// handleSetMessageReactionRequest handles setMessageReaction operation.
+//
+// Use this method to change the chosen reactions on a message. Service messages can't be reacted to.
+// Automatically forwarded messages from a channel to its discussion group have the same available
+// reactions as messages in the channel. Returns _True_ on success.
+//
+// POST /setMessageReaction
+func (s *Server) handleSetMessageReactionRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("setMessageReaction"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/setMessageReaction"),
+	}
+
+	// Start a span for this request.
+	ctx, span := s.cfg.Tracer.Start(r.Context(), "SetMessageReaction",
+		trace.WithAttributes(otelAttrs...),
+		serverSpanKind,
+	)
+	defer span.End()
+
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
+
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "SetMessageReaction",
+			ID:   "setMessageReaction",
+		}
+	)
+	request, close, err := s.decodeSetMessageReactionRequest(r)
+	if err != nil {
+		err = &ogenerrors.DecodeRequestError{
+			OperationContext: opErrContext,
+			Err:              err,
+		}
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+	defer func() {
+		if err := close(); err != nil {
+			recordError("CloseRequest", err)
+		}
+	}()
+
+	var response *Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:          ctx,
+			OperationName:    "SetMessageReaction",
+			OperationSummary: "",
+			OperationID:      "setMessageReaction",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
+		}
+
+		type (
+			Request  = *SetMessageReaction
+			Params   = struct{}
+			Response = *Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.SetMessageReaction(ctx, request)
+				return response, err
+			},
+		)
+	} else {
+		response, err = s.h.SetMessageReaction(ctx, request)
+	}
+	if err != nil {
+		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
+			return
+		}
+		if errors.Is(err, ht.ErrNotImplemented) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+			return
+		}
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
+		return
+	}
+
+	if err := encodeSetMessageReactionResponse(response, w, span); err != nil {
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -10239,22 +12466,28 @@ func (s *Server) handleSetMyCommandsRequest(args [0]string, argsEscaped bool, w 
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -10268,7 +12501,7 @@ func (s *Server) handleSetMyCommandsRequest(args [0]string, argsEscaped bool, w 
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -10281,12 +12514,13 @@ func (s *Server) handleSetMyCommandsRequest(args [0]string, argsEscaped bool, w 
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "SetMyCommands",
-			OperationID:   "setMyCommands",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "SetMyCommands",
+			OperationSummary: "",
+			OperationID:      "setMyCommands",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -10311,22 +12545,27 @@ func (s *Server) handleSetMyCommandsRequest(args [0]string, argsEscaped bool, w 
 		response, err = s.h.SetMyCommands(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeSetMyCommandsResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -10352,22 +12591,28 @@ func (s *Server) handleSetMyDefaultAdministratorRightsRequest(args [0]string, ar
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -10381,7 +12626,7 @@ func (s *Server) handleSetMyDefaultAdministratorRightsRequest(args [0]string, ar
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -10394,12 +12639,13 @@ func (s *Server) handleSetMyDefaultAdministratorRightsRequest(args [0]string, ar
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "SetMyDefaultAdministratorRights",
-			OperationID:   "setMyDefaultAdministratorRights",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "SetMyDefaultAdministratorRights",
+			OperationSummary: "",
+			OperationID:      "setMyDefaultAdministratorRights",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -10424,22 +12670,27 @@ func (s *Server) handleSetMyDefaultAdministratorRightsRequest(args [0]string, ar
 		response, err = s.h.SetMyDefaultAdministratorRights(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeSetMyDefaultAdministratorRightsResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -10464,22 +12715,28 @@ func (s *Server) handleSetMyDescriptionRequest(args [0]string, argsEscaped bool,
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -10493,7 +12750,7 @@ func (s *Server) handleSetMyDescriptionRequest(args [0]string, argsEscaped bool,
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -10506,12 +12763,13 @@ func (s *Server) handleSetMyDescriptionRequest(args [0]string, argsEscaped bool,
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "SetMyDescription",
-			OperationID:   "setMyDescription",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "SetMyDescription",
+			OperationSummary: "",
+			OperationID:      "setMyDescription",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -10536,22 +12794,27 @@ func (s *Server) handleSetMyDescriptionRequest(args [0]string, argsEscaped bool,
 		response, err = s.h.SetMyDescription(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeSetMyDescriptionResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -10575,22 +12838,28 @@ func (s *Server) handleSetMyNameRequest(args [0]string, argsEscaped bool, w http
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -10604,7 +12873,7 @@ func (s *Server) handleSetMyNameRequest(args [0]string, argsEscaped bool, w http
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -10617,12 +12886,13 @@ func (s *Server) handleSetMyNameRequest(args [0]string, argsEscaped bool, w http
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "SetMyName",
-			OperationID:   "setMyName",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "SetMyName",
+			OperationSummary: "",
+			OperationID:      "setMyName",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -10647,22 +12917,27 @@ func (s *Server) handleSetMyNameRequest(args [0]string, argsEscaped bool, w http
 		response, err = s.h.SetMyName(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeSetMyNameResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -10687,22 +12962,28 @@ func (s *Server) handleSetMyShortDescriptionRequest(args [0]string, argsEscaped 
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -10716,7 +12997,7 @@ func (s *Server) handleSetMyShortDescriptionRequest(args [0]string, argsEscaped 
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -10729,12 +13010,13 @@ func (s *Server) handleSetMyShortDescriptionRequest(args [0]string, argsEscaped 
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "SetMyShortDescription",
-			OperationID:   "setMyShortDescription",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "SetMyShortDescription",
+			OperationSummary: "",
+			OperationID:      "setMyShortDescription",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -10759,22 +13041,27 @@ func (s *Server) handleSetMyShortDescriptionRequest(args [0]string, argsEscaped 
 		response, err = s.h.SetMyShortDescription(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeSetMyShortDescriptionResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -10801,22 +13088,28 @@ func (s *Server) handleSetPassportDataErrorsRequest(args [0]string, argsEscaped 
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -10830,7 +13123,7 @@ func (s *Server) handleSetPassportDataErrorsRequest(args [0]string, argsEscaped 
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -10843,12 +13136,13 @@ func (s *Server) handleSetPassportDataErrorsRequest(args [0]string, argsEscaped 
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "SetPassportDataErrors",
-			OperationID:   "setPassportDataErrors",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "SetPassportDataErrors",
+			OperationSummary: "",
+			OperationID:      "setPassportDataErrors",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -10873,22 +13167,27 @@ func (s *Server) handleSetPassportDataErrorsRequest(args [0]string, argsEscaped 
 		response, err = s.h.SetPassportDataErrors(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeSetPassportDataErrorsResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -10913,22 +13212,28 @@ func (s *Server) handleSetStickerEmojiListRequest(args [0]string, argsEscaped bo
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -10942,7 +13247,7 @@ func (s *Server) handleSetStickerEmojiListRequest(args [0]string, argsEscaped bo
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -10955,12 +13260,13 @@ func (s *Server) handleSetStickerEmojiListRequest(args [0]string, argsEscaped bo
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "SetStickerEmojiList",
-			OperationID:   "setStickerEmojiList",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "SetStickerEmojiList",
+			OperationSummary: "",
+			OperationID:      "setStickerEmojiList",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -10985,22 +13291,27 @@ func (s *Server) handleSetStickerEmojiListRequest(args [0]string, argsEscaped bo
 		response, err = s.h.SetStickerEmojiList(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeSetStickerEmojiListResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -11025,22 +13336,28 @@ func (s *Server) handleSetStickerKeywordsRequest(args [0]string, argsEscaped boo
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -11054,7 +13371,7 @@ func (s *Server) handleSetStickerKeywordsRequest(args [0]string, argsEscaped boo
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -11067,12 +13384,13 @@ func (s *Server) handleSetStickerKeywordsRequest(args [0]string, argsEscaped boo
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "SetStickerKeywords",
-			OperationID:   "setStickerKeywords",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "SetStickerKeywords",
+			OperationSummary: "",
+			OperationID:      "setStickerKeywords",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -11097,22 +13415,27 @@ func (s *Server) handleSetStickerKeywordsRequest(args [0]string, argsEscaped boo
 		response, err = s.h.SetStickerKeywords(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeSetStickerKeywordsResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -11138,22 +13461,28 @@ func (s *Server) handleSetStickerMaskPositionRequest(args [0]string, argsEscaped
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -11167,7 +13496,7 @@ func (s *Server) handleSetStickerMaskPositionRequest(args [0]string, argsEscaped
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -11180,12 +13509,13 @@ func (s *Server) handleSetStickerMaskPositionRequest(args [0]string, argsEscaped
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "SetStickerMaskPosition",
-			OperationID:   "setStickerMaskPosition",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "SetStickerMaskPosition",
+			OperationSummary: "",
+			OperationID:      "setStickerMaskPosition",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -11210,22 +13540,27 @@ func (s *Server) handleSetStickerMaskPositionRequest(args [0]string, argsEscaped
 		response, err = s.h.SetStickerMaskPosition(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeSetStickerMaskPositionResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -11250,22 +13585,28 @@ func (s *Server) handleSetStickerPositionInSetRequest(args [0]string, argsEscape
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -11279,7 +13620,7 @@ func (s *Server) handleSetStickerPositionInSetRequest(args [0]string, argsEscape
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -11292,12 +13633,13 @@ func (s *Server) handleSetStickerPositionInSetRequest(args [0]string, argsEscape
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "SetStickerPositionInSet",
-			OperationID:   "setStickerPositionInSet",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "SetStickerPositionInSet",
+			OperationSummary: "",
+			OperationID:      "setStickerPositionInSet",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -11322,22 +13664,27 @@ func (s *Server) handleSetStickerPositionInSetRequest(args [0]string, argsEscape
 		response, err = s.h.SetStickerPositionInSet(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeSetStickerPositionInSetResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -11362,22 +13709,28 @@ func (s *Server) handleSetStickerSetThumbnailRequest(args [0]string, argsEscaped
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -11391,7 +13744,7 @@ func (s *Server) handleSetStickerSetThumbnailRequest(args [0]string, argsEscaped
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -11404,12 +13757,13 @@ func (s *Server) handleSetStickerSetThumbnailRequest(args [0]string, argsEscaped
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "SetStickerSetThumbnail",
-			OperationID:   "setStickerSetThumbnail",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "SetStickerSetThumbnail",
+			OperationSummary: "",
+			OperationID:      "setStickerSetThumbnail",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -11434,22 +13788,27 @@ func (s *Server) handleSetStickerSetThumbnailRequest(args [0]string, argsEscaped
 		response, err = s.h.SetStickerSetThumbnail(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeSetStickerSetThumbnailResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -11473,22 +13832,28 @@ func (s *Server) handleSetStickerSetTitleRequest(args [0]string, argsEscaped boo
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -11502,7 +13867,7 @@ func (s *Server) handleSetStickerSetTitleRequest(args [0]string, argsEscaped boo
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -11515,12 +13880,13 @@ func (s *Server) handleSetStickerSetTitleRequest(args [0]string, argsEscaped boo
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "SetStickerSetTitle",
-			OperationID:   "setStickerSetTitle",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "SetStickerSetTitle",
+			OperationSummary: "",
+			OperationID:      "setStickerSetTitle",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -11545,22 +13911,27 @@ func (s *Server) handleSetStickerSetTitleRequest(args [0]string, argsEscaped boo
 		response, err = s.h.SetStickerSetTitle(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeSetStickerSetTitleResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -11586,22 +13957,28 @@ func (s *Server) handleSetWebhookRequest(args [0]string, argsEscaped bool, w htt
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -11615,7 +13992,7 @@ func (s *Server) handleSetWebhookRequest(args [0]string, argsEscaped bool, w htt
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -11628,12 +14005,13 @@ func (s *Server) handleSetWebhookRequest(args [0]string, argsEscaped bool, w htt
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "SetWebhook",
-			OperationID:   "setWebhook",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "SetWebhook",
+			OperationSummary: "",
+			OperationID:      "setWebhook",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -11658,22 +14036,27 @@ func (s *Server) handleSetWebhookRequest(args [0]string, argsEscaped bool, w htt
 		response, err = s.h.SetWebhook(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeSetWebhookResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -11699,22 +14082,28 @@ func (s *Server) handleStopMessageLiveLocationRequest(args [0]string, argsEscape
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -11728,7 +14117,7 @@ func (s *Server) handleStopMessageLiveLocationRequest(args [0]string, argsEscape
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -11741,12 +14130,13 @@ func (s *Server) handleStopMessageLiveLocationRequest(args [0]string, argsEscape
 	var response *ResultMessageOrBoolean
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "StopMessageLiveLocation",
-			OperationID:   "stopMessageLiveLocation",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "StopMessageLiveLocation",
+			OperationSummary: "",
+			OperationID:      "stopMessageLiveLocation",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -11771,22 +14161,27 @@ func (s *Server) handleStopMessageLiveLocationRequest(args [0]string, argsEscape
 		response, err = s.h.StopMessageLiveLocation(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeStopMessageLiveLocationResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -11811,22 +14206,28 @@ func (s *Server) handleStopPollRequest(args [0]string, argsEscaped bool, w http.
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -11840,7 +14241,7 @@ func (s *Server) handleStopPollRequest(args [0]string, argsEscaped bool, w http.
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -11853,12 +14254,13 @@ func (s *Server) handleStopPollRequest(args [0]string, argsEscaped bool, w http.
 	var response *ResultPoll
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "StopPoll",
-			OperationID:   "stopPoll",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "StopPoll",
+			OperationSummary: "",
+			OperationID:      "stopPoll",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -11883,22 +14285,27 @@ func (s *Server) handleStopPollRequest(args [0]string, argsEscaped bool, w http.
 		response, err = s.h.StopPoll(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeStopPollResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -11927,22 +14334,28 @@ func (s *Server) handleUnbanChatMemberRequest(args [0]string, argsEscaped bool, 
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -11956,7 +14369,7 @@ func (s *Server) handleUnbanChatMemberRequest(args [0]string, argsEscaped bool, 
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -11969,12 +14382,13 @@ func (s *Server) handleUnbanChatMemberRequest(args [0]string, argsEscaped bool, 
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "UnbanChatMember",
-			OperationID:   "unbanChatMember",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "UnbanChatMember",
+			OperationSummary: "",
+			OperationID:      "unbanChatMember",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -11999,22 +14413,27 @@ func (s *Server) handleUnbanChatMemberRequest(args [0]string, argsEscaped bool, 
 		response, err = s.h.UnbanChatMember(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeUnbanChatMemberResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -12040,22 +14459,28 @@ func (s *Server) handleUnbanChatSenderChatRequest(args [0]string, argsEscaped bo
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -12069,7 +14494,7 @@ func (s *Server) handleUnbanChatSenderChatRequest(args [0]string, argsEscaped bo
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -12082,12 +14507,13 @@ func (s *Server) handleUnbanChatSenderChatRequest(args [0]string, argsEscaped bo
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "UnbanChatSenderChat",
-			OperationID:   "unbanChatSenderChat",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "UnbanChatSenderChat",
+			OperationSummary: "",
+			OperationID:      "unbanChatSenderChat",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -12112,22 +14538,27 @@ func (s *Server) handleUnbanChatSenderChatRequest(args [0]string, argsEscaped bo
 		response, err = s.h.UnbanChatSenderChat(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeUnbanChatSenderChatResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -12153,22 +14584,28 @@ func (s *Server) handleUnhideGeneralForumTopicRequest(args [0]string, argsEscape
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -12182,7 +14619,7 @@ func (s *Server) handleUnhideGeneralForumTopicRequest(args [0]string, argsEscape
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -12195,12 +14632,13 @@ func (s *Server) handleUnhideGeneralForumTopicRequest(args [0]string, argsEscape
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "UnhideGeneralForumTopic",
-			OperationID:   "unhideGeneralForumTopic",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "UnhideGeneralForumTopic",
+			OperationSummary: "",
+			OperationID:      "unhideGeneralForumTopic",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -12225,22 +14663,27 @@ func (s *Server) handleUnhideGeneralForumTopicRequest(args [0]string, argsEscape
 		response, err = s.h.UnhideGeneralForumTopic(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeUnhideGeneralForumTopicResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -12267,22 +14710,28 @@ func (s *Server) handleUnpinAllChatMessagesRequest(args [0]string, argsEscaped b
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -12296,7 +14745,7 @@ func (s *Server) handleUnpinAllChatMessagesRequest(args [0]string, argsEscaped b
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -12309,12 +14758,13 @@ func (s *Server) handleUnpinAllChatMessagesRequest(args [0]string, argsEscaped b
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "UnpinAllChatMessages",
-			OperationID:   "unpinAllChatMessages",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "UnpinAllChatMessages",
+			OperationSummary: "",
+			OperationID:      "unpinAllChatMessages",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -12339,22 +14789,27 @@ func (s *Server) handleUnpinAllChatMessagesRequest(args [0]string, argsEscaped b
 		response, err = s.h.UnpinAllChatMessages(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeUnpinAllChatMessagesResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -12380,22 +14835,28 @@ func (s *Server) handleUnpinAllForumTopicMessagesRequest(args [0]string, argsEsc
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -12409,7 +14870,7 @@ func (s *Server) handleUnpinAllForumTopicMessagesRequest(args [0]string, argsEsc
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -12422,12 +14883,13 @@ func (s *Server) handleUnpinAllForumTopicMessagesRequest(args [0]string, argsEsc
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "UnpinAllForumTopicMessages",
-			OperationID:   "unpinAllForumTopicMessages",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "UnpinAllForumTopicMessages",
+			OperationSummary: "",
+			OperationID:      "unpinAllForumTopicMessages",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -12452,22 +14914,152 @@ func (s *Server) handleUnpinAllForumTopicMessagesRequest(args [0]string, argsEsc
 		response, err = s.h.UnpinAllForumTopicMessages(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeUnpinAllForumTopicMessagesResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
+		return
+	}
+}
+
+// handleUnpinAllGeneralForumTopicMessagesRequest handles unpinAllGeneralForumTopicMessages operation.
+//
+// Use this method to clear the list of pinned messages in a General forum topic. The bot must be an
+// administrator in the chat for this to work and must have the _can_pin_messages_ administrator
+// right in the supergroup. Returns _True_ on success.
+//
+// POST /unpinAllGeneralForumTopicMessages
+func (s *Server) handleUnpinAllGeneralForumTopicMessagesRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("unpinAllGeneralForumTopicMessages"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/unpinAllGeneralForumTopicMessages"),
+	}
+
+	// Start a span for this request.
+	ctx, span := s.cfg.Tracer.Start(r.Context(), "UnpinAllGeneralForumTopicMessages",
+		trace.WithAttributes(otelAttrs...),
+		serverSpanKind,
+	)
+	defer span.End()
+
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
+
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "UnpinAllGeneralForumTopicMessages",
+			ID:   "unpinAllGeneralForumTopicMessages",
+		}
+	)
+	request, close, err := s.decodeUnpinAllGeneralForumTopicMessagesRequest(r)
+	if err != nil {
+		err = &ogenerrors.DecodeRequestError{
+			OperationContext: opErrContext,
+			Err:              err,
+		}
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+	defer func() {
+		if err := close(); err != nil {
+			recordError("CloseRequest", err)
+		}
+	}()
+
+	var response *Result
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:          ctx,
+			OperationName:    "UnpinAllGeneralForumTopicMessages",
+			OperationSummary: "",
+			OperationID:      "unpinAllGeneralForumTopicMessages",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
+		}
+
+		type (
+			Request  = *UnpinAllGeneralForumTopicMessages
+			Params   = struct{}
+			Response = *Result
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.UnpinAllGeneralForumTopicMessages(ctx, request)
+				return response, err
+			},
+		)
+	} else {
+		response, err = s.h.UnpinAllGeneralForumTopicMessages(ctx, request)
+	}
+	if err != nil {
+		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
+			return
+		}
+		if errors.Is(err, ht.ErrNotImplemented) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+			return
+		}
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
+		return
+	}
+
+	if err := encodeUnpinAllGeneralForumTopicMessagesResponse(response, w, span); err != nil {
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -12494,22 +15086,28 @@ func (s *Server) handleUnpinChatMessageRequest(args [0]string, argsEscaped bool,
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -12523,7 +15121,7 @@ func (s *Server) handleUnpinChatMessageRequest(args [0]string, argsEscaped bool,
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -12536,12 +15134,13 @@ func (s *Server) handleUnpinChatMessageRequest(args [0]string, argsEscaped bool,
 	var response *Result
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "UnpinChatMessage",
-			OperationID:   "unpinChatMessage",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "UnpinChatMessage",
+			OperationSummary: "",
+			OperationID:      "unpinChatMessage",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -12566,22 +15165,27 @@ func (s *Server) handleUnpinChatMessageRequest(args [0]string, argsEscaped bool,
 		response, err = s.h.UnpinChatMessage(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeUnpinChatMessageResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }
@@ -12589,10 +15193,11 @@ func (s *Server) handleUnpinChatMessageRequest(args [0]string, argsEscaped bool,
 // handleUploadStickerFileRequest handles uploadStickerFile operation.
 //
 // Use this method to upload a file with a sticker for later use in the
-// [createNewStickerSet](https://core.telegram.org/bots/api#createnewstickerset) and
-// [addStickerToSet](https://core.telegram.org/bots/api#addstickertoset) methods (the file can be
-// used multiple times). Returns the uploaded [File](https://core.telegram.org/bots/api#file) on
-// success.
+// [createNewStickerSet](https://core.telegram.org/bots/api#createnewstickerset),
+// [addStickerToSet](https://core.telegram.org/bots/api#addstickertoset), or
+// [replaceStickerInSet](https://core.telegram.org/bots/api#replacestickerinset) methods (the file
+// can be used multiple times). Returns the uploaded [File](https://core.telegram.org/bots/api#file)
+// on success.
 //
 // POST /uploadStickerFile
 func (s *Server) handleUploadStickerFileRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
@@ -12609,22 +15214,28 @@ func (s *Server) handleUploadStickerFileRequest(args [0]string, argsEscaped bool
 	)
 	defer span.End()
 
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
 	// Run stopwatch.
 	startTime := time.Now()
 	defer func() {
 		elapsedDuration := time.Since(startTime)
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
-	}()
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
 
-	// Increment request counter.
-	s.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
 
 	var (
 		recordError = func(stage string, err error) {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, stage)
-			s.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
@@ -12638,7 +15249,7 @@ func (s *Server) handleUploadStickerFileRequest(args [0]string, argsEscaped bool
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeRequest", err)
+		defer recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
@@ -12651,12 +15262,13 @@ func (s *Server) handleUploadStickerFileRequest(args [0]string, argsEscaped bool
 	var response *ResultFile
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
-			Context:       ctx,
-			OperationName: "UploadStickerFile",
-			OperationID:   "uploadStickerFile",
-			Body:          request,
-			Params:        middleware.Parameters{},
-			Raw:           r,
+			Context:          ctx,
+			OperationName:    "UploadStickerFile",
+			OperationSummary: "",
+			OperationID:      "uploadStickerFile",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
@@ -12681,22 +15293,27 @@ func (s *Server) handleUploadStickerFileRequest(args [0]string, argsEscaped bool
 		response, err = s.h.UploadStickerFile(ctx, request)
 	}
 	if err != nil {
-		recordError("Internal", err)
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
-			encodeErrorResponse(errRes, w, span)
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
 			return
 		}
 		if errors.Is(err, ht.ErrNotImplemented) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
 			return
 		}
-		encodeErrorResponse(s.h.NewError(ctx, err), w, span)
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
 		return
 	}
 
 	if err := encodeUploadStickerFileResponse(response, w, span); err != nil {
-		recordError("EncodeResponse", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
 		return
 	}
 }

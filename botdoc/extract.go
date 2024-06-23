@@ -34,7 +34,7 @@ func Extract(doc *goquery.Document) (a API) {
 			}
 		}
 		appendDefinition := func() {
-			if d.Name == "" {
+			if d.Name == "" || strings.Contains(d.Name, " ") {
 				d = Definition{}
 				return
 			}
@@ -113,6 +113,8 @@ func Extract(doc *goquery.Document) (a API) {
 			`Telegram clients currently support the following`,
 			`Currently, the following`,
 			`This object represents one result of`,
+			`Currently, it can be one of`,
+			`It can be one of`,
 		} {
 			if strings.Contains(d.RawText, sumMarker) {
 				probablySum = true

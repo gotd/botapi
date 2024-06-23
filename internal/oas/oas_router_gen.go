@@ -10,6 +10,19 @@ import (
 	"github.com/ogen-go/ogen/uri"
 )
 
+func (s *Server) cutPrefix(path string) (string, bool) {
+	prefix := s.cfg.Prefix
+	if prefix == "" {
+		return path, true
+	}
+	if !strings.HasPrefix(path, prefix) {
+		// Prefix doesn't match.
+		return "", false
+	}
+	// Cut prefix from the path.
+	return strings.TrimPrefix(path, prefix), true
+}
+
 // ServeHTTP serves http request as defined by OpenAPI v3 specification,
 // calling handler that matches the path or returning not found error.
 func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -21,17 +34,9 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			elemIsEscaped = strings.ContainsRune(elem, '%')
 		}
 	}
-	if prefix := s.cfg.Prefix; len(prefix) > 0 {
-		if strings.HasPrefix(elem, prefix) {
-			// Cut prefix from the path.
-			elem = strings.TrimPrefix(elem, prefix)
-		} else {
-			// Prefix doesn't match.
-			s.notFound(w, r)
-			return
-		}
-	}
-	if len(elem) == 0 {
+
+	elem, ok := s.cutPrefix(elem)
+	if !ok || len(elem) == 0 {
 		s.notFound(w, r)
 		return
 	}
@@ -44,6 +49,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}
 		switch elem[0] {
 		case '/': // Prefix: "/"
+			origElem := elem
 			if l := len("/"); len(elem) >= l && elem[0:l] == "/" {
 				elem = elem[l:]
 			} else {
@@ -55,6 +61,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			}
 			switch elem[0] {
 			case 'a': // Prefix: "a"
+				origElem := elem
 				if l := len("a"); len(elem) >= l && elem[0:l] == "a" {
 					elem = elem[l:]
 				} else {
@@ -66,6 +73,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				}
 				switch elem[0] {
 				case 'd': // Prefix: "ddStickerToSet"
+					origElem := elem
 					if l := len("ddStickerToSet"); len(elem) >= l && elem[0:l] == "ddStickerToSet" {
 						elem = elem[l:]
 					} else {
@@ -83,7 +91,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 						return
 					}
+
+					elem = origElem
 				case 'n': // Prefix: "nswer"
+					origElem := elem
 					if l := len("nswer"); len(elem) >= l && elem[0:l] == "nswer" {
 						elem = elem[l:]
 					} else {
@@ -95,6 +106,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 					}
 					switch elem[0] {
 					case 'C': // Prefix: "CallbackQuery"
+						origElem := elem
 						if l := len("CallbackQuery"); len(elem) >= l && elem[0:l] == "CallbackQuery" {
 							elem = elem[l:]
 						} else {
@@ -112,7 +124,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 							return
 						}
+
+						elem = origElem
 					case 'I': // Prefix: "InlineQuery"
+						origElem := elem
 						if l := len("InlineQuery"); len(elem) >= l && elem[0:l] == "InlineQuery" {
 							elem = elem[l:]
 						} else {
@@ -130,7 +145,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 							return
 						}
+
+						elem = origElem
 					case 'P': // Prefix: "PreCheckoutQuery"
+						origElem := elem
 						if l := len("PreCheckoutQuery"); len(elem) >= l && elem[0:l] == "PreCheckoutQuery" {
 							elem = elem[l:]
 						} else {
@@ -148,7 +166,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 							return
 						}
+
+						elem = origElem
 					case 'S': // Prefix: "ShippingQuery"
+						origElem := elem
 						if l := len("ShippingQuery"); len(elem) >= l && elem[0:l] == "ShippingQuery" {
 							elem = elem[l:]
 						} else {
@@ -166,7 +187,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 							return
 						}
+
+						elem = origElem
 					case 'W': // Prefix: "WebAppQuery"
+						origElem := elem
 						if l := len("WebAppQuery"); len(elem) >= l && elem[0:l] == "WebAppQuery" {
 							elem = elem[l:]
 						} else {
@@ -184,8 +208,13 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 							return
 						}
+
+						elem = origElem
 					}
+
+					elem = origElem
 				case 'p': // Prefix: "pproveChatJoinRequest"
+					origElem := elem
 					if l := len("pproveChatJoinRequest"); len(elem) >= l && elem[0:l] == "pproveChatJoinRequest" {
 						elem = elem[l:]
 					} else {
@@ -203,8 +232,13 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 						return
 					}
+
+					elem = origElem
 				}
+
+				elem = origElem
 			case 'b': // Prefix: "banChat"
+				origElem := elem
 				if l := len("banChat"); len(elem) >= l && elem[0:l] == "banChat" {
 					elem = elem[l:]
 				} else {
@@ -216,6 +250,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				}
 				switch elem[0] {
 				case 'M': // Prefix: "Member"
+					origElem := elem
 					if l := len("Member"); len(elem) >= l && elem[0:l] == "Member" {
 						elem = elem[l:]
 					} else {
@@ -233,7 +268,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 						return
 					}
+
+					elem = origElem
 				case 'S': // Prefix: "SenderChat"
+					origElem := elem
 					if l := len("SenderChat"); len(elem) >= l && elem[0:l] == "SenderChat" {
 						elem = elem[l:]
 					} else {
@@ -251,8 +289,13 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 						return
 					}
+
+					elem = origElem
 				}
+
+				elem = origElem
 			case 'c': // Prefix: "c"
+				origElem := elem
 				if l := len("c"); len(elem) >= l && elem[0:l] == "c" {
 					elem = elem[l:]
 				} else {
@@ -264,6 +307,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				}
 				switch elem[0] {
 				case 'l': // Prefix: "lose"
+					origElem := elem
 					if l := len("lose"); len(elem) >= l && elem[0:l] == "lose" {
 						elem = elem[l:]
 					} else {
@@ -282,6 +326,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 					}
 					switch elem[0] {
 					case 'F': // Prefix: "ForumTopic"
+						origElem := elem
 						if l := len("ForumTopic"); len(elem) >= l && elem[0:l] == "ForumTopic" {
 							elem = elem[l:]
 						} else {
@@ -299,7 +344,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 							return
 						}
+
+						elem = origElem
 					case 'G': // Prefix: "GeneralForumTopic"
+						origElem := elem
 						if l := len("GeneralForumTopic"); len(elem) >= l && elem[0:l] == "GeneralForumTopic" {
 							elem = elem[l:]
 						} else {
@@ -317,8 +365,13 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 							return
 						}
+
+						elem = origElem
 					}
+
+					elem = origElem
 				case 'o': // Prefix: "opyMessage"
+					origElem := elem
 					if l := len("opyMessage"); len(elem) >= l && elem[0:l] == "opyMessage" {
 						elem = elem[l:]
 					} else {
@@ -326,7 +379,6 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 					}
 
 					if len(elem) == 0 {
-						// Leaf node.
 						switch r.Method {
 						case "POST":
 							s.handleCopyMessageRequest([0]string{}, elemIsEscaped, w, r)
@@ -336,7 +388,33 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 						return
 					}
+					switch elem[0] {
+					case 's': // Prefix: "s"
+						origElem := elem
+						if l := len("s"); len(elem) >= l && elem[0:l] == "s" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							// Leaf node.
+							switch r.Method {
+							case "POST":
+								s.handleCopyMessagesRequest([0]string{}, elemIsEscaped, w, r)
+							default:
+								s.notAllowed(w, r, "POST")
+							}
+
+							return
+						}
+
+						elem = origElem
+					}
+
+					elem = origElem
 				case 'r': // Prefix: "reate"
+					origElem := elem
 					if l := len("reate"); len(elem) >= l && elem[0:l] == "reate" {
 						elem = elem[l:]
 					} else {
@@ -348,6 +426,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 					}
 					switch elem[0] {
 					case 'C': // Prefix: "ChatInviteLink"
+						origElem := elem
 						if l := len("ChatInviteLink"); len(elem) >= l && elem[0:l] == "ChatInviteLink" {
 							elem = elem[l:]
 						} else {
@@ -365,7 +444,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 							return
 						}
+
+						elem = origElem
 					case 'F': // Prefix: "ForumTopic"
+						origElem := elem
 						if l := len("ForumTopic"); len(elem) >= l && elem[0:l] == "ForumTopic" {
 							elem = elem[l:]
 						} else {
@@ -383,7 +465,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 							return
 						}
+
+						elem = origElem
 					case 'I': // Prefix: "InvoiceLink"
+						origElem := elem
 						if l := len("InvoiceLink"); len(elem) >= l && elem[0:l] == "InvoiceLink" {
 							elem = elem[l:]
 						} else {
@@ -401,7 +486,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 							return
 						}
+
+						elem = origElem
 					case 'N': // Prefix: "NewStickerSet"
+						origElem := elem
 						if l := len("NewStickerSet"); len(elem) >= l && elem[0:l] == "NewStickerSet" {
 							elem = elem[l:]
 						} else {
@@ -419,9 +507,16 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 							return
 						}
+
+						elem = origElem
 					}
+
+					elem = origElem
 				}
+
+				elem = origElem
 			case 'd': // Prefix: "de"
+				origElem := elem
 				if l := len("de"); len(elem) >= l && elem[0:l] == "de" {
 					elem = elem[l:]
 				} else {
@@ -433,6 +528,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				}
 				switch elem[0] {
 				case 'c': // Prefix: "clineChatJoinRequest"
+					origElem := elem
 					if l := len("clineChatJoinRequest"); len(elem) >= l && elem[0:l] == "clineChatJoinRequest" {
 						elem = elem[l:]
 					} else {
@@ -450,7 +546,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 						return
 					}
+
+					elem = origElem
 				case 'l': // Prefix: "lete"
+					origElem := elem
 					if l := len("lete"); len(elem) >= l && elem[0:l] == "lete" {
 						elem = elem[l:]
 					} else {
@@ -462,6 +561,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 					}
 					switch elem[0] {
 					case 'C': // Prefix: "Chat"
+						origElem := elem
 						if l := len("Chat"); len(elem) >= l && elem[0:l] == "Chat" {
 							elem = elem[l:]
 						} else {
@@ -473,6 +573,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 						}
 						switch elem[0] {
 						case 'P': // Prefix: "Photo"
+							origElem := elem
 							if l := len("Photo"); len(elem) >= l && elem[0:l] == "Photo" {
 								elem = elem[l:]
 							} else {
@@ -490,7 +591,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 								return
 							}
+
+							elem = origElem
 						case 'S': // Prefix: "StickerSet"
+							origElem := elem
 							if l := len("StickerSet"); len(elem) >= l && elem[0:l] == "StickerSet" {
 								elem = elem[l:]
 							} else {
@@ -508,8 +612,13 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 								return
 							}
+
+							elem = origElem
 						}
+
+						elem = origElem
 					case 'F': // Prefix: "ForumTopic"
+						origElem := elem
 						if l := len("ForumTopic"); len(elem) >= l && elem[0:l] == "ForumTopic" {
 							elem = elem[l:]
 						} else {
@@ -527,7 +636,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 							return
 						}
+
+						elem = origElem
 					case 'M': // Prefix: "M"
+						origElem := elem
 						if l := len("M"); len(elem) >= l && elem[0:l] == "M" {
 							elem = elem[l:]
 						} else {
@@ -539,6 +651,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 						}
 						switch elem[0] {
 						case 'e': // Prefix: "essage"
+							origElem := elem
 							if l := len("essage"); len(elem) >= l && elem[0:l] == "essage" {
 								elem = elem[l:]
 							} else {
@@ -546,7 +659,6 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 							}
 
 							if len(elem) == 0 {
-								// Leaf node.
 								switch r.Method {
 								case "POST":
 									s.handleDeleteMessageRequest([0]string{}, elemIsEscaped, w, r)
@@ -556,7 +668,33 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 								return
 							}
+							switch elem[0] {
+							case 's': // Prefix: "s"
+								origElem := elem
+								if l := len("s"); len(elem) >= l && elem[0:l] == "s" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									// Leaf node.
+									switch r.Method {
+									case "POST":
+										s.handleDeleteMessagesRequest([0]string{}, elemIsEscaped, w, r)
+									default:
+										s.notAllowed(w, r, "POST")
+									}
+
+									return
+								}
+
+								elem = origElem
+							}
+
+							elem = origElem
 						case 'y': // Prefix: "yCommands"
+							origElem := elem
 							if l := len("yCommands"); len(elem) >= l && elem[0:l] == "yCommands" {
 								elem = elem[l:]
 							} else {
@@ -574,8 +712,13 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 								return
 							}
+
+							elem = origElem
 						}
+
+						elem = origElem
 					case 'S': // Prefix: "Sticker"
+						origElem := elem
 						if l := len("Sticker"); len(elem) >= l && elem[0:l] == "Sticker" {
 							elem = elem[l:]
 						} else {
@@ -587,6 +730,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 						}
 						switch elem[0] {
 						case 'F': // Prefix: "FromSet"
+							origElem := elem
 							if l := len("FromSet"); len(elem) >= l && elem[0:l] == "FromSet" {
 								elem = elem[l:]
 							} else {
@@ -604,7 +748,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 								return
 							}
+
+							elem = origElem
 						case 'S': // Prefix: "Set"
+							origElem := elem
 							if l := len("Set"); len(elem) >= l && elem[0:l] == "Set" {
 								elem = elem[l:]
 							} else {
@@ -622,8 +769,13 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 								return
 							}
+
+							elem = origElem
 						}
+
+						elem = origElem
 					case 'W': // Prefix: "Webhook"
+						origElem := elem
 						if l := len("Webhook"); len(elem) >= l && elem[0:l] == "Webhook" {
 							elem = elem[l:]
 						} else {
@@ -641,9 +793,16 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 							return
 						}
+
+						elem = origElem
 					}
+
+					elem = origElem
 				}
+
+				elem = origElem
 			case 'e': // Prefix: "e"
+				origElem := elem
 				if l := len("e"); len(elem) >= l && elem[0:l] == "e" {
 					elem = elem[l:]
 				} else {
@@ -655,6 +814,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				}
 				switch elem[0] {
 				case 'd': // Prefix: "dit"
+					origElem := elem
 					if l := len("dit"); len(elem) >= l && elem[0:l] == "dit" {
 						elem = elem[l:]
 					} else {
@@ -666,6 +826,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 					}
 					switch elem[0] {
 					case 'C': // Prefix: "ChatInviteLink"
+						origElem := elem
 						if l := len("ChatInviteLink"); len(elem) >= l && elem[0:l] == "ChatInviteLink" {
 							elem = elem[l:]
 						} else {
@@ -683,7 +844,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 							return
 						}
+
+						elem = origElem
 					case 'F': // Prefix: "ForumTopic"
+						origElem := elem
 						if l := len("ForumTopic"); len(elem) >= l && elem[0:l] == "ForumTopic" {
 							elem = elem[l:]
 						} else {
@@ -701,7 +865,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 							return
 						}
+
+						elem = origElem
 					case 'G': // Prefix: "GeneralForumTopic"
+						origElem := elem
 						if l := len("GeneralForumTopic"); len(elem) >= l && elem[0:l] == "GeneralForumTopic" {
 							elem = elem[l:]
 						} else {
@@ -719,7 +886,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 							return
 						}
+
+						elem = origElem
 					case 'M': // Prefix: "Message"
+						origElem := elem
 						if l := len("Message"); len(elem) >= l && elem[0:l] == "Message" {
 							elem = elem[l:]
 						} else {
@@ -731,6 +901,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 						}
 						switch elem[0] {
 						case 'C': // Prefix: "Caption"
+							origElem := elem
 							if l := len("Caption"); len(elem) >= l && elem[0:l] == "Caption" {
 								elem = elem[l:]
 							} else {
@@ -748,7 +919,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 								return
 							}
+
+							elem = origElem
 						case 'L': // Prefix: "LiveLocation"
+							origElem := elem
 							if l := len("LiveLocation"); len(elem) >= l && elem[0:l] == "LiveLocation" {
 								elem = elem[l:]
 							} else {
@@ -766,7 +940,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 								return
 							}
+
+							elem = origElem
 						case 'M': // Prefix: "Media"
+							origElem := elem
 							if l := len("Media"); len(elem) >= l && elem[0:l] == "Media" {
 								elem = elem[l:]
 							} else {
@@ -784,7 +961,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 								return
 							}
+
+							elem = origElem
 						case 'R': // Prefix: "ReplyMarkup"
+							origElem := elem
 							if l := len("ReplyMarkup"); len(elem) >= l && elem[0:l] == "ReplyMarkup" {
 								elem = elem[l:]
 							} else {
@@ -802,7 +982,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 								return
 							}
+
+							elem = origElem
 						case 'T': // Prefix: "Text"
+							origElem := elem
 							if l := len("Text"); len(elem) >= l && elem[0:l] == "Text" {
 								elem = elem[l:]
 							} else {
@@ -820,9 +1003,16 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 								return
 							}
+
+							elem = origElem
 						}
+
+						elem = origElem
 					}
+
+					elem = origElem
 				case 'x': // Prefix: "xportChatInviteLink"
+					origElem := elem
 					if l := len("xportChatInviteLink"); len(elem) >= l && elem[0:l] == "xportChatInviteLink" {
 						elem = elem[l:]
 					} else {
@@ -840,8 +1030,13 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 						return
 					}
+
+					elem = origElem
 				}
+
+				elem = origElem
 			case 'f': // Prefix: "forwardMessage"
+				origElem := elem
 				if l := len("forwardMessage"); len(elem) >= l && elem[0:l] == "forwardMessage" {
 					elem = elem[l:]
 				} else {
@@ -849,7 +1044,6 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				}
 
 				if len(elem) == 0 {
-					// Leaf node.
 					switch r.Method {
 					case "POST":
 						s.handleForwardMessageRequest([0]string{}, elemIsEscaped, w, r)
@@ -859,7 +1053,33 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 					return
 				}
+				switch elem[0] {
+				case 's': // Prefix: "s"
+					origElem := elem
+					if l := len("s"); len(elem) >= l && elem[0:l] == "s" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					if len(elem) == 0 {
+						// Leaf node.
+						switch r.Method {
+						case "POST":
+							s.handleForwardMessagesRequest([0]string{}, elemIsEscaped, w, r)
+						default:
+							s.notAllowed(w, r, "POST")
+						}
+
+						return
+					}
+
+					elem = origElem
+				}
+
+				elem = origElem
 			case 'g': // Prefix: "get"
+				origElem := elem
 				if l := len("get"); len(elem) >= l && elem[0:l] == "get" {
 					elem = elem[l:]
 				} else {
@@ -870,7 +1090,29 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 					break
 				}
 				switch elem[0] {
+				case 'B': // Prefix: "BusinessConnection"
+					origElem := elem
+					if l := len("BusinessConnection"); len(elem) >= l && elem[0:l] == "BusinessConnection" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					if len(elem) == 0 {
+						// Leaf node.
+						switch r.Method {
+						case "POST":
+							s.handleGetBusinessConnectionRequest([0]string{}, elemIsEscaped, w, r)
+						default:
+							s.notAllowed(w, r, "POST")
+						}
+
+						return
+					}
+
+					elem = origElem
 				case 'C': // Prefix: "C"
+					origElem := elem
 					if l := len("C"); len(elem) >= l && elem[0:l] == "C" {
 						elem = elem[l:]
 					} else {
@@ -882,6 +1124,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 					}
 					switch elem[0] {
 					case 'h': // Prefix: "hat"
+						origElem := elem
 						if l := len("hat"); len(elem) >= l && elem[0:l] == "hat" {
 							elem = elem[l:]
 						} else {
@@ -900,6 +1143,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 						}
 						switch elem[0] {
 						case 'A': // Prefix: "Administrators"
+							origElem := elem
 							if l := len("Administrators"); len(elem) >= l && elem[0:l] == "Administrators" {
 								elem = elem[l:]
 							} else {
@@ -917,7 +1161,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 								return
 							}
+
+							elem = origElem
 						case 'M': // Prefix: "Me"
+							origElem := elem
 							if l := len("Me"); len(elem) >= l && elem[0:l] == "Me" {
 								elem = elem[l:]
 							} else {
@@ -929,6 +1176,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 							}
 							switch elem[0] {
 							case 'm': // Prefix: "mber"
+								origElem := elem
 								if l := len("mber"); len(elem) >= l && elem[0:l] == "mber" {
 									elem = elem[l:]
 								} else {
@@ -947,6 +1195,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 								}
 								switch elem[0] {
 								case 'C': // Prefix: "Count"
+									origElem := elem
 									if l := len("Count"); len(elem) >= l && elem[0:l] == "Count" {
 										elem = elem[l:]
 									} else {
@@ -964,8 +1213,13 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 										return
 									}
+
+									elem = origElem
 								}
+
+								elem = origElem
 							case 'n': // Prefix: "nuButton"
+								origElem := elem
 								if l := len("nuButton"); len(elem) >= l && elem[0:l] == "nuButton" {
 									elem = elem[l:]
 								} else {
@@ -983,9 +1237,16 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 									return
 								}
+
+								elem = origElem
 							}
+
+							elem = origElem
 						}
+
+						elem = origElem
 					case 'u': // Prefix: "ustomEmojiStickers"
+						origElem := elem
 						if l := len("ustomEmojiStickers"); len(elem) >= l && elem[0:l] == "ustomEmojiStickers" {
 							elem = elem[l:]
 						} else {
@@ -1003,8 +1264,13 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 							return
 						}
+
+						elem = origElem
 					}
+
+					elem = origElem
 				case 'F': // Prefix: "F"
+					origElem := elem
 					if l := len("F"); len(elem) >= l && elem[0:l] == "F" {
 						elem = elem[l:]
 					} else {
@@ -1016,6 +1282,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 					}
 					switch elem[0] {
 					case 'i': // Prefix: "ile"
+						origElem := elem
 						if l := len("ile"); len(elem) >= l && elem[0:l] == "ile" {
 							elem = elem[l:]
 						} else {
@@ -1033,7 +1300,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 							return
 						}
+
+						elem = origElem
 					case 'o': // Prefix: "orumTopicIconStickers"
+						origElem := elem
 						if l := len("orumTopicIconStickers"); len(elem) >= l && elem[0:l] == "orumTopicIconStickers" {
 							elem = elem[l:]
 						} else {
@@ -1051,8 +1321,13 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 							return
 						}
+
+						elem = origElem
 					}
+
+					elem = origElem
 				case 'G': // Prefix: "GameHighScores"
+					origElem := elem
 					if l := len("GameHighScores"); len(elem) >= l && elem[0:l] == "GameHighScores" {
 						elem = elem[l:]
 					} else {
@@ -1070,7 +1345,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 						return
 					}
+
+					elem = origElem
 				case 'M': // Prefix: "M"
+					origElem := elem
 					if l := len("M"); len(elem) >= l && elem[0:l] == "M" {
 						elem = elem[l:]
 					} else {
@@ -1082,6 +1360,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 					}
 					switch elem[0] {
 					case 'e': // Prefix: "e"
+						origElem := elem
 						if l := len("e"); len(elem) >= l && elem[0:l] == "e" {
 							elem = elem[l:]
 						} else {
@@ -1099,7 +1378,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 							return
 						}
+
+						elem = origElem
 					case 'y': // Prefix: "y"
+						origElem := elem
 						if l := len("y"); len(elem) >= l && elem[0:l] == "y" {
 							elem = elem[l:]
 						} else {
@@ -1111,6 +1393,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 						}
 						switch elem[0] {
 						case 'C': // Prefix: "Commands"
+							origElem := elem
 							if l := len("Commands"); len(elem) >= l && elem[0:l] == "Commands" {
 								elem = elem[l:]
 							} else {
@@ -1128,7 +1411,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 								return
 							}
+
+							elem = origElem
 						case 'D': // Prefix: "De"
+							origElem := elem
 							if l := len("De"); len(elem) >= l && elem[0:l] == "De" {
 								elem = elem[l:]
 							} else {
@@ -1140,6 +1426,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 							}
 							switch elem[0] {
 							case 'f': // Prefix: "faultAdministratorRights"
+								origElem := elem
 								if l := len("faultAdministratorRights"); len(elem) >= l && elem[0:l] == "faultAdministratorRights" {
 									elem = elem[l:]
 								} else {
@@ -1157,7 +1444,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 									return
 								}
+
+								elem = origElem
 							case 's': // Prefix: "scription"
+								origElem := elem
 								if l := len("scription"); len(elem) >= l && elem[0:l] == "scription" {
 									elem = elem[l:]
 								} else {
@@ -1175,8 +1465,13 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 									return
 								}
+
+								elem = origElem
 							}
+
+							elem = origElem
 						case 'N': // Prefix: "Name"
+							origElem := elem
 							if l := len("Name"); len(elem) >= l && elem[0:l] == "Name" {
 								elem = elem[l:]
 							} else {
@@ -1194,7 +1489,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 								return
 							}
+
+							elem = origElem
 						case 'S': // Prefix: "ShortDescription"
+							origElem := elem
 							if l := len("ShortDescription"); len(elem) >= l && elem[0:l] == "ShortDescription" {
 								elem = elem[l:]
 							} else {
@@ -1212,27 +1510,73 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 								return
 							}
+
+							elem = origElem
 						}
+
+						elem = origElem
 					}
-				case 'S': // Prefix: "StickerSet"
-					if l := len("StickerSet"); len(elem) >= l && elem[0:l] == "StickerSet" {
+
+					elem = origElem
+				case 'S': // Prefix: "St"
+					origElem := elem
+					if l := len("St"); len(elem) >= l && elem[0:l] == "St" {
 						elem = elem[l:]
 					} else {
 						break
 					}
 
 					if len(elem) == 0 {
-						// Leaf node.
-						switch r.Method {
-						case "POST":
-							s.handleGetStickerSetRequest([0]string{}, elemIsEscaped, w, r)
-						default:
-							s.notAllowed(w, r, "POST")
+						break
+					}
+					switch elem[0] {
+					case 'a': // Prefix: "arTransactions"
+						origElem := elem
+						if l := len("arTransactions"); len(elem) >= l && elem[0:l] == "arTransactions" {
+							elem = elem[l:]
+						} else {
+							break
 						}
 
-						return
+						if len(elem) == 0 {
+							// Leaf node.
+							switch r.Method {
+							case "POST":
+								s.handleGetStarTransactionsRequest([0]string{}, elemIsEscaped, w, r)
+							default:
+								s.notAllowed(w, r, "POST")
+							}
+
+							return
+						}
+
+						elem = origElem
+					case 'i': // Prefix: "ickerSet"
+						origElem := elem
+						if l := len("ickerSet"); len(elem) >= l && elem[0:l] == "ickerSet" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							// Leaf node.
+							switch r.Method {
+							case "POST":
+								s.handleGetStickerSetRequest([0]string{}, elemIsEscaped, w, r)
+							default:
+								s.notAllowed(w, r, "POST")
+							}
+
+							return
+						}
+
+						elem = origElem
 					}
+
+					elem = origElem
 				case 'U': // Prefix: "U"
+					origElem := elem
 					if l := len("U"); len(elem) >= l && elem[0:l] == "U" {
 						elem = elem[l:]
 					} else {
@@ -1244,6 +1588,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 					}
 					switch elem[0] {
 					case 'p': // Prefix: "pdates"
+						origElem := elem
 						if l := len("pdates"); len(elem) >= l && elem[0:l] == "pdates" {
 							elem = elem[l:]
 						} else {
@@ -1261,26 +1606,70 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 							return
 						}
-					case 's': // Prefix: "serProfilePhotos"
-						if l := len("serProfilePhotos"); len(elem) >= l && elem[0:l] == "serProfilePhotos" {
+
+						elem = origElem
+					case 's': // Prefix: "ser"
+						origElem := elem
+						if l := len("ser"); len(elem) >= l && elem[0:l] == "ser" {
 							elem = elem[l:]
 						} else {
 							break
 						}
 
 						if len(elem) == 0 {
-							// Leaf node.
-							switch r.Method {
-							case "POST":
-								s.handleGetUserProfilePhotosRequest([0]string{}, elemIsEscaped, w, r)
-							default:
-								s.notAllowed(w, r, "POST")
+							break
+						}
+						switch elem[0] {
+						case 'C': // Prefix: "ChatBoosts"
+							origElem := elem
+							if l := len("ChatBoosts"); len(elem) >= l && elem[0:l] == "ChatBoosts" {
+								elem = elem[l:]
+							} else {
+								break
 							}
 
-							return
+							if len(elem) == 0 {
+								// Leaf node.
+								switch r.Method {
+								case "POST":
+									s.handleGetUserChatBoostsRequest([0]string{}, elemIsEscaped, w, r)
+								default:
+									s.notAllowed(w, r, "POST")
+								}
+
+								return
+							}
+
+							elem = origElem
+						case 'P': // Prefix: "ProfilePhotos"
+							origElem := elem
+							if l := len("ProfilePhotos"); len(elem) >= l && elem[0:l] == "ProfilePhotos" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							if len(elem) == 0 {
+								// Leaf node.
+								switch r.Method {
+								case "POST":
+									s.handleGetUserProfilePhotosRequest([0]string{}, elemIsEscaped, w, r)
+								default:
+									s.notAllowed(w, r, "POST")
+								}
+
+								return
+							}
+
+							elem = origElem
 						}
+
+						elem = origElem
 					}
+
+					elem = origElem
 				case 'W': // Prefix: "WebhookInfo"
+					origElem := elem
 					if l := len("WebhookInfo"); len(elem) >= l && elem[0:l] == "WebhookInfo" {
 						elem = elem[l:]
 					} else {
@@ -1298,8 +1687,13 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 						return
 					}
+
+					elem = origElem
 				}
+
+				elem = origElem
 			case 'h': // Prefix: "hideGeneralForumTopic"
+				origElem := elem
 				if l := len("hideGeneralForumTopic"); len(elem) >= l && elem[0:l] == "hideGeneralForumTopic" {
 					elem = elem[l:]
 				} else {
@@ -1317,7 +1711,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 					return
 				}
+
+				elem = origElem
 			case 'l': // Prefix: "l"
+				origElem := elem
 				if l := len("l"); len(elem) >= l && elem[0:l] == "l" {
 					elem = elem[l:]
 				} else {
@@ -1329,6 +1726,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				}
 				switch elem[0] {
 				case 'e': // Prefix: "eaveChat"
+					origElem := elem
 					if l := len("eaveChat"); len(elem) >= l && elem[0:l] == "eaveChat" {
 						elem = elem[l:]
 					} else {
@@ -1346,7 +1744,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 						return
 					}
+
+					elem = origElem
 				case 'o': // Prefix: "ogOut"
+					origElem := elem
 					if l := len("ogOut"); len(elem) >= l && elem[0:l] == "ogOut" {
 						elem = elem[l:]
 					} else {
@@ -1364,8 +1765,13 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 						return
 					}
+
+					elem = origElem
 				}
+
+				elem = origElem
 			case 'p': // Prefix: "p"
+				origElem := elem
 				if l := len("p"); len(elem) >= l && elem[0:l] == "p" {
 					elem = elem[l:]
 				} else {
@@ -1377,6 +1783,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				}
 				switch elem[0] {
 				case 'i': // Prefix: "inChatMessage"
+					origElem := elem
 					if l := len("inChatMessage"); len(elem) >= l && elem[0:l] == "inChatMessage" {
 						elem = elem[l:]
 					} else {
@@ -1394,7 +1801,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 						return
 					}
+
+					elem = origElem
 				case 'r': // Prefix: "romoteChatMember"
+					origElem := elem
 					if l := len("romoteChatMember"); len(elem) >= l && elem[0:l] == "romoteChatMember" {
 						elem = elem[l:]
 					} else {
@@ -1412,8 +1822,13 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 						return
 					}
+
+					elem = origElem
 				}
+
+				elem = origElem
 			case 'r': // Prefix: "re"
+				origElem := elem
 				if l := len("re"); len(elem) >= l && elem[0:l] == "re" {
 					elem = elem[l:]
 				} else {
@@ -1424,7 +1839,29 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 					break
 				}
 				switch elem[0] {
+				case 'f': // Prefix: "fundStarPayment"
+					origElem := elem
+					if l := len("fundStarPayment"); len(elem) >= l && elem[0:l] == "fundStarPayment" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					if len(elem) == 0 {
+						// Leaf node.
+						switch r.Method {
+						case "POST":
+							s.handleRefundStarPaymentRequest([0]string{}, elemIsEscaped, w, r)
+						default:
+							s.notAllowed(w, r, "POST")
+						}
+
+						return
+					}
+
+					elem = origElem
 				case 'o': // Prefix: "open"
+					origElem := elem
 					if l := len("open"); len(elem) >= l && elem[0:l] == "open" {
 						elem = elem[l:]
 					} else {
@@ -1436,6 +1873,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 					}
 					switch elem[0] {
 					case 'F': // Prefix: "ForumTopic"
+						origElem := elem
 						if l := len("ForumTopic"); len(elem) >= l && elem[0:l] == "ForumTopic" {
 							elem = elem[l:]
 						} else {
@@ -1453,7 +1891,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 							return
 						}
+
+						elem = origElem
 					case 'G': // Prefix: "GeneralForumTopic"
+						origElem := elem
 						if l := len("GeneralForumTopic"); len(elem) >= l && elem[0:l] == "GeneralForumTopic" {
 							elem = elem[l:]
 						} else {
@@ -1471,8 +1912,34 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 							return
 						}
+
+						elem = origElem
 					}
+
+					elem = origElem
+				case 'p': // Prefix: "placeStickerInSet"
+					origElem := elem
+					if l := len("placeStickerInSet"); len(elem) >= l && elem[0:l] == "placeStickerInSet" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					if len(elem) == 0 {
+						// Leaf node.
+						switch r.Method {
+						case "POST":
+							s.handleReplaceStickerInSetRequest([0]string{}, elemIsEscaped, w, r)
+						default:
+							s.notAllowed(w, r, "POST")
+						}
+
+						return
+					}
+
+					elem = origElem
 				case 's': // Prefix: "strictChatMember"
+					origElem := elem
 					if l := len("strictChatMember"); len(elem) >= l && elem[0:l] == "strictChatMember" {
 						elem = elem[l:]
 					} else {
@@ -1490,7 +1957,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 						return
 					}
+
+					elem = origElem
 				case 'v': // Prefix: "vokeChatInviteLink"
+					origElem := elem
 					if l := len("vokeChatInviteLink"); len(elem) >= l && elem[0:l] == "vokeChatInviteLink" {
 						elem = elem[l:]
 					} else {
@@ -1508,8 +1978,13 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 						return
 					}
+
+					elem = origElem
 				}
+
+				elem = origElem
 			case 's': // Prefix: "s"
+				origElem := elem
 				if l := len("s"); len(elem) >= l && elem[0:l] == "s" {
 					elem = elem[l:]
 				} else {
@@ -1521,6 +1996,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				}
 				switch elem[0] {
 				case 'e': // Prefix: "e"
+					origElem := elem
 					if l := len("e"); len(elem) >= l && elem[0:l] == "e" {
 						elem = elem[l:]
 					} else {
@@ -1532,6 +2008,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 					}
 					switch elem[0] {
 					case 'n': // Prefix: "nd"
+						origElem := elem
 						if l := len("nd"); len(elem) >= l && elem[0:l] == "nd" {
 							elem = elem[l:]
 						} else {
@@ -1543,6 +2020,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 						}
 						switch elem[0] {
 						case 'A': // Prefix: "A"
+							origElem := elem
 							if l := len("A"); len(elem) >= l && elem[0:l] == "A" {
 								elem = elem[l:]
 							} else {
@@ -1554,6 +2032,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 							}
 							switch elem[0] {
 							case 'n': // Prefix: "nimation"
+								origElem := elem
 								if l := len("nimation"); len(elem) >= l && elem[0:l] == "nimation" {
 									elem = elem[l:]
 								} else {
@@ -1571,7 +2050,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 									return
 								}
+
+								elem = origElem
 							case 'u': // Prefix: "udio"
+								origElem := elem
 								if l := len("udio"); len(elem) >= l && elem[0:l] == "udio" {
 									elem = elem[l:]
 								} else {
@@ -1589,8 +2071,13 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 									return
 								}
+
+								elem = origElem
 							}
+
+							elem = origElem
 						case 'C': // Prefix: "C"
+							origElem := elem
 							if l := len("C"); len(elem) >= l && elem[0:l] == "C" {
 								elem = elem[l:]
 							} else {
@@ -1602,6 +2089,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 							}
 							switch elem[0] {
 							case 'h': // Prefix: "hatAction"
+								origElem := elem
 								if l := len("hatAction"); len(elem) >= l && elem[0:l] == "hatAction" {
 									elem = elem[l:]
 								} else {
@@ -1619,7 +2107,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 									return
 								}
+
+								elem = origElem
 							case 'o': // Prefix: "ontact"
+								origElem := elem
 								if l := len("ontact"); len(elem) >= l && elem[0:l] == "ontact" {
 									elem = elem[l:]
 								} else {
@@ -1637,8 +2128,13 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 									return
 								}
+
+								elem = origElem
 							}
+
+							elem = origElem
 						case 'D': // Prefix: "D"
+							origElem := elem
 							if l := len("D"); len(elem) >= l && elem[0:l] == "D" {
 								elem = elem[l:]
 							} else {
@@ -1650,6 +2146,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 							}
 							switch elem[0] {
 							case 'i': // Prefix: "ice"
+								origElem := elem
 								if l := len("ice"); len(elem) >= l && elem[0:l] == "ice" {
 									elem = elem[l:]
 								} else {
@@ -1667,7 +2164,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 									return
 								}
+
+								elem = origElem
 							case 'o': // Prefix: "ocument"
+								origElem := elem
 								if l := len("ocument"); len(elem) >= l && elem[0:l] == "ocument" {
 									elem = elem[l:]
 								} else {
@@ -1685,8 +2185,13 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 									return
 								}
+
+								elem = origElem
 							}
+
+							elem = origElem
 						case 'G': // Prefix: "Game"
+							origElem := elem
 							if l := len("Game"); len(elem) >= l && elem[0:l] == "Game" {
 								elem = elem[l:]
 							} else {
@@ -1704,7 +2209,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 								return
 							}
+
+							elem = origElem
 						case 'I': // Prefix: "Invoice"
+							origElem := elem
 							if l := len("Invoice"); len(elem) >= l && elem[0:l] == "Invoice" {
 								elem = elem[l:]
 							} else {
@@ -1722,7 +2230,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 								return
 							}
+
+							elem = origElem
 						case 'L': // Prefix: "Location"
+							origElem := elem
 							if l := len("Location"); len(elem) >= l && elem[0:l] == "Location" {
 								elem = elem[l:]
 							} else {
@@ -1740,7 +2251,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 								return
 							}
+
+							elem = origElem
 						case 'M': // Prefix: "Me"
+							origElem := elem
 							if l := len("Me"); len(elem) >= l && elem[0:l] == "Me" {
 								elem = elem[l:]
 							} else {
@@ -1752,6 +2266,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 							}
 							switch elem[0] {
 							case 'd': // Prefix: "diaGroup"
+								origElem := elem
 								if l := len("diaGroup"); len(elem) >= l && elem[0:l] == "diaGroup" {
 									elem = elem[l:]
 								} else {
@@ -1769,7 +2284,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 									return
 								}
+
+								elem = origElem
 							case 's': // Prefix: "ssage"
+								origElem := elem
 								if l := len("ssage"); len(elem) >= l && elem[0:l] == "ssage" {
 									elem = elem[l:]
 								} else {
@@ -1787,8 +2305,13 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 									return
 								}
+
+								elem = origElem
 							}
+
+							elem = origElem
 						case 'P': // Prefix: "P"
+							origElem := elem
 							if l := len("P"); len(elem) >= l && elem[0:l] == "P" {
 								elem = elem[l:]
 							} else {
@@ -1800,6 +2323,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 							}
 							switch elem[0] {
 							case 'h': // Prefix: "hoto"
+								origElem := elem
 								if l := len("hoto"); len(elem) >= l && elem[0:l] == "hoto" {
 									elem = elem[l:]
 								} else {
@@ -1817,7 +2341,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 									return
 								}
+
+								elem = origElem
 							case 'o': // Prefix: "oll"
+								origElem := elem
 								if l := len("oll"); len(elem) >= l && elem[0:l] == "oll" {
 									elem = elem[l:]
 								} else {
@@ -1835,8 +2362,13 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 									return
 								}
+
+								elem = origElem
 							}
+
+							elem = origElem
 						case 'S': // Prefix: "Sticker"
+							origElem := elem
 							if l := len("Sticker"); len(elem) >= l && elem[0:l] == "Sticker" {
 								elem = elem[l:]
 							} else {
@@ -1854,7 +2386,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 								return
 							}
+
+							elem = origElem
 						case 'V': // Prefix: "V"
+							origElem := elem
 							if l := len("V"); len(elem) >= l && elem[0:l] == "V" {
 								elem = elem[l:]
 							} else {
@@ -1866,6 +2401,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 							}
 							switch elem[0] {
 							case 'e': // Prefix: "enue"
+								origElem := elem
 								if l := len("enue"); len(elem) >= l && elem[0:l] == "enue" {
 									elem = elem[l:]
 								} else {
@@ -1883,7 +2419,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 									return
 								}
+
+								elem = origElem
 							case 'i': // Prefix: "ideo"
+								origElem := elem
 								if l := len("ideo"); len(elem) >= l && elem[0:l] == "ideo" {
 									elem = elem[l:]
 								} else {
@@ -1902,6 +2441,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 								}
 								switch elem[0] {
 								case 'N': // Prefix: "Note"
+									origElem := elem
 									if l := len("Note"); len(elem) >= l && elem[0:l] == "Note" {
 										elem = elem[l:]
 									} else {
@@ -1919,8 +2459,13 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 										return
 									}
+
+									elem = origElem
 								}
+
+								elem = origElem
 							case 'o': // Prefix: "oice"
+								origElem := elem
 								if l := len("oice"); len(elem) >= l && elem[0:l] == "oice" {
 									elem = elem[l:]
 								} else {
@@ -1938,9 +2483,16 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 									return
 								}
+
+								elem = origElem
 							}
+
+							elem = origElem
 						}
+
+						elem = origElem
 					case 't': // Prefix: "t"
+						origElem := elem
 						if l := len("t"); len(elem) >= l && elem[0:l] == "t" {
 							elem = elem[l:]
 						} else {
@@ -1952,6 +2504,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 						}
 						switch elem[0] {
 						case 'C': // Prefix: "C"
+							origElem := elem
 							if l := len("C"); len(elem) >= l && elem[0:l] == "C" {
 								elem = elem[l:]
 							} else {
@@ -1963,6 +2516,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 							}
 							switch elem[0] {
 							case 'h': // Prefix: "hat"
+								origElem := elem
 								if l := len("hat"); len(elem) >= l && elem[0:l] == "hat" {
 									elem = elem[l:]
 								} else {
@@ -1974,6 +2528,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 								}
 								switch elem[0] {
 								case 'A': // Prefix: "AdministratorCustomTitle"
+									origElem := elem
 									if l := len("AdministratorCustomTitle"); len(elem) >= l && elem[0:l] == "AdministratorCustomTitle" {
 										elem = elem[l:]
 									} else {
@@ -1991,7 +2546,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 										return
 									}
+
+									elem = origElem
 								case 'D': // Prefix: "Description"
+									origElem := elem
 									if l := len("Description"); len(elem) >= l && elem[0:l] == "Description" {
 										elem = elem[l:]
 									} else {
@@ -2009,7 +2567,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 										return
 									}
+
+									elem = origElem
 								case 'M': // Prefix: "MenuButton"
+									origElem := elem
 									if l := len("MenuButton"); len(elem) >= l && elem[0:l] == "MenuButton" {
 										elem = elem[l:]
 									} else {
@@ -2027,7 +2588,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 										return
 									}
+
+									elem = origElem
 								case 'P': // Prefix: "P"
+									origElem := elem
 									if l := len("P"); len(elem) >= l && elem[0:l] == "P" {
 										elem = elem[l:]
 									} else {
@@ -2039,6 +2603,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 									}
 									switch elem[0] {
 									case 'e': // Prefix: "ermissions"
+										origElem := elem
 										if l := len("ermissions"); len(elem) >= l && elem[0:l] == "ermissions" {
 											elem = elem[l:]
 										} else {
@@ -2056,7 +2621,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 											return
 										}
+
+										elem = origElem
 									case 'h': // Prefix: "hoto"
+										origElem := elem
 										if l := len("hoto"); len(elem) >= l && elem[0:l] == "hoto" {
 											elem = elem[l:]
 										} else {
@@ -2074,8 +2642,13 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 											return
 										}
+
+										elem = origElem
 									}
+
+									elem = origElem
 								case 'S': // Prefix: "StickerSet"
+									origElem := elem
 									if l := len("StickerSet"); len(elem) >= l && elem[0:l] == "StickerSet" {
 										elem = elem[l:]
 									} else {
@@ -2093,7 +2666,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 										return
 									}
+
+									elem = origElem
 								case 'T': // Prefix: "Title"
+									origElem := elem
 									if l := len("Title"); len(elem) >= l && elem[0:l] == "Title" {
 										elem = elem[l:]
 									} else {
@@ -2111,8 +2687,13 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 										return
 									}
+
+									elem = origElem
 								}
+
+								elem = origElem
 							case 'u': // Prefix: "ustomEmojiStickerSetThumbnail"
+								origElem := elem
 								if l := len("ustomEmojiStickerSetThumbnail"); len(elem) >= l && elem[0:l] == "ustomEmojiStickerSetThumbnail" {
 									elem = elem[l:]
 								} else {
@@ -2130,8 +2711,13 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 									return
 								}
+
+								elem = origElem
 							}
+
+							elem = origElem
 						case 'G': // Prefix: "GameScore"
+							origElem := elem
 							if l := len("GameScore"); len(elem) >= l && elem[0:l] == "GameScore" {
 								elem = elem[l:]
 							} else {
@@ -2149,8 +2735,11 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 								return
 							}
-						case 'M': // Prefix: "My"
-							if l := len("My"); len(elem) >= l && elem[0:l] == "My" {
+
+							elem = origElem
+						case 'M': // Prefix: "M"
+							origElem := elem
+							if l := len("M"); len(elem) >= l && elem[0:l] == "M" {
 								elem = elem[l:]
 							} else {
 								break
@@ -2160,8 +2749,9 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 								break
 							}
 							switch elem[0] {
-							case 'C': // Prefix: "Commands"
-								if l := len("Commands"); len(elem) >= l && elem[0:l] == "Commands" {
+							case 'e': // Prefix: "essageReaction"
+								origElem := elem
+								if l := len("essageReaction"); len(elem) >= l && elem[0:l] == "essageReaction" {
 									elem = elem[l:]
 								} else {
 									break
@@ -2171,15 +2761,18 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 									// Leaf node.
 									switch r.Method {
 									case "POST":
-										s.handleSetMyCommandsRequest([0]string{}, elemIsEscaped, w, r)
+										s.handleSetMessageReactionRequest([0]string{}, elemIsEscaped, w, r)
 									default:
 										s.notAllowed(w, r, "POST")
 									}
 
 									return
 								}
-							case 'D': // Prefix: "De"
-								if l := len("De"); len(elem) >= l && elem[0:l] == "De" {
+
+								elem = origElem
+							case 'y': // Prefix: "y"
+								origElem := elem
+								if l := len("y"); len(elem) >= l && elem[0:l] == "y" {
 									elem = elem[l:]
 								} else {
 									break
@@ -2189,8 +2782,9 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 									break
 								}
 								switch elem[0] {
-								case 'f': // Prefix: "faultAdministratorRights"
-									if l := len("faultAdministratorRights"); len(elem) >= l && elem[0:l] == "faultAdministratorRights" {
+								case 'C': // Prefix: "Commands"
+									origElem := elem
+									if l := len("Commands"); len(elem) >= l && elem[0:l] == "Commands" {
 										elem = elem[l:]
 									} else {
 										break
@@ -2200,15 +2794,75 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 										// Leaf node.
 										switch r.Method {
 										case "POST":
-											s.handleSetMyDefaultAdministratorRightsRequest([0]string{}, elemIsEscaped, w, r)
+											s.handleSetMyCommandsRequest([0]string{}, elemIsEscaped, w, r)
 										default:
 											s.notAllowed(w, r, "POST")
 										}
 
 										return
 									}
-								case 's': // Prefix: "scription"
-									if l := len("scription"); len(elem) >= l && elem[0:l] == "scription" {
+
+									elem = origElem
+								case 'D': // Prefix: "De"
+									origElem := elem
+									if l := len("De"); len(elem) >= l && elem[0:l] == "De" {
+										elem = elem[l:]
+									} else {
+										break
+									}
+
+									if len(elem) == 0 {
+										break
+									}
+									switch elem[0] {
+									case 'f': // Prefix: "faultAdministratorRights"
+										origElem := elem
+										if l := len("faultAdministratorRights"); len(elem) >= l && elem[0:l] == "faultAdministratorRights" {
+											elem = elem[l:]
+										} else {
+											break
+										}
+
+										if len(elem) == 0 {
+											// Leaf node.
+											switch r.Method {
+											case "POST":
+												s.handleSetMyDefaultAdministratorRightsRequest([0]string{}, elemIsEscaped, w, r)
+											default:
+												s.notAllowed(w, r, "POST")
+											}
+
+											return
+										}
+
+										elem = origElem
+									case 's': // Prefix: "scription"
+										origElem := elem
+										if l := len("scription"); len(elem) >= l && elem[0:l] == "scription" {
+											elem = elem[l:]
+										} else {
+											break
+										}
+
+										if len(elem) == 0 {
+											// Leaf node.
+											switch r.Method {
+											case "POST":
+												s.handleSetMyDescriptionRequest([0]string{}, elemIsEscaped, w, r)
+											default:
+												s.notAllowed(w, r, "POST")
+											}
+
+											return
+										}
+
+										elem = origElem
+									}
+
+									elem = origElem
+								case 'N': // Prefix: "Name"
+									origElem := elem
+									if l := len("Name"); len(elem) >= l && elem[0:l] == "Name" {
 										elem = elem[l:]
 									} else {
 										break
@@ -2218,52 +2872,44 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 										// Leaf node.
 										switch r.Method {
 										case "POST":
-											s.handleSetMyDescriptionRequest([0]string{}, elemIsEscaped, w, r)
+											s.handleSetMyNameRequest([0]string{}, elemIsEscaped, w, r)
 										default:
 											s.notAllowed(w, r, "POST")
 										}
 
 										return
 									}
-								}
-							case 'N': // Prefix: "Name"
-								if l := len("Name"); len(elem) >= l && elem[0:l] == "Name" {
-									elem = elem[l:]
-								} else {
-									break
-								}
 
-								if len(elem) == 0 {
-									// Leaf node.
-									switch r.Method {
-									case "POST":
-										s.handleSetMyNameRequest([0]string{}, elemIsEscaped, w, r)
-									default:
-										s.notAllowed(w, r, "POST")
+									elem = origElem
+								case 'S': // Prefix: "ShortDescription"
+									origElem := elem
+									if l := len("ShortDescription"); len(elem) >= l && elem[0:l] == "ShortDescription" {
+										elem = elem[l:]
+									} else {
+										break
 									}
 
-									return
-								}
-							case 'S': // Prefix: "ShortDescription"
-								if l := len("ShortDescription"); len(elem) >= l && elem[0:l] == "ShortDescription" {
-									elem = elem[l:]
-								} else {
-									break
-								}
+									if len(elem) == 0 {
+										// Leaf node.
+										switch r.Method {
+										case "POST":
+											s.handleSetMyShortDescriptionRequest([0]string{}, elemIsEscaped, w, r)
+										default:
+											s.notAllowed(w, r, "POST")
+										}
 
-								if len(elem) == 0 {
-									// Leaf node.
-									switch r.Method {
-									case "POST":
-										s.handleSetMyShortDescriptionRequest([0]string{}, elemIsEscaped, w, r)
-									default:
-										s.notAllowed(w, r, "POST")
+										return
 									}
 
-									return
+									elem = origElem
 								}
+
+								elem = origElem
 							}
+
+							elem = origElem
 						case 'P': // Prefix: "PassportDataErrors"
+							origElem := elem
 							if l := len("PassportDataErrors"); len(elem) >= l && elem[0:l] == "PassportDataErrors" {
 								elem = elem[l:]
 							} else {
@@ -2281,7 +2927,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 								return
 							}
+
+							elem = origElem
 						case 'S': // Prefix: "Sticker"
+							origElem := elem
 							if l := len("Sticker"); len(elem) >= l && elem[0:l] == "Sticker" {
 								elem = elem[l:]
 							} else {
@@ -2293,6 +2942,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 							}
 							switch elem[0] {
 							case 'E': // Prefix: "EmojiList"
+								origElem := elem
 								if l := len("EmojiList"); len(elem) >= l && elem[0:l] == "EmojiList" {
 									elem = elem[l:]
 								} else {
@@ -2310,7 +2960,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 									return
 								}
+
+								elem = origElem
 							case 'K': // Prefix: "Keywords"
+								origElem := elem
 								if l := len("Keywords"); len(elem) >= l && elem[0:l] == "Keywords" {
 									elem = elem[l:]
 								} else {
@@ -2328,7 +2981,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 									return
 								}
+
+								elem = origElem
 							case 'M': // Prefix: "MaskPosition"
+								origElem := elem
 								if l := len("MaskPosition"); len(elem) >= l && elem[0:l] == "MaskPosition" {
 									elem = elem[l:]
 								} else {
@@ -2346,7 +3002,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 									return
 								}
+
+								elem = origElem
 							case 'P': // Prefix: "PositionInSet"
+								origElem := elem
 								if l := len("PositionInSet"); len(elem) >= l && elem[0:l] == "PositionInSet" {
 									elem = elem[l:]
 								} else {
@@ -2364,7 +3023,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 									return
 								}
+
+								elem = origElem
 							case 'S': // Prefix: "SetT"
+								origElem := elem
 								if l := len("SetT"); len(elem) >= l && elem[0:l] == "SetT" {
 									elem = elem[l:]
 								} else {
@@ -2376,6 +3038,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 								}
 								switch elem[0] {
 								case 'h': // Prefix: "humbnail"
+									origElem := elem
 									if l := len("humbnail"); len(elem) >= l && elem[0:l] == "humbnail" {
 										elem = elem[l:]
 									} else {
@@ -2393,7 +3056,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 										return
 									}
+
+									elem = origElem
 								case 'i': // Prefix: "itle"
+									origElem := elem
 									if l := len("itle"); len(elem) >= l && elem[0:l] == "itle" {
 										elem = elem[l:]
 									} else {
@@ -2411,9 +3077,16 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 										return
 									}
+
+									elem = origElem
 								}
+
+								elem = origElem
 							}
+
+							elem = origElem
 						case 'W': // Prefix: "Webhook"
+							origElem := elem
 							if l := len("Webhook"); len(elem) >= l && elem[0:l] == "Webhook" {
 								elem = elem[l:]
 							} else {
@@ -2431,9 +3104,16 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 								return
 							}
+
+							elem = origElem
 						}
+
+						elem = origElem
 					}
+
+					elem = origElem
 				case 't': // Prefix: "top"
+					origElem := elem
 					if l := len("top"); len(elem) >= l && elem[0:l] == "top" {
 						elem = elem[l:]
 					} else {
@@ -2445,6 +3125,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 					}
 					switch elem[0] {
 					case 'M': // Prefix: "MessageLiveLocation"
+						origElem := elem
 						if l := len("MessageLiveLocation"); len(elem) >= l && elem[0:l] == "MessageLiveLocation" {
 							elem = elem[l:]
 						} else {
@@ -2462,7 +3143,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 							return
 						}
+
+						elem = origElem
 					case 'P': // Prefix: "Poll"
+						origElem := elem
 						if l := len("Poll"); len(elem) >= l && elem[0:l] == "Poll" {
 							elem = elem[l:]
 						} else {
@@ -2480,9 +3164,16 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 							return
 						}
+
+						elem = origElem
 					}
+
+					elem = origElem
 				}
+
+				elem = origElem
 			case 'u': // Prefix: "u"
+				origElem := elem
 				if l := len("u"); len(elem) >= l && elem[0:l] == "u" {
 					elem = elem[l:]
 				} else {
@@ -2494,6 +3185,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				}
 				switch elem[0] {
 				case 'n': // Prefix: "n"
+					origElem := elem
 					if l := len("n"); len(elem) >= l && elem[0:l] == "n" {
 						elem = elem[l:]
 					} else {
@@ -2505,6 +3197,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 					}
 					switch elem[0] {
 					case 'b': // Prefix: "banChat"
+						origElem := elem
 						if l := len("banChat"); len(elem) >= l && elem[0:l] == "banChat" {
 							elem = elem[l:]
 						} else {
@@ -2516,6 +3209,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 						}
 						switch elem[0] {
 						case 'M': // Prefix: "Member"
+							origElem := elem
 							if l := len("Member"); len(elem) >= l && elem[0:l] == "Member" {
 								elem = elem[l:]
 							} else {
@@ -2533,7 +3227,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 								return
 							}
+
+							elem = origElem
 						case 'S': // Prefix: "SenderChat"
+							origElem := elem
 							if l := len("SenderChat"); len(elem) >= l && elem[0:l] == "SenderChat" {
 								elem = elem[l:]
 							} else {
@@ -2551,8 +3248,13 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 								return
 							}
+
+							elem = origElem
 						}
+
+						elem = origElem
 					case 'h': // Prefix: "hideGeneralForumTopic"
+						origElem := elem
 						if l := len("hideGeneralForumTopic"); len(elem) >= l && elem[0:l] == "hideGeneralForumTopic" {
 							elem = elem[l:]
 						} else {
@@ -2570,7 +3272,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 							return
 						}
+
+						elem = origElem
 					case 'p': // Prefix: "pin"
+						origElem := elem
 						if l := len("pin"); len(elem) >= l && elem[0:l] == "pin" {
 							elem = elem[l:]
 						} else {
@@ -2582,6 +3287,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 						}
 						switch elem[0] {
 						case 'A': // Prefix: "All"
+							origElem := elem
 							if l := len("All"); len(elem) >= l && elem[0:l] == "All" {
 								elem = elem[l:]
 							} else {
@@ -2593,6 +3299,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 							}
 							switch elem[0] {
 							case 'C': // Prefix: "ChatMessages"
+								origElem := elem
 								if l := len("ChatMessages"); len(elem) >= l && elem[0:l] == "ChatMessages" {
 									elem = elem[l:]
 								} else {
@@ -2610,7 +3317,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 									return
 								}
+
+								elem = origElem
 							case 'F': // Prefix: "ForumTopicMessages"
+								origElem := elem
 								if l := len("ForumTopicMessages"); len(elem) >= l && elem[0:l] == "ForumTopicMessages" {
 									elem = elem[l:]
 								} else {
@@ -2628,8 +3338,34 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 									return
 								}
+
+								elem = origElem
+							case 'G': // Prefix: "GeneralForumTopicMessages"
+								origElem := elem
+								if l := len("GeneralForumTopicMessages"); len(elem) >= l && elem[0:l] == "GeneralForumTopicMessages" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									// Leaf node.
+									switch r.Method {
+									case "POST":
+										s.handleUnpinAllGeneralForumTopicMessagesRequest([0]string{}, elemIsEscaped, w, r)
+									default:
+										s.notAllowed(w, r, "POST")
+									}
+
+									return
+								}
+
+								elem = origElem
 							}
+
+							elem = origElem
 						case 'C': // Prefix: "ChatMessage"
+							origElem := elem
 							if l := len("ChatMessage"); len(elem) >= l && elem[0:l] == "ChatMessage" {
 								elem = elem[l:]
 							} else {
@@ -2647,9 +3383,16 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 								return
 							}
+
+							elem = origElem
 						}
+
+						elem = origElem
 					}
+
+					elem = origElem
 				case 'p': // Prefix: "ploadStickerFile"
+					origElem := elem
 					if l := len("ploadStickerFile"); len(elem) >= l && elem[0:l] == "ploadStickerFile" {
 						elem = elem[l:]
 					} else {
@@ -2667,8 +3410,14 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 						return
 					}
+
+					elem = origElem
 				}
+
+				elem = origElem
 			}
+
+			elem = origElem
 		}
 	}
 	s.notFound(w, r)
@@ -2677,6 +3426,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 // Route is route object.
 type Route struct {
 	name        string
+	summary     string
 	operationID string
 	pathPattern string
 	count       int
@@ -2688,6 +3438,11 @@ type Route struct {
 // It is guaranteed to be unique and not empty.
 func (r Route) Name() string {
 	return r.name
+}
+
+// Summary returns OpenAPI summary.
+func (r Route) Summary() string {
+	return r.summary
 }
 
 // OperationID returns OpenAPI operationId.
@@ -2731,6 +3486,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 		}()
 	}
 
+	elem, ok := s.cutPrefix(elem)
+	if !ok {
+		return r, false
+	}
+
 	// Static code generated router with unwrapped path search.
 	switch {
 	default:
@@ -2739,6 +3499,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 		}
 		switch elem[0] {
 		case '/': // Prefix: "/"
+			origElem := elem
 			if l := len("/"); len(elem) >= l && elem[0:l] == "/" {
 				elem = elem[l:]
 			} else {
@@ -2750,6 +3511,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 			}
 			switch elem[0] {
 			case 'a': // Prefix: "a"
+				origElem := elem
 				if l := len("a"); len(elem) >= l && elem[0:l] == "a" {
 					elem = elem[l:]
 				} else {
@@ -2761,6 +3523,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 				}
 				switch elem[0] {
 				case 'd': // Prefix: "ddStickerToSet"
+					origElem := elem
 					if l := len("ddStickerToSet"); len(elem) >= l && elem[0:l] == "ddStickerToSet" {
 						elem = elem[l:]
 					} else {
@@ -2768,10 +3531,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 					}
 
 					if len(elem) == 0 {
+						// Leaf node.
 						switch method {
 						case "POST":
-							// Leaf: AddStickerToSet
 							r.name = "AddStickerToSet"
+							r.summary = ""
 							r.operationID = "addStickerToSet"
 							r.pathPattern = "/addStickerToSet"
 							r.args = args
@@ -2781,7 +3545,10 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							return
 						}
 					}
+
+					elem = origElem
 				case 'n': // Prefix: "nswer"
+					origElem := elem
 					if l := len("nswer"); len(elem) >= l && elem[0:l] == "nswer" {
 						elem = elem[l:]
 					} else {
@@ -2793,6 +3560,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 					}
 					switch elem[0] {
 					case 'C': // Prefix: "CallbackQuery"
+						origElem := elem
 						if l := len("CallbackQuery"); len(elem) >= l && elem[0:l] == "CallbackQuery" {
 							elem = elem[l:]
 						} else {
@@ -2800,10 +3568,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						}
 
 						if len(elem) == 0 {
+							// Leaf node.
 							switch method {
 							case "POST":
-								// Leaf: AnswerCallbackQuery
 								r.name = "AnswerCallbackQuery"
+								r.summary = ""
 								r.operationID = "answerCallbackQuery"
 								r.pathPattern = "/answerCallbackQuery"
 								r.args = args
@@ -2813,7 +3582,10 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								return
 							}
 						}
+
+						elem = origElem
 					case 'I': // Prefix: "InlineQuery"
+						origElem := elem
 						if l := len("InlineQuery"); len(elem) >= l && elem[0:l] == "InlineQuery" {
 							elem = elem[l:]
 						} else {
@@ -2821,10 +3593,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						}
 
 						if len(elem) == 0 {
+							// Leaf node.
 							switch method {
 							case "POST":
-								// Leaf: AnswerInlineQuery
 								r.name = "AnswerInlineQuery"
+								r.summary = ""
 								r.operationID = "answerInlineQuery"
 								r.pathPattern = "/answerInlineQuery"
 								r.args = args
@@ -2834,7 +3607,10 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								return
 							}
 						}
+
+						elem = origElem
 					case 'P': // Prefix: "PreCheckoutQuery"
+						origElem := elem
 						if l := len("PreCheckoutQuery"); len(elem) >= l && elem[0:l] == "PreCheckoutQuery" {
 							elem = elem[l:]
 						} else {
@@ -2842,10 +3618,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						}
 
 						if len(elem) == 0 {
+							// Leaf node.
 							switch method {
 							case "POST":
-								// Leaf: AnswerPreCheckoutQuery
 								r.name = "AnswerPreCheckoutQuery"
+								r.summary = ""
 								r.operationID = "answerPreCheckoutQuery"
 								r.pathPattern = "/answerPreCheckoutQuery"
 								r.args = args
@@ -2855,7 +3632,10 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								return
 							}
 						}
+
+						elem = origElem
 					case 'S': // Prefix: "ShippingQuery"
+						origElem := elem
 						if l := len("ShippingQuery"); len(elem) >= l && elem[0:l] == "ShippingQuery" {
 							elem = elem[l:]
 						} else {
@@ -2863,10 +3643,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						}
 
 						if len(elem) == 0 {
+							// Leaf node.
 							switch method {
 							case "POST":
-								// Leaf: AnswerShippingQuery
 								r.name = "AnswerShippingQuery"
+								r.summary = ""
 								r.operationID = "answerShippingQuery"
 								r.pathPattern = "/answerShippingQuery"
 								r.args = args
@@ -2876,7 +3657,10 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								return
 							}
 						}
+
+						elem = origElem
 					case 'W': // Prefix: "WebAppQuery"
+						origElem := elem
 						if l := len("WebAppQuery"); len(elem) >= l && elem[0:l] == "WebAppQuery" {
 							elem = elem[l:]
 						} else {
@@ -2884,10 +3668,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						}
 
 						if len(elem) == 0 {
+							// Leaf node.
 							switch method {
 							case "POST":
-								// Leaf: AnswerWebAppQuery
 								r.name = "AnswerWebAppQuery"
+								r.summary = ""
 								r.operationID = "answerWebAppQuery"
 								r.pathPattern = "/answerWebAppQuery"
 								r.args = args
@@ -2897,8 +3682,13 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								return
 							}
 						}
+
+						elem = origElem
 					}
+
+					elem = origElem
 				case 'p': // Prefix: "pproveChatJoinRequest"
+					origElem := elem
 					if l := len("pproveChatJoinRequest"); len(elem) >= l && elem[0:l] == "pproveChatJoinRequest" {
 						elem = elem[l:]
 					} else {
@@ -2906,10 +3696,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 					}
 
 					if len(elem) == 0 {
+						// Leaf node.
 						switch method {
 						case "POST":
-							// Leaf: ApproveChatJoinRequest
 							r.name = "ApproveChatJoinRequest"
+							r.summary = ""
 							r.operationID = "approveChatJoinRequest"
 							r.pathPattern = "/approveChatJoinRequest"
 							r.args = args
@@ -2919,8 +3710,13 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							return
 						}
 					}
+
+					elem = origElem
 				}
+
+				elem = origElem
 			case 'b': // Prefix: "banChat"
+				origElem := elem
 				if l := len("banChat"); len(elem) >= l && elem[0:l] == "banChat" {
 					elem = elem[l:]
 				} else {
@@ -2932,6 +3728,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 				}
 				switch elem[0] {
 				case 'M': // Prefix: "Member"
+					origElem := elem
 					if l := len("Member"); len(elem) >= l && elem[0:l] == "Member" {
 						elem = elem[l:]
 					} else {
@@ -2939,10 +3736,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 					}
 
 					if len(elem) == 0 {
+						// Leaf node.
 						switch method {
 						case "POST":
-							// Leaf: BanChatMember
 							r.name = "BanChatMember"
+							r.summary = ""
 							r.operationID = "banChatMember"
 							r.pathPattern = "/banChatMember"
 							r.args = args
@@ -2952,7 +3750,10 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							return
 						}
 					}
+
+					elem = origElem
 				case 'S': // Prefix: "SenderChat"
+					origElem := elem
 					if l := len("SenderChat"); len(elem) >= l && elem[0:l] == "SenderChat" {
 						elem = elem[l:]
 					} else {
@@ -2960,10 +3761,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 					}
 
 					if len(elem) == 0 {
+						// Leaf node.
 						switch method {
 						case "POST":
-							// Leaf: BanChatSenderChat
 							r.name = "BanChatSenderChat"
+							r.summary = ""
 							r.operationID = "banChatSenderChat"
 							r.pathPattern = "/banChatSenderChat"
 							r.args = args
@@ -2973,8 +3775,13 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							return
 						}
 					}
+
+					elem = origElem
 				}
+
+				elem = origElem
 			case 'c': // Prefix: "c"
+				origElem := elem
 				if l := len("c"); len(elem) >= l && elem[0:l] == "c" {
 					elem = elem[l:]
 				} else {
@@ -2986,6 +3793,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 				}
 				switch elem[0] {
 				case 'l': // Prefix: "lose"
+					origElem := elem
 					if l := len("lose"); len(elem) >= l && elem[0:l] == "lose" {
 						elem = elem[l:]
 					} else {
@@ -2996,6 +3804,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						switch method {
 						case "POST":
 							r.name = "Close"
+							r.summary = ""
 							r.operationID = "close"
 							r.pathPattern = "/close"
 							r.args = args
@@ -3007,6 +3816,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 					}
 					switch elem[0] {
 					case 'F': // Prefix: "ForumTopic"
+						origElem := elem
 						if l := len("ForumTopic"); len(elem) >= l && elem[0:l] == "ForumTopic" {
 							elem = elem[l:]
 						} else {
@@ -3014,10 +3824,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						}
 
 						if len(elem) == 0 {
+							// Leaf node.
 							switch method {
 							case "POST":
-								// Leaf: CloseForumTopic
 								r.name = "CloseForumTopic"
+								r.summary = ""
 								r.operationID = "closeForumTopic"
 								r.pathPattern = "/closeForumTopic"
 								r.args = args
@@ -3027,7 +3838,10 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								return
 							}
 						}
+
+						elem = origElem
 					case 'G': // Prefix: "GeneralForumTopic"
+						origElem := elem
 						if l := len("GeneralForumTopic"); len(elem) >= l && elem[0:l] == "GeneralForumTopic" {
 							elem = elem[l:]
 						} else {
@@ -3035,10 +3849,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						}
 
 						if len(elem) == 0 {
+							// Leaf node.
 							switch method {
 							case "POST":
-								// Leaf: CloseGeneralForumTopic
 								r.name = "CloseGeneralForumTopic"
+								r.summary = ""
 								r.operationID = "closeGeneralForumTopic"
 								r.pathPattern = "/closeGeneralForumTopic"
 								r.args = args
@@ -3048,8 +3863,13 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								return
 							}
 						}
+
+						elem = origElem
 					}
+
+					elem = origElem
 				case 'o': // Prefix: "opyMessage"
+					origElem := elem
 					if l := len("opyMessage"); len(elem) >= l && elem[0:l] == "opyMessage" {
 						elem = elem[l:]
 					} else {
@@ -3059,8 +3879,8 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 					if len(elem) == 0 {
 						switch method {
 						case "POST":
-							// Leaf: CopyMessage
 							r.name = "CopyMessage"
+							r.summary = ""
 							r.operationID = "copyMessage"
 							r.pathPattern = "/copyMessage"
 							r.args = args
@@ -3070,7 +3890,37 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							return
 						}
 					}
+					switch elem[0] {
+					case 's': // Prefix: "s"
+						origElem := elem
+						if l := len("s"); len(elem) >= l && elem[0:l] == "s" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							// Leaf node.
+							switch method {
+							case "POST":
+								r.name = "CopyMessages"
+								r.summary = ""
+								r.operationID = "copyMessages"
+								r.pathPattern = "/copyMessages"
+								r.args = args
+								r.count = 0
+								return r, true
+							default:
+								return
+							}
+						}
+
+						elem = origElem
+					}
+
+					elem = origElem
 				case 'r': // Prefix: "reate"
+					origElem := elem
 					if l := len("reate"); len(elem) >= l && elem[0:l] == "reate" {
 						elem = elem[l:]
 					} else {
@@ -3082,6 +3932,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 					}
 					switch elem[0] {
 					case 'C': // Prefix: "ChatInviteLink"
+						origElem := elem
 						if l := len("ChatInviteLink"); len(elem) >= l && elem[0:l] == "ChatInviteLink" {
 							elem = elem[l:]
 						} else {
@@ -3089,10 +3940,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						}
 
 						if len(elem) == 0 {
+							// Leaf node.
 							switch method {
 							case "POST":
-								// Leaf: CreateChatInviteLink
 								r.name = "CreateChatInviteLink"
+								r.summary = ""
 								r.operationID = "createChatInviteLink"
 								r.pathPattern = "/createChatInviteLink"
 								r.args = args
@@ -3102,7 +3954,10 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								return
 							}
 						}
+
+						elem = origElem
 					case 'F': // Prefix: "ForumTopic"
+						origElem := elem
 						if l := len("ForumTopic"); len(elem) >= l && elem[0:l] == "ForumTopic" {
 							elem = elem[l:]
 						} else {
@@ -3110,10 +3965,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						}
 
 						if len(elem) == 0 {
+							// Leaf node.
 							switch method {
 							case "POST":
-								// Leaf: CreateForumTopic
 								r.name = "CreateForumTopic"
+								r.summary = ""
 								r.operationID = "createForumTopic"
 								r.pathPattern = "/createForumTopic"
 								r.args = args
@@ -3123,7 +3979,10 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								return
 							}
 						}
+
+						elem = origElem
 					case 'I': // Prefix: "InvoiceLink"
+						origElem := elem
 						if l := len("InvoiceLink"); len(elem) >= l && elem[0:l] == "InvoiceLink" {
 							elem = elem[l:]
 						} else {
@@ -3131,10 +3990,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						}
 
 						if len(elem) == 0 {
+							// Leaf node.
 							switch method {
 							case "POST":
-								// Leaf: CreateInvoiceLink
 								r.name = "CreateInvoiceLink"
+								r.summary = ""
 								r.operationID = "createInvoiceLink"
 								r.pathPattern = "/createInvoiceLink"
 								r.args = args
@@ -3144,7 +4004,10 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								return
 							}
 						}
+
+						elem = origElem
 					case 'N': // Prefix: "NewStickerSet"
+						origElem := elem
 						if l := len("NewStickerSet"); len(elem) >= l && elem[0:l] == "NewStickerSet" {
 							elem = elem[l:]
 						} else {
@@ -3152,10 +4015,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						}
 
 						if len(elem) == 0 {
+							// Leaf node.
 							switch method {
 							case "POST":
-								// Leaf: CreateNewStickerSet
 								r.name = "CreateNewStickerSet"
+								r.summary = ""
 								r.operationID = "createNewStickerSet"
 								r.pathPattern = "/createNewStickerSet"
 								r.args = args
@@ -3165,9 +4029,16 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								return
 							}
 						}
+
+						elem = origElem
 					}
+
+					elem = origElem
 				}
+
+				elem = origElem
 			case 'd': // Prefix: "de"
+				origElem := elem
 				if l := len("de"); len(elem) >= l && elem[0:l] == "de" {
 					elem = elem[l:]
 				} else {
@@ -3179,6 +4050,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 				}
 				switch elem[0] {
 				case 'c': // Prefix: "clineChatJoinRequest"
+					origElem := elem
 					if l := len("clineChatJoinRequest"); len(elem) >= l && elem[0:l] == "clineChatJoinRequest" {
 						elem = elem[l:]
 					} else {
@@ -3186,10 +4058,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 					}
 
 					if len(elem) == 0 {
+						// Leaf node.
 						switch method {
 						case "POST":
-							// Leaf: DeclineChatJoinRequest
 							r.name = "DeclineChatJoinRequest"
+							r.summary = ""
 							r.operationID = "declineChatJoinRequest"
 							r.pathPattern = "/declineChatJoinRequest"
 							r.args = args
@@ -3199,7 +4072,10 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							return
 						}
 					}
+
+					elem = origElem
 				case 'l': // Prefix: "lete"
+					origElem := elem
 					if l := len("lete"); len(elem) >= l && elem[0:l] == "lete" {
 						elem = elem[l:]
 					} else {
@@ -3211,6 +4087,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 					}
 					switch elem[0] {
 					case 'C': // Prefix: "Chat"
+						origElem := elem
 						if l := len("Chat"); len(elem) >= l && elem[0:l] == "Chat" {
 							elem = elem[l:]
 						} else {
@@ -3222,6 +4099,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						}
 						switch elem[0] {
 						case 'P': // Prefix: "Photo"
+							origElem := elem
 							if l := len("Photo"); len(elem) >= l && elem[0:l] == "Photo" {
 								elem = elem[l:]
 							} else {
@@ -3229,10 +4107,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							}
 
 							if len(elem) == 0 {
+								// Leaf node.
 								switch method {
 								case "POST":
-									// Leaf: DeleteChatPhoto
 									r.name = "DeleteChatPhoto"
+									r.summary = ""
 									r.operationID = "deleteChatPhoto"
 									r.pathPattern = "/deleteChatPhoto"
 									r.args = args
@@ -3242,7 +4121,10 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									return
 								}
 							}
+
+							elem = origElem
 						case 'S': // Prefix: "StickerSet"
+							origElem := elem
 							if l := len("StickerSet"); len(elem) >= l && elem[0:l] == "StickerSet" {
 								elem = elem[l:]
 							} else {
@@ -3250,10 +4132,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							}
 
 							if len(elem) == 0 {
+								// Leaf node.
 								switch method {
 								case "POST":
-									// Leaf: DeleteChatStickerSet
 									r.name = "DeleteChatStickerSet"
+									r.summary = ""
 									r.operationID = "deleteChatStickerSet"
 									r.pathPattern = "/deleteChatStickerSet"
 									r.args = args
@@ -3263,8 +4146,13 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									return
 								}
 							}
+
+							elem = origElem
 						}
+
+						elem = origElem
 					case 'F': // Prefix: "ForumTopic"
+						origElem := elem
 						if l := len("ForumTopic"); len(elem) >= l && elem[0:l] == "ForumTopic" {
 							elem = elem[l:]
 						} else {
@@ -3272,10 +4160,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						}
 
 						if len(elem) == 0 {
+							// Leaf node.
 							switch method {
 							case "POST":
-								// Leaf: DeleteForumTopic
 								r.name = "DeleteForumTopic"
+								r.summary = ""
 								r.operationID = "deleteForumTopic"
 								r.pathPattern = "/deleteForumTopic"
 								r.args = args
@@ -3285,7 +4174,10 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								return
 							}
 						}
+
+						elem = origElem
 					case 'M': // Prefix: "M"
+						origElem := elem
 						if l := len("M"); len(elem) >= l && elem[0:l] == "M" {
 							elem = elem[l:]
 						} else {
@@ -3297,6 +4189,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						}
 						switch elem[0] {
 						case 'e': // Prefix: "essage"
+							origElem := elem
 							if l := len("essage"); len(elem) >= l && elem[0:l] == "essage" {
 								elem = elem[l:]
 							} else {
@@ -3306,8 +4199,8 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							if len(elem) == 0 {
 								switch method {
 								case "POST":
-									// Leaf: DeleteMessage
 									r.name = "DeleteMessage"
+									r.summary = ""
 									r.operationID = "deleteMessage"
 									r.pathPattern = "/deleteMessage"
 									r.args = args
@@ -3317,7 +4210,37 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									return
 								}
 							}
+							switch elem[0] {
+							case 's': // Prefix: "s"
+								origElem := elem
+								if l := len("s"); len(elem) >= l && elem[0:l] == "s" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									// Leaf node.
+									switch method {
+									case "POST":
+										r.name = "DeleteMessages"
+										r.summary = ""
+										r.operationID = "deleteMessages"
+										r.pathPattern = "/deleteMessages"
+										r.args = args
+										r.count = 0
+										return r, true
+									default:
+										return
+									}
+								}
+
+								elem = origElem
+							}
+
+							elem = origElem
 						case 'y': // Prefix: "yCommands"
+							origElem := elem
 							if l := len("yCommands"); len(elem) >= l && elem[0:l] == "yCommands" {
 								elem = elem[l:]
 							} else {
@@ -3325,10 +4248,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							}
 
 							if len(elem) == 0 {
+								// Leaf node.
 								switch method {
 								case "POST":
-									// Leaf: DeleteMyCommands
 									r.name = "DeleteMyCommands"
+									r.summary = ""
 									r.operationID = "deleteMyCommands"
 									r.pathPattern = "/deleteMyCommands"
 									r.args = args
@@ -3338,8 +4262,13 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									return
 								}
 							}
+
+							elem = origElem
 						}
+
+						elem = origElem
 					case 'S': // Prefix: "Sticker"
+						origElem := elem
 						if l := len("Sticker"); len(elem) >= l && elem[0:l] == "Sticker" {
 							elem = elem[l:]
 						} else {
@@ -3351,6 +4280,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						}
 						switch elem[0] {
 						case 'F': // Prefix: "FromSet"
+							origElem := elem
 							if l := len("FromSet"); len(elem) >= l && elem[0:l] == "FromSet" {
 								elem = elem[l:]
 							} else {
@@ -3358,10 +4288,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							}
 
 							if len(elem) == 0 {
+								// Leaf node.
 								switch method {
 								case "POST":
-									// Leaf: DeleteStickerFromSet
 									r.name = "DeleteStickerFromSet"
+									r.summary = ""
 									r.operationID = "deleteStickerFromSet"
 									r.pathPattern = "/deleteStickerFromSet"
 									r.args = args
@@ -3371,7 +4302,10 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									return
 								}
 							}
+
+							elem = origElem
 						case 'S': // Prefix: "Set"
+							origElem := elem
 							if l := len("Set"); len(elem) >= l && elem[0:l] == "Set" {
 								elem = elem[l:]
 							} else {
@@ -3379,10 +4313,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							}
 
 							if len(elem) == 0 {
+								// Leaf node.
 								switch method {
 								case "POST":
-									// Leaf: DeleteStickerSet
 									r.name = "DeleteStickerSet"
+									r.summary = ""
 									r.operationID = "deleteStickerSet"
 									r.pathPattern = "/deleteStickerSet"
 									r.args = args
@@ -3392,8 +4327,13 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									return
 								}
 							}
+
+							elem = origElem
 						}
+
+						elem = origElem
 					case 'W': // Prefix: "Webhook"
+						origElem := elem
 						if l := len("Webhook"); len(elem) >= l && elem[0:l] == "Webhook" {
 							elem = elem[l:]
 						} else {
@@ -3401,10 +4341,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						}
 
 						if len(elem) == 0 {
+							// Leaf node.
 							switch method {
 							case "POST":
-								// Leaf: DeleteWebhook
 								r.name = "DeleteWebhook"
+								r.summary = ""
 								r.operationID = "deleteWebhook"
 								r.pathPattern = "/deleteWebhook"
 								r.args = args
@@ -3414,9 +4355,16 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								return
 							}
 						}
+
+						elem = origElem
 					}
+
+					elem = origElem
 				}
+
+				elem = origElem
 			case 'e': // Prefix: "e"
+				origElem := elem
 				if l := len("e"); len(elem) >= l && elem[0:l] == "e" {
 					elem = elem[l:]
 				} else {
@@ -3428,6 +4376,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 				}
 				switch elem[0] {
 				case 'd': // Prefix: "dit"
+					origElem := elem
 					if l := len("dit"); len(elem) >= l && elem[0:l] == "dit" {
 						elem = elem[l:]
 					} else {
@@ -3439,6 +4388,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 					}
 					switch elem[0] {
 					case 'C': // Prefix: "ChatInviteLink"
+						origElem := elem
 						if l := len("ChatInviteLink"); len(elem) >= l && elem[0:l] == "ChatInviteLink" {
 							elem = elem[l:]
 						} else {
@@ -3446,10 +4396,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						}
 
 						if len(elem) == 0 {
+							// Leaf node.
 							switch method {
 							case "POST":
-								// Leaf: EditChatInviteLink
 								r.name = "EditChatInviteLink"
+								r.summary = ""
 								r.operationID = "editChatInviteLink"
 								r.pathPattern = "/editChatInviteLink"
 								r.args = args
@@ -3459,7 +4410,10 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								return
 							}
 						}
+
+						elem = origElem
 					case 'F': // Prefix: "ForumTopic"
+						origElem := elem
 						if l := len("ForumTopic"); len(elem) >= l && elem[0:l] == "ForumTopic" {
 							elem = elem[l:]
 						} else {
@@ -3467,10 +4421,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						}
 
 						if len(elem) == 0 {
+							// Leaf node.
 							switch method {
 							case "POST":
-								// Leaf: EditForumTopic
 								r.name = "EditForumTopic"
+								r.summary = ""
 								r.operationID = "editForumTopic"
 								r.pathPattern = "/editForumTopic"
 								r.args = args
@@ -3480,7 +4435,10 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								return
 							}
 						}
+
+						elem = origElem
 					case 'G': // Prefix: "GeneralForumTopic"
+						origElem := elem
 						if l := len("GeneralForumTopic"); len(elem) >= l && elem[0:l] == "GeneralForumTopic" {
 							elem = elem[l:]
 						} else {
@@ -3488,10 +4446,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						}
 
 						if len(elem) == 0 {
+							// Leaf node.
 							switch method {
 							case "POST":
-								// Leaf: EditGeneralForumTopic
 								r.name = "EditGeneralForumTopic"
+								r.summary = ""
 								r.operationID = "editGeneralForumTopic"
 								r.pathPattern = "/editGeneralForumTopic"
 								r.args = args
@@ -3501,7 +4460,10 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								return
 							}
 						}
+
+						elem = origElem
 					case 'M': // Prefix: "Message"
+						origElem := elem
 						if l := len("Message"); len(elem) >= l && elem[0:l] == "Message" {
 							elem = elem[l:]
 						} else {
@@ -3513,6 +4475,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						}
 						switch elem[0] {
 						case 'C': // Prefix: "Caption"
+							origElem := elem
 							if l := len("Caption"); len(elem) >= l && elem[0:l] == "Caption" {
 								elem = elem[l:]
 							} else {
@@ -3520,10 +4483,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							}
 
 							if len(elem) == 0 {
+								// Leaf node.
 								switch method {
 								case "POST":
-									// Leaf: EditMessageCaption
 									r.name = "EditMessageCaption"
+									r.summary = ""
 									r.operationID = "editMessageCaption"
 									r.pathPattern = "/editMessageCaption"
 									r.args = args
@@ -3533,7 +4497,10 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									return
 								}
 							}
+
+							elem = origElem
 						case 'L': // Prefix: "LiveLocation"
+							origElem := elem
 							if l := len("LiveLocation"); len(elem) >= l && elem[0:l] == "LiveLocation" {
 								elem = elem[l:]
 							} else {
@@ -3541,10 +4508,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							}
 
 							if len(elem) == 0 {
+								// Leaf node.
 								switch method {
 								case "POST":
-									// Leaf: EditMessageLiveLocation
 									r.name = "EditMessageLiveLocation"
+									r.summary = ""
 									r.operationID = "editMessageLiveLocation"
 									r.pathPattern = "/editMessageLiveLocation"
 									r.args = args
@@ -3554,7 +4522,10 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									return
 								}
 							}
+
+							elem = origElem
 						case 'M': // Prefix: "Media"
+							origElem := elem
 							if l := len("Media"); len(elem) >= l && elem[0:l] == "Media" {
 								elem = elem[l:]
 							} else {
@@ -3562,10 +4533,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							}
 
 							if len(elem) == 0 {
+								// Leaf node.
 								switch method {
 								case "POST":
-									// Leaf: EditMessageMedia
 									r.name = "EditMessageMedia"
+									r.summary = ""
 									r.operationID = "editMessageMedia"
 									r.pathPattern = "/editMessageMedia"
 									r.args = args
@@ -3575,7 +4547,10 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									return
 								}
 							}
+
+							elem = origElem
 						case 'R': // Prefix: "ReplyMarkup"
+							origElem := elem
 							if l := len("ReplyMarkup"); len(elem) >= l && elem[0:l] == "ReplyMarkup" {
 								elem = elem[l:]
 							} else {
@@ -3583,10 +4558,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							}
 
 							if len(elem) == 0 {
+								// Leaf node.
 								switch method {
 								case "POST":
-									// Leaf: EditMessageReplyMarkup
 									r.name = "EditMessageReplyMarkup"
+									r.summary = ""
 									r.operationID = "editMessageReplyMarkup"
 									r.pathPattern = "/editMessageReplyMarkup"
 									r.args = args
@@ -3596,7 +4572,10 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									return
 								}
 							}
+
+							elem = origElem
 						case 'T': // Prefix: "Text"
+							origElem := elem
 							if l := len("Text"); len(elem) >= l && elem[0:l] == "Text" {
 								elem = elem[l:]
 							} else {
@@ -3604,10 +4583,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							}
 
 							if len(elem) == 0 {
+								// Leaf node.
 								switch method {
 								case "POST":
-									// Leaf: EditMessageText
 									r.name = "EditMessageText"
+									r.summary = ""
 									r.operationID = "editMessageText"
 									r.pathPattern = "/editMessageText"
 									r.args = args
@@ -3617,9 +4597,16 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									return
 								}
 							}
+
+							elem = origElem
 						}
+
+						elem = origElem
 					}
+
+					elem = origElem
 				case 'x': // Prefix: "xportChatInviteLink"
+					origElem := elem
 					if l := len("xportChatInviteLink"); len(elem) >= l && elem[0:l] == "xportChatInviteLink" {
 						elem = elem[l:]
 					} else {
@@ -3627,10 +4614,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 					}
 
 					if len(elem) == 0 {
+						// Leaf node.
 						switch method {
 						case "POST":
-							// Leaf: ExportChatInviteLink
 							r.name = "ExportChatInviteLink"
+							r.summary = ""
 							r.operationID = "exportChatInviteLink"
 							r.pathPattern = "/exportChatInviteLink"
 							r.args = args
@@ -3640,8 +4628,13 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							return
 						}
 					}
+
+					elem = origElem
 				}
+
+				elem = origElem
 			case 'f': // Prefix: "forwardMessage"
+				origElem := elem
 				if l := len("forwardMessage"); len(elem) >= l && elem[0:l] == "forwardMessage" {
 					elem = elem[l:]
 				} else {
@@ -3651,8 +4644,8 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 				if len(elem) == 0 {
 					switch method {
 					case "POST":
-						// Leaf: ForwardMessage
 						r.name = "ForwardMessage"
+						r.summary = ""
 						r.operationID = "forwardMessage"
 						r.pathPattern = "/forwardMessage"
 						r.args = args
@@ -3662,7 +4655,37 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						return
 					}
 				}
+				switch elem[0] {
+				case 's': // Prefix: "s"
+					origElem := elem
+					if l := len("s"); len(elem) >= l && elem[0:l] == "s" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					if len(elem) == 0 {
+						// Leaf node.
+						switch method {
+						case "POST":
+							r.name = "ForwardMessages"
+							r.summary = ""
+							r.operationID = "forwardMessages"
+							r.pathPattern = "/forwardMessages"
+							r.args = args
+							r.count = 0
+							return r, true
+						default:
+							return
+						}
+					}
+
+					elem = origElem
+				}
+
+				elem = origElem
 			case 'g': // Prefix: "get"
+				origElem := elem
 				if l := len("get"); len(elem) >= l && elem[0:l] == "get" {
 					elem = elem[l:]
 				} else {
@@ -3673,7 +4696,33 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 					break
 				}
 				switch elem[0] {
+				case 'B': // Prefix: "BusinessConnection"
+					origElem := elem
+					if l := len("BusinessConnection"); len(elem) >= l && elem[0:l] == "BusinessConnection" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					if len(elem) == 0 {
+						// Leaf node.
+						switch method {
+						case "POST":
+							r.name = "GetBusinessConnection"
+							r.summary = ""
+							r.operationID = "getBusinessConnection"
+							r.pathPattern = "/getBusinessConnection"
+							r.args = args
+							r.count = 0
+							return r, true
+						default:
+							return
+						}
+					}
+
+					elem = origElem
 				case 'C': // Prefix: "C"
+					origElem := elem
 					if l := len("C"); len(elem) >= l && elem[0:l] == "C" {
 						elem = elem[l:]
 					} else {
@@ -3685,6 +4734,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 					}
 					switch elem[0] {
 					case 'h': // Prefix: "hat"
+						origElem := elem
 						if l := len("hat"); len(elem) >= l && elem[0:l] == "hat" {
 							elem = elem[l:]
 						} else {
@@ -3695,6 +4745,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							switch method {
 							case "POST":
 								r.name = "GetChat"
+								r.summary = ""
 								r.operationID = "getChat"
 								r.pathPattern = "/getChat"
 								r.args = args
@@ -3706,6 +4757,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						}
 						switch elem[0] {
 						case 'A': // Prefix: "Administrators"
+							origElem := elem
 							if l := len("Administrators"); len(elem) >= l && elem[0:l] == "Administrators" {
 								elem = elem[l:]
 							} else {
@@ -3713,10 +4765,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							}
 
 							if len(elem) == 0 {
+								// Leaf node.
 								switch method {
 								case "POST":
-									// Leaf: GetChatAdministrators
 									r.name = "GetChatAdministrators"
+									r.summary = ""
 									r.operationID = "getChatAdministrators"
 									r.pathPattern = "/getChatAdministrators"
 									r.args = args
@@ -3726,7 +4779,10 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									return
 								}
 							}
+
+							elem = origElem
 						case 'M': // Prefix: "Me"
+							origElem := elem
 							if l := len("Me"); len(elem) >= l && elem[0:l] == "Me" {
 								elem = elem[l:]
 							} else {
@@ -3738,6 +4794,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							}
 							switch elem[0] {
 							case 'm': // Prefix: "mber"
+								origElem := elem
 								if l := len("mber"); len(elem) >= l && elem[0:l] == "mber" {
 									elem = elem[l:]
 								} else {
@@ -3748,6 +4805,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									switch method {
 									case "POST":
 										r.name = "GetChatMember"
+										r.summary = ""
 										r.operationID = "getChatMember"
 										r.pathPattern = "/getChatMember"
 										r.args = args
@@ -3759,6 +4817,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								}
 								switch elem[0] {
 								case 'C': // Prefix: "Count"
+									origElem := elem
 									if l := len("Count"); len(elem) >= l && elem[0:l] == "Count" {
 										elem = elem[l:]
 									} else {
@@ -3766,10 +4825,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									}
 
 									if len(elem) == 0 {
+										// Leaf node.
 										switch method {
 										case "POST":
-											// Leaf: GetChatMemberCount
 											r.name = "GetChatMemberCount"
+											r.summary = ""
 											r.operationID = "getChatMemberCount"
 											r.pathPattern = "/getChatMemberCount"
 											r.args = args
@@ -3779,8 +4839,13 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 											return
 										}
 									}
+
+									elem = origElem
 								}
+
+								elem = origElem
 							case 'n': // Prefix: "nuButton"
+								origElem := elem
 								if l := len("nuButton"); len(elem) >= l && elem[0:l] == "nuButton" {
 									elem = elem[l:]
 								} else {
@@ -3788,10 +4853,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								}
 
 								if len(elem) == 0 {
+									// Leaf node.
 									switch method {
 									case "POST":
-										// Leaf: GetChatMenuButton
 										r.name = "GetChatMenuButton"
+										r.summary = ""
 										r.operationID = "getChatMenuButton"
 										r.pathPattern = "/getChatMenuButton"
 										r.args = args
@@ -3801,9 +4867,16 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 										return
 									}
 								}
+
+								elem = origElem
 							}
+
+							elem = origElem
 						}
+
+						elem = origElem
 					case 'u': // Prefix: "ustomEmojiStickers"
+						origElem := elem
 						if l := len("ustomEmojiStickers"); len(elem) >= l && elem[0:l] == "ustomEmojiStickers" {
 							elem = elem[l:]
 						} else {
@@ -3811,10 +4884,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						}
 
 						if len(elem) == 0 {
+							// Leaf node.
 							switch method {
 							case "POST":
-								// Leaf: GetCustomEmojiStickers
 								r.name = "GetCustomEmojiStickers"
+								r.summary = ""
 								r.operationID = "getCustomEmojiStickers"
 								r.pathPattern = "/getCustomEmojiStickers"
 								r.args = args
@@ -3824,8 +4898,13 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								return
 							}
 						}
+
+						elem = origElem
 					}
+
+					elem = origElem
 				case 'F': // Prefix: "F"
+					origElem := elem
 					if l := len("F"); len(elem) >= l && elem[0:l] == "F" {
 						elem = elem[l:]
 					} else {
@@ -3837,6 +4916,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 					}
 					switch elem[0] {
 					case 'i': // Prefix: "ile"
+						origElem := elem
 						if l := len("ile"); len(elem) >= l && elem[0:l] == "ile" {
 							elem = elem[l:]
 						} else {
@@ -3844,10 +4924,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						}
 
 						if len(elem) == 0 {
+							// Leaf node.
 							switch method {
 							case "POST":
-								// Leaf: GetFile
 								r.name = "GetFile"
+								r.summary = ""
 								r.operationID = "getFile"
 								r.pathPattern = "/getFile"
 								r.args = args
@@ -3857,7 +4938,10 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								return
 							}
 						}
+
+						elem = origElem
 					case 'o': // Prefix: "orumTopicIconStickers"
+						origElem := elem
 						if l := len("orumTopicIconStickers"); len(elem) >= l && elem[0:l] == "orumTopicIconStickers" {
 							elem = elem[l:]
 						} else {
@@ -3865,10 +4949,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						}
 
 						if len(elem) == 0 {
+							// Leaf node.
 							switch method {
 							case "POST":
-								// Leaf: GetForumTopicIconStickers
 								r.name = "GetForumTopicIconStickers"
+								r.summary = ""
 								r.operationID = "getForumTopicIconStickers"
 								r.pathPattern = "/getForumTopicIconStickers"
 								r.args = args
@@ -3878,8 +4963,13 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								return
 							}
 						}
+
+						elem = origElem
 					}
+
+					elem = origElem
 				case 'G': // Prefix: "GameHighScores"
+					origElem := elem
 					if l := len("GameHighScores"); len(elem) >= l && elem[0:l] == "GameHighScores" {
 						elem = elem[l:]
 					} else {
@@ -3887,10 +4977,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 					}
 
 					if len(elem) == 0 {
+						// Leaf node.
 						switch method {
 						case "POST":
-							// Leaf: GetGameHighScores
 							r.name = "GetGameHighScores"
+							r.summary = ""
 							r.operationID = "getGameHighScores"
 							r.pathPattern = "/getGameHighScores"
 							r.args = args
@@ -3900,7 +4991,10 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							return
 						}
 					}
+
+					elem = origElem
 				case 'M': // Prefix: "M"
+					origElem := elem
 					if l := len("M"); len(elem) >= l && elem[0:l] == "M" {
 						elem = elem[l:]
 					} else {
@@ -3912,6 +5006,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 					}
 					switch elem[0] {
 					case 'e': // Prefix: "e"
+						origElem := elem
 						if l := len("e"); len(elem) >= l && elem[0:l] == "e" {
 							elem = elem[l:]
 						} else {
@@ -3919,10 +5014,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						}
 
 						if len(elem) == 0 {
+							// Leaf node.
 							switch method {
 							case "POST":
-								// Leaf: GetMe
 								r.name = "GetMe"
+								r.summary = ""
 								r.operationID = "getMe"
 								r.pathPattern = "/getMe"
 								r.args = args
@@ -3932,7 +5028,10 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								return
 							}
 						}
+
+						elem = origElem
 					case 'y': // Prefix: "y"
+						origElem := elem
 						if l := len("y"); len(elem) >= l && elem[0:l] == "y" {
 							elem = elem[l:]
 						} else {
@@ -3944,6 +5043,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						}
 						switch elem[0] {
 						case 'C': // Prefix: "Commands"
+							origElem := elem
 							if l := len("Commands"); len(elem) >= l && elem[0:l] == "Commands" {
 								elem = elem[l:]
 							} else {
@@ -3951,10 +5051,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							}
 
 							if len(elem) == 0 {
+								// Leaf node.
 								switch method {
 								case "POST":
-									// Leaf: GetMyCommands
 									r.name = "GetMyCommands"
+									r.summary = ""
 									r.operationID = "getMyCommands"
 									r.pathPattern = "/getMyCommands"
 									r.args = args
@@ -3964,7 +5065,10 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									return
 								}
 							}
+
+							elem = origElem
 						case 'D': // Prefix: "De"
+							origElem := elem
 							if l := len("De"); len(elem) >= l && elem[0:l] == "De" {
 								elem = elem[l:]
 							} else {
@@ -3976,6 +5080,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							}
 							switch elem[0] {
 							case 'f': // Prefix: "faultAdministratorRights"
+								origElem := elem
 								if l := len("faultAdministratorRights"); len(elem) >= l && elem[0:l] == "faultAdministratorRights" {
 									elem = elem[l:]
 								} else {
@@ -3983,10 +5088,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								}
 
 								if len(elem) == 0 {
+									// Leaf node.
 									switch method {
 									case "POST":
-										// Leaf: GetMyDefaultAdministratorRights
 										r.name = "GetMyDefaultAdministratorRights"
+										r.summary = ""
 										r.operationID = "getMyDefaultAdministratorRights"
 										r.pathPattern = "/getMyDefaultAdministratorRights"
 										r.args = args
@@ -3996,7 +5102,10 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 										return
 									}
 								}
+
+								elem = origElem
 							case 's': // Prefix: "scription"
+								origElem := elem
 								if l := len("scription"); len(elem) >= l && elem[0:l] == "scription" {
 									elem = elem[l:]
 								} else {
@@ -4004,10 +5113,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								}
 
 								if len(elem) == 0 {
+									// Leaf node.
 									switch method {
 									case "POST":
-										// Leaf: GetMyDescription
 										r.name = "GetMyDescription"
+										r.summary = ""
 										r.operationID = "getMyDescription"
 										r.pathPattern = "/getMyDescription"
 										r.args = args
@@ -4017,8 +5127,13 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 										return
 									}
 								}
+
+								elem = origElem
 							}
+
+							elem = origElem
 						case 'N': // Prefix: "Name"
+							origElem := elem
 							if l := len("Name"); len(elem) >= l && elem[0:l] == "Name" {
 								elem = elem[l:]
 							} else {
@@ -4026,10 +5141,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							}
 
 							if len(elem) == 0 {
+								// Leaf node.
 								switch method {
 								case "POST":
-									// Leaf: GetMyName
 									r.name = "GetMyName"
+									r.summary = ""
 									r.operationID = "getMyName"
 									r.pathPattern = "/getMyName"
 									r.args = args
@@ -4039,7 +5155,10 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									return
 								}
 							}
+
+							elem = origElem
 						case 'S': // Prefix: "ShortDescription"
+							origElem := elem
 							if l := len("ShortDescription"); len(elem) >= l && elem[0:l] == "ShortDescription" {
 								elem = elem[l:]
 							} else {
@@ -4047,10 +5166,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							}
 
 							if len(elem) == 0 {
+								// Leaf node.
 								switch method {
 								case "POST":
-									// Leaf: GetMyShortDescription
 									r.name = "GetMyShortDescription"
+									r.summary = ""
 									r.operationID = "getMyShortDescription"
 									r.pathPattern = "/getMyShortDescription"
 									r.args = args
@@ -4060,30 +5180,81 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									return
 								}
 							}
+
+							elem = origElem
 						}
+
+						elem = origElem
 					}
-				case 'S': // Prefix: "StickerSet"
-					if l := len("StickerSet"); len(elem) >= l && elem[0:l] == "StickerSet" {
+
+					elem = origElem
+				case 'S': // Prefix: "St"
+					origElem := elem
+					if l := len("St"); len(elem) >= l && elem[0:l] == "St" {
 						elem = elem[l:]
 					} else {
 						break
 					}
 
 					if len(elem) == 0 {
-						switch method {
-						case "POST":
-							// Leaf: GetStickerSet
-							r.name = "GetStickerSet"
-							r.operationID = "getStickerSet"
-							r.pathPattern = "/getStickerSet"
-							r.args = args
-							r.count = 0
-							return r, true
-						default:
-							return
-						}
+						break
 					}
+					switch elem[0] {
+					case 'a': // Prefix: "arTransactions"
+						origElem := elem
+						if l := len("arTransactions"); len(elem) >= l && elem[0:l] == "arTransactions" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							// Leaf node.
+							switch method {
+							case "POST":
+								r.name = "GetStarTransactions"
+								r.summary = ""
+								r.operationID = "getStarTransactions"
+								r.pathPattern = "/getStarTransactions"
+								r.args = args
+								r.count = 0
+								return r, true
+							default:
+								return
+							}
+						}
+
+						elem = origElem
+					case 'i': // Prefix: "ickerSet"
+						origElem := elem
+						if l := len("ickerSet"); len(elem) >= l && elem[0:l] == "ickerSet" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							// Leaf node.
+							switch method {
+							case "POST":
+								r.name = "GetStickerSet"
+								r.summary = ""
+								r.operationID = "getStickerSet"
+								r.pathPattern = "/getStickerSet"
+								r.args = args
+								r.count = 0
+								return r, true
+							default:
+								return
+							}
+						}
+
+						elem = origElem
+					}
+
+					elem = origElem
 				case 'U': // Prefix: "U"
+					origElem := elem
 					if l := len("U"); len(elem) >= l && elem[0:l] == "U" {
 						elem = elem[l:]
 					} else {
@@ -4095,6 +5266,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 					}
 					switch elem[0] {
 					case 'p': // Prefix: "pdates"
+						origElem := elem
 						if l := len("pdates"); len(elem) >= l && elem[0:l] == "pdates" {
 							elem = elem[l:]
 						} else {
@@ -4102,10 +5274,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						}
 
 						if len(elem) == 0 {
+							// Leaf node.
 							switch method {
 							case "POST":
-								// Leaf: GetUpdates
 								r.name = "GetUpdates"
+								r.summary = ""
 								r.operationID = "getUpdates"
 								r.pathPattern = "/getUpdates"
 								r.args = args
@@ -4115,29 +5288,78 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								return
 							}
 						}
-					case 's': // Prefix: "serProfilePhotos"
-						if l := len("serProfilePhotos"); len(elem) >= l && elem[0:l] == "serProfilePhotos" {
+
+						elem = origElem
+					case 's': // Prefix: "ser"
+						origElem := elem
+						if l := len("ser"); len(elem) >= l && elem[0:l] == "ser" {
 							elem = elem[l:]
 						} else {
 							break
 						}
 
 						if len(elem) == 0 {
-							switch method {
-							case "POST":
-								// Leaf: GetUserProfilePhotos
-								r.name = "GetUserProfilePhotos"
-								r.operationID = "getUserProfilePhotos"
-								r.pathPattern = "/getUserProfilePhotos"
-								r.args = args
-								r.count = 0
-								return r, true
-							default:
-								return
-							}
+							break
 						}
+						switch elem[0] {
+						case 'C': // Prefix: "ChatBoosts"
+							origElem := elem
+							if l := len("ChatBoosts"); len(elem) >= l && elem[0:l] == "ChatBoosts" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							if len(elem) == 0 {
+								// Leaf node.
+								switch method {
+								case "POST":
+									r.name = "GetUserChatBoosts"
+									r.summary = ""
+									r.operationID = "getUserChatBoosts"
+									r.pathPattern = "/getUserChatBoosts"
+									r.args = args
+									r.count = 0
+									return r, true
+								default:
+									return
+								}
+							}
+
+							elem = origElem
+						case 'P': // Prefix: "ProfilePhotos"
+							origElem := elem
+							if l := len("ProfilePhotos"); len(elem) >= l && elem[0:l] == "ProfilePhotos" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							if len(elem) == 0 {
+								// Leaf node.
+								switch method {
+								case "POST":
+									r.name = "GetUserProfilePhotos"
+									r.summary = ""
+									r.operationID = "getUserProfilePhotos"
+									r.pathPattern = "/getUserProfilePhotos"
+									r.args = args
+									r.count = 0
+									return r, true
+								default:
+									return
+								}
+							}
+
+							elem = origElem
+						}
+
+						elem = origElem
 					}
+
+					elem = origElem
 				case 'W': // Prefix: "WebhookInfo"
+					origElem := elem
 					if l := len("WebhookInfo"); len(elem) >= l && elem[0:l] == "WebhookInfo" {
 						elem = elem[l:]
 					} else {
@@ -4145,10 +5367,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 					}
 
 					if len(elem) == 0 {
+						// Leaf node.
 						switch method {
 						case "POST":
-							// Leaf: GetWebhookInfo
 							r.name = "GetWebhookInfo"
+							r.summary = ""
 							r.operationID = "getWebhookInfo"
 							r.pathPattern = "/getWebhookInfo"
 							r.args = args
@@ -4158,8 +5381,13 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							return
 						}
 					}
+
+					elem = origElem
 				}
+
+				elem = origElem
 			case 'h': // Prefix: "hideGeneralForumTopic"
+				origElem := elem
 				if l := len("hideGeneralForumTopic"); len(elem) >= l && elem[0:l] == "hideGeneralForumTopic" {
 					elem = elem[l:]
 				} else {
@@ -4167,10 +5395,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 				}
 
 				if len(elem) == 0 {
+					// Leaf node.
 					switch method {
 					case "POST":
-						// Leaf: HideGeneralForumTopic
 						r.name = "HideGeneralForumTopic"
+						r.summary = ""
 						r.operationID = "hideGeneralForumTopic"
 						r.pathPattern = "/hideGeneralForumTopic"
 						r.args = args
@@ -4180,7 +5409,10 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						return
 					}
 				}
+
+				elem = origElem
 			case 'l': // Prefix: "l"
+				origElem := elem
 				if l := len("l"); len(elem) >= l && elem[0:l] == "l" {
 					elem = elem[l:]
 				} else {
@@ -4192,6 +5424,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 				}
 				switch elem[0] {
 				case 'e': // Prefix: "eaveChat"
+					origElem := elem
 					if l := len("eaveChat"); len(elem) >= l && elem[0:l] == "eaveChat" {
 						elem = elem[l:]
 					} else {
@@ -4199,10 +5432,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 					}
 
 					if len(elem) == 0 {
+						// Leaf node.
 						switch method {
 						case "POST":
-							// Leaf: LeaveChat
 							r.name = "LeaveChat"
+							r.summary = ""
 							r.operationID = "leaveChat"
 							r.pathPattern = "/leaveChat"
 							r.args = args
@@ -4212,7 +5446,10 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							return
 						}
 					}
+
+					elem = origElem
 				case 'o': // Prefix: "ogOut"
+					origElem := elem
 					if l := len("ogOut"); len(elem) >= l && elem[0:l] == "ogOut" {
 						elem = elem[l:]
 					} else {
@@ -4220,10 +5457,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 					}
 
 					if len(elem) == 0 {
+						// Leaf node.
 						switch method {
 						case "POST":
-							// Leaf: LogOut
 							r.name = "LogOut"
+							r.summary = ""
 							r.operationID = "logOut"
 							r.pathPattern = "/logOut"
 							r.args = args
@@ -4233,8 +5471,13 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							return
 						}
 					}
+
+					elem = origElem
 				}
+
+				elem = origElem
 			case 'p': // Prefix: "p"
+				origElem := elem
 				if l := len("p"); len(elem) >= l && elem[0:l] == "p" {
 					elem = elem[l:]
 				} else {
@@ -4246,6 +5489,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 				}
 				switch elem[0] {
 				case 'i': // Prefix: "inChatMessage"
+					origElem := elem
 					if l := len("inChatMessage"); len(elem) >= l && elem[0:l] == "inChatMessage" {
 						elem = elem[l:]
 					} else {
@@ -4253,10 +5497,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 					}
 
 					if len(elem) == 0 {
+						// Leaf node.
 						switch method {
 						case "POST":
-							// Leaf: PinChatMessage
 							r.name = "PinChatMessage"
+							r.summary = ""
 							r.operationID = "pinChatMessage"
 							r.pathPattern = "/pinChatMessage"
 							r.args = args
@@ -4266,7 +5511,10 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							return
 						}
 					}
+
+					elem = origElem
 				case 'r': // Prefix: "romoteChatMember"
+					origElem := elem
 					if l := len("romoteChatMember"); len(elem) >= l && elem[0:l] == "romoteChatMember" {
 						elem = elem[l:]
 					} else {
@@ -4274,10 +5522,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 					}
 
 					if len(elem) == 0 {
+						// Leaf node.
 						switch method {
 						case "POST":
-							// Leaf: PromoteChatMember
 							r.name = "PromoteChatMember"
+							r.summary = ""
 							r.operationID = "promoteChatMember"
 							r.pathPattern = "/promoteChatMember"
 							r.args = args
@@ -4287,8 +5536,13 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							return
 						}
 					}
+
+					elem = origElem
 				}
+
+				elem = origElem
 			case 'r': // Prefix: "re"
+				origElem := elem
 				if l := len("re"); len(elem) >= l && elem[0:l] == "re" {
 					elem = elem[l:]
 				} else {
@@ -4299,7 +5553,33 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 					break
 				}
 				switch elem[0] {
+				case 'f': // Prefix: "fundStarPayment"
+					origElem := elem
+					if l := len("fundStarPayment"); len(elem) >= l && elem[0:l] == "fundStarPayment" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					if len(elem) == 0 {
+						// Leaf node.
+						switch method {
+						case "POST":
+							r.name = "RefundStarPayment"
+							r.summary = ""
+							r.operationID = "refundStarPayment"
+							r.pathPattern = "/refundStarPayment"
+							r.args = args
+							r.count = 0
+							return r, true
+						default:
+							return
+						}
+					}
+
+					elem = origElem
 				case 'o': // Prefix: "open"
+					origElem := elem
 					if l := len("open"); len(elem) >= l && elem[0:l] == "open" {
 						elem = elem[l:]
 					} else {
@@ -4311,6 +5591,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 					}
 					switch elem[0] {
 					case 'F': // Prefix: "ForumTopic"
+						origElem := elem
 						if l := len("ForumTopic"); len(elem) >= l && elem[0:l] == "ForumTopic" {
 							elem = elem[l:]
 						} else {
@@ -4318,10 +5599,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						}
 
 						if len(elem) == 0 {
+							// Leaf node.
 							switch method {
 							case "POST":
-								// Leaf: ReopenForumTopic
 								r.name = "ReopenForumTopic"
+								r.summary = ""
 								r.operationID = "reopenForumTopic"
 								r.pathPattern = "/reopenForumTopic"
 								r.args = args
@@ -4331,7 +5613,10 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								return
 							}
 						}
+
+						elem = origElem
 					case 'G': // Prefix: "GeneralForumTopic"
+						origElem := elem
 						if l := len("GeneralForumTopic"); len(elem) >= l && elem[0:l] == "GeneralForumTopic" {
 							elem = elem[l:]
 						} else {
@@ -4339,10 +5624,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						}
 
 						if len(elem) == 0 {
+							// Leaf node.
 							switch method {
 							case "POST":
-								// Leaf: ReopenGeneralForumTopic
 								r.name = "ReopenGeneralForumTopic"
+								r.summary = ""
 								r.operationID = "reopenGeneralForumTopic"
 								r.pathPattern = "/reopenGeneralForumTopic"
 								r.args = args
@@ -4352,8 +5638,38 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								return
 							}
 						}
+
+						elem = origElem
 					}
+
+					elem = origElem
+				case 'p': // Prefix: "placeStickerInSet"
+					origElem := elem
+					if l := len("placeStickerInSet"); len(elem) >= l && elem[0:l] == "placeStickerInSet" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					if len(elem) == 0 {
+						// Leaf node.
+						switch method {
+						case "POST":
+							r.name = "ReplaceStickerInSet"
+							r.summary = ""
+							r.operationID = "replaceStickerInSet"
+							r.pathPattern = "/replaceStickerInSet"
+							r.args = args
+							r.count = 0
+							return r, true
+						default:
+							return
+						}
+					}
+
+					elem = origElem
 				case 's': // Prefix: "strictChatMember"
+					origElem := elem
 					if l := len("strictChatMember"); len(elem) >= l && elem[0:l] == "strictChatMember" {
 						elem = elem[l:]
 					} else {
@@ -4361,10 +5677,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 					}
 
 					if len(elem) == 0 {
+						// Leaf node.
 						switch method {
 						case "POST":
-							// Leaf: RestrictChatMember
 							r.name = "RestrictChatMember"
+							r.summary = ""
 							r.operationID = "restrictChatMember"
 							r.pathPattern = "/restrictChatMember"
 							r.args = args
@@ -4374,7 +5691,10 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							return
 						}
 					}
+
+					elem = origElem
 				case 'v': // Prefix: "vokeChatInviteLink"
+					origElem := elem
 					if l := len("vokeChatInviteLink"); len(elem) >= l && elem[0:l] == "vokeChatInviteLink" {
 						elem = elem[l:]
 					} else {
@@ -4382,10 +5702,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 					}
 
 					if len(elem) == 0 {
+						// Leaf node.
 						switch method {
 						case "POST":
-							// Leaf: RevokeChatInviteLink
 							r.name = "RevokeChatInviteLink"
+							r.summary = ""
 							r.operationID = "revokeChatInviteLink"
 							r.pathPattern = "/revokeChatInviteLink"
 							r.args = args
@@ -4395,8 +5716,13 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							return
 						}
 					}
+
+					elem = origElem
 				}
+
+				elem = origElem
 			case 's': // Prefix: "s"
+				origElem := elem
 				if l := len("s"); len(elem) >= l && elem[0:l] == "s" {
 					elem = elem[l:]
 				} else {
@@ -4408,6 +5734,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 				}
 				switch elem[0] {
 				case 'e': // Prefix: "e"
+					origElem := elem
 					if l := len("e"); len(elem) >= l && elem[0:l] == "e" {
 						elem = elem[l:]
 					} else {
@@ -4419,6 +5746,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 					}
 					switch elem[0] {
 					case 'n': // Prefix: "nd"
+						origElem := elem
 						if l := len("nd"); len(elem) >= l && elem[0:l] == "nd" {
 							elem = elem[l:]
 						} else {
@@ -4430,6 +5758,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						}
 						switch elem[0] {
 						case 'A': // Prefix: "A"
+							origElem := elem
 							if l := len("A"); len(elem) >= l && elem[0:l] == "A" {
 								elem = elem[l:]
 							} else {
@@ -4441,6 +5770,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							}
 							switch elem[0] {
 							case 'n': // Prefix: "nimation"
+								origElem := elem
 								if l := len("nimation"); len(elem) >= l && elem[0:l] == "nimation" {
 									elem = elem[l:]
 								} else {
@@ -4448,10 +5778,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								}
 
 								if len(elem) == 0 {
+									// Leaf node.
 									switch method {
 									case "POST":
-										// Leaf: SendAnimation
 										r.name = "SendAnimation"
+										r.summary = ""
 										r.operationID = "sendAnimation"
 										r.pathPattern = "/sendAnimation"
 										r.args = args
@@ -4461,7 +5792,10 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 										return
 									}
 								}
+
+								elem = origElem
 							case 'u': // Prefix: "udio"
+								origElem := elem
 								if l := len("udio"); len(elem) >= l && elem[0:l] == "udio" {
 									elem = elem[l:]
 								} else {
@@ -4469,10 +5803,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								}
 
 								if len(elem) == 0 {
+									// Leaf node.
 									switch method {
 									case "POST":
-										// Leaf: SendAudio
 										r.name = "SendAudio"
+										r.summary = ""
 										r.operationID = "sendAudio"
 										r.pathPattern = "/sendAudio"
 										r.args = args
@@ -4482,8 +5817,13 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 										return
 									}
 								}
+
+								elem = origElem
 							}
+
+							elem = origElem
 						case 'C': // Prefix: "C"
+							origElem := elem
 							if l := len("C"); len(elem) >= l && elem[0:l] == "C" {
 								elem = elem[l:]
 							} else {
@@ -4495,6 +5835,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							}
 							switch elem[0] {
 							case 'h': // Prefix: "hatAction"
+								origElem := elem
 								if l := len("hatAction"); len(elem) >= l && elem[0:l] == "hatAction" {
 									elem = elem[l:]
 								} else {
@@ -4502,10 +5843,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								}
 
 								if len(elem) == 0 {
+									// Leaf node.
 									switch method {
 									case "POST":
-										// Leaf: SendChatAction
 										r.name = "SendChatAction"
+										r.summary = ""
 										r.operationID = "sendChatAction"
 										r.pathPattern = "/sendChatAction"
 										r.args = args
@@ -4515,7 +5857,10 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 										return
 									}
 								}
+
+								elem = origElem
 							case 'o': // Prefix: "ontact"
+								origElem := elem
 								if l := len("ontact"); len(elem) >= l && elem[0:l] == "ontact" {
 									elem = elem[l:]
 								} else {
@@ -4523,10 +5868,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								}
 
 								if len(elem) == 0 {
+									// Leaf node.
 									switch method {
 									case "POST":
-										// Leaf: SendContact
 										r.name = "SendContact"
+										r.summary = ""
 										r.operationID = "sendContact"
 										r.pathPattern = "/sendContact"
 										r.args = args
@@ -4536,8 +5882,13 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 										return
 									}
 								}
+
+								elem = origElem
 							}
+
+							elem = origElem
 						case 'D': // Prefix: "D"
+							origElem := elem
 							if l := len("D"); len(elem) >= l && elem[0:l] == "D" {
 								elem = elem[l:]
 							} else {
@@ -4549,6 +5900,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							}
 							switch elem[0] {
 							case 'i': // Prefix: "ice"
+								origElem := elem
 								if l := len("ice"); len(elem) >= l && elem[0:l] == "ice" {
 									elem = elem[l:]
 								} else {
@@ -4556,10 +5908,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								}
 
 								if len(elem) == 0 {
+									// Leaf node.
 									switch method {
 									case "POST":
-										// Leaf: SendDice
 										r.name = "SendDice"
+										r.summary = ""
 										r.operationID = "sendDice"
 										r.pathPattern = "/sendDice"
 										r.args = args
@@ -4569,7 +5922,10 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 										return
 									}
 								}
+
+								elem = origElem
 							case 'o': // Prefix: "ocument"
+								origElem := elem
 								if l := len("ocument"); len(elem) >= l && elem[0:l] == "ocument" {
 									elem = elem[l:]
 								} else {
@@ -4577,10 +5933,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								}
 
 								if len(elem) == 0 {
+									// Leaf node.
 									switch method {
 									case "POST":
-										// Leaf: SendDocument
 										r.name = "SendDocument"
+										r.summary = ""
 										r.operationID = "sendDocument"
 										r.pathPattern = "/sendDocument"
 										r.args = args
@@ -4590,8 +5947,13 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 										return
 									}
 								}
+
+								elem = origElem
 							}
+
+							elem = origElem
 						case 'G': // Prefix: "Game"
+							origElem := elem
 							if l := len("Game"); len(elem) >= l && elem[0:l] == "Game" {
 								elem = elem[l:]
 							} else {
@@ -4599,10 +5961,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							}
 
 							if len(elem) == 0 {
+								// Leaf node.
 								switch method {
 								case "POST":
-									// Leaf: SendGame
 									r.name = "SendGame"
+									r.summary = ""
 									r.operationID = "sendGame"
 									r.pathPattern = "/sendGame"
 									r.args = args
@@ -4612,7 +5975,10 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									return
 								}
 							}
+
+							elem = origElem
 						case 'I': // Prefix: "Invoice"
+							origElem := elem
 							if l := len("Invoice"); len(elem) >= l && elem[0:l] == "Invoice" {
 								elem = elem[l:]
 							} else {
@@ -4620,10 +5986,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							}
 
 							if len(elem) == 0 {
+								// Leaf node.
 								switch method {
 								case "POST":
-									// Leaf: SendInvoice
 									r.name = "SendInvoice"
+									r.summary = ""
 									r.operationID = "sendInvoice"
 									r.pathPattern = "/sendInvoice"
 									r.args = args
@@ -4633,7 +6000,10 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									return
 								}
 							}
+
+							elem = origElem
 						case 'L': // Prefix: "Location"
+							origElem := elem
 							if l := len("Location"); len(elem) >= l && elem[0:l] == "Location" {
 								elem = elem[l:]
 							} else {
@@ -4641,10 +6011,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							}
 
 							if len(elem) == 0 {
+								// Leaf node.
 								switch method {
 								case "POST":
-									// Leaf: SendLocation
 									r.name = "SendLocation"
+									r.summary = ""
 									r.operationID = "sendLocation"
 									r.pathPattern = "/sendLocation"
 									r.args = args
@@ -4654,7 +6025,10 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									return
 								}
 							}
+
+							elem = origElem
 						case 'M': // Prefix: "Me"
+							origElem := elem
 							if l := len("Me"); len(elem) >= l && elem[0:l] == "Me" {
 								elem = elem[l:]
 							} else {
@@ -4666,6 +6040,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							}
 							switch elem[0] {
 							case 'd': // Prefix: "diaGroup"
+								origElem := elem
 								if l := len("diaGroup"); len(elem) >= l && elem[0:l] == "diaGroup" {
 									elem = elem[l:]
 								} else {
@@ -4673,10 +6048,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								}
 
 								if len(elem) == 0 {
+									// Leaf node.
 									switch method {
 									case "POST":
-										// Leaf: SendMediaGroup
 										r.name = "SendMediaGroup"
+										r.summary = ""
 										r.operationID = "sendMediaGroup"
 										r.pathPattern = "/sendMediaGroup"
 										r.args = args
@@ -4686,7 +6062,10 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 										return
 									}
 								}
+
+								elem = origElem
 							case 's': // Prefix: "ssage"
+								origElem := elem
 								if l := len("ssage"); len(elem) >= l && elem[0:l] == "ssage" {
 									elem = elem[l:]
 								} else {
@@ -4694,10 +6073,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								}
 
 								if len(elem) == 0 {
+									// Leaf node.
 									switch method {
 									case "POST":
-										// Leaf: SendMessage
 										r.name = "SendMessage"
+										r.summary = ""
 										r.operationID = "sendMessage"
 										r.pathPattern = "/sendMessage"
 										r.args = args
@@ -4707,8 +6087,13 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 										return
 									}
 								}
+
+								elem = origElem
 							}
+
+							elem = origElem
 						case 'P': // Prefix: "P"
+							origElem := elem
 							if l := len("P"); len(elem) >= l && elem[0:l] == "P" {
 								elem = elem[l:]
 							} else {
@@ -4720,6 +6105,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							}
 							switch elem[0] {
 							case 'h': // Prefix: "hoto"
+								origElem := elem
 								if l := len("hoto"); len(elem) >= l && elem[0:l] == "hoto" {
 									elem = elem[l:]
 								} else {
@@ -4727,10 +6113,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								}
 
 								if len(elem) == 0 {
+									// Leaf node.
 									switch method {
 									case "POST":
-										// Leaf: SendPhoto
 										r.name = "SendPhoto"
+										r.summary = ""
 										r.operationID = "sendPhoto"
 										r.pathPattern = "/sendPhoto"
 										r.args = args
@@ -4740,7 +6127,10 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 										return
 									}
 								}
+
+								elem = origElem
 							case 'o': // Prefix: "oll"
+								origElem := elem
 								if l := len("oll"); len(elem) >= l && elem[0:l] == "oll" {
 									elem = elem[l:]
 								} else {
@@ -4748,10 +6138,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								}
 
 								if len(elem) == 0 {
+									// Leaf node.
 									switch method {
 									case "POST":
-										// Leaf: SendPoll
 										r.name = "SendPoll"
+										r.summary = ""
 										r.operationID = "sendPoll"
 										r.pathPattern = "/sendPoll"
 										r.args = args
@@ -4761,8 +6152,13 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 										return
 									}
 								}
+
+								elem = origElem
 							}
+
+							elem = origElem
 						case 'S': // Prefix: "Sticker"
+							origElem := elem
 							if l := len("Sticker"); len(elem) >= l && elem[0:l] == "Sticker" {
 								elem = elem[l:]
 							} else {
@@ -4770,10 +6166,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							}
 
 							if len(elem) == 0 {
+								// Leaf node.
 								switch method {
 								case "POST":
-									// Leaf: SendSticker
 									r.name = "SendSticker"
+									r.summary = ""
 									r.operationID = "sendSticker"
 									r.pathPattern = "/sendSticker"
 									r.args = args
@@ -4783,7 +6180,10 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									return
 								}
 							}
+
+							elem = origElem
 						case 'V': // Prefix: "V"
+							origElem := elem
 							if l := len("V"); len(elem) >= l && elem[0:l] == "V" {
 								elem = elem[l:]
 							} else {
@@ -4795,6 +6195,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							}
 							switch elem[0] {
 							case 'e': // Prefix: "enue"
+								origElem := elem
 								if l := len("enue"); len(elem) >= l && elem[0:l] == "enue" {
 									elem = elem[l:]
 								} else {
@@ -4802,10 +6203,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								}
 
 								if len(elem) == 0 {
+									// Leaf node.
 									switch method {
 									case "POST":
-										// Leaf: SendVenue
 										r.name = "SendVenue"
+										r.summary = ""
 										r.operationID = "sendVenue"
 										r.pathPattern = "/sendVenue"
 										r.args = args
@@ -4815,7 +6217,10 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 										return
 									}
 								}
+
+								elem = origElem
 							case 'i': // Prefix: "ideo"
+								origElem := elem
 								if l := len("ideo"); len(elem) >= l && elem[0:l] == "ideo" {
 									elem = elem[l:]
 								} else {
@@ -4826,6 +6231,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									switch method {
 									case "POST":
 										r.name = "SendVideo"
+										r.summary = ""
 										r.operationID = "sendVideo"
 										r.pathPattern = "/sendVideo"
 										r.args = args
@@ -4837,6 +6243,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								}
 								switch elem[0] {
 								case 'N': // Prefix: "Note"
+									origElem := elem
 									if l := len("Note"); len(elem) >= l && elem[0:l] == "Note" {
 										elem = elem[l:]
 									} else {
@@ -4844,10 +6251,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									}
 
 									if len(elem) == 0 {
+										// Leaf node.
 										switch method {
 										case "POST":
-											// Leaf: SendVideoNote
 											r.name = "SendVideoNote"
+											r.summary = ""
 											r.operationID = "sendVideoNote"
 											r.pathPattern = "/sendVideoNote"
 											r.args = args
@@ -4857,8 +6265,13 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 											return
 										}
 									}
+
+									elem = origElem
 								}
+
+								elem = origElem
 							case 'o': // Prefix: "oice"
+								origElem := elem
 								if l := len("oice"); len(elem) >= l && elem[0:l] == "oice" {
 									elem = elem[l:]
 								} else {
@@ -4866,10 +6279,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								}
 
 								if len(elem) == 0 {
+									// Leaf node.
 									switch method {
 									case "POST":
-										// Leaf: SendVoice
 										r.name = "SendVoice"
+										r.summary = ""
 										r.operationID = "sendVoice"
 										r.pathPattern = "/sendVoice"
 										r.args = args
@@ -4879,9 +6293,16 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 										return
 									}
 								}
+
+								elem = origElem
 							}
+
+							elem = origElem
 						}
+
+						elem = origElem
 					case 't': // Prefix: "t"
+						origElem := elem
 						if l := len("t"); len(elem) >= l && elem[0:l] == "t" {
 							elem = elem[l:]
 						} else {
@@ -4893,6 +6314,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						}
 						switch elem[0] {
 						case 'C': // Prefix: "C"
+							origElem := elem
 							if l := len("C"); len(elem) >= l && elem[0:l] == "C" {
 								elem = elem[l:]
 							} else {
@@ -4904,6 +6326,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							}
 							switch elem[0] {
 							case 'h': // Prefix: "hat"
+								origElem := elem
 								if l := len("hat"); len(elem) >= l && elem[0:l] == "hat" {
 									elem = elem[l:]
 								} else {
@@ -4915,6 +6338,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								}
 								switch elem[0] {
 								case 'A': // Prefix: "AdministratorCustomTitle"
+									origElem := elem
 									if l := len("AdministratorCustomTitle"); len(elem) >= l && elem[0:l] == "AdministratorCustomTitle" {
 										elem = elem[l:]
 									} else {
@@ -4922,10 +6346,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									}
 
 									if len(elem) == 0 {
+										// Leaf node.
 										switch method {
 										case "POST":
-											// Leaf: SetChatAdministratorCustomTitle
 											r.name = "SetChatAdministratorCustomTitle"
+											r.summary = ""
 											r.operationID = "setChatAdministratorCustomTitle"
 											r.pathPattern = "/setChatAdministratorCustomTitle"
 											r.args = args
@@ -4935,7 +6360,10 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 											return
 										}
 									}
+
+									elem = origElem
 								case 'D': // Prefix: "Description"
+									origElem := elem
 									if l := len("Description"); len(elem) >= l && elem[0:l] == "Description" {
 										elem = elem[l:]
 									} else {
@@ -4943,10 +6371,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									}
 
 									if len(elem) == 0 {
+										// Leaf node.
 										switch method {
 										case "POST":
-											// Leaf: SetChatDescription
 											r.name = "SetChatDescription"
+											r.summary = ""
 											r.operationID = "setChatDescription"
 											r.pathPattern = "/setChatDescription"
 											r.args = args
@@ -4956,7 +6385,10 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 											return
 										}
 									}
+
+									elem = origElem
 								case 'M': // Prefix: "MenuButton"
+									origElem := elem
 									if l := len("MenuButton"); len(elem) >= l && elem[0:l] == "MenuButton" {
 										elem = elem[l:]
 									} else {
@@ -4964,10 +6396,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									}
 
 									if len(elem) == 0 {
+										// Leaf node.
 										switch method {
 										case "POST":
-											// Leaf: SetChatMenuButton
 											r.name = "SetChatMenuButton"
+											r.summary = ""
 											r.operationID = "setChatMenuButton"
 											r.pathPattern = "/setChatMenuButton"
 											r.args = args
@@ -4977,7 +6410,10 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 											return
 										}
 									}
+
+									elem = origElem
 								case 'P': // Prefix: "P"
+									origElem := elem
 									if l := len("P"); len(elem) >= l && elem[0:l] == "P" {
 										elem = elem[l:]
 									} else {
@@ -4989,6 +6425,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									}
 									switch elem[0] {
 									case 'e': // Prefix: "ermissions"
+										origElem := elem
 										if l := len("ermissions"); len(elem) >= l && elem[0:l] == "ermissions" {
 											elem = elem[l:]
 										} else {
@@ -4996,10 +6433,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 										}
 
 										if len(elem) == 0 {
+											// Leaf node.
 											switch method {
 											case "POST":
-												// Leaf: SetChatPermissions
 												r.name = "SetChatPermissions"
+												r.summary = ""
 												r.operationID = "setChatPermissions"
 												r.pathPattern = "/setChatPermissions"
 												r.args = args
@@ -5009,7 +6447,10 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 												return
 											}
 										}
+
+										elem = origElem
 									case 'h': // Prefix: "hoto"
+										origElem := elem
 										if l := len("hoto"); len(elem) >= l && elem[0:l] == "hoto" {
 											elem = elem[l:]
 										} else {
@@ -5017,10 +6458,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 										}
 
 										if len(elem) == 0 {
+											// Leaf node.
 											switch method {
 											case "POST":
-												// Leaf: SetChatPhoto
 												r.name = "SetChatPhoto"
+												r.summary = ""
 												r.operationID = "setChatPhoto"
 												r.pathPattern = "/setChatPhoto"
 												r.args = args
@@ -5030,8 +6472,13 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 												return
 											}
 										}
+
+										elem = origElem
 									}
+
+									elem = origElem
 								case 'S': // Prefix: "StickerSet"
+									origElem := elem
 									if l := len("StickerSet"); len(elem) >= l && elem[0:l] == "StickerSet" {
 										elem = elem[l:]
 									} else {
@@ -5039,10 +6486,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									}
 
 									if len(elem) == 0 {
+										// Leaf node.
 										switch method {
 										case "POST":
-											// Leaf: SetChatStickerSet
 											r.name = "SetChatStickerSet"
+											r.summary = ""
 											r.operationID = "setChatStickerSet"
 											r.pathPattern = "/setChatStickerSet"
 											r.args = args
@@ -5052,7 +6500,10 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 											return
 										}
 									}
+
+									elem = origElem
 								case 'T': // Prefix: "Title"
+									origElem := elem
 									if l := len("Title"); len(elem) >= l && elem[0:l] == "Title" {
 										elem = elem[l:]
 									} else {
@@ -5060,10 +6511,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									}
 
 									if len(elem) == 0 {
+										// Leaf node.
 										switch method {
 										case "POST":
-											// Leaf: SetChatTitle
 											r.name = "SetChatTitle"
+											r.summary = ""
 											r.operationID = "setChatTitle"
 											r.pathPattern = "/setChatTitle"
 											r.args = args
@@ -5073,8 +6525,13 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 											return
 										}
 									}
+
+									elem = origElem
 								}
+
+								elem = origElem
 							case 'u': // Prefix: "ustomEmojiStickerSetThumbnail"
+								origElem := elem
 								if l := len("ustomEmojiStickerSetThumbnail"); len(elem) >= l && elem[0:l] == "ustomEmojiStickerSetThumbnail" {
 									elem = elem[l:]
 								} else {
@@ -5082,10 +6539,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								}
 
 								if len(elem) == 0 {
+									// Leaf node.
 									switch method {
 									case "POST":
-										// Leaf: SetCustomEmojiStickerSetThumbnail
 										r.name = "SetCustomEmojiStickerSetThumbnail"
+										r.summary = ""
 										r.operationID = "setCustomEmojiStickerSetThumbnail"
 										r.pathPattern = "/setCustomEmojiStickerSetThumbnail"
 										r.args = args
@@ -5095,8 +6553,13 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 										return
 									}
 								}
+
+								elem = origElem
 							}
+
+							elem = origElem
 						case 'G': // Prefix: "GameScore"
+							origElem := elem
 							if l := len("GameScore"); len(elem) >= l && elem[0:l] == "GameScore" {
 								elem = elem[l:]
 							} else {
@@ -5104,10 +6567,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							}
 
 							if len(elem) == 0 {
+								// Leaf node.
 								switch method {
 								case "POST":
-									// Leaf: SetGameScore
 									r.name = "SetGameScore"
+									r.summary = ""
 									r.operationID = "setGameScore"
 									r.pathPattern = "/setGameScore"
 									r.args = args
@@ -5117,8 +6581,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									return
 								}
 							}
-						case 'M': // Prefix: "My"
-							if l := len("My"); len(elem) >= l && elem[0:l] == "My" {
+
+							elem = origElem
+						case 'M': // Prefix: "M"
+							origElem := elem
+							if l := len("M"); len(elem) >= l && elem[0:l] == "M" {
 								elem = elem[l:]
 							} else {
 								break
@@ -5128,20 +6595,22 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								break
 							}
 							switch elem[0] {
-							case 'C': // Prefix: "Commands"
-								if l := len("Commands"); len(elem) >= l && elem[0:l] == "Commands" {
+							case 'e': // Prefix: "essageReaction"
+								origElem := elem
+								if l := len("essageReaction"); len(elem) >= l && elem[0:l] == "essageReaction" {
 									elem = elem[l:]
 								} else {
 									break
 								}
 
 								if len(elem) == 0 {
+									// Leaf node.
 									switch method {
 									case "POST":
-										// Leaf: SetMyCommands
-										r.name = "SetMyCommands"
-										r.operationID = "setMyCommands"
-										r.pathPattern = "/setMyCommands"
+										r.name = "SetMessageReaction"
+										r.summary = ""
+										r.operationID = "setMessageReaction"
+										r.pathPattern = "/setMessageReaction"
 										r.args = args
 										r.count = 0
 										return r, true
@@ -5149,8 +6618,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 										return
 									}
 								}
-							case 'D': // Prefix: "De"
-								if l := len("De"); len(elem) >= l && elem[0:l] == "De" {
+
+								elem = origElem
+							case 'y': // Prefix: "y"
+								origElem := elem
+								if l := len("y"); len(elem) >= l && elem[0:l] == "y" {
 									elem = elem[l:]
 								} else {
 									break
@@ -5160,20 +6632,22 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									break
 								}
 								switch elem[0] {
-								case 'f': // Prefix: "faultAdministratorRights"
-									if l := len("faultAdministratorRights"); len(elem) >= l && elem[0:l] == "faultAdministratorRights" {
+								case 'C': // Prefix: "Commands"
+									origElem := elem
+									if l := len("Commands"); len(elem) >= l && elem[0:l] == "Commands" {
 										elem = elem[l:]
 									} else {
 										break
 									}
 
 									if len(elem) == 0 {
+										// Leaf node.
 										switch method {
 										case "POST":
-											// Leaf: SetMyDefaultAdministratorRights
-											r.name = "SetMyDefaultAdministratorRights"
-											r.operationID = "setMyDefaultAdministratorRights"
-											r.pathPattern = "/setMyDefaultAdministratorRights"
+											r.name = "SetMyCommands"
+											r.summary = ""
+											r.operationID = "setMyCommands"
+											r.pathPattern = "/setMyCommands"
 											r.args = args
 											r.count = 0
 											return r, true
@@ -5181,20 +6655,89 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 											return
 										}
 									}
-								case 's': // Prefix: "scription"
-									if l := len("scription"); len(elem) >= l && elem[0:l] == "scription" {
+
+									elem = origElem
+								case 'D': // Prefix: "De"
+									origElem := elem
+									if l := len("De"); len(elem) >= l && elem[0:l] == "De" {
 										elem = elem[l:]
 									} else {
 										break
 									}
 
 									if len(elem) == 0 {
+										break
+									}
+									switch elem[0] {
+									case 'f': // Prefix: "faultAdministratorRights"
+										origElem := elem
+										if l := len("faultAdministratorRights"); len(elem) >= l && elem[0:l] == "faultAdministratorRights" {
+											elem = elem[l:]
+										} else {
+											break
+										}
+
+										if len(elem) == 0 {
+											// Leaf node.
+											switch method {
+											case "POST":
+												r.name = "SetMyDefaultAdministratorRights"
+												r.summary = ""
+												r.operationID = "setMyDefaultAdministratorRights"
+												r.pathPattern = "/setMyDefaultAdministratorRights"
+												r.args = args
+												r.count = 0
+												return r, true
+											default:
+												return
+											}
+										}
+
+										elem = origElem
+									case 's': // Prefix: "scription"
+										origElem := elem
+										if l := len("scription"); len(elem) >= l && elem[0:l] == "scription" {
+											elem = elem[l:]
+										} else {
+											break
+										}
+
+										if len(elem) == 0 {
+											// Leaf node.
+											switch method {
+											case "POST":
+												r.name = "SetMyDescription"
+												r.summary = ""
+												r.operationID = "setMyDescription"
+												r.pathPattern = "/setMyDescription"
+												r.args = args
+												r.count = 0
+												return r, true
+											default:
+												return
+											}
+										}
+
+										elem = origElem
+									}
+
+									elem = origElem
+								case 'N': // Prefix: "Name"
+									origElem := elem
+									if l := len("Name"); len(elem) >= l && elem[0:l] == "Name" {
+										elem = elem[l:]
+									} else {
+										break
+									}
+
+									if len(elem) == 0 {
+										// Leaf node.
 										switch method {
 										case "POST":
-											// Leaf: SetMyDescription
-											r.name = "SetMyDescription"
-											r.operationID = "setMyDescription"
-											r.pathPattern = "/setMyDescription"
+											r.name = "SetMyName"
+											r.summary = ""
+											r.operationID = "setMyName"
+											r.pathPattern = "/setMyName"
 											r.args = args
 											r.count = 0
 											return r, true
@@ -5202,51 +6745,41 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 											return
 										}
 									}
-								}
-							case 'N': // Prefix: "Name"
-								if l := len("Name"); len(elem) >= l && elem[0:l] == "Name" {
-									elem = elem[l:]
-								} else {
-									break
+
+									elem = origElem
+								case 'S': // Prefix: "ShortDescription"
+									origElem := elem
+									if l := len("ShortDescription"); len(elem) >= l && elem[0:l] == "ShortDescription" {
+										elem = elem[l:]
+									} else {
+										break
+									}
+
+									if len(elem) == 0 {
+										// Leaf node.
+										switch method {
+										case "POST":
+											r.name = "SetMyShortDescription"
+											r.summary = ""
+											r.operationID = "setMyShortDescription"
+											r.pathPattern = "/setMyShortDescription"
+											r.args = args
+											r.count = 0
+											return r, true
+										default:
+											return
+										}
+									}
+
+									elem = origElem
 								}
 
-								if len(elem) == 0 {
-									switch method {
-									case "POST":
-										// Leaf: SetMyName
-										r.name = "SetMyName"
-										r.operationID = "setMyName"
-										r.pathPattern = "/setMyName"
-										r.args = args
-										r.count = 0
-										return r, true
-									default:
-										return
-									}
-								}
-							case 'S': // Prefix: "ShortDescription"
-								if l := len("ShortDescription"); len(elem) >= l && elem[0:l] == "ShortDescription" {
-									elem = elem[l:]
-								} else {
-									break
-								}
-
-								if len(elem) == 0 {
-									switch method {
-									case "POST":
-										// Leaf: SetMyShortDescription
-										r.name = "SetMyShortDescription"
-										r.operationID = "setMyShortDescription"
-										r.pathPattern = "/setMyShortDescription"
-										r.args = args
-										r.count = 0
-										return r, true
-									default:
-										return
-									}
-								}
+								elem = origElem
 							}
+
+							elem = origElem
 						case 'P': // Prefix: "PassportDataErrors"
+							origElem := elem
 							if l := len("PassportDataErrors"); len(elem) >= l && elem[0:l] == "PassportDataErrors" {
 								elem = elem[l:]
 							} else {
@@ -5254,10 +6787,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							}
 
 							if len(elem) == 0 {
+								// Leaf node.
 								switch method {
 								case "POST":
-									// Leaf: SetPassportDataErrors
 									r.name = "SetPassportDataErrors"
+									r.summary = ""
 									r.operationID = "setPassportDataErrors"
 									r.pathPattern = "/setPassportDataErrors"
 									r.args = args
@@ -5267,7 +6801,10 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									return
 								}
 							}
+
+							elem = origElem
 						case 'S': // Prefix: "Sticker"
+							origElem := elem
 							if l := len("Sticker"); len(elem) >= l && elem[0:l] == "Sticker" {
 								elem = elem[l:]
 							} else {
@@ -5279,6 +6816,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							}
 							switch elem[0] {
 							case 'E': // Prefix: "EmojiList"
+								origElem := elem
 								if l := len("EmojiList"); len(elem) >= l && elem[0:l] == "EmojiList" {
 									elem = elem[l:]
 								} else {
@@ -5286,10 +6824,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								}
 
 								if len(elem) == 0 {
+									// Leaf node.
 									switch method {
 									case "POST":
-										// Leaf: SetStickerEmojiList
 										r.name = "SetStickerEmojiList"
+										r.summary = ""
 										r.operationID = "setStickerEmojiList"
 										r.pathPattern = "/setStickerEmojiList"
 										r.args = args
@@ -5299,7 +6838,10 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 										return
 									}
 								}
+
+								elem = origElem
 							case 'K': // Prefix: "Keywords"
+								origElem := elem
 								if l := len("Keywords"); len(elem) >= l && elem[0:l] == "Keywords" {
 									elem = elem[l:]
 								} else {
@@ -5307,10 +6849,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								}
 
 								if len(elem) == 0 {
+									// Leaf node.
 									switch method {
 									case "POST":
-										// Leaf: SetStickerKeywords
 										r.name = "SetStickerKeywords"
+										r.summary = ""
 										r.operationID = "setStickerKeywords"
 										r.pathPattern = "/setStickerKeywords"
 										r.args = args
@@ -5320,7 +6863,10 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 										return
 									}
 								}
+
+								elem = origElem
 							case 'M': // Prefix: "MaskPosition"
+								origElem := elem
 								if l := len("MaskPosition"); len(elem) >= l && elem[0:l] == "MaskPosition" {
 									elem = elem[l:]
 								} else {
@@ -5328,10 +6874,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								}
 
 								if len(elem) == 0 {
+									// Leaf node.
 									switch method {
 									case "POST":
-										// Leaf: SetStickerMaskPosition
 										r.name = "SetStickerMaskPosition"
+										r.summary = ""
 										r.operationID = "setStickerMaskPosition"
 										r.pathPattern = "/setStickerMaskPosition"
 										r.args = args
@@ -5341,7 +6888,10 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 										return
 									}
 								}
+
+								elem = origElem
 							case 'P': // Prefix: "PositionInSet"
+								origElem := elem
 								if l := len("PositionInSet"); len(elem) >= l && elem[0:l] == "PositionInSet" {
 									elem = elem[l:]
 								} else {
@@ -5349,10 +6899,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								}
 
 								if len(elem) == 0 {
+									// Leaf node.
 									switch method {
 									case "POST":
-										// Leaf: SetStickerPositionInSet
 										r.name = "SetStickerPositionInSet"
+										r.summary = ""
 										r.operationID = "setStickerPositionInSet"
 										r.pathPattern = "/setStickerPositionInSet"
 										r.args = args
@@ -5362,7 +6913,10 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 										return
 									}
 								}
+
+								elem = origElem
 							case 'S': // Prefix: "SetT"
+								origElem := elem
 								if l := len("SetT"); len(elem) >= l && elem[0:l] == "SetT" {
 									elem = elem[l:]
 								} else {
@@ -5374,6 +6928,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								}
 								switch elem[0] {
 								case 'h': // Prefix: "humbnail"
+									origElem := elem
 									if l := len("humbnail"); len(elem) >= l && elem[0:l] == "humbnail" {
 										elem = elem[l:]
 									} else {
@@ -5381,10 +6936,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									}
 
 									if len(elem) == 0 {
+										// Leaf node.
 										switch method {
 										case "POST":
-											// Leaf: SetStickerSetThumbnail
 											r.name = "SetStickerSetThumbnail"
+											r.summary = ""
 											r.operationID = "setStickerSetThumbnail"
 											r.pathPattern = "/setStickerSetThumbnail"
 											r.args = args
@@ -5394,7 +6950,10 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 											return
 										}
 									}
+
+									elem = origElem
 								case 'i': // Prefix: "itle"
+									origElem := elem
 									if l := len("itle"); len(elem) >= l && elem[0:l] == "itle" {
 										elem = elem[l:]
 									} else {
@@ -5402,10 +6961,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									}
 
 									if len(elem) == 0 {
+										// Leaf node.
 										switch method {
 										case "POST":
-											// Leaf: SetStickerSetTitle
 											r.name = "SetStickerSetTitle"
+											r.summary = ""
 											r.operationID = "setStickerSetTitle"
 											r.pathPattern = "/setStickerSetTitle"
 											r.args = args
@@ -5415,9 +6975,16 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 											return
 										}
 									}
+
+									elem = origElem
 								}
+
+								elem = origElem
 							}
+
+							elem = origElem
 						case 'W': // Prefix: "Webhook"
+							origElem := elem
 							if l := len("Webhook"); len(elem) >= l && elem[0:l] == "Webhook" {
 								elem = elem[l:]
 							} else {
@@ -5425,10 +6992,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							}
 
 							if len(elem) == 0 {
+								// Leaf node.
 								switch method {
 								case "POST":
-									// Leaf: SetWebhook
 									r.name = "SetWebhook"
+									r.summary = ""
 									r.operationID = "setWebhook"
 									r.pathPattern = "/setWebhook"
 									r.args = args
@@ -5438,9 +7006,16 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									return
 								}
 							}
+
+							elem = origElem
 						}
+
+						elem = origElem
 					}
+
+					elem = origElem
 				case 't': // Prefix: "top"
+					origElem := elem
 					if l := len("top"); len(elem) >= l && elem[0:l] == "top" {
 						elem = elem[l:]
 					} else {
@@ -5452,6 +7027,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 					}
 					switch elem[0] {
 					case 'M': // Prefix: "MessageLiveLocation"
+						origElem := elem
 						if l := len("MessageLiveLocation"); len(elem) >= l && elem[0:l] == "MessageLiveLocation" {
 							elem = elem[l:]
 						} else {
@@ -5459,10 +7035,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						}
 
 						if len(elem) == 0 {
+							// Leaf node.
 							switch method {
 							case "POST":
-								// Leaf: StopMessageLiveLocation
 								r.name = "StopMessageLiveLocation"
+								r.summary = ""
 								r.operationID = "stopMessageLiveLocation"
 								r.pathPattern = "/stopMessageLiveLocation"
 								r.args = args
@@ -5472,7 +7049,10 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								return
 							}
 						}
+
+						elem = origElem
 					case 'P': // Prefix: "Poll"
+						origElem := elem
 						if l := len("Poll"); len(elem) >= l && elem[0:l] == "Poll" {
 							elem = elem[l:]
 						} else {
@@ -5480,10 +7060,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						}
 
 						if len(elem) == 0 {
+							// Leaf node.
 							switch method {
 							case "POST":
-								// Leaf: StopPoll
 								r.name = "StopPoll"
+								r.summary = ""
 								r.operationID = "stopPoll"
 								r.pathPattern = "/stopPoll"
 								r.args = args
@@ -5493,9 +7074,16 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								return
 							}
 						}
+
+						elem = origElem
 					}
+
+					elem = origElem
 				}
+
+				elem = origElem
 			case 'u': // Prefix: "u"
+				origElem := elem
 				if l := len("u"); len(elem) >= l && elem[0:l] == "u" {
 					elem = elem[l:]
 				} else {
@@ -5507,6 +7095,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 				}
 				switch elem[0] {
 				case 'n': // Prefix: "n"
+					origElem := elem
 					if l := len("n"); len(elem) >= l && elem[0:l] == "n" {
 						elem = elem[l:]
 					} else {
@@ -5518,6 +7107,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 					}
 					switch elem[0] {
 					case 'b': // Prefix: "banChat"
+						origElem := elem
 						if l := len("banChat"); len(elem) >= l && elem[0:l] == "banChat" {
 							elem = elem[l:]
 						} else {
@@ -5529,6 +7119,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						}
 						switch elem[0] {
 						case 'M': // Prefix: "Member"
+							origElem := elem
 							if l := len("Member"); len(elem) >= l && elem[0:l] == "Member" {
 								elem = elem[l:]
 							} else {
@@ -5536,10 +7127,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							}
 
 							if len(elem) == 0 {
+								// Leaf node.
 								switch method {
 								case "POST":
-									// Leaf: UnbanChatMember
 									r.name = "UnbanChatMember"
+									r.summary = ""
 									r.operationID = "unbanChatMember"
 									r.pathPattern = "/unbanChatMember"
 									r.args = args
@@ -5549,7 +7141,10 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									return
 								}
 							}
+
+							elem = origElem
 						case 'S': // Prefix: "SenderChat"
+							origElem := elem
 							if l := len("SenderChat"); len(elem) >= l && elem[0:l] == "SenderChat" {
 								elem = elem[l:]
 							} else {
@@ -5557,10 +7152,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							}
 
 							if len(elem) == 0 {
+								// Leaf node.
 								switch method {
 								case "POST":
-									// Leaf: UnbanChatSenderChat
 									r.name = "UnbanChatSenderChat"
+									r.summary = ""
 									r.operationID = "unbanChatSenderChat"
 									r.pathPattern = "/unbanChatSenderChat"
 									r.args = args
@@ -5570,8 +7166,13 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									return
 								}
 							}
+
+							elem = origElem
 						}
+
+						elem = origElem
 					case 'h': // Prefix: "hideGeneralForumTopic"
+						origElem := elem
 						if l := len("hideGeneralForumTopic"); len(elem) >= l && elem[0:l] == "hideGeneralForumTopic" {
 							elem = elem[l:]
 						} else {
@@ -5579,10 +7180,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						}
 
 						if len(elem) == 0 {
+							// Leaf node.
 							switch method {
 							case "POST":
-								// Leaf: UnhideGeneralForumTopic
 								r.name = "UnhideGeneralForumTopic"
+								r.summary = ""
 								r.operationID = "unhideGeneralForumTopic"
 								r.pathPattern = "/unhideGeneralForumTopic"
 								r.args = args
@@ -5592,7 +7194,10 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								return
 							}
 						}
+
+						elem = origElem
 					case 'p': // Prefix: "pin"
+						origElem := elem
 						if l := len("pin"); len(elem) >= l && elem[0:l] == "pin" {
 							elem = elem[l:]
 						} else {
@@ -5604,6 +7209,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						}
 						switch elem[0] {
 						case 'A': // Prefix: "All"
+							origElem := elem
 							if l := len("All"); len(elem) >= l && elem[0:l] == "All" {
 								elem = elem[l:]
 							} else {
@@ -5615,6 +7221,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							}
 							switch elem[0] {
 							case 'C': // Prefix: "ChatMessages"
+								origElem := elem
 								if l := len("ChatMessages"); len(elem) >= l && elem[0:l] == "ChatMessages" {
 									elem = elem[l:]
 								} else {
@@ -5622,10 +7229,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								}
 
 								if len(elem) == 0 {
+									// Leaf node.
 									switch method {
 									case "POST":
-										// Leaf: UnpinAllChatMessages
 										r.name = "UnpinAllChatMessages"
+										r.summary = ""
 										r.operationID = "unpinAllChatMessages"
 										r.pathPattern = "/unpinAllChatMessages"
 										r.args = args
@@ -5635,7 +7243,10 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 										return
 									}
 								}
+
+								elem = origElem
 							case 'F': // Prefix: "ForumTopicMessages"
+								origElem := elem
 								if l := len("ForumTopicMessages"); len(elem) >= l && elem[0:l] == "ForumTopicMessages" {
 									elem = elem[l:]
 								} else {
@@ -5643,10 +7254,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								}
 
 								if len(elem) == 0 {
+									// Leaf node.
 									switch method {
 									case "POST":
-										// Leaf: UnpinAllForumTopicMessages
 										r.name = "UnpinAllForumTopicMessages"
+										r.summary = ""
 										r.operationID = "unpinAllForumTopicMessages"
 										r.pathPattern = "/unpinAllForumTopicMessages"
 										r.args = args
@@ -5656,8 +7268,38 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 										return
 									}
 								}
+
+								elem = origElem
+							case 'G': // Prefix: "GeneralForumTopicMessages"
+								origElem := elem
+								if l := len("GeneralForumTopicMessages"); len(elem) >= l && elem[0:l] == "GeneralForumTopicMessages" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									// Leaf node.
+									switch method {
+									case "POST":
+										r.name = "UnpinAllGeneralForumTopicMessages"
+										r.summary = ""
+										r.operationID = "unpinAllGeneralForumTopicMessages"
+										r.pathPattern = "/unpinAllGeneralForumTopicMessages"
+										r.args = args
+										r.count = 0
+										return r, true
+									default:
+										return
+									}
+								}
+
+								elem = origElem
 							}
+
+							elem = origElem
 						case 'C': // Prefix: "ChatMessage"
+							origElem := elem
 							if l := len("ChatMessage"); len(elem) >= l && elem[0:l] == "ChatMessage" {
 								elem = elem[l:]
 							} else {
@@ -5665,10 +7307,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							}
 
 							if len(elem) == 0 {
+								// Leaf node.
 								switch method {
 								case "POST":
-									// Leaf: UnpinChatMessage
 									r.name = "UnpinChatMessage"
+									r.summary = ""
 									r.operationID = "unpinChatMessage"
 									r.pathPattern = "/unpinChatMessage"
 									r.args = args
@@ -5678,9 +7321,16 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									return
 								}
 							}
+
+							elem = origElem
 						}
+
+						elem = origElem
 					}
+
+					elem = origElem
 				case 'p': // Prefix: "ploadStickerFile"
+					origElem := elem
 					if l := len("ploadStickerFile"); len(elem) >= l && elem[0:l] == "ploadStickerFile" {
 						elem = elem[l:]
 					} else {
@@ -5688,10 +7338,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 					}
 
 					if len(elem) == 0 {
+						// Leaf node.
 						switch method {
 						case "POST":
-							// Leaf: UploadStickerFile
 							r.name = "UploadStickerFile"
+							r.summary = ""
 							r.operationID = "uploadStickerFile"
 							r.pathPattern = "/uploadStickerFile"
 							r.args = args
@@ -5701,8 +7352,14 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							return
 						}
 					}
+
+					elem = origElem
 				}
+
+				elem = origElem
 			}
+
+			elem = origElem
 		}
 	}
 	return r, false

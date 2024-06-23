@@ -16,7 +16,7 @@ func encodeAddStickerToSetRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -30,7 +30,7 @@ func encodeAnswerCallbackQueryRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -44,7 +44,7 @@ func encodeAnswerInlineQueryRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -58,7 +58,7 @@ func encodeAnswerPreCheckoutQueryRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -72,7 +72,7 @@ func encodeAnswerShippingQueryRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -86,7 +86,7 @@ func encodeAnswerWebAppQueryRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -100,7 +100,7 @@ func encodeApproveChatJoinRequestRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -114,7 +114,7 @@ func encodeBanChatMemberRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -128,7 +128,7 @@ func encodeBanChatSenderChatRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -142,7 +142,7 @@ func encodeCloseForumTopicRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -156,7 +156,7 @@ func encodeCloseGeneralForumTopicRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -170,7 +170,21 @@ func encodeCopyMessageRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
+	{
+		req.Encode(e)
+	}
+	encoded := e.Bytes()
+	ht.SetBody(r, bytes.NewReader(encoded), contentType)
+	return nil
+}
+
+func encodeCopyMessagesRequest(
+	req *CopyMessages,
+	r *http.Request,
+) error {
+	const contentType = "application/json"
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -184,7 +198,7 @@ func encodeCreateChatInviteLinkRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -198,7 +212,7 @@ func encodeCreateForumTopicRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -212,7 +226,7 @@ func encodeCreateInvoiceLinkRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -226,7 +240,7 @@ func encodeCreateNewStickerSetRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -240,7 +254,7 @@ func encodeDeclineChatJoinRequestRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -254,7 +268,7 @@ func encodeDeleteChatPhotoRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -268,7 +282,7 @@ func encodeDeleteChatStickerSetRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -282,7 +296,7 @@ func encodeDeleteForumTopicRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -296,7 +310,21 @@ func encodeDeleteMessageRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
+	{
+		req.Encode(e)
+	}
+	encoded := e.Bytes()
+	ht.SetBody(r, bytes.NewReader(encoded), contentType)
+	return nil
+}
+
+func encodeDeleteMessagesRequest(
+	req *DeleteMessages,
+	r *http.Request,
+) error {
+	const contentType = "application/json"
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -314,7 +342,7 @@ func encodeDeleteMyCommandsRequest(
 		// Keep request with empty body if value is not set.
 		return nil
 	}
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		if req.Set {
 			req.Encode(e)
@@ -330,7 +358,7 @@ func encodeDeleteStickerFromSetRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -344,7 +372,7 @@ func encodeDeleteStickerSetRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -362,7 +390,7 @@ func encodeDeleteWebhookRequest(
 		// Keep request with empty body if value is not set.
 		return nil
 	}
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		if req.Set {
 			req.Encode(e)
@@ -378,7 +406,7 @@ func encodeEditChatInviteLinkRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -392,7 +420,7 @@ func encodeEditForumTopicRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -406,7 +434,7 @@ func encodeEditGeneralForumTopicRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -420,7 +448,7 @@ func encodeEditMessageCaptionRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -434,7 +462,7 @@ func encodeEditMessageLiveLocationRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -448,7 +476,7 @@ func encodeEditMessageMediaRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -462,7 +490,7 @@ func encodeEditMessageReplyMarkupRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -476,7 +504,7 @@ func encodeEditMessageTextRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -490,7 +518,7 @@ func encodeExportChatInviteLinkRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -504,7 +532,35 @@ func encodeForwardMessageRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
+	{
+		req.Encode(e)
+	}
+	encoded := e.Bytes()
+	ht.SetBody(r, bytes.NewReader(encoded), contentType)
+	return nil
+}
+
+func encodeForwardMessagesRequest(
+	req *ForwardMessages,
+	r *http.Request,
+) error {
+	const contentType = "application/json"
+	e := new(jx.Encoder)
+	{
+		req.Encode(e)
+	}
+	encoded := e.Bytes()
+	ht.SetBody(r, bytes.NewReader(encoded), contentType)
+	return nil
+}
+
+func encodeGetBusinessConnectionRequest(
+	req *GetBusinessConnection,
+	r *http.Request,
+) error {
+	const contentType = "application/json"
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -518,7 +574,7 @@ func encodeGetChatRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -532,7 +588,7 @@ func encodeGetChatAdministratorsRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -546,7 +602,7 @@ func encodeGetChatMemberRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -560,7 +616,7 @@ func encodeGetChatMemberCountRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -578,7 +634,7 @@ func encodeGetChatMenuButtonRequest(
 		// Keep request with empty body if value is not set.
 		return nil
 	}
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		if req.Set {
 			req.Encode(e)
@@ -594,7 +650,7 @@ func encodeGetCustomEmojiStickersRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -608,7 +664,7 @@ func encodeGetFileRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -622,7 +678,7 @@ func encodeGetGameHighScoresRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -640,7 +696,7 @@ func encodeGetMyCommandsRequest(
 		// Keep request with empty body if value is not set.
 		return nil
 	}
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		if req.Set {
 			req.Encode(e)
@@ -660,7 +716,7 @@ func encodeGetMyDefaultAdministratorRightsRequest(
 		// Keep request with empty body if value is not set.
 		return nil
 	}
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		if req.Set {
 			req.Encode(e)
@@ -680,7 +736,7 @@ func encodeGetMyDescriptionRequest(
 		// Keep request with empty body if value is not set.
 		return nil
 	}
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		if req.Set {
 			req.Encode(e)
@@ -700,7 +756,7 @@ func encodeGetMyNameRequest(
 		// Keep request with empty body if value is not set.
 		return nil
 	}
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		if req.Set {
 			req.Encode(e)
@@ -720,7 +776,27 @@ func encodeGetMyShortDescriptionRequest(
 		// Keep request with empty body if value is not set.
 		return nil
 	}
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
+	{
+		if req.Set {
+			req.Encode(e)
+		}
+	}
+	encoded := e.Bytes()
+	ht.SetBody(r, bytes.NewReader(encoded), contentType)
+	return nil
+}
+
+func encodeGetStarTransactionsRequest(
+	req OptGetStarTransactions,
+	r *http.Request,
+) error {
+	const contentType = "application/json"
+	if !req.Set {
+		// Keep request with empty body if value is not set.
+		return nil
+	}
+	e := new(jx.Encoder)
 	{
 		if req.Set {
 			req.Encode(e)
@@ -736,7 +812,7 @@ func encodeGetStickerSetRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -754,11 +830,25 @@ func encodeGetUpdatesRequest(
 		// Keep request with empty body if value is not set.
 		return nil
 	}
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		if req.Set {
 			req.Encode(e)
 		}
+	}
+	encoded := e.Bytes()
+	ht.SetBody(r, bytes.NewReader(encoded), contentType)
+	return nil
+}
+
+func encodeGetUserChatBoostsRequest(
+	req *GetUserChatBoosts,
+	r *http.Request,
+) error {
+	const contentType = "application/json"
+	e := new(jx.Encoder)
+	{
+		req.Encode(e)
 	}
 	encoded := e.Bytes()
 	ht.SetBody(r, bytes.NewReader(encoded), contentType)
@@ -770,7 +860,7 @@ func encodeGetUserProfilePhotosRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -784,7 +874,7 @@ func encodeHideGeneralForumTopicRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -798,7 +888,7 @@ func encodeLeaveChatRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -812,7 +902,7 @@ func encodePinChatMessageRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -826,7 +916,21 @@ func encodePromoteChatMemberRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
+	{
+		req.Encode(e)
+	}
+	encoded := e.Bytes()
+	ht.SetBody(r, bytes.NewReader(encoded), contentType)
+	return nil
+}
+
+func encodeRefundStarPaymentRequest(
+	req *RefundStarPayment,
+	r *http.Request,
+) error {
+	const contentType = "application/json"
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -840,7 +944,7 @@ func encodeReopenForumTopicRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -854,7 +958,21 @@ func encodeReopenGeneralForumTopicRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
+	{
+		req.Encode(e)
+	}
+	encoded := e.Bytes()
+	ht.SetBody(r, bytes.NewReader(encoded), contentType)
+	return nil
+}
+
+func encodeReplaceStickerInSetRequest(
+	req *ReplaceStickerInSet,
+	r *http.Request,
+) error {
+	const contentType = "application/json"
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -868,7 +986,7 @@ func encodeRestrictChatMemberRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -882,7 +1000,7 @@ func encodeRevokeChatInviteLinkRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -896,7 +1014,7 @@ func encodeSendAnimationRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -910,7 +1028,7 @@ func encodeSendAudioRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -924,7 +1042,7 @@ func encodeSendChatActionRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -938,7 +1056,7 @@ func encodeSendContactRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -952,7 +1070,7 @@ func encodeSendDiceRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -966,7 +1084,7 @@ func encodeSendDocumentRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -980,7 +1098,7 @@ func encodeSendGameRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -994,7 +1112,7 @@ func encodeSendInvoiceRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -1008,7 +1126,7 @@ func encodeSendLocationRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -1022,7 +1140,7 @@ func encodeSendMediaGroupRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -1036,7 +1154,7 @@ func encodeSendMessageRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -1050,7 +1168,7 @@ func encodeSendPhotoRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -1064,7 +1182,7 @@ func encodeSendPollRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -1078,7 +1196,7 @@ func encodeSendStickerRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -1092,7 +1210,7 @@ func encodeSendVenueRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -1106,7 +1224,7 @@ func encodeSendVideoRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -1120,7 +1238,7 @@ func encodeSendVideoNoteRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -1134,7 +1252,7 @@ func encodeSendVoiceRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -1148,7 +1266,7 @@ func encodeSetChatAdministratorCustomTitleRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -1162,7 +1280,7 @@ func encodeSetChatDescriptionRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -1180,7 +1298,7 @@ func encodeSetChatMenuButtonRequest(
 		// Keep request with empty body if value is not set.
 		return nil
 	}
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		if req.Set {
 			req.Encode(e)
@@ -1196,7 +1314,7 @@ func encodeSetChatPermissionsRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -1210,7 +1328,7 @@ func encodeSetChatPhotoRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -1224,7 +1342,7 @@ func encodeSetChatStickerSetRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -1238,7 +1356,7 @@ func encodeSetChatTitleRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -1252,7 +1370,7 @@ func encodeSetCustomEmojiStickerSetThumbnailRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -1266,7 +1384,21 @@ func encodeSetGameScoreRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
+	{
+		req.Encode(e)
+	}
+	encoded := e.Bytes()
+	ht.SetBody(r, bytes.NewReader(encoded), contentType)
+	return nil
+}
+
+func encodeSetMessageReactionRequest(
+	req *SetMessageReaction,
+	r *http.Request,
+) error {
+	const contentType = "application/json"
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -1280,7 +1412,7 @@ func encodeSetMyCommandsRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -1298,7 +1430,7 @@ func encodeSetMyDefaultAdministratorRightsRequest(
 		// Keep request with empty body if value is not set.
 		return nil
 	}
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		if req.Set {
 			req.Encode(e)
@@ -1318,7 +1450,7 @@ func encodeSetMyDescriptionRequest(
 		// Keep request with empty body if value is not set.
 		return nil
 	}
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		if req.Set {
 			req.Encode(e)
@@ -1338,7 +1470,7 @@ func encodeSetMyNameRequest(
 		// Keep request with empty body if value is not set.
 		return nil
 	}
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		if req.Set {
 			req.Encode(e)
@@ -1358,7 +1490,7 @@ func encodeSetMyShortDescriptionRequest(
 		// Keep request with empty body if value is not set.
 		return nil
 	}
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		if req.Set {
 			req.Encode(e)
@@ -1374,7 +1506,7 @@ func encodeSetPassportDataErrorsRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -1388,7 +1520,7 @@ func encodeSetStickerEmojiListRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -1402,7 +1534,7 @@ func encodeSetStickerKeywordsRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -1416,7 +1548,7 @@ func encodeSetStickerMaskPositionRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -1430,7 +1562,7 @@ func encodeSetStickerPositionInSetRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -1444,7 +1576,7 @@ func encodeSetStickerSetThumbnailRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -1458,7 +1590,7 @@ func encodeSetStickerSetTitleRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -1472,7 +1604,7 @@ func encodeSetWebhookRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -1486,7 +1618,7 @@ func encodeStopMessageLiveLocationRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -1500,7 +1632,7 @@ func encodeStopPollRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -1514,7 +1646,7 @@ func encodeUnbanChatMemberRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -1528,7 +1660,7 @@ func encodeUnbanChatSenderChatRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -1542,7 +1674,7 @@ func encodeUnhideGeneralForumTopicRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -1556,7 +1688,7 @@ func encodeUnpinAllChatMessagesRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -1570,7 +1702,21 @@ func encodeUnpinAllForumTopicMessagesRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
+	{
+		req.Encode(e)
+	}
+	encoded := e.Bytes()
+	ht.SetBody(r, bytes.NewReader(encoded), contentType)
+	return nil
+}
+
+func encodeUnpinAllGeneralForumTopicMessagesRequest(
+	req *UnpinAllGeneralForumTopicMessages,
+	r *http.Request,
+) error {
+	const contentType = "application/json"
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -1584,7 +1730,7 @@ func encodeUnpinChatMessageRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}
@@ -1598,7 +1744,7 @@ func encodeUploadStickerFileRequest(
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
-	e := jx.GetEncoder()
+	e := new(jx.Encoder)
 	{
 		req.Encode(e)
 	}

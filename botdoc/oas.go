@@ -106,7 +106,7 @@ func (a API) typeOAS(f Field) *ogen.Schema {
 		p.Ref = "#/components/schemas/" + t.Name
 	case KindArray:
 		p.Type = "array"
-		p.Items = a.typeOAS(Field{Type: *t.Item})
+		p.Items = &ogen.Items{Item: a.typeOAS(Field{Type: *t.Item})}
 	default:
 		switch t.String() {
 		case "Integer or String":
@@ -339,7 +339,7 @@ Schemas:
 			p := a.fieldOAS(s, f)
 			oneOf := p.OneOf
 			if p.Items != nil {
-				oneOf = p.Items.OneOf
+				oneOf = p.Items.Item.OneOf
 			}
 			var d *ogen.Discriminator
 			for _, s := range oneOf {
@@ -362,7 +362,7 @@ Schemas:
 					}
 				}
 				if p.Items != nil {
-					p.Items.Discriminator = df
+					p.Items.Item.Discriminator = df
 				} else {
 					p.Discriminator = df
 				}
@@ -415,8 +415,10 @@ Schemas:
 				)
 				c.Schemas[resultName] = resultFor(&ogen.Schema{
 					Type: "array",
-					Items: &ogen.Schema{
-						Ref: itemName,
+					Items: &ogen.Items{
+						Item: &ogen.Schema{
+							Ref: itemName,
+						},
 					},
 				})
 				addResponse(resultName, "#/components/schemas/"+resultName, "Result of method invocation")
@@ -534,7 +536,7 @@ func patchSchema(spec *ogen.Spec) *ogen.Spec {
 	}
 	setItemsFormat := func(typeName, propName, format string) {
 		updateProperty(typeName, propName, func(p *ogen.Property) {
-			p.Schema.Items.Format = format
+			p.Schema.Items.Item.Format = format
 		})
 	}
 	// MTProto uses int64, use it in BotAPI too to reduce copying.

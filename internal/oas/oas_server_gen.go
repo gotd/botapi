@@ -10,10 +10,8 @@ import (
 type Handler interface {
 	// AddStickerToSet implements addStickerToSet operation.
 	//
-	// Use this method to add a new sticker to a set created by the bot. The format of the added sticker
-	// must match the format of the other stickers in the set. Emoji sticker sets can have up to 200
-	// stickers. Animated and video sticker sets can have up to 50 stickers. Static sticker sets can have
-	// up to 120 stickers. Returns _True_ on success.
+	// Use this method to add a new sticker to a set created by the bot. Emoji sticker sets can have up
+	// to 200 stickers. Other sticker sets can have up to 120 stickers. Returns _True_ on success.
 	//
 	// POST /addStickerToSet
 	AddStickerToSet(ctx context.Context, req *AddStickerToSet) (*Result, error)
@@ -114,15 +112,29 @@ type Handler interface {
 	CloseGeneralForumTopic(ctx context.Context, req *CloseGeneralForumTopic) (*Result, error)
 	// CopyMessage implements copyMessage operation.
 	//
-	// Use this method to copy messages of any kind. Service messages and invoice messages can't be
-	// copied. A quiz [poll](https://core.telegram.org/bots/api#poll) can be copied only if the value of
-	// the field _correct_option_id_ is known to the bot. The method is analogous to the method
-	// [forwardMessage](https://core.telegram.org/bots/api#forwardmessage), but the copied message
-	// doesn't have a link to the original message. Returns the [MessageId](https://core.telegram.
-	// org/bots/api#messageid) of the sent message on success.
+	// Use this method to copy messages of any kind. Service messages, giveaway messages, giveaway
+	// winners messages, and invoice messages can't be copied. A quiz [poll](https://core.telegram.
+	// org/bots/api#poll) can be copied only if the value of the field _correct_option_id_ is known to
+	// the bot. The method is analogous to the method [forwardMessage](https://core.telegram.
+	// org/bots/api#forwardmessage), but the copied message doesn't have a link to the original message.
+	// Returns the [MessageId](https://core.telegram.org/bots/api#messageid) of the sent message on
+	// success.
 	//
 	// POST /copyMessage
 	CopyMessage(ctx context.Context, req *CopyMessage) (*ResultMessageId, error)
+	// CopyMessages implements copyMessages operation.
+	//
+	// Use this method to copy messages of any kind. If some of the specified messages can't be found or
+	// copied, they are skipped. Service messages, giveaway messages, giveaway winners messages, and
+	// invoice messages can't be copied. A quiz [poll](https://core.telegram.org/bots/api#poll) can be
+	// copied only if the value of the field _correct_option_id_ is known to the bot. The method is
+	// analogous to the method [forwardMessages](https://core.telegram.org/bots/api#forwardmessages), but
+	// the copied messages don't have a link to the original message. Album grouping is kept for copied
+	// messages. On success, an array of [MessageId](https://core.telegram.org/bots/api#messageid) of the
+	// sent messages is returned.
+	//
+	// POST /copyMessages
+	CopyMessages(ctx context.Context, req *CopyMessages) (*ResultArrayOfMessageId, error)
 	// CreateChatInviteLink implements createChatInviteLink operation.
 	//
 	// Use this method to create an additional invite link for a chat. The bot must be an administrator
@@ -202,6 +214,13 @@ type Handler interface {
 	//
 	// POST /deleteMessage
 	DeleteMessage(ctx context.Context, req *DeleteMessage) (*Result, error)
+	// DeleteMessages implements deleteMessages operation.
+	//
+	// Use this method to delete multiple messages simultaneously. If some of the specified messages
+	// can't be found, they are skipped. Returns _True_ on success.
+	//
+	// POST /deleteMessages
+	DeleteMessages(ctx context.Context, req *DeleteMessages) (*Result, error)
 	// DeleteMyCommands implements deleteMyCommands operation.
 	//
 	// Use this method to delete the list of the bot's commands for the given scope and user language.
@@ -259,7 +278,8 @@ type Handler interface {
 	//
 	// Use this method to edit captions of messages. On success, if the edited message is not an inline
 	// message, the edited [Message](https://core.telegram.org/bots/api#message) is returned, otherwise
-	// _True_ is returned.
+	// _True_ is returned. Note that business messages that were not sent by the bot and do not contain
+	// an inline keyboard can only be edited within **48 hours** from the time they were sent.
 	//
 	// POST /editMessageCaption
 	EditMessageCaption(ctx context.Context, req *EditMessageCaption) (*ResultMessageOrBoolean, error)
@@ -280,7 +300,9 @@ type Handler interface {
 	// for document albums and to a photo or a video otherwise. When an inline message is edited, a new
 	// file can't be uploaded; use a previously uploaded file via its file_id or specify a URL. On
 	// success, if the edited message is not an inline message, the edited [Message](https://core.
-	// telegram.org/bots/api#message) is returned, otherwise _True_ is returned.
+	// telegram.org/bots/api#message) is returned, otherwise _True_ is returned. Note that business
+	// messages that were not sent by the bot and do not contain an inline keyboard can only be edited
+	// within **48 hours** from the time they were sent.
 	//
 	// POST /editMessageMedia
 	EditMessageMedia(ctx context.Context, req *EditMessageMedia) (*ResultMessageOrBoolean, error)
@@ -288,7 +310,9 @@ type Handler interface {
 	//
 	// Use this method to edit only the reply markup of messages. On success, if the edited message is
 	// not an inline message, the edited [Message](https://core.telegram.org/bots/api#message) is
-	// returned, otherwise _True_ is returned.
+	// returned, otherwise _True_ is returned. Note that business messages that were not sent by the bot
+	// and do not contain an inline keyboard can only be edited within **48 hours** from the time they
+	// were sent.
 	//
 	// POST /editMessageReplyMarkup
 	EditMessageReplyMarkup(ctx context.Context, req *EditMessageReplyMarkup) (*ResultMessageOrBoolean, error)
@@ -296,7 +320,9 @@ type Handler interface {
 	//
 	// Use this method to edit text and [game](https://core.telegram.org/bots/api#games) messages. On
 	// success, if the edited message is not an inline message, the edited [Message](https://core.
-	// telegram.org/bots/api#message) is returned, otherwise _True_ is returned.
+	// telegram.org/bots/api#message) is returned, otherwise _True_ is returned. Note that business
+	// messages that were not sent by the bot and do not contain an inline keyboard can only be edited
+	// within **48 hours** from the time they were sent.
 	//
 	// POST /editMessageText
 	EditMessageText(ctx context.Context, req *EditMessageText) (*ResultMessageOrBoolean, error)
@@ -310,19 +336,36 @@ type Handler interface {
 	ExportChatInviteLink(ctx context.Context, req *ExportChatInviteLink) (*ResultString, error)
 	// ForwardMessage implements forwardMessage operation.
 	//
-	// Use this method to forward messages of any kind. Service messages can't be forwarded. On success,
-	// the sent [Message](https://core.telegram.org/bots/api#message) is returned.
+	// Use this method to forward messages of any kind. Service messages and messages with protected
+	// content can't be forwarded. On success, the sent [Message](https://core.telegram.
+	// org/bots/api#message) is returned.
 	//
 	// POST /forwardMessage
 	ForwardMessage(ctx context.Context, req *ForwardMessage) (*ResultMessage, error)
+	// ForwardMessages implements forwardMessages operation.
+	//
+	// Use this method to forward multiple messages of any kind. If some of the specified messages can't
+	// be found or forwarded, they are skipped. Service messages and messages with protected content
+	// can't be forwarded. Album grouping is kept for forwarded messages. On success, an array of
+	// [MessageId](https://core.telegram.org/bots/api#messageid) of the sent messages is returned.
+	//
+	// POST /forwardMessages
+	ForwardMessages(ctx context.Context, req *ForwardMessages) (*ResultArrayOfMessageId, error)
+	// GetBusinessConnection implements getBusinessConnection operation.
+	//
+	// Use this method to get information about the connection of the bot with a business account.
+	// Returns a [BusinessConnection](https://core.telegram.org/bots/api#businessconnection) object on
+	// success.
+	//
+	// POST /getBusinessConnection
+	GetBusinessConnection(ctx context.Context, req *GetBusinessConnection) (*Result, error)
 	// GetChat implements getChat operation.
 	//
-	// Use this method to get up to date information about the chat (current name of the user for
-	// one-on-one conversations, current username of a user, group or channel, etc.). Returns a
-	// [Chat](https://core.telegram.org/bots/api#chat) object on success.
+	// Use this method to get up-to-date information about the chat. Returns a
+	// [ChatFullInfo](https://core.telegram.org/bots/api#chatfullinfo) object on success.
 	//
 	// POST /getChat
-	GetChat(ctx context.Context, req *GetChat) (*ResultChat, error)
+	GetChat(ctx context.Context, req *GetChat) (*Result, error)
 	// GetChatAdministrators implements getChatAdministrators operation.
 	//
 	// Use this method to get a list of administrators in a chat, which aren't bots. Returns an Array of
@@ -429,6 +472,13 @@ type Handler interface {
 	//
 	// POST /getMyShortDescription
 	GetMyShortDescription(ctx context.Context, req OptGetMyShortDescription) (*Result, error)
+	// GetStarTransactions implements getStarTransactions operation.
+	//
+	// Returns the bot's Telegram Star transactions in chronological order. On success, returns a
+	// [StarTransactions](https://core.telegram.org/bots/api#startransactions) object.
+	//
+	// POST /getStarTransactions
+	GetStarTransactions(ctx context.Context, req OptGetStarTransactions) (*Result, error)
 	// GetStickerSet implements getStickerSet operation.
 	//
 	// Use this method to get a sticker set. On success, a [StickerSet](https://core.telegram.
@@ -444,6 +494,13 @@ type Handler interface {
 	//
 	// POST /getUpdates
 	GetUpdates(ctx context.Context, req OptGetUpdates) (*ResultArrayOfUpdate, error)
+	// GetUserChatBoosts implements getUserChatBoosts operation.
+	//
+	// Use this method to get the list of boosts added to a chat by a user. Requires administrator rights
+	// in the chat. Returns a [UserChatBoosts](https://core.telegram.org/bots/api#userchatboosts) object.
+	//
+	// POST /getUserChatBoosts
+	GetUserChatBoosts(ctx context.Context, req *GetUserChatBoosts) (*Result, error)
 	// GetUserProfilePhotos implements getUserProfilePhotos operation.
 	//
 	// Use this method to get a list of profile pictures for a user. Returns a
@@ -501,6 +558,13 @@ type Handler interface {
 	//
 	// POST /promoteChatMember
 	PromoteChatMember(ctx context.Context, req *PromoteChatMember) (*Result, error)
+	// RefundStarPayment implements refundStarPayment operation.
+	//
+	// Refunds a successful payment in [Telegram Stars](https://t.me/BotNews/90). Returns _True_ on
+	// success.
+	//
+	// POST /refundStarPayment
+	RefundStarPayment(ctx context.Context, req *RefundStarPayment) (*Result, error)
 	// ReopenForumTopic implements reopenForumTopic operation.
 	//
 	// Use this method to reopen a closed topic in a forum supergroup chat. The bot must be an
@@ -517,6 +581,16 @@ type Handler interface {
 	//
 	// POST /reopenGeneralForumTopic
 	ReopenGeneralForumTopic(ctx context.Context, req *ReopenGeneralForumTopic) (*Result, error)
+	// ReplaceStickerInSet implements replaceStickerInSet operation.
+	//
+	// Use this method to replace an existing sticker in a sticker set with a new one. The method is
+	// equivalent to calling [deleteStickerFromSet](https://core.telegram.
+	// org/bots/api#deletestickerfromset), then [addStickerToSet](https://core.telegram.
+	// org/bots/api#addstickertoset), then [setStickerPositionInSet](https://core.telegram.
+	// org/bots/api#setstickerpositioninset). Returns _True_ on success.
+	//
+	// POST /replaceStickerInSet
+	ReplaceStickerInSet(ctx context.Context, req *ReplaceStickerInSet) (*Result, error)
 	// RestrictChatMember implements restrictChatMember operation.
 	//
 	// Use this method to restrict a user in a supergroup. The bot must be an administrator in the
@@ -663,11 +737,11 @@ type Handler interface {
 	// SendVoice implements sendVoice operation.
 	//
 	// Use this method to send audio files, if you want Telegram clients to display the file as a
-	// playable voice message. For this to work, your audio must be in an .OGG file encoded with OPUS
-	// (other formats may be sent as [Audio](https://core.telegram.org/bots/api#audio) or
-	// [Document](https://core.telegram.org/bots/api#document)). On success, the sent
-	// [Message](https://core.telegram.org/bots/api#message) is returned. Bots can currently send voice
-	// messages of up to 50 MB in size, this limit may be changed in the future.
+	// playable voice message. For this to work, your audio must be in an .OGG file encoded with OPUS, or
+	// in .MP3 format, or in .M4A format (other formats may be sent as [Audio](https://core.telegram.
+	// org/bots/api#audio) or [Document](https://core.telegram.org/bots/api#document)). On success, the
+	// sent [Message](https://core.telegram.org/bots/api#message) is returned. Bots can currently send
+	// voice messages of up to 50 MB in size, this limit may be changed in the future.
 	//
 	// POST /sendVoice
 	SendVoice(ctx context.Context, req *SendVoice) (*ResultMessage, error)
@@ -741,6 +815,14 @@ type Handler interface {
 	//
 	// POST /setGameScore
 	SetGameScore(ctx context.Context, req *SetGameScore) (*Result, error)
+	// SetMessageReaction implements setMessageReaction operation.
+	//
+	// Use this method to change the chosen reactions on a message. Service messages can't be reacted to.
+	// Automatically forwarded messages from a channel to its discussion group have the same available
+	// reactions as messages in the channel. Returns _True_ on success.
+	//
+	// POST /setMessageReaction
+	SetMessageReaction(ctx context.Context, req *SetMessageReaction) (*Result, error)
 	// SetMyCommands implements setMyCommands operation.
 	//
 	// Use this method to change the list of the bot's commands. See [this manual](https://core.telegram.
@@ -894,6 +976,14 @@ type Handler interface {
 	//
 	// POST /unpinAllForumTopicMessages
 	UnpinAllForumTopicMessages(ctx context.Context, req *UnpinAllForumTopicMessages) (*Result, error)
+	// UnpinAllGeneralForumTopicMessages implements unpinAllGeneralForumTopicMessages operation.
+	//
+	// Use this method to clear the list of pinned messages in a General forum topic. The bot must be an
+	// administrator in the chat for this to work and must have the _can_pin_messages_ administrator
+	// right in the supergroup. Returns _True_ on success.
+	//
+	// POST /unpinAllGeneralForumTopicMessages
+	UnpinAllGeneralForumTopicMessages(ctx context.Context, req *UnpinAllGeneralForumTopicMessages) (*Result, error)
 	// UnpinChatMessage implements unpinChatMessage operation.
 	//
 	// Use this method to remove a message from the list of pinned messages in a chat. If the chat is not
@@ -906,10 +996,11 @@ type Handler interface {
 	// UploadStickerFile implements uploadStickerFile operation.
 	//
 	// Use this method to upload a file with a sticker for later use in the
-	// [createNewStickerSet](https://core.telegram.org/bots/api#createnewstickerset) and
-	// [addStickerToSet](https://core.telegram.org/bots/api#addstickertoset) methods (the file can be
-	// used multiple times). Returns the uploaded [File](https://core.telegram.org/bots/api#file) on
-	// success.
+	// [createNewStickerSet](https://core.telegram.org/bots/api#createnewstickerset),
+	// [addStickerToSet](https://core.telegram.org/bots/api#addstickertoset), or
+	// [replaceStickerInSet](https://core.telegram.org/bots/api#replacestickerinset) methods (the file
+	// can be used multiple times). Returns the uploaded [File](https://core.telegram.org/bots/api#file)
+	// on success.
 	//
 	// POST /uploadStickerFile
 	UploadStickerFile(ctx context.Context, req *UploadStickerFile) (*ResultFile, error)
