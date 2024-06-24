@@ -10,7 +10,7 @@ require (
 	github.com/go-faster/errors v0.7.1
 	github.com/go-faster/jx v1.1.0
 	github.com/gotd/td v0.104.0
-	github.com/ogen-go/ogen v1.2.1
+	github.com/ogen-go/ogen v1.2.2
 	github.com/stretchr/testify v1.9.0
 	go.etcd.io/bbolt v1.3.10
 	go.opentelemetry.io/otel v1.27.0
