@@ -291,6 +291,22 @@ func (s *InputMediaVideo) setDefaults() {
 }
 
 // setDefaults set default value of fields.
+func (s *InputPaidMediaPhoto) setDefaults() {
+	{
+		val := string("photo")
+		s.Type = val
+	}
+}
+
+// setDefaults set default value of fields.
+func (s *InputPaidMediaVideo) setDefaults() {
+	{
+		val := string("video")
+		s.Type = val
+	}
+}
+
+// setDefaults set default value of fields.
 func (s *MenuButtonCommands) setDefaults() {
 	{
 		val := string("commands")

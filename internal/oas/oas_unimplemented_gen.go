@@ -155,13 +155,13 @@ func (UnimplementedHandler) CloseGeneralForumTopic(ctx context.Context, req *Clo
 
 // CopyMessage implements copyMessage operation.
 //
-// Use this method to copy messages of any kind. Service messages, giveaway messages, giveaway
-// winners messages, and invoice messages can't be copied. A quiz [poll](https://core.telegram.
-// org/bots/api#poll) can be copied only if the value of the field _correct_option_id_ is known to
-// the bot. The method is analogous to the method [forwardMessage](https://core.telegram.
-// org/bots/api#forwardmessage), but the copied message doesn't have a link to the original message.
-// Returns the [MessageId](https://core.telegram.org/bots/api#messageid) of the sent message on
-// success.
+// Use this method to copy messages of any kind. Service messages, paid media messages, giveaway
+// messages, giveaway winners messages, and invoice messages can't be copied. A quiz
+// [poll](https://core.telegram.org/bots/api#poll) can be copied only if the value of the field
+// _correct_option_id_ is known to the bot. The method is analogous to the method
+// [forwardMessage](https://core.telegram.org/bots/api#forwardmessage), but the copied message
+// doesn't have a link to the original message. Returns the [MessageId](https://core.telegram.
+// org/bots/api#messageid) of the sent message on success.
 //
 // POST /copyMessage
 func (UnimplementedHandler) CopyMessage(ctx context.Context, req *CopyMessage) (r *ResultMessageId, _ error) {
@@ -171,13 +171,13 @@ func (UnimplementedHandler) CopyMessage(ctx context.Context, req *CopyMessage) (
 // CopyMessages implements copyMessages operation.
 //
 // Use this method to copy messages of any kind. If some of the specified messages can't be found or
-// copied, they are skipped. Service messages, giveaway messages, giveaway winners messages, and
-// invoice messages can't be copied. A quiz [poll](https://core.telegram.org/bots/api#poll) can be
-// copied only if the value of the field _correct_option_id_ is known to the bot. The method is
-// analogous to the method [forwardMessages](https://core.telegram.org/bots/api#forwardmessages), but
-// the copied messages don't have a link to the original message. Album grouping is kept for copied
-// messages. On success, an array of [MessageId](https://core.telegram.org/bots/api#messageid) of the
-// sent messages is returned.
+// copied, they are skipped. Service messages, paid media messages, giveaway messages, giveaway
+// winners messages, and invoice messages can't be copied. A quiz [poll](https://core.telegram.
+// org/bots/api#poll) can be copied only if the value of the field _correct_option_id_ is known to
+// the bot. The method is analogous to the method [forwardMessages](https://core.telegram.
+// org/bots/api#forwardmessages), but the copied messages don't have a link to the original message.
+// Album grouping is kept for copied messages. On success, an array of [MessageId](https://core.
+// telegram.org/bots/api#messageid) of the sent messages is returned.
 //
 // POST /copyMessages
 func (UnimplementedHandler) CopyMessages(ctx context.Context, req *CopyMessages) (r *ResultArrayOfMessageId, _ error) {
@@ -194,6 +194,21 @@ func (UnimplementedHandler) CopyMessages(ctx context.Context, req *CopyMessages)
 //
 // POST /createChatInviteLink
 func (UnimplementedHandler) CreateChatInviteLink(ctx context.Context, req *CreateChatInviteLink) (r *ResultChatInviteLink, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// CreateChatSubscriptionInviteLink implements createChatSubscriptionInviteLink operation.
+//
+// Use this method to create a [subscription invite link](https://telegram.
+// org/blog/superchannels-star-reactions-subscriptions#star-subscriptions) for a channel chat. The
+// bot must have the _can_invite_users_ administrator rights. The link can be edited using the method
+// [editChatSubscriptionInviteLink](https://core.telegram.
+// org/bots/api#editchatsubscriptioninvitelink) or revoked using the method
+// [revokeChatInviteLink](https://core.telegram.org/bots/api#revokechatinvitelink). Returns the new
+// invite link as a [ChatInviteLink](https://core.telegram.org/bots/api#chatinvitelink) object.
+//
+// POST /createChatSubscriptionInviteLink
+func (UnimplementedHandler) CreateChatSubscriptionInviteLink(ctx context.Context, req *CreateChatSubscriptionInviteLink) (r *ResultChatInviteLink, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -352,11 +367,22 @@ func (UnimplementedHandler) EditChatInviteLink(ctx context.Context, req *EditCha
 	return r, ht.ErrNotImplemented
 }
 
+// EditChatSubscriptionInviteLink implements editChatSubscriptionInviteLink operation.
+//
+// Use this method to edit a subscription invite link created by the bot. The bot must have the
+// _can_invite_users_ administrator rights. Returns the edited invite link as a
+// [ChatInviteLink](https://core.telegram.org/bots/api#chatinvitelink) object.
+//
+// POST /editChatSubscriptionInviteLink
+func (UnimplementedHandler) EditChatSubscriptionInviteLink(ctx context.Context, req *EditChatSubscriptionInviteLink) (r *ResultChatInviteLink, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
 // EditForumTopic implements editForumTopic operation.
 //
 // Use this method to edit name and icon of a topic in a forum supergroup chat. The bot must be an
-// administrator in the chat for this to work and must have _can_manage_topics_ administrator rights,
-// unless it is the creator of the topic. Returns _True_ on success.
+// administrator in the chat for this to work and must have the _can_manage_topics_ administrator
+// rights, unless it is the creator of the topic. Returns _True_ on success.
 //
 // POST /editForumTopic
 func (UnimplementedHandler) EditForumTopic(ctx context.Context, req *EditForumTopic) (r *Result, _ error) {
@@ -366,8 +392,8 @@ func (UnimplementedHandler) EditForumTopic(ctx context.Context, req *EditForumTo
 // EditGeneralForumTopic implements editGeneralForumTopic operation.
 //
 // Use this method to edit the name of the 'General' topic in a forum supergroup chat. The bot must
-// be an administrator in the chat for this to work and must have _can_manage_topics_ administrator
-// rights. Returns _True_ on success.
+// be an administrator in the chat for this to work and must have the _can_manage_topics_
+// administrator rights. Returns _True_ on success.
 //
 // POST /editGeneralForumTopic
 func (UnimplementedHandler) EditGeneralForumTopic(ctx context.Context, req *EditGeneralForumTopic) (r *Result, _ error) {
@@ -401,14 +427,14 @@ func (UnimplementedHandler) EditMessageLiveLocation(ctx context.Context, req *Ed
 
 // EditMessageMedia implements editMessageMedia operation.
 //
-// Use this method to edit animation, audio, document, photo, or video messages. If a message is part
-// of a message album, then it can be edited only to an audio for audio albums, only to a document
-// for document albums and to a photo or a video otherwise. When an inline message is edited, a new
-// file can't be uploaded; use a previously uploaded file via its file_id or specify a URL. On
-// success, if the edited message is not an inline message, the edited [Message](https://core.
-// telegram.org/bots/api#message) is returned, otherwise _True_ is returned. Note that business
-// messages that were not sent by the bot and do not contain an inline keyboard can only be edited
-// within **48 hours** from the time they were sent.
+// Use this method to edit animation, audio, document, photo, or video messages, or to add media to
+// text messages. If a message is part of a message album, then it can be edited only to an audio for
+// audio albums, only to a document for document albums and to a photo or a video otherwise. When an
+// inline message is edited, a new file can't be uploaded; use a previously uploaded file via its
+// file_id or specify a URL. On success, if the edited message is not an inline message, the edited
+// [Message](https://core.telegram.org/bots/api#message) is returned, otherwise _True_ is returned.
+// Note that business messages that were not sent by the bot and do not contain an inline keyboard
+// can only be edited within **48 hours** from the time they were sent.
 //
 // POST /editMessageMedia
 func (UnimplementedHandler) EditMessageMedia(ctx context.Context, req *EditMessageMedia) (r *ResultMessageOrBoolean, _ error) {
@@ -438,6 +464,16 @@ func (UnimplementedHandler) EditMessageReplyMarkup(ctx context.Context, req *Edi
 //
 // POST /editMessageText
 func (UnimplementedHandler) EditMessageText(ctx context.Context, req *EditMessageText) (r *ResultMessageOrBoolean, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// EditUserStarSubscription implements editUserStarSubscription operation.
+//
+// Allows the bot to cancel or re-enable extension of a subscription paid in Telegram Stars. Returns
+// _True_ on success.
+//
+// POST /editUserStarSubscription
+func (UnimplementedHandler) EditUserStarSubscription(ctx context.Context, req *EditUserStarSubscription) (r *Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -472,6 +508,16 @@ func (UnimplementedHandler) ForwardMessage(ctx context.Context, req *ForwardMess
 //
 // POST /forwardMessages
 func (UnimplementedHandler) ForwardMessages(ctx context.Context, req *ForwardMessages) (r *ResultArrayOfMessageId, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// GetAvailableGifts implements getAvailableGifts operation.
+//
+// Returns the list of gifts that can be sent by the bot to users. Requires no parameters. Returns a
+// [Gifts](https://core.telegram.org/bots/api#gifts) object.
+//
+// POST /getAvailableGifts
+func (UnimplementedHandler) GetAvailableGifts(ctx context.Context) (r *Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -773,6 +819,28 @@ func (UnimplementedHandler) RefundStarPayment(ctx context.Context, req *RefundSt
 	return r, ht.ErrNotImplemented
 }
 
+// RemoveChatVerification implements removeChatVerification operation.
+//
+// Removes verification from a chat that is currently verified [on behalf of the
+// organization](https://telegram.org/verify#third-party-verification) represented by the bot.
+// Returns _True_ on success.
+//
+// POST /removeChatVerification
+func (UnimplementedHandler) RemoveChatVerification(ctx context.Context, req *RemoveChatVerification) (r *Result, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// RemoveUserVerification implements removeUserVerification operation.
+//
+// Removes verification from a user who is currently verified [on behalf of the
+// organization](https://telegram.org/verify#third-party-verification) represented by the bot.
+// Returns _True_ on success.
+//
+// POST /removeUserVerification
+func (UnimplementedHandler) RemoveUserVerification(ctx context.Context, req *RemoveUserVerification) (r *Result, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
 // ReopenForumTopic implements reopenForumTopic operation.
 //
 // Use this method to reopen a closed topic in a forum supergroup chat. The bot must be an
@@ -828,6 +896,16 @@ func (UnimplementedHandler) RestrictChatMember(ctx context.Context, req *Restric
 //
 // POST /revokeChatInviteLink
 func (UnimplementedHandler) RevokeChatInviteLink(ctx context.Context, req *RevokeChatInviteLink) (r *ResultChatInviteLink, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// SavePreparedInlineMessage implements savePreparedInlineMessage operation.
+//
+// Stores a message that can be sent by a user of a Mini App. Returns a
+// [PreparedInlineMessage](https://core.telegram.org/bots/api#preparedinlinemessage) object.
+//
+// POST /savePreparedInlineMessage
+func (UnimplementedHandler) SavePreparedInlineMessage(ctx context.Context, req *SavePreparedInlineMessage) (r *Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -903,6 +981,16 @@ func (UnimplementedHandler) SendGame(ctx context.Context, req *SendGame) (r *Res
 	return r, ht.ErrNotImplemented
 }
 
+// SendGift implements sendGift operation.
+//
+// Sends a gift to the given user. The gift can't be converted to Telegram Stars by the user. Returns
+// _True_ on success.
+//
+// POST /sendGift
+func (UnimplementedHandler) SendGift(ctx context.Context, req *SendGift) (r *Result, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
 // SendInvoice implements sendInvoice operation.
 //
 // Use this method to send invoices. On success, the sent [Message](https://core.telegram.
@@ -941,6 +1029,16 @@ func (UnimplementedHandler) SendMediaGroup(ctx context.Context, req *SendMediaGr
 //
 // POST /sendMessage
 func (UnimplementedHandler) SendMessage(ctx context.Context, req *SendMessage) (r *ResultMessage, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// SendPaidMedia implements sendPaidMedia operation.
+//
+// Use this method to send paid media. On success, the sent [Message](https://core.telegram.
+// org/bots/api#message) is returned.
+//
+// POST /sendPaidMedia
+func (UnimplementedHandler) SendPaidMedia(ctx context.Context, req *SendPaidMedia) (r *ResultMessage, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -1127,7 +1225,7 @@ func (UnimplementedHandler) SetGameScore(ctx context.Context, req *SetGameScore)
 //
 // Use this method to change the chosen reactions on a message. Service messages can't be reacted to.
 // Automatically forwarded messages from a channel to its discussion group have the same available
-// reactions as messages in the channel. Returns _True_ on success.
+// reactions as messages in the channel. Bots can't use paid reactions. Returns _True_ on success.
 //
 // POST /setMessageReaction
 func (UnimplementedHandler) SetMessageReaction(ctx context.Context, req *SetMessageReaction) (r *Result, _ error) {
@@ -1256,6 +1354,17 @@ func (UnimplementedHandler) SetStickerSetTitle(ctx context.Context, req *SetStic
 	return r, ht.ErrNotImplemented
 }
 
+// SetUserEmojiStatus implements setUserEmojiStatus operation.
+//
+// Changes the emoji status for a given user that previously allowed the bot to manage their emoji
+// status via the Mini App method [requestEmojiStatusAccess](https://core.telegram.
+// org/bots/webapps#initializing-mini-apps). Returns _True_ on success.
+//
+// POST /setUserEmojiStatus
+func (UnimplementedHandler) SetUserEmojiStatus(ctx context.Context, req *SetUserEmojiStatus) (r *Result, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
 // SetWebhook implements setWebhook operation.
 //
 // If you'd like to make sure that the webhook was set by you, you can specify secret data in the
@@ -1381,6 +1490,26 @@ func (UnimplementedHandler) UnpinChatMessage(ctx context.Context, req *UnpinChat
 //
 // POST /uploadStickerFile
 func (UnimplementedHandler) UploadStickerFile(ctx context.Context, req *UploadStickerFile) (r *ResultFile, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// VerifyChat implements verifyChat operation.
+//
+// Verifies a chat [on behalf of the organization](https://telegram.
+// org/verify#third-party-verification) which is represented by the bot. Returns _True_ on success.
+//
+// POST /verifyChat
+func (UnimplementedHandler) VerifyChat(ctx context.Context, req *VerifyChat) (r *Result, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// VerifyUser implements verifyUser operation.
+//
+// Verifies a user [on behalf of the organization](https://telegram.
+// org/verify#third-party-verification) which is represented by the bot. Returns _True_ on success.
+//
+// POST /verifyUser
+func (UnimplementedHandler) VerifyUser(ctx context.Context, req *VerifyUser) (r *Result, _ error) {
 	return r, ht.ErrNotImplemented
 }
 

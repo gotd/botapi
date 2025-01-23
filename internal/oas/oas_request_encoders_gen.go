@@ -207,6 +207,20 @@ func encodeCreateChatInviteLinkRequest(
 	return nil
 }
 
+func encodeCreateChatSubscriptionInviteLinkRequest(
+	req *CreateChatSubscriptionInviteLink,
+	r *http.Request,
+) error {
+	const contentType = "application/json"
+	e := new(jx.Encoder)
+	{
+		req.Encode(e)
+	}
+	encoded := e.Bytes()
+	ht.SetBody(r, bytes.NewReader(encoded), contentType)
+	return nil
+}
+
 func encodeCreateForumTopicRequest(
 	req *CreateForumTopic,
 	r *http.Request,
@@ -415,6 +429,20 @@ func encodeEditChatInviteLinkRequest(
 	return nil
 }
 
+func encodeEditChatSubscriptionInviteLinkRequest(
+	req *EditChatSubscriptionInviteLink,
+	r *http.Request,
+) error {
+	const contentType = "application/json"
+	e := new(jx.Encoder)
+	{
+		req.Encode(e)
+	}
+	encoded := e.Bytes()
+	ht.SetBody(r, bytes.NewReader(encoded), contentType)
+	return nil
+}
+
 func encodeEditForumTopicRequest(
 	req *EditForumTopic,
 	r *http.Request,
@@ -501,6 +529,20 @@ func encodeEditMessageReplyMarkupRequest(
 
 func encodeEditMessageTextRequest(
 	req *EditMessageText,
+	r *http.Request,
+) error {
+	const contentType = "application/json"
+	e := new(jx.Encoder)
+	{
+		req.Encode(e)
+	}
+	encoded := e.Bytes()
+	ht.SetBody(r, bytes.NewReader(encoded), contentType)
+	return nil
+}
+
+func encodeEditUserStarSubscriptionRequest(
+	req *EditUserStarSubscription,
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
@@ -939,6 +981,34 @@ func encodeRefundStarPaymentRequest(
 	return nil
 }
 
+func encodeRemoveChatVerificationRequest(
+	req *RemoveChatVerification,
+	r *http.Request,
+) error {
+	const contentType = "application/json"
+	e := new(jx.Encoder)
+	{
+		req.Encode(e)
+	}
+	encoded := e.Bytes()
+	ht.SetBody(r, bytes.NewReader(encoded), contentType)
+	return nil
+}
+
+func encodeRemoveUserVerificationRequest(
+	req *RemoveUserVerification,
+	r *http.Request,
+) error {
+	const contentType = "application/json"
+	e := new(jx.Encoder)
+	{
+		req.Encode(e)
+	}
+	encoded := e.Bytes()
+	ht.SetBody(r, bytes.NewReader(encoded), contentType)
+	return nil
+}
+
 func encodeReopenForumTopicRequest(
 	req *ReopenForumTopic,
 	r *http.Request,
@@ -997,6 +1067,20 @@ func encodeRestrictChatMemberRequest(
 
 func encodeRevokeChatInviteLinkRequest(
 	req *RevokeChatInviteLink,
+	r *http.Request,
+) error {
+	const contentType = "application/json"
+	e := new(jx.Encoder)
+	{
+		req.Encode(e)
+	}
+	encoded := e.Bytes()
+	ht.SetBody(r, bytes.NewReader(encoded), contentType)
+	return nil
+}
+
+func encodeSavePreparedInlineMessageRequest(
+	req *SavePreparedInlineMessage,
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
@@ -1107,6 +1191,20 @@ func encodeSendGameRequest(
 	return nil
 }
 
+func encodeSendGiftRequest(
+	req *SendGift,
+	r *http.Request,
+) error {
+	const contentType = "application/json"
+	e := new(jx.Encoder)
+	{
+		req.Encode(e)
+	}
+	encoded := e.Bytes()
+	ht.SetBody(r, bytes.NewReader(encoded), contentType)
+	return nil
+}
+
 func encodeSendInvoiceRequest(
 	req *SendInvoice,
 	r *http.Request,
@@ -1151,6 +1249,20 @@ func encodeSendMediaGroupRequest(
 
 func encodeSendMessageRequest(
 	req *SendMessage,
+	r *http.Request,
+) error {
+	const contentType = "application/json"
+	e := new(jx.Encoder)
+	{
+		req.Encode(e)
+	}
+	encoded := e.Bytes()
+	ht.SetBody(r, bytes.NewReader(encoded), contentType)
+	return nil
+}
+
+func encodeSendPaidMediaRequest(
+	req *SendPaidMedia,
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
@@ -1599,6 +1711,20 @@ func encodeSetStickerSetTitleRequest(
 	return nil
 }
 
+func encodeSetUserEmojiStatusRequest(
+	req *SetUserEmojiStatus,
+	r *http.Request,
+) error {
+	const contentType = "application/json"
+	e := new(jx.Encoder)
+	{
+		req.Encode(e)
+	}
+	encoded := e.Bytes()
+	ht.SetBody(r, bytes.NewReader(encoded), contentType)
+	return nil
+}
+
 func encodeSetWebhookRequest(
 	req *SetWebhook,
 	r *http.Request,
@@ -1741,6 +1867,34 @@ func encodeUnpinChatMessageRequest(
 
 func encodeUploadStickerFileRequest(
 	req *UploadStickerFile,
+	r *http.Request,
+) error {
+	const contentType = "application/json"
+	e := new(jx.Encoder)
+	{
+		req.Encode(e)
+	}
+	encoded := e.Bytes()
+	ht.SetBody(r, bytes.NewReader(encoded), contentType)
+	return nil
+}
+
+func encodeVerifyChatRequest(
+	req *VerifyChat,
+	r *http.Request,
+) error {
+	const contentType = "application/json"
+	e := new(jx.Encoder)
+	{
+		req.Encode(e)
+	}
+	encoded := e.Bytes()
+	ht.SetBody(r, bytes.NewReader(encoded), contentType)
+	return nil
+}
+
+func encodeVerifyUserRequest(
+	req *VerifyUser,
 	r *http.Request,
 ) error {
 	const contentType = "application/json"

@@ -12,7 +12,7 @@ import (
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/metric"
-	semconv "go.opentelemetry.io/otel/semconv/v1.19.0"
+	semconv "go.opentelemetry.io/otel/semconv/v1.26.0"
 	"go.opentelemetry.io/otel/trace"
 
 	ht "github.com/ogen-go/ogen/http"
@@ -126,26 +126,26 @@ type Invoker interface {
 	CloseGeneralForumTopic(ctx context.Context, request *CloseGeneralForumTopic) (*Result, error)
 	// CopyMessage invokes copyMessage operation.
 	//
-	// Use this method to copy messages of any kind. Service messages, giveaway messages, giveaway
-	// winners messages, and invoice messages can't be copied. A quiz [poll](https://core.telegram.
-	// org/bots/api#poll) can be copied only if the value of the field _correct_option_id_ is known to
-	// the bot. The method is analogous to the method [forwardMessage](https://core.telegram.
-	// org/bots/api#forwardmessage), but the copied message doesn't have a link to the original message.
-	// Returns the [MessageId](https://core.telegram.org/bots/api#messageid) of the sent message on
-	// success.
+	// Use this method to copy messages of any kind. Service messages, paid media messages, giveaway
+	// messages, giveaway winners messages, and invoice messages can't be copied. A quiz
+	// [poll](https://core.telegram.org/bots/api#poll) can be copied only if the value of the field
+	// _correct_option_id_ is known to the bot. The method is analogous to the method
+	// [forwardMessage](https://core.telegram.org/bots/api#forwardmessage), but the copied message
+	// doesn't have a link to the original message. Returns the [MessageId](https://core.telegram.
+	// org/bots/api#messageid) of the sent message on success.
 	//
 	// POST /copyMessage
 	CopyMessage(ctx context.Context, request *CopyMessage) (*ResultMessageId, error)
 	// CopyMessages invokes copyMessages operation.
 	//
 	// Use this method to copy messages of any kind. If some of the specified messages can't be found or
-	// copied, they are skipped. Service messages, giveaway messages, giveaway winners messages, and
-	// invoice messages can't be copied. A quiz [poll](https://core.telegram.org/bots/api#poll) can be
-	// copied only if the value of the field _correct_option_id_ is known to the bot. The method is
-	// analogous to the method [forwardMessages](https://core.telegram.org/bots/api#forwardmessages), but
-	// the copied messages don't have a link to the original message. Album grouping is kept for copied
-	// messages. On success, an array of [MessageId](https://core.telegram.org/bots/api#messageid) of the
-	// sent messages is returned.
+	// copied, they are skipped. Service messages, paid media messages, giveaway messages, giveaway
+	// winners messages, and invoice messages can't be copied. A quiz [poll](https://core.telegram.
+	// org/bots/api#poll) can be copied only if the value of the field _correct_option_id_ is known to
+	// the bot. The method is analogous to the method [forwardMessages](https://core.telegram.
+	// org/bots/api#forwardmessages), but the copied messages don't have a link to the original message.
+	// Album grouping is kept for copied messages. On success, an array of [MessageId](https://core.
+	// telegram.org/bots/api#messageid) of the sent messages is returned.
 	//
 	// POST /copyMessages
 	CopyMessages(ctx context.Context, request *CopyMessages) (*ResultArrayOfMessageId, error)
@@ -159,6 +159,18 @@ type Invoker interface {
 	//
 	// POST /createChatInviteLink
 	CreateChatInviteLink(ctx context.Context, request *CreateChatInviteLink) (*ResultChatInviteLink, error)
+	// CreateChatSubscriptionInviteLink invokes createChatSubscriptionInviteLink operation.
+	//
+	// Use this method to create a [subscription invite link](https://telegram.
+	// org/blog/superchannels-star-reactions-subscriptions#star-subscriptions) for a channel chat. The
+	// bot must have the _can_invite_users_ administrator rights. The link can be edited using the method
+	// [editChatSubscriptionInviteLink](https://core.telegram.
+	// org/bots/api#editchatsubscriptioninvitelink) or revoked using the method
+	// [revokeChatInviteLink](https://core.telegram.org/bots/api#revokechatinvitelink). Returns the new
+	// invite link as a [ChatInviteLink](https://core.telegram.org/bots/api#chatinvitelink) object.
+	//
+	// POST /createChatSubscriptionInviteLink
+	CreateChatSubscriptionInviteLink(ctx context.Context, request *CreateChatSubscriptionInviteLink) (*ResultChatInviteLink, error)
 	// CreateForumTopic invokes createForumTopic operation.
 	//
 	// Use this method to create a topic in a forum supergroup chat. The bot must be an administrator in
@@ -272,19 +284,27 @@ type Invoker interface {
 	//
 	// POST /editChatInviteLink
 	EditChatInviteLink(ctx context.Context, request *EditChatInviteLink) (*ResultChatInviteLink, error)
+	// EditChatSubscriptionInviteLink invokes editChatSubscriptionInviteLink operation.
+	//
+	// Use this method to edit a subscription invite link created by the bot. The bot must have the
+	// _can_invite_users_ administrator rights. Returns the edited invite link as a
+	// [ChatInviteLink](https://core.telegram.org/bots/api#chatinvitelink) object.
+	//
+	// POST /editChatSubscriptionInviteLink
+	EditChatSubscriptionInviteLink(ctx context.Context, request *EditChatSubscriptionInviteLink) (*ResultChatInviteLink, error)
 	// EditForumTopic invokes editForumTopic operation.
 	//
 	// Use this method to edit name and icon of a topic in a forum supergroup chat. The bot must be an
-	// administrator in the chat for this to work and must have _can_manage_topics_ administrator rights,
-	// unless it is the creator of the topic. Returns _True_ on success.
+	// administrator in the chat for this to work and must have the _can_manage_topics_ administrator
+	// rights, unless it is the creator of the topic. Returns _True_ on success.
 	//
 	// POST /editForumTopic
 	EditForumTopic(ctx context.Context, request *EditForumTopic) (*Result, error)
 	// EditGeneralForumTopic invokes editGeneralForumTopic operation.
 	//
 	// Use this method to edit the name of the 'General' topic in a forum supergroup chat. The bot must
-	// be an administrator in the chat for this to work and must have _can_manage_topics_ administrator
-	// rights. Returns _True_ on success.
+	// be an administrator in the chat for this to work and must have the _can_manage_topics_
+	// administrator rights. Returns _True_ on success.
 	//
 	// POST /editGeneralForumTopic
 	EditGeneralForumTopic(ctx context.Context, request *EditGeneralForumTopic) (*Result, error)
@@ -309,14 +329,14 @@ type Invoker interface {
 	EditMessageLiveLocation(ctx context.Context, request *EditMessageLiveLocation) (*ResultMessageOrBoolean, error)
 	// EditMessageMedia invokes editMessageMedia operation.
 	//
-	// Use this method to edit animation, audio, document, photo, or video messages. If a message is part
-	// of a message album, then it can be edited only to an audio for audio albums, only to a document
-	// for document albums and to a photo or a video otherwise. When an inline message is edited, a new
-	// file can't be uploaded; use a previously uploaded file via its file_id or specify a URL. On
-	// success, if the edited message is not an inline message, the edited [Message](https://core.
-	// telegram.org/bots/api#message) is returned, otherwise _True_ is returned. Note that business
-	// messages that were not sent by the bot and do not contain an inline keyboard can only be edited
-	// within **48 hours** from the time they were sent.
+	// Use this method to edit animation, audio, document, photo, or video messages, or to add media to
+	// text messages. If a message is part of a message album, then it can be edited only to an audio for
+	// audio albums, only to a document for document albums and to a photo or a video otherwise. When an
+	// inline message is edited, a new file can't be uploaded; use a previously uploaded file via its
+	// file_id or specify a URL. On success, if the edited message is not an inline message, the edited
+	// [Message](https://core.telegram.org/bots/api#message) is returned, otherwise _True_ is returned.
+	// Note that business messages that were not sent by the bot and do not contain an inline keyboard
+	// can only be edited within **48 hours** from the time they were sent.
 	//
 	// POST /editMessageMedia
 	EditMessageMedia(ctx context.Context, request *EditMessageMedia) (*ResultMessageOrBoolean, error)
@@ -340,6 +360,13 @@ type Invoker interface {
 	//
 	// POST /editMessageText
 	EditMessageText(ctx context.Context, request *EditMessageText) (*ResultMessageOrBoolean, error)
+	// EditUserStarSubscription invokes editUserStarSubscription operation.
+	//
+	// Allows the bot to cancel or re-enable extension of a subscription paid in Telegram Stars. Returns
+	// _True_ on success.
+	//
+	// POST /editUserStarSubscription
+	EditUserStarSubscription(ctx context.Context, request *EditUserStarSubscription) (*Result, error)
 	// ExportChatInviteLink invokes exportChatInviteLink operation.
 	//
 	// Use this method to generate a new primary invite link for a chat; any previously generated primary
@@ -365,6 +392,13 @@ type Invoker interface {
 	//
 	// POST /forwardMessages
 	ForwardMessages(ctx context.Context, request *ForwardMessages) (*ResultArrayOfMessageId, error)
+	// GetAvailableGifts invokes getAvailableGifts operation.
+	//
+	// Returns the list of gifts that can be sent by the bot to users. Requires no parameters. Returns a
+	// [Gifts](https://core.telegram.org/bots/api#gifts) object.
+	//
+	// POST /getAvailableGifts
+	GetAvailableGifts(ctx context.Context) (*Result, error)
 	// GetBusinessConnection invokes getBusinessConnection operation.
 	//
 	// Use this method to get information about the connection of the bot with a business account.
@@ -579,6 +613,22 @@ type Invoker interface {
 	//
 	// POST /refundStarPayment
 	RefundStarPayment(ctx context.Context, request *RefundStarPayment) (*Result, error)
+	// RemoveChatVerification invokes removeChatVerification operation.
+	//
+	// Removes verification from a chat that is currently verified [on behalf of the
+	// organization](https://telegram.org/verify#third-party-verification) represented by the bot.
+	// Returns _True_ on success.
+	//
+	// POST /removeChatVerification
+	RemoveChatVerification(ctx context.Context, request *RemoveChatVerification) (*Result, error)
+	// RemoveUserVerification invokes removeUserVerification operation.
+	//
+	// Removes verification from a user who is currently verified [on behalf of the
+	// organization](https://telegram.org/verify#third-party-verification) represented by the bot.
+	// Returns _True_ on success.
+	//
+	// POST /removeUserVerification
+	RemoveUserVerification(ctx context.Context, request *RemoveUserVerification) (*Result, error)
 	// ReopenForumTopic invokes reopenForumTopic operation.
 	//
 	// Use this method to reopen a closed topic in a forum supergroup chat. The bot must be an
@@ -622,6 +672,13 @@ type Invoker interface {
 	//
 	// POST /revokeChatInviteLink
 	RevokeChatInviteLink(ctx context.Context, request *RevokeChatInviteLink) (*ResultChatInviteLink, error)
+	// SavePreparedInlineMessage invokes savePreparedInlineMessage operation.
+	//
+	// Stores a message that can be sent by a user of a Mini App. Returns a
+	// [PreparedInlineMessage](https://core.telegram.org/bots/api#preparedinlinemessage) object.
+	//
+	// POST /savePreparedInlineMessage
+	SavePreparedInlineMessage(ctx context.Context, request *SavePreparedInlineMessage) (*Result, error)
 	// SendAnimation invokes sendAnimation operation.
 	//
 	// Use this method to send animation files (GIF or H.264/MPEG-4 AVC video without sound). On success,
@@ -673,6 +730,13 @@ type Invoker interface {
 	//
 	// POST /sendGame
 	SendGame(ctx context.Context, request *SendGame) (*ResultMessage, error)
+	// SendGift invokes sendGift operation.
+	//
+	// Sends a gift to the given user. The gift can't be converted to Telegram Stars by the user. Returns
+	// _True_ on success.
+	//
+	// POST /sendGift
+	SendGift(ctx context.Context, request *SendGift) (*Result, error)
 	// SendInvoice invokes sendInvoice operation.
 	//
 	// Use this method to send invoices. On success, the sent [Message](https://core.telegram.
@@ -702,6 +766,13 @@ type Invoker interface {
 	//
 	// POST /sendMessage
 	SendMessage(ctx context.Context, request *SendMessage) (*ResultMessage, error)
+	// SendPaidMedia invokes sendPaidMedia operation.
+	//
+	// Use this method to send paid media. On success, the sent [Message](https://core.telegram.
+	// org/bots/api#message) is returned.
+	//
+	// POST /sendPaidMedia
+	SendPaidMedia(ctx context.Context, request *SendPaidMedia) (*ResultMessage, error)
 	// SendPhoto invokes sendPhoto operation.
 	//
 	// Use this method to send photos. On success, the sent [Message](https://core.telegram.
@@ -833,7 +904,7 @@ type Invoker interface {
 	//
 	// Use this method to change the chosen reactions on a message. Service messages can't be reacted to.
 	// Automatically forwarded messages from a channel to its discussion group have the same available
-	// reactions as messages in the channel. Returns _True_ on success.
+	// reactions as messages in the channel. Bots can't use paid reactions. Returns _True_ on success.
 	//
 	// POST /setMessageReaction
 	SetMessageReaction(ctx context.Context, request *SetMessageReaction) (*Result, error)
@@ -923,6 +994,14 @@ type Invoker interface {
 	//
 	// POST /setStickerSetTitle
 	SetStickerSetTitle(ctx context.Context, request *SetStickerSetTitle) (*Result, error)
+	// SetUserEmojiStatus invokes setUserEmojiStatus operation.
+	//
+	// Changes the emoji status for a given user that previously allowed the bot to manage their emoji
+	// status via the Mini App method [requestEmojiStatusAccess](https://core.telegram.
+	// org/bots/webapps#initializing-mini-apps). Returns _True_ on success.
+	//
+	// POST /setUserEmojiStatus
+	SetUserEmojiStatus(ctx context.Context, request *SetUserEmojiStatus) (*Result, error)
 	// SetWebhook invokes setWebhook operation.
 	//
 	// If you'd like to make sure that the webhook was set by you, you can specify secret data in the
@@ -1018,6 +1097,20 @@ type Invoker interface {
 	//
 	// POST /uploadStickerFile
 	UploadStickerFile(ctx context.Context, request *UploadStickerFile) (*ResultFile, error)
+	// VerifyChat invokes verifyChat operation.
+	//
+	// Verifies a chat [on behalf of the organization](https://telegram.
+	// org/verify#third-party-verification) which is represented by the bot. Returns _True_ on success.
+	//
+	// POST /verifyChat
+	VerifyChat(ctx context.Context, request *VerifyChat) (*Result, error)
+	// VerifyUser invokes verifyUser operation.
+	//
+	// Verifies a user [on behalf of the organization](https://telegram.
+	// org/verify#third-party-verification) which is represented by the bot. Returns _True_ on success.
+	//
+	// POST /verifyUser
+	VerifyUser(ctx context.Context, request *VerifyUser) (*Result, error)
 }
 
 // Client implements OAS client.
@@ -1086,7 +1179,7 @@ func (c *Client) AddStickerToSet(ctx context.Context, request *AddStickerToSet) 
 func (c *Client) sendAddStickerToSet(ctx context.Context, request *AddStickerToSet) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("addStickerToSet"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/addStickerToSet"),
 	}
 
@@ -1095,14 +1188,14 @@ func (c *Client) sendAddStickerToSet(ctx context.Context, request *AddStickerToS
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "AddStickerToSet",
+	ctx, span := c.cfg.Tracer.Start(ctx, AddStickerToSetOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -1163,7 +1256,7 @@ func (c *Client) AnswerCallbackQuery(ctx context.Context, request *AnswerCallbac
 func (c *Client) sendAnswerCallbackQuery(ctx context.Context, request *AnswerCallbackQuery) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("answerCallbackQuery"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/answerCallbackQuery"),
 	}
 
@@ -1172,14 +1265,14 @@ func (c *Client) sendAnswerCallbackQuery(ctx context.Context, request *AnswerCal
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "AnswerCallbackQuery",
+	ctx, span := c.cfg.Tracer.Start(ctx, AnswerCallbackQueryOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -1239,7 +1332,7 @@ func (c *Client) AnswerInlineQuery(ctx context.Context, request *AnswerInlineQue
 func (c *Client) sendAnswerInlineQuery(ctx context.Context, request *AnswerInlineQuery) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("answerInlineQuery"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/answerInlineQuery"),
 	}
 
@@ -1248,14 +1341,14 @@ func (c *Client) sendAnswerInlineQuery(ctx context.Context, request *AnswerInlin
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "AnswerInlineQuery",
+	ctx, span := c.cfg.Tracer.Start(ctx, AnswerInlineQueryOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -1318,7 +1411,7 @@ func (c *Client) AnswerPreCheckoutQuery(ctx context.Context, request *AnswerPreC
 func (c *Client) sendAnswerPreCheckoutQuery(ctx context.Context, request *AnswerPreCheckoutQuery) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("answerPreCheckoutQuery"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/answerPreCheckoutQuery"),
 	}
 
@@ -1327,14 +1420,14 @@ func (c *Client) sendAnswerPreCheckoutQuery(ctx context.Context, request *Answer
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "AnswerPreCheckoutQuery",
+	ctx, span := c.cfg.Tracer.Start(ctx, AnswerPreCheckoutQueryOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -1398,7 +1491,7 @@ func (c *Client) AnswerShippingQuery(ctx context.Context, request *AnswerShippin
 func (c *Client) sendAnswerShippingQuery(ctx context.Context, request *AnswerShippingQuery) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("answerShippingQuery"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/answerShippingQuery"),
 	}
 
@@ -1407,14 +1500,14 @@ func (c *Client) sendAnswerShippingQuery(ctx context.Context, request *AnswerShi
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "AnswerShippingQuery",
+	ctx, span := c.cfg.Tracer.Start(ctx, AnswerShippingQueryOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -1476,7 +1569,7 @@ func (c *Client) AnswerWebAppQuery(ctx context.Context, request *AnswerWebAppQue
 func (c *Client) sendAnswerWebAppQuery(ctx context.Context, request *AnswerWebAppQuery) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("answerWebAppQuery"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/answerWebAppQuery"),
 	}
 
@@ -1485,14 +1578,14 @@ func (c *Client) sendAnswerWebAppQuery(ctx context.Context, request *AnswerWebAp
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "AnswerWebAppQuery",
+	ctx, span := c.cfg.Tracer.Start(ctx, AnswerWebAppQueryOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -1552,7 +1645,7 @@ func (c *Client) ApproveChatJoinRequest(ctx context.Context, request *ApproveCha
 func (c *Client) sendApproveChatJoinRequest(ctx context.Context, request *ApproveChatJoinRequest) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("approveChatJoinRequest"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/approveChatJoinRequest"),
 	}
 
@@ -1561,14 +1654,14 @@ func (c *Client) sendApproveChatJoinRequest(ctx context.Context, request *Approv
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "ApproveChatJoinRequest",
+	ctx, span := c.cfg.Tracer.Start(ctx, ApproveChatJoinRequestOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -1631,7 +1724,7 @@ func (c *Client) BanChatMember(ctx context.Context, request *BanChatMember) (*Re
 func (c *Client) sendBanChatMember(ctx context.Context, request *BanChatMember) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("banChatMember"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/banChatMember"),
 	}
 
@@ -1640,14 +1733,14 @@ func (c *Client) sendBanChatMember(ctx context.Context, request *BanChatMember) 
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "BanChatMember",
+	ctx, span := c.cfg.Tracer.Start(ctx, BanChatMemberOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -1710,7 +1803,7 @@ func (c *Client) BanChatSenderChat(ctx context.Context, request *BanChatSenderCh
 func (c *Client) sendBanChatSenderChat(ctx context.Context, request *BanChatSenderChat) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("banChatSenderChat"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/banChatSenderChat"),
 	}
 
@@ -1719,14 +1812,14 @@ func (c *Client) sendBanChatSenderChat(ctx context.Context, request *BanChatSend
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "BanChatSenderChat",
+	ctx, span := c.cfg.Tracer.Start(ctx, BanChatSenderChatOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -1788,7 +1881,7 @@ func (c *Client) Close(ctx context.Context) (*Result, error) {
 func (c *Client) sendClose(ctx context.Context) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("close"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/close"),
 	}
 
@@ -1797,14 +1890,14 @@ func (c *Client) sendClose(ctx context.Context) (res *Result, err error) {
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "Close",
+	ctx, span := c.cfg.Tracer.Start(ctx, CloseOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -1862,7 +1955,7 @@ func (c *Client) CloseForumTopic(ctx context.Context, request *CloseForumTopic) 
 func (c *Client) sendCloseForumTopic(ctx context.Context, request *CloseForumTopic) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("closeForumTopic"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/closeForumTopic"),
 	}
 
@@ -1871,14 +1964,14 @@ func (c *Client) sendCloseForumTopic(ctx context.Context, request *CloseForumTop
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "CloseForumTopic",
+	ctx, span := c.cfg.Tracer.Start(ctx, CloseForumTopicOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -1939,7 +2032,7 @@ func (c *Client) CloseGeneralForumTopic(ctx context.Context, request *CloseGener
 func (c *Client) sendCloseGeneralForumTopic(ctx context.Context, request *CloseGeneralForumTopic) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("closeGeneralForumTopic"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/closeGeneralForumTopic"),
 	}
 
@@ -1948,14 +2041,14 @@ func (c *Client) sendCloseGeneralForumTopic(ctx context.Context, request *CloseG
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "CloseGeneralForumTopic",
+	ctx, span := c.cfg.Tracer.Start(ctx, CloseGeneralForumTopicOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -2003,13 +2096,13 @@ func (c *Client) sendCloseGeneralForumTopic(ctx context.Context, request *CloseG
 
 // CopyMessage invokes copyMessage operation.
 //
-// Use this method to copy messages of any kind. Service messages, giveaway messages, giveaway
-// winners messages, and invoice messages can't be copied. A quiz [poll](https://core.telegram.
-// org/bots/api#poll) can be copied only if the value of the field _correct_option_id_ is known to
-// the bot. The method is analogous to the method [forwardMessage](https://core.telegram.
-// org/bots/api#forwardmessage), but the copied message doesn't have a link to the original message.
-// Returns the [MessageId](https://core.telegram.org/bots/api#messageid) of the sent message on
-// success.
+// Use this method to copy messages of any kind. Service messages, paid media messages, giveaway
+// messages, giveaway winners messages, and invoice messages can't be copied. A quiz
+// [poll](https://core.telegram.org/bots/api#poll) can be copied only if the value of the field
+// _correct_option_id_ is known to the bot. The method is analogous to the method
+// [forwardMessage](https://core.telegram.org/bots/api#forwardmessage), but the copied message
+// doesn't have a link to the original message. Returns the [MessageId](https://core.telegram.
+// org/bots/api#messageid) of the sent message on success.
 //
 // POST /copyMessage
 func (c *Client) CopyMessage(ctx context.Context, request *CopyMessage) (*ResultMessageId, error) {
@@ -2020,7 +2113,7 @@ func (c *Client) CopyMessage(ctx context.Context, request *CopyMessage) (*Result
 func (c *Client) sendCopyMessage(ctx context.Context, request *CopyMessage) (res *ResultMessageId, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("copyMessage"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/copyMessage"),
 	}
 
@@ -2029,14 +2122,14 @@ func (c *Client) sendCopyMessage(ctx context.Context, request *CopyMessage) (res
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "CopyMessage",
+	ctx, span := c.cfg.Tracer.Start(ctx, CopyMessageOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -2085,13 +2178,13 @@ func (c *Client) sendCopyMessage(ctx context.Context, request *CopyMessage) (res
 // CopyMessages invokes copyMessages operation.
 //
 // Use this method to copy messages of any kind. If some of the specified messages can't be found or
-// copied, they are skipped. Service messages, giveaway messages, giveaway winners messages, and
-// invoice messages can't be copied. A quiz [poll](https://core.telegram.org/bots/api#poll) can be
-// copied only if the value of the field _correct_option_id_ is known to the bot. The method is
-// analogous to the method [forwardMessages](https://core.telegram.org/bots/api#forwardmessages), but
-// the copied messages don't have a link to the original message. Album grouping is kept for copied
-// messages. On success, an array of [MessageId](https://core.telegram.org/bots/api#messageid) of the
-// sent messages is returned.
+// copied, they are skipped. Service messages, paid media messages, giveaway messages, giveaway
+// winners messages, and invoice messages can't be copied. A quiz [poll](https://core.telegram.
+// org/bots/api#poll) can be copied only if the value of the field _correct_option_id_ is known to
+// the bot. The method is analogous to the method [forwardMessages](https://core.telegram.
+// org/bots/api#forwardmessages), but the copied messages don't have a link to the original message.
+// Album grouping is kept for copied messages. On success, an array of [MessageId](https://core.
+// telegram.org/bots/api#messageid) of the sent messages is returned.
 //
 // POST /copyMessages
 func (c *Client) CopyMessages(ctx context.Context, request *CopyMessages) (*ResultArrayOfMessageId, error) {
@@ -2102,7 +2195,7 @@ func (c *Client) CopyMessages(ctx context.Context, request *CopyMessages) (*Resu
 func (c *Client) sendCopyMessages(ctx context.Context, request *CopyMessages) (res *ResultArrayOfMessageId, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("copyMessages"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/copyMessages"),
 	}
 
@@ -2111,14 +2204,14 @@ func (c *Client) sendCopyMessages(ctx context.Context, request *CopyMessages) (r
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "CopyMessages",
+	ctx, span := c.cfg.Tracer.Start(ctx, CopyMessagesOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -2181,7 +2274,7 @@ func (c *Client) CreateChatInviteLink(ctx context.Context, request *CreateChatIn
 func (c *Client) sendCreateChatInviteLink(ctx context.Context, request *CreateChatInviteLink) (res *ResultChatInviteLink, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("createChatInviteLink"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/createChatInviteLink"),
 	}
 
@@ -2190,14 +2283,14 @@ func (c *Client) sendCreateChatInviteLink(ctx context.Context, request *CreateCh
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "CreateChatInviteLink",
+	ctx, span := c.cfg.Tracer.Start(ctx, CreateChatInviteLinkOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -2243,6 +2336,87 @@ func (c *Client) sendCreateChatInviteLink(ctx context.Context, request *CreateCh
 	return result, nil
 }
 
+// CreateChatSubscriptionInviteLink invokes createChatSubscriptionInviteLink operation.
+//
+// Use this method to create a [subscription invite link](https://telegram.
+// org/blog/superchannels-star-reactions-subscriptions#star-subscriptions) for a channel chat. The
+// bot must have the _can_invite_users_ administrator rights. The link can be edited using the method
+// [editChatSubscriptionInviteLink](https://core.telegram.
+// org/bots/api#editchatsubscriptioninvitelink) or revoked using the method
+// [revokeChatInviteLink](https://core.telegram.org/bots/api#revokechatinvitelink). Returns the new
+// invite link as a [ChatInviteLink](https://core.telegram.org/bots/api#chatinvitelink) object.
+//
+// POST /createChatSubscriptionInviteLink
+func (c *Client) CreateChatSubscriptionInviteLink(ctx context.Context, request *CreateChatSubscriptionInviteLink) (*ResultChatInviteLink, error) {
+	res, err := c.sendCreateChatSubscriptionInviteLink(ctx, request)
+	return res, err
+}
+
+func (c *Client) sendCreateChatSubscriptionInviteLink(ctx context.Context, request *CreateChatSubscriptionInviteLink) (res *ResultChatInviteLink, err error) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("createChatSubscriptionInviteLink"),
+		semconv.HTTPRequestMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/createChatSubscriptionInviteLink"),
+	}
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, CreateChatSubscriptionInviteLinkOperation,
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	var pathParts [1]string
+	pathParts[0] = "/createChatSubscriptionInviteLink"
+	uri.AddPathParts(u, pathParts[:]...)
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "POST", u)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeCreateChatSubscriptionInviteLinkRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeCreateChatSubscriptionInviteLinkResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
 // CreateForumTopic invokes createForumTopic operation.
 //
 // Use this method to create a topic in a forum supergroup chat. The bot must be an administrator in
@@ -2259,7 +2433,7 @@ func (c *Client) CreateForumTopic(ctx context.Context, request *CreateForumTopic
 func (c *Client) sendCreateForumTopic(ctx context.Context, request *CreateForumTopic) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("createForumTopic"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/createForumTopic"),
 	}
 
@@ -2268,14 +2442,14 @@ func (c *Client) sendCreateForumTopic(ctx context.Context, request *CreateForumT
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "CreateForumTopic",
+	ctx, span := c.cfg.Tracer.Start(ctx, CreateForumTopicOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -2335,7 +2509,7 @@ func (c *Client) CreateInvoiceLink(ctx context.Context, request *CreateInvoiceLi
 func (c *Client) sendCreateInvoiceLink(ctx context.Context, request *CreateInvoiceLink) (res *ResultString, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("createInvoiceLink"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/createInvoiceLink"),
 	}
 
@@ -2344,14 +2518,14 @@ func (c *Client) sendCreateInvoiceLink(ctx context.Context, request *CreateInvoi
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "CreateInvoiceLink",
+	ctx, span := c.cfg.Tracer.Start(ctx, CreateInvoiceLinkOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -2411,7 +2585,7 @@ func (c *Client) CreateNewStickerSet(ctx context.Context, request *CreateNewStic
 func (c *Client) sendCreateNewStickerSet(ctx context.Context, request *CreateNewStickerSet) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("createNewStickerSet"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/createNewStickerSet"),
 	}
 
@@ -2420,14 +2594,14 @@ func (c *Client) sendCreateNewStickerSet(ctx context.Context, request *CreateNew
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "CreateNewStickerSet",
+	ctx, span := c.cfg.Tracer.Start(ctx, CreateNewStickerSetOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -2487,7 +2661,7 @@ func (c *Client) DeclineChatJoinRequest(ctx context.Context, request *DeclineCha
 func (c *Client) sendDeclineChatJoinRequest(ctx context.Context, request *DeclineChatJoinRequest) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("declineChatJoinRequest"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/declineChatJoinRequest"),
 	}
 
@@ -2496,14 +2670,14 @@ func (c *Client) sendDeclineChatJoinRequest(ctx context.Context, request *Declin
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "DeclineChatJoinRequest",
+	ctx, span := c.cfg.Tracer.Start(ctx, DeclineChatJoinRequestOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -2564,7 +2738,7 @@ func (c *Client) DeleteChatPhoto(ctx context.Context, request *DeleteChatPhoto) 
 func (c *Client) sendDeleteChatPhoto(ctx context.Context, request *DeleteChatPhoto) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("deleteChatPhoto"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/deleteChatPhoto"),
 	}
 
@@ -2573,14 +2747,14 @@ func (c *Client) sendDeleteChatPhoto(ctx context.Context, request *DeleteChatPho
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "DeleteChatPhoto",
+	ctx, span := c.cfg.Tracer.Start(ctx, DeleteChatPhotoOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -2642,7 +2816,7 @@ func (c *Client) DeleteChatStickerSet(ctx context.Context, request *DeleteChatSt
 func (c *Client) sendDeleteChatStickerSet(ctx context.Context, request *DeleteChatStickerSet) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("deleteChatStickerSet"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/deleteChatStickerSet"),
 	}
 
@@ -2651,14 +2825,14 @@ func (c *Client) sendDeleteChatStickerSet(ctx context.Context, request *DeleteCh
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "DeleteChatStickerSet",
+	ctx, span := c.cfg.Tracer.Start(ctx, DeleteChatStickerSetOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -2719,7 +2893,7 @@ func (c *Client) DeleteForumTopic(ctx context.Context, request *DeleteForumTopic
 func (c *Client) sendDeleteForumTopic(ctx context.Context, request *DeleteForumTopic) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("deleteForumTopic"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/deleteForumTopic"),
 	}
 
@@ -2728,14 +2902,14 @@ func (c *Client) sendDeleteForumTopic(ctx context.Context, request *DeleteForumT
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "DeleteForumTopic",
+	ctx, span := c.cfg.Tracer.Start(ctx, DeleteForumTopicOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -2802,7 +2976,7 @@ func (c *Client) DeleteMessage(ctx context.Context, request *DeleteMessage) (*Re
 func (c *Client) sendDeleteMessage(ctx context.Context, request *DeleteMessage) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("deleteMessage"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/deleteMessage"),
 	}
 
@@ -2811,14 +2985,14 @@ func (c *Client) sendDeleteMessage(ctx context.Context, request *DeleteMessage) 
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "DeleteMessage",
+	ctx, span := c.cfg.Tracer.Start(ctx, DeleteMessageOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -2878,7 +3052,7 @@ func (c *Client) DeleteMessages(ctx context.Context, request *DeleteMessages) (*
 func (c *Client) sendDeleteMessages(ctx context.Context, request *DeleteMessages) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("deleteMessages"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/deleteMessages"),
 	}
 
@@ -2887,14 +3061,14 @@ func (c *Client) sendDeleteMessages(ctx context.Context, request *DeleteMessages
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "DeleteMessages",
+	ctx, span := c.cfg.Tracer.Start(ctx, DeleteMessagesOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -2956,7 +3130,7 @@ func (c *Client) DeleteMyCommands(ctx context.Context, request OptDeleteMyComman
 func (c *Client) sendDeleteMyCommands(ctx context.Context, request OptDeleteMyCommands) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("deleteMyCommands"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/deleteMyCommands"),
 	}
 
@@ -2965,14 +3139,14 @@ func (c *Client) sendDeleteMyCommands(ctx context.Context, request OptDeleteMyCo
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "DeleteMyCommands",
+	ctx, span := c.cfg.Tracer.Start(ctx, DeleteMyCommandsOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -3031,7 +3205,7 @@ func (c *Client) DeleteStickerFromSet(ctx context.Context, request *DeleteSticke
 func (c *Client) sendDeleteStickerFromSet(ctx context.Context, request *DeleteStickerFromSet) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("deleteStickerFromSet"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/deleteStickerFromSet"),
 	}
 
@@ -3040,14 +3214,14 @@ func (c *Client) sendDeleteStickerFromSet(ctx context.Context, request *DeleteSt
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "DeleteStickerFromSet",
+	ctx, span := c.cfg.Tracer.Start(ctx, DeleteStickerFromSetOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -3106,7 +3280,7 @@ func (c *Client) DeleteStickerSet(ctx context.Context, request *DeleteStickerSet
 func (c *Client) sendDeleteStickerSet(ctx context.Context, request *DeleteStickerSet) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("deleteStickerSet"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/deleteStickerSet"),
 	}
 
@@ -3115,14 +3289,14 @@ func (c *Client) sendDeleteStickerSet(ctx context.Context, request *DeleteSticke
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "DeleteStickerSet",
+	ctx, span := c.cfg.Tracer.Start(ctx, DeleteStickerSetOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -3182,7 +3356,7 @@ func (c *Client) DeleteWebhook(ctx context.Context, request OptDeleteWebhook) (*
 func (c *Client) sendDeleteWebhook(ctx context.Context, request OptDeleteWebhook) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("deleteWebhook"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/deleteWebhook"),
 	}
 
@@ -3191,14 +3365,14 @@ func (c *Client) sendDeleteWebhook(ctx context.Context, request OptDeleteWebhook
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "DeleteWebhook",
+	ctx, span := c.cfg.Tracer.Start(ctx, DeleteWebhookOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -3260,7 +3434,7 @@ func (c *Client) EditChatInviteLink(ctx context.Context, request *EditChatInvite
 func (c *Client) sendEditChatInviteLink(ctx context.Context, request *EditChatInviteLink) (res *ResultChatInviteLink, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("editChatInviteLink"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/editChatInviteLink"),
 	}
 
@@ -3269,14 +3443,14 @@ func (c *Client) sendEditChatInviteLink(ctx context.Context, request *EditChatIn
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "EditChatInviteLink",
+	ctx, span := c.cfg.Tracer.Start(ctx, EditChatInviteLinkOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -3322,11 +3496,88 @@ func (c *Client) sendEditChatInviteLink(ctx context.Context, request *EditChatIn
 	return result, nil
 }
 
+// EditChatSubscriptionInviteLink invokes editChatSubscriptionInviteLink operation.
+//
+// Use this method to edit a subscription invite link created by the bot. The bot must have the
+// _can_invite_users_ administrator rights. Returns the edited invite link as a
+// [ChatInviteLink](https://core.telegram.org/bots/api#chatinvitelink) object.
+//
+// POST /editChatSubscriptionInviteLink
+func (c *Client) EditChatSubscriptionInviteLink(ctx context.Context, request *EditChatSubscriptionInviteLink) (*ResultChatInviteLink, error) {
+	res, err := c.sendEditChatSubscriptionInviteLink(ctx, request)
+	return res, err
+}
+
+func (c *Client) sendEditChatSubscriptionInviteLink(ctx context.Context, request *EditChatSubscriptionInviteLink) (res *ResultChatInviteLink, err error) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("editChatSubscriptionInviteLink"),
+		semconv.HTTPRequestMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/editChatSubscriptionInviteLink"),
+	}
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, EditChatSubscriptionInviteLinkOperation,
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	var pathParts [1]string
+	pathParts[0] = "/editChatSubscriptionInviteLink"
+	uri.AddPathParts(u, pathParts[:]...)
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "POST", u)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeEditChatSubscriptionInviteLinkRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeEditChatSubscriptionInviteLinkResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
 // EditForumTopic invokes editForumTopic operation.
 //
 // Use this method to edit name and icon of a topic in a forum supergroup chat. The bot must be an
-// administrator in the chat for this to work and must have _can_manage_topics_ administrator rights,
-// unless it is the creator of the topic. Returns _True_ on success.
+// administrator in the chat for this to work and must have the _can_manage_topics_ administrator
+// rights, unless it is the creator of the topic. Returns _True_ on success.
 //
 // POST /editForumTopic
 func (c *Client) EditForumTopic(ctx context.Context, request *EditForumTopic) (*Result, error) {
@@ -3337,7 +3588,7 @@ func (c *Client) EditForumTopic(ctx context.Context, request *EditForumTopic) (*
 func (c *Client) sendEditForumTopic(ctx context.Context, request *EditForumTopic) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("editForumTopic"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/editForumTopic"),
 	}
 
@@ -3346,14 +3597,14 @@ func (c *Client) sendEditForumTopic(ctx context.Context, request *EditForumTopic
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "EditForumTopic",
+	ctx, span := c.cfg.Tracer.Start(ctx, EditForumTopicOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -3402,8 +3653,8 @@ func (c *Client) sendEditForumTopic(ctx context.Context, request *EditForumTopic
 // EditGeneralForumTopic invokes editGeneralForumTopic operation.
 //
 // Use this method to edit the name of the 'General' topic in a forum supergroup chat. The bot must
-// be an administrator in the chat for this to work and must have _can_manage_topics_ administrator
-// rights. Returns _True_ on success.
+// be an administrator in the chat for this to work and must have the _can_manage_topics_
+// administrator rights. Returns _True_ on success.
 //
 // POST /editGeneralForumTopic
 func (c *Client) EditGeneralForumTopic(ctx context.Context, request *EditGeneralForumTopic) (*Result, error) {
@@ -3414,7 +3665,7 @@ func (c *Client) EditGeneralForumTopic(ctx context.Context, request *EditGeneral
 func (c *Client) sendEditGeneralForumTopic(ctx context.Context, request *EditGeneralForumTopic) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("editGeneralForumTopic"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/editGeneralForumTopic"),
 	}
 
@@ -3423,14 +3674,14 @@ func (c *Client) sendEditGeneralForumTopic(ctx context.Context, request *EditGen
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "EditGeneralForumTopic",
+	ctx, span := c.cfg.Tracer.Start(ctx, EditGeneralForumTopicOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -3492,7 +3743,7 @@ func (c *Client) EditMessageCaption(ctx context.Context, request *EditMessageCap
 func (c *Client) sendEditMessageCaption(ctx context.Context, request *EditMessageCaption) (res *ResultMessageOrBoolean, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("editMessageCaption"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/editMessageCaption"),
 	}
 
@@ -3501,14 +3752,14 @@ func (c *Client) sendEditMessageCaption(ctx context.Context, request *EditMessag
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "EditMessageCaption",
+	ctx, span := c.cfg.Tracer.Start(ctx, EditMessageCaptionOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -3571,7 +3822,7 @@ func (c *Client) EditMessageLiveLocation(ctx context.Context, request *EditMessa
 func (c *Client) sendEditMessageLiveLocation(ctx context.Context, request *EditMessageLiveLocation) (res *ResultMessageOrBoolean, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("editMessageLiveLocation"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/editMessageLiveLocation"),
 	}
 
@@ -3580,14 +3831,14 @@ func (c *Client) sendEditMessageLiveLocation(ctx context.Context, request *EditM
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "EditMessageLiveLocation",
+	ctx, span := c.cfg.Tracer.Start(ctx, EditMessageLiveLocationOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -3635,14 +3886,14 @@ func (c *Client) sendEditMessageLiveLocation(ctx context.Context, request *EditM
 
 // EditMessageMedia invokes editMessageMedia operation.
 //
-// Use this method to edit animation, audio, document, photo, or video messages. If a message is part
-// of a message album, then it can be edited only to an audio for audio albums, only to a document
-// for document albums and to a photo or a video otherwise. When an inline message is edited, a new
-// file can't be uploaded; use a previously uploaded file via its file_id or specify a URL. On
-// success, if the edited message is not an inline message, the edited [Message](https://core.
-// telegram.org/bots/api#message) is returned, otherwise _True_ is returned. Note that business
-// messages that were not sent by the bot and do not contain an inline keyboard can only be edited
-// within **48 hours** from the time they were sent.
+// Use this method to edit animation, audio, document, photo, or video messages, or to add media to
+// text messages. If a message is part of a message album, then it can be edited only to an audio for
+// audio albums, only to a document for document albums and to a photo or a video otherwise. When an
+// inline message is edited, a new file can't be uploaded; use a previously uploaded file via its
+// file_id or specify a URL. On success, if the edited message is not an inline message, the edited
+// [Message](https://core.telegram.org/bots/api#message) is returned, otherwise _True_ is returned.
+// Note that business messages that were not sent by the bot and do not contain an inline keyboard
+// can only be edited within **48 hours** from the time they were sent.
 //
 // POST /editMessageMedia
 func (c *Client) EditMessageMedia(ctx context.Context, request *EditMessageMedia) (*ResultMessageOrBoolean, error) {
@@ -3653,7 +3904,7 @@ func (c *Client) EditMessageMedia(ctx context.Context, request *EditMessageMedia
 func (c *Client) sendEditMessageMedia(ctx context.Context, request *EditMessageMedia) (res *ResultMessageOrBoolean, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("editMessageMedia"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/editMessageMedia"),
 	}
 
@@ -3662,14 +3913,14 @@ func (c *Client) sendEditMessageMedia(ctx context.Context, request *EditMessageM
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "EditMessageMedia",
+	ctx, span := c.cfg.Tracer.Start(ctx, EditMessageMediaOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -3732,7 +3983,7 @@ func (c *Client) EditMessageReplyMarkup(ctx context.Context, request *EditMessag
 func (c *Client) sendEditMessageReplyMarkup(ctx context.Context, request *EditMessageReplyMarkup) (res *ResultMessageOrBoolean, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("editMessageReplyMarkup"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/editMessageReplyMarkup"),
 	}
 
@@ -3741,14 +3992,14 @@ func (c *Client) sendEditMessageReplyMarkup(ctx context.Context, request *EditMe
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "EditMessageReplyMarkup",
+	ctx, span := c.cfg.Tracer.Start(ctx, EditMessageReplyMarkupOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -3811,7 +4062,7 @@ func (c *Client) EditMessageText(ctx context.Context, request *EditMessageText) 
 func (c *Client) sendEditMessageText(ctx context.Context, request *EditMessageText) (res *ResultMessageOrBoolean, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("editMessageText"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/editMessageText"),
 	}
 
@@ -3820,14 +4071,14 @@ func (c *Client) sendEditMessageText(ctx context.Context, request *EditMessageTe
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "EditMessageText",
+	ctx, span := c.cfg.Tracer.Start(ctx, EditMessageTextOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -3873,6 +4124,82 @@ func (c *Client) sendEditMessageText(ctx context.Context, request *EditMessageTe
 	return result, nil
 }
 
+// EditUserStarSubscription invokes editUserStarSubscription operation.
+//
+// Allows the bot to cancel or re-enable extension of a subscription paid in Telegram Stars. Returns
+// _True_ on success.
+//
+// POST /editUserStarSubscription
+func (c *Client) EditUserStarSubscription(ctx context.Context, request *EditUserStarSubscription) (*Result, error) {
+	res, err := c.sendEditUserStarSubscription(ctx, request)
+	return res, err
+}
+
+func (c *Client) sendEditUserStarSubscription(ctx context.Context, request *EditUserStarSubscription) (res *Result, err error) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("editUserStarSubscription"),
+		semconv.HTTPRequestMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/editUserStarSubscription"),
+	}
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, EditUserStarSubscriptionOperation,
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	var pathParts [1]string
+	pathParts[0] = "/editUserStarSubscription"
+	uri.AddPathParts(u, pathParts[:]...)
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "POST", u)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeEditUserStarSubscriptionRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeEditUserStarSubscriptionResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
 // ExportChatInviteLink invokes exportChatInviteLink operation.
 //
 // Use this method to generate a new primary invite link for a chat; any previously generated primary
@@ -3888,7 +4215,7 @@ func (c *Client) ExportChatInviteLink(ctx context.Context, request *ExportChatIn
 func (c *Client) sendExportChatInviteLink(ctx context.Context, request *ExportChatInviteLink) (res *ResultString, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("exportChatInviteLink"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/exportChatInviteLink"),
 	}
 
@@ -3897,14 +4224,14 @@ func (c *Client) sendExportChatInviteLink(ctx context.Context, request *ExportCh
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "ExportChatInviteLink",
+	ctx, span := c.cfg.Tracer.Start(ctx, ExportChatInviteLinkOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -3965,7 +4292,7 @@ func (c *Client) ForwardMessage(ctx context.Context, request *ForwardMessage) (*
 func (c *Client) sendForwardMessage(ctx context.Context, request *ForwardMessage) (res *ResultMessage, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("forwardMessage"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/forwardMessage"),
 	}
 
@@ -3974,14 +4301,14 @@ func (c *Client) sendForwardMessage(ctx context.Context, request *ForwardMessage
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "ForwardMessage",
+	ctx, span := c.cfg.Tracer.Start(ctx, ForwardMessageOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -4043,7 +4370,7 @@ func (c *Client) ForwardMessages(ctx context.Context, request *ForwardMessages) 
 func (c *Client) sendForwardMessages(ctx context.Context, request *ForwardMessages) (res *ResultArrayOfMessageId, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("forwardMessages"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/forwardMessages"),
 	}
 
@@ -4052,14 +4379,14 @@ func (c *Client) sendForwardMessages(ctx context.Context, request *ForwardMessag
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "ForwardMessages",
+	ctx, span := c.cfg.Tracer.Start(ctx, ForwardMessagesOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -4105,6 +4432,79 @@ func (c *Client) sendForwardMessages(ctx context.Context, request *ForwardMessag
 	return result, nil
 }
 
+// GetAvailableGifts invokes getAvailableGifts operation.
+//
+// Returns the list of gifts that can be sent by the bot to users. Requires no parameters. Returns a
+// [Gifts](https://core.telegram.org/bots/api#gifts) object.
+//
+// POST /getAvailableGifts
+func (c *Client) GetAvailableGifts(ctx context.Context) (*Result, error) {
+	res, err := c.sendGetAvailableGifts(ctx)
+	return res, err
+}
+
+func (c *Client) sendGetAvailableGifts(ctx context.Context) (res *Result, err error) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("getAvailableGifts"),
+		semconv.HTTPRequestMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/getAvailableGifts"),
+	}
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, GetAvailableGiftsOperation,
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	var pathParts [1]string
+	pathParts[0] = "/getAvailableGifts"
+	uri.AddPathParts(u, pathParts[:]...)
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "POST", u)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeGetAvailableGiftsResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
 // GetBusinessConnection invokes getBusinessConnection operation.
 //
 // Use this method to get information about the connection of the bot with a business account.
@@ -4120,7 +4520,7 @@ func (c *Client) GetBusinessConnection(ctx context.Context, request *GetBusiness
 func (c *Client) sendGetBusinessConnection(ctx context.Context, request *GetBusinessConnection) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getBusinessConnection"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/getBusinessConnection"),
 	}
 
@@ -4129,14 +4529,14 @@ func (c *Client) sendGetBusinessConnection(ctx context.Context, request *GetBusi
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "GetBusinessConnection",
+	ctx, span := c.cfg.Tracer.Start(ctx, GetBusinessConnectionOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -4196,7 +4596,7 @@ func (c *Client) GetChat(ctx context.Context, request *GetChat) (*Result, error)
 func (c *Client) sendGetChat(ctx context.Context, request *GetChat) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getChat"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/getChat"),
 	}
 
@@ -4205,14 +4605,14 @@ func (c *Client) sendGetChat(ctx context.Context, request *GetChat) (res *Result
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "GetChat",
+	ctx, span := c.cfg.Tracer.Start(ctx, GetChatOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -4272,7 +4672,7 @@ func (c *Client) GetChatAdministrators(ctx context.Context, request *GetChatAdmi
 func (c *Client) sendGetChatAdministrators(ctx context.Context, request *GetChatAdministrators) (res *ResultArrayOfChatMember, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getChatAdministrators"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/getChatAdministrators"),
 	}
 
@@ -4281,14 +4681,14 @@ func (c *Client) sendGetChatAdministrators(ctx context.Context, request *GetChat
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "GetChatAdministrators",
+	ctx, span := c.cfg.Tracer.Start(ctx, GetChatAdministratorsOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -4349,7 +4749,7 @@ func (c *Client) GetChatMember(ctx context.Context, request *GetChatMember) (*Re
 func (c *Client) sendGetChatMember(ctx context.Context, request *GetChatMember) (res *ResultChatMember, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getChatMember"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/getChatMember"),
 	}
 
@@ -4358,14 +4758,14 @@ func (c *Client) sendGetChatMember(ctx context.Context, request *GetChatMember) 
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "GetChatMember",
+	ctx, span := c.cfg.Tracer.Start(ctx, GetChatMemberOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -4424,7 +4824,7 @@ func (c *Client) GetChatMemberCount(ctx context.Context, request *GetChatMemberC
 func (c *Client) sendGetChatMemberCount(ctx context.Context, request *GetChatMemberCount) (res *ResultInt, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getChatMemberCount"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/getChatMemberCount"),
 	}
 
@@ -4433,14 +4833,14 @@ func (c *Client) sendGetChatMemberCount(ctx context.Context, request *GetChatMem
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "GetChatMemberCount",
+	ctx, span := c.cfg.Tracer.Start(ctx, GetChatMemberCountOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -4501,7 +4901,7 @@ func (c *Client) GetChatMenuButton(ctx context.Context, request OptGetChatMenuBu
 func (c *Client) sendGetChatMenuButton(ctx context.Context, request OptGetChatMenuButton) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getChatMenuButton"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/getChatMenuButton"),
 	}
 
@@ -4510,14 +4910,14 @@ func (c *Client) sendGetChatMenuButton(ctx context.Context, request OptGetChatMe
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "GetChatMenuButton",
+	ctx, span := c.cfg.Tracer.Start(ctx, GetChatMenuButtonOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -4577,7 +4977,7 @@ func (c *Client) GetCustomEmojiStickers(ctx context.Context, request *GetCustomE
 func (c *Client) sendGetCustomEmojiStickers(ctx context.Context, request *GetCustomEmojiStickers) (res *ResultArrayOfSticker, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getCustomEmojiStickers"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/getCustomEmojiStickers"),
 	}
 
@@ -4586,14 +4986,14 @@ func (c *Client) sendGetCustomEmojiStickers(ctx context.Context, request *GetCus
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "GetCustomEmojiStickers",
+	ctx, span := c.cfg.Tracer.Start(ctx, GetCustomEmojiStickersOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -4657,7 +5057,7 @@ func (c *Client) GetFile(ctx context.Context, request *GetFile) (*ResultFile, er
 func (c *Client) sendGetFile(ctx context.Context, request *GetFile) (res *ResultFile, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getFile"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/getFile"),
 	}
 
@@ -4666,14 +5066,14 @@ func (c *Client) sendGetFile(ctx context.Context, request *GetFile) (res *Result
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "GetFile",
+	ctx, span := c.cfg.Tracer.Start(ctx, GetFileOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -4734,7 +5134,7 @@ func (c *Client) GetForumTopicIconStickers(ctx context.Context) (*ResultArrayOfS
 func (c *Client) sendGetForumTopicIconStickers(ctx context.Context) (res *ResultArrayOfSticker, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getForumTopicIconStickers"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/getForumTopicIconStickers"),
 	}
 
@@ -4743,14 +5143,14 @@ func (c *Client) sendGetForumTopicIconStickers(ctx context.Context) (res *Result
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "GetForumTopicIconStickers",
+	ctx, span := c.cfg.Tracer.Start(ctx, GetForumTopicIconStickersOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -4808,7 +5208,7 @@ func (c *Client) GetGameHighScores(ctx context.Context, request *GetGameHighScor
 func (c *Client) sendGetGameHighScores(ctx context.Context, request *GetGameHighScores) (res *ResultArrayOfGameHighScore, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getGameHighScores"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/getGameHighScores"),
 	}
 
@@ -4817,14 +5217,14 @@ func (c *Client) sendGetGameHighScores(ctx context.Context, request *GetGameHigh
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "GetGameHighScores",
+	ctx, span := c.cfg.Tracer.Start(ctx, GetGameHighScoresOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -4884,7 +5284,7 @@ func (c *Client) GetMe(ctx context.Context) (*ResultUser, error) {
 func (c *Client) sendGetMe(ctx context.Context) (res *ResultUser, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getMe"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/getMe"),
 	}
 
@@ -4893,14 +5293,14 @@ func (c *Client) sendGetMe(ctx context.Context) (res *ResultUser, err error) {
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "GetMe",
+	ctx, span := c.cfg.Tracer.Start(ctx, GetMeOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -4958,7 +5358,7 @@ func (c *Client) GetMyCommands(ctx context.Context, request OptGetMyCommands) (*
 func (c *Client) sendGetMyCommands(ctx context.Context, request OptGetMyCommands) (res *ResultArrayOfBotCommand, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getMyCommands"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/getMyCommands"),
 	}
 
@@ -4967,14 +5367,14 @@ func (c *Client) sendGetMyCommands(ctx context.Context, request OptGetMyCommands
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "GetMyCommands",
+	ctx, span := c.cfg.Tracer.Start(ctx, GetMyCommandsOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -5034,7 +5434,7 @@ func (c *Client) GetMyDefaultAdministratorRights(ctx context.Context, request Op
 func (c *Client) sendGetMyDefaultAdministratorRights(ctx context.Context, request OptGetMyDefaultAdministratorRights) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getMyDefaultAdministratorRights"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/getMyDefaultAdministratorRights"),
 	}
 
@@ -5043,14 +5443,14 @@ func (c *Client) sendGetMyDefaultAdministratorRights(ctx context.Context, reques
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "GetMyDefaultAdministratorRights",
+	ctx, span := c.cfg.Tracer.Start(ctx, GetMyDefaultAdministratorRightsOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -5110,7 +5510,7 @@ func (c *Client) GetMyDescription(ctx context.Context, request OptGetMyDescripti
 func (c *Client) sendGetMyDescription(ctx context.Context, request OptGetMyDescription) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getMyDescription"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/getMyDescription"),
 	}
 
@@ -5119,14 +5519,14 @@ func (c *Client) sendGetMyDescription(ctx context.Context, request OptGetMyDescr
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "GetMyDescription",
+	ctx, span := c.cfg.Tracer.Start(ctx, GetMyDescriptionOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -5186,7 +5586,7 @@ func (c *Client) GetMyName(ctx context.Context, request OptGetMyName) (*Result, 
 func (c *Client) sendGetMyName(ctx context.Context, request OptGetMyName) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getMyName"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/getMyName"),
 	}
 
@@ -5195,14 +5595,14 @@ func (c *Client) sendGetMyName(ctx context.Context, request OptGetMyName) (res *
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "GetMyName",
+	ctx, span := c.cfg.Tracer.Start(ctx, GetMyNameOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -5262,7 +5662,7 @@ func (c *Client) GetMyShortDescription(ctx context.Context, request OptGetMyShor
 func (c *Client) sendGetMyShortDescription(ctx context.Context, request OptGetMyShortDescription) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getMyShortDescription"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/getMyShortDescription"),
 	}
 
@@ -5271,14 +5671,14 @@ func (c *Client) sendGetMyShortDescription(ctx context.Context, request OptGetMy
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "GetMyShortDescription",
+	ctx, span := c.cfg.Tracer.Start(ctx, GetMyShortDescriptionOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -5338,7 +5738,7 @@ func (c *Client) GetStarTransactions(ctx context.Context, request OptGetStarTran
 func (c *Client) sendGetStarTransactions(ctx context.Context, request OptGetStarTransactions) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getStarTransactions"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/getStarTransactions"),
 	}
 
@@ -5347,14 +5747,14 @@ func (c *Client) sendGetStarTransactions(ctx context.Context, request OptGetStar
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "GetStarTransactions",
+	ctx, span := c.cfg.Tracer.Start(ctx, GetStarTransactionsOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -5414,7 +5814,7 @@ func (c *Client) GetStickerSet(ctx context.Context, request *GetStickerSet) (*Re
 func (c *Client) sendGetStickerSet(ctx context.Context, request *GetStickerSet) (res *ResultStickerSet, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getStickerSet"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/getStickerSet"),
 	}
 
@@ -5423,14 +5823,14 @@ func (c *Client) sendGetStickerSet(ctx context.Context, request *GetStickerSet) 
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "GetStickerSet",
+	ctx, span := c.cfg.Tracer.Start(ctx, GetStickerSetOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -5491,7 +5891,7 @@ func (c *Client) GetUpdates(ctx context.Context, request OptGetUpdates) (*Result
 func (c *Client) sendGetUpdates(ctx context.Context, request OptGetUpdates) (res *ResultArrayOfUpdate, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getUpdates"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/getUpdates"),
 	}
 
@@ -5500,14 +5900,14 @@ func (c *Client) sendGetUpdates(ctx context.Context, request OptGetUpdates) (res
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "GetUpdates",
+	ctx, span := c.cfg.Tracer.Start(ctx, GetUpdatesOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -5567,7 +5967,7 @@ func (c *Client) GetUserChatBoosts(ctx context.Context, request *GetUserChatBoos
 func (c *Client) sendGetUserChatBoosts(ctx context.Context, request *GetUserChatBoosts) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getUserChatBoosts"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/getUserChatBoosts"),
 	}
 
@@ -5576,14 +5976,14 @@ func (c *Client) sendGetUserChatBoosts(ctx context.Context, request *GetUserChat
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "GetUserChatBoosts",
+	ctx, span := c.cfg.Tracer.Start(ctx, GetUserChatBoostsOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -5643,7 +6043,7 @@ func (c *Client) GetUserProfilePhotos(ctx context.Context, request *GetUserProfi
 func (c *Client) sendGetUserProfilePhotos(ctx context.Context, request *GetUserProfilePhotos) (res *ResultUserProfilePhotos, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getUserProfilePhotos"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/getUserProfilePhotos"),
 	}
 
@@ -5652,14 +6052,14 @@ func (c *Client) sendGetUserProfilePhotos(ctx context.Context, request *GetUserP
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "GetUserProfilePhotos",
+	ctx, span := c.cfg.Tracer.Start(ctx, GetUserProfilePhotosOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -5721,7 +6121,7 @@ func (c *Client) GetWebhookInfo(ctx context.Context) (*ResultWebhookInfo, error)
 func (c *Client) sendGetWebhookInfo(ctx context.Context) (res *ResultWebhookInfo, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("getWebhookInfo"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/getWebhookInfo"),
 	}
 
@@ -5730,14 +6130,14 @@ func (c *Client) sendGetWebhookInfo(ctx context.Context) (res *ResultWebhookInfo
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "GetWebhookInfo",
+	ctx, span := c.cfg.Tracer.Start(ctx, GetWebhookInfoOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -5795,7 +6195,7 @@ func (c *Client) HideGeneralForumTopic(ctx context.Context, request *HideGeneral
 func (c *Client) sendHideGeneralForumTopic(ctx context.Context, request *HideGeneralForumTopic) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("hideGeneralForumTopic"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/hideGeneralForumTopic"),
 	}
 
@@ -5804,14 +6204,14 @@ func (c *Client) sendHideGeneralForumTopic(ctx context.Context, request *HideGen
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "HideGeneralForumTopic",
+	ctx, span := c.cfg.Tracer.Start(ctx, HideGeneralForumTopicOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -5870,7 +6270,7 @@ func (c *Client) LeaveChat(ctx context.Context, request *LeaveChat) (*Result, er
 func (c *Client) sendLeaveChat(ctx context.Context, request *LeaveChat) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("leaveChat"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/leaveChat"),
 	}
 
@@ -5879,14 +6279,14 @@ func (c *Client) sendLeaveChat(ctx context.Context, request *LeaveChat) (res *Re
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "LeaveChat",
+	ctx, span := c.cfg.Tracer.Start(ctx, LeaveChatOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -5949,7 +6349,7 @@ func (c *Client) LogOut(ctx context.Context) (*Result, error) {
 func (c *Client) sendLogOut(ctx context.Context) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("logOut"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/logOut"),
 	}
 
@@ -5958,14 +6358,14 @@ func (c *Client) sendLogOut(ctx context.Context) (res *Result, err error) {
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "LogOut",
+	ctx, span := c.cfg.Tracer.Start(ctx, LogOutOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -6024,7 +6424,7 @@ func (c *Client) PinChatMessage(ctx context.Context, request *PinChatMessage) (*
 func (c *Client) sendPinChatMessage(ctx context.Context, request *PinChatMessage) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("pinChatMessage"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/pinChatMessage"),
 	}
 
@@ -6033,14 +6433,14 @@ func (c *Client) sendPinChatMessage(ctx context.Context, request *PinChatMessage
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "PinChatMessage",
+	ctx, span := c.cfg.Tracer.Start(ctx, PinChatMessageOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -6101,7 +6501,7 @@ func (c *Client) PromoteChatMember(ctx context.Context, request *PromoteChatMemb
 func (c *Client) sendPromoteChatMember(ctx context.Context, request *PromoteChatMember) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("promoteChatMember"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/promoteChatMember"),
 	}
 
@@ -6110,14 +6510,14 @@ func (c *Client) sendPromoteChatMember(ctx context.Context, request *PromoteChat
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "PromoteChatMember",
+	ctx, span := c.cfg.Tracer.Start(ctx, PromoteChatMemberOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -6177,7 +6577,7 @@ func (c *Client) RefundStarPayment(ctx context.Context, request *RefundStarPayme
 func (c *Client) sendRefundStarPayment(ctx context.Context, request *RefundStarPayment) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("refundStarPayment"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/refundStarPayment"),
 	}
 
@@ -6186,14 +6586,14 @@ func (c *Client) sendRefundStarPayment(ctx context.Context, request *RefundStarP
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "RefundStarPayment",
+	ctx, span := c.cfg.Tracer.Start(ctx, RefundStarPaymentOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -6239,6 +6639,160 @@ func (c *Client) sendRefundStarPayment(ctx context.Context, request *RefundStarP
 	return result, nil
 }
 
+// RemoveChatVerification invokes removeChatVerification operation.
+//
+// Removes verification from a chat that is currently verified [on behalf of the
+// organization](https://telegram.org/verify#third-party-verification) represented by the bot.
+// Returns _True_ on success.
+//
+// POST /removeChatVerification
+func (c *Client) RemoveChatVerification(ctx context.Context, request *RemoveChatVerification) (*Result, error) {
+	res, err := c.sendRemoveChatVerification(ctx, request)
+	return res, err
+}
+
+func (c *Client) sendRemoveChatVerification(ctx context.Context, request *RemoveChatVerification) (res *Result, err error) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("removeChatVerification"),
+		semconv.HTTPRequestMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/removeChatVerification"),
+	}
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, RemoveChatVerificationOperation,
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	var pathParts [1]string
+	pathParts[0] = "/removeChatVerification"
+	uri.AddPathParts(u, pathParts[:]...)
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "POST", u)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeRemoveChatVerificationRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeRemoveChatVerificationResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
+// RemoveUserVerification invokes removeUserVerification operation.
+//
+// Removes verification from a user who is currently verified [on behalf of the
+// organization](https://telegram.org/verify#third-party-verification) represented by the bot.
+// Returns _True_ on success.
+//
+// POST /removeUserVerification
+func (c *Client) RemoveUserVerification(ctx context.Context, request *RemoveUserVerification) (*Result, error) {
+	res, err := c.sendRemoveUserVerification(ctx, request)
+	return res, err
+}
+
+func (c *Client) sendRemoveUserVerification(ctx context.Context, request *RemoveUserVerification) (res *Result, err error) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("removeUserVerification"),
+		semconv.HTTPRequestMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/removeUserVerification"),
+	}
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, RemoveUserVerificationOperation,
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	var pathParts [1]string
+	pathParts[0] = "/removeUserVerification"
+	uri.AddPathParts(u, pathParts[:]...)
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "POST", u)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeRemoveUserVerificationRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeRemoveUserVerificationResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
 // ReopenForumTopic invokes reopenForumTopic operation.
 //
 // Use this method to reopen a closed topic in a forum supergroup chat. The bot must be an
@@ -6254,7 +6808,7 @@ func (c *Client) ReopenForumTopic(ctx context.Context, request *ReopenForumTopic
 func (c *Client) sendReopenForumTopic(ctx context.Context, request *ReopenForumTopic) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("reopenForumTopic"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/reopenForumTopic"),
 	}
 
@@ -6263,14 +6817,14 @@ func (c *Client) sendReopenForumTopic(ctx context.Context, request *ReopenForumT
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "ReopenForumTopic",
+	ctx, span := c.cfg.Tracer.Start(ctx, ReopenForumTopicOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -6331,7 +6885,7 @@ func (c *Client) ReopenGeneralForumTopic(ctx context.Context, request *ReopenGen
 func (c *Client) sendReopenGeneralForumTopic(ctx context.Context, request *ReopenGeneralForumTopic) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("reopenGeneralForumTopic"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/reopenGeneralForumTopic"),
 	}
 
@@ -6340,14 +6894,14 @@ func (c *Client) sendReopenGeneralForumTopic(ctx context.Context, request *Reope
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "ReopenGeneralForumTopic",
+	ctx, span := c.cfg.Tracer.Start(ctx, ReopenGeneralForumTopicOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -6410,7 +6964,7 @@ func (c *Client) ReplaceStickerInSet(ctx context.Context, request *ReplaceSticke
 func (c *Client) sendReplaceStickerInSet(ctx context.Context, request *ReplaceStickerInSet) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("replaceStickerInSet"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/replaceStickerInSet"),
 	}
 
@@ -6419,14 +6973,14 @@ func (c *Client) sendReplaceStickerInSet(ctx context.Context, request *ReplaceSt
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "ReplaceStickerInSet",
+	ctx, span := c.cfg.Tracer.Start(ctx, ReplaceStickerInSetOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -6487,7 +7041,7 @@ func (c *Client) RestrictChatMember(ctx context.Context, request *RestrictChatMe
 func (c *Client) sendRestrictChatMember(ctx context.Context, request *RestrictChatMember) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("restrictChatMember"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/restrictChatMember"),
 	}
 
@@ -6496,14 +7050,14 @@ func (c *Client) sendRestrictChatMember(ctx context.Context, request *RestrictCh
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "RestrictChatMember",
+	ctx, span := c.cfg.Tracer.Start(ctx, RestrictChatMemberOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -6565,7 +7119,7 @@ func (c *Client) RevokeChatInviteLink(ctx context.Context, request *RevokeChatIn
 func (c *Client) sendRevokeChatInviteLink(ctx context.Context, request *RevokeChatInviteLink) (res *ResultChatInviteLink, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("revokeChatInviteLink"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/revokeChatInviteLink"),
 	}
 
@@ -6574,14 +7128,14 @@ func (c *Client) sendRevokeChatInviteLink(ctx context.Context, request *RevokeCh
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "RevokeChatInviteLink",
+	ctx, span := c.cfg.Tracer.Start(ctx, RevokeChatInviteLinkOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -6627,6 +7181,82 @@ func (c *Client) sendRevokeChatInviteLink(ctx context.Context, request *RevokeCh
 	return result, nil
 }
 
+// SavePreparedInlineMessage invokes savePreparedInlineMessage operation.
+//
+// Stores a message that can be sent by a user of a Mini App. Returns a
+// [PreparedInlineMessage](https://core.telegram.org/bots/api#preparedinlinemessage) object.
+//
+// POST /savePreparedInlineMessage
+func (c *Client) SavePreparedInlineMessage(ctx context.Context, request *SavePreparedInlineMessage) (*Result, error) {
+	res, err := c.sendSavePreparedInlineMessage(ctx, request)
+	return res, err
+}
+
+func (c *Client) sendSavePreparedInlineMessage(ctx context.Context, request *SavePreparedInlineMessage) (res *Result, err error) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("savePreparedInlineMessage"),
+		semconv.HTTPRequestMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/savePreparedInlineMessage"),
+	}
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, SavePreparedInlineMessageOperation,
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	var pathParts [1]string
+	pathParts[0] = "/savePreparedInlineMessage"
+	uri.AddPathParts(u, pathParts[:]...)
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "POST", u)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeSavePreparedInlineMessageRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeSavePreparedInlineMessageResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
 // SendAnimation invokes sendAnimation operation.
 //
 // Use this method to send animation files (GIF or H.264/MPEG-4 AVC video without sound). On success,
@@ -6642,7 +7272,7 @@ func (c *Client) SendAnimation(ctx context.Context, request *SendAnimation) (*Re
 func (c *Client) sendSendAnimation(ctx context.Context, request *SendAnimation) (res *ResultMessage, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendAnimation"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/sendAnimation"),
 	}
 
@@ -6651,14 +7281,14 @@ func (c *Client) sendSendAnimation(ctx context.Context, request *SendAnimation) 
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "SendAnimation",
+	ctx, span := c.cfg.Tracer.Start(ctx, SendAnimationOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -6718,7 +7348,7 @@ func (c *Client) SendAudio(ctx context.Context, request *SendAudio) (*ResultMess
 func (c *Client) sendSendAudio(ctx context.Context, request *SendAudio) (res *ResultMessage, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendAudio"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/sendAudio"),
 	}
 
@@ -6727,14 +7357,14 @@ func (c *Client) sendSendAudio(ctx context.Context, request *SendAudio) (res *Re
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "SendAudio",
+	ctx, span := c.cfg.Tracer.Start(ctx, SendAudioOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -6794,7 +7424,7 @@ func (c *Client) SendChatAction(ctx context.Context, request *SendChatAction) (*
 func (c *Client) sendSendChatAction(ctx context.Context, request *SendChatAction) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendChatAction"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/sendChatAction"),
 	}
 
@@ -6803,14 +7433,14 @@ func (c *Client) sendSendChatAction(ctx context.Context, request *SendChatAction
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "SendChatAction",
+	ctx, span := c.cfg.Tracer.Start(ctx, SendChatActionOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -6870,7 +7500,7 @@ func (c *Client) SendContact(ctx context.Context, request *SendContact) (*Result
 func (c *Client) sendSendContact(ctx context.Context, request *SendContact) (res *ResultMessage, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendContact"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/sendContact"),
 	}
 
@@ -6879,14 +7509,14 @@ func (c *Client) sendSendContact(ctx context.Context, request *SendContact) (res
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "SendContact",
+	ctx, span := c.cfg.Tracer.Start(ctx, SendContactOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -6946,7 +7576,7 @@ func (c *Client) SendDice(ctx context.Context, request *SendDice) (*ResultMessag
 func (c *Client) sendSendDice(ctx context.Context, request *SendDice) (res *ResultMessage, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendDice"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/sendDice"),
 	}
 
@@ -6955,14 +7585,14 @@ func (c *Client) sendSendDice(ctx context.Context, request *SendDice) (res *Resu
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "SendDice",
+	ctx, span := c.cfg.Tracer.Start(ctx, SendDiceOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -7023,7 +7653,7 @@ func (c *Client) SendDocument(ctx context.Context, request *SendDocument) (*Resu
 func (c *Client) sendSendDocument(ctx context.Context, request *SendDocument) (res *ResultMessage, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendDocument"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/sendDocument"),
 	}
 
@@ -7032,14 +7662,14 @@ func (c *Client) sendSendDocument(ctx context.Context, request *SendDocument) (r
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "SendDocument",
+	ctx, span := c.cfg.Tracer.Start(ctx, SendDocumentOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -7099,7 +7729,7 @@ func (c *Client) SendGame(ctx context.Context, request *SendGame) (*ResultMessag
 func (c *Client) sendSendGame(ctx context.Context, request *SendGame) (res *ResultMessage, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendGame"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/sendGame"),
 	}
 
@@ -7108,14 +7738,14 @@ func (c *Client) sendSendGame(ctx context.Context, request *SendGame) (res *Resu
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "SendGame",
+	ctx, span := c.cfg.Tracer.Start(ctx, SendGameOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -7161,6 +7791,82 @@ func (c *Client) sendSendGame(ctx context.Context, request *SendGame) (res *Resu
 	return result, nil
 }
 
+// SendGift invokes sendGift operation.
+//
+// Sends a gift to the given user. The gift can't be converted to Telegram Stars by the user. Returns
+// _True_ on success.
+//
+// POST /sendGift
+func (c *Client) SendGift(ctx context.Context, request *SendGift) (*Result, error) {
+	res, err := c.sendSendGift(ctx, request)
+	return res, err
+}
+
+func (c *Client) sendSendGift(ctx context.Context, request *SendGift) (res *Result, err error) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("sendGift"),
+		semconv.HTTPRequestMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/sendGift"),
+	}
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, SendGiftOperation,
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	var pathParts [1]string
+	pathParts[0] = "/sendGift"
+	uri.AddPathParts(u, pathParts[:]...)
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "POST", u)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeSendGiftRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeSendGiftResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
 // SendInvoice invokes sendInvoice operation.
 //
 // Use this method to send invoices. On success, the sent [Message](https://core.telegram.
@@ -7175,7 +7881,7 @@ func (c *Client) SendInvoice(ctx context.Context, request *SendInvoice) (*Result
 func (c *Client) sendSendInvoice(ctx context.Context, request *SendInvoice) (res *ResultMessage, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendInvoice"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/sendInvoice"),
 	}
 
@@ -7184,14 +7890,14 @@ func (c *Client) sendSendInvoice(ctx context.Context, request *SendInvoice) (res
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "SendInvoice",
+	ctx, span := c.cfg.Tracer.Start(ctx, SendInvoiceOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -7251,7 +7957,7 @@ func (c *Client) SendLocation(ctx context.Context, request *SendLocation) (*Resu
 func (c *Client) sendSendLocation(ctx context.Context, request *SendLocation) (res *ResultMessage, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendLocation"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/sendLocation"),
 	}
 
@@ -7260,14 +7966,14 @@ func (c *Client) sendSendLocation(ctx context.Context, request *SendLocation) (r
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "SendLocation",
+	ctx, span := c.cfg.Tracer.Start(ctx, SendLocationOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -7328,7 +8034,7 @@ func (c *Client) SendMediaGroup(ctx context.Context, request *SendMediaGroup) (*
 func (c *Client) sendSendMediaGroup(ctx context.Context, request *SendMediaGroup) (res *ResultArrayOfMessage, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendMediaGroup"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/sendMediaGroup"),
 	}
 
@@ -7337,14 +8043,14 @@ func (c *Client) sendSendMediaGroup(ctx context.Context, request *SendMediaGroup
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "SendMediaGroup",
+	ctx, span := c.cfg.Tracer.Start(ctx, SendMediaGroupOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -7404,7 +8110,7 @@ func (c *Client) SendMessage(ctx context.Context, request *SendMessage) (*Result
 func (c *Client) sendSendMessage(ctx context.Context, request *SendMessage) (res *ResultMessage, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendMessage"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/sendMessage"),
 	}
 
@@ -7413,14 +8119,14 @@ func (c *Client) sendSendMessage(ctx context.Context, request *SendMessage) (res
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "SendMessage",
+	ctx, span := c.cfg.Tracer.Start(ctx, SendMessageOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -7466,6 +8172,82 @@ func (c *Client) sendSendMessage(ctx context.Context, request *SendMessage) (res
 	return result, nil
 }
 
+// SendPaidMedia invokes sendPaidMedia operation.
+//
+// Use this method to send paid media. On success, the sent [Message](https://core.telegram.
+// org/bots/api#message) is returned.
+//
+// POST /sendPaidMedia
+func (c *Client) SendPaidMedia(ctx context.Context, request *SendPaidMedia) (*ResultMessage, error) {
+	res, err := c.sendSendPaidMedia(ctx, request)
+	return res, err
+}
+
+func (c *Client) sendSendPaidMedia(ctx context.Context, request *SendPaidMedia) (res *ResultMessage, err error) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("sendPaidMedia"),
+		semconv.HTTPRequestMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/sendPaidMedia"),
+	}
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, SendPaidMediaOperation,
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	var pathParts [1]string
+	pathParts[0] = "/sendPaidMedia"
+	uri.AddPathParts(u, pathParts[:]...)
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "POST", u)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeSendPaidMediaRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeSendPaidMediaResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
 // SendPhoto invokes sendPhoto operation.
 //
 // Use this method to send photos. On success, the sent [Message](https://core.telegram.
@@ -7480,7 +8262,7 @@ func (c *Client) SendPhoto(ctx context.Context, request *SendPhoto) (*ResultMess
 func (c *Client) sendSendPhoto(ctx context.Context, request *SendPhoto) (res *ResultMessage, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendPhoto"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/sendPhoto"),
 	}
 
@@ -7489,14 +8271,14 @@ func (c *Client) sendSendPhoto(ctx context.Context, request *SendPhoto) (res *Re
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "SendPhoto",
+	ctx, span := c.cfg.Tracer.Start(ctx, SendPhotoOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -7556,7 +8338,7 @@ func (c *Client) SendPoll(ctx context.Context, request *SendPoll) (*ResultMessag
 func (c *Client) sendSendPoll(ctx context.Context, request *SendPoll) (res *ResultMessage, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendPoll"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/sendPoll"),
 	}
 
@@ -7565,14 +8347,14 @@ func (c *Client) sendSendPoll(ctx context.Context, request *SendPoll) (res *Resu
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "SendPoll",
+	ctx, span := c.cfg.Tracer.Start(ctx, SendPollOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -7635,7 +8417,7 @@ func (c *Client) SendSticker(ctx context.Context, request *SendSticker) (*Result
 func (c *Client) sendSendSticker(ctx context.Context, request *SendSticker) (res *ResultMessage, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendSticker"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/sendSticker"),
 	}
 
@@ -7644,14 +8426,14 @@ func (c *Client) sendSendSticker(ctx context.Context, request *SendSticker) (res
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "SendSticker",
+	ctx, span := c.cfg.Tracer.Start(ctx, SendStickerOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -7711,7 +8493,7 @@ func (c *Client) SendVenue(ctx context.Context, request *SendVenue) (*ResultMess
 func (c *Client) sendSendVenue(ctx context.Context, request *SendVenue) (res *ResultMessage, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendVenue"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/sendVenue"),
 	}
 
@@ -7720,14 +8502,14 @@ func (c *Client) sendSendVenue(ctx context.Context, request *SendVenue) (res *Re
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "SendVenue",
+	ctx, span := c.cfg.Tracer.Start(ctx, SendVenueOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -7789,7 +8571,7 @@ func (c *Client) SendVideo(ctx context.Context, request *SendVideo) (*ResultMess
 func (c *Client) sendSendVideo(ctx context.Context, request *SendVideo) (res *ResultMessage, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendVideo"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/sendVideo"),
 	}
 
@@ -7798,14 +8580,14 @@ func (c *Client) sendSendVideo(ctx context.Context, request *SendVideo) (res *Re
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "SendVideo",
+	ctx, span := c.cfg.Tracer.Start(ctx, SendVideoOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -7866,7 +8648,7 @@ func (c *Client) SendVideoNote(ctx context.Context, request *SendVideoNote) (*Re
 func (c *Client) sendSendVideoNote(ctx context.Context, request *SendVideoNote) (res *ResultMessage, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendVideoNote"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/sendVideoNote"),
 	}
 
@@ -7875,14 +8657,14 @@ func (c *Client) sendSendVideoNote(ctx context.Context, request *SendVideoNote) 
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "SendVideoNote",
+	ctx, span := c.cfg.Tracer.Start(ctx, SendVideoNoteOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -7946,7 +8728,7 @@ func (c *Client) SendVoice(ctx context.Context, request *SendVoice) (*ResultMess
 func (c *Client) sendSendVoice(ctx context.Context, request *SendVoice) (res *ResultMessage, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("sendVoice"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/sendVoice"),
 	}
 
@@ -7955,14 +8737,14 @@ func (c *Client) sendSendVoice(ctx context.Context, request *SendVoice) (res *Re
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "SendVoice",
+	ctx, span := c.cfg.Tracer.Start(ctx, SendVoiceOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -8022,7 +8804,7 @@ func (c *Client) SetChatAdministratorCustomTitle(ctx context.Context, request *S
 func (c *Client) sendSetChatAdministratorCustomTitle(ctx context.Context, request *SetChatAdministratorCustomTitle) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setChatAdministratorCustomTitle"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/setChatAdministratorCustomTitle"),
 	}
 
@@ -8031,14 +8813,14 @@ func (c *Client) sendSetChatAdministratorCustomTitle(ctx context.Context, reques
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "SetChatAdministratorCustomTitle",
+	ctx, span := c.cfg.Tracer.Start(ctx, SetChatAdministratorCustomTitleOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -8099,7 +8881,7 @@ func (c *Client) SetChatDescription(ctx context.Context, request *SetChatDescrip
 func (c *Client) sendSetChatDescription(ctx context.Context, request *SetChatDescription) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setChatDescription"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/setChatDescription"),
 	}
 
@@ -8108,14 +8890,14 @@ func (c *Client) sendSetChatDescription(ctx context.Context, request *SetChatDes
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "SetChatDescription",
+	ctx, span := c.cfg.Tracer.Start(ctx, SetChatDescriptionOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -8175,7 +8957,7 @@ func (c *Client) SetChatMenuButton(ctx context.Context, request OptSetChatMenuBu
 func (c *Client) sendSetChatMenuButton(ctx context.Context, request OptSetChatMenuButton) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setChatMenuButton"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/setChatMenuButton"),
 	}
 
@@ -8184,14 +8966,14 @@ func (c *Client) sendSetChatMenuButton(ctx context.Context, request OptSetChatMe
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "SetChatMenuButton",
+	ctx, span := c.cfg.Tracer.Start(ctx, SetChatMenuButtonOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -8252,7 +9034,7 @@ func (c *Client) SetChatPermissions(ctx context.Context, request *SetChatPermiss
 func (c *Client) sendSetChatPermissions(ctx context.Context, request *SetChatPermissions) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setChatPermissions"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/setChatPermissions"),
 	}
 
@@ -8261,14 +9043,14 @@ func (c *Client) sendSetChatPermissions(ctx context.Context, request *SetChatPer
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "SetChatPermissions",
+	ctx, span := c.cfg.Tracer.Start(ctx, SetChatPermissionsOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -8331,7 +9113,7 @@ func (c *Client) SetChatPhoto(ctx context.Context, request *SetChatPhoto) (*Resu
 func (c *Client) sendSetChatPhoto(ctx context.Context, request *SetChatPhoto) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setChatPhoto"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/setChatPhoto"),
 	}
 
@@ -8340,14 +9122,14 @@ func (c *Client) sendSetChatPhoto(ctx context.Context, request *SetChatPhoto) (r
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "SetChatPhoto",
+	ctx, span := c.cfg.Tracer.Start(ctx, SetChatPhotoOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -8409,7 +9191,7 @@ func (c *Client) SetChatStickerSet(ctx context.Context, request *SetChatStickerS
 func (c *Client) sendSetChatStickerSet(ctx context.Context, request *SetChatStickerSet) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setChatStickerSet"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/setChatStickerSet"),
 	}
 
@@ -8418,14 +9200,14 @@ func (c *Client) sendSetChatStickerSet(ctx context.Context, request *SetChatStic
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "SetChatStickerSet",
+	ctx, span := c.cfg.Tracer.Start(ctx, SetChatStickerSetOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -8486,7 +9268,7 @@ func (c *Client) SetChatTitle(ctx context.Context, request *SetChatTitle) (*Resu
 func (c *Client) sendSetChatTitle(ctx context.Context, request *SetChatTitle) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setChatTitle"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/setChatTitle"),
 	}
 
@@ -8495,14 +9277,14 @@ func (c *Client) sendSetChatTitle(ctx context.Context, request *SetChatTitle) (r
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "SetChatTitle",
+	ctx, span := c.cfg.Tracer.Start(ctx, SetChatTitleOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -8561,7 +9343,7 @@ func (c *Client) SetCustomEmojiStickerSetThumbnail(ctx context.Context, request 
 func (c *Client) sendSetCustomEmojiStickerSetThumbnail(ctx context.Context, request *SetCustomEmojiStickerSetThumbnail) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setCustomEmojiStickerSetThumbnail"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/setCustomEmojiStickerSetThumbnail"),
 	}
 
@@ -8570,14 +9352,14 @@ func (c *Client) sendSetCustomEmojiStickerSetThumbnail(ctx context.Context, requ
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "SetCustomEmojiStickerSetThumbnail",
+	ctx, span := c.cfg.Tracer.Start(ctx, SetCustomEmojiStickerSetThumbnailOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -8639,7 +9421,7 @@ func (c *Client) SetGameScore(ctx context.Context, request *SetGameScore) (*Resu
 func (c *Client) sendSetGameScore(ctx context.Context, request *SetGameScore) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setGameScore"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/setGameScore"),
 	}
 
@@ -8648,14 +9430,14 @@ func (c *Client) sendSetGameScore(ctx context.Context, request *SetGameScore) (r
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "SetGameScore",
+	ctx, span := c.cfg.Tracer.Start(ctx, SetGameScoreOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -8705,7 +9487,7 @@ func (c *Client) sendSetGameScore(ctx context.Context, request *SetGameScore) (r
 //
 // Use this method to change the chosen reactions on a message. Service messages can't be reacted to.
 // Automatically forwarded messages from a channel to its discussion group have the same available
-// reactions as messages in the channel. Returns _True_ on success.
+// reactions as messages in the channel. Bots can't use paid reactions. Returns _True_ on success.
 //
 // POST /setMessageReaction
 func (c *Client) SetMessageReaction(ctx context.Context, request *SetMessageReaction) (*Result, error) {
@@ -8716,7 +9498,7 @@ func (c *Client) SetMessageReaction(ctx context.Context, request *SetMessageReac
 func (c *Client) sendSetMessageReaction(ctx context.Context, request *SetMessageReaction) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setMessageReaction"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/setMessageReaction"),
 	}
 
@@ -8725,14 +9507,14 @@ func (c *Client) sendSetMessageReaction(ctx context.Context, request *SetMessage
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "SetMessageReaction",
+	ctx, span := c.cfg.Tracer.Start(ctx, SetMessageReactionOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -8792,7 +9574,7 @@ func (c *Client) SetMyCommands(ctx context.Context, request *SetMyCommands) (*Re
 func (c *Client) sendSetMyCommands(ctx context.Context, request *SetMyCommands) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setMyCommands"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/setMyCommands"),
 	}
 
@@ -8801,14 +9583,14 @@ func (c *Client) sendSetMyCommands(ctx context.Context, request *SetMyCommands) 
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "SetMyCommands",
+	ctx, span := c.cfg.Tracer.Start(ctx, SetMyCommandsOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -8869,7 +9651,7 @@ func (c *Client) SetMyDefaultAdministratorRights(ctx context.Context, request Op
 func (c *Client) sendSetMyDefaultAdministratorRights(ctx context.Context, request OptSetMyDefaultAdministratorRights) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setMyDefaultAdministratorRights"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/setMyDefaultAdministratorRights"),
 	}
 
@@ -8878,14 +9660,14 @@ func (c *Client) sendSetMyDefaultAdministratorRights(ctx context.Context, reques
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "SetMyDefaultAdministratorRights",
+	ctx, span := c.cfg.Tracer.Start(ctx, SetMyDefaultAdministratorRightsOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -8945,7 +9727,7 @@ func (c *Client) SetMyDescription(ctx context.Context, request OptSetMyDescripti
 func (c *Client) sendSetMyDescription(ctx context.Context, request OptSetMyDescription) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setMyDescription"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/setMyDescription"),
 	}
 
@@ -8954,14 +9736,14 @@ func (c *Client) sendSetMyDescription(ctx context.Context, request OptSetMyDescr
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "SetMyDescription",
+	ctx, span := c.cfg.Tracer.Start(ctx, SetMyDescriptionOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -9020,7 +9802,7 @@ func (c *Client) SetMyName(ctx context.Context, request OptSetMyName) (*Result, 
 func (c *Client) sendSetMyName(ctx context.Context, request OptSetMyName) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setMyName"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/setMyName"),
 	}
 
@@ -9029,14 +9811,14 @@ func (c *Client) sendSetMyName(ctx context.Context, request OptSetMyName) (res *
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "SetMyName",
+	ctx, span := c.cfg.Tracer.Start(ctx, SetMyNameOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -9096,7 +9878,7 @@ func (c *Client) SetMyShortDescription(ctx context.Context, request OptSetMyShor
 func (c *Client) sendSetMyShortDescription(ctx context.Context, request OptSetMyShortDescription) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setMyShortDescription"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/setMyShortDescription"),
 	}
 
@@ -9105,14 +9887,14 @@ func (c *Client) sendSetMyShortDescription(ctx context.Context, request OptSetMy
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "SetMyShortDescription",
+	ctx, span := c.cfg.Tracer.Start(ctx, SetMyShortDescriptionOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -9174,7 +9956,7 @@ func (c *Client) SetPassportDataErrors(ctx context.Context, request *SetPassport
 func (c *Client) sendSetPassportDataErrors(ctx context.Context, request *SetPassportDataErrors) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setPassportDataErrors"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/setPassportDataErrors"),
 	}
 
@@ -9183,14 +9965,14 @@ func (c *Client) sendSetPassportDataErrors(ctx context.Context, request *SetPass
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "SetPassportDataErrors",
+	ctx, span := c.cfg.Tracer.Start(ctx, SetPassportDataErrorsOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -9250,7 +10032,7 @@ func (c *Client) SetStickerEmojiList(ctx context.Context, request *SetStickerEmo
 func (c *Client) sendSetStickerEmojiList(ctx context.Context, request *SetStickerEmojiList) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setStickerEmojiList"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/setStickerEmojiList"),
 	}
 
@@ -9259,14 +10041,14 @@ func (c *Client) sendSetStickerEmojiList(ctx context.Context, request *SetSticke
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "SetStickerEmojiList",
+	ctx, span := c.cfg.Tracer.Start(ctx, SetStickerEmojiListOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -9326,7 +10108,7 @@ func (c *Client) SetStickerKeywords(ctx context.Context, request *SetStickerKeyw
 func (c *Client) sendSetStickerKeywords(ctx context.Context, request *SetStickerKeywords) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setStickerKeywords"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/setStickerKeywords"),
 	}
 
@@ -9335,14 +10117,14 @@ func (c *Client) sendSetStickerKeywords(ctx context.Context, request *SetSticker
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "SetStickerKeywords",
+	ctx, span := c.cfg.Tracer.Start(ctx, SetStickerKeywordsOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -9403,7 +10185,7 @@ func (c *Client) SetStickerMaskPosition(ctx context.Context, request *SetSticker
 func (c *Client) sendSetStickerMaskPosition(ctx context.Context, request *SetStickerMaskPosition) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setStickerMaskPosition"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/setStickerMaskPosition"),
 	}
 
@@ -9412,14 +10194,14 @@ func (c *Client) sendSetStickerMaskPosition(ctx context.Context, request *SetSti
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "SetStickerMaskPosition",
+	ctx, span := c.cfg.Tracer.Start(ctx, SetStickerMaskPositionOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -9479,7 +10261,7 @@ func (c *Client) SetStickerPositionInSet(ctx context.Context, request *SetSticke
 func (c *Client) sendSetStickerPositionInSet(ctx context.Context, request *SetStickerPositionInSet) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setStickerPositionInSet"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/setStickerPositionInSet"),
 	}
 
@@ -9488,14 +10270,14 @@ func (c *Client) sendSetStickerPositionInSet(ctx context.Context, request *SetSt
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "SetStickerPositionInSet",
+	ctx, span := c.cfg.Tracer.Start(ctx, SetStickerPositionInSetOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -9555,7 +10337,7 @@ func (c *Client) SetStickerSetThumbnail(ctx context.Context, request *SetSticker
 func (c *Client) sendSetStickerSetThumbnail(ctx context.Context, request *SetStickerSetThumbnail) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setStickerSetThumbnail"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/setStickerSetThumbnail"),
 	}
 
@@ -9564,14 +10346,14 @@ func (c *Client) sendSetStickerSetThumbnail(ctx context.Context, request *SetSti
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "SetStickerSetThumbnail",
+	ctx, span := c.cfg.Tracer.Start(ctx, SetStickerSetThumbnailOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -9630,7 +10412,7 @@ func (c *Client) SetStickerSetTitle(ctx context.Context, request *SetStickerSetT
 func (c *Client) sendSetStickerSetTitle(ctx context.Context, request *SetStickerSetTitle) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setStickerSetTitle"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/setStickerSetTitle"),
 	}
 
@@ -9639,14 +10421,14 @@ func (c *Client) sendSetStickerSetTitle(ctx context.Context, request *SetSticker
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "SetStickerSetTitle",
+	ctx, span := c.cfg.Tracer.Start(ctx, SetStickerSetTitleOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -9692,6 +10474,83 @@ func (c *Client) sendSetStickerSetTitle(ctx context.Context, request *SetSticker
 	return result, nil
 }
 
+// SetUserEmojiStatus invokes setUserEmojiStatus operation.
+//
+// Changes the emoji status for a given user that previously allowed the bot to manage their emoji
+// status via the Mini App method [requestEmojiStatusAccess](https://core.telegram.
+// org/bots/webapps#initializing-mini-apps). Returns _True_ on success.
+//
+// POST /setUserEmojiStatus
+func (c *Client) SetUserEmojiStatus(ctx context.Context, request *SetUserEmojiStatus) (*Result, error) {
+	res, err := c.sendSetUserEmojiStatus(ctx, request)
+	return res, err
+}
+
+func (c *Client) sendSetUserEmojiStatus(ctx context.Context, request *SetUserEmojiStatus) (res *Result, err error) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("setUserEmojiStatus"),
+		semconv.HTTPRequestMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/setUserEmojiStatus"),
+	}
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, SetUserEmojiStatusOperation,
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	var pathParts [1]string
+	pathParts[0] = "/setUserEmojiStatus"
+	uri.AddPathParts(u, pathParts[:]...)
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "POST", u)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeSetUserEmojiStatusRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeSetUserEmojiStatusResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
 // SetWebhook invokes setWebhook operation.
 //
 // If you'd like to make sure that the webhook was set by you, you can specify secret data in the
@@ -9707,7 +10566,7 @@ func (c *Client) SetWebhook(ctx context.Context, request *SetWebhook) (*Result, 
 func (c *Client) sendSetWebhook(ctx context.Context, request *SetWebhook) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("setWebhook"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/setWebhook"),
 	}
 
@@ -9716,14 +10575,14 @@ func (c *Client) sendSetWebhook(ctx context.Context, request *SetWebhook) (res *
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "SetWebhook",
+	ctx, span := c.cfg.Tracer.Start(ctx, SetWebhookOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -9784,7 +10643,7 @@ func (c *Client) StopMessageLiveLocation(ctx context.Context, request *StopMessa
 func (c *Client) sendStopMessageLiveLocation(ctx context.Context, request *StopMessageLiveLocation) (res *ResultMessageOrBoolean, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("stopMessageLiveLocation"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/stopMessageLiveLocation"),
 	}
 
@@ -9793,14 +10652,14 @@ func (c *Client) sendStopMessageLiveLocation(ctx context.Context, request *StopM
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "StopMessageLiveLocation",
+	ctx, span := c.cfg.Tracer.Start(ctx, StopMessageLiveLocationOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -9860,7 +10719,7 @@ func (c *Client) StopPoll(ctx context.Context, request *StopPoll) (*ResultPoll, 
 func (c *Client) sendStopPoll(ctx context.Context, request *StopPoll) (res *ResultPoll, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("stopPoll"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/stopPoll"),
 	}
 
@@ -9869,14 +10728,14 @@ func (c *Client) sendStopPoll(ctx context.Context, request *StopPoll) (res *Resu
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "StopPoll",
+	ctx, span := c.cfg.Tracer.Start(ctx, StopPollOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -9940,7 +10799,7 @@ func (c *Client) UnbanChatMember(ctx context.Context, request *UnbanChatMember) 
 func (c *Client) sendUnbanChatMember(ctx context.Context, request *UnbanChatMember) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("unbanChatMember"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/unbanChatMember"),
 	}
 
@@ -9949,14 +10808,14 @@ func (c *Client) sendUnbanChatMember(ctx context.Context, request *UnbanChatMemb
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "UnbanChatMember",
+	ctx, span := c.cfg.Tracer.Start(ctx, UnbanChatMemberOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -10017,7 +10876,7 @@ func (c *Client) UnbanChatSenderChat(ctx context.Context, request *UnbanChatSend
 func (c *Client) sendUnbanChatSenderChat(ctx context.Context, request *UnbanChatSenderChat) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("unbanChatSenderChat"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/unbanChatSenderChat"),
 	}
 
@@ -10026,14 +10885,14 @@ func (c *Client) sendUnbanChatSenderChat(ctx context.Context, request *UnbanChat
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "UnbanChatSenderChat",
+	ctx, span := c.cfg.Tracer.Start(ctx, UnbanChatSenderChatOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -10094,7 +10953,7 @@ func (c *Client) UnhideGeneralForumTopic(ctx context.Context, request *UnhideGen
 func (c *Client) sendUnhideGeneralForumTopic(ctx context.Context, request *UnhideGeneralForumTopic) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("unhideGeneralForumTopic"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/unhideGeneralForumTopic"),
 	}
 
@@ -10103,14 +10962,14 @@ func (c *Client) sendUnhideGeneralForumTopic(ctx context.Context, request *Unhid
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "UnhideGeneralForumTopic",
+	ctx, span := c.cfg.Tracer.Start(ctx, UnhideGeneralForumTopicOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -10172,7 +11031,7 @@ func (c *Client) UnpinAllChatMessages(ctx context.Context, request *UnpinAllChat
 func (c *Client) sendUnpinAllChatMessages(ctx context.Context, request *UnpinAllChatMessages) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("unpinAllChatMessages"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/unpinAllChatMessages"),
 	}
 
@@ -10181,14 +11040,14 @@ func (c *Client) sendUnpinAllChatMessages(ctx context.Context, request *UnpinAll
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "UnpinAllChatMessages",
+	ctx, span := c.cfg.Tracer.Start(ctx, UnpinAllChatMessagesOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -10249,7 +11108,7 @@ func (c *Client) UnpinAllForumTopicMessages(ctx context.Context, request *UnpinA
 func (c *Client) sendUnpinAllForumTopicMessages(ctx context.Context, request *UnpinAllForumTopicMessages) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("unpinAllForumTopicMessages"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/unpinAllForumTopicMessages"),
 	}
 
@@ -10258,14 +11117,14 @@ func (c *Client) sendUnpinAllForumTopicMessages(ctx context.Context, request *Un
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "UnpinAllForumTopicMessages",
+	ctx, span := c.cfg.Tracer.Start(ctx, UnpinAllForumTopicMessagesOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -10326,7 +11185,7 @@ func (c *Client) UnpinAllGeneralForumTopicMessages(ctx context.Context, request 
 func (c *Client) sendUnpinAllGeneralForumTopicMessages(ctx context.Context, request *UnpinAllGeneralForumTopicMessages) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("unpinAllGeneralForumTopicMessages"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/unpinAllGeneralForumTopicMessages"),
 	}
 
@@ -10335,14 +11194,14 @@ func (c *Client) sendUnpinAllGeneralForumTopicMessages(ctx context.Context, requ
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "UnpinAllGeneralForumTopicMessages",
+	ctx, span := c.cfg.Tracer.Start(ctx, UnpinAllGeneralForumTopicMessagesOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -10404,7 +11263,7 @@ func (c *Client) UnpinChatMessage(ctx context.Context, request *UnpinChatMessage
 func (c *Client) sendUnpinChatMessage(ctx context.Context, request *UnpinChatMessage) (res *Result, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("unpinChatMessage"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/unpinChatMessage"),
 	}
 
@@ -10413,14 +11272,14 @@ func (c *Client) sendUnpinChatMessage(ctx context.Context, request *UnpinChatMes
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "UnpinChatMessage",
+	ctx, span := c.cfg.Tracer.Start(ctx, UnpinChatMessageOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -10484,7 +11343,7 @@ func (c *Client) UploadStickerFile(ctx context.Context, request *UploadStickerFi
 func (c *Client) sendUploadStickerFile(ctx context.Context, request *UploadStickerFile) (res *ResultFile, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("uploadStickerFile"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/uploadStickerFile"),
 	}
 
@@ -10493,14 +11352,14 @@ func (c *Client) sendUploadStickerFile(ctx context.Context, request *UploadStick
 	defer func() {
 		// Use floating point division here for higher precision (instead of Millisecond method).
 		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
 	}()
 
 	// Increment request counter.
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "UploadStickerFile",
+	ctx, span := c.cfg.Tracer.Start(ctx, UploadStickerFileOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -10539,6 +11398,158 @@ func (c *Client) sendUploadStickerFile(ctx context.Context, request *UploadStick
 
 	stage = "DecodeResponse"
 	result, err := decodeUploadStickerFileResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
+// VerifyChat invokes verifyChat operation.
+//
+// Verifies a chat [on behalf of the organization](https://telegram.
+// org/verify#third-party-verification) which is represented by the bot. Returns _True_ on success.
+//
+// POST /verifyChat
+func (c *Client) VerifyChat(ctx context.Context, request *VerifyChat) (*Result, error) {
+	res, err := c.sendVerifyChat(ctx, request)
+	return res, err
+}
+
+func (c *Client) sendVerifyChat(ctx context.Context, request *VerifyChat) (res *Result, err error) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("verifyChat"),
+		semconv.HTTPRequestMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/verifyChat"),
+	}
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, VerifyChatOperation,
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	var pathParts [1]string
+	pathParts[0] = "/verifyChat"
+	uri.AddPathParts(u, pathParts[:]...)
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "POST", u)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeVerifyChatRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeVerifyChatResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
+// VerifyUser invokes verifyUser operation.
+//
+// Verifies a user [on behalf of the organization](https://telegram.
+// org/verify#third-party-verification) which is represented by the bot. Returns _True_ on success.
+//
+// POST /verifyUser
+func (c *Client) VerifyUser(ctx context.Context, request *VerifyUser) (*Result, error) {
+	res, err := c.sendVerifyUser(ctx, request)
+	return res, err
+}
+
+func (c *Client) sendVerifyUser(ctx context.Context, request *VerifyUser) (res *Result, err error) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("verifyUser"),
+		semconv.HTTPRequestMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/verifyUser"),
+	}
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, VerifyUserOperation,
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	var pathParts [1]string
+	pathParts[0] = "/verifyUser"
+	uri.AddPathParts(u, pathParts[:]...)
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "POST", u)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeVerifyUserRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeVerifyUserResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
