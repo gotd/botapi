@@ -5,7 +5,7 @@ toolchain go1.23.5
 
 require (
 	github.com/PuerkitoBio/goquery v1.9.2
-	github.com/go-chi/chi/v5 v5.1.0
+	github.com/go-chi/chi/v5 v5.2.0
 	github.com/go-faster/errors v0.7.1
 	github.com/go-faster/jx v1.1.0
 	github.com/gotd/td v0.117.0
