@@ -9,6 +9,11 @@ import (
 	"github.com/gotd/td/fileid"
 )
 
+// errInvalidFileID is returned when a file_id cannot be decoded.
+func errInvalidFileID() *Error {
+	return &Error{Code: 400, Description: "Bad Request: invalid file_id"}
+}
+
 // GetFile decodes a file_id and returns a File describing it.
 //
 // Unlike the HTTP Bot API, this library is MTProto-native: there is no file
@@ -18,7 +23,7 @@ import (
 func (b *Bot) GetFile(_ context.Context, fileID string) (*File, error) {
 	f, err := fileid.DecodeFileID(fileID)
 	if err != nil {
-		return nil, &Error{Code: 400, Description: "Bad Request: invalid file_id"}
+		return nil, errInvalidFileID()
 	}
 	return &File{
 		FileID:       fileID,
@@ -31,7 +36,7 @@ func (b *Bot) GetFile(_ context.Context, fileID string) (*File, error) {
 func (b *Bot) DownloadFile(ctx context.Context, fileID string, w io.Writer) (int64, error) {
 	f, err := fileid.DecodeFileID(fileID)
 	if err != nil {
-		return 0, &Error{Code: 400, Description: "Bad Request: invalid file_id"}
+		return 0, errInvalidFileID()
 	}
 
 	counter := &countWriter{w: w}
@@ -54,7 +59,7 @@ func (b *Bot) DownloadFile(ctx context.Context, fileID string, w io.Writer) (int
 func (b *Bot) DownloadFileToPath(ctx context.Context, fileID, path string) error {
 	f, err := fileid.DecodeFileID(fileID)
 	if err != nil {
-		return &Error{Code: 400, Description: "Bad Request: invalid file_id"}
+		return errInvalidFileID()
 	}
 	loc, ok := f.AsInputFileLocation()
 	if !ok {
