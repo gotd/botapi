@@ -46,7 +46,7 @@ func main() {
 		log.Fatal("Create bot", zap.Error(err))
 	}
 
-	bot.Use(botapi.Recover(), botapi.Timeout(time.Minute))
+	bot.Use(botapi.Recover(), botapi.Timeout(time.Minute), botapi.Logging())
 
 	bot.OnCommand("start", func(c *botapi.Context) error {
 		_, err := c.Reply("Send me a photo or a file and I'll send it back. Or try /photo.")

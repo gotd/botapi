@@ -207,11 +207,22 @@ func (b *Bot) convertMessage(ctx context.Context, m *tg.Message) (*Message, erro
 		r.ForwardOrigin = origin
 	}
 
-	if m.Message != "" {
-		r.Text = m.Message
-	}
-	if len(m.Entities) > 0 {
-		r.Entities = entitiesFromTg(m.Entities)
+	if media, ok := m.GetMedia(); ok {
+		convertMessageMedia(media, r)
+		// On a media message, m.Message is the caption.
+		if m.Message != "" {
+			r.Caption = m.Message
+			if len(m.Entities) > 0 {
+				r.CaptionEntities = entitiesFromTg(m.Entities)
+			}
+		}
+	} else {
+		if m.Message != "" {
+			r.Text = m.Message
+		}
+		if len(m.Entities) > 0 {
+			r.Entities = entitiesFromTg(m.Entities)
+		}
 	}
 	if mkp, ok := m.ReplyMarkup.(*tg.ReplyInlineMarkup); ok {
 		r.ReplyMarkup = inlineKeyboardFromTg(mkp)
