@@ -30,6 +30,8 @@ type Bot struct {
 	gaps   *updates.Manager
 	disp   tg.UpdateDispatcher
 
+	router router
+
 	onStart func(ctx context.Context)
 
 	self *tg.User
