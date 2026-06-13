@@ -20,7 +20,10 @@ messages follow [Conventional Commits](https://www.conventionalcommits.org/).
 - **Rich messages** (Bot API 10.1) — `SendRichMessage`/`SendRichHTML`/
   `SendRichMarkdown` send structured page-block content built with
   `github.com/gotd/td/telegram/message/rich`. The `examples/rich` bot showcases
-  every page-block and rich-text constructor.
+  the page-block and rich-text constructors valid in a bot-sent message.
+  (Instant-View-page-only blocks — Title, Subtitle, Header, Subheader, Kicker,
+  AuthorDate, Cover, RelatedArticles — and the auto-link inline styles are
+  rejected by the server with `RICH_VALIDATE_CTOR_NOT_ALLOWED`.)
 - **Background sends** — `Bot.Background()` / `Context.Background()` expose a
   run-lifetime context for proactive sends to any chat from timers, queues or
   goroutines, instead of the per-update handler context. Plus `Bot.Logger()`.

@@ -1,15 +1,22 @@
 // Command rich is a showcase of Telegram rich messages (Bot API 10.1) built with
 // github.com/gotd/td/telegram/message/rich. Each command sends a rich message
-// exercising a category of the rich-text and page-block constructors:
+// exercising a category of the allowed rich-text and page-block constructors:
 //
-//	/headings  titles, headers, headings 1-6, kicker, author/date, footer
-//	/text      every inline text style (bold, italic, spoiler, math, links, …)
+//	/headings  headings 1-6 and a footer
+//	/text      every allowed inline text style (bold, italic, spoiler, math, …)
 //	/lists     bullet, checklist and ordered lists (incl. block items)
-//	/blocks    paragraph, preformatted, quotes, details, math, divider, anchor
+//	/blocks    paragraph, anchor, code, quotes, math, details, thinking, divider
 //	/table     a table with header and data cells
 //	/map       a map block
-//	/media     photo/audio/image/custom-emoji/cover/collage/slideshow/related
-//	           (the media-by-id blocks need real ids — see the env vars below)
+//	/media     photo/audio/image/custom-emoji/collage/slideshow (need real ids)
+//
+// Not every page block is valid in a bot-sent rich message. Per the official Bot
+// API server (telegram-bot-api, td/td/telegram/WebPageBlock.cpp), these are
+// Instant-View-page-only and the server rejects them with
+// RICH_VALIDATE_CTOR_NOT_ALLOWED, so they are intentionally not used here:
+// Title, Subtitle, Header, Subheader, Kicker, AuthorDate, Cover,
+// RelatedArticles — and the inline auto-link styles (AutoURL/AutoEmail/
+// AutoPhone). Video is omitted too.
 //
 // Run it with an MTProto app identity (https://my.telegram.org) and a BotFather
 // token. To exercise /media's media-by-id blocks, also set any of PHOTO_ID,
@@ -55,7 +62,7 @@ func main() {
 
 	bot.OnCommand("start", "List the rich-message demos", func(c *botapi.Context) error {
 		return send(c,
-			rich.Title(rich.Plain("Rich message showcase")),
+			rich.Heading1(rich.Plain("Rich message showcase")),
 			rich.Paragraph(rich.Plain("Try these commands to see the page-block constructors:")),
 			rich.List(
 				rich.ListItem(rich.Fixed(rich.Plain("/headings"))),
@@ -69,14 +76,8 @@ func main() {
 		)
 	})
 
-	bot.OnCommand("headings", "Titles and headings", func(c *botapi.Context) error {
+	bot.OnCommand("headings", "Headings and a footer", func(c *botapi.Context) error {
 		return send(c,
-			rich.Kicker(rich.Plain("KICKER")),
-			rich.Title(rich.Plain("The Title")),
-			rich.Subtitle(rich.Plain("The subtitle")),
-			rich.AuthorDate(rich.Plain("by Ada"), int(time.Now().Unix())),
-			rich.Header(rich.Plain("A header")),
-			rich.Subheader(rich.Plain("A subheader")),
 			rich.Heading1(rich.Plain("Heading 1")),
 			rich.Heading2(rich.Plain("Heading 2")),
 			rich.Heading3(rich.Plain("Heading 3")),
@@ -88,7 +89,7 @@ func main() {
 		)
 	})
 
-	bot.OnCommand("text", "Every inline text style", func(c *botapi.Context) error {
+	bot.OnCommand("text", "Every allowed inline text style", func(c *botapi.Context) error {
 		return send(c,
 			rich.Paragraph(rich.Concat(
 				rich.Bold(rich.Plain("bold")), sp(), rich.Italic(rich.Plain("italic")), sp(),
@@ -116,12 +117,6 @@ func main() {
 				rich.AnchorLink(rich.Plain("jump to anchor"), "more"),
 			)),
 			rich.Paragraph(rich.Concat(
-				rich.Plain("auto-detected: "),
-				rich.AutoURL(rich.Plain("https://telegram.org")), sp(),
-				rich.AutoEmail(rich.Plain("team@telegram.org")), sp(),
-				rich.AutoPhone(rich.Plain("+15550100")),
-			)),
-			rich.Paragraph(rich.Concat(
 				rich.Plain("date: "),
 				rich.Date(rich.Plain("now"), int(time.Now().Unix()), rich.DateFlags{LongDate: true, ShortTime: true}),
 				rich.Plain(", empty: ["), rich.Empty(), rich.Plain("]"),
@@ -131,7 +126,7 @@ func main() {
 
 	bot.OnCommand("lists", "Bullet, checklist and ordered lists", func(c *botapi.Context) error {
 		return send(c,
-			rich.Header(rich.Plain("Unordered")),
+			rich.Heading3(rich.Plain("Unordered")),
 			rich.List(
 				rich.ListItem(rich.Plain("a plain item")),
 				rich.CheckListItem(true, rich.Plain("a checked item")),
@@ -141,7 +136,7 @@ func main() {
 					rich.Preformatted(rich.Plain("nested := true"), "go"),
 				),
 			),
-			rich.Header(rich.Plain("Ordered")),
+			rich.Heading3(rich.Plain("Ordered")),
 			rich.OrderedList(
 				rich.OrderedListItem("1.", rich.Plain("first")),
 				rich.OrderedListItem("2.", rich.Plain("second")),
@@ -150,7 +145,7 @@ func main() {
 		)
 	})
 
-	bot.OnCommand("blocks", "Paragraphs, quotes, code, details, math", func(c *botapi.Context) error {
+	bot.OnCommand("blocks", "Anchor, code, quotes, math, details, divider", func(c *botapi.Context) error {
 		return send(c,
 			rich.AnchorBlock("more"),
 			rich.Paragraph(rich.Concat(
@@ -213,7 +208,6 @@ func mediaBlocks() []tg.PageBlockClass {
 	if id := envID("PHOTO_ID"); id != 0 {
 		blocks = append(blocks,
 			rich.Photo(id, caption("A photo")),
-			rich.Cover(rich.Photo(id, caption("A cover"))),
 			rich.Collage(caption("A collage"),
 				rich.Photo(id, emptyCaption()), rich.Photo(id, emptyCaption())),
 			rich.Slideshow(caption("A slideshow"),
@@ -234,11 +228,8 @@ func mediaBlocks() []tg.PageBlockClass {
 		)))
 	}
 
+	// A map always renders, so /media works even without any media ids.
 	blocks = append(blocks,
-		rich.RelatedArticles(rich.Plain("Related articles"),
-			tg.PageRelatedArticle{URL: "https://telegram.org", Title: "Telegram", Author: "Telegram"},
-		),
-		// A map always renders, so /media works even without any media ids.
 		rich.Map(&tg.InputGeoPoint{Lat: 55.7539, Long: 37.6208}, 15, 600, 400, caption("Red Square")),
 	)
 	return blocks
