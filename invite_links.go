@@ -18,7 +18,7 @@ func (b *Bot) resolveInviteLinks(ctx context.Context, chat ChatID) (peers.Invite
 	}
 	l, ok := p.(linkable)
 	if !ok {
-		return peers.InviteLinks{}, &Error{Code: 400, Description: "Bad Request: method is not available in private chats"}
+		return peers.InviteLinks{}, errNotInPrivateChat()
 	}
 	return l.InviteLinks(), nil
 }

@@ -6,6 +6,12 @@ import (
 	"github.com/gotd/td/tg"
 )
 
+// errNotInPrivateChat is returned by chat-management methods invoked on a
+// private (user) chat where they do not apply.
+func errNotInPrivateChat() *Error {
+	return &Error{Code: 400, Description: "Bad Request: method is not available in private chats"}
+}
+
 // chatAdmin is the subset of peer operations shared by basic groups and
 // channels/supergroups. peers.Chat and peers.Channel both implement it; users
 // do not.
@@ -24,7 +30,7 @@ func (b *Bot) resolveChatAdmin(ctx context.Context, chat ChatID) (chatAdmin, err
 	}
 	a, ok := p.(chatAdmin)
 	if !ok {
-		return nil, &Error{Code: 400, Description: "Bad Request: method is not available in private chats"}
+		return nil, errNotInPrivateChat()
 	}
 	return a, nil
 }
