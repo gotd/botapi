@@ -5,12 +5,14 @@ go 1.25.0
 require (
 	github.com/PuerkitoBio/goquery v1.11.0
 	github.com/go-faster/errors v0.7.1
+	github.com/gotd/contrib v0.21.1
 	github.com/gotd/log v0.1.0
 	github.com/gotd/log/logzap v0.1.1
 	github.com/gotd/td v0.156.0
 	github.com/stretchr/testify v1.11.1
-	go.etcd.io/bbolt v1.3.11
+	go.etcd.io/bbolt v1.4.3
 	go.uber.org/zap v1.28.0
+	golang.org/x/time v0.14.0
 )
 
 require (
@@ -30,7 +32,6 @@ require (
 	github.com/gotd/ige v0.2.2 // indirect
 	github.com/gotd/neo v0.1.5 // indirect
 	github.com/klauspost/compress v1.18.6 // indirect
-	github.com/kr/pretty v0.3.1 // indirect
 	github.com/mattn/go-colorable v0.1.14 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/ogen-go/ogen v1.20.3 // indirect

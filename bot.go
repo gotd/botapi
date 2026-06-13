@@ -10,7 +10,6 @@ import (
 	"github.com/gotd/td/telegram/message"
 	"github.com/gotd/td/telegram/peers"
 	"github.com/gotd/td/telegram/updates"
-	updhook "github.com/gotd/td/telegram/updates/hook"
 	"github.com/gotd/td/tg"
 	"go.uber.org/zap"
 )
@@ -82,9 +81,7 @@ func New(token string, opt Options) (*Bot, error) {
 		Device:         opt.Device,
 		UpdateHandler:  h,
 		SessionStorage: opt.Storage,
-		Middlewares: []telegram.Middleware{
-			updhook.UpdateHook(h.Handle),
-		},
+		Middlewares:    buildMiddlewares(opt, h),
 	})
 	*rawPlaceholder = *client.API()
 

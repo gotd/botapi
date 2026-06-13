@@ -42,6 +42,24 @@ type Options struct {
 	// OnStart is called once, after the bot is authorized and update gap
 	// recovery is live. Optional.
 	OnStart func(ctx context.Context)
+
+	// FloodWait enables transparent flood-wait handling: a request that hits a
+	// FLOOD_WAIT limit is retried after sleeping for the indicated duration,
+	// instead of failing with a 429 error. Off by default.
+	FloodWait bool
+
+	// MaxFloodWaitRetries bounds how many times a flood-waited request is retried
+	// when FloodWait is enabled. Zero uses the underlying library default.
+	MaxFloodWaitRetries int
+
+	// RequestsPerSecond, when greater than zero, proactively rate-limits outgoing
+	// MTProto requests to this many per second via a global token bucket. It is a
+	// coarse guard against hitting Telegram's limits; off by default.
+	RequestsPerSecond float64
+
+	// RequestBurst is the token-bucket burst size for RequestsPerSecond. Defaults
+	// to 1 when RequestsPerSecond is set.
+	RequestBurst int
 }
 
 func (o *Options) setDefaults() {
