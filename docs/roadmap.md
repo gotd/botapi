@@ -175,7 +175,10 @@ Deferred within Phase 5: payment answers
   `examples/media` (send by URL, echo incoming media by file_id, `GetFile`).
 - ☑ Allocation tests on hot paths (`bench_test.go`): entity/markup/user
   conversion and `file_unique_id`, with `-benchmem`.
-- ☐ Conformance test against kept `botdoc` extractor (API-version drift guard)
+- ☑ Conformance test against the `botdoc` extractor (`conformance_test.go`):
+  every published method must be implemented on `*Bot`, covered by other means,
+  or categorized as deferred/not-applicable — failing on uncategorized (drift)
+  methods or stale allowlist entries.
 - ◐ Docs: package docs (`doc.go`) and README done; reference/migration guide
   still to write.
 
