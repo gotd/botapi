@@ -25,9 +25,6 @@ var deferredMethods = map[string]string{
 	"answerShippingQuery":    "payments — deferred until payment updates land",
 	"sendInvoice":            "payments — deferred",
 	"setPassportDataErrors":  "Telegram Passport — deferred",
-	"sendGame":               "games — deferred",
-	"setGameScore":           "games — deferred",
-	"getGameHighScores":      "games — deferred",
 }
 
 // notApplicableMethods lists published methods that do not apply to the
