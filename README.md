@@ -1,21 +1,113 @@
 # botapi
 
-The telegram-bot-api, but in go. WIP.
-* [API Reference](https://core.telegram.org/bots/api)
-* [Reference implementation](https://github.com/tdlib/telegram-bot-api)
-* [Generated OpenAPI v3 Schema](./_oas/openapi.json)
+A Telegram Bot API library for Go, implemented directly over **MTProto** using
+[`gotd/td`](https://github.com/gotd/td) — not over HTTP to `api.telegram.org`.
 
-## Features
-* Parsing of API documentation with defaults, format, enum and constraints inference
-* OpenAPI v3 specification generation
-* Server and Client generation based on OpenAPI v3 specification
+It exposes the familiar [Bot API](https://core.telegram.org/bots/api) surface
+(types, methods, updates) but speaks MTProto on a persistent connection. That
+sidesteps the Bot API server's rate limits, removes the `getUpdates`/webhook
+round trip, and keeps the raw `gotd/td` client one method call away
+(`Bot.Raw()`) for anything not yet covered.
 
-## Roadmap
-- [x] Parse definition
-- [x] Generate OpenAPI v3 Specification
-- [x] Generate client and server from OpenAPi v3 using [ogen](https://github.com/ogen-go/ogen)
-- [x] Infer enums
-- [ ] Infer defaults
-- [ ] Use rich text for documentation
-- [ ] More links to documentation
-- [ ] Support Emoji
+> **Status: under active reconstruction.** The repo is being rebuilt from a
+> codegen-first OpenAPI/ogen project into a hand-written library. The `Bot`
+> client skeleton compiles and connects today; the typed Bot API surface
+> (methods, types, handler framework) is being filled in. See
+> [`docs/roadmap.md`](./docs/roadmap.md) for what's done and what's next.
+
+## Why MTProto instead of HTTP
+
+| | HTTP Bot API client (e.g. telego) | botapi |
+| --- | --- | --- |
+| Transport | HTTPS to `api.telegram.org` | MTProto via `gotd/td` |
+| Updates | `getUpdates` long-poll / webhook | persistent connection, no polling |
+| Rate limits | Bot API server limits | MTProto limits only |
+| Escape hatch | none | raw `*tg.Client` via `Bot.Raw()` |
+
+## Design goals
+
+In priority order (see [`docs/architecture.md`](./docs/architecture.md)):
+
+1. **Zero-reflection performance** — fully typed request/response building, no
+   `reflect` in the hot path; allocation-tested like `gotd/td`.
+2. **Type-safe unions & enums** — `ChatID`, `InputFile`, `ChatMember`,
+   `ReplyMarkup`, parse modes, etc. as sealed interfaces and typed constants,
+   not stringly-typed structs.
+3. **First-class context & structured errors** — context-first API; typed
+   errors (flood-wait, retry-after, network vs API vs not-implemented);
+   proactive rate limiting.
+4. **A great handler framework** — composable middleware, router and predicates
+   over a native MTProto update stream.
+
+## Usage
+
+> The high-level typed methods are still being built. Today you get the `Bot`
+> lifecycle plus the raw `gotd/td` client and message sender.
+
+```go
+package main
+
+import (
+	"context"
+
+	"github.com/gotd/botapi"
+	"github.com/gotd/botapi/storage"
+	"github.com/gotd/td/tg"
+	"go.etcd.io/bbolt"
+	"go.uber.org/zap"
+)
+
+func main() {
+	ctx := context.Background()
+
+	db, err := bbolt.Open("bot.bbolt", 0o600, nil)
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
+
+	// Bots still need an MTProto app identity (https://my.telegram.org).
+	// This is NOT the bot token.
+	bot, err := botapi.New("<bot-token>", botapi.Options{
+		AppID:   123456,
+		AppHash: "<app-hash>",
+		Logger:  zap.NewExample(),
+		Storage: storage.NewBBoltStorage(db),
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	// Register raw MTProto update handlers on the dispatcher (the typed
+	// handler framework is built on top of this in a later phase).
+	bot.Dispatcher().OnNewMessage(func(ctx context.Context, e tg.Entities, u *tg.UpdateNewMessage) error {
+		// ... use bot.Sender() to reply ...
+		return nil
+	})
+
+	// Connects, authorizes as a bot, and serves updates until ctx is cancelled.
+	if err := bot.Run(ctx); err != nil {
+		panic(err)
+	}
+}
+```
+
+`Options.Storage` is optional — leave it nil to keep session, peers and update
+state in memory (nothing survives a restart). `storage.BBoltStorage` persists
+all of it to a single bbolt file.
+
+## Package layout
+
+- `botapi` (root) — the public library: the `Bot` client, options, and the
+  hand-written Bot API surface as it lands.
+- `storage` — bbolt-backed session/peer/update-state storage.
+- `internal/botdoc` — fetches and extracts the published Bot API docs; kept as a
+  reference oracle and a conformance check against API-version drift.
+- `_seed/` — the previous codegen-era translation layer, preserved
+  (non-compiled) as reference to re-point onto the hand-written types.
+
+## Acknowledgements
+
+- [Bot API reference](https://core.telegram.org/bots/api) — the spec.
+- [`gotd/td`](https://github.com/gotd/td) — the MTProto engine.
+- [reference Bot API server](https://github.com/tdlib/telegram-bot-api).

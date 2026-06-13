@@ -1,4 +1,4 @@
-package botstorage
+package storage
 
 import (
 	"context"

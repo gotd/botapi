@@ -110,7 +110,7 @@ func (b *BotAPI) DeleteChatStickerSet(ctx context.Context, req *oas.DeleteChatSt
 }
 
 // GetChat implements oas.Handler.
-func (b *BotAPI) GetChat(ctx context.Context, req *oas.GetChat) (*oas.ResultChat, error) {
+func (b *BotAPI) GetChat(ctx context.Context, req *oas.GetChat) (*oas.Result, error) {
 	p, err := b.resolveID(ctx, req.ChatID)
 	if err != nil {
 		return nil, errors.Wrap(err, "resolve chatID")
@@ -193,7 +193,7 @@ func (b *BotAPI) GetChat(ctx context.Context, req *oas.GetChat) (*oas.ResultChat
 		// TODO(tdakkota): set AllMembersAreAdministrators
 	}
 
-	return &oas.ResultChat{
+	return &oas.Result{
 		Result: oas.NewOptChat(chat),
 		Ok:     true,
 	}, nil

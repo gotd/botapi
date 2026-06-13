@@ -25,11 +25,10 @@ func fillBotAPIChatPrivate(user peers.User) oas.Chat {
 
 func fillBotAPIChatGroup(chat Chat) oas.Chat {
 	r := oas.Chat{
-		ID:                  int64(chat.TDLibPeerID()),
-		Type:                oas.ChatTypeGroup,
-		Title:               oas.NewOptString(chat.VisibleName()),
-		Username:            optString(chat.Username),
-		HasProtectedContent: oas.NewOptBool(chat.NoForwards()),
+		ID:       int64(chat.TDLibPeerID()),
+		Type:     oas.ChatTypeGroup,
+		Title:    oas.NewOptString(chat.VisibleName()),
+		Username: optString(chat.Username),
 	}
 	switch ch := chat.(type) {
 	case peers.Channel:

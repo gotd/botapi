@@ -11,7 +11,7 @@ var _ interface {
 	EditChatInviteLink(context.Context, *oas.EditChatInviteLink) (*oas.ResultChatInviteLink, error)
 	ExportChatInviteLink(context.Context, *oas.ExportChatInviteLink) (*oas.ResultString, error)
 	ForwardMessage(context.Context, *oas.ForwardMessage) (*oas.ResultMessage, error)
-	GetChat(context.Context, *oas.GetChat) (*oas.ResultChat, error)
+	GetChat(context.Context, *oas.GetChat) (*oas.Result, error)
 	GetChatAdministrators(context.Context, *oas.GetChatAdministrators) (*oas.ResultArrayOfChatMember, error)
 	GetChatMember(context.Context, *oas.GetChatMember) (*oas.ResultChatMember, error)
 	GetChatMemberCount(context.Context, *oas.GetChatMemberCount) (*oas.ResultInt, error)

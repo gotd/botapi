@@ -6,11 +6,10 @@ coverage:
 	@./go.coverage.sh
 .PHONY: coverage
 
-generate:
-	go generate ./...
-.PHONY: generate
+lint:
+	golangci-lint run ./...
+.PHONY: lint
 
 tidy:
 	go mod tidy
-
-clean: generate tidy
+.PHONY: tidy
