@@ -171,7 +171,6 @@ Deferred within Phase 5: payment answers
 - ☑ `pool.Pool` re-pointed at public `Bot` (`pool/`): lazy per-token start,
   shared startup for concurrent callers, per-token bbolt storage, idle GC
   (`RunGC`), `Kill`/`Close`.
-- ☐ `cmd/botapi` HTTP server as an optional example (local Bot-API server)
 - ◐ Examples: `examples/echo` (handler + middleware), `examples/buttons`
   (inline keyboards + callback queries), `examples/inline` (inline mode). Media
   bot still to add.

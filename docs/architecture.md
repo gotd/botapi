@@ -39,7 +39,7 @@ the *server* `oas.Handler` on top of `gotd/td`. We are inverting this.
 | `botdoc` doc **fetch/extract** (HTML → structured API) | **keep** — used as a reference oracle for hand-writing & for doc strings / a verification test that our hand-written surface matches the published API |
 | `internal/botapi` translation logic (convert_message, markup, peers, errors_map, send*, fileid) | **keep & re-point** from `oas.*` types to our hand-written types |
 | `internal/pool`, `internal/botstorage` | **keep** — client lifecycle, bbolt storage |
-| `cmd/botapi` (HTTP server) | **demote** to an optional example/cmd; the library is the product |
+| `cmd/botapi` (HTTP server) | **drop** — the library is the product; no HTTP Bot-API server is planned |
 
 Net: the project becomes a **library** whose public API is hand-written Bot API
 types + a `Bot` client, with the MTProto translation as its engine.
@@ -78,7 +78,6 @@ botapi/                      root package — the public library
   storage/                   bbolt session/peer/state storage (from botstorage)
 
   internal/botdoc/           kept doc fetch/extract (reference oracle + tests)
-  cmd/botapi/                optional: local Bot-API-compatible HTTP server
   cmd/botdoc/                optional: fetch & inspect the published API
   examples/
   docs/
