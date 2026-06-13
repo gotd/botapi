@@ -10,13 +10,14 @@
 //	/map       a map block
 //	/media     photo/audio/image/custom-emoji/collage/slideshow (need real ids)
 //
-// Not every page block is valid in a bot-sent rich message. Per the official Bot
-// API server (telegram-bot-api, td/td/telegram/WebPageBlock.cpp), these are
-// Instant-View-page-only and the server rejects them with
-// RICH_VALIDATE_CTOR_NOT_ALLOWED, so they are intentionally not used here:
-// Title, Subtitle, Header, Subheader, Kicker, AuthorDate, Cover,
-// RelatedArticles — and the inline auto-link styles (AutoURL/AutoEmail/
-// AutoPhone). Video is omitted too.
+// Not every constructor is valid in a bot-sent rich message. Per the official
+// Bot API server (telegram-bot-api, td/td/telegram/WebPageBlock.cpp), these are
+// Instant-View-page-only: the server reduces them to plain text or drops them,
+// and Telegram rejects them raw with RICH_VALIDATE_CTOR_NOT_ALLOWED, so they are
+// intentionally not used here. Page blocks: Title, Subtitle, Header, Subheader,
+// Kicker, AuthorDate, Cover, RelatedArticles. Inline text: Mention, Hashtag,
+// Cashtag, BotCommand, BankCard and the auto-link styles AutoURL/AutoEmail/
+// AutoPhone (MentionName and Date are allowed). Video is omitted too.
 //
 // Run it with an MTProto app identity (https://my.telegram.org) and a BotFather
 // token. To exercise /media's media-by-id blocks, also set any of PHOTO_ID,
@@ -103,12 +104,7 @@ func main() {
 				rich.Plain(", inline math "), rich.Math("a^2+b^2=c^2"),
 			)),
 			rich.Paragraph(rich.Concat(
-				rich.Mention(rich.Plain("@durov")), sp(),
-				rich.MentionName(rich.Plain("Ada"), 1), sp(),
-				rich.Hashtag(rich.Plain("#golang")), sp(),
-				rich.Cashtag(rich.Plain("$TON")), sp(),
-				rich.BotCommand(rich.Plain("/start")), sp(),
-				rich.BankCard(rich.Plain("4111111111111111")),
+				rich.Plain("mention by name: "), rich.MentionName(rich.Plain("Ada"), 1),
 			)),
 			rich.Paragraph(rich.Concat(
 				rich.Email(rich.Plain("hi@example.com"), "hi@example.com"), sp(),

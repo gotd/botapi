@@ -21,9 +21,10 @@ messages follow [Conventional Commits](https://www.conventionalcommits.org/).
   `SendRichMarkdown` send structured page-block content built with
   `github.com/gotd/td/telegram/message/rich`. The `examples/rich` bot showcases
   the page-block and rich-text constructors valid in a bot-sent message.
-  (Instant-View-page-only blocks — Title, Subtitle, Header, Subheader, Kicker,
-  AuthorDate, Cover, RelatedArticles — and the auto-link inline styles are
-  rejected by the server with `RICH_VALIDATE_CTOR_NOT_ALLOWED`.)
+  (Instant-View-page-only constructors are rejected by the server with
+  `RICH_VALIDATE_CTOR_NOT_ALLOWED`: page blocks Title, Subtitle, Header,
+  Subheader, Kicker, AuthorDate, Cover, RelatedArticles; and inline styles
+  Mention, Hashtag, Cashtag, BotCommand, BankCard, AutoURL/AutoEmail/AutoPhone.)
 - **Background sends** — `Bot.Background()` / `Context.Background()` expose a
   run-lifetime context for proactive sends to any chat from timers, queues or
   goroutines, instead of the per-update handler context. Plus `Bot.Logger()`.
