@@ -19,3 +19,10 @@ gen
 
 # Bot db files
 state/*.bbolt
+
+# Stray binaries from `go build ./examples/<name>` run at the repo root.
+/echo
+/buttons
+/inline
+/media
+/advanced
