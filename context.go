@@ -59,3 +59,13 @@ func (c *Context) AnswerCallback(opts ...AnswerCallbackQueryOption) error {
 	}
 	return c.Bot.AnswerCallbackQuery(c, cq.ID, opts...)
 }
+
+// AnswerInline answers the update's inline query with the given results. It is
+// an error to call it when the update is not an inline query.
+func (c *Context) AnswerInline(results []InlineQueryResult, opts ...AnswerInlineQueryOption) error {
+	iq := c.Update.InlineQuery
+	if iq == nil {
+		return &Error{Code: 400, Description: "Bad Request: update has no inline query to answer"}
+	}
+	return c.Bot.AnswerInlineQuery(c, iq.ID, results, opts...)
+}

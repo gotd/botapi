@@ -7,11 +7,39 @@ import (
 	"io"
 
 	"github.com/gotd/td/fileid"
+	"github.com/gotd/td/tg"
 )
 
 // errInvalidFileID is returned when a file_id cannot be decoded.
 func errInvalidFileID() *Error {
 	return &Error{Code: 400, Description: "Bad Request: invalid file_id"}
+}
+
+// inputPhotoFromFileID builds an MTProto input photo reference from a file_id.
+func inputPhotoFromFileID(fileID string) (tg.InputPhotoClass, error) {
+	f, err := fileid.DecodeFileID(fileID)
+	if err != nil {
+		return nil, errInvalidFileID()
+	}
+	return &tg.InputPhoto{
+		ID:            f.ID,
+		AccessHash:    f.AccessHash,
+		FileReference: f.FileReference,
+	}, nil
+}
+
+// inputDocumentFromFileID builds an MTProto input document reference from a
+// file_id (documents, video, audio, voice, stickers, animations, ...).
+func inputDocumentFromFileID(fileID string) (tg.InputDocumentClass, error) {
+	f, err := fileid.DecodeFileID(fileID)
+	if err != nil {
+		return nil, errInvalidFileID()
+	}
+	return &tg.InputDocument{
+		ID:            f.ID,
+		AccessHash:    f.AccessHash,
+		FileReference: f.FileReference,
+	}, nil
 }
 
 // GetFile decodes a file_id and returns a File describing it.

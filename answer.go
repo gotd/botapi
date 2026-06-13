@@ -71,3 +71,88 @@ func (b *Bot) AnswerCallbackQuery(ctx context.Context, callbackQueryID string, o
 	}
 	return nil
 }
+
+// AnswerInlineQueryOption configures an AnswerInlineQuery call.
+type AnswerInlineQueryOption func(*answerInlineConfig)
+
+type answerInlineConfig struct {
+	cacheTime     int
+	isPersonal    bool
+	nextOffset    string
+	switchPMText  string
+	switchPMParam string
+}
+
+// WithInlineCacheTime sets the maximum time, in seconds, the result may be
+// cached on the server.
+func WithInlineCacheTime(seconds int) AnswerInlineQueryOption {
+	return func(c *answerInlineConfig) { c.cacheTime = seconds }
+}
+
+// WithInlinePersonal marks the results as personal so they are not cached for
+// other users querying the same thing.
+func WithInlinePersonal() AnswerInlineQueryOption {
+	return func(c *answerInlineConfig) { c.isPersonal = true }
+}
+
+// WithInlineNextOffset sets the offset a client returns to request the next page
+// of results. An empty offset (the default) means no more results.
+func WithInlineNextOffset(offset string) AnswerInlineQueryOption {
+	return func(c *answerInlineConfig) { c.nextOffset = offset }
+}
+
+// WithInlineSwitchPM shows a button above the results that switches the user to
+// a private chat with the bot, passing startParam as the /start parameter.
+func WithInlineSwitchPM(text, startParam string) AnswerInlineQueryOption {
+	return func(c *answerInlineConfig) {
+		c.switchPMText = text
+		c.switchPMParam = startParam
+	}
+}
+
+// AnswerInlineQuery sends the results of an inline query. inlineQueryID is the
+// InlineQuery.ID from the update.
+func (b *Bot) AnswerInlineQuery(
+	ctx context.Context, inlineQueryID string, results []InlineQueryResult, opts ...AnswerInlineQueryOption,
+) error {
+	var cfg answerInlineConfig
+	for _, o := range opts {
+		o(&cfg)
+	}
+
+	queryID, err := strconv.ParseInt(inlineQueryID, 10, 64)
+	if err != nil {
+		return &Error{Code: 400, Description: "Bad Request: invalid inline query id"}
+	}
+
+	tgResults := make([]tg.InputBotInlineResultClass, 0, len(results))
+	for _, r := range results {
+		if r == nil {
+			return &Error{Code: 400, Description: "Bad Request: inline query result is nil"}
+		}
+		converted, err := r.toTg(ctx, b)
+		if err != nil {
+			return err
+		}
+		tgResults = append(tgResults, converted)
+	}
+
+	req := &tg.MessagesSetInlineBotResultsRequest{
+		QueryID:    queryID,
+		Results:    tgResults,
+		CacheTime:  cfg.cacheTime,
+		Private:    cfg.isPersonal,
+		NextOffset: cfg.nextOffset,
+	}
+	if cfg.switchPMText != "" {
+		req.SetSwitchPm(tg.InlineBotSwitchPM{
+			Text:       cfg.switchPMText,
+			StartParam: cfg.switchPMParam,
+		})
+	}
+
+	if _, err := b.raw.MessagesSetInlineBotResults(ctx, req); err != nil {
+		return asAPIError(err)
+	}
+	return nil
+}
