@@ -196,9 +196,14 @@ the product).
 
 ## Phase 8 — Release
 
-- ☐ CI (lint, race tests, conformance), codecov
-- ☐ Semantic version, changelog, conventional commits
-- ☐ Announce; migration guide
+- ☑ CI (lint, `-race` tests, conformance runs in `go test`), codecov coverage —
+  workflows modernized (`actions/checkout@v6`, `setup-go@v5`,
+  `golangci-lint-action@v9` for the v2 config).
+- ◐ Conventional commits enforced (`commitlint` workflow); `CHANGELOG.md` added.
+  **Semantic version tag** is the maintainer's call (no tags yet — `v0.1.0`
+  when ready).
+- ◐ Usage guide (`docs/guide.md`) done; a public announce is the maintainer's
+  call.
 
 ---
 

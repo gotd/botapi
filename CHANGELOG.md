@@ -1,0 +1,55 @@
+# Changelog
+
+All notable changes to this project are documented here. The format is based on
+[Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project aims to
+follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Commit
+messages follow [Conventional Commits](https://www.conventionalcommits.org/).
+
+## [Unreleased]
+
+`botapi` was rebuilt from a codegen-first OpenAPI/ogen project into a
+hand-written, MTProto-backed Bot API **library** built on
+[`gotd/td`](https://github.com/gotd/td). It exposes the familiar Bot API surface
+but speaks MTProto directly — no `api.telegram.org`, no `getUpdates`/webhooks.
+
+### Added
+
+- **Client** — `Bot` with `New`/`Run`/`Raw`, a persistent MTProto connection and
+  gap-aware update stream. Optional bbolt `Storage` for session/peers/state.
+- **Types** — hand-written Bot API types and sealed-interface unions (`ChatID`,
+  `InputFile`, `ReplyMarkup`, `InputMedia`, `ChatMember`, `MessageOrigin`,
+  `InlineQueryResult`, `InputMessageContent`, `BotCommandScope`,
+  `PassportElementError`, …) with compile-time exhaustiveness checks.
+- **Sending** — `SendMessage` (HTML/MarkdownV2/Markdown), photo/document/video/
+  audio/voice/animation/video-note/sticker, media groups, location/venue/
+  contact/poll/dice, chat actions; edits (text/caption/markup/media, live
+  location), forward/copy/delete, `StopPoll`.
+- **Receiving** — a handler framework (`On*`, predicates, middleware, `Group`,
+  `Context`) over the native update stream; messages, edits, channel posts,
+  callback/inline queries, shipping/pre-checkout queries; incoming media, polls,
+  contacts and forward origins mapped to the typed `Message`.
+- **Files** — `GetFile`, `DownloadFile`/`DownloadFileToPath`, local
+  `file_unique_id` derivation.
+- **Queries** — `AnswerCallbackQuery`, `AnswerInlineQuery`,
+  `AnswerShippingQuery`, `AnswerPreCheckoutQuery`.
+- **Chat management** — members (ban/unban/restrict/promote, get member(s)/
+  admins/count, custom title), admin (pin/unpin, title/description/photo/
+  permissions, sticker set, leave), invite links, `GetChat`,
+  `GetUserProfilePhotos`.
+- **Commands** — `Set`/`Get`/`DeleteMyCommands` with scopes; `OnCommand`
+  auto-publishes the command menu.
+- **Stickers** — `UploadStickerFile`, sticker-set create/add/delete/reorder,
+  `GetStickerSet`, `SetStickerSetThumb`.
+- **Payments & games** — `SendInvoice`, `SetPassportDataErrors`, `SendGame`,
+  `SetGameScore`, `GetGameHighScores`.
+- **Resilience** — Bot-API-shaped errors with a comprehensive `tgerr` mapping
+  and `AsFloodWait`/`AsChatMigrated`/`Code` helpers; opt-in flood-wait retry and
+  a proactive rate limiter.
+- **Multi-bot** — `pool.Pool` runs and multiplexes many bots by token with idle
+  GC.
+- **Tooling & docs** — `cmd/botdoc` (fetch/inspect the published API), a
+  method-drift conformance test, hot-path benchmarks, package docs, a usage
+  guide and runnable examples (`echo`, `buttons`, `inline`, `media`,
+  `advanced`).
+
+[Unreleased]: https://github.com/gotd/botapi/commits/main
