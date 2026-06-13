@@ -1,0 +1,98 @@
+package botapi
+
+import (
+	"context"
+
+	"github.com/gotd/td/tg"
+	"go.uber.org/zap"
+)
+
+// installHandlers wires the raw tg.UpdateDispatcher to the Bot API router. It is
+// called once from New. Update-conversion failures are logged and swallowed so
+// a single bad update never tears down the update stream.
+func (b *Bot) installHandlers() {
+	b.disp.OnNewMessage(func(ctx context.Context, _ tg.Entities, u *tg.UpdateNewMessage) error {
+		b.dispatchMessage(ctx, u.Message, false)
+		return nil
+	})
+	b.disp.OnEditMessage(func(ctx context.Context, _ tg.Entities, u *tg.UpdateEditMessage) error {
+		b.dispatchMessage(ctx, u.Message, true)
+		return nil
+	})
+	b.disp.OnNewChannelMessage(func(ctx context.Context, _ tg.Entities, u *tg.UpdateNewChannelMessage) error {
+		b.dispatchMessage(ctx, u.Message, false)
+		return nil
+	})
+	b.disp.OnEditChannelMessage(func(ctx context.Context, _ tg.Entities, u *tg.UpdateEditChannelMessage) error {
+		b.dispatchMessage(ctx, u.Message, true)
+		return nil
+	})
+	b.disp.OnBotCallbackQuery(func(ctx context.Context, e tg.Entities, u *tg.UpdateBotCallbackQuery) error {
+		b.route(ctx, &Update{CallbackQuery: callbackQueryFromTg(e, u)})
+		return nil
+	})
+	b.disp.OnBotInlineQuery(func(ctx context.Context, e tg.Entities, u *tg.UpdateBotInlineQuery) error {
+		b.route(ctx, &Update{InlineQuery: inlineQueryFromTg(e, u)})
+		return nil
+	})
+}
+
+// dispatchMessage converts a message and routes it as the appropriate update
+// field. Channel-broadcast messages become channel posts; everything else is a
+// regular message. edited selects the edited_* fields.
+func (b *Bot) dispatchMessage(ctx context.Context, msg tg.MessageClass, edited bool) {
+	m, err := b.messageFromTg(ctx, msg)
+	if err != nil {
+		b.log.Error("Convert message", zap.Error(err))
+		return
+	}
+	if m == nil {
+		return
+	}
+
+	u := &Update{}
+	switch {
+	case m.Chat.Type == ChatTypeChannel && edited:
+		u.EditedChannelPost = m
+	case m.Chat.Type == ChatTypeChannel:
+		u.ChannelPost = m
+	case edited:
+		u.EditedMessage = m
+	default:
+		u.Message = m
+	}
+	b.route(ctx, u)
+}
+
+// OnMessage registers a handler for new messages matching the predicates.
+func (b *Bot) OnMessage(h Handler, predicates ...Predicate) {
+	b.on(h, prepend(func(u *Update) bool { return u.Message != nil }, predicates)...)
+}
+
+// OnEditedMessage registers a handler for edited messages.
+func (b *Bot) OnEditedMessage(h Handler, predicates ...Predicate) {
+	b.on(h, prepend(func(u *Update) bool { return u.EditedMessage != nil }, predicates)...)
+}
+
+// OnChannelPost registers a handler for new channel posts.
+func (b *Bot) OnChannelPost(h Handler, predicates ...Predicate) {
+	b.on(h, prepend(func(u *Update) bool { return u.ChannelPost != nil }, predicates)...)
+}
+
+// OnCallbackQuery registers a handler for callback queries from inline keyboards.
+func (b *Bot) OnCallbackQuery(h Handler, predicates ...Predicate) {
+	b.on(h, prepend(func(u *Update) bool { return u.CallbackQuery != nil }, predicates)...)
+}
+
+// OnInlineQuery registers a handler for inline queries.
+func (b *Bot) OnInlineQuery(h Handler, predicates ...Predicate) {
+	b.on(h, prepend(func(u *Update) bool { return u.InlineQuery != nil }, predicates)...)
+}
+
+// prepend returns p followed by rest, without mutating rest.
+func prepend(p Predicate, rest []Predicate) []Predicate {
+	out := make([]Predicate, 0, len(rest)+1)
+	out = append(out, p)
+	out = append(out, rest...)
+	return out
+}

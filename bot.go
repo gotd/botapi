@@ -88,7 +88,7 @@ func New(token string, opt Options) (*Bot, error) {
 	})
 	*rawPlaceholder = *client.API()
 
-	return &Bot{
+	b := &Bot{
 		token:   token,
 		log:     opt.Logger,
 		client:  client,
@@ -98,7 +98,9 @@ func New(token string, opt Options) (*Bot, error) {
 		gaps:    gaps,
 		disp:    disp,
 		onStart: opt.OnStart,
-	}, nil
+	}
+	b.installHandlers()
+	return b, nil
 }
 
 // Run connects, authorizes as a bot, and blocks serving updates until ctx is
