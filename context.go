@@ -1,5 +1,7 @@
 package botapi
 
+import "context"
+
 // Message returns the message the update carries (new/edited message or channel
 // post), or nil.
 func (c *Context) Message() *Message { return c.Update.EffectiveMessage() }
@@ -59,6 +61,18 @@ func (c *Context) AnswerCallback(opts ...AnswerCallbackQueryOption) error {
 	}
 	return c.Bot.AnswerCallbackQuery(c, cq.ID, opts...)
 }
+
+// Background returns a context tied to the bot's run lifetime, for sends that
+// must outlive this handler (a timer, queue or goroutine). The handler's own
+// context is per-update and may be canceled (e.g. by Timeout middleware) as soon
+// as the handler returns, so do not capture it for background work.
+//
+// Send messages to any chat in the background with Bot.SendMessage and this
+// context:
+//
+//	ctx := c.Background()
+//	go func() { c.Bot.SendMessage(ctx, botapi.ID(other), "hi") }()
+func (c *Context) Background() context.Context { return c.Bot.Background() }
 
 // AnswerInline answers the update's inline query with the given results. It is
 // an error to call it when the update is not an inline query.

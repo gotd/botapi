@@ -12,6 +12,9 @@ messages follow [Conventional Commits](https://www.conventionalcommits.org/).
 - **Rich messages** (Bot API 10.1) — `SendRichMessage`/`SendRichHTML`/
   `SendRichMarkdown` send structured page-block content built with
   `github.com/gotd/td/telegram/message/rich`.
+- **Background sends** — `Bot.Background()` / `Context.Background()` expose a
+  run-lifetime context for proactive sends to any chat from timers, queues or
+  goroutines, instead of the per-update handler context. Plus `Bot.Logger()`.
 
 ## [0.1.0] - 2026-06-14
 

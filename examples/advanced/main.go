@@ -211,6 +211,22 @@ func registerCommands(bot *botapi.Bot) {
 		return err
 	})
 
+	// Background send: reply now, then send again from a goroutine that outlives
+	// the handler. The handler's own context would be canceled on return, so use
+	// the bot's run-lifetime Background context.
+	bot.OnCommand("remind", "Send a reminder in 5 seconds (background)", func(c *botapi.Context) error {
+		chat, _ := c.Chat()
+		ctx := c.Background()
+		go func() {
+			time.Sleep(5 * time.Second)
+			if _, err := c.Bot.SendMessage(ctx, chat, "⏰ Here's your reminder!"); err != nil {
+				c.Bot.Logger().Warn("background reminder failed", zap.Error(err))
+			}
+		}()
+		_, err := c.Reply("OK, I'll remind you in 5 seconds.")
+		return err
+	})
+
 	bot.OnCommand("protect", "Send a message that can't be forwarded", func(c *botapi.Context) error {
 		_, err := c.Reply("🔒 This message has protected content.", botapi.ProtectContent())
 		return err
@@ -412,6 +428,7 @@ Commands:
 /forward — forward your message back
 /silent — silent message
 /protect — protected-content message
+/remind — background send after a delay
 
 Also try:
 • send me a <i>photo</i>, <i>document</i>, <i>sticker</i>, <i>location</i> or <i>contact</i>

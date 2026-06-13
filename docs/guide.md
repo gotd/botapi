@@ -199,6 +199,31 @@ bot.OnInlineQuery(handler)
 > Updates for the bot's own outgoing messages are filtered out (the HTTP Bot API
 > never delivers them), so reply handlers won't answer themselves.
 
+### Sending in the background
+
+A handler's context is **per-update** — the `Timeout` middleware may give it a
+deadline, and it is canceled once the handler returns. Do not capture it for
+work that outlives the handler. For proactive sends (a timer, a queue, a
+goroutine) to any chat, use `Bot.Background()` (or `Context.Background()`), a
+context tied to the bot's run lifetime:
+
+```go
+bot.OnCommand("remind", "Remind me", func(c *botapi.Context) error {
+	chat, _ := c.Chat()
+	ctx := c.Background()
+	go func() {
+		time.Sleep(time.Minute)
+		c.Bot.SendMessage(ctx, chat, "⏰ reminder")
+	}()
+	return nil
+})
+```
+
+Outside any handler, keep the `*Bot` and call `bot.SendMessage(bot.Background(),
+botapi.ID(chatID), text)` from wherever you like once the bot is running.
+`Background` returns an already-canceled context before `Run` connects (and
+after it stops), so background sends fail fast instead of blocking.
+
 ## Predicates
 
 Every `On*` method accepts trailing `Predicate`s (`func(*Update) bool`); the

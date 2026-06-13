@@ -42,6 +42,11 @@ type Bot struct {
 	commands         []BotCommand
 	registerCommands bool
 
+	// runMu guards runCtx, the bot's run-lifetime context, used for background
+	// (proactive) sends that must outlive a single update handler.
+	runMu  sync.Mutex
+	runCtx context.Context
+
 	self *tg.User
 }
 
@@ -151,6 +156,11 @@ func (b *Bot) publishCommands(ctx context.Context) {
 // canceled or a fatal error occurs. Register handlers before calling Run.
 func (b *Bot) Run(ctx context.Context) error {
 	return b.client.Run(ctx, func(ctx context.Context) error {
+		// Expose the connection-lifetime context for background sends, and clear
+		// it on shutdown so background work stops with the bot.
+		b.setRunCtx(ctx)
+		defer b.setRunCtx(nil)
+
 		status, err := b.client.Auth().Status(ctx)
 		if err != nil {
 			return errors.Wrap(err, "auth status")
@@ -207,3 +217,49 @@ func (b *Bot) Peers() *peers.Manager { return b.peers }
 
 // Self returns the bot's own user. It is nil until Run has authorized.
 func (b *Bot) Self() *tg.User { return b.self }
+
+// Logger returns the bot's zap logger.
+func (b *Bot) Logger() *zap.Logger { return b.log }
+
+func (b *Bot) setRunCtx(ctx context.Context) {
+	b.runMu.Lock()
+	b.runCtx = ctx
+	b.runMu.Unlock()
+}
+
+// Background returns a context tied to the bot's run lifetime, for proactive or
+// background sends that are not in response to an update — e.g. from a timer,
+// queue or goroutine. It is canceled when the bot stops.
+//
+// A handler's own context is per-update (and may carry a Timeout deadline), so
+// it must not be used for work that outlives the handler. Use Background
+// instead:
+//
+//	bot.OnCommand("remind", "Remind in a minute", func(c *botapi.Context) error {
+//		chat, _ := c.Chat()
+//		ctx := c.Bot.Background()
+//		go func() {
+//			time.Sleep(time.Minute)
+//			c.Bot.SendMessage(ctx, chat, "⏰ reminder")
+//		}()
+//		return nil
+//	})
+//
+// Before Run has connected (or after it has stopped) Background returns an
+// already-canceled context, so background sends fail fast rather than block.
+func (b *Bot) Background() context.Context {
+	b.runMu.Lock()
+	ctx := b.runCtx
+	b.runMu.Unlock()
+	if ctx == nil {
+		return canceledContext
+	}
+	return ctx
+}
+
+// canceledContext is returned by Background before the bot is running.
+var canceledContext = func() context.Context {
+	ctx, cancel := context.WithCancel(context.Background())
+	cancel()
+	return ctx
+}()
