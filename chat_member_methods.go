@@ -239,3 +239,39 @@ func userToInputPeer(u tg.InputUserClass) tg.InputPeerClass {
 		return &tg.InputPeerEmpty{}
 	}
 }
+
+// SetChatAdministratorCustomTitle sets a custom title (rank) for an
+// administrator that the bot has promoted in a supergroup. It preserves the
+// administrator's existing rights.
+func (b *Bot) SetChatAdministratorCustomTitle(ctx context.Context, chat ChatID, userID int64, customTitle string) error {
+	channel, err := b.resolveChannel(ctx, chat)
+	if err != nil {
+		return err
+	}
+	user, err := b.resolveInputUser(ctx, userID)
+	if err != nil {
+		return err
+	}
+
+	res, err := b.raw.ChannelsGetParticipant(ctx, &tg.ChannelsGetParticipantRequest{
+		Channel:     channel,
+		Participant: userToInputPeer(user),
+	})
+	if err != nil {
+		return asAPIError(err)
+	}
+	admin, ok := res.Participant.(*tg.ChannelParticipantAdmin)
+	if !ok {
+		return &Error{Code: 400, Description: "Bad Request: user is not an administrator"}
+	}
+
+	if _, err := b.raw.ChannelsEditAdmin(ctx, &tg.ChannelsEditAdminRequest{
+		Channel:     channel,
+		UserID:      user,
+		AdminRights: admin.AdminRights,
+		Rank:        customTitle,
+	}); err != nil {
+		return asAPIError(err)
+	}
+	return nil
+}

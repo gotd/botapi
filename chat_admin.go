@@ -138,3 +138,33 @@ func (b *Bot) SetChatPermissions(ctx context.Context, chat ChatID, permissions C
 	}
 	return nil
 }
+
+// SetChatStickerSet sets the group sticker set for a supergroup.
+func (b *Bot) SetChatStickerSet(ctx context.Context, chat ChatID, stickerSetName string) error {
+	channel, err := b.resolveChannel(ctx, chat)
+	if err != nil {
+		return err
+	}
+	if _, err := b.raw.ChannelsSetStickers(ctx, &tg.ChannelsSetStickersRequest{
+		Channel:    channel,
+		Stickerset: &tg.InputStickerSetShortName{ShortName: stickerSetName},
+	}); err != nil {
+		return asAPIError(err)
+	}
+	return nil
+}
+
+// DeleteChatStickerSet removes the group sticker set from a supergroup.
+func (b *Bot) DeleteChatStickerSet(ctx context.Context, chat ChatID) error {
+	channel, err := b.resolveChannel(ctx, chat)
+	if err != nil {
+		return err
+	}
+	if _, err := b.raw.ChannelsSetStickers(ctx, &tg.ChannelsSetStickersRequest{
+		Channel:    channel,
+		Stickerset: &tg.InputStickerSetEmpty{},
+	}); err != nil {
+		return asAPIError(err)
+	}
+	return nil
+}

@@ -21,22 +21,17 @@ var coveredByOtherMeans = map[string]string{
 // implemented. Each is an acknowledged gap tracked in docs/roadmap.md; the
 // conformance test allows them so it can still catch *unacknowledged* drift.
 var deferredMethods = map[string]string{
-	"editMessageMedia":                "Phase 3 deferred",
-	"answerPreCheckoutQuery":          "payments — deferred until payment updates land",
-	"answerShippingQuery":             "payments — deferred until payment updates land",
-	"sendInvoice":                     "payments — deferred",
-	"setPassportDataErrors":           "Telegram Passport — deferred",
-	"sendGame":                        "games — deferred",
-	"setGameScore":                    "games — deferred",
-	"getGameHighScores":               "games — deferred",
-	"getStickerSet":                   "stickers — deferred (needs Sticker[] conversion)",
-	"setStickerSetThumb":              "stickers — deferred",
-	"getChat":                         "chat info — deferred",
-	"getUserProfilePhotos":            "deferred",
-	"setChatStickerSet":               "chat sticker set — deferred",
-	"deleteChatStickerSet":            "chat sticker set — deferred",
-	"setChatAdministratorCustomTitle": "member management — deferred",
-	"stopPoll":                        "deferred",
+	"editMessageMedia":       "Phase 3 deferred",
+	"answerPreCheckoutQuery": "payments — deferred until payment updates land",
+	"answerShippingQuery":    "payments — deferred until payment updates land",
+	"sendInvoice":            "payments — deferred",
+	"setPassportDataErrors":  "Telegram Passport — deferred",
+	"sendGame":               "games — deferred",
+	"setGameScore":           "games — deferred",
+	"getGameHighScores":      "games — deferred",
+	"getStickerSet":          "stickers — deferred (needs Sticker[] conversion)",
+	"setStickerSetThumb":     "stickers — deferred",
+	"stopPoll":               "deferred",
 }
 
 // notApplicableMethods lists published methods that do not apply to the
