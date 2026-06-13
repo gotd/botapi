@@ -33,6 +33,8 @@ func convertMessageMedia(media tg.MessageMediaClass, r *Message) {
 			UserID:      media.UserID,
 			VCard:       media.Vcard,
 		}
+	case *tg.MessageMediaPoll:
+		r.Poll = pollFromTg(&media.Poll, &media.Results)
 	}
 }
 

@@ -30,7 +30,6 @@ var deferredMethods = map[string]string{
 	"getGameHighScores":      "games — deferred",
 	"getStickerSet":          "stickers — deferred (needs Sticker[] conversion)",
 	"setStickerSetThumb":     "stickers — deferred",
-	"stopPoll":               "deferred",
 }
 
 // notApplicableMethods lists published methods that do not apply to the
