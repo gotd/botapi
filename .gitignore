@@ -26,3 +26,9 @@ state/*.bbolt
 /inline
 /media
 /advanced
+/rich
+/background
+
+# Subscriber store written by the background example.
+subscribers.json
+subscribers.json.tmp

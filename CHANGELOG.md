@@ -31,7 +31,8 @@ messages follow [Conventional Commits](https://www.conventionalcommits.org/).
 - **Serializable peer references** — `Bot.PeerRef` captures a chat's id and
   access hash into a JSON-serializable `PeerRef`; `Peer(ref)` addresses it
   directly (no stored peer data, no re-resolution), so background/scheduled
-  sends survive a restart.
+  sends survive a restart. The new `examples/background` bot persists
+  subscriber `PeerRef`s to a JSON file and re-greets them after a restart.
 
 ## [0.1.0] - 2026-06-14
 
