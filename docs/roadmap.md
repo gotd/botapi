@@ -170,10 +170,14 @@ Deferred within Phase 5: payment answers
 
 - ☐ `pool.Pool` re-pointed at public `Bot`; GC, keepalive
 - ☐ `cmd/botapi` HTTP server as an optional example (local Bot-API server)
-- ☐ Examples: echo bot, media bot, inline bot, handler/middleware
-- ☐ Allocation tests on hot paths; benchmarks vs HTTP Bot API clients
+- ◐ Examples: `examples/echo` (handler + middleware), `examples/buttons`
+  (inline keyboards + callback queries), `examples/inline` (inline mode). Media
+  bot still to add.
+- ☑ Allocation tests on hot paths (`bench_test.go`): entity/markup/user
+  conversion and `file_unique_id`, with `-benchmem`.
 - ☐ Conformance test against kept `botdoc` extractor (API-version drift guard)
-- ☐ Docs: package docs, migration guide, README
+- ◐ Docs: package docs (`doc.go`) and README done; reference/migration guide
+  still to write.
 
 ## Phase 8 — Release
 
