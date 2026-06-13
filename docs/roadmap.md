@@ -57,18 +57,26 @@ The hand-written Bot API surface. This is the bulk of the work. **Done** on
 
 ## Phase 3 — Outgoing methods (translation)
 
-Re-point the kept translation logic from `oas.*` to our types, then fill stubs.
+Hand-written over the gotd sender on our types. **Done** on `main`: methods on
+`*Bot` with shared functional `SendOption`s; pure translation
+(`markup_to_tg.go`, `entities.go`, `errors_map.go`, `convert.go`) is unit
+tested. Live-Telegram paths are compile-/lint-verified.
 
-- ☐ `SendMessage` (text + entities/HTML) — re-point `send.go`
-- ☐ Media sends: `SendPhoto`, `SendDocument`, `SendVideo`, `SendAudio`,
-  `SendVoice`, `SendAnimation`, `SendVideoNote`, `SendMediaGroup`,
-  `SendSticker` (currently stubbed — uploader + `fileid`)
-- ☐ `SendContact`, `SendDice`, `SendVenue`, `SendLocation`, `SendPoll`
-- ☐ `SendChatAction` (already mapped)
-- ☐ Keyboards both directions (`markup.go`)
-- ☐ Edits: `EditMessageText/Caption/Media/ReplyMarkup`
-- ☐ `ForwardMessage(s)`, `CopyMessage(s)`, `DeleteMessage(s)`
-- ☐ Peer/chat-id resolution hardening (`ResolveTDLibID`, access-hash misses)
+- ☑ `SendMessage` (text + HTML/MarkdownV2/Markdown) — `send.go`
+- ☑ Media sends: `SendPhoto`, `SendDocument`, `SendVideo`, `SendAudio`,
+  `SendVoice`, `SendAnimation`, `SendVideoNote`, `SendSticker` (file_id via
+  `fileid`, URL, or upload via the uploader); `SendMediaGroup` (uploaded albums)
+- ☑ `SendContact`, `SendDice`, `SendVenue`, `SendLocation`, `SendPoll`
+- ☑ `SendChatAction`
+- ☑ Keyboards both directions (`markup_to_tg.go` out, `convert.go` in)
+- ◐ Edits: `EditMessageText/Caption/ReplyMarkup` done; `EditMessageMedia` TODO
+- ☑ `ForwardMessage`, `CopyMessage`, `DeleteMessage(s)`
+- ◐ Peer/chat-id resolution (`resolve.go`: TDLib id + @username); access-hash
+  miss hardening continues as real traffic exposes cases
+
+Deferred within Phase 3: explicit-entity sends (parse modes cover formatting);
+`SendMediaGroup` with file_id/URL items (only uploads compose through the
+high-level album API); `EditMessageMedia`.
 
 ## Phase 4 — Incoming: updates & handler framework
 
