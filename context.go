@@ -49,3 +49,13 @@ func (c *Context) Reply(text string, opts ...SendOption) (*Message, error) {
 	opts = append([]SendOption{ReplyTo(m.MessageID)}, opts...)
 	return c.Bot.SendMessage(c, ID(m.Chat.ID), text, opts...)
 }
+
+// AnswerCallback answers the update's callback query. It is an error to call it
+// when the update is not a callback query.
+func (c *Context) AnswerCallback(opts ...AnswerCallbackQueryOption) error {
+	cq := c.Update.CallbackQuery
+	if cq == nil {
+		return &Error{Code: 400, Description: "Bad Request: update has no callback query to answer"}
+	}
+	return c.Bot.AnswerCallbackQuery(c, cq.ID, opts...)
+}
