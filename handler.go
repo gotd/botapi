@@ -4,7 +4,7 @@ import (
 	"context"
 	"sync"
 
-	"go.uber.org/zap"
+	"github.com/gotd/log"
 )
 
 // Context is passed to a Handler. It embeds the request context (so it can be
@@ -93,7 +93,7 @@ func (b *Bot) route(ctx context.Context, u *Update) {
 		}
 		c := &Context{Context: ctx, Bot: b, Update: u}
 		if err := h(c); err != nil {
-			b.log.Error("Handler error", zap.Error(err))
+			b.logger().Error(ctx, "Handler error", log.Error(err))
 		}
 		return
 	}

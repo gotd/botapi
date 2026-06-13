@@ -7,6 +7,14 @@ messages follow [Conventional Commits](https://www.conventionalcommits.org/).
 
 ## [Unreleased]
 
+### Changed
+
+- **Logging port** — the library now logs through `github.com/gotd/log` instead
+  of zap directly. `Options.Logger` and `Bot.Logger()` (and `pool.Options.Logger`)
+  are now `log.Logger`. **Breaking:** wrap a `*zap.Logger` with
+  `github.com/gotd/log/logzap.New` (or a `*slog.Logger` with `logslog.New`). The
+  library no longer depends on zap.
+
 ### Added
 
 - **Rich messages** (Bot API 10.1) — `SendRichMessage`/`SendRichHTML`/

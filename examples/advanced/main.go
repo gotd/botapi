@@ -19,6 +19,8 @@ import (
 	"strings"
 	"time"
 
+	glog "github.com/gotd/log"
+	"github.com/gotd/log/logzap"
 	"go.uber.org/zap"
 
 	"github.com/gotd/td/telegram/message/rich"
@@ -29,7 +31,7 @@ import (
 const samplePhotoURL = "https://upload.wikimedia.org/wikipedia/commons/3/3a/Cat03.jpg"
 
 func main() {
-	log, _ := zap.NewDevelopment()
+	log, _ := zap.NewProduction()
 	defer func() { _ = log.Sync() }()
 
 	appID, err := strconv.Atoi(os.Getenv("APP_ID"))
@@ -40,7 +42,7 @@ func main() {
 	bot, err := botapi.New(os.Getenv("BOT_TOKEN"), botapi.Options{
 		AppID:     appID,
 		AppHash:   os.Getenv("APP_HASH"),
-		Logger:    log,
+		Logger:    logzap.New(log),
 		FloodWait: true, // transparently wait out flood limits
 	})
 	if err != nil {
@@ -220,7 +222,7 @@ func registerCommands(bot *botapi.Bot) {
 		go func() {
 			time.Sleep(5 * time.Second)
 			if _, err := c.Bot.SendMessage(ctx, chat, "⏰ Here's your reminder!"); err != nil {
-				c.Bot.Logger().Warn("background reminder failed", zap.Error(err))
+				glog.For(c.Bot.Logger()).Warn(ctx, "background reminder failed", glog.Error(err))
 			}
 		}()
 		_, err := c.Reply("OK, I'll remind you in 5 seconds.")

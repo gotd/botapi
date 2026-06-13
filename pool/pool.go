@@ -14,8 +14,8 @@ import (
 	"time"
 
 	"github.com/go-faster/errors"
+	"github.com/gotd/log"
 	"go.etcd.io/bbolt"
-	"go.uber.org/zap"
 
 	"github.com/gotd/botapi"
 	"github.com/gotd/botapi/storage"
@@ -28,8 +28,9 @@ type Options struct {
 	AppID   int
 	AppHash string
 
-	// Logger is the base zap logger. Defaults to a no-op logger.
-	Logger *zap.Logger
+	// Logger is the base structured logger (github.com/gotd/log port).
+	// Defaults to a no-op logger.
+	Logger log.Logger
 
 	// StateDir, when set, is the directory holding each bot's persistent session
 	// file (<id>.bbolt). When empty, bots run with in-memory storage and nothing
@@ -44,7 +45,7 @@ type Options struct {
 // Pool is a concurrency-safe set of bots keyed by token.
 type Pool struct {
 	opt Options
-	log *zap.Logger
+	log log.Logger
 
 	mu   sync.Mutex
 	bots map[string]*managed
@@ -55,9 +56,7 @@ func New(opt Options) (*Pool, error) {
 	if opt.AppID == 0 || opt.AppHash == "" {
 		return nil, errors.New("AppID and AppHash are required")
 	}
-	if opt.Logger == nil {
-		opt.Logger = zap.NewNop()
-	}
+	opt.Logger = log.OrNop(opt.Logger)
 	return &Pool{
 		opt:  opt,
 		log:  opt.Logger,
@@ -112,7 +111,7 @@ func (p *Pool) acquire(tok Token) (*managed, error) {
 
 // start builds and runs a bot for the token in the background.
 func (p *Pool) start(tok Token) (*managed, error) {
-	log := p.log.Named("bot").With(zap.Int("id", tok.ID))
+	botLog := log.With(log.Named(p.log, "bot"), log.Int("id", tok.ID))
 
 	var (
 		store botapi.Storage
@@ -133,7 +132,7 @@ func (p *Pool) start(tok Token) (*managed, error) {
 	bot, err := botapi.New(tok.String(), botapi.Options{
 		AppID:   p.opt.AppID,
 		AppHash: p.opt.AppHash,
-		Logger:  log,
+		Logger:  botLog,
 		Storage: store,
 		OnStart: func(context.Context) { m.markReady(nil) },
 	})
@@ -154,7 +153,7 @@ func (p *Pool) start(tok Token) (*managed, error) {
 		// must reach every waiter; markReady is a no-op once the bot is ready.
 		if runErr != nil && !errors.Is(runErr, context.Canceled) {
 			m.markReady(runErr)
-			log.Warn("Bot stopped", zap.Error(runErr))
+			log.For(botLog).Warn(context.Background(), "Bot stopped", log.Error(runErr))
 		} else {
 			// Unblock any startup waiter on a clean shutdown too.
 			m.markReady(errStopped)

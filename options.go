@@ -3,10 +3,10 @@ package botapi
 import (
 	"context"
 
+	"github.com/gotd/log"
 	"github.com/gotd/td/telegram"
 	"github.com/gotd/td/telegram/peers"
 	"github.com/gotd/td/telegram/updates"
-	"go.uber.org/zap"
 )
 
 // Storage persists everything a bot needs across restarts: the MTProto session,
@@ -29,8 +29,10 @@ type Options struct {
 	AppID   int
 	AppHash string
 
-	// Logger is the zap logger. Defaults to a no-op logger.
-	Logger *zap.Logger
+	// Logger is the structured logger the bot writes to, via the
+	// github.com/gotd/log port. Defaults to a no-op logger. Wrap a *zap.Logger
+	// with github.com/gotd/log/logzap.New, or a *slog.Logger with logslog.New.
+	Logger log.Logger
 
 	// Device describes the client to Telegram. Optional.
 	Device telegram.DeviceConfig
@@ -68,7 +70,5 @@ type Options struct {
 }
 
 func (o *Options) setDefaults() {
-	if o.Logger == nil {
-		o.Logger = zap.NewNop()
-	}
+	o.Logger = log.OrNop(o.Logger)
 }

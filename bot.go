@@ -7,13 +7,11 @@ import (
 
 	"github.com/go-faster/errors"
 	"github.com/gotd/log"
-	"github.com/gotd/log/logzap"
 	"github.com/gotd/td/telegram"
 	"github.com/gotd/td/telegram/message"
 	"github.com/gotd/td/telegram/peers"
 	"github.com/gotd/td/telegram/updates"
 	"github.com/gotd/td/tg"
-	"go.uber.org/zap"
 )
 
 // Bot is a Telegram Bot API client implemented over MTProto.
@@ -22,7 +20,7 @@ import (
 // Run to connect and serve. Bot is safe for concurrent use once running.
 type Bot struct {
 	token string
-	log   *zap.Logger
+	log   log.Logger
 
 	client *telegram.Client
 	raw    *tg.Client
@@ -60,9 +58,7 @@ func New(token string, opt Options) (*Bot, error) {
 		return nil, errors.New("AppID and AppHash are required (see https://my.telegram.org)")
 	}
 	opt.setDefaults()
-
-	// gotd/td logs through the github.com/gotd/log port; bridge the zap logger.
-	lg := logzap.New(opt.Logger)
+	lg := opt.Logger
 
 	disp := tg.NewUpdateDispatcher()
 
@@ -83,7 +79,7 @@ func New(token string, opt Options) (*Bot, error) {
 		AccessHasher: pm,
 		Logger:       log.Named(lg, "gaps"),
 		OnChannelTooLong: func(channelID int64) {
-			opt.Logger.Warn("Channel too long", zap.Int64("channel_id", channelID))
+			log.For(lg).Warn(context.Background(), "Channel too long", log.Int64("channel_id", channelID))
 		},
 	})
 
@@ -146,10 +142,10 @@ func (b *Bot) publishCommands(ctx context.Context) {
 		return
 	}
 	if err := b.SetMyCommands(ctx, cmds); err != nil {
-		b.log.Warn("Register bot commands", zap.Error(err))
+		b.logger().Warn(ctx, "Register bot commands", log.Error(err))
 		return
 	}
-	b.log.Debug("Registered bot commands", zap.Int("count", len(cmds)))
+	b.logger().Debug(ctx, "Registered bot commands", log.Int("count", len(cmds)))
 }
 
 // Run connects, authorizes as a bot, and blocks serving updates until ctx is
@@ -187,9 +183,9 @@ func (b *Bot) Run(ctx context.Context) error {
 		return b.gaps.Run(ctx, b.raw, me.ID, updates.AuthOptions{
 			IsBot: true,
 			OnStart: func(ctx context.Context) {
-				b.log.Info("Bot started",
-					zap.Int64("id", me.ID),
-					zap.String("username", me.Username),
+				b.logger().Info(ctx, "Bot started",
+					log.Int64("id", me.ID),
+					log.String("username", me.Username),
 				)
 				b.publishCommands(ctx)
 				if b.onStart != nil {
@@ -218,8 +214,11 @@ func (b *Bot) Peers() *peers.Manager { return b.peers }
 // Self returns the bot's own user. It is nil until Run has authorized.
 func (b *Bot) Self() *tg.User { return b.self }
 
-// Logger returns the bot's zap logger.
-func (b *Bot) Logger() *zap.Logger { return b.log }
+// Logger returns the bot's structured logger (the github.com/gotd/log port).
+func (b *Bot) Logger() log.Logger { return b.log }
+
+// logger wraps the bot's logger in an ergonomic Helper for internal logging.
+func (b *Bot) logger() log.Helper { return log.For(b.log) }
 
 func (b *Bot) setRunCtx(ctx context.Context) {
 	b.runMu.Lock()

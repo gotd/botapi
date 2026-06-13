@@ -5,7 +5,7 @@ import (
 	"runtime/debug"
 	"time"
 
-	"go.uber.org/zap"
+	"github.com/gotd/log"
 )
 
 // Recover wraps a handler so a panic is recovered, logged with its stack, and
@@ -15,9 +15,9 @@ func Recover() Middleware {
 		return func(c *Context) (err error) {
 			defer func() {
 				if r := recover(); r != nil {
-					c.Bot.log.Error("Recovered from panic in handler",
-						zap.Any("panic", r),
-						zap.ByteString("stack", debug.Stack()),
+					c.Bot.logger().Error(c, "Recovered from panic in handler",
+						log.Any("panic", r),
+						log.String("stack", string(debug.Stack())),
 					)
 					err = &Error{Code: 500, Description: "Internal Server Error: handler panicked"}
 				}
@@ -47,10 +47,10 @@ func Logging() Middleware {
 		return func(c *Context) error {
 			err := next(c)
 			if err != nil {
-				c.Bot.log.Warn("Update handled with error",
-					zap.Int("update_id", c.Update.UpdateID), zap.Error(err))
+				c.Bot.logger().Warn(c, "Update handled with error",
+					log.Int("update_id", c.Update.UpdateID), log.Error(err))
 			} else {
-				c.Bot.log.Debug("Update handled", zap.Int("update_id", c.Update.UpdateID))
+				c.Bot.logger().Debug(c, "Update handled", log.Int("update_id", c.Update.UpdateID))
 			}
 			return err
 		}

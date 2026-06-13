@@ -3,8 +3,8 @@ package botapi
 import (
 	"context"
 
+	"github.com/gotd/log"
 	"github.com/gotd/td/tg"
-	"go.uber.org/zap"
 )
 
 // installHandlers wires the raw tg.UpdateDispatcher to the Bot API router. It is
@@ -58,7 +58,7 @@ func (b *Bot) dispatchMessage(ctx context.Context, msg tg.MessageClass, edited b
 
 	m, err := b.messageFromTg(ctx, msg)
 	if err != nil {
-		b.log.Error("Convert message", zap.Error(err))
+		b.logger().Error(ctx, "Convert message", log.Error(err))
 		return
 	}
 	if m == nil {

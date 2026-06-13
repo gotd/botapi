@@ -14,13 +14,14 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/gotd/log/logzap"
 	"go.uber.org/zap"
 
 	"github.com/gotd/botapi"
 )
 
 func main() {
-	log, _ := zap.NewDevelopment()
+	log, _ := zap.NewProduction()
 	defer func() { _ = log.Sync() }()
 
 	appID, err := strconv.Atoi(os.Getenv("APP_ID"))
@@ -31,7 +32,7 @@ func main() {
 	bot, err := botapi.New(os.Getenv("BOT_TOKEN"), botapi.Options{
 		AppID:   appID,
 		AppHash: os.Getenv("APP_HASH"),
-		Logger:  log,
+		Logger:  logzap.New(log),
 	})
 	if err != nil {
 		log.Fatal("Create bot", zap.Error(err))
