@@ -83,12 +83,19 @@ func (b *Bot) applySendConfig(builder *message.Builder, cfg sendConfig) (*messag
 	return builder, nil
 }
 
-// sentMessage unpacks a send response into a Bot API Message, backfilling the
-// peer id when the server omitted it.
+// sentMessage unpacks a send or edit response into a Bot API Message,
+// backfilling the peer id when the server omitted it.
 func (b *Bot) sentMessage(ctx context.Context, peer tg.InputPeerClass, resp tg.UpdatesClass, sendErr error) (*Message, error) {
 	m, err := unpack.MessageClass(resp, sendErr)
 	if err != nil {
-		return nil, asAPIError(err)
+		// unpack.MessageClass only handles new-message updates. Edits return
+		// UpdateEditMessage/UpdateEditChannelMessage, which it rejects; extract
+		// those here so EditMessage* don't report a failure for a successful edit.
+		if edited, ok := editedMessageFromResp(resp); ok {
+			m = edited
+		} else {
+			return nil, asAPIError(err)
+		}
 	}
 	msg, ok := m.(*tg.Message)
 	if !ok {

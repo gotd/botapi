@@ -140,15 +140,37 @@ func registerCommands(bot *botapi.Bot) {
 		return err
 	})
 
-	bot.OnCommand("edit", "Send a message, then edit it", func(c *botapi.Context) error {
+	// A self-verifying edit test: send a message, then edit its text and its
+	// reply markup, reporting any failure back to the chat (and the log).
+	bot.OnCommand("edit", "Send a message, then edit it (text + markup)", func(c *botapi.Context) error {
 		chat, _ := c.Chat()
-		m, err := c.Bot.SendMessage(c, chat, "This message will change in 2 seconds…")
+		m, err := c.Bot.SendMessage(c, chat, "Step 0: this message will change…")
 		if err != nil {
 			return err
 		}
-		time.Sleep(2 * time.Second)
-		_, err = c.Bot.EditMessageText(c, chat, m.MessageID, "✏️ Edited!")
-		return err
+
+		time.Sleep(time.Second)
+		if _, err := c.Bot.EditMessageText(c, chat, m.MessageID, "Step 1: ✏️ text edited"); err != nil {
+			_, _ = c.Reply("EditMessageText failed: " + err.Error())
+			return err
+		}
+
+		time.Sleep(time.Second)
+		kb := botapi.InlineKeyboard([]botapi.InlineKeyboardButton{
+			botapi.InlineButtonData("✅ markup edited", "demo:ok"),
+		})
+		if _, err := c.Bot.EditMessageReplyMarkup(c, chat, m.MessageID, kb); err != nil {
+			_, _ = c.Reply("EditMessageReplyMarkup failed: " + err.Error())
+			return err
+		}
+
+		time.Sleep(time.Second)
+		if _, err := c.Bot.EditMessageText(c, chat, m.MessageID,
+			"Step 2: ✅ all edits succeeded", botapi.WithReplyMarkup(kb)); err != nil {
+			_, _ = c.Reply("final EditMessageText failed: " + err.Error())
+			return err
+		}
+		return nil
 	})
 
 	bot.OnCommand("forward", "Forward your command back to you", func(c *botapi.Context) error {

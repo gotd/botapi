@@ -70,3 +70,29 @@ func (b *Bot) EditMessageReplyMarkup(ctx context.Context, chat ChatID, messageID
 	resp, err := b.raw.MessagesEditMessage(ctx, req)
 	return b.sentMessage(ctx, peer, resp, err)
 }
+
+// editedMessageFromResp extracts the edited message from an edit response.
+// Edits return UpdateEditMessage/UpdateEditChannelMessage, which the generic
+// send unpacker does not handle.
+func editedMessageFromResp(resp tg.UpdatesClass) (tg.MessageClass, bool) {
+	var updates []tg.UpdateClass
+	switch v := resp.(type) {
+	case *tg.Updates:
+		updates = v.Updates
+	case *tg.UpdatesCombined:
+		updates = v.Updates
+	case *tg.UpdateShort:
+		updates = []tg.UpdateClass{v.Update}
+	default:
+		return nil, false
+	}
+	for _, u := range updates {
+		switch upd := u.(type) {
+		case *tg.UpdateEditMessage:
+			return upd.Message, true
+		case *tg.UpdateEditChannelMessage:
+			return upd.Message, true
+		}
+	}
+	return nil, false
+}
