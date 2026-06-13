@@ -108,25 +108,26 @@ with the chat-management and query work in Phase 5).
 
 ## Phase 5 — Files, queries, chat management
 
-**Done** on `main` (payments and games aside — see below). The methods are on
-`*Bot` with the same functional-option style as Phase 3. See `file.go`,
-`answer.go`, `commands.go`, `chat_member_methods.go`, `chat_admin.go`,
-`chat_info.go`, `chat_photo.go`, `invite_links.go`, `live_location.go`,
-`edit_media.go`, `poll.go`, `inline_query_result.go`,
-`input_message_content.go`, `sticker.go`, `sticker_set.go`.
+**Done** on `main` — the conformance test's deferred list is now empty: every
+method published in the doc snapshot is implemented (or, for
+`getUpdates`/webhooks/`logOut`/`close`, categorized as not-applicable to the
+MTProto model). The methods are on `*Bot` with the same functional-option style
+as Phase 3. See `file.go`, `answer.go`, `commands.go`, `chat_member_methods.go`,
+`chat_admin.go`, `chat_info.go`, `chat_photo.go`, `invite_links.go`,
+`live_location.go`, `edit_media.go`, `poll.go`, `inline_query_result.go`,
+`input_message_content.go`, `sticker.go`, `sticker_set.go`, `games.go`,
+`payments.go`, `send_invoice.go`, `passport.go`.
 
 - ☑ `GetFile` + download (`DownloadFile`/`DownloadFileToPath`);
   `file_unique_id` resolved — derived locally from the decoded `file_id` with
   the TDLib scheme (web/document exact; legacy photos via volume/local id, newer
   photo sources fall back to media id). Resolves Decisions-needed #1. No HTTP
   file server in the MTProto-native model, so `GetFile` is decode-only.
-- ◐ `AnswerCallbackQuery` (+ `Context.AnswerCallback`) and `AnswerInlineQuery`
-  (+ `Context.AnswerInline`) done — the `InlineQueryResult` union (article;
+- ☑ `AnswerCallbackQuery` (+ `Context.AnswerCallback`) and `AnswerInlineQuery`
+  (+ `Context.AnswerInline`) — the `InlineQueryResult` union (article;
   photo/gif/mpeg4 gif by URL; cached photo/gif/sticker/document/video/voice/
   audio by file_id; contact/location/venue) and the `InputMessageContent` union
-  (text/location/venue/contact). Payment answers
-  `AnswerPreCheckoutQuery`/`AnswerShippingQuery` deferred (need payment-update
-  plumbing, which has no incoming updates wired yet).
+  (text/location/venue/contact).
 - ☑ Chat members: `Ban`/`Unban`/`Restrict`/`PromoteChatMember`,
   `GetChatMember`, `GetChatAdministrators`, `GetChatMemberCount`
   (supergroups/channels via `channels.*`); `ChatPermissions`/`ChatAdminRights`
@@ -145,11 +146,12 @@ with the chat-management and query work in Phase 5).
 - ☑ Stickers: `UploadStickerFile`, `CreateNewStickerSet`, `AddStickerToSet`,
   `DeleteStickerFromSet`, `SetStickerPositionInSet`, `GetStickerSet`,
   `SetStickerSetThumb` (`InputSticker`/`StickerFormat`/`StickerSet`).
-
-Deferred within Phase 5 (need their own update/type infrastructure):
-**payments** (`AnswerPreCheckoutQuery`/`AnswerShippingQuery`/`SendInvoice`/
-`SetPassportDataErrors`) and **games** (`SendGame`/`SetGameScore`/
-`GetGameHighScores`).
+- ☑ Games: `SendGame`, `SetGameScore`, `GetGameHighScores`
+  (`Game`/`GameHighScore`).
+- ☑ Payments: `SendInvoice` (`InvoiceParams`), `AnswerShippingQuery`,
+  `AnswerPreCheckoutQuery`, incoming `ShippingQuery`/`PreCheckoutQuery`
+  (`On{Shipping,PreCheckout}Query`), `SetPassportDataErrors`
+  (`PassportElementError` union).
 
 ## Phase 6 — Errors, rate limiting, resilience
 
