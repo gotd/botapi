@@ -33,21 +33,27 @@ detailed handoff.
 - ☑ Bump `gotd/td` to latest (**v0.117.0 → v0.156.0**); `tidy` dropped
   `go-chi/chi`, moved `ogen` to indirect, added `gotd/log` + `gotd/log/logzap`
 - ◐ Update `Makefile` (done: dropped `generate`, added `lint`); rewrite
-  `README.md` (todo)
+  `README.md` (☑ rewritten for the MTProto-backed library)
 
 ## Phase 2 — Core type system
 
-The hand-written Bot API surface. This is the bulk of the work.
+The hand-written Bot API surface. This is the bulk of the work. **Done** on
+`main` (commits on top of Phase 1): see `enums.go`, `errors.go`, `markup.go`,
+`unions.go`, `types_*.go`, `message_origin.go`, `chat_member.go`,
+`input_media.go`, `update.go`.
 
-- ☐ Primitive types: `User`, `Chat`, `Message`, `MessageEntity`, `PhotoSize`,
-  `Document`, `Update`, `ResponseParameters`
-- ☐ Typed enums: `ParseMode`, `ChatType`, `ChatAction`, `MessageEntityType`, …
-- ☐ Sealed-interface unions: `ChatID`, `InputFile`, `ReplyMarkup`,
+- ☑ Primitive types: `User`, `Chat`, `Message`, `MessageEntity`, `PhotoSize`,
+  `Document`, `Update`, `ResponseParameters` (+ media/query supporting types)
+- ☑ Typed enums: `ParseMode`, `ChatType`, `ChatAction`, `MessageEntityType`, … +
+  the union discriminators
+- ☑ Sealed-interface unions: `ChatID`, `InputFile`, `ReplyMarkup`,
   `MessageOrigin`, `ChatMember`, `ReactionType`, `MenuButton`, `InputMedia`
-- ☐ Constructors / fluent setters (`ID`, `Username`, keyboard builders) —
-  the `telegoutil` equivalent, but type-safe
-- ☐ Typed error hierarchy (`Error`, `AsFloodWait`, `ErrNotImplemented`)
-- ☐ Exhaustiveness lint config for unions
+- ◐ Constructors / fluent setters (`ID`, `Username`, keyboard builders) — done;
+  the `telegoutil` equivalent. More fluent setters land alongside the methods
+  in Phase 3.
+- ☑ Typed error hierarchy (`Error`, `AsFloodWait`, `ErrNotImplemented`)
+- ☑ Exhaustiveness lint config for unions (`gochecksumtype` + `exhaustive`;
+  golangci config migrated to v2)
 
 ## Phase 3 — Outgoing methods (translation)
 
