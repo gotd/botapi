@@ -7,6 +7,8 @@ messages follow [Conventional Commits](https://www.conventionalcommits.org/).
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-06-14
+
 `botapi` was rebuilt from a codegen-first OpenAPI/ogen project into a
 hand-written, MTProto-backed Bot API **library** built on
 [`gotd/td`](https://github.com/gotd/td). It exposes the familiar Bot API surface
@@ -52,4 +54,5 @@ but speaks MTProto directly — no `api.telegram.org`, no `getUpdates`/webhooks.
   guide and runnable examples (`echo`, `buttons`, `inline`, `media`,
   `advanced`).
 
-[Unreleased]: https://github.com/gotd/botapi/commits/main
+[Unreleased]: https://github.com/gotd/botapi/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/gotd/botapi/releases/tag/v0.1.0

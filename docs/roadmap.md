@@ -199,9 +199,8 @@ the product).
 - ☑ CI (lint, `-race` tests, conformance runs in `go test`), codecov coverage —
   workflows modernized (`actions/checkout@v6`, `setup-go@v5`,
   `golangci-lint-action@v9` for the v2 config).
-- ◐ Conventional commits enforced (`commitlint` workflow); `CHANGELOG.md` added.
-  **Semantic version tag** is the maintainer's call (no tags yet — `v0.1.0`
-  when ready).
+- ☑ Conventional commits enforced (`commitlint` workflow); `CHANGELOG.md` added;
+  first semantic version **`v0.1.0`** tagged.
 - ◐ Usage guide (`docs/guide.md`) done; a public announce is the maintainer's
   call.
 
