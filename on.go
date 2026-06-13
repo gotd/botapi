@@ -64,29 +64,37 @@ func (b *Bot) dispatchMessage(ctx context.Context, msg tg.MessageClass, edited b
 	b.route(ctx, u)
 }
 
+// Kind predicates select an update by which field it carries. They are shared
+// by Bot.On* and Group.On*.
+func hasMessage(u *Update) bool       { return u.Message != nil }
+func hasEditedMessage(u *Update) bool { return u.EditedMessage != nil }
+func hasChannelPost(u *Update) bool   { return u.ChannelPost != nil }
+func hasCallbackQuery(u *Update) bool { return u.CallbackQuery != nil }
+func hasInlineQuery(u *Update) bool   { return u.InlineQuery != nil }
+
 // OnMessage registers a handler for new messages matching the predicates.
 func (b *Bot) OnMessage(h Handler, predicates ...Predicate) {
-	b.on(h, prepend(func(u *Update) bool { return u.Message != nil }, predicates)...)
+	b.on(h, prepend(hasMessage, predicates)...)
 }
 
 // OnEditedMessage registers a handler for edited messages.
 func (b *Bot) OnEditedMessage(h Handler, predicates ...Predicate) {
-	b.on(h, prepend(func(u *Update) bool { return u.EditedMessage != nil }, predicates)...)
+	b.on(h, prepend(hasEditedMessage, predicates)...)
 }
 
 // OnChannelPost registers a handler for new channel posts.
 func (b *Bot) OnChannelPost(h Handler, predicates ...Predicate) {
-	b.on(h, prepend(func(u *Update) bool { return u.ChannelPost != nil }, predicates)...)
+	b.on(h, prepend(hasChannelPost, predicates)...)
 }
 
 // OnCallbackQuery registers a handler for callback queries from inline keyboards.
 func (b *Bot) OnCallbackQuery(h Handler, predicates ...Predicate) {
-	b.on(h, prepend(func(u *Update) bool { return u.CallbackQuery != nil }, predicates)...)
+	b.on(h, prepend(hasCallbackQuery, predicates)...)
 }
 
 // OnInlineQuery registers a handler for inline queries.
 func (b *Bot) OnInlineQuery(h Handler, predicates ...Predicate) {
-	b.on(h, prepend(func(u *Update) bool { return u.InlineQuery != nil }, predicates)...)
+	b.on(h, prepend(hasInlineQuery, predicates)...)
 }
 
 // prepend returns p followed by rest, without mutating rest.

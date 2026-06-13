@@ -30,6 +30,7 @@ type Middleware func(next Handler) Handler
 type route struct {
 	handler    Handler
 	predicates []Predicate
+	mws        []Middleware
 }
 
 func (r route) matches(u *Update) bool {
@@ -59,9 +60,15 @@ func (b *Bot) Use(mws ...Middleware) {
 
 // on registers a handler guarded by the given predicates.
 func (b *Bot) on(handler Handler, predicates ...Predicate) {
+	b.onWith(handler, nil, predicates)
+}
+
+// onWith registers a handler with route-scoped middleware (applied inside the
+// global middleware) and predicates.
+func (b *Bot) onWith(handler Handler, mws []Middleware, predicates []Predicate) {
 	b.router.mu.Lock()
 	defer b.router.mu.Unlock()
-	b.router.routes = append(b.router.routes, route{handler: handler, predicates: predicates})
+	b.router.routes = append(b.router.routes, route{handler: handler, predicates: predicates, mws: mws})
 }
 
 // route dispatches an update to the first matching handler, wrapped in the
@@ -78,6 +85,9 @@ func (b *Bot) route(ctx context.Context, u *Update) {
 			continue
 		}
 		h := r.handler
+		for i := len(r.mws) - 1; i >= 0; i-- {
+			h = r.mws[i](h)
+		}
 		for i := len(mws) - 1; i >= 0; i-- {
 			h = mws[i](h)
 		}
