@@ -1,5 +1,10 @@
 version: "2"
 
+run:
+  # Pin the analysis target to 1.24 so the released golangci-lint binary (built
+  # with go1.24) accepts the module even though go.mod targets a newer Go.
+  go: "1.24"
+
 linters:
   default: none
   enable:
