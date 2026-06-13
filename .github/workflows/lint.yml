@@ -21,9 +21,11 @@ jobs:
           go-version-file: go.mod
 
       - name: Lint
-        uses: golangci/golangci-lint-action@v6
+        # v7 installs golangci-lint v2, which the .golangci.yml (version "2")
+        # requires; v6 defaults to the v1 line and rejects the config.
+        uses: golangci/golangci-lint-action@v7
         with:
-          version: latest
+          version: v2.12.2
           args: --timeout 5m
 
   # Check that go.mod/go.sum are tidy.
