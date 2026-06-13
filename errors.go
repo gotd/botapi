@@ -63,3 +63,23 @@ func AsFloodWait(err error) (retryAfter time.Duration, ok bool) {
 	}
 	return tgerr.AsFloodWait(err)
 }
+
+// AsChatMigrated reports whether err indicates that a basic group was upgraded
+// to a supergroup and, if so, the new supergroup chat id the caller should use.
+func AsChatMigrated(err error) (newChatID int64, ok bool) {
+	var apiErr *Error
+	if errors.As(err, &apiErr) && apiErr.Parameters != nil && apiErr.Parameters.MigrateToChatID != 0 {
+		return apiErr.Parameters.MigrateToChatID, true
+	}
+	return 0, false
+}
+
+// Code returns the Bot API error code carried by err, or 0 if err is not a
+// *Error. It is a convenience over errors.As for the common branch-on-code case.
+func Code(err error) int {
+	var apiErr *Error
+	if errors.As(err, &apiErr) {
+		return apiErr.Code
+	}
+	return 0
+}

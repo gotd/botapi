@@ -42,7 +42,7 @@ func (b *Bot) photoMedia(ctx context.Context, file InputFile, caption []styling.
 	case InputFileID:
 		fid, err := fileid.DecodeFileID(string(f))
 		if err != nil {
-			return nil, &Error{Code: 400, Description: "Bad Request: wrong file identifier/HTTP URL specified"}
+			return nil, &Error{Code: 400, Description: descWrongFileID}
 		}
 		photo := &tg.InputMediaPhoto{ID: &tg.InputPhoto{
 			ID:            fid.ID,
@@ -71,7 +71,7 @@ func (b *Bot) documentMedia(ctx context.Context, file InputFile, caption []styli
 	case InputFileID:
 		fid, err := fileid.DecodeFileID(string(f))
 		if err != nil {
-			return nil, &Error{Code: 400, Description: "Bad Request: wrong file identifier/HTTP URL specified"}
+			return nil, &Error{Code: 400, Description: descWrongFileID}
 		}
 		doc := &tg.InputMediaDocument{ID: &tg.InputDocument{
 			ID:            fid.ID,
