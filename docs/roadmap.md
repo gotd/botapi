@@ -148,10 +148,23 @@ Deferred within Phase 5: payment answers
 
 ## Phase 6 — Errors, rate limiting, resilience
 
-- ☐ Complete `tgerr` → Bot API code mapping (`errors_map.go`)
-- ☐ Flood-wait retry middleware (`tgerr.AsFloodWait`) + proactive limiter
-- ☐ Context-cancellation semantics (return wrapped `ctx.Err()`)
-- ☐ Reconnect/migration behavior surfaced sanely to callers
+**Done** on `main`. See `errors_map.go`, `errors.go`, `ratelimit.go`.
+
+- ☑ `tgerr` → Bot API mapping completed: a ~50-entry table of verbatim official
+  descriptions (`errors_map.go`, mirroring telegram-bot-api `Client.cpp`), plus
+  the server's code-normalization (sub-400/404 → 400, SCREAMING_CASE 403 → 400)
+  and prefix/casing fallback for unmapped errors. Helpers `AsFloodWait`,
+  `AsChatMigrated`, `Code`.
+- ☑ Flood-wait retry + proactive limiter: opt-in `Options.FloodWait`
+  (+ `MaxFloodWaitRetries`) and `Options.RequestsPerSecond` (+ `RequestBurst`),
+  wired as client invoker middlewares via `gotd/contrib`
+  (`floodwait`/`ratelimit`). Off by default.
+- ☑ Context-cancellation semantics: `asAPIError` passes `context.Canceled`/
+  `DeadlineExceeded` through unchanged (even when RPC-wrapped) so callers can
+  `errors.Is` on `ctx.Err()`.
+- ◐ Reconnect handled transparently by the gotd client + gaps manager; group →
+  supergroup migration is surfaced via `AsChatMigrated`. A connection-state
+  callback is deferred to Phase 7 polish.
 
 ## Phase 7 — Multi-bot, server, polish
 
