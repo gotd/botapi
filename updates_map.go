@@ -49,3 +49,65 @@ func inlineQueryFromTg(e tg.Entities, u *tg.UpdateBotInlineQuery) *InlineQuery {
 	}
 	return iq
 }
+
+// shippingQueryFromTg builds a ShippingQuery from a bot shipping-query update.
+func shippingQueryFromTg(e tg.Entities, u *tg.UpdateBotShippingQuery) *ShippingQuery {
+	q := &ShippingQuery{
+		ID:              strconv.FormatInt(u.QueryID, 10),
+		InvoicePayload:  string(u.Payload),
+		ShippingAddress: shippingAddressFromTg(u.ShippingAddress),
+	}
+	if user, ok := e.Users[u.UserID]; ok {
+		q.From = userFromTgUser(user)
+	} else {
+		q.From = User{ID: u.UserID}
+	}
+	return q
+}
+
+// preCheckoutQueryFromTg builds a PreCheckoutQuery from a bot pre-checkout
+// update.
+func preCheckoutQueryFromTg(e tg.Entities, u *tg.UpdateBotPrecheckoutQuery) *PreCheckoutQuery {
+	q := &PreCheckoutQuery{
+		ID:               strconv.FormatInt(u.QueryID, 10),
+		Currency:         u.Currency,
+		TotalAmount:      int(u.TotalAmount),
+		InvoicePayload:   string(u.Payload),
+		ShippingOptionID: u.ShippingOptionID,
+	}
+	if user, ok := e.Users[u.UserID]; ok {
+		q.From = userFromTgUser(user)
+	} else {
+		q.From = User{ID: u.UserID}
+	}
+	if info, ok := u.GetInfo(); ok {
+		q.OrderInfo = orderInfoFromTg(info)
+	}
+	return q
+}
+
+// shippingAddressFromTg converts an MTProto post address.
+func shippingAddressFromTg(a tg.PostAddress) ShippingAddress {
+	return ShippingAddress{
+		CountryCode: a.CountryISO2,
+		State:       a.State,
+		City:        a.City,
+		StreetLine1: a.StreetLine1,
+		StreetLine2: a.StreetLine2,
+		PostCode:    a.PostCode,
+	}
+}
+
+// orderInfoFromTg converts MTProto requested payment info.
+func orderInfoFromTg(info tg.PaymentRequestedInfo) *OrderInfo {
+	out := &OrderInfo{
+		Name:        info.Name,
+		PhoneNumber: info.Phone,
+		Email:       info.Email,
+	}
+	if addr, ok := info.GetShippingAddress(); ok {
+		a := shippingAddressFromTg(addr)
+		out.ShippingAddress = &a
+	}
+	return out
+}

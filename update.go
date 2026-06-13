@@ -11,6 +11,8 @@ type Update struct {
 	InlineQuery        *InlineQuery        `json:"inline_query,omitempty"`
 	ChosenInlineResult *ChosenInlineResult `json:"chosen_inline_result,omitempty"`
 	CallbackQuery      *CallbackQuery      `json:"callback_query,omitempty"`
+	ShippingQuery      *ShippingQuery      `json:"shipping_query,omitempty"`
+	PreCheckoutQuery   *PreCheckoutQuery   `json:"pre_checkout_query,omitempty"`
 	Poll               *Poll               `json:"poll,omitempty"`
 	PollAnswer         *PollAnswer         `json:"poll_answer,omitempty"`
 	MyChatMember       *ChatMemberUpdated  `json:"my_chat_member,omitempty"`

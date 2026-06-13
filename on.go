@@ -35,6 +35,14 @@ func (b *Bot) installHandlers() {
 		b.route(ctx, &Update{InlineQuery: inlineQueryFromTg(e, u)})
 		return nil
 	})
+	b.disp.OnBotShippingQuery(func(ctx context.Context, e tg.Entities, u *tg.UpdateBotShippingQuery) error {
+		b.route(ctx, &Update{ShippingQuery: shippingQueryFromTg(e, u)})
+		return nil
+	})
+	b.disp.OnBotPrecheckoutQuery(func(ctx context.Context, e tg.Entities, u *tg.UpdateBotPrecheckoutQuery) error {
+		b.route(ctx, &Update{PreCheckoutQuery: preCheckoutQueryFromTg(e, u)})
+		return nil
+	})
 }
 
 // dispatchMessage converts a message and routes it as the appropriate update
@@ -73,11 +81,13 @@ func (b *Bot) dispatchMessage(ctx context.Context, msg tg.MessageClass, edited b
 
 // Kind predicates select an update by which field it carries. They are shared
 // by Bot.On* and Group.On*.
-func hasMessage(u *Update) bool       { return u.Message != nil }
-func hasEditedMessage(u *Update) bool { return u.EditedMessage != nil }
-func hasChannelPost(u *Update) bool   { return u.ChannelPost != nil }
-func hasCallbackQuery(u *Update) bool { return u.CallbackQuery != nil }
-func hasInlineQuery(u *Update) bool   { return u.InlineQuery != nil }
+func hasMessage(u *Update) bool          { return u.Message != nil }
+func hasEditedMessage(u *Update) bool    { return u.EditedMessage != nil }
+func hasChannelPost(u *Update) bool      { return u.ChannelPost != nil }
+func hasCallbackQuery(u *Update) bool    { return u.CallbackQuery != nil }
+func hasInlineQuery(u *Update) bool      { return u.InlineQuery != nil }
+func hasShippingQuery(u *Update) bool    { return u.ShippingQuery != nil }
+func hasPreCheckoutQuery(u *Update) bool { return u.PreCheckoutQuery != nil }
 
 // OnMessage registers a handler for new messages matching the predicates.
 func (b *Bot) OnMessage(h Handler, predicates ...Predicate) {
@@ -102,6 +112,16 @@ func (b *Bot) OnCallbackQuery(h Handler, predicates ...Predicate) {
 // OnInlineQuery registers a handler for inline queries.
 func (b *Bot) OnInlineQuery(h Handler, predicates ...Predicate) {
 	b.on(h, prepend(hasInlineQuery, predicates)...)
+}
+
+// OnShippingQuery registers a handler for shipping queries (flexible invoices).
+func (b *Bot) OnShippingQuery(h Handler, predicates ...Predicate) {
+	b.on(h, prepend(hasShippingQuery, predicates)...)
+}
+
+// OnPreCheckoutQuery registers a handler for pre-checkout queries.
+func (b *Bot) OnPreCheckoutQuery(h Handler, predicates ...Predicate) {
+	b.on(h, prepend(hasPreCheckoutQuery, predicates)...)
 }
 
 // prepend returns p followed by rest, without mutating rest.
