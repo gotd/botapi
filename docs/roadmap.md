@@ -167,20 +167,24 @@ Deferred within Phase 5: payment answers
 
 ## Phase 7 — Multi-bot, server, polish
 
+**Done** on `main` (the `cmd/botapi` HTTP server was dropped — the library is
+the product).
+
 - ☑ `pool.Pool` re-pointed at public `Bot` (`pool/`): lazy per-token start,
   shared startup for concurrent callers, per-token bbolt storage, idle GC
   (`RunGC`), `Kill`/`Close`.
 - ☑ Examples: `examples/echo` (handler + middleware), `examples/buttons`
   (inline keyboards + callback queries), `examples/inline` (inline mode),
-  `examples/media` (send by URL, echo incoming media by file_id, `GetFile`).
+  `examples/media` (send by URL, echo incoming media by file_id, `GetFile`),
+  `examples/advanced` (most of the surface in one bot).
 - ☑ Allocation tests on hot paths (`bench_test.go`): entity/markup/user
   conversion and `file_unique_id`, with `-benchmem`.
 - ☑ Conformance test against the `botdoc` extractor (`conformance_test.go`):
   every published method must be implemented on `*Bot`, covered by other means,
   or categorized as deferred/not-applicable — failing on uncategorized (drift)
   methods or stale allowlist entries.
-- ◐ Docs: package docs (`doc.go`) and README done; reference/migration guide
-  still to write.
+- ☑ Docs: package docs (`doc.go`), README, and a full usage guide
+  (`docs/guide.md`).
 
 ## Phase 8 — Release
 

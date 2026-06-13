@@ -41,9 +41,6 @@ In priority order (see [`docs/architecture.md`](./docs/architecture.md)):
 
 ## Usage
 
-> The high-level typed methods are still being built. Today you get the `Bot`
-> lifecycle plus the raw `gotd/td` client and message sender.
-
 ```go
 package main
 
@@ -51,46 +48,35 @@ import (
 	"context"
 
 	"github.com/gotd/botapi"
-	"github.com/gotd/botapi/storage"
-	"github.com/gotd/td/tg"
-	"go.etcd.io/bbolt"
-	"go.uber.org/zap"
 )
 
 func main() {
-	ctx := context.Background()
-
-	db, err := bbolt.Open("bot.bbolt", 0o600, nil)
-	if err != nil {
-		panic(err)
-	}
-	defer db.Close()
-
 	// Bots still need an MTProto app identity (https://my.telegram.org).
 	// This is NOT the bot token.
 	bot, err := botapi.New("<bot-token>", botapi.Options{
 		AppID:   123456,
 		AppHash: "<app-hash>",
-		Logger:  zap.NewExample(),
-		Storage: storage.NewBBoltStorage(db),
 	})
 	if err != nil {
 		panic(err)
 	}
 
-	// Register raw MTProto update handlers on the dispatcher (the typed
-	// handler framework is built on top of this in a later phase).
-	bot.Dispatcher().OnNewMessage(func(ctx context.Context, e tg.Entities, u *tg.UpdateNewMessage) error {
-		// ... use bot.Sender() to reply ...
-		return nil
+	bot.OnCommand("start", "Start the bot", func(c *botapi.Context) error {
+		_, err := c.Reply("Hello!")
+		return err
 	})
 
 	// Connects, authorizes as a bot, and serves updates until ctx is cancelled.
-	if err := bot.Run(ctx); err != nil {
+	if err := bot.Run(context.Background()); err != nil {
 		panic(err)
 	}
 }
 ```
+
+See the [**guide**](./docs/guide.md) for the full surface (sending, media,
+keyboards, handlers, predicates, middleware, commands, files, chat management,
+errors, pooling) and [`examples/`](./examples) for runnable bots
+(`echo`, `buttons`, `inline`, `media`, `advanced`).
 
 `Options.Storage` is optional — leave it nil to keep session, peers and update
 state in memory (nothing survives a restart). `storage.BBoltStorage` persists
