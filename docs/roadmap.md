@@ -170,9 +170,9 @@ Deferred within Phase 5: payment answers
 - ☑ `pool.Pool` re-pointed at public `Bot` (`pool/`): lazy per-token start,
   shared startup for concurrent callers, per-token bbolt storage, idle GC
   (`RunGC`), `Kill`/`Close`.
-- ◐ Examples: `examples/echo` (handler + middleware), `examples/buttons`
-  (inline keyboards + callback queries), `examples/inline` (inline mode). Media
-  bot still to add.
+- ☑ Examples: `examples/echo` (handler + middleware), `examples/buttons`
+  (inline keyboards + callback queries), `examples/inline` (inline mode),
+  `examples/media` (send by URL, echo incoming media by file_id, `GetFile`).
 - ☑ Allocation tests on hot paths (`bench_test.go`): entity/markup/user
   conversion and `file_unique_id`, with `-benchmem`.
 - ☐ Conformance test against kept `botdoc` extractor (API-version drift guard)
