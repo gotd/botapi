@@ -20,9 +20,10 @@ var coveredByOtherMeans = map[string]string{
 // deferredMethods lists published methods that are planned but not yet
 // implemented. Each is an acknowledged gap tracked in docs/roadmap.md; the
 // conformance test allows them so it can still catch *unacknowledged* drift.
-var deferredMethods = map[string]string{
-	"setPassportDataErrors": "Telegram Passport — deferred",
-}
+//
+// Empty: every method published in the snapshot is now implemented or
+// categorized as not-applicable below.
+var deferredMethods = map[string]string{}
 
 // notApplicableMethods lists published methods that do not apply to the
 // MTProto-native model and are intentionally not implemented.

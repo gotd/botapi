@@ -42,6 +42,9 @@ linters:
     goconst:
       min-len: 2
       min-occurrences: 3
+      # Enum-mapping switch labels (e.g. secureValueType) repeat as test inputs;
+      # that is not a reason to introduce a constant.
+      ignore-tests: true
     misspell:
       locale: US
     lll:
