@@ -126,6 +126,9 @@ bot.SendRichHTML(ctx, chat, "<h1>Title</h1><p>Body</p>")
 bot.SendRichMarkdown(ctx, chat, "# Title\n\nBody")
 ```
 
+See [`examples/rich`](../examples/rich) for every page-block and rich-text
+constructor (headings, lists, tables, quotes, math, maps, media, …).
+
 ## Keyboards
 
 `ReplyMarkup` is a sealed union: `*InlineKeyboardMarkup`,

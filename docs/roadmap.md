@@ -184,6 +184,7 @@ the product).
 - ☑ Examples: `examples/echo` (handler + middleware), `examples/buttons`
   (inline keyboards + callback queries), `examples/inline` (inline mode),
   `examples/media` (send by URL, echo incoming media by file_id, `GetFile`),
+  `examples/rich` (rich messages — every page-block/text constructor),
   `examples/advanced` (most of the surface in one bot).
 - ☑ Allocation tests on hot paths (`bench_test.go`): entity/markup/user
   conversion and `file_unique_id`, with `-benchmem`.
