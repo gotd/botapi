@@ -23,7 +23,7 @@ jobs:
       - name: Lint
         # v7 installs golangci-lint v2, which the .golangci.yml (version "2")
         # requires; v6 defaults to the v1 line and rejects the config.
-        uses: golangci/golangci-lint-action@v7
+        uses: golangci/golangci-lint-action@v9
         with:
           version: v2.12.2
           args: --timeout 5m
