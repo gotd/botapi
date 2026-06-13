@@ -1,0 +1,51 @@
+package botapi
+
+// Message returns the message the update carries (new/edited message or channel
+// post), or nil.
+func (c *Context) Message() *Message { return c.Update.EffectiveMessage() }
+
+// Sender returns the user who produced the update (message sender or callback/
+// inline-query sender), or nil when there is none.
+func (c *Context) Sender() *User {
+	switch {
+	case c.Update.CallbackQuery != nil:
+		return &c.Update.CallbackQuery.From
+	case c.Update.InlineQuery != nil:
+		return &c.Update.InlineQuery.From
+	}
+	if m := c.Message(); m != nil {
+		return m.From
+	}
+	return nil
+}
+
+// Chat returns the target chat id of the update and whether one is present.
+func (c *Context) Chat() (ChatID, bool) {
+	if m := c.Message(); m != nil {
+		return ID(m.Chat.ID), true
+	}
+	if cq := c.Update.CallbackQuery; cq != nil && cq.Message != nil {
+		return ID(cq.Message.Chat.ID), true
+	}
+	return nil, false
+}
+
+// Send sends a text message to the update's chat.
+func (c *Context) Send(text string, opts ...SendOption) (*Message, error) {
+	chat, ok := c.Chat()
+	if !ok {
+		return nil, &Error{Code: 400, Description: "Bad Request: update has no chat to send to"}
+	}
+	return c.Bot.SendMessage(c, chat, text, opts...)
+}
+
+// Reply sends a text message to the update's chat as a reply to the incoming
+// message.
+func (c *Context) Reply(text string, opts ...SendOption) (*Message, error) {
+	m := c.Message()
+	if m == nil {
+		return nil, &Error{Code: 400, Description: "Bad Request: update has no message to reply to"}
+	}
+	opts = append([]SendOption{ReplyTo(m.MessageID)}, opts...)
+	return c.Bot.SendMessage(c, ID(m.Chat.ID), text, opts...)
+}
