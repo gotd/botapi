@@ -7,6 +7,12 @@ messages follow [Conventional Commits](https://www.conventionalcommits.org/).
 
 ## [Unreleased]
 
+### Added
+
+- **Rich messages** (Bot API 10.1) — `SendRichMessage`/`SendRichHTML`/
+  `SendRichMarkdown` send structured page-block content built with
+  `github.com/gotd/td/telegram/message/rich`.
+
 ## [0.1.0] - 2026-06-14
 
 `botapi` was rebuilt from a codegen-first OpenAPI/ogen project into a

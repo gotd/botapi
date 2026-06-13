@@ -21,6 +21,8 @@ import (
 
 	"go.uber.org/zap"
 
+	"github.com/gotd/td/telegram/message/rich"
+
 	"github.com/gotd/botapi"
 )
 
@@ -85,6 +87,31 @@ func registerCommands(bot *botapi.Bot) {
 	bot.OnCommand("md", "Send a MarkdownV2-formatted message", func(c *botapi.Context) error {
 		_, err := c.Reply("*bold*, _italic_, `code`, ||spoiler||",
 			botapi.WithParseMode(botapi.ParseModeMarkdownV2))
+		return err
+	})
+
+	// A rich message (Bot API 10.1): structured page-block content built with
+	// the gotd/td rich package.
+	bot.OnCommand("rich", "Send a structured rich message", func(c *botapi.Context) error {
+		chat, _ := c.Chat()
+		msg := rich.New(
+			rich.Heading1(rich.Plain("Rich messages")),
+			rich.Paragraph(rich.Concat(
+				rich.Plain("They carry "),
+				rich.Bold(rich.Plain("headings")),
+				rich.Plain(", "),
+				rich.Italic(rich.Plain("paragraphs")),
+				rich.Plain(" and more — a tree of blocks, not a flat string."),
+			)),
+			rich.Preformatted(rich.Plain("bot.SendRichMessage(ctx, chat, msg)"), "go"),
+		).Input()
+		_, err := c.Bot.SendRichMessage(c, chat, msg)
+		return err
+	})
+
+	bot.OnCommand("richhtml", "Send a rich message from HTML", func(c *botapi.Context) error {
+		chat, _ := c.Chat()
+		_, err := c.Bot.SendRichHTML(c, chat, "<h1>From HTML</h1><p>Parsed by Telegram into a <b>rich</b> message.</p>")
 		return err
 	})
 
@@ -370,6 +397,8 @@ const helpText = `<b>Advanced demo bot</b>
 Commands:
 /html — HTML formatting
 /md — MarkdownV2 formatting
+/rich — structured rich message (page blocks)
+/richhtml — rich message from HTML
 /keyboard — inline keyboard + callbacks
 /removekbd — remove the reply keyboard
 /photo — send a photo by URL

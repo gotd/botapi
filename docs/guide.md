@@ -101,6 +101,31 @@ bot.SendMessage(ctx, chat, "*bold* _italic_ ||spoiler||",
 	botapi.WithParseMode(botapi.ParseModeMarkdownV2))
 ```
 
+## Rich messages
+
+Beyond formatted text, Telegram supports **rich messages** (Bot API 10.1):
+structured content — headings, paragraphs, lists, tables, block quotes, media,
+math — as a tree of page blocks rather than a flat string with entity ranges.
+Build the content with `github.com/gotd/td/telegram/message/rich` and send it
+with `SendRichMessage`:
+
+```go
+import "github.com/gotd/td/telegram/message/rich"
+
+msg := rich.New(
+	rich.Heading1(rich.Plain("Title")),
+	rich.Paragraph(rich.Bold(rich.Plain("Hello"))),
+).Input()
+bot.SendRichMessage(ctx, chat, msg)
+```
+
+For a whole HTML or Markdown document (parsed server-side), use the shortcuts:
+
+```go
+bot.SendRichHTML(ctx, chat, "<h1>Title</h1><p>Body</p>")
+bot.SendRichMarkdown(ctx, chat, "# Title\n\nBody")
+```
+
 ## Keyboards
 
 `ReplyMarkup` is a sealed union: `*InlineKeyboardMarkup`,
