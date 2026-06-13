@@ -45,3 +45,13 @@ func (b *Bot) resolveInputPeer(ctx context.Context, chat ChatID) (tg.InputPeerCl
 	}
 	return p.InputPeer(), nil
 }
+
+// resolveInputUser resolves a Bot API user id to the tg.InputUserClass the
+// MTProto user-targeting methods need, pulling the access hash from storage.
+func (b *Bot) resolveInputUser(ctx context.Context, userID int64) (tg.InputUserClass, error) {
+	u, err := b.peers.ResolveUserID(ctx, userID)
+	if err != nil {
+		return nil, asAPIError(err)
+	}
+	return u.InputUser(), nil
+}
