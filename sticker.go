@@ -20,17 +20,21 @@ const (
 	StickerFormatVideo StickerFormat = "video"
 )
 
-// mimeStickerStatic is the MIME type used for static (and unknown) stickers.
-const mimeStickerStatic = "image/png"
+// Sticker MIME types.
+const (
+	mimeStickerStatic   = "image/png"
+	mimeStickerAnimated = "application/x-tgsticker"
+	mimeStickerVideo    = "video/webm"
+)
 
 // mimeType reports the MTProto MIME type for the sticker format. Static (and
 // any unknown) formats default to PNG.
 func (f StickerFormat) mimeType() string {
 	switch f {
 	case StickerFormatAnimated:
-		return "application/x-tgsticker"
+		return mimeStickerAnimated
 	case StickerFormatVideo:
-		return "video/webm"
+		return mimeStickerVideo
 	case StickerFormatStatic:
 		return mimeStickerStatic
 	default:

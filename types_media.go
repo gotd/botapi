@@ -105,3 +105,12 @@ type UserProfilePhotos struct {
 	TotalCount int           `json:"total_count"`
 	Photos     [][]PhotoSize `json:"photos"`
 }
+
+// StickerSet represents a set of stickers.
+type StickerSet struct {
+	Name        string      `json:"name"`
+	Title       string      `json:"title"`
+	StickerType StickerType `json:"sticker_type"`
+	Stickers    []Sticker   `json:"stickers"`
+	Thumbnail   *PhotoSize  `json:"thumbnail,omitempty"`
+}
