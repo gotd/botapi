@@ -16,7 +16,8 @@ import (
 
 // BBoltStorage is bbolt-based storage.
 type BBoltStorage struct {
-	db *bbolt.DB
+	db     *bbolt.DB
+	ownsDB bool // close db on Close when we opened it
 }
 
 var _ interface {
@@ -25,9 +26,30 @@ var _ interface {
 	updates.StateStorage
 } = (*BBoltStorage)(nil)
 
-// NewBBoltStorage creates new BBoltStorage.
+// NewBBoltStorage creates new BBoltStorage over an already-open database. The
+// caller retains ownership of db and is responsible for closing it.
 func NewBBoltStorage(db *bbolt.DB) *BBoltStorage {
 	return &BBoltStorage{db: db}
+}
+
+// Open opens (creating it if necessary) a bbolt database at path and returns
+// storage backed by it. The returned storage owns the database; call Close to
+// release it.
+func Open(path string) (*BBoltStorage, error) {
+	db, err := bbolt.Open(path, 0o600, nil)
+	if err != nil {
+		return nil, errors.Wrap(err, "open bbolt")
+	}
+	return &BBoltStorage{db: db, ownsDB: true}, nil
+}
+
+// Close releases the underlying database if this storage opened it (via Open).
+// It is a no-op for storage created with NewBBoltStorage.
+func (b *BBoltStorage) Close() error {
+	if !b.ownsDB {
+		return nil
+	}
+	return b.db.Close()
 }
 
 var _ = map[string]struct{}{

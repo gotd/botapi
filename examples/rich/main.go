@@ -40,6 +40,7 @@ import (
 	"github.com/gotd/td/tg"
 
 	"github.com/gotd/botapi"
+	"github.com/gotd/botapi/storage"
 )
 
 func main() {
@@ -51,10 +52,18 @@ func main() {
 		log.Fatal("APP_ID must be a number (see https://my.telegram.org)", zap.Error(err))
 	}
 
+	// Persist session, peers and update state so the bot resumes across restarts.
+	store, err := storage.Open("rich-session.bbolt")
+	if err != nil {
+		log.Fatal("Open storage", zap.Error(err))
+	}
+	defer func() { _ = store.Close() }()
+
 	bot, err := botapi.New(os.Getenv("BOT_TOKEN"), botapi.Options{
 		AppID:   appID,
 		AppHash: os.Getenv("APP_HASH"),
 		Logger:  logzap.New(log),
+		Storage: store,
 	})
 	if err != nil {
 		log.Fatal("Create bot", zap.Error(err))

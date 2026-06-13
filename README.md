@@ -79,8 +79,10 @@ errors, pooling) and [`examples/`](./examples) for runnable bots
 (`echo`, `buttons`, `inline`, `media`, `rich`, `background`, `advanced`).
 
 `Options.Storage` is optional — leave it nil to keep session, peers and update
-state in memory (nothing survives a restart). `storage.BBoltStorage` persists
-all of it to a single bbolt file.
+state in memory (nothing survives a restart). `storage.Open("bot.bbolt")`
+persists all of it to a single bbolt file; close it on shutdown. Every example
+under [`examples/`](./examples) persists its session this way by default, so
+they reconnect without re-authorizing.
 
 ## Package layout
 

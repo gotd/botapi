@@ -17,6 +17,10 @@ messages follow [Conventional Commits](https://www.conventionalcommits.org/).
 
 ### Added
 
+- **`storage.Open`/`Close`** — a one-call opener that creates (or reuses) a
+  bbolt-backed `Storage` and owns the database, so persisting a session is
+  `storage.Open("bot.bbolt")` plus a deferred `Close`. Every example now
+  persists its session by default.
 - **Rich messages** (Bot API 10.1) — `SendRichMessage`/`SendRichHTML`/
   `SendRichMarkdown` send structured page-block content built with
   `github.com/gotd/td/telegram/message/rich`. The `examples/rich` bot showcases

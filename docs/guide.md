@@ -410,12 +410,22 @@ botapi.Options{
 ## Persistence
 
 By default everything is in memory (nothing survives a restart). Provide a
-`Storage` to persist the session, peer access hashes and update state:
+`Storage` to persist the session, peer access hashes and update state.
+`storage.Open` is the one-call form — it opens (creating it if needed) a
+bbolt file and owns it, so close it on shutdown:
 
 ```go
-db, _ := bbolt.Open("bot.bbolt", 0o666, nil)
-opts := botapi.Options{AppID: appID, AppHash: appHash, Storage: storage.NewBBoltStorage(db)}
+store, err := storage.Open("bot.bbolt")
+if err != nil {
+	return err
+}
+defer store.Close()
+opts := botapi.Options{AppID: appID, AppHash: appHash, Storage: store}
 ```
+
+To share a `*bbolt.DB` you already manage, wrap it with
+`storage.NewBBoltStorage(db)` instead and close the db yourself. Every bot under
+`examples/` persists its session this way by default.
 
 ## Running many bots
 
