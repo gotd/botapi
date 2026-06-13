@@ -109,35 +109,42 @@ with the chat-management and query work in Phase 5).
 
 ## Phase 5 — Files, queries, chat management
 
-**Mostly done** on `main`. The methods are on `*Bot` with the same
-functional-option style as Phase 3. See `file.go`, `answer.go`, `commands.go`,
-`chat_member_methods.go`, `chat_admin.go`, `invite_links.go`,
-`live_location.go`.
+**Done** on `main` (payment answers and a couple of sticker reads aside). The
+methods are on `*Bot` with the same functional-option style as Phase 3. See
+`file.go`, `answer.go`, `commands.go`, `chat_member_methods.go`,
+`chat_admin.go`, `chat_photo.go`, `invite_links.go`, `live_location.go`,
+`inline_query_result.go`, `input_message_content.go`, `sticker.go`.
 
 - ☑ `GetFile` + download (`DownloadFile`/`DownloadFileToPath`);
   `file_unique_id` resolved — derived locally from the decoded `file_id` with
   the TDLib scheme (web/document exact; legacy photos via volume/local id, newer
   photo sources fall back to media id). Resolves Decisions-needed #1. No HTTP
   file server in the MTProto-native model, so `GetFile` is decode-only.
-- ◐ `AnswerCallbackQuery` done (+ `Context.AnswerCallback`).
-  `AnswerInlineQuery` (needs the `InlineQueryResult` union) and the payment
-  answers `AnswerPreCheckoutQuery`/`AnswerShippingQuery` (need payment-update
-  plumbing) deferred.
+- ◐ `AnswerCallbackQuery` (+ `Context.AnswerCallback`) and `AnswerInlineQuery`
+  (+ `Context.AnswerInline`) done — the `InlineQueryResult` union (article;
+  photo/gif/mpeg4 gif by URL; cached photo/gif/sticker/document/video/voice/
+  audio by file_id; contact/location/venue) and the `InputMessageContent` union
+  (text/location/venue/contact). Payment answers
+  `AnswerPreCheckoutQuery`/`AnswerShippingQuery` deferred (need payment-update
+  plumbing, which has no incoming updates wired yet).
 - ☑ Chat members: `Ban`/`Unban`/`Restrict`/`PromoteChatMember`,
   `GetChatMember`, `GetChatAdministrators`, `GetChatMemberCount`
   (supergroups/channels via `channels.*`); `ChatPermissions`/`ChatAdminRights`
   with MTProto rights mapping; participant → `ChatMember` converter.
 - ☑ Chat admin: pin/unpin (`PinChatMessage`/`UnpinChatMessage`/
   `UnpinAllChatMessages`), `SetChatTitle`/`SetChatDescription`,
-  `SetChatPermissions`, `LeaveChat`; invite links
-  (`Export`/`Create`/`Edit`/`RevokeChatInviteLink`). Chat photo set/delete
-  deferred (needs the upload path).
+  `SetChatPermissions`, `LeaveChat`, `SetChatPhoto`/`DeleteChatPhoto`; invite
+  links (`Export`/`Create`/`Edit`/`RevokeChatInviteLink`).
 - ☑ Commands: `Set`/`Get`/`DeleteMyCommands` with the `BotCommandScope` union.
 - ☑ Live location: `EditMessageLiveLocation`, `StopMessageLiveLocation`.
+- ◐ Stickers: `UploadStickerFile`, `CreateNewStickerSet`, `AddStickerToSet`,
+  `DeleteStickerFromSet`, `SetStickerPositionInSet` done (`InputSticker` +
+  `StickerFormat`). `GetStickerSet`/`SetStickerSetThumb` deferred (need full
+  `Sticker[]` conversion).
 
-Deferred within Phase 5: `UploadStickerFile` and sticker-set methods (large,
-needs sticker-set type surface); `AnswerInlineQuery` (`InlineQueryResult`
-union); payment answers; chat photo set/delete.
+Deferred within Phase 5: payment answers
+(`AnswerPreCheckoutQuery`/`AnswerShippingQuery`) until payment updates land;
+`GetStickerSet`/`SetStickerSetThumb`.
 
 ## Phase 6 — Errors, rate limiting, resilience
 
