@@ -15,6 +15,7 @@ const (
 	descChatNotFound = "Bad Request: chat not found"
 	descWrongFileID  = "Bad Request: wrong file identifier/HTTP URL specified"
 	descUnauthorized = "Unauthorized"
+	descInvalidFile  = "Bad Request: invalid file"
 
 	descNotModified = "Bad Request: message is not modified: specified new message content " +
 		"and reply markup are exactly the same as a current content and reply markup of the message"

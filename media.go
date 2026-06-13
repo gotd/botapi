@@ -59,7 +59,7 @@ func (b *Bot) photoMedia(ctx context.Context, file InputFile, caption []styling.
 		}
 		return message.UploadedPhoto(upFile, caption...), nil
 	default:
-		return nil, &Error{Code: 400, Description: "Bad Request: invalid file"}
+		return nil, &Error{Code: 400, Description: descInvalidFile}
 	}
 }
 
@@ -92,7 +92,7 @@ func (b *Bot) documentMedia(ctx context.Context, file InputFile, caption []styli
 		}
 		return b, nil
 	default:
-		return nil, &Error{Code: 400, Description: "Bad Request: invalid file"}
+		return nil, &Error{Code: 400, Description: descInvalidFile}
 	}
 }
 

@@ -21,7 +21,6 @@ var coveredByOtherMeans = map[string]string{
 // implemented. Each is an acknowledged gap tracked in docs/roadmap.md; the
 // conformance test allows them so it can still catch *unacknowledged* drift.
 var deferredMethods = map[string]string{
-	"editMessageMedia":       "Phase 3 deferred",
 	"answerPreCheckoutQuery": "payments — deferred until payment updates land",
 	"answerShippingQuery":    "payments — deferred until payment updates land",
 	"sendInvoice":            "payments — deferred",
