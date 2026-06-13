@@ -40,7 +40,7 @@ func main() {
 	// Middleware applies to every handler.
 	bot.Use(botapi.Recover(), botapi.Timeout(30*time.Second))
 
-	bot.OnCommand("start", func(c *botapi.Context) error {
+	bot.OnCommand("start", "Show the welcome message", func(c *botapi.Context) error {
 		_, err := c.Reply("Hi! Send me any text and I'll echo it back.")
 		return err
 	})

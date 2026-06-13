@@ -48,13 +48,13 @@ func main() {
 
 	bot.Use(botapi.Recover(), botapi.Timeout(time.Minute), botapi.Logging())
 
-	bot.OnCommand("start", func(c *botapi.Context) error {
+	bot.OnCommand("start", "Show the welcome message", func(c *botapi.Context) error {
 		_, err := c.Reply("Send me a photo or a file and I'll send it back. Or try /photo.")
 		return err
 	})
 
 	// Send a photo by URL — Telegram fetches it server-side.
-	bot.OnCommand("photo", func(c *botapi.Context) error {
+	bot.OnCommand("photo", "Send a sample photo", func(c *botapi.Context) error {
 		chat, ok := c.Chat()
 		if !ok {
 			return nil

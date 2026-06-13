@@ -8,7 +8,7 @@ package botapi
 //
 //	admin := bot.Group(ChatTypeIs(ChatTypeSupergroup))
 //	admin.Use(Recover())
-//	admin.OnCommand("ban", banHandler)
+//	admin.OnCommand("ban", "Ban a user", banHandler)
 type Group struct {
 	bot   *Bot
 	preds []Predicate
@@ -46,6 +46,7 @@ func (g *Group) OnCallbackQuery(h Handler, predicates ...Predicate) {
 }
 
 // OnCommand registers a command handler in the group.
-func (g *Group) OnCommand(name string, h Handler, predicates ...Predicate) {
+func (g *Group) OnCommand(name, description string, h Handler, predicates ...Predicate) {
+	g.bot.registerCommand(name, description)
 	g.OnMessage(h, prepend(Command(name), predicates)...)
 }

@@ -139,7 +139,11 @@ func Or(predicates ...Predicate) Predicate {
 	}
 }
 
-// OnCommand registers a handler for the given bot command (e.g. "start").
-func (b *Bot) OnCommand(name string, h Handler, predicates ...Predicate) {
+// OnCommand registers a handler for the given bot command (e.g. "start"). The
+// description is shown in the client's command menu; unless command
+// registration is disabled, Run publishes the registered commands to Telegram
+// via SetMyCommands.
+func (b *Bot) OnCommand(name, description string, h Handler, predicates ...Predicate) {
+	b.registerCommand(name, description)
 	b.OnMessage(h, prepend(Command(name), predicates)...)
 }

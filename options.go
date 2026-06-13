@@ -60,6 +60,11 @@ type Options struct {
 	// RequestBurst is the token-bucket burst size for RequestsPerSecond. Defaults
 	// to 1 when RequestsPerSecond is set.
 	RequestBurst int
+
+	// DisableCommandRegistration stops Run from publishing the commands
+	// registered via OnCommand to Telegram (SetMyCommands, default scope). By
+	// default the bot's command menu is kept in sync with its OnCommand handlers.
+	DisableCommandRegistration bool
 }
 
 func (o *Options) setDefaults() {

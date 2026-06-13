@@ -18,7 +18,7 @@
 //	if err != nil {
 //		return err
 //	}
-//	bot.OnCommand("start", func(c *botapi.Context) error {
+//	bot.OnCommand("start", "Start the bot", func(c *botapi.Context) error {
 //		_, err := c.Reply("hello")
 //		return err
 //	})

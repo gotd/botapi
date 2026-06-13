@@ -54,7 +54,7 @@ func main() {
 
 	bot.Use(botapi.Recover(), botapi.Timeout(30*time.Second))
 
-	bot.OnCommand("menu", func(c *botapi.Context) error {
+	bot.OnCommand("menu", "Show the voting menu", func(c *botapi.Context) error {
 		_, err := c.Reply("How do you like this bot?", botapi.WithReplyMarkup(menu()))
 		return err
 	})

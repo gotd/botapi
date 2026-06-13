@@ -2,6 +2,8 @@ package botapi
 
 import (
 	"context"
+	"strings"
+	"sync"
 
 	"github.com/go-faster/errors"
 	"github.com/gotd/log"
@@ -32,6 +34,13 @@ type Bot struct {
 	router router
 
 	onStart func(ctx context.Context)
+
+	// commands collects the (command, description) pairs registered through
+	// OnCommand so Run can publish them to Telegram. registerCommands gates the
+	// publish.
+	commandsMu       sync.Mutex
+	commands         []BotCommand
+	registerCommands bool
 
 	self *tg.User
 }
@@ -86,18 +95,56 @@ func New(token string, opt Options) (*Bot, error) {
 	*rawPlaceholder = *client.API()
 
 	b := &Bot{
-		token:   token,
-		log:     opt.Logger,
-		client:  client,
-		raw:     client.API(),
-		sender:  message.NewSender(client.API()),
-		peers:   pm,
-		gaps:    gaps,
-		disp:    disp,
-		onStart: opt.OnStart,
+		token:            token,
+		log:              opt.Logger,
+		client:           client,
+		raw:              client.API(),
+		sender:           message.NewSender(client.API()),
+		peers:            pm,
+		gaps:             gaps,
+		disp:             disp,
+		onStart:          opt.OnStart,
+		registerCommands: !opt.DisableCommandRegistration,
 	}
 	b.installHandlers()
 	return b, nil
+}
+
+// registerCommand records a command registered through OnCommand so Run can
+// publish the set to Telegram. Duplicate names keep their first description.
+func (b *Bot) registerCommand(name, description string) {
+	name = strings.TrimPrefix(name, "/")
+	if name == "" {
+		return
+	}
+	b.commandsMu.Lock()
+	defer b.commandsMu.Unlock()
+	for _, c := range b.commands {
+		if c.Command == name {
+			return
+		}
+	}
+	b.commands = append(b.commands, BotCommand{Command: name, Description: description})
+}
+
+// publishCommands reports the collected OnCommand set to Telegram (default
+// scope). Failures are logged, not fatal, since a bad description should not
+// stop the bot from serving.
+func (b *Bot) publishCommands(ctx context.Context) {
+	if !b.registerCommands {
+		return
+	}
+	b.commandsMu.Lock()
+	cmds := append([]BotCommand(nil), b.commands...)
+	b.commandsMu.Unlock()
+	if len(cmds) == 0 {
+		return
+	}
+	if err := b.SetMyCommands(ctx, cmds); err != nil {
+		b.log.Warn("Register bot commands", zap.Error(err))
+		return
+	}
+	b.log.Debug("Registered bot commands", zap.Int("count", len(cmds)))
 }
 
 // Run connects, authorizes as a bot, and blocks serving updates until ctx is
@@ -134,6 +181,7 @@ func (b *Bot) Run(ctx context.Context) error {
 					zap.Int64("id", me.ID),
 					zap.String("username", me.Username),
 				)
+				b.publishCommands(ctx)
 				if b.onStart != nil {
 					b.onStart(ctx)
 				}
