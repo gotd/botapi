@@ -108,11 +108,12 @@ with the chat-management and query work in Phase 5).
 
 ## Phase 5 — Files, queries, chat management
 
-**Done** on `main` (payment answers and a couple of sticker reads aside). The
-methods are on `*Bot` with the same functional-option style as Phase 3. See
-`file.go`, `answer.go`, `commands.go`, `chat_member_methods.go`,
-`chat_admin.go`, `chat_photo.go`, `invite_links.go`, `live_location.go`,
-`inline_query_result.go`, `input_message_content.go`, `sticker.go`.
+**Done** on `main` (payments and games aside — see below). The methods are on
+`*Bot` with the same functional-option style as Phase 3. See `file.go`,
+`answer.go`, `commands.go`, `chat_member_methods.go`, `chat_admin.go`,
+`chat_info.go`, `chat_photo.go`, `invite_links.go`, `live_location.go`,
+`edit_media.go`, `poll.go`, `inline_query_result.go`,
+`input_message_content.go`, `sticker.go`, `sticker_set.go`.
 
 - ☑ `GetFile` + download (`DownloadFile`/`DownloadFileToPath`);
   `file_unique_id` resolved — derived locally from the decoded `file_id` with
@@ -132,18 +133,23 @@ methods are on `*Bot` with the same functional-option style as Phase 3. See
   with MTProto rights mapping; participant → `ChatMember` converter.
 - ☑ Chat admin: pin/unpin (`PinChatMessage`/`UnpinChatMessage`/
   `UnpinAllChatMessages`), `SetChatTitle`/`SetChatDescription`,
-  `SetChatPermissions`, `LeaveChat`, `SetChatPhoto`/`DeleteChatPhoto`; invite
-  links (`Export`/`Create`/`Edit`/`RevokeChatInviteLink`).
+  `SetChatPermissions`, `LeaveChat`, `SetChatPhoto`/`DeleteChatPhoto`,
+  `SetChatStickerSet`/`DeleteChatStickerSet`,
+  `SetChatAdministratorCustomTitle`; invite links
+  (`Export`/`Create`/`Edit`/`RevokeChatInviteLink`).
+- ☑ Chat info: `GetChat`, `GetUserProfilePhotos`.
 - ☑ Commands: `Set`/`Get`/`DeleteMyCommands` with the `BotCommandScope` union.
-- ☑ Live location: `EditMessageLiveLocation`, `StopMessageLiveLocation`.
-- ◐ Stickers: `UploadStickerFile`, `CreateNewStickerSet`, `AddStickerToSet`,
-  `DeleteStickerFromSet`, `SetStickerPositionInSet` done (`InputSticker` +
-  `StickerFormat`). `GetStickerSet`/`SetStickerSetThumb` deferred (need full
-  `Sticker[]` conversion).
+- ☑ Edits: `EditMessageMedia`; live location
+  (`EditMessageLiveLocation`/`StopMessageLiveLocation`); `StopPoll`
+  (+ incoming-poll mapping).
+- ☑ Stickers: `UploadStickerFile`, `CreateNewStickerSet`, `AddStickerToSet`,
+  `DeleteStickerFromSet`, `SetStickerPositionInSet`, `GetStickerSet`,
+  `SetStickerSetThumb` (`InputSticker`/`StickerFormat`/`StickerSet`).
 
-Deferred within Phase 5: payment answers
-(`AnswerPreCheckoutQuery`/`AnswerShippingQuery`) until payment updates land;
-`GetStickerSet`/`SetStickerSetThumb`.
+Deferred within Phase 5 (need their own update/type infrastructure):
+**payments** (`AnswerPreCheckoutQuery`/`AnswerShippingQuery`/`SendInvoice`/
+`SetPassportDataErrors`) and **games** (`SendGame`/`SetGameScore`/
+`GetGameHighScores`).
 
 ## Phase 6 — Errors, rate limiting, resilience
 
