@@ -118,6 +118,49 @@ func (b *Bot) fillFrom(ctx context.Context, from tg.PeerClass, m *Message) error
 	return nil
 }
 
+// forwardOrigin maps an MTProto forward header into a Bot API MessageOrigin.
+// A hidden sender yields a hidden-user origin (no resolution); otherwise the
+// user or chat/channel is resolved via the peer manager.
+func (b *Bot) forwardOrigin(ctx context.Context, h *tg.MessageFwdHeader) (MessageOrigin, error) {
+	if name, ok := h.GetFromName(); ok {
+		return &MessageOriginHiddenUser{Type: OriginHiddenUser, Date: h.Date, SenderUserName: name}, nil
+	}
+
+	fromID, ok := h.GetFromID()
+	if !ok {
+		return nil, nil
+	}
+
+	if pu, ok := fromID.(*tg.PeerUser); ok {
+		u, err := b.peers.GetUser(ctx, &tg.InputUser{UserID: pu.UserID})
+		if err != nil {
+			return nil, asAPIError(err)
+		}
+		return &MessageOriginUser{Type: OriginUser, Date: h.Date, SenderUser: userFromTgUser(u.Raw())}, nil
+	}
+
+	chat, err := b.chatByPeer(ctx, fromID)
+	if err != nil {
+		return nil, err
+	}
+	author, _ := h.GetPostAuthor()
+	if post, ok := h.GetChannelPost(); ok && chat.Type == ChatTypeChannel {
+		return &MessageOriginChannel{
+			Type:            OriginChannel,
+			Date:            h.Date,
+			Chat:            chat,
+			MessageID:       post,
+			AuthorSignature: author,
+		}, nil
+	}
+	return &MessageOriginChat{
+		Type:            OriginChat,
+		Date:            h.Date,
+		SenderChat:      chat,
+		AuthorSignature: author,
+	}, nil
+}
+
 // convertMessage translates a tg.Message into a Bot API Message, resolving the
 // chat and sender via the peer manager. It fills the core fields (text,
 // entities, reply target, inline markup); richer media mapping arrives with the
@@ -154,6 +197,14 @@ func (b *Bot) convertMessage(ctx context.Context, m *tg.Message) (*Message, erro
 
 	if rh, ok := m.ReplyTo.(*tg.MessageReplyHeader); ok && rh.ReplyToMsgID != 0 {
 		r.ReplyToMessage = &Message{MessageID: rh.ReplyToMsgID}
+	}
+
+	if h, ok := m.GetFwdFrom(); ok {
+		origin, err := b.forwardOrigin(ctx, &h)
+		if err != nil {
+			return nil, err
+		}
+		r.ForwardOrigin = origin
 	}
 
 	if m.Message != "" {
