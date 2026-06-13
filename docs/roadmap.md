@@ -109,15 +109,35 @@ with the chat-management and query work in Phase 5).
 
 ## Phase 5 — Files, queries, chat management
 
-- ☐ `GetFile` + download; `file_id`/`file_unique_id` (resolve the stub)
-- ☐ `UploadStickerFile`, sticker set methods
-- ☐ `AnswerCallbackQuery`, `AnswerInlineQuery`, `AnswerPreCheckoutQuery`,
-  `AnswerShippingQuery`
-- ☐ Chat members: ban/unban/restrict/promote, `GetChatMember(s)`,
-  `GetChatAdministrators`, `GetChatMemberCount`
-- ☐ Chat admin: pin/unpin, photo, title, permissions, invite links (partly done)
-- ☐ Commands: `Set/Get/DeleteMyCommands` (done in seed — re-point)
-- ☐ Live location: `EditMessageLiveLocation`, `StopMessageLiveLocation`
+**Mostly done** on `main`. The methods are on `*Bot` with the same
+functional-option style as Phase 3. See `file.go`, `answer.go`, `commands.go`,
+`chat_member_methods.go`, `chat_admin.go`, `invite_links.go`,
+`live_location.go`.
+
+- ☑ `GetFile` + download (`DownloadFile`/`DownloadFileToPath`);
+  `file_unique_id` resolved — derived locally from the decoded `file_id` with
+  the TDLib scheme (web/document exact; legacy photos via volume/local id, newer
+  photo sources fall back to media id). Resolves Decisions-needed #1. No HTTP
+  file server in the MTProto-native model, so `GetFile` is decode-only.
+- ◐ `AnswerCallbackQuery` done (+ `Context.AnswerCallback`).
+  `AnswerInlineQuery` (needs the `InlineQueryResult` union) and the payment
+  answers `AnswerPreCheckoutQuery`/`AnswerShippingQuery` (need payment-update
+  plumbing) deferred.
+- ☑ Chat members: `Ban`/`Unban`/`Restrict`/`PromoteChatMember`,
+  `GetChatMember`, `GetChatAdministrators`, `GetChatMemberCount`
+  (supergroups/channels via `channels.*`); `ChatPermissions`/`ChatAdminRights`
+  with MTProto rights mapping; participant → `ChatMember` converter.
+- ☑ Chat admin: pin/unpin (`PinChatMessage`/`UnpinChatMessage`/
+  `UnpinAllChatMessages`), `SetChatTitle`/`SetChatDescription`,
+  `SetChatPermissions`, `LeaveChat`; invite links
+  (`Export`/`Create`/`Edit`/`RevokeChatInviteLink`). Chat photo set/delete
+  deferred (needs the upload path).
+- ☑ Commands: `Set`/`Get`/`DeleteMyCommands` with the `BotCommandScope` union.
+- ☑ Live location: `EditMessageLiveLocation`, `StopMessageLiveLocation`.
+
+Deferred within Phase 5: `UploadStickerFile` and sticker-set methods (large,
+needs sticker-set type surface); `AnswerInlineQuery` (`InlineQueryResult`
+union); payment answers; chat photo set/delete.
 
 ## Phase 6 — Errors, rate limiting, resilience
 
@@ -154,7 +174,9 @@ with the chat-management and query work in Phase 5).
 
 ## Decisions needed (maintainer)
 
-1. **`file_unique_id`** — derive properly now (Phase 5) or keep stubbed initially?
+1. ~~**`file_unique_id`**~~ — **Resolved (Phase 5): derived locally** from the
+   decoded `file_id` with the TDLib scheme (web/document exact; photos best
+   effort, stable per file).
 2. ~~**HTTP Bot-API compatibility**~~ — **Resolved (Phase 4): MTProto-native
    handlers only, no `getUpdates`/webhook shim.**
 3. ~~**Unions**~~ — **Resolved (Phase 2): sealed interfaces**, guarded by the
