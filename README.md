@@ -100,11 +100,11 @@ all of it to a single bbolt file.
 
 - `botapi` (root) — the public library: the `Bot` client, options, and the
   hand-written Bot API surface as it lands.
+- `pool` — runs and multiplexes many bots by token over one process.
 - `storage` — bbolt-backed session/peer/update-state storage.
 - `internal/botdoc` — fetches and extracts the published Bot API docs; kept as a
   reference oracle and a conformance check against API-version drift.
-- `_seed/` — the previous codegen-era translation layer, preserved
-  (non-compiled) as reference to re-point onto the hand-written types.
+- `cmd/botdoc` — CLI to fetch and inspect the published Bot API docs.
 
 ## Acknowledgements
 

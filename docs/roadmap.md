@@ -17,16 +17,15 @@ Legend: ☐ todo · ◐ in progress · ☑ done
 
 ## Phase 1 — Demolition & skeleton
 
-Strip codegen, keep the engine, stand up an empty-but-compiling library.
-**In progress** on branch `phase1-rebuild` — see `phase1-status.md` for the
-detailed handoff.
+Strip codegen, keep the engine, stand up an empty-but-compiling library. **Done.**
 
 - ☑ Remove `internal/oas`, `botdoc` OAS emission (`oas.go`),
   `cmd/gotd-bot-oas`, `_oas/`, ogen tooling (`tools.go`/`generate.go`)
 - ☑ Keep `botdoc` **fetch/extract** only; moved under `internal/botdoc`
-- ☑ Preserve `internal/botapi` + `internal/pool` + `cmd/botapi` as non-compiled
-  seed under `_seed/` (re-point to `tdbot`/`pool` in later phases);
-  `internal/botstorage` → `storage` (public)
+- ☑ Preserved `internal/botapi` + `internal/pool` + `cmd/botapi` as a
+  non-compiled `_seed/` reference for re-pointing; `internal/botstorage` →
+  `storage` (public). The seed was removed in Phase 7 once everything had been
+  re-pointed.
 - ☑ New root `Bot` type with construction, `Run(ctx)`, `Raw() *tg.Client`,
   wiring the verified update chain (peers hook → gaps → dispatcher)
 - ☑ Repo builds with the translation layer detached — **`go mod tidy`,
@@ -191,11 +190,9 @@ Deferred within Phase 5: payment answers
 ## Sequencing notes
 
 - Phases 2–4 are the critical path; 3 unblocks the most user value.
-- Re-pointing reused code (`tdbot`) only needs the Phase-2 types to exist, so
-  build a **vertical slice first**: `User`/`Chat`/`Message`/`ChatID` →
-  `SendMessage` → echo update flow. Prove the whole pipe before going wide.
-- Keep each method's translation behind the seed logic where it already exists;
-  prefer re-pointing over rewriting.
+- Re-pointing reused code only needs the Phase-2 types to exist, so build a
+  **vertical slice first**: `User`/`Chat`/`Message`/`ChatID` → `SendMessage` →
+  echo update flow. Prove the whole pipe before going wide.
 
 ## Decisions needed (maintainer)
 

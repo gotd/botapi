@@ -210,7 +210,7 @@ handlers, call `bot.Run(ctx)`".
 
 ## Open questions (tracked in roadmap)
 
-- `file_unique_id` derivation (currently stubbed in the seed code).
+- `file_unique_id` derivation (resolved in Phase 5: derived locally).
 - How much HTTP Bot-API compatibility (`getUpdates`/webhook shims) to ship.
 - Whether `ChatID`/`InputFile` use sealed interfaces vs. type-param generics —
   leaning sealed interfaces for ergonomics + exhaustiveness linting.
