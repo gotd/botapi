@@ -80,14 +80,32 @@ high-level album API); `EditMessageMedia`.
 
 ## Phase 4 — Incoming: updates & handler framework
 
-- ☐ `tg.Update*` → `botapi.Update` mapping (message, edited, callback query,
-  inline query, chat member, etc.) via the dispatcher
-- ☐ `convert_message.go` re-point + finish reply-to / forward resolution
-- ☐ `handler` package: `Group`, `Use`/middleware, predicates, routing, context
-- ☐ Built-in middleware: `Recover`, `Timeout`, rate-limit, logging
-- ☐ Built-in predicates: command, prefix, chat type, media, regex
-- ☐ `Bot.On*` convenience registration
-- ☐ Decide & implement any `getUpdates`/webhook compatibility shim
+**Done** on `main`. The framework lives in the root package (on `*Bot`),
+consistent with the Phase 3 methods. `installHandlers` (called from New) binds
+the raw `tg.UpdateDispatcher` to a concurrency-safe router. See
+`examples/echo` for the end-to-end pipe.
+
+- ☑ `tg.Update*` → `botapi.Update` mapping: new/edited messages, channel posts
+  (broadcast → channel_post, supergroup → message), callback & inline queries
+  (`updates_map.go`, `on.go`); senders resolved from harvested `Entities`
+- ☑ `convert.go` re-point + reply-to + forward-origin resolution
+  (user/hidden/chat/channel)
+- ☑ Routing: `Group`, `Use`/middleware (global + group-scoped), predicates,
+  first-match dispatch, `Context` (`handler.go`, `group.go`, `context.go`)
+- ☑ Built-in middleware: `Recover`, `Timeout`, `Logging` (rate-limit → Phase 6)
+- ☑ Built-in predicates: `Command`, `HasPrefix`, `HasText`, `TextEquals`,
+  `Regex`, `ChatTypeIs`, `CallbackData`/`CallbackPrefix`, `Not`/`Or`
+  (media predicate → Phase 5 alongside incoming media)
+- ☑ `Bot.On*` convenience: `OnMessage`, `OnEditedMessage`, `OnChannelPost`,
+  `OnCallbackQuery`, `OnInlineQuery`, `OnCommand`
+- ☑ **Decision: no `getUpdates`/webhook shim.** Updates arrive on the
+  persistent MTProto connection; the native handler framework + `Bot.Run` is
+  the only model. Decided against an HTTP-poll/webhook compatibility surface
+  (resolves Decisions-needed #2).
+
+Deferred within Phase 4: `chat_member`/`my_chat_member`, `poll`/`poll_answer`
+and `chosen_inline_result` update routing (types exist; dispatcher wiring lands
+with the chat-management and query work in Phase 5).
 
 ## Phase 5 — Files, queries, chat management
 
@@ -137,10 +155,11 @@ high-level album API); `EditMessageMedia`.
 ## Decisions needed (maintainer)
 
 1. **`file_unique_id`** — derive properly now (Phase 5) or keep stubbed initially?
-2. **HTTP Bot-API compatibility** — ship `getUpdates`/webhook shims for drop-in
-   telego migration, or MTProto-native handlers only?
-3. **Unions** — sealed interfaces (recommended) vs. type-param generics?
-4. **Module surface** — single root package, or split `handler`/`pool` into
-   sub-packages from day one?
-5. **`appID`/`appHash`** — bundled default vs. caller-provided (bots still need
-   an app identity for MTProto).
+2. ~~**HTTP Bot-API compatibility**~~ — **Resolved (Phase 4): MTProto-native
+   handlers only, no `getUpdates`/webhook shim.**
+3. ~~**Unions**~~ — **Resolved (Phase 2): sealed interfaces**, guarded by the
+   `gochecksumtype` exhaustiveness linter.
+4. ~~**Module surface**~~ — **Resolved (Phases 2–4): single root package**;
+   `pool` re-points in Phase 7.
+5. **`appID`/`appHash`** — bundled default vs. caller-provided (currently
+   caller-provided and required).
