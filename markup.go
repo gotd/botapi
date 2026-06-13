@@ -10,11 +10,6 @@ type ReplyMarkup interface {
 	isReplyMarkup()
 }
 
-func (*InlineKeyboardMarkup) isReplyMarkup() {}
-func (*ReplyKeyboardMarkup) isReplyMarkup()  {}
-func (*ReplyKeyboardRemove) isReplyMarkup()  {}
-func (*ForceReply) isReplyMarkup()           {}
-
 // WebAppInfo describes a Web App to be opened from a button.
 type WebAppInfo struct {
 	URL string `json:"url"`
@@ -76,6 +71,11 @@ type ForceReply struct {
 	InputFieldPlaceholder string `json:"input_field_placeholder,omitempty"`
 	Selective             bool   `json:"selective,omitempty"`
 }
+
+func (*InlineKeyboardMarkup) isReplyMarkup() {}
+func (*ReplyKeyboardMarkup) isReplyMarkup()  {}
+func (*ReplyKeyboardRemove) isReplyMarkup()  {}
+func (*ForceReply) isReplyMarkup()           {}
 
 // --- Constructors / builders (the type-safe telegoutil equivalent) ---
 

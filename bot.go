@@ -100,7 +100,7 @@ func New(token string, opt Options) (*Bot, error) {
 }
 
 // Run connects, authorizes as a bot, and blocks serving updates until ctx is
-// cancelled or a fatal error occurs. Register handlers before calling Run.
+// canceled or a fatal error occurs. Register handlers before calling Run.
 func (b *Bot) Run(ctx context.Context) error {
 	return b.client.Run(ctx, func(ctx context.Context) error {
 		status, err := b.client.Auth().Status(ctx)

@@ -1,54 +1,19 @@
-linters-settings:
-  revive:
-    rules:
-      - name: unused-parameter
-        disabled: true
-      - name: if-return
-        disabled: true
-  govet:
-    check-shadowing: true
-  gocyclo:
-    min-complexity: 15
-  maligned:
-    suggest-new: true
-  dupl:
-    threshold: 120
-  goconst:
-    min-len: 2
-    min-occurrences: 3
-  misspell:
-    locale: US
-  lll:
-    line-length: 140
-  goimports:
-    local-prefixes: github.com/gotd/botapi
-  gocritic:
-    enabled-tags:
-      - diagnostic
-      - experimental
-      - opinionated
-      - performance
-      - style
-    disabled-checks:
-      - hugeParam
-      - rangeValCopy
-      - exitAfterDefer
-      - whyNoLint
-      - singleCaseSwitch
-      - commentedOutCode
+version: "2"
 
 linters:
-  disable-all: true
+  default: none
   enable:
     - dogsled
-    # False positive: botapi has a lot of similar unimplemented methods
-    # - dupl
     - errcheck
+    # Exhaustiveness of switches over typed enums (ParseMode, ChatType, ...).
+    - exhaustive
+    # Exhaustiveness of switches over sealed-interface unions (ChatID,
+    # ReplyMarkup, ChatMember, ...). These are the "sum types" of this package:
+    # interfaces with an unexported marker method.
+    - gochecksumtype
     - gochecknoinits
     - goconst
     - gocritic
-    - gofmt
-    - goimports
     - revive
     - gosec
     - govet
@@ -56,66 +21,85 @@ linters:
     - lll
     - misspell
     - nakedret
-    - typecheck
     - unconvert
     - unparam
     - whitespace
+  settings:
+    revive:
+      rules:
+        - name: unused-parameter
+          disabled: true
+        - name: if-return
+          disabled: true
+    govet:
+      enable:
+        - shadow
+    goconst:
+      min-len: 2
+      min-occurrences: 3
+    misspell:
+      locale: US
+    lll:
+      line-length: 140
+    exhaustive:
+      # A `default:` case counts as covering the remaining variants.
+      default-signifies-exhaustive: true
+    gochecksumtype:
+      # A `default:` case counts as covering the remaining variants.
+      default-signifies-exhaustive: true
+    gocritic:
+      enabled-tags:
+        - diagnostic
+        - experimental
+        - opinionated
+        - performance
+        - style
+      disabled-checks:
+        - hugeParam
+        - rangeValCopy
+        - exitAfterDefer
+        - whyNoLint
+        - singleCaseSwitch
+        - commentedOutCode
+  exclusions:
+    rules:
+      - linters: [gocritic]
+        text: "commentedOutCode"
+        source: "SHA1"
+      # Allow embed globals.
+      - source: "embed\\.FS"
+        linters: [gochecknoglobals]
+      # Exclude go:generate from lll.
+      - source: "//go:generate"
+        linters: [lll]
+      # Relax noisy linters in tests.
+      - path: _test\.go
+        linters:
+          - errcheck
+          - gosec
+          - goconst
+          - lll
+      # Ignore shadowing of common names.
+      - linters: [govet]
+        text: 'declaration of "(err|ctx|log)"'
+      - path: internal\.go
+        text: "should have.+comment"
+        linters: [revive]
+      # Allow underscores in package names.
+      - linters: [revive]
+        text: "underscores? in package names?"
+      - linters: [staticcheck]
+        text: "SA1019: (telegram|client).+ is deprecated:"
+      # G115 (integer overflow on conversion) is noisy on known-safe size/index
+      # conversions in storage and doc parsing.
+      - linters: [gosec]
+        text: "G115:"
 
-  # Do not enable:
-  # - wsl       (too opinionated about newlines)
-  # - godox     (todos are OK)
-  # - bodyclose (false positives on helper functions)
-  # - prealloc  (not worth it in scope of this project)
-  # - maligned  (same as prealloc)
-  # - funlen    (gocyclo is enough)
-  # - gochecknoglobals
-  # - gocognit
-issues:
-  exclude-use-default: false
-  exclude-rules:
-    - linters: [gocritic]
-      text: "commentedOutCode"
-      source: "SHA1"
-
-    # Allow embed globals
-    - source: "embed\\.FS"
-      linters: [gochecknoglobals]
-
-    # Exclude go:generate from lll
-    - source: "//go:generate"
-      linters: [lll]
-
-    # Disable linters that are annoying in tests.
-    - path: _test\.go
-      linters:
-        - gocyclo
-        - errcheck
-        - dupl
-        - gosec
-        - funlen
-        - goconst
-        - gocognit
-        - scopelint
-        - lll
-        - gochecknoglobals
-    # Ignore shadowing of err.
-    - linters: [govet]
-      text: 'declaration of "(err|ctx|log)"'
-
-    - path: internal\.go
-      text: "should have.+comment"
-      linters: [revive]
-
-    # Allow underscores in package names.
-    - linters: [revive, stylecheck]
-      text: "underscores? in package names?"
-
-    - linters: [staticcheck]
-      text: "SA1019: (telegram|client).+ is deprecated:"
-
-    - linters: [typecheck]
-      text: "missing type in composite literal"
-
-    # TODO: Rewrite
-    - path: pool\.go
-      linters: [revive, govet, gocritic, misspell]
+formatters:
+  enable:
+    - gofmt
+    - goimports
+  settings:
+    goimports:
+      local-prefixes:
+        - github.com/gotd/botapi
