@@ -9,7 +9,7 @@ require (
 	github.com/gotd/log/logzap v0.1.1
 	github.com/gotd/td v0.156.0
 	github.com/stretchr/testify v1.11.1
-	go.etcd.io/bbolt v1.3.11
+	go.etcd.io/bbolt v1.4.3
 	go.uber.org/zap v1.28.0
 )
 
