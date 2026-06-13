@@ -77,7 +77,7 @@ func (*ReplyKeyboardMarkup) isReplyMarkup()  {}
 func (*ReplyKeyboardRemove) isReplyMarkup()  {}
 func (*ForceReply) isReplyMarkup()           {}
 
-// --- Constructors / builders (the type-safe telegoutil equivalent) ---
+// --- Constructors / builders (type-safe keyboard helpers) ---
 
 // InlineKeyboard builds an inline keyboard from rows of buttons.
 func InlineKeyboard(rows ...[]InlineKeyboardButton) *InlineKeyboardMarkup {

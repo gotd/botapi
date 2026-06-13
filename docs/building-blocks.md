@@ -1,9 +1,10 @@
 # gotd/td building blocks
 
 This document maps the high-level `github.com/gotd/td` primitives the Bot API
-library is built on. Unlike `telego`, this library does **not** talk HTTP to
-`api.telegram.org`. It implements the Bot API *surface* directly over MTProto
-using `gotd/td`. Everything below is a building block we wrap or translate.
+library is built on. Unlike HTTP Bot API clients, this library does **not** talk
+HTTP to `api.telegram.org`. It implements the Bot API *surface* directly over
+MTProto using `gotd/td`. Everything below is a building block we wrap or
+translate.
 
 All signatures verified against the local checkout at `/src/gotd/td`
 (`github.com/gotd/td`, module path confirmed). File:line references are to that
@@ -393,9 +394,9 @@ MTProto, peer resolution, gap recovery, or file transfer.
 
 ---
 
-## 11. What this buys us over telego
+## 11. What this buys us over HTTP Bot API clients
 
-| telego (HTTP Bot API) | this library (MTProto) |
+| HTTP Bot API client | this library (MTProto) |
 | --- | --- |
 | Subject to Bot API server rate limits | Direct MTProto; flood-wait only |
 | `file_id` opaque, must round-trip server | `fileid` codec is local; can construct locations |

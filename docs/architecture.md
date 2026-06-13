@@ -9,8 +9,8 @@
 
 A Go library that exposes the **Telegram Bot API** surface (types, methods,
 updates) but implements it **directly over MTProto** via `gotd/td` — not over
-HTTP to `api.telegram.org`. `telego` is the ergonomic bar to beat; the Bot API
-docs (<https://core.telegram.org/bots/api>) are the spec.
+HTTP to `api.telegram.org`. Existing HTTP Bot API clients set the ergonomic bar
+to beat; the Bot API docs (<https://core.telegram.org/bots/api>) are the spec.
 
 Design goals, in priority order (per project decision):
 
@@ -23,7 +23,7 @@ Design goals, in priority order (per project decision):
    errors (`FloodWait`, retry-after, network vs API vs not-implemented);
    proactive rate limiting.
 4. **A great handler framework** — composable middleware/router/predicates over
-   a native MTProto update stream, cleaner than `telegohandler`.
+   a native MTProto update stream.
 
 ## What changes from today's `botapi`
 
@@ -69,7 +69,7 @@ botapi/                      root package — the public library
      errors_map.go           tgerr -> botapi error codes
      engine.go               owns sender/peers/uploader/downloader/dispatcher
 
-  handler/                   the dispatcher framework (telegohandler rival)
+  handler/                   the dispatcher framework
      handler.go              Group, Use (middleware), predicates, routing
      predicates.go
      context.go
@@ -93,8 +93,9 @@ botapi/                      root package — the public library
 
 ### Type-safe unions
 
-`telego` models `ChatID` as a two-field struct (`{ID int64; Username string}`)
-and `InputFile` similarly — illegal states are representable. We use sealed
+A common HTTP-client approach models `ChatID` as a two-field struct
+(`{ID int64; Username string}`) and `InputFile` similarly — illegal states are
+representable. We use sealed
 interfaces (a private method makes them unforgeable from outside the package),
 with ergonomic constructors:
 
@@ -113,8 +114,7 @@ type InputFile interface{ isInputFile() }
 Discriminated incoming unions (`ChatMember`, `MessageOrigin`, `ReactionType`,
 `MenuButton`, `InputMedia`, inline-query results) are sealed interfaces with one
 concrete type per variant and a type switch — compile-time exhaustiveness via a
-linter, no `interface{}` + reflection, no runtime "try each type" unmarshal that
-`telego` does.
+linter, no `interface{}` + reflection, no runtime "try each type" unmarshal.
 
 ### Typed enums
 
@@ -170,10 +170,9 @@ grp.Use(Recover(), Timeout(30*time.Second))
 
 Predicates are `func(ctx, Update) bool`; middleware is
 `func(next Handler) Handler`. Context carries the `*Bot`, the update, and
-per-update values — designed in from the start (telego bolts a `Context` wrapper
-on after the fact and has the webhook `context.WithoutCancel` foot-gun, which we
-avoid because updates arrive over a persistent MTProto stream, not per-request
-HTTP).
+per-update values — designed in from the start, with no per-request HTTP
+`context.WithoutCancel` foot-gun because updates arrive over a persistent
+MTProto stream rather than per-request HTTP.
 
 ## Update flow (no long-poll, no webhook)
 

@@ -1,7 +1,8 @@
 # Roadmap
 
 > Rebuild `github.com/gotd/botapi` from a codegen-first OpenAPI/ogen project into
-> a hand-written, MTProto-backed Bot API **library** that beats `telego`.
+> a hand-written, MTProto-backed Bot API **library** that beats existing HTTP
+> Bot API clients on ergonomics and performance.
 > Companion docs: `architecture.md`, `building-blocks.md`.
 
 Legend: ☐ todo · ◐ in progress · ☑ done
@@ -48,9 +49,8 @@ The hand-written Bot API surface. This is the bulk of the work. **Done** on
   the union discriminators
 - ☑ Sealed-interface unions: `ChatID`, `InputFile`, `ReplyMarkup`,
   `MessageOrigin`, `ChatMember`, `ReactionType`, `MenuButton`, `InputMedia`
-- ◐ Constructors / fluent setters (`ID`, `Username`, keyboard builders) — done;
-  the `telegoutil` equivalent. More fluent setters land alongside the methods
-  in Phase 3.
+- ◐ Constructors / fluent setters (`ID`, `Username`, keyboard builders) — done.
+  More fluent setters land alongside the methods in Phase 3.
 - ☑ Typed error hierarchy (`Error`, `AsFloodWait`, `ErrNotImplemented`)
 - ☑ Exhaustiveness lint config for unions (`gochecksumtype` + `exhaustive`;
   golangci config migrated to v2)
@@ -171,9 +171,9 @@ Deferred within Phase 5: payment answers
 - ☐ `pool.Pool` re-pointed at public `Bot`; GC, keepalive
 - ☐ `cmd/botapi` HTTP server as an optional example (local Bot-API server)
 - ☐ Examples: echo bot, media bot, inline bot, handler/middleware
-- ☐ Allocation tests on hot paths; benchmarks vs telego
+- ☐ Allocation tests on hot paths; benchmarks vs HTTP Bot API clients
 - ☐ Conformance test against kept `botdoc` extractor (API-version drift guard)
-- ☐ Docs: package docs, migration-from-telego guide, README
+- ☐ Docs: package docs, migration guide, README
 
 ## Phase 8 — Release
 

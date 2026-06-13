@@ -17,7 +17,7 @@ round trip, and keeps the raw `gotd/td` client one method call away
 
 ## Why MTProto instead of HTTP
 
-| | HTTP Bot API client (e.g. telego) | botapi |
+| | HTTP Bot API client | botapi |
 | --- | --- | --- |
 | Transport | HTTPS to `api.telegram.org` | MTProto via `gotd/td` |
 | Updates | `getUpdates` long-poll / webhook | persistent connection, no polling |
