@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Install Go
         uses: actions/setup-go@v5
@@ -21,9 +21,9 @@ jobs:
           go-version-file: go.mod
 
       - name: Lint
-        # v7 installs golangci-lint v2, which the .golangci.yml (version "2")
-        # requires; v6 defaults to the v1 line and rejects the config.
-        uses: golangci/golangci-lint-action@v7
+        # v8+ installs golangci-lint v2, which the .golangci.yml (version "2")
+        # requires; the v6 line defaults to v1 and rejects the config.
+        uses: golangci/golangci-lint-action@v9
         with:
           version: v2.12.2
           args: --timeout 5m
@@ -33,7 +33,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Install Go
         uses: actions/setup-go@v5
