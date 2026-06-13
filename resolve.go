@@ -32,6 +32,10 @@ func (b *Bot) resolvePeer(ctx context.Context, chat ChatID) (peers.Peer, error) 
 			return nil, asAPIError(err)
 		}
 		return p, nil
+	case chatIDRef:
+		// A PeerRef is addressed directly for sending (resolveInputPeer); it
+		// cannot back the peers.Peer that chat-management needs.
+		return nil, &Error{Code: 400, Description: "Bad Request: peer reference is only usable for sending"}
 	default:
 		return nil, &Error{Code: 400, Description: "Bad Request: invalid chat_id"}
 	}
@@ -39,6 +43,11 @@ func (b *Bot) resolvePeer(ctx context.Context, chat ChatID) (peers.Peer, error) 
 
 // resolveInputPeer resolves a ChatID to the tg.InputPeerClass the sender needs.
 func (b *Bot) resolveInputPeer(ctx context.Context, chat ChatID) (tg.InputPeerClass, error) {
+	// A PeerRef carries its own access hash, so it is addressed directly without
+	// consulting stored peer data — this is what makes it survive a restart.
+	if ref, ok := chat.(chatIDRef); ok {
+		return ref.ref.inputPeer()
+	}
 	p, err := b.resolvePeer(ctx, chat)
 	if err != nil {
 		return nil, err

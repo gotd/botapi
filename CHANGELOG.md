@@ -15,6 +15,10 @@ messages follow [Conventional Commits](https://www.conventionalcommits.org/).
 - **Background sends** — `Bot.Background()` / `Context.Background()` expose a
   run-lifetime context for proactive sends to any chat from timers, queues or
   goroutines, instead of the per-update handler context. Plus `Bot.Logger()`.
+- **Serializable peer references** — `Bot.PeerRef` captures a chat's id and
+  access hash into a JSON-serializable `PeerRef`; `Peer(ref)` addresses it
+  directly (no stored peer data, no re-resolution), so background/scheduled
+  sends survive a restart.
 
 ## [0.1.0] - 2026-06-14
 

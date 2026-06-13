@@ -224,6 +224,28 @@ botapi.ID(chatID), text)` from wherever you like once the bot is running.
 `Background` returns an already-canceled context before `Run` connects (and
 after it stops), so background sends fail fast instead of blocking.
 
+#### Across restarts
+
+Addressing a chat needs its MTProto **access hash**. The bot persists access
+hashes for peers it has seen (with a `Storage`), but to address a chat after a
+restart without relying on that, capture a **`PeerRef`** — a self-contained,
+JSON-serializable reference (id + access hash) — and reuse it with `Peer`:
+
+```go
+ref, _ := bot.PeerRef(ctx, botapi.ID(chatID)) // resolve once, capture the hash
+data, _ := json.Marshal(ref)                  // persist it (DB, file, …)
+
+// … bot restarts …
+var ref botapi.PeerRef
+_ = json.Unmarshal(data, &ref)
+bot.SendMessage(bot.Background(), botapi.Peer(ref), "still works") // no re-resolution
+```
+
+`Peer(ref)` is addressed straight from the reference, so a serialized
+`{chat, text}` is all you need to deliver a message after a restart — no task
+queue. (`PeerRef` is for sending; chat-management methods still take a resolved
+`ID`/`Username`.)
+
 ## Predicates
 
 Every `On*` method accepts trailing `Predicate`s (`func(*Update) bool`); the
