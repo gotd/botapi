@@ -1,0 +1,47 @@
+package botapi
+
+import (
+	"context"
+	"strings"
+
+	"github.com/gotd/td/constant"
+	"github.com/gotd/td/telegram/peers"
+	"github.com/gotd/td/tg"
+)
+
+// resolvePeer resolves a Bot API ChatID to a gotd peer, pulling the access hash
+// from storage. Numeric ids go through the TDLib id convention; @usernames are
+// resolved by domain.
+//
+// The switch over the sealed ChatID union is exhaustive (gochecksumtype).
+func (b *Bot) resolvePeer(ctx context.Context, chat ChatID) (peers.Peer, error) {
+	switch c := chat.(type) {
+	case ChatIDInt:
+		p, err := b.peers.ResolveTDLibID(ctx, constant.TDLibPeerID(int64(c)))
+		if err != nil {
+			return nil, asAPIError(err)
+		}
+		return p, nil
+	case ChatIDUsername:
+		name := strings.TrimPrefix(string(c), "@")
+		if name == "" {
+			return nil, &Error{Code: 400, Description: "Bad Request: chat_id is empty"}
+		}
+		p, err := b.peers.ResolveDomain(ctx, name)
+		if err != nil {
+			return nil, asAPIError(err)
+		}
+		return p, nil
+	default:
+		return nil, &Error{Code: 400, Description: "Bad Request: invalid chat_id"}
+	}
+}
+
+// resolveInputPeer resolves a ChatID to the tg.InputPeerClass the sender needs.
+func (b *Bot) resolveInputPeer(ctx context.Context, chat ChatID) (tg.InputPeerClass, error) {
+	p, err := b.resolvePeer(ctx, chat)
+	if err != nil {
+		return nil, err
+	}
+	return p.InputPeer(), nil
+}
