@@ -21,7 +21,6 @@ var coveredByOtherMeans = map[string]string{
 // implemented. Each is an acknowledged gap tracked in docs/roadmap.md; the
 // conformance test allows them so it can still catch *unacknowledged* drift.
 var deferredMethods = map[string]string{
-	"sendInvoice":           "payments — deferred",
 	"setPassportDataErrors": "Telegram Passport — deferred",
 }
 

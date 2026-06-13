@@ -97,11 +97,7 @@ func WithPreCheckoutError(message string) PreCheckoutAnswerOption {
 func shippingOptionsToTg(options []ShippingOption) []tg.ShippingOption {
 	out := make([]tg.ShippingOption, 0, len(options))
 	for _, o := range options {
-		prices := make([]tg.LabeledPrice, 0, len(o.Prices))
-		for _, p := range o.Prices {
-			prices = append(prices, tg.LabeledPrice{Label: p.Label, Amount: int64(p.Amount)})
-		}
-		out = append(out, tg.ShippingOption{ID: o.ID, Title: o.Title, Prices: prices})
+		out = append(out, tg.ShippingOption{ID: o.ID, Title: o.Title, Prices: pricesToTg(o.Prices)})
 	}
 	return out
 }
