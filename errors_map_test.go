@@ -3,6 +3,7 @@ package botapi
 import (
 	"context"
 	"errors"
+	"fmt"
 	"testing"
 
 	"github.com/gotd/td/tgerr"
@@ -17,6 +18,19 @@ func TestAsAPIError(t *testing.T) {
 	t.Run("PassThroughNonRPC", func(t *testing.T) {
 		if got := asAPIError(context.Canceled); !errors.Is(got, context.Canceled) {
 			t.Fatalf("non-RPC error should pass through, got %v", got)
+		}
+	})
+	t.Run("PassThroughDeadline", func(t *testing.T) {
+		if got := asAPIError(context.DeadlineExceeded); !errors.Is(got, context.DeadlineExceeded) {
+			t.Fatalf("deadline error should pass through, got %v", got)
+		}
+	})
+	t.Run("ContextWrappedByRPCStillPasses", func(t *testing.T) {
+		// An RPC-typed error that wraps a cancellation must still surface the
+		// cancellation so callers can branch on ctx.Err().
+		wrapped := fmt.Errorf("rpc: %w", context.Canceled)
+		if got := asAPIError(wrapped); !errors.Is(got, context.Canceled) {
+			t.Fatalf("wrapped cancellation should pass through, got %v", got)
 		}
 	})
 	t.Run("AlreadyAPIError", func(t *testing.T) {

@@ -1,6 +1,7 @@
 package botapi
 
 import (
+	"context"
 	"errors"
 	"net/http"
 	"strconv"
@@ -118,6 +119,11 @@ func asAPIError(err error) error {
 	}
 	var already *Error
 	if errors.As(err, &already) {
+		return err
+	}
+	// Context cancellation/deadline always passes through unchanged (even if it
+	// happens to be wrapped by an RPC error) so callers can errors.Is on it.
+	if errors.Is(err, context.Canceled) || errors.Is(err, context.DeadlineExceeded) {
 		return err
 	}
 	rpcErr, ok := tgerr.As(err)
