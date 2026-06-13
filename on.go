@@ -41,6 +41,13 @@ func (b *Bot) installHandlers() {
 // field. Channel-broadcast messages become channel posts; everything else is a
 // regular message. edited selects the edited_* fields.
 func (b *Bot) dispatchMessage(ctx context.Context, msg tg.MessageClass, edited bool) {
+	// Drop the bot's own outgoing messages. MTProto echoes them back on the
+	// update stream, but the HTTP Bot API never delivers them — without this a
+	// bot that replies to messages would answer its own replies in a loop.
+	if tgm, ok := msg.(*tg.Message); ok && tgm.Out {
+		return
+	}
+
 	m, err := b.messageFromTg(ctx, msg)
 	if err != nil {
 		b.log.Error("Convert message", zap.Error(err))
