@@ -23,6 +23,7 @@ type sendConfig struct {
 	replyTo           int
 	markup            ReplyMarkup
 	parseMode         ParseMode
+	businessConn      string
 }
 
 // DisableWebPagePreview disables the link preview for messages with links.
@@ -42,6 +43,25 @@ func WithReplyMarkup(m ReplyMarkup) SendOption { return func(c *sendConfig) { c.
 
 // WithParseMode selects the formatting mode for the text or caption.
 func WithParseMode(m ParseMode) SendOption { return func(c *sendConfig) { c.parseMode = m } }
+
+// WithBusinessConnection sends the message on behalf of the business account
+// identified by the given connection id, instead of as the bot itself.
+//
+// It currently applies to SendMessage (text). Sending media on behalf of a
+// business account is not yet supported.
+func WithBusinessConnection(connectionID string) SendOption {
+	return func(c *sendConfig) { c.businessConn = connectionID }
+}
+
+// senderFor returns the message sender the config selects: the bot's own sender,
+// or a business-scoped sender when a business connection is set.
+func (b *Bot) senderFor(cfg sendConfig) *message.Sender {
+	if cfg.businessConn == "" {
+		return b.sender
+	}
+
+	return b.businessSender(cfg.businessConn)
+}
 
 // styledText turns text + parse mode into styling options.
 //
@@ -141,7 +161,7 @@ func (b *Bot) SendMessage(ctx context.Context, chat ChatID, text string, opts ..
 		return nil, err
 	}
 
-	builder := &b.sender.To(peer).Builder
+	builder := &b.senderFor(cfg).To(peer).Builder
 
 	builder, err = b.applySendConfig(builder, cfg)
 	if err != nil {

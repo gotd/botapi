@@ -72,3 +72,9 @@ func (c *BusinessContext) StarBalance(ctx context.Context) (StarAmount, error) {
 func (c *BusinessContext) DeleteMessages(ctx context.Context, messageIDs []int) error {
 	return c.bot.DeleteBusinessMessages(ctx, c.connectionID, messageIDs)
 }
+
+// SendMessage sends a text message to a chat on behalf of the connected business
+// account and returns the sent message.
+func (c *BusinessContext) SendMessage(ctx context.Context, chat ChatID, text string, opts ...SendOption) (*Message, error) {
+	return c.bot.SendMessage(ctx, chat, text, append(opts, WithBusinessConnection(c.connectionID))...)
+}

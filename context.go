@@ -29,6 +29,10 @@ func (c *Context) Chat() (ChatID, bool) {
 		return ID(m.Chat.ID), true
 	}
 
+	if bm := c.BusinessMessage(); bm != nil {
+		return ID(bm.Chat.ID), true
+	}
+
 	if cq := c.Update.CallbackQuery; cq != nil && cq.Message != nil {
 		return ID(cq.Message.Chat.ID), true
 	}
@@ -36,19 +40,33 @@ func (c *Context) Chat() (ChatID, bool) {
 	return nil, false
 }
 
-// Send sends a text message to the update's chat.
+// Send sends a text message to the update's chat. For a business update it sends
+// on behalf of the connected account.
 func (c *Context) Send(text string, opts ...SendOption) (*Message, error) {
 	chat, ok := c.Chat()
 	if !ok {
 		return nil, &Error{Code: 400, Description: "Bad Request: update has no chat to send to"}
 	}
 
+	if id := c.Update.businessConnectionID(); id != "" {
+		opts = append([]SendOption{WithBusinessConnection(id)}, opts...)
+	}
+
 	return c.Bot.SendMessage(c, chat, text, opts...)
 }
 
 // Reply sends a text message to the update's chat as a reply to the incoming
-// message.
+// message. For a business message it replies on behalf of the connected account.
 func (c *Context) Reply(text string, opts ...SendOption) (*Message, error) {
+	if bm := c.BusinessMessage(); bm != nil {
+		opts = append([]SendOption{
+			ReplyTo(bm.MessageID),
+			WithBusinessConnection(bm.BusinessConnectionID),
+		}, opts...)
+
+		return c.Bot.SendMessage(c, ID(bm.Chat.ID), text, opts...)
+	}
+
 	m := c.Message()
 	if m == nil {
 		return nil, &Error{Code: 400, Description: "Bad Request: update has no message to reply to"}

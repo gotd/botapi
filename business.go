@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/gotd/td/bin"
+	"github.com/gotd/td/telegram/message"
 	"github.com/gotd/td/tg"
 )
 
@@ -83,6 +84,36 @@ func (b *Bot) invokeBusiness(ctx context.Context, connectionID string, query bin
 		ConnectionID: connectionID,
 		Query:        query,
 	}, output)
+}
+
+// businessInvoker wraps every RPC forwarded through it in
+// invokeWithBusinessConnection, so a message.Sender built on it sends on behalf
+// of a connected business account.
+//
+// It is suitable for single-RPC sends (e.g. a text message). It must not back
+// uploads: it would wrap the upload.saveFilePart calls too, which is not how the
+// account-scoped media path works.
+type businessInvoker struct {
+	inner        tg.Invoker
+	connectionID string
+}
+
+func (i businessInvoker) Invoke(ctx context.Context, input bin.Encoder, output bin.Decoder) error {
+	query, ok := input.(bin.Object)
+	if !ok {
+		return i.inner.Invoke(ctx, input, output)
+	}
+
+	return i.inner.Invoke(ctx, &tg.InvokeWithBusinessConnectionRequest{
+		ConnectionID: i.connectionID,
+		Query:        query,
+	}, output)
+}
+
+// businessSender returns a message.Sender that sends on behalf of the business
+// account identified by connectionID.
+func (b *Bot) businessSender(connectionID string) *message.Sender {
+	return message.NewSender(tg.NewClient(businessInvoker{inner: b.invoker, connectionID: connectionID}))
 }
 
 // GetBusinessConnection returns information about the connection of the bot with
