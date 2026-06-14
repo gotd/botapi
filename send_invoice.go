@@ -36,19 +36,9 @@ type InvoiceParams struct {
 	IsFlexible                bool `json:"is_flexible,omitempty"`
 }
 
-// SendInvoice sends an invoice.
-func (b *Bot) SendInvoice(ctx context.Context, chat ChatID, params InvoiceParams, opts ...SendOption) (*Message, error) {
-	var cfg sendConfig
-
-	for _, o := range opts {
-		o(&cfg)
-	}
-
-	peer, err := b.resolveInputPeer(ctx, chat)
-	if err != nil {
-		return nil, err
-	}
-
+// invoiceMedia builds the MTProto invoice media shared by SendInvoice and
+// CreateInvoiceLink.
+func invoiceMedia(params InvoiceParams) *tg.InputMediaInvoice {
 	suggested := make([]int64, len(params.SuggestedTipAmounts))
 	for i, a := range params.SuggestedTipAmounts {
 		suggested[i] = int64(a)
@@ -90,6 +80,24 @@ func (b *Bot) SendInvoice(ctx context.Context, chat ChatID, params InvoiceParams
 			},
 		})
 	}
+
+	return media
+}
+
+// SendInvoice sends an invoice.
+func (b *Bot) SendInvoice(ctx context.Context, chat ChatID, params InvoiceParams, opts ...SendOption) (*Message, error) {
+	var cfg sendConfig
+
+	for _, o := range opts {
+		o(&cfg)
+	}
+
+	peer, err := b.resolveInputPeer(ctx, chat)
+	if err != nil {
+		return nil, err
+	}
+
+	media := invoiceMedia(params)
 
 	builder := &b.sender.To(peer).Builder
 
