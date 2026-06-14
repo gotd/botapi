@@ -1,5 +1,7 @@
 package botapi
 
+import "github.com/gotd/td/tg"
+
 // MessageEntity represents one special entity in a text message (e.g. a
 // hashtag, link, or formatted run).
 type MessageEntity struct {
@@ -121,4 +123,15 @@ type Message struct {
 	PinnedMessage  *Message `json:"pinned_message,omitempty"`
 
 	ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
+
+	// raw holds the original MTProto message this Message was converted from, or
+	// nil for synthesized stubs (e.g. reply_to/pinned placeholders). It is not
+	// serialized; reach it through Raw.
+	raw *tg.Message
 }
+
+// Raw returns the original MTProto message this Message was converted from, for
+// anything the typed Bot API surface does not expose. It is nil for messages
+// that were not converted from a live update — synthesized reply_to and pinned
+// placeholders, or values produced by JSON decoding.
+func (m *Message) Raw() *tg.Message { return m.raw }

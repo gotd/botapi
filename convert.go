@@ -192,6 +192,7 @@ func (b *Bot) convertMessage(ctx context.Context, m *tg.Message) (*Message, erro
 		Date:                m.Date,
 		Chat:                chat,
 		HasProtectedContent: m.Noforwards,
+		raw:                 m,
 	}
 	if v, ok := m.GetEditDate(); ok {
 		r.EditDate = v

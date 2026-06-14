@@ -21,6 +21,22 @@ func convMsg(t *testing.T, m *tg.Message) *Message {
 	return r
 }
 
+func TestConvertMessageExposesRaw(t *testing.T) {
+	m := &tg.Message{ID: 42, Message: "hi"}
+
+	m.PeerID = &tg.PeerUser{UserID: 10}
+
+	r := convMsg(t, m)
+	if r.Raw() != m {
+		t.Fatalf("Raw() = %p, want original %p", r.Raw(), m)
+	}
+
+	// Synthesized stubs (e.g. JSON-decoded messages) carry no raw message.
+	if (&Message{}).Raw() != nil {
+		t.Fatal("Raw() of a zero Message should be nil")
+	}
+}
+
 func TestConvertTextMessageFromUser(t *testing.T) {
 	m := &tg.Message{ID: 7, Message: "hello world"}
 
