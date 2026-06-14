@@ -1,4 +1,4 @@
-# botapi
+# botapi [![Go Reference](https://img.shields.io/badge/go-pkg-00ADD8)](https://pkg.go.dev/github.com/gotd/botapi#section-documentation) [![codecov](https://img.shields.io/codecov/c/github/gotd/botapi?label=cover)](https://codecov.io/gh/gotd/botapi) [![experimental](https://img.shields.io/badge/-experimental-blueviolet)](https://gotd.org/docs/projects/status#experimental)
 
 A Telegram Bot API library for Go, implemented directly over **MTProto** using
 [`gotd/td`](https://github.com/gotd/td) — not over HTTP to `api.telegram.org`.
