@@ -17,7 +17,7 @@ func reactionToTg(r ReactionType) (tg.ReactionClass, error) {
 	case ReactionTypeCustomEmoji:
 		id, err := strconv.ParseInt(v.CustomEmojiID, 10, 64)
 		if err != nil {
-			return nil, &Error{Code: 400, Description: "Bad Request: invalid custom_emoji_id"}
+			return nil, errInvalidCustomEmojiID()
 		}
 
 		return &tg.ReactionCustomEmoji{DocumentID: id}, nil

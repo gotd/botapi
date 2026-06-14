@@ -90,3 +90,9 @@ func Code(err error) int {
 
 	return 0
 }
+
+// errInvalidCustomEmojiID is returned when a custom_emoji_id is not a valid
+// integer document id.
+func errInvalidCustomEmojiID() *Error {
+	return &Error{Code: 400, Description: "Bad Request: invalid custom_emoji_id"}
+}

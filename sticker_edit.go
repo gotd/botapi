@@ -160,7 +160,7 @@ func (b *Bot) GetCustomEmojiStickers(ctx context.Context, customEmojiIDs []strin
 	for _, s := range customEmojiIDs {
 		id, err := strconv.ParseInt(s, 10, 64)
 		if err != nil {
-			return nil, &Error{Code: 400, Description: "Bad Request: invalid custom_emoji_id"}
+			return nil, errInvalidCustomEmojiID()
 		}
 
 		ids = append(ids, id)
