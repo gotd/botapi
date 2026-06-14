@@ -92,6 +92,9 @@ func New(token string, opt Options) (*Bot, error) {
 		UpdateHandler:  h,
 		SessionStorage: opt.Storage,
 		Middlewares:    buildMiddlewares(opt, h),
+		Resolver:       opt.resolver,
+		PublicKeys:     opt.publicKeys,
+		DCList:         opt.dcList,
 	})
 	*rawPlaceholder = *client.API()
 

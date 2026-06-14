@@ -5,6 +5,7 @@ import (
 
 	"github.com/gotd/log"
 	"github.com/gotd/td/telegram"
+	"github.com/gotd/td/telegram/dcs"
 	"github.com/gotd/td/telegram/peers"
 	"github.com/gotd/td/telegram/updates"
 )
@@ -67,6 +68,13 @@ type Options struct {
 	// registered via OnCommand to Telegram (SetMyCommands, default scope). By
 	// default the bot's command menu is kept in sync with its OnCommand handlers.
 	DisableCommandRegistration bool
+
+	// resolver, publicKeys and dcList override the MTProto endpoints the client
+	// connects to. They are unexported test seams used to point a Bot at an
+	// in-process tgtest server; production code reaches Telegram's real DCs.
+	resolver   dcs.Resolver
+	publicKeys []telegram.PublicKey
+	dcList     dcs.List
 }
 
 func (o *Options) setDefaults() {
