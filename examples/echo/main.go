@@ -31,7 +31,7 @@ func main() {
 	}
 
 	// Persist session, peers and update state so the bot resumes across restarts.
-	store, err := storage.Open("echo-session.bbolt")
+	store, err := storage.Open("session.bbolt")
 	if err != nil {
 		log.Fatal("Open storage", zap.Error(err))
 	}

@@ -35,11 +35,12 @@ func (u *Update) Text() string {
 	return ""
 }
 
-// commandName extracts the bot command name from message text: "/start@bot foo"
-// yields ("start", true). Pure.
-func commandName(text string) (string, bool) {
+// commandName extracts the bot command name and its optional @target from
+// message text: "/start@bot foo" yields ("start", "bot", true), "/start foo"
+// yields ("start", "", true). Pure.
+func commandName(text string) (name, target string, ok bool) {
 	if !strings.HasPrefix(text, "/") {
-		return "", false
+		return "", "", false
 	}
 	field := text
 	if i := strings.IndexAny(text, " \t\n"); i >= 0 {
@@ -47,13 +48,19 @@ func commandName(text string) (string, bool) {
 	}
 	field = field[1:] // drop leading slash
 	if at := strings.IndexByte(field, '@'); at >= 0 {
+		target = field[at+1:]
 		field = field[:at]
 	}
-	return field, field != ""
+	return field, target, field != ""
 }
 
 // Command matches a message whose first token is the given bot command (with or
-// without a leading slash, and ignoring a trailing @botusername).
+// without a leading slash).
+//
+// A command may be targeted at a specific bot with a trailing @username
+// ("/start@my_bot"), as Telegram clients do in groups. An untargeted command
+// always matches; a targeted one matches only when the @username is this bot's
+// own — so the bot ignores commands aimed at other bots.
 func Command(name string) Predicate {
 	name = strings.TrimPrefix(name, "/")
 	return func(u *Update) bool {
@@ -61,8 +68,11 @@ func Command(name string) Predicate {
 		if m == nil {
 			return false
 		}
-		got, ok := commandName(m.Text)
-		return ok && got == name
+		got, target, ok := commandName(m.Text)
+		if !ok || got != name {
+			return false
+		}
+		return target == "" || strings.EqualFold(target, u.botUsername)
 	}
 }
 

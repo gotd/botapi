@@ -7,6 +7,12 @@ messages follow [Conventional Commits](https://www.conventionalcommits.org/).
 
 ## [Unreleased]
 
+### Fixed
+
+- **Targeted commands** — a command addressed to another bot (`/cmd@other_bot`,
+  as clients send in groups) no longer matches. `Command`/`OnCommand` now match
+  an untargeted command, or one whose `@username` is this bot's own.
+
 ### Changed
 
 - **Logging port** — the library now logs through `github.com/gotd/log` instead

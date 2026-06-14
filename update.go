@@ -17,4 +17,10 @@ type Update struct {
 	PollAnswer         *PollAnswer         `json:"poll_answer,omitempty"`
 	MyChatMember       *ChatMemberUpdated  `json:"my_chat_member,omitempty"`
 	ChatMember         *ChatMemberUpdated  `json:"chat_member,omitempty"`
+
+	// botUsername is this bot's @username (without the @), set by the router so
+	// command predicates can tell a command targeted at this bot ("/cmd@me")
+	// from one targeted at another ("/cmd@other"). Not part of the Bot API
+	// payload, so it is unexported and not serialized.
+	botUsername string
 }

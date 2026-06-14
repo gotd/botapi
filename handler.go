@@ -75,6 +75,10 @@ func (b *Bot) onWith(handler Handler, mws []Middleware, predicates []Predicate) 
 // global middleware. Handler errors are logged, not propagated to the update
 // loop, so one failing handler does not tear down the bot.
 func (b *Bot) route(ctx context.Context, u *Update) {
+	if b.self != nil {
+		u.botUsername = b.self.Username
+	}
+
 	b.router.mu.RLock()
 	routes := b.router.routes
 	mws := b.router.mws
