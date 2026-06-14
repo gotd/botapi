@@ -21,7 +21,7 @@ import (
 // by token, fetches self, starts gap recovery, and — from OnStart — sends a
 // real message over the encrypted transport to a freshly signed-up human, whose
 // own session then reads it back. This covers the whole Run lifecycle against
-// the actual server behaviour teledtest provides.
+// the actual server behavior teledtest provides.
 //
 // The test is skipped on hosts without container support (teledtest backs the
 // server with a throwaway PostgreSQL container).
