@@ -1,5 +1,7 @@
 package botapi
 
+import "github.com/go-faster/jx"
+
 // MessageOrigin is a sealed union describing the original sender of a forwarded
 // message.
 //
@@ -7,6 +9,9 @@ package botapi
 // *MessageOriginChat, *MessageOriginChannel.
 type MessageOrigin interface {
 	isMessageOrigin()
+	// Encode writes the origin as a JSON object, including its "type"
+	// discriminator, through the jx encoder.
+	Encode(e *jx.Encoder)
 }
 
 // MessageOriginUser is a message originally sent by a known user.

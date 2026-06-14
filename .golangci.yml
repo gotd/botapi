@@ -80,6 +80,13 @@ linters:
       # Exclude go:generate from lll.
       - source: "//go:generate"
         linters: [lll]
+      # The codec_*.go files are hand-written jx Encode/Decode in the style of
+      # generated marshaling code: every wire field name recurs as a FieldStart
+      # argument and a decode case label. Constants for JSON field names would
+      # only obscure the one-to-one mapping with the struct tags, so exclude
+      # them from goconst — as generated codecs conventionally are.
+      - path: codec.*\.go
+        linters: [goconst]
       # Relax noisy linters in tests.
       - path: _test\.go
         linters:
