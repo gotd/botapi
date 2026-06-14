@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "skills": {
+    "golang-refactor-tools": {
+      "source": "go-faster/gooners",
+      "sourceType": "github",
+      "skillPath": "skills/golang-refactor-tools/SKILL.md",
+      "computedHash": "a62f3d4a337a93f815bd0a88b7892bfd08e35fbba8cc230f96eacb2d66ea1580"
+    },
+    "jx": {
+      "source": "go-faster/gooners",
+      "sourceType": "github",
+      "skillPath": "skills/jx/SKILL.md",
+      "computedHash": "0880941d1cb5561f179b4725d3679f6ff7b18db342b79875466c42c4b046672e"
+    }
+  }
+}
