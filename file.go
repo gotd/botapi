@@ -21,6 +21,7 @@ func inputPhotoFromFileID(fileID string) (tg.InputPhotoClass, error) {
 	if err != nil {
 		return nil, errInvalidFileID()
 	}
+
 	return &tg.InputPhoto{
 		ID:            f.ID,
 		AccessHash:    f.AccessHash,
@@ -35,6 +36,7 @@ func inputDocumentFromFileID(fileID string) (tg.InputDocumentClass, error) {
 	if err != nil {
 		return nil, errInvalidFileID()
 	}
+
 	return &tg.InputDocument{
 		ID:            f.ID,
 		AccessHash:    f.AccessHash,
@@ -53,6 +55,7 @@ func (b *Bot) GetFile(_ context.Context, fileID string) (*File, error) {
 	if err != nil {
 		return nil, errInvalidFileID()
 	}
+
 	return &File{
 		FileID:       fileID,
 		FileUniqueID: fileUniqueID(f),
@@ -72,14 +75,18 @@ func (b *Bot) DownloadFile(ctx context.Context, fileID string, w io.Writer) (int
 		if _, err := b.client.Download(loc).Stream(ctx, counter); err != nil {
 			return counter.n, asAPIError(err)
 		}
+
 		return counter.n, nil
 	}
+
 	if loc, ok := f.AsInputWebFileLocation(); ok {
 		if _, err := b.client.DownloadWeb(loc).Stream(ctx, counter); err != nil {
 			return counter.n, asAPIError(err)
 		}
+
 		return counter.n, nil
 	}
+
 	return 0, &Error{Code: 400, Description: "Bad Request: file_id is not downloadable"}
 }
 
@@ -89,13 +96,16 @@ func (b *Bot) DownloadFileToPath(ctx context.Context, fileID, path string) error
 	if err != nil {
 		return errInvalidFileID()
 	}
+
 	loc, ok := f.AsInputFileLocation()
 	if !ok {
 		return &Error{Code: 400, Description: "Bad Request: file_id is not downloadable"}
 	}
+
 	if _, err := b.client.Download(loc).ToPath(ctx, path); err != nil {
 		return asAPIError(err)
 	}
+
 	return nil
 }
 
@@ -107,7 +117,9 @@ type countWriter struct {
 
 func (c *countWriter) Write(p []byte) (int, error) {
 	n, err := c.w.Write(p)
+
 	c.n += int64(n)
+
 	return n, err
 }
 
@@ -132,10 +144,12 @@ const (
 // value Telegram's own server would return.
 func fileUniqueID(f fileid.FileID) string {
 	var buf []byte
+
 	switch {
 	case f.URL != "":
 		buf = make([]byte, 4, 4+len(f.URL))
 		binary.LittleEndian.PutUint32(buf, uniqueTypeWeb)
+
 		buf = append(buf, f.URL...)
 	case isPhotoType(f.Type) && f.PhotoSizeSource.VolumeID != 0:
 		buf = make([]byte, 16)
@@ -147,6 +161,7 @@ func fileUniqueID(f fileid.FileID) string {
 		binary.LittleEndian.PutUint32(buf[0:], uint32(uniqueTypeFor(f.Type)))
 		binary.LittleEndian.PutUint64(buf[4:], uint64(f.ID))
 	}
+
 	return base64.RawURLEncoding.EncodeToString(rleEncode(buf))
 }
 
@@ -179,19 +194,24 @@ func uniqueTypeFor(t fileid.Type) int {
 // helper in github.com/gotd/td/fileid.
 func rleEncode(s []byte) (r []byte) {
 	var count byte
+
 	for _, cur := range s {
 		if cur == 0 {
 			count++
 			continue
 		}
+
 		if count > 0 {
 			r = append(r, 0, count)
 			count = 0
 		}
+
 		r = append(r, cur)
 	}
+
 	if count > 0 {
 		r = append(r, 0, count)
 	}
+
 	return r
 }

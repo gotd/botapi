@@ -43,7 +43,9 @@ func newMockInvoker() *mockInvoker {
 		if err := req.Decode(buf); err != nil {
 			return nil, err
 		}
+
 		var users []tg.UserClass
+
 		for _, iu := range req.ID {
 			switch u := iu.(type) {
 			case *tg.InputUserSelf:
@@ -54,6 +56,7 @@ func newMockInvoker() *mockInvoker {
 				users = append(users, &tg.User{ID: u.UserID})
 			}
 		}
+
 		return &tg.UserClassVector{Elems: users}, nil
 	})
 	// Default upload: accept any file part.
@@ -64,7 +67,9 @@ func newMockInvoker() *mockInvoker {
 		if err := req.Decode(buf); err != nil {
 			return nil, err
 		}
+
 		var chats []tg.ChatClass
+
 		for _, ic := range req.ID {
 			if c, ok := ic.(*tg.InputChannel); ok {
 				chats = append(chats, &tg.Channel{
@@ -75,8 +80,10 @@ func newMockInvoker() *mockInvoker {
 				})
 			}
 		}
+
 		return &tg.MessagesChats{Chats: chats}, nil
 	})
+
 	return m
 }
 
@@ -85,6 +92,7 @@ func newMockInvoker() *mockInvoker {
 // decode back, or an error (use a *tgerr.Error to exercise error mapping).
 func (m *mockInvoker) handle(id uint32, h func(buf *bin.Buffer) (bin.Encoder, error)) {
 	m.mu.Lock()
+
 	m.handlers[id] = h
 	m.mu.Unlock()
 }
@@ -103,7 +111,9 @@ func (m *mockInvoker) fail(id uint32, err *tgerr.Error) {
 func (m *mockInvoker) called(id uint32) bool {
 	m.mu.Lock()
 	defer m.mu.Unlock()
+
 	_, ok := m.last[id]
+
 	return ok
 }
 
@@ -111,6 +121,7 @@ func (m *mockInvoker) called(id uint32) bool {
 func (m *mockInvoker) count() int {
 	m.mu.Lock()
 	defer m.mu.Unlock()
+
 	return len(m.calls)
 }
 
@@ -118,11 +129,14 @@ func (m *mockInvoker) count() int {
 func (m *mockInvoker) decode(t *testing.T, id uint32, dst bin.Decoder) {
 	t.Helper()
 	m.mu.Lock()
+
 	raw, ok := m.last[id]
 	m.mu.Unlock()
+
 	if !ok {
 		t.Fatalf("no recorded request for %#x", id)
 	}
+
 	if err := dst.Decode(&bin.Buffer{Buf: raw}); err != nil {
 		t.Fatalf("decode request %#x: %v", id, err)
 	}
@@ -130,31 +144,39 @@ func (m *mockInvoker) decode(t *testing.T, id uint32, dst bin.Decoder) {
 
 func (m *mockInvoker) Invoke(_ context.Context, input bin.Encoder, output bin.Decoder) error {
 	var buf bin.Buffer
+
 	if err := input.Encode(&buf); err != nil {
 		return err
 	}
+
 	id, err := buf.PeekID()
 	if err != nil {
 		return err
 	}
 
 	m.mu.Lock()
+
 	m.calls = append(m.calls, id)
 	m.last[id] = append([]byte(nil), buf.Buf...)
+
 	h := m.handlers[id]
 	m.mu.Unlock()
 
 	if h == nil {
 		return errors.Errorf("mockInvoker: unhandled request %#x", id)
 	}
+
 	resp, err := h(&buf)
 	if err != nil {
 		return err
 	}
+
 	var rb bin.Buffer
+
 	if err := resp.Encode(&rb); err != nil {
 		return err
 	}
+
 	return output.Decode(&rb)
 }
 
@@ -162,6 +184,7 @@ func (m *mockInvoker) Invoke(_ context.Context, input bin.Encoder, output bin.De
 // canned self user, so every RPC method can be driven offline.
 func newMockBot(inv *mockInvoker) *Bot {
 	raw := tg.NewClient(inv)
+
 	return &Bot{
 		log:    log.Nop,
 		raw:    raw,
@@ -189,7 +212,9 @@ func channelRef(id, hash int64) ChatID {
 // PeerRef.
 func tdlibChannel(id int64) ChatID { //nolint:unparam // a single fixed id keeps tests readable
 	var p constant.TDLibPeerID
+
 	p.Channel(id)
+
 	return ID(int64(p))
 }
 

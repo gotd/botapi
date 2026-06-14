@@ -40,6 +40,7 @@ func fullMessage() *Message {
 		IsForum:   true,
 	}
 	thumb := &PhotoSize{FileID: "t", FileUniqueID: "tu", Width: 1, Height: 2, FileSize: 3}
+
 	return &Message{
 		MessageID:           7,
 		MessageThreadID:     3,
@@ -106,9 +107,11 @@ func TestMessageJXRoundTrip(t *testing.T) {
 	}
 
 	var out Message
+
 	if err := json.Unmarshal(data, &out); err != nil {
 		t.Fatalf("unmarshal: %v", err)
 	}
+
 	if !reflect.DeepEqual(in, &out) {
 		t.Fatalf("round trip mismatch:\n in: %+v\nout: %+v", in, &out)
 	}
@@ -118,6 +121,7 @@ func TestMessageJXRoundTrip(t *testing.T) {
 	if err != nil {
 		t.Fatalf("re-marshal: %v", err)
 	}
+
 	if !bytes.Equal(again, data) {
 		t.Fatalf("non-idempotent encoding:\n first: %s\nsecond: %s", data, again)
 	}
@@ -127,14 +131,18 @@ func TestMessageJXRoundTrip(t *testing.T) {
 // parses it back (exercising UnmarshalJSON) and asserts the value is preserved.
 func jsonRoundTrip[T any](t *testing.T, in T) {
 	t.Helper()
+
 	data, err := json.Marshal(in)
 	if err != nil {
 		t.Fatalf("marshal %T: %v", in, err)
 	}
+
 	var out T
+
 	if err := json.Unmarshal(data, &out); err != nil {
 		t.Fatalf("unmarshal %T: %v", in, err)
 	}
+
 	if !reflect.DeepEqual(in, out) {
 		t.Fatalf("%T round trip mismatch:\n in: %+v\nout: %+v", in, in, out)
 	}
@@ -144,6 +152,7 @@ func jsonRoundTrip[T any](t *testing.T, in T) {
 // encoding/json, covering each type's MarshalJSON/UnmarshalJSON wrappers.
 func TestLeafEntitiesJSON(t *testing.T) {
 	thumb := &PhotoSize{FileID: "t", FileUniqueID: "tu", Width: 1, Height: 2, FileSize: 3}
+
 	jsonRoundTrip(t, User{ID: 1, FirstName: "A", LastName: "B", Username: "u", LanguageCode: "en", IsBot: true, IsPremium: true, AddedToAttachmentMenu: true, CanJoinGroups: true, CanReadAllGroupMessages: true, SupportsInlineQueries: true})
 	jsonRoundTrip(t, Chat{ID: -1, Type: ChatTypeGroup, Title: "t", Username: "u", FirstName: "f", LastName: "l", IsForum: true})
 	jsonRoundTrip(t, PhotoSize{FileID: "p", FileUniqueID: "pu", Width: 1, Height: 2, FileSize: 3})
@@ -183,8 +192,10 @@ func TestDecodeTruncated(t *testing.T) {
 	if err != nil {
 		t.Fatalf("marshal: %v", err)
 	}
+
 	for i := range len(data) {
 		var m Message
+
 		// Decode directly (not via encoding/json, which rejects a truncated
 		// outer object before delegating). Must error, never panic.
 		if err := unmarshalJX(data[:i], &m); err == nil {
@@ -211,6 +222,7 @@ func TestDecodeTypeMismatch(t *testing.T) {
 	}
 	for _, c := range cases {
 		var m Message
+
 		if err := json.Unmarshal([]byte(c), &m); err == nil {
 			t.Fatalf("expected error for %s", c)
 		}
@@ -256,20 +268,25 @@ func TestDecodeFieldErrors(t *testing.T) {
 		{&MessageOriginChannel{Type: OriginChannel, Date: 4, Chat: Chat{ID: 1, Type: ChatTypeChannel}, MessageID: 5, AuthorSignature: "s"}, func() jsonDecoder { return &MessageOriginChannel{} }},
 		{fullMessage(), func() jsonDecoder { return &Message{} }},
 	}
+
 	for _, p := range probes {
 		data, err := json.Marshal(p.full)
 		if err != nil {
 			t.Fatalf("marshal %T: %v", p.full, err)
 		}
+
 		// An unknown field must be skipped, not rejected (covers the default
 		// branch of every Decode).
 		if err := unmarshalJX([]byte(`{"__unknown__":{"a":[1,2,3]}}`), p.newDec()); err != nil {
 			t.Errorf("%T: unknown field not skipped: %v", p.full, err)
 		}
+
 		var keyed map[string]json.RawMessage
+
 		if err := json.Unmarshal(data, &keyed); err != nil {
 			t.Fatalf("rekey %T: %v", p.full, err)
 		}
+
 		for field := range keyed {
 			// "@" is not a valid JSON value start, so whichever decoder the
 			// field dispatches to (scalar, nested object or array) fails.
@@ -311,13 +328,17 @@ func TestMessageOriginVariantsRoundTrip(t *testing.T) {
 		&MessageOriginChat{Type: OriginChat, Date: 3, SenderChat: chat, AuthorSignature: "s"},
 		&MessageOriginChannel{Type: OriginChannel, Date: 4, Chat: chat, MessageID: 5},
 	}
+
 	for _, want := range cases {
 		var e jx.Encoder
+
 		want.Encode(&e)
+
 		got, err := decodeMessageOrigin(jx.DecodeBytes(e.Bytes()))
 		if err != nil {
 			t.Fatalf("decode %T: %v", want, err)
 		}
+
 		if !reflect.DeepEqual(want, got) {
 			t.Fatalf("origin %T mismatch:\nwant %+v\n got %+v", want, want, got)
 		}
@@ -335,36 +356,44 @@ func TestDecodeMessageOriginUnknown(t *testing.T) {
 func TestEntitiesUnmarshalJSON(t *testing.T) {
 	t.Run("User", func(t *testing.T) {
 		var u User
+
 		if err := json.Unmarshal([]byte(`{"id":42,"first_name":"Ada","is_bot":true}`), &u); err != nil {
 			t.Fatal(err)
 		}
+
 		if u.ID != 42 || u.FirstName != "Ada" || !u.IsBot {
 			t.Fatalf("user = %+v", u)
 		}
 	})
 	t.Run("Chat", func(t *testing.T) {
 		var c Chat
+
 		if err := json.Unmarshal([]byte(`{"id":-1,"type":"private","first_name":"X"}`), &c); err != nil {
 			t.Fatal(err)
 		}
+
 		if c.ID != -1 || c.Type != ChatTypePrivate {
 			t.Fatalf("chat = %+v", c)
 		}
 	})
 	t.Run("Poll", func(t *testing.T) {
 		var p Poll
+
 		if err := json.Unmarshal([]byte(`{"id":"x","question":"q","options":[{"text":"a","voter_count":1}],"total_voter_count":1,"type":"regular"}`), &p); err != nil {
 			t.Fatal(err)
 		}
+
 		if len(p.Options) != 1 || p.Options[0].Text != "a" {
 			t.Fatalf("poll = %+v", p)
 		}
 	})
 	t.Run("UnknownFieldSkipped", func(t *testing.T) {
 		var u User
+
 		if err := json.Unmarshal([]byte(`{"id":1,"first_name":"A","unexpected":{"a":[1,2]}}`), &u); err != nil {
 			t.Fatal(err)
 		}
+
 		if u.ID != 1 {
 			t.Fatalf("user = %+v", u)
 		}

@@ -58,15 +58,19 @@ func TestUpdateJSONRoundTrip(t *testing.T) {
 	}
 
 	var out Update
+
 	if err := json.Unmarshal(data, &out); err != nil {
 		t.Fatal(err)
 	}
+
 	if out.UpdateID != 42 || out.Message == nil {
 		t.Fatalf("round trip lost data: %+v", out)
 	}
+
 	if out.Message.Chat.Type != ChatTypeSupergroup || out.Message.Text != "hi" {
 		t.Fatalf("unexpected message: %+v", out.Message)
 	}
+
 	if len(out.Message.Entities) != 1 || out.Message.Entities[0].Type != EntityBold {
 		t.Fatalf("unexpected entities: %+v", out.Message.Entities)
 	}

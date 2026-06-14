@@ -57,6 +57,7 @@ func main() {
 	if err != nil {
 		log.Fatal("Open storage", zap.Error(err))
 	}
+
 	defer func() { _ = store.Close() }()
 
 	bot, err := botapi.New(os.Getenv("BOT_TOKEN"), botapi.Options{
@@ -68,6 +69,7 @@ func main() {
 	if err != nil {
 		log.Fatal("Create bot", zap.Error(err))
 	}
+
 	bot.Use(botapi.Recover(), botapi.Logging())
 
 	bot.OnCommand("start", "List the rich-message demos", func(c *botapi.Context) error {
@@ -199,6 +201,7 @@ func main() {
 	defer cancel()
 
 	log.Info("Starting rich bot")
+
 	if err := bot.Run(ctx); err != nil {
 		log.Fatal("Run", zap.Error(err))
 	}
@@ -219,14 +222,17 @@ func mediaBlocks() []tg.PageBlockClass {
 				rich.Photo(id, emptyCaption()), rich.Photo(id, emptyCaption())),
 		)
 	}
+
 	if id := envID("AUDIO_ID"); id != 0 {
 		blocks = append(blocks, rich.Audio(id, caption("An audio")))
 	}
+
 	if id := envID("DOCUMENT_ID"); id != 0 {
 		blocks = append(blocks, rich.Paragraph(rich.Concat(
 			rich.Plain("inline image: "), rich.Image(id, 24, 24),
 		)))
 	}
+
 	if id := envID("EMOJI_ID"); id != 0 {
 		blocks = append(blocks, rich.Paragraph(rich.Concat(
 			rich.Plain("custom emoji: "), rich.CustomEmoji(id, "👍"),
@@ -237,6 +243,7 @@ func mediaBlocks() []tg.PageBlockClass {
 	blocks = append(blocks,
 		rich.Map(&tg.InputGeoPoint{Lat: 55.7539, Long: 37.6208}, 15, 600, 400, caption("Red Square")),
 	)
+
 	return blocks
 }
 
@@ -246,7 +253,9 @@ func send(c *botapi.Context, blocks ...tg.PageBlockClass) error {
 	if !ok {
 		return nil
 	}
+
 	_, err := c.Bot.SendRichMessage(c, chat, rich.New(blocks...).Input())
+
 	return err
 }
 

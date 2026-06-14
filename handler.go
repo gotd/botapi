@@ -39,6 +39,7 @@ func (r route) matches(u *Update) bool {
 			return false
 		}
 	}
+
 	return true
 }
 
@@ -55,6 +56,7 @@ type router struct {
 func (b *Bot) Use(mws ...Middleware) {
 	b.router.mu.Lock()
 	defer b.router.mu.Unlock()
+
 	b.router.mws = append(b.router.mws, mws...)
 }
 
@@ -68,6 +70,7 @@ func (b *Bot) on(handler Handler, predicates ...Predicate) {
 func (b *Bot) onWith(handler Handler, mws []Middleware, predicates []Predicate) {
 	b.router.mu.Lock()
 	defer b.router.mu.Unlock()
+
 	b.router.routes = append(b.router.routes, route{handler: handler, predicates: predicates, mws: mws})
 }
 
@@ -80,6 +83,7 @@ func (b *Bot) route(ctx context.Context, u *Update) {
 	}
 
 	b.router.mu.RLock()
+
 	routes := b.router.routes
 	mws := b.router.mws
 	b.router.mu.RUnlock()
@@ -88,17 +92,21 @@ func (b *Bot) route(ctx context.Context, u *Update) {
 		if !r.matches(u) {
 			continue
 		}
+
 		h := r.handler
 		for i := len(r.mws) - 1; i >= 0; i-- {
 			h = r.mws[i](h)
 		}
+
 		for i := len(mws) - 1; i >= 0; i-- {
 			h = mws[i](h)
 		}
+
 		c := &Context{Context: ctx, Bot: b, Update: u}
 		if err := h(c); err != nil {
 			b.logger().Error(ctx, "Handler error", log.Error(err))
 		}
+
 		return
 	}
 }

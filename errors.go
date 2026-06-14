@@ -42,6 +42,7 @@ func (e *Error) Error() string {
 	if e.Description == "" {
 		return fmt.Sprintf("botapi: error %d", e.Code)
 	}
+
 	return fmt.Sprintf("botapi: %d: %s", e.Code, e.Description)
 }
 
@@ -58,9 +59,11 @@ var ErrNotImplemented = errors.New("botapi: not implemented")
 // underlying github.com/gotd/td/tgerr flood-wait representation.
 func AsFloodWait(err error) (retryAfter time.Duration, ok bool) {
 	var apiErr *Error
+
 	if errors.As(err, &apiErr) && apiErr.Parameters != nil && apiErr.Parameters.RetryAfter > 0 {
 		return time.Duration(apiErr.Parameters.RetryAfter) * time.Second, true
 	}
+
 	return tgerr.AsFloodWait(err)
 }
 
@@ -68,9 +71,11 @@ func AsFloodWait(err error) (retryAfter time.Duration, ok bool) {
 // to a supergroup and, if so, the new supergroup chat id the caller should use.
 func AsChatMigrated(err error) (newChatID int64, ok bool) {
 	var apiErr *Error
+
 	if errors.As(err, &apiErr) && apiErr.Parameters != nil && apiErr.Parameters.MigrateToChatID != 0 {
 		return apiErr.Parameters.MigrateToChatID, true
 	}
+
 	return 0, false
 }
 
@@ -78,8 +83,10 @@ func AsChatMigrated(err error) (newChatID int64, ok bool) {
 // *Error. It is a convenience over errors.As for the common branch-on-code case.
 func Code(err error) int {
 	var apiErr *Error
+
 	if errors.As(err, &apiErr) {
 		return apiErr.Code
 	}
+
 	return 0
 }

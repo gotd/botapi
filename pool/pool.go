@@ -56,7 +56,9 @@ func New(opt Options) (*Pool, error) {
 	if opt.AppID == 0 || opt.AppHash == "" {
 		return nil, errors.New("AppID and AppHash are required")
 	}
+
 	opt.Logger = log.OrNop(opt.Logger)
+
 	return &Pool{
 		opt:  opt,
 		log:  opt.Logger,
@@ -84,7 +86,9 @@ func (p *Pool) Do(ctx context.Context, token string, fn func(*botapi.Bot) error)
 		if m.startErr != nil {
 			return m.startErr
 		}
+
 		m.use()
+
 		return fn(m.bot)
 	case <-ctx.Done():
 		return ctx.Err()
@@ -105,7 +109,9 @@ func (p *Pool) acquire(tok Token) (*managed, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	p.bots[tok.String()] = m
+
 	return m, nil
 }
 
@@ -117,12 +123,15 @@ func (p *Pool) start(tok Token) (*managed, error) {
 		store botapi.Storage
 		db    *bbolt.DB
 	)
+
 	if p.opt.StateDir != "" {
 		path := filepath.Join(p.opt.StateDir, fmt.Sprintf("%d.bbolt", tok.ID))
+
 		opened, err := bbolt.Open(path, 0o666, bbolt.DefaultOptions)
 		if err != nil {
 			return nil, errors.Wrap(err, "open state db")
 		}
+
 		db = opened
 		store = storage.NewBBoltStorage(opened)
 	}
@@ -140,11 +149,14 @@ func (p *Pool) start(tok Token) (*managed, error) {
 		if db != nil {
 			_ = db.Close()
 		}
+
 		return nil, err
 	}
+
 	m.bot = bot
 
 	ctx, cancel := context.WithCancel(context.Background())
+
 	m.cancel = cancel
 
 	go func() {
@@ -158,7 +170,9 @@ func (p *Pool) start(tok Token) (*managed, error) {
 			// Unblock any startup waiter on a clean shutdown too.
 			m.markReady(errStopped)
 		}
+
 		p.drop(tok.String(), m)
+
 		if m.db != nil {
 			_ = m.db.Close()
 		}
@@ -174,9 +188,11 @@ var errStopped = errors.New("bot stopped before becoming ready")
 // kills it.
 func (p *Pool) drop(token string, m *managed) {
 	p.mu.Lock()
+
 	if cur, ok := p.bots[token]; ok && cur == m {
 		delete(p.bots, token)
 	}
+
 	p.mu.Unlock()
 	m.kill()
 }
@@ -184,11 +200,14 @@ func (p *Pool) drop(token string, m *managed) {
 // Kill stops and removes the bot for the token, if present.
 func (p *Pool) Kill(token string) {
 	p.mu.Lock()
+
 	m, ok := p.bots[token]
 	if ok {
 		delete(p.bots, token)
 	}
+
 	p.mu.Unlock()
+
 	if ok {
 		m.kill()
 	}
@@ -197,9 +216,12 @@ func (p *Pool) Kill(token string) {
 // Close stops every bot in the pool.
 func (p *Pool) Close() {
 	p.mu.Lock()
+
 	bots := p.bots
+
 	p.bots = map[string]*managed{}
 	p.mu.Unlock()
+
 	for _, m := range bots {
 		m.kill()
 	}
@@ -210,10 +232,14 @@ func (p *Pool) Close() {
 func (p *Pool) RunGC(ctx context.Context) {
 	if p.opt.IdleTimeout <= 0 {
 		<-ctx.Done()
+
 		return
 	}
+
 	ticker := time.NewTicker(time.Second)
+
 	defer ticker.Stop()
+
 	for {
 		select {
 		case <-ctx.Done():
@@ -227,14 +253,19 @@ func (p *Pool) RunGC(ctx context.Context) {
 // reap kills every bot whose last use is before the deadline.
 func (p *Pool) reap(deadline time.Time) {
 	p.mu.Lock()
+
 	var dead []*managed
+
 	for token, m := range p.bots {
 		if m.idleBefore(deadline) {
 			dead = append(dead, m)
+
 			delete(p.bots, token)
 		}
 	}
+
 	p.mu.Unlock()
+
 	for _, m := range dead {
 		m.kill()
 	}
@@ -267,6 +298,7 @@ func (m *managed) markReady(err error) {
 
 func (m *managed) use() {
 	m.mu.Lock()
+
 	m.lastUsed = time.Now()
 	m.mu.Unlock()
 }
@@ -274,6 +306,7 @@ func (m *managed) use() {
 func (m *managed) idleBefore(deadline time.Time) bool {
 	m.mu.Lock()
 	defer m.mu.Unlock()
+
 	return !m.lastUsed.IsZero() && m.lastUsed.Before(deadline)
 }
 

@@ -216,6 +216,7 @@ func resultMarkup(markup *InlineKeyboardMarkup) (tg.ReplyMarkupClass, error) {
 	if markup == nil {
 		return nil, nil
 	}
+
 	return replyMarkupToTg(markup)
 }
 
@@ -230,6 +231,7 @@ func (b *Bot) sendMessage(
 	if content != nil {
 		return content.toTg(ctx, b, markup)
 	}
+
 	msg := &tg.InputBotInlineMessageMediaAuto{Message: capt.Caption}
 	if len(capt.CaptionEntities) > 0 {
 		msg.Entities = entitiesToTg(capt.CaptionEntities)
@@ -238,12 +240,15 @@ func (b *Bot) sendMessage(
 		if err != nil {
 			return nil, err
 		}
+
 		msg.Message = text
 		msg.Entities = entities
 	}
+
 	if markup != nil {
 		msg.SetReplyMarkup(markup)
 	}
+
 	return msg, nil
 }
 
@@ -251,14 +256,17 @@ func (r *InlineQueryResultArticle) toTg(ctx context.Context, b *Bot) (tg.InputBo
 	if r.InputMessageContent == nil {
 		return nil, &Error{Code: 400, Description: "Bad Request: article result requires input_message_content"}
 	}
+
 	markup, err := resultMarkup(r.ReplyMarkup)
 	if err != nil {
 		return nil, err
 	}
+
 	send, err := r.InputMessageContent.toTg(ctx, b, markup)
 	if err != nil {
 		return nil, err
 	}
+
 	res := &tg.InputBotInlineResult{
 		ID:          r.ID,
 		Type:        "article",
@@ -269,9 +277,11 @@ func (r *InlineQueryResultArticle) toTg(ctx context.Context, b *Bot) (tg.InputBo
 	if r.URL != "" {
 		res.SetURL(r.URL)
 	}
+
 	if r.ThumbnailURL != "" {
 		res.SetThumb(tg.InputWebDocument{URL: r.ThumbnailURL, MimeType: mimeImageJPEG})
 	}
+
 	return res, nil
 }
 
@@ -288,10 +298,12 @@ func (b *Bot) webResult(
 	if err != nil {
 		return nil, err
 	}
+
 	send, err := b.sendMessage(ctx, content, capt, mkp)
 	if err != nil {
 		return nil, err
 	}
+
 	res := &tg.InputBotInlineResult{
 		ID:          id,
 		Type:        typ,
@@ -299,6 +311,7 @@ func (b *Bot) webResult(
 		Description: description,
 		SendMessage: send,
 	}
+
 	if contentURL != "" {
 		doc := tg.InputWebDocument{URL: contentURL, MimeType: mimeType}
 		if width > 0 || height > 0 {
@@ -306,11 +319,14 @@ func (b *Bot) webResult(
 				&tg.DocumentAttributeImageSize{W: width, H: height},
 			}
 		}
+
 		res.SetContent(doc)
 	}
+
 	if thumbURL != "" {
 		res.SetThumb(tg.InputWebDocument{URL: thumbURL, MimeType: mimeImageJPEG})
 	}
+
 	return res, nil
 }
 
@@ -344,14 +360,17 @@ func (b *Bot) cachedDocument(
 	if err != nil {
 		return nil, err
 	}
+
 	mkp, err := resultMarkup(markup)
 	if err != nil {
 		return nil, err
 	}
+
 	send, err := b.sendMessage(ctx, content, capt, mkp)
 	if err != nil {
 		return nil, err
 	}
+
 	return &tg.InputBotInlineResultDocument{
 		ID:          id,
 		Type:        typ,
@@ -367,14 +386,17 @@ func (r *InlineQueryResultCachedPhoto) toTg(ctx context.Context, b *Bot) (tg.Inp
 	if err != nil {
 		return nil, err
 	}
+
 	mkp, err := resultMarkup(r.ReplyMarkup)
 	if err != nil {
 		return nil, err
 	}
+
 	send, err := b.sendMessage(ctx, r.InputMessageContent, r.captioned, mkp)
 	if err != nil {
 		return nil, err
 	}
+
 	return &tg.InputBotInlineResultPhoto{
 		ID:          r.ID,
 		Type:        "photo",
@@ -418,7 +440,9 @@ func (r *InlineQueryResultContact) toTg(ctx context.Context, b *Bot) (tg.InputBo
 	if err != nil {
 		return nil, err
 	}
+
 	var send tg.InputBotInlineMessageClass
+
 	if r.InputMessageContent != nil {
 		if send, err = r.InputMessageContent.toTg(ctx, b, mkp); err != nil {
 			return nil, err
@@ -433,8 +457,10 @@ func (r *InlineQueryResultContact) toTg(ctx context.Context, b *Bot) (tg.InputBo
 		if mkp != nil {
 			msg.SetReplyMarkup(mkp)
 		}
+
 		send = msg
 	}
+
 	res := &tg.InputBotInlineResult{
 		ID:          r.ID,
 		Type:        "contact",
@@ -445,6 +471,7 @@ func (r *InlineQueryResultContact) toTg(ctx context.Context, b *Bot) (tg.InputBo
 	if r.ThumbnailURL != "" {
 		res.SetThumb(tg.InputWebDocument{URL: r.ThumbnailURL, MimeType: mimeImageJPEG})
 	}
+
 	return res, nil
 }
 
@@ -453,7 +480,9 @@ func (r *InlineQueryResultLocation) toTg(ctx context.Context, b *Bot) (tg.InputB
 	if err != nil {
 		return nil, err
 	}
+
 	var send tg.InputBotInlineMessageClass
+
 	if r.InputMessageContent != nil {
 		if send, err = r.InputMessageContent.toTg(ctx, b, mkp); err != nil {
 			return nil, err
@@ -472,8 +501,10 @@ func (r *InlineQueryResultLocation) toTg(ctx context.Context, b *Bot) (tg.InputB
 		if mkp != nil {
 			msg.SetReplyMarkup(mkp)
 		}
+
 		send = msg
 	}
+
 	res := &tg.InputBotInlineResult{
 		ID:          r.ID,
 		Type:        "geo",
@@ -483,6 +514,7 @@ func (r *InlineQueryResultLocation) toTg(ctx context.Context, b *Bot) (tg.InputB
 	if r.ThumbnailURL != "" {
 		res.SetThumb(tg.InputWebDocument{URL: r.ThumbnailURL, MimeType: mimeImageJPEG})
 	}
+
 	return res, nil
 }
 
@@ -491,7 +523,9 @@ func (r *InlineQueryResultVenue) toTg(ctx context.Context, b *Bot) (tg.InputBotI
 	if err != nil {
 		return nil, err
 	}
+
 	var send tg.InputBotInlineMessageClass
+
 	if r.InputMessageContent != nil {
 		if send, err = r.InputMessageContent.toTg(ctx, b, mkp); err != nil {
 			return nil, err
@@ -511,6 +545,7 @@ func (r *InlineQueryResultVenue) toTg(ctx context.Context, b *Bot) (tg.InputBotI
 			return nil, err
 		}
 	}
+
 	res := &tg.InputBotInlineResult{
 		ID:          r.ID,
 		Type:        "venue",
@@ -521,5 +556,6 @@ func (r *InlineQueryResultVenue) toTg(ctx context.Context, b *Bot) (tg.InputBotI
 	if r.ThumbnailURL != "" {
 		res.SetThumb(tg.InputWebDocument{URL: r.ThumbnailURL, MimeType: mimeImageJPEG})
 	}
+
 	return res, nil
 }

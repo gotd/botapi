@@ -20,12 +20,15 @@ func TestEntitiesRoundTrip(t *testing.T) {
 	if len(tgEnts) != len(in) {
 		t.Fatalf("to-tg length: got %d want %d", len(tgEnts), len(in))
 	}
+
 	if bq, ok := tgEnts[3].(*tg.MessageEntityBlockquote); !ok || !bq.Collapsed {
 		t.Fatalf("expandable blockquote should set Collapsed: %#v", tgEnts[3])
 	}
+
 	if mn, ok := tgEnts[4].(*tg.MessageEntityMentionName); !ok || mn.UserID != 777 {
 		t.Fatalf("text mention user id lost: %#v", tgEnts[4])
 	}
+
 	if ce, ok := tgEnts[5].(*tg.MessageEntityCustomEmoji); !ok || ce.DocumentID != 12345 {
 		t.Fatalf("custom emoji doc id lost: %#v", tgEnts[5])
 	}
@@ -34,14 +37,17 @@ func TestEntitiesRoundTrip(t *testing.T) {
 	if len(out) != len(in) {
 		t.Fatalf("from-tg length: got %d want %d", len(out), len(in))
 	}
+
 	for i := range in {
 		if out[i].Type != in[i].Type || out[i].Offset != in[i].Offset || out[i].Length != in[i].Length {
 			t.Fatalf("entity %d mismatch: got %+v want %+v", i, out[i], in[i])
 		}
 	}
+
 	if out[1].URL != "https://example.com" || out[2].Language != "go" {
 		t.Fatalf("attribute fields lost: %+v %+v", out[1], out[2])
 	}
+
 	if out[4].User == nil || out[4].User.ID != 777 {
 		t.Fatalf("text mention user lost: %+v", out[4])
 	}
@@ -76,29 +82,37 @@ func TestEntitiesAllTypes(t *testing.T) {
 		{Type: EntityCustomEmoji, Offset: 18, Length: 1, CustomEmojiID: "555"},
 	}
 	tgEntities := entitiesToTg(entities)
+
 	if len(tgEntities) != len(entities) {
 		t.Fatalf("toTg produced %d, want %d", len(tgEntities), len(entities))
 	}
+
 	back := entitiesFromTg(tgEntities)
 	if len(back) != len(entities) {
 		t.Fatalf("fromTg produced %d, want %d", len(back), len(entities))
 	}
+
 	byType := map[MessageEntityType]MessageEntity{}
 	for _, e := range back {
 		byType[e.Type] = e
 	}
+
 	if byType[EntityPre].Language != "go" {
 		t.Fatalf("pre lang = %q", byType[EntityPre].Language)
 	}
+
 	if byType[EntityTextLink].URL != "https://e" {
 		t.Fatalf("text link url = %q", byType[EntityTextLink].URL)
 	}
+
 	if byType[EntityTextMention].User == nil || byType[EntityTextMention].User.ID != 42 {
 		t.Fatalf("text mention user = %#v", byType[EntityTextMention].User)
 	}
+
 	if byType[EntityCustomEmoji].CustomEmojiID != "555" {
 		t.Fatalf("custom emoji id = %q", byType[EntityCustomEmoji].CustomEmojiID)
 	}
+
 	if _, ok := byType[EntityExpandableBlockquote]; !ok {
 		t.Fatal("expandable blockquote lost")
 	}

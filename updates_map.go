@@ -14,6 +14,7 @@ func (b *Bot) messageFromTg(ctx context.Context, msg tg.MessageClass) (*Message,
 	if !ok {
 		return nil, nil
 	}
+
 	return b.convertMessage(ctx, m)
 }
 
@@ -32,6 +33,7 @@ func callbackQueryFromTg(e tg.Entities, u *tg.UpdateBotCallbackQuery) *CallbackQ
 	} else {
 		cq.From = User{ID: u.UserID}
 	}
+
 	return cq
 }
 
@@ -47,6 +49,7 @@ func inlineQueryFromTg(e tg.Entities, u *tg.UpdateBotInlineQuery) *InlineQuery {
 	} else {
 		iq.From = User{ID: u.UserID}
 	}
+
 	return iq
 }
 
@@ -62,6 +65,7 @@ func shippingQueryFromTg(e tg.Entities, u *tg.UpdateBotShippingQuery) *ShippingQ
 	} else {
 		q.From = User{ID: u.UserID}
 	}
+
 	return q
 }
 
@@ -80,9 +84,11 @@ func preCheckoutQueryFromTg(e tg.Entities, u *tg.UpdateBotPrecheckoutQuery) *Pre
 	} else {
 		q.From = User{ID: u.UserID}
 	}
+
 	if info, ok := u.GetInfo(); ok {
 		q.OrderInfo = orderInfoFromTg(info)
 	}
+
 	return q
 }
 
@@ -107,7 +113,9 @@ func orderInfoFromTg(info tg.PaymentRequestedInfo) *OrderInfo {
 	}
 	if addr, ok := info.GetShippingAddress(); ok {
 		a := shippingAddressFromTg(addr)
+
 		out.ShippingAddress = &a
 	}
+
 	return out
 }

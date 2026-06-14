@@ -23,6 +23,7 @@ import (
 // The usual SendOptions (reply, silent, protect, reply markup) apply.
 func (b *Bot) SendRichMessage(ctx context.Context, chat ChatID, msg tg.InputRichMessageClass, opts ...SendOption) (*Message, error) {
 	var cfg sendConfig
+
 	for _, o := range opts {
 		o(&cfg)
 	}
@@ -33,12 +34,14 @@ func (b *Bot) SendRichMessage(ctx context.Context, chat ChatID, msg tg.InputRich
 	}
 
 	builder := &b.sender.To(peer).Builder
+
 	builder, err = b.applySendConfig(builder, cfg)
 	if err != nil {
 		return nil, err
 	}
 
 	resp, err := builder.RichMessage(ctx, msg)
+
 	return b.sentMessage(ctx, peer, resp, err)
 }
 

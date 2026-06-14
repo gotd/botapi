@@ -36,7 +36,9 @@ func TestRunEndToEnd(t *testing.T) {
 	// bot to address the user with. Keep the session so we can read the message
 	// back from the recipient's side afterwards.
 	recipientStorage := &session.StorageMemory{}
+
 	var recipient *tg.User
+
 	require.NoError(t, srv.Run(ctx, recipientStorage, func(api *tg.Client) error {
 		recipient = signUpUser(ctx, t, api, "+1234500000", "Recipient")
 		return nil
@@ -59,14 +61,19 @@ func TestRunEndToEnd(t *testing.T) {
 	require.NoError(t, err)
 
 	var sent *Message
+
 	runCtx, runCancel := context.WithCancel(ctx)
+
 	defer runCancel()
+
 	bot.onStart = func(ctx context.Context) {
 		m, err := bot.SendMessage(ctx, userRef(recipient.ID, recipient.AccessHash), "hello from OnStart")
 		if err != nil {
 			t.Errorf("send in OnStart: %v", err)
 		}
+
 		sent = m
+
 		runCancel()
 	}
 
@@ -90,9 +97,11 @@ func TestRunEndToEnd(t *testing.T) {
 			Limit: 1,
 		})
 		require.NoError(t, err)
+
 		msgs := hist.(*tg.MessagesMessages).Messages
 		require.NotEmpty(t, msgs)
 		require.Equal(t, "hello from OnStart", msgs[0].(*tg.Message).Message)
+
 		return nil
 	}))
 }
@@ -101,6 +110,7 @@ func TestRunEndToEnd(t *testing.T) {
 // self.
 func signUpUser(ctx context.Context, t *testing.T, api *tg.Client, phone, first string) *tg.User {
 	t.Helper()
+
 	sent, err := api.AuthSendCode(ctx, &tg.AuthSendCodeRequest{
 		PhoneNumber: phone,
 		APIID:       telegram.TestAppID,
@@ -108,6 +118,7 @@ func signUpUser(ctx context.Context, t *testing.T, api *tg.Client, phone, first 
 		Settings:    tg.CodeSettings{},
 	})
 	require.NoError(t, err)
+
 	code := sent.(*tg.AuthSentCode)
 	authResp, err := api.AuthSignUp(ctx, &tg.AuthSignUpRequest{
 		PhoneNumber:   phone,
@@ -115,5 +126,6 @@ func signUpUser(ctx context.Context, t *testing.T, api *tg.Client, phone, first 
 		FirstName:     first,
 	})
 	require.NoError(t, err)
+
 	return authResp.(*tg.AuthAuthorization).User.(*tg.User)
 }

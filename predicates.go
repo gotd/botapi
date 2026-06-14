@@ -29,9 +29,11 @@ func (u *Update) Text() string {
 	if m := u.EffectiveMessage(); m != nil {
 		return m.Text
 	}
+
 	if u.CallbackQuery != nil {
 		return u.CallbackQuery.Data
 	}
+
 	return ""
 }
 
@@ -42,15 +44,18 @@ func commandName(text string) (name, target string, ok bool) {
 	if !strings.HasPrefix(text, "/") {
 		return "", "", false
 	}
+
 	field := text
 	if i := strings.IndexAny(text, " \t\n"); i >= 0 {
 		field = text[:i]
 	}
+
 	field = field[1:] // drop leading slash
 	if at := strings.IndexByte(field, '@'); at >= 0 {
 		target = field[at+1:]
 		field = field[:at]
 	}
+
 	return field, target, field != ""
 }
 
@@ -63,15 +68,18 @@ func commandName(text string) (name, target string, ok bool) {
 // own — so the bot ignores commands aimed at other bots.
 func Command(name string) Predicate {
 	name = strings.TrimPrefix(name, "/")
+
 	return func(u *Update) bool {
 		m := u.EffectiveMessage()
 		if m == nil {
 			return false
 		}
+
 		got, target, ok := commandName(m.Text)
 		if !ok || got != name {
 			return false
 		}
+
 		return target == "" || strings.EqualFold(target, u.botUsername)
 	}
 }
@@ -104,6 +112,7 @@ func TextEquals(s string) Predicate {
 // pattern does not compile (a programming error caught at registration).
 func Regex(pattern string) Predicate {
 	re := regexp.MustCompile(pattern)
+
 	return func(u *Update) bool {
 		m := u.EffectiveMessage()
 		return m != nil && re.MatchString(m.Text)
@@ -145,6 +154,7 @@ func Or(predicates ...Predicate) Predicate {
 				return true
 			}
 		}
+
 		return false
 	}
 }

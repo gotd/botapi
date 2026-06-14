@@ -21,16 +21,19 @@ func (b *Bot) resolvePeer(ctx context.Context, chat ChatID) (peers.Peer, error) 
 		if err != nil {
 			return nil, asAPIError(err)
 		}
+
 		return p, nil
 	case ChatIDUsername:
 		name := strings.TrimPrefix(string(c), "@")
 		if name == "" {
 			return nil, &Error{Code: 400, Description: "Bad Request: chat_id is empty"}
 		}
+
 		p, err := b.peers.ResolveDomain(ctx, name)
 		if err != nil {
 			return nil, asAPIError(err)
 		}
+
 		return p, nil
 	case chatIDRef:
 		// A PeerRef is addressed directly for sending (resolveInputPeer); it
@@ -48,10 +51,12 @@ func (b *Bot) resolveInputPeer(ctx context.Context, chat ChatID) (tg.InputPeerCl
 	if ref, ok := chat.(chatIDRef); ok {
 		return ref.ref.inputPeer()
 	}
+
 	p, err := b.resolvePeer(ctx, chat)
 	if err != nil {
 		return nil, err
 	}
+
 	return p.InputPeer(), nil
 }
 
@@ -62,5 +67,6 @@ func (b *Bot) resolveInputUser(ctx context.Context, userID int64) (tg.InputUserC
 	if err != nil {
 		return nil, asAPIError(err)
 	}
+
 	return u.InputUser(), nil
 }

@@ -42,6 +42,7 @@ func (b *Bot) PeerRef(ctx context.Context, chat ChatID) (PeerRef, error) {
 	if err != nil {
 		return PeerRef{}, err
 	}
+
 	return peerRefFromInputPeer(peer)
 }
 
@@ -76,6 +77,7 @@ func (r PeerRef) inputPeer() (tg.InputPeerClass, error) {
 // tdlibID returns the TDLib (Bot API) chat id for the reference.
 func (r PeerRef) tdlibID() int64 {
 	var id constant.TDLibPeerID
+
 	switch r.Kind {
 	case peerKindUser:
 		id.User(r.ID)
@@ -84,6 +86,7 @@ func (r PeerRef) tdlibID() int64 {
 	case peerKindChannel:
 		id.Channel(r.ID)
 	}
+
 	return int64(id)
 }
 

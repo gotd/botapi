@@ -10,6 +10,7 @@ import (
 func TestSendInvoice(t *testing.T) {
 	inv := newMockInvoker()
 	inv.reply(tg.MessagesSendMediaRequestTypeID, sendMediaOK())
+
 	b := newMockBot(inv)
 
 	params := InvoiceParams{
@@ -22,8 +23,11 @@ func TestSendInvoice(t *testing.T) {
 	if _, err := b.SendInvoice(context.Background(), userRef(10, 20), params); err != nil {
 		t.Fatalf("SendInvoice: %v", err)
 	}
+
 	var req tg.MessagesSendMediaRequest
+
 	inv.decode(t, tg.MessagesSendMediaRequestTypeID, &req)
+
 	if _, ok := req.Media.(*tg.InputMediaInvoice); !ok {
 		t.Fatalf("media = %#v", req.Media)
 	}

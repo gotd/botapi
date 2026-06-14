@@ -28,7 +28,9 @@ func pollFromTg(poll *tg.Poll, results *tg.PollResults) *Poll {
 		voters  int
 		correct bool
 	}
+
 	byOption := make(map[string]stat, len(results.Results))
+
 	for _, r := range results.Results {
 		byOption[string(r.Option)] = stat{voters: r.Voters, correct: r.Correct}
 	}
@@ -39,8 +41,11 @@ func pollFromTg(poll *tg.Poll, results *tg.PollResults) *Poll {
 		if !ok {
 			continue
 		}
+
 		s := byOption[string(ans.Option)]
+
 		out.Options = append(out.Options, PollOption{Text: ans.Text.Text, VoterCount: s.voters})
+
 		if s.correct {
 			out.CorrectOptionID = i
 		}
@@ -50,7 +55,9 @@ func pollFromTg(poll *tg.Poll, results *tg.PollResults) *Poll {
 	if s, ok := results.GetSolution(); ok {
 		out.Explanation = s
 	}
+
 	out.ExplanationEntities = entitiesFromTg(results.SolutionEntities)
+
 	return out
 }
 
@@ -68,23 +75,28 @@ func (b *Bot) StopPoll(ctx context.Context, chat ChatID, messageID int, markup R
 	}
 
 	closed := *poll
+
 	closed.Closed = true
+
 	req := &tg.MessagesEditMessageRequest{
 		Peer: p.InputPeer(),
 		ID:   messageID,
 	}
 	req.SetMedia(&tg.InputMediaPoll{Poll: closed})
+
 	if markup != nil {
 		mkp, err := replyMarkupToTg(markup)
 		if err != nil {
 			return nil, err
 		}
+
 		req.SetReplyMarkup(mkp)
 	}
 
 	if _, err := b.raw.MessagesEditMessage(ctx, req); err != nil {
 		return nil, asAPIError(err)
 	}
+
 	// Closing does not change the tally, so the fetched results are final.
 	return pollFromTg(&closed, results), nil
 }
@@ -98,6 +110,7 @@ func (b *Bot) fetchPoll(ctx context.Context, p peers.Peer, messageID int) (*tg.P
 		res tg.MessagesMessagesClass
 		err error
 	)
+
 	if ch, ok := p.(peers.Channel); ok {
 		res, err = b.raw.ChannelsGetMessages(ctx, &tg.ChannelsGetMessagesRequest{
 			Channel: ch.InputChannel(),
@@ -106,6 +119,7 @@ func (b *Bot) fetchPoll(ctx context.Context, p peers.Peer, messageID int) (*tg.P
 	} else {
 		res, err = b.raw.MessagesGetMessages(ctx, ids)
 	}
+
 	if err != nil {
 		return nil, nil, asAPIError(err)
 	}
@@ -114,16 +128,20 @@ func (b *Bot) fetchPoll(ctx context.Context, p peers.Peer, messageID int) (*tg.P
 	if !ok {
 		return nil, nil, &Error{Code: 400, Description: "Bad Request: message to stop not found"}
 	}
+
 	for _, m := range msgs.GetMessages() {
 		msg, ok := m.(*tg.Message)
 		if !ok || msg.ID != messageID {
 			continue
 		}
+
 		media, ok := msg.Media.(*tg.MessageMediaPoll)
 		if !ok {
 			return nil, nil, &Error{Code: 400, Description: "Bad Request: message is not a poll"}
 		}
+
 		return &media.Poll, &media.Results, nil
 	}
+
 	return nil, nil, &Error{Code: 400, Description: "Bad Request: message to stop not found"}
 }

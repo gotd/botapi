@@ -10,6 +10,7 @@ func chatMemberFromParticipant(p tg.ChannelParticipantClass, users map[int64]*tg
 		if u, ok := users[id]; ok {
 			return userFromTgUser(u)
 		}
+
 		return User{ID: id}
 	}
 
@@ -23,6 +24,7 @@ func chatMemberFromParticipant(p tg.ChannelParticipantClass, users map[int64]*tg
 		}
 	case *tg.ChannelParticipantAdmin:
 		r := v.AdminRights
+
 		return &ChatMemberAdministrator{
 			Status:              StatusAdministrator,
 			User:                user(v.UserID),
@@ -49,6 +51,7 @@ func chatMemberFromParticipant(p tg.ChannelParticipantClass, users map[int64]*tg
 		if v.Left {
 			return &ChatMemberLeft{Status: StatusLeft, User: user(uid)}
 		}
+
 		br := v.BannedRights
 		// A member who can still view messages is "restricted"; one who cannot is
 		// fully banned ("kicked").
@@ -59,6 +62,7 @@ func chatMemberFromParticipant(p tg.ChannelParticipantClass, users map[int64]*tg
 				UntilDate: br.UntilDate,
 			}
 		}
+
 		return &ChatMemberRestricted{
 			Status:                StatusRestricted,
 			User:                  user(uid),
@@ -85,6 +89,7 @@ func peerUserID(p tg.PeerClass) int64 {
 	if u, ok := p.(*tg.PeerUser); ok {
 		return u.UserID
 	}
+
 	return 0
 }
 
@@ -96,5 +101,6 @@ func usersByID(users []tg.UserClass) map[int64]*tg.User {
 			m[user.ID] = user
 		}
 	}
+
 	return m
 }

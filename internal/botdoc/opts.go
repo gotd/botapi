@@ -59,6 +59,7 @@ func createMatcher(s []string, fn func(a, b string) bool) func(string) bool {
 				return true
 			}
 		}
+
 		return false
 	}
 }

@@ -11,6 +11,7 @@ import (
 // upload.
 func (b *Bot) EditMessageMedia(ctx context.Context, chat ChatID, messageID int, media InputMedia, opts ...SendOption) (*Message, error) {
 	var cfg sendConfig
+
 	for _, o := range opts {
 		o(&cfg)
 	}
@@ -32,21 +33,26 @@ func (b *Bot) EditMessageMedia(ctx context.Context, chat ChatID, messageID int, 
 	if err != nil {
 		return nil, err
 	}
+
 	if msg != "" {
 		req.Message = msg
 	}
+
 	if len(entities) > 0 {
 		req.Entities = entities
 	}
+
 	if cfg.markup != nil {
 		mkp, err := replyMarkupToTg(cfg.markup)
 		if err != nil {
 			return nil, err
 		}
+
 		req.SetReplyMarkup(mkp)
 	}
 
 	resp, err := b.raw.MessagesEditMessage(ctx, req)
+
 	return b.sentMessage(ctx, peer, resp, err)
 }
 
@@ -64,9 +70,11 @@ func (b *Bot) caption(ctx context.Context, c captionData) (string, []tg.MessageE
 	if len(c.entities) > 0 {
 		return c.text, entitiesToTg(c.entities), nil
 	}
+
 	if c.parseMode != ParseModeNone && c.text != "" {
 		return b.styledMessage(ctx, c.text, c.parseMode)
 	}
+
 	return c.text, nil, nil
 }
 
@@ -104,6 +112,7 @@ func (b *Bot) photoInputMedia(ctx context.Context, file InputFile) (tg.InputMedi
 		if err != nil {
 			return nil, err
 		}
+
 		return &tg.InputMediaPhoto{ID: photo}, nil
 	case InputFileURL:
 		return &tg.InputMediaPhotoExternal{URL: string(f)}, nil
@@ -112,6 +121,7 @@ func (b *Bot) photoInputMedia(ctx context.Context, file InputFile) (tg.InputMedi
 		if err != nil {
 			return nil, err
 		}
+
 		return &tg.InputMediaUploadedPhoto{File: uploaded}, nil
 	default:
 		return nil, &Error{Code: 400, Description: descInvalidFile}
@@ -128,6 +138,7 @@ func (b *Bot) documentInputMedia(ctx context.Context, file InputFile, mimeType s
 		if err != nil {
 			return nil, err
 		}
+
 		return &tg.InputMediaDocument{ID: doc}, nil
 	case InputFileURL:
 		return &tg.InputMediaDocumentExternal{URL: string(f)}, nil
@@ -136,10 +147,12 @@ func (b *Bot) documentInputMedia(ctx context.Context, file InputFile, mimeType s
 		if err != nil {
 			return nil, err
 		}
+
 		media := &tg.InputMediaUploadedDocument{File: uploaded, MimeType: mimeType}
 		if f.Name != "" {
 			media.Attributes = []tg.DocumentAttributeClass{&tg.DocumentAttributeFilename{FileName: f.Name}}
 		}
+
 		return media, nil
 	default:
 		return nil, &Error{Code: 400, Description: descInvalidFile}

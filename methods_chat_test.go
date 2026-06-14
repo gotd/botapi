@@ -10,13 +10,17 @@ import (
 func TestSetChatTitle(t *testing.T) {
 	inv := newMockInvoker()
 	inv.reply(tg.ChannelsEditTitleRequestTypeID, okUpdates())
+
 	b := newMockBot(inv)
 
 	if err := b.SetChatTitle(context.Background(), tdlibChannel(50), "New Title"); err != nil {
 		t.Fatalf("SetChatTitle: %v", err)
 	}
+
 	var req tg.ChannelsEditTitleRequest
+
 	inv.decode(t, tg.ChannelsEditTitleRequestTypeID, &req)
+
 	if req.Title != "New Title" {
 		t.Fatalf("title = %q", req.Title)
 	}
@@ -25,6 +29,7 @@ func TestSetChatTitle(t *testing.T) {
 func TestSetChatDescription(t *testing.T) {
 	inv := newMockInvoker()
 	inv.reply(tg.MessagesEditChatAboutRequestTypeID, &tg.BoolTrue{})
+
 	b := newMockBot(inv)
 
 	if err := b.SetChatDescription(context.Background(), tdlibChannel(50), "About"); err != nil {
@@ -35,6 +40,7 @@ func TestSetChatDescription(t *testing.T) {
 func TestSetChatPermissions(t *testing.T) {
 	inv := newMockInvoker()
 	inv.reply(tg.MessagesEditChatDefaultBannedRightsRequestTypeID, okUpdates())
+
 	b := newMockBot(inv)
 
 	perms := ChatPermissions{CanSendMessages: true}
@@ -46,13 +52,17 @@ func TestSetChatPermissions(t *testing.T) {
 func TestPinChatMessage(t *testing.T) {
 	inv := newMockInvoker()
 	inv.reply(tg.MessagesUpdatePinnedMessageRequestTypeID, okUpdates())
+
 	b := newMockBot(inv)
 
 	if err := b.PinChatMessage(context.Background(), userRef(10, 20), 7); err != nil {
 		t.Fatalf("PinChatMessage: %v", err)
 	}
+
 	var req tg.MessagesUpdatePinnedMessageRequest
+
 	inv.decode(t, tg.MessagesUpdatePinnedMessageRequestTypeID, &req)
+
 	if req.ID != 7 {
 		t.Fatalf("id = %d", req.ID)
 	}
@@ -61,13 +71,17 @@ func TestPinChatMessage(t *testing.T) {
 func TestUnpinChatMessage(t *testing.T) {
 	inv := newMockInvoker()
 	inv.reply(tg.MessagesUpdatePinnedMessageRequestTypeID, okUpdates())
+
 	b := newMockBot(inv)
 
 	if err := b.UnpinChatMessage(context.Background(), userRef(10, 20), 7); err != nil {
 		t.Fatalf("UnpinChatMessage: %v", err)
 	}
+
 	var req tg.MessagesUpdatePinnedMessageRequest
+
 	inv.decode(t, tg.MessagesUpdatePinnedMessageRequestTypeID, &req)
+
 	if !req.Unpin {
 		t.Fatal("expected Unpin")
 	}
@@ -76,6 +90,7 @@ func TestUnpinChatMessage(t *testing.T) {
 func TestUnpinAllChatMessages(t *testing.T) {
 	inv := newMockInvoker()
 	inv.reply(tg.MessagesUnpinAllMessagesRequestTypeID, &tg.MessagesAffectedHistory{})
+
 	b := newMockBot(inv)
 
 	if err := b.UnpinAllChatMessages(context.Background(), userRef(10, 20)); err != nil {
@@ -86,13 +101,17 @@ func TestUnpinAllChatMessages(t *testing.T) {
 func TestSetChatStickerSet(t *testing.T) {
 	inv := newMockInvoker()
 	inv.reply(tg.ChannelsSetStickersRequestTypeID, &tg.BoolTrue{})
+
 	b := newMockBot(inv)
 
 	if err := b.SetChatStickerSet(context.Background(), tdlibChannel(50), "mypack"); err != nil {
 		t.Fatalf("SetChatStickerSet: %v", err)
 	}
+
 	var req tg.ChannelsSetStickersRequest
+
 	inv.decode(t, tg.ChannelsSetStickersRequestTypeID, &req)
+
 	if s, ok := req.Stickerset.(*tg.InputStickerSetShortName); !ok || s.ShortName != "mypack" {
 		t.Fatalf("stickerset = %#v", req.Stickerset)
 	}
@@ -101,6 +120,7 @@ func TestSetChatStickerSet(t *testing.T) {
 func TestDeleteChatStickerSet(t *testing.T) {
 	inv := newMockInvoker()
 	inv.reply(tg.ChannelsSetStickersRequestTypeID, &tg.BoolTrue{})
+
 	b := newMockBot(inv)
 
 	if err := b.DeleteChatStickerSet(context.Background(), tdlibChannel(50)); err != nil {
@@ -111,6 +131,7 @@ func TestDeleteChatStickerSet(t *testing.T) {
 func TestDeleteChatPhoto(t *testing.T) {
 	inv := newMockInvoker()
 	inv.reply(tg.ChannelsEditPhotoRequestTypeID, okUpdates())
+
 	b := newMockBot(inv)
 
 	if err := b.DeleteChatPhoto(context.Background(), tdlibChannel(50)); err != nil {
@@ -123,12 +144,14 @@ func TestGetStickerSet(t *testing.T) {
 	inv.reply(tg.MessagesGetStickerSetRequestTypeID, &tg.MessagesStickerSet{
 		Set: tg.StickerSet{ShortName: "mypack", Title: "My Pack"},
 	})
+
 	b := newMockBot(inv)
 
 	set, err := b.GetStickerSet(context.Background(), "mypack")
 	if err != nil {
 		t.Fatalf("GetStickerSet: %v", err)
 	}
+
 	if set.Name != "mypack" || set.Title != "My Pack" {
 		t.Fatalf("set = %#v", set)
 	}
@@ -137,6 +160,7 @@ func TestGetStickerSet(t *testing.T) {
 func TestSendGame(t *testing.T) {
 	inv := newMockInvoker()
 	inv.reply(tg.MessagesSendMediaRequestTypeID, messageUpdates(&tg.Message{ID: 1, PeerID: &tg.PeerUser{UserID: 10}}))
+
 	b := newMockBot(inv)
 
 	if _, err := b.SendGame(context.Background(), userRef(10, 20), "mygame"); err != nil {
@@ -147,6 +171,7 @@ func TestSendGame(t *testing.T) {
 func TestAnswerShippingQuery(t *testing.T) {
 	inv := newMockInvoker()
 	inv.reply(tg.MessagesSetBotShippingResultsRequestTypeID, &tg.BoolTrue{})
+
 	b := newMockBot(inv)
 
 	if err := b.AnswerShippingQuery(context.Background(), "12345", true); err != nil {
@@ -157,6 +182,7 @@ func TestAnswerShippingQuery(t *testing.T) {
 func TestAnswerPreCheckoutQuery(t *testing.T) {
 	inv := newMockInvoker()
 	inv.reply(tg.MessagesSetBotPrecheckoutResultsRequestTypeID, &tg.BoolTrue{})
+
 	b := newMockBot(inv)
 
 	if err := b.AnswerPreCheckoutQuery(context.Background(), "12345", true); err != nil {
@@ -167,6 +193,7 @@ func TestAnswerPreCheckoutQuery(t *testing.T) {
 func TestSetPassportDataErrors(t *testing.T) {
 	inv := newMockInvoker()
 	inv.reply(tg.UsersSetSecureValueErrorsRequestTypeID, &tg.BoolTrue{})
+
 	b := newMockBot(inv)
 
 	errs := []PassportElementError{
@@ -190,12 +217,14 @@ func TestStopPoll(t *testing.T) {
 		}},
 	})
 	inv.reply(tg.MessagesEditMessageRequestTypeID, editUpdates(&tg.Message{ID: 7, PeerID: &tg.PeerChannel{ChannelID: 50}}))
+
 	b := newMockBot(inv)
 
 	poll, err := b.StopPoll(context.Background(), tdlibChannel(50), 7, nil)
 	if err != nil {
 		t.Fatalf("StopPoll: %v", err)
 	}
+
 	if !poll.IsClosed {
 		t.Fatal("poll should be closed")
 	}

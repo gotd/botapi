@@ -10,6 +10,7 @@ import (
 // sendMedia applies the send options to a builder and sends a media message.
 func (b *Bot) sendMedia(ctx context.Context, chat ChatID, media message.MediaOption, opts ...SendOption) (*Message, error) {
 	var cfg sendConfig
+
 	for _, o := range opts {
 		o(&cfg)
 	}
@@ -20,12 +21,14 @@ func (b *Bot) sendMedia(ctx context.Context, chat ChatID, media message.MediaOpt
 	}
 
 	builder := &b.sender.To(peer).Builder
+
 	builder, err = b.applySendConfig(builder, cfg)
 	if err != nil {
 		return nil, err
 	}
 
 	resp, err := builder.Media(ctx, media)
+
 	return b.sentMessage(ctx, peer, resp, err)
 }
 
@@ -35,6 +38,7 @@ func (b *Bot) SendDice(ctx context.Context, chat ChatID, emoji DiceEmoji, opts .
 	if emoji == "" {
 		emoji = DiceDie
 	}
+
 	return b.sendMedia(ctx, chat, message.MediaDice(string(emoji)), opts...)
 }
 
@@ -64,10 +68,13 @@ func (b *Bot) SendPoll(ctx context.Context, chat ChatID, question string, option
 	if len(options) < 2 {
 		return nil, &Error{Code: 400, Description: "Bad Request: poll must have at least 2 option"}
 	}
+
 	answers := make([]message.PollAnswerOption, len(options))
 	for i, o := range options {
 		answers[i] = message.PollAnswer(o)
 	}
+
 	poll := message.Poll(question, answers[0], answers[1], answers[2:]...)
+
 	return b.sendMedia(ctx, chat, poll, opts...)
 }

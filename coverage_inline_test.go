@@ -72,10 +72,12 @@ func TestInlineResultWithContentAndMarkup(t *testing.T) {
 
 func TestInputMessageContentToTg(t *testing.T) {
 	b := newMockBot(newMockInvoker())
+
 	mkp, err := replyMarkupToTg(goodInlineMarkup)
 	if err != nil {
 		t.Fatal(err)
 	}
+
 	contents := []InputMessageContent{
 		&InputTextMessageContent{MessageText: "t", Entities: []MessageEntity{{Type: EntityBold, Length: 1}}},
 		&InputLocationMessageContent{Latitude: 1, Longitude: 2, HorizontalAccuracy: 5, Heading: 90, LivePeriod: 60},
@@ -96,10 +98,12 @@ func TestInputMessageContentToTg(t *testing.T) {
 func TestInputTextContentParseMode(t *testing.T) {
 	b := newMockBot(newMockInvoker())
 	c := &InputTextMessageContent{MessageText: "<b>bold</b>", ParseMode: ParseModeHTML, DisableWebPagePreview: true}
+
 	got, err := c.toTg(context.Background(), b, nil)
 	if err != nil {
 		t.Fatal(err)
 	}
+
 	text, ok := got.(*tg.InputBotInlineMessageText)
 	if !ok || text.Message != "bold" || len(text.Entities) != 1 {
 		t.Fatalf("text content = %#v", got)

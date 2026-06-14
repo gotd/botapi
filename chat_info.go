@@ -12,7 +12,9 @@ func (b *Bot) GetChat(ctx context.Context, chat ChatID) (*Chat, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	c := chatFromPeer(p)
+
 	return &c, nil
 }
 
@@ -59,6 +61,7 @@ func (b *Bot) GetUserProfilePhotos(ctx context.Context, userID int64, opts ...Ge
 		photos []tg.PhotoClass
 		total  int
 	)
+
 	switch p := res.(type) {
 	case *tg.PhotosPhotos:
 		photos = p.Photos
@@ -69,10 +72,12 @@ func (b *Bot) GetUserProfilePhotos(ctx context.Context, userID int64, opts ...Ge
 	}
 
 	out := &UserProfilePhotos{TotalCount: total}
+
 	for _, ph := range photos {
 		if photo, ok := ph.(*tg.Photo); ok {
 			out.Photos = append(out.Photos, photoSizesFromTg(photo))
 		}
 	}
+
 	return out, nil
 }

@@ -63,6 +63,7 @@ func (r ChatAdminRights) toTg() tg.ChatAdminRights {
 func (p ChatPermissions) toBannedRights(untilDate int) tg.ChatBannedRights {
 	canSendAnyMedia := p.CanSendAudios || p.CanSendDocuments || p.CanSendPhotos ||
 		p.CanSendVideos || p.CanSendVideoNotes || p.CanSendVoiceNotes
+
 	return tg.ChatBannedRights{
 		SendMessages:    !p.CanSendMessages,
 		SendMedia:       !canSendAnyMedia,

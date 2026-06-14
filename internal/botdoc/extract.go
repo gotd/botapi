@@ -14,6 +14,7 @@ func Extract(doc *goquery.Document) (a API) {
 		d   Definition
 		sec section
 	)
+
 	doc.Find("#dev_page_content").Children().Each(func(i int, s *goquery.Selection) {
 		// Replace emoji images with alts.
 		s.Find(".emoji").Each(func(i int, s *goquery.Selection) {
@@ -25,6 +26,7 @@ func Extract(doc *goquery.Document) (a API) {
 			(a.Version == "" || text > a.Version) {
 			a.Version = text
 		}
+
 		if s.Is("h3") {
 			switch strings.TrimSpace(s.Text()) {
 			case "Available types":
@@ -33,24 +35,30 @@ func Extract(doc *goquery.Document) (a API) {
 				sec = sectionMethods
 			}
 		}
+
 		appendDefinition := func() {
 			if d.Name == "" || strings.Contains(d.Name, " ") {
 				d = Definition{}
 				return
 			}
+
 			for i, c := range d.Name {
 				if i != 0 {
 					break
 				}
+
 				if c == unicode.ToUpper(c) {
 					sec = sectionTypes
 				} else {
 					sec = sectionMethods
 				}
 			}
+
 			const canBeString = "String can be used instead of this object"
+
 			if strings.Contains(d.RawText, canBeString) {
 				newName := d.Name + "Object"
+
 				a.Types = append(a.Types, Definition{
 					Name:    d.Name,
 					RawText: d.RawText,
@@ -65,41 +73,52 @@ func Extract(doc *goquery.Document) (a API) {
 				})
 				d.Name = newName
 			}
+
 			switch sec {
 			case sectionMethods:
 				a.Methods = append(a.Methods, d)
 			case sectionTypes:
 				a.Types = append(a.Types, d)
 			}
+
 			d = Definition{}
 		}
+
 		if s.Is("h4") {
 			d.Name = strings.TrimSpace(s.Text())
 			return
 		}
+
 		if s.Is("p") && d.Name != "" {
 			d.RawText = strings.TrimSpace(s.Text())
 			d.PrettyDescription = selDescription(s)
+
 			if strings.Contains(strings.ToLower(d.RawText), `currently holds no information`) {
 				appendDefinition()
 			}
+
 			if strings.Contains(d.RawText, `Returns basic information about the bot`) {
 				d.Ret = &Type{
 					Kind: KindObject,
 					Name: "User",
 				}
+
 				appendDefinition()
 			}
 		}
+
 		switch desc := d.RawText; {
 		case strings.Contains(desc, `as String on success`):
 			t := newPrimitive(String)
+
 			d.Ret = &t
 		case strings.Contains(desc, `Returns True on success`):
 			t := newPrimitive(Boolean)
+
 			d.Ret = &t
 		case strings.Contains(desc, `Returns Int on success`):
 			t := newPrimitive(Integer)
+
 			d.Ret = &t
 		}
 
@@ -108,6 +127,7 @@ func Extract(doc *goquery.Document) (a API) {
 			probablySum    bool
 			probablyMarker string
 		)
+
 		for _, sumMarker := range []string{
 			`It should be one of`,
 			`Telegram clients currently support the following`,
@@ -121,26 +141,34 @@ func Extract(doc *goquery.Document) (a API) {
 				probablyMarker = sumMarker
 			}
 		}
+
 		if s.Is("ul") && probablySum {
 			t := &Type{
 				Kind: KindSum,
 			}
+
 			d.RawText = strings.TrimSpace(strings.ReplaceAll(d.RawText, probablyMarker, ""))
+
 			s.Find("li").Each(func(i int, s *goquery.Selection) {
 				t.Sum = append(t.Sum, ParseType(s.Text()))
 			})
+
 			d.Ret = t
+
 			appendDefinition()
+
 			return
 		}
 
 		if d.Ret == nil {
 			var links []string
+
 			s.Find("a").Each(func(i int, selection *goquery.Selection) {
 				if href, _ := selection.Attr("href"); strings.HasPrefix(href, "#") {
 					links = append(links, selection.Text())
 				}
 			})
+
 			const (
 				retPrefix       = `on success, the`
 				retPrefix2      = `on success, a`
@@ -153,11 +181,14 @@ func Extract(doc *goquery.Document) (a API) {
 				retSuffix3      = ` objects`
 				retSuffix4      = ` on success`
 			)
+
 			var (
 				start, end int
 				prefix     string
 			)
+
 			loweredDesc := strings.TrimSuffix(strings.ToLower(d.RawText), ".")
+
 			start, prefix = IndexOneOf(loweredDesc,
 				retArrayPrefix,
 				retArrayPrefix2,
@@ -166,6 +197,7 @@ func Extract(doc *goquery.Document) (a API) {
 				retPrefix3,
 				retPrefix4,
 			)
+
 			if prefix == retArrayPrefix || prefix == retArrayPrefix2 {
 				// Do not cut prefix, if we do ParseType will be unable to detect an array clause.
 				prefix = ""
@@ -174,36 +206,45 @@ func Extract(doc *goquery.Document) (a API) {
 			end, _ = IndexOneOf(loweredDesc, retSuffix, retSuffix2, retSuffix3, retSuffix4)
 			if start > 0 && end > start {
 				ret := strings.TrimSpace(d.RawText[start+len(prefix) : end])
+
 				ret = strings.TrimSuffix(ret, ".")
 				ret = strings.TrimSuffix(ret, "object")
 				ret = strings.TrimSuffix(ret, "objects")
 
 				var found bool
+
 				for _, link := range links {
 					if strings.Contains(ret, link) {
 						ret = link
 						found = true
+
 						break
 					}
 				}
+
 				// HACK: replace Array of Messages with Array of Message.
 				if ret == "Messages" && prefix == "" {
 					ret = "Message"
 				}
+
 				// HACK: if prefix is Array of, add it manually, so ParseType can detect it.
 				if found && prefix == "" {
 					ret = "Array of " + ret
 				}
+
 				if idxSpace := strings.LastIndex(ret, " "); !found && idxSpace > 0 {
 					// Skipping verb like "sent".
 					ret = ret[idxSpace+1:]
 				}
+
 				t := ParseType(ret)
+
 				d.Ret = &t
 			} else if strings.Contains(loweredDesc,
 				`the edited message is returned, otherwise true is returned`) {
 				// HACK: sum type result for editing methods.
 				t := ParseType("Message or True")
+
 				d.Ret = &t
 			}
 		}
@@ -212,25 +253,32 @@ func Extract(doc *goquery.Document) (a API) {
 			if strings.Contains(d.RawText, "Requires no parameters") {
 				appendDefinition()
 			}
+
 			return
 		}
 
 		var head []string
+
 		s.Find("th").Each(func(i int, s *goquery.Selection) {
 			head = append(head, strings.TrimSpace(s.Text()))
 		})
+
 		if len(head) == 0 {
 			return
 		}
+
 		s.Find("tr").Each(func(i int, s *goquery.Selection) {
 			sel := s.Find("td")
+
 			const (
 				fName     = 0
 				fType     = 1
 				fOptional = 2
 				optPrefix = "Optional. "
 			)
+
 			var fDescription int
+
 			switch sel.Length() {
 			case 3:
 				fDescription = 2
@@ -239,6 +287,7 @@ func Extract(doc *goquery.Document) (a API) {
 			default:
 				return
 			}
+
 			name := sel.Eq(fName).Text()
 			rawText := sel.Eq(fDescription).Text()
 
@@ -246,9 +295,11 @@ func Extract(doc *goquery.Document) (a API) {
 			if sel.Eq(fOptional).Text() == "Optional" {
 				optional = true
 			}
+
 			typ := ParseType(sel.Eq(fType).Text())
 
 			description := selDescription(sel.Eq(fDescription))
+
 			d.Fields = append(d.Fields, Field{
 				Name:              name,
 				RawText:           rawText,
@@ -260,6 +311,7 @@ func Extract(doc *goquery.Document) (a API) {
 		})
 		appendDefinition()
 	})
+
 	return a
 }
 
@@ -272,10 +324,13 @@ func collectEnum(typ Type, name, description string) []string {
 		enumClause  = "can be"
 		oneOfClause = "one of"
 	)
+
 	idx, _ := IndexOneOf(strings.ToLower(description), enumClause, oneOfClause)
+
 	if idx < 0 {
 		return nil
 	}
+
 	return collectEnumValues(description[idx:])
 }
 
@@ -289,6 +344,7 @@ func collectEnumValues(s string) (r []string) {
 		i   = 0
 		idx = -1
 	)
+
 	for i < len(s) {
 		c, size := utf8.DecodeRuneInString(s[i:])
 		switch {
@@ -298,6 +354,7 @@ func collectEnumValues(s string) (r []string) {
 			r = append(r, s[idx:i])
 			idx = -1
 		}
+
 		i += size
 	}
 

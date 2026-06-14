@@ -30,6 +30,7 @@ func (g *Group) Use(mws ...Middleware) *Group {
 // Handle registers a handler in the group with optional extra predicates.
 func (g *Group) Handle(h Handler, predicates ...Predicate) {
 	preds := make([]Predicate, 0, len(g.preds)+len(predicates))
+
 	preds = append(preds, g.preds...)
 	preds = append(preds, predicates...)
 	g.bot.onWith(h, g.mws, preds)

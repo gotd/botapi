@@ -15,12 +15,15 @@ func TestInviteLinkErrorsOnPrivate(t *testing.T) {
 	if _, err := b.ExportChatInviteLink(ctx, chat); err == nil {
 		t.Fatal("ExportChatInviteLink on private chat should fail")
 	}
+
 	if _, err := b.CreateChatInviteLink(ctx, chat); err == nil {
 		t.Fatal("CreateChatInviteLink on private chat should fail")
 	}
+
 	if _, err := b.EditChatInviteLink(ctx, chat, "https://t.me/+x"); err == nil {
 		t.Fatal("EditChatInviteLink on private chat should fail")
 	}
+
 	if _, err := b.RevokeChatInviteLink(ctx, chat, "https://t.me/+x"); err == nil {
 		t.Fatal("RevokeChatInviteLink on private chat should fail")
 	}

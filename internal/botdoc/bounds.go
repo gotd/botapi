@@ -25,10 +25,12 @@ func matchBounds(r *regexp.Regexp, matches []string) (a, b int) {
 	if err != nil {
 		return a, b
 	}
+
 	end, err := strconv.Atoi(matches[r.SubexpIndex("end")])
 	if err != nil {
 		return a, b
 	}
+
 	return start, end
 }
 
@@ -37,6 +39,7 @@ func regexBounds(r *regexp.Regexp, s string) (a, b int) {
 	if len(matches) < 3 {
 		return a, b
 	}
+
 	return matchBounds(r, matches)
 }
 

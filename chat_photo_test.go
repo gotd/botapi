@@ -10,12 +10,14 @@ import (
 func TestSetChatPhotoUpload(t *testing.T) {
 	inv := newMockInvoker()
 	inv.reply(tg.ChannelsEditPhotoRequestTypeID, okUpdates())
+
 	b := newMockBot(inv)
 
 	err := b.SetChatPhoto(context.Background(), tdlibChannel(50), FileFromBytes("p.jpg", []byte("img")))
 	if err != nil {
 		t.Fatalf("SetChatPhoto: %v", err)
 	}
+
 	if !inv.called(tg.ChannelsEditPhotoRequestTypeID) {
 		t.Fatal("expected channels.editPhoto")
 	}

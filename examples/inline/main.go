@@ -36,6 +36,7 @@ func main() {
 	if err != nil {
 		log.Fatal("Open storage", zap.Error(err))
 	}
+
 	defer func() { _ = store.Close() }()
 
 	bot, err := botapi.New(os.Getenv("BOT_TOKEN"), botapi.Options{
@@ -53,6 +54,7 @@ func main() {
 		if q == "" {
 			return c.AnswerInline(nil)
 		}
+
 		results := []botapi.InlineQueryResult{
 			&botapi.InlineQueryResultArticle{
 				ID:          "upper",
@@ -71,6 +73,7 @@ func main() {
 				},
 			},
 		}
+
 		return c.AnswerInline(results, botapi.WithInlineCacheTime(1))
 	})
 
@@ -78,6 +81,7 @@ func main() {
 	defer cancel()
 
 	log.Info("Starting inline bot")
+
 	if err := bot.Run(ctx); err != nil {
 		log.Fatal("Run", zap.Error(err))
 	}

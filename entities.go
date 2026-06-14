@@ -14,6 +14,7 @@ func entitiesToTg(entities []MessageEntity) []tg.MessageEntityClass {
 	if len(entities) == 0 {
 		return nil
 	}
+
 	out := make([]tg.MessageEntityClass, 0, len(entities))
 	for _, e := range entities {
 		off, length := e.Offset, e.Length
@@ -54,17 +55,21 @@ func entitiesToTg(entities []MessageEntity) []tg.MessageEntityClass {
 			out = append(out, &tg.MessageEntityTextURL{Offset: off, Length: length, URL: e.URL})
 		case EntityTextMention:
 			var userID int64
+
 			if e.User != nil {
 				userID = e.User.ID
 			}
+
 			out = append(out, &tg.MessageEntityMentionName{Offset: off, Length: length, UserID: userID})
 		case EntityCustomEmoji:
 			id, _ := strconv.ParseInt(e.CustomEmojiID, 10, 64)
+
 			out = append(out, &tg.MessageEntityCustomEmoji{Offset: off, Length: length, DocumentID: id})
 		default:
 			// Unknown entity type: skip rather than emit an invalid entity.
 		}
 	}
+
 	return out
 }
 
@@ -76,6 +81,7 @@ func entitiesFromTg(entities []tg.MessageEntityClass) []MessageEntity {
 	if len(entities) == 0 {
 		return nil
 	}
+
 	out := make([]MessageEntity, 0, len(entities))
 	for _, e := range entities {
 		me := MessageEntity{Offset: e.GetOffset(), Length: e.GetLength()}
@@ -128,7 +134,9 @@ func entitiesFromTg(entities []tg.MessageEntityClass) []MessageEntity {
 			// Unknown or bot-irrelevant entity (e.g. unknown future types): skip.
 			continue
 		}
+
 		out = append(out, me)
 	}
+
 	return out
 }

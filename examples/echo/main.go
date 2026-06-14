@@ -35,6 +35,7 @@ func main() {
 	if err != nil {
 		log.Fatal("Open storage", zap.Error(err))
 	}
+
 	defer func() { _ = store.Close() }()
 
 	bot, err := botapi.New(os.Getenv("BOT_TOKEN"), botapi.Options{
@@ -65,6 +66,7 @@ func main() {
 	defer cancel()
 
 	log.Info("Starting echo bot")
+
 	if err := bot.Run(ctx); err != nil {
 		log.Fatal("Run", zap.Error(err))
 	}

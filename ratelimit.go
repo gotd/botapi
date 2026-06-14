@@ -20,6 +20,7 @@ func buildMiddlewares(opt Options, h telegram.UpdateHandler) []telegram.Middlewa
 		if opt.MaxFloodWaitRetries > 0 {
 			w = w.WithMaxRetries(uint(opt.MaxFloodWaitRetries))
 		}
+
 		mw = append(mw, w)
 	}
 
@@ -28,9 +29,11 @@ func buildMiddlewares(opt Options, h telegram.UpdateHandler) []telegram.Middlewa
 		if burst <= 0 {
 			burst = 1
 		}
+
 		mw = append(mw, ratelimit.New(rate.Limit(opt.RequestsPerSecond), burst))
 	}
 
 	mw = append(mw, updhook.UpdateHook(h.Handle))
+
 	return mw
 }

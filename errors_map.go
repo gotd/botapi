@@ -118,15 +118,19 @@ func asAPIError(err error) error {
 	if err == nil {
 		return nil
 	}
+
 	var already *Error
+
 	if errors.As(err, &already) {
 		return err
 	}
+
 	// Context cancellation/deadline always passes through unchanged (even if it
 	// happens to be wrapped by an RPC error) so callers can errors.Is on it.
 	if errors.Is(err, context.Canceled) || errors.Is(err, context.DeadlineExceeded) {
 		return err
 	}
+
 	rpcErr, ok := tgerr.As(err)
 	if !ok {
 		return err
@@ -148,6 +152,7 @@ func asAPIError(err error) error {
 
 	// Unknown error: apply the official server's normalization and prefix rules.
 	code := normalizeErrorCode(rpcErr.Code, rpcErr.Message)
+
 	return &Error{
 		Code:        code,
 		Description: prefixDescription(code, rpcErr.Message),
@@ -162,9 +167,11 @@ func normalizeErrorCode(code int, message string) int {
 	if code < http.StatusBadRequest || code == http.StatusNotFound {
 		return http.StatusBadRequest
 	}
+
 	if code == http.StatusForbidden && isScreamingCase(message) {
 		return http.StatusBadRequest
 	}
+
 	return code
 }
 
@@ -176,12 +183,15 @@ func prefixDescription(code int, message string) string {
 	if message == "" {
 		return prefix
 	}
+
 	if hasPrefix(message, prefix) {
 		return message
 	}
+
 	if len(message) >= 2 && (message[1] == '_' || isUpper(message[1])) {
 		return prefix + ": " + message
 	}
+
 	return prefix + ": " + lowerFirst(message)
 }
 
@@ -204,12 +214,14 @@ func isScreamingCase(s string) bool {
 	if s == "" {
 		return false
 	}
+
 	for i := 0; i < len(s); i++ {
 		c := s[i]
 		if !(c >= 'A' && c <= 'Z') && !(c >= '0' && c <= '9') && c != '_' {
 			return false
 		}
 	}
+
 	return true
 }
 
@@ -223,7 +235,10 @@ func lowerFirst(s string) string {
 	if s == "" || !isUpper(s[0]) {
 		return s
 	}
+
 	b := []byte(s)
+
 	b[0] += 'a' - 'A'
+
 	return string(b)
 }

@@ -4,7 +4,9 @@ import "testing"
 
 func TestSendOptions(t *testing.T) {
 	var cfg sendConfig
+
 	q := "x"
+
 	for _, o := range []SendOption{
 		Silent(),
 		DisableWebPagePreview(),
@@ -15,9 +17,11 @@ func TestSendOptions(t *testing.T) {
 	} {
 		o(&cfg)
 	}
+
 	if !cfg.silent || !cfg.disableWebPreview || !cfg.protect {
 		t.Fatalf("bool options not applied: %+v", cfg)
 	}
+
 	if cfg.replyTo != 99 || cfg.parseMode != ParseModeHTML || cfg.markup == nil {
 		t.Fatalf("value options not applied: %+v", cfg)
 	}
@@ -30,6 +34,7 @@ func TestStyledText(t *testing.T) {
 			t.Fatalf("mode %q: got %d opts, err %v", mode, len(opts), err)
 		}
 	}
+
 	if _, err := styledText("x", ParseMode("weird"), nil); err == nil {
 		t.Fatal("unknown parse mode should error")
 	}

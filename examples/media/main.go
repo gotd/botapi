@@ -44,6 +44,7 @@ func main() {
 	if err != nil {
 		log.Fatal("Open storage", zap.Error(err))
 	}
+
 	defer func() { _ = store.Close() }()
 
 	bot, err := botapi.New(os.Getenv("BOT_TOKEN"), botapi.Options{
@@ -69,7 +70,9 @@ func main() {
 		if !ok {
 			return nil
 		}
+
 		_, err := c.Bot.SendPhoto(c, chat, botapi.FileURL(samplePhotoURL), "Here's a cat 🐈")
+
 		return err
 	})
 
@@ -80,6 +83,7 @@ func main() {
 		chat, _ := c.Chat()
 		_, err := c.Bot.SendPhoto(c, chat, botapi.FileID(largest.FileID),
 			fmt.Sprintf("%d×%d, file_unique_id=%s", largest.Width, largest.Height, largest.FileUniqueID))
+
 		return err
 	}, hasPhoto)
 
@@ -92,10 +96,12 @@ func main() {
 		if err != nil {
 			return err
 		}
+
 		caption := fmt.Sprintf("%s (%d bytes)\nfile_unique_id=%s",
 			doc.FileName, doc.FileSize, file.FileUniqueID)
 
 		_, err = c.Bot.SendDocument(c, chat, botapi.FileID(doc.FileID), caption)
+
 		return err
 	}, hasDocument)
 
@@ -103,6 +109,7 @@ func main() {
 	defer cancel()
 
 	log.Info("Starting media bot")
+
 	if err := bot.Run(ctx); err != nil {
 		log.Fatal("Run", zap.Error(err))
 	}

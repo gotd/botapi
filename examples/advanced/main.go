@@ -45,6 +45,7 @@ func main() {
 	if err != nil {
 		log.Fatal("Open storage", zap.Error(err))
 	}
+
 	defer func() { _ = store.Close() }()
 
 	bot, err := botapi.New(os.Getenv("BOT_TOKEN"), botapi.Options{
@@ -70,6 +71,7 @@ func main() {
 	defer cancel()
 
 	log.Info("Starting advanced bot")
+
 	if err := bot.Run(ctx); err != nil {
 		log.Fatal("Run", zap.Error(err))
 	}
@@ -81,6 +83,7 @@ func registerCommands(bot *botapi.Bot) {
 	bot.OnCommand("start", "Welcome message and reply keyboard", func(c *botapi.Context) error {
 		_, err := c.Reply("👋 Welcome! Type /help to see everything I can do.",
 			botapi.WithReplyMarkup(mainReplyKeyboard()))
+
 		return err
 	})
 
@@ -92,12 +95,14 @@ func registerCommands(bot *botapi.Bot) {
 	bot.OnCommand("html", "Send an HTML-formatted message", func(c *botapi.Context) error {
 		_, err := c.Reply("<b>bold</b>, <i>italic</i>, <code>code</code>, <a href=\"https://telegram.org\">link</a>",
 			botapi.WithParseMode(botapi.ParseModeHTML))
+
 		return err
 	})
 
 	bot.OnCommand("md", "Send a MarkdownV2-formatted message", func(c *botapi.Context) error {
 		_, err := c.Reply("*bold*, _italic_, `code`, ||spoiler||",
 			botapi.WithParseMode(botapi.ParseModeMarkdownV2))
+
 		return err
 	})
 
@@ -117,12 +122,14 @@ func registerCommands(bot *botapi.Bot) {
 			rich.Preformatted(rich.Plain("bot.SendRichMessage(ctx, chat, msg)"), "go"),
 		).Input()
 		_, err := c.Bot.SendRichMessage(c, chat, msg)
+
 		return err
 	})
 
 	bot.OnCommand("richhtml", "Send a rich message from HTML", func(c *botapi.Context) error {
 		chat, _ := c.Chat()
 		_, err := c.Bot.SendRichHTML(c, chat, "<h1>From HTML</h1><p>Parsed by Telegram into a <b>rich</b> message.</p>")
+
 		return err
 	})
 
@@ -135,36 +142,42 @@ func registerCommands(bot *botapi.Bot) {
 		chat, _ := c.Chat()
 		_, err := c.Bot.SendPoll(c, chat, "Best Go web framework?",
 			[]string{"net/http", "gin", "echo", "fiber"})
+
 		return err
 	})
 
 	bot.OnCommand("dice", "Roll a dice", func(c *botapi.Context) error {
 		chat, _ := c.Chat()
 		_, err := c.Bot.SendDice(c, chat, botapi.DiceDie)
+
 		return err
 	})
 
 	bot.OnCommand("location", "Send a location", func(c *botapi.Context) error {
 		chat, _ := c.Chat()
 		_, err := c.Bot.SendLocation(c, chat, 55.7558, 37.6173)
+
 		return err
 	})
 
 	bot.OnCommand("venue", "Send a venue", func(c *botapi.Context) error {
 		chat, _ := c.Chat()
 		_, err := c.Bot.SendVenue(c, chat, 55.7520, 37.6175, "Red Square", "Moscow, Russia")
+
 		return err
 	})
 
 	bot.OnCommand("contact", "Send a contact", func(c *botapi.Context) error {
 		chat, _ := c.Chat()
 		_, err := c.Bot.SendContact(c, chat, "+1234567890", "Ada", "Lovelace")
+
 		return err
 	})
 
 	bot.OnCommand("photo", "Send a photo by URL", func(c *botapi.Context) error {
 		chat, _ := c.Chat()
 		_, err := c.Bot.SendPhoto(c, chat, botapi.FileURL(samplePhotoURL), "A cat 🐈 sent by URL")
+
 		return err
 	})
 
@@ -173,8 +186,11 @@ func registerCommands(bot *botapi.Bot) {
 		if err := c.Bot.SendChatAction(c, chat, botapi.ChatActionTyping); err != nil {
 			return err
 		}
+
 		time.Sleep(2 * time.Second)
+
 		_, err := c.Reply("Done typing!")
+
 		return err
 	})
 
@@ -182,18 +198,21 @@ func registerCommands(bot *botapi.Bot) {
 	// reply markup, reporting any failure back to the chat (and the log).
 	bot.OnCommand("edit", "Send a message, then edit it (text + markup)", func(c *botapi.Context) error {
 		chat, _ := c.Chat()
+
 		m, err := c.Bot.SendMessage(c, chat, "Step 0: this message will change…")
 		if err != nil {
 			return err
 		}
 
 		time.Sleep(time.Second)
+
 		if _, err := c.Bot.EditMessageText(c, chat, m.MessageID, "Step 1: ✏️ text edited"); err != nil {
 			_, _ = c.Reply("EditMessageText failed: " + err.Error())
 			return err
 		}
 
 		time.Sleep(time.Second)
+
 		kb := botapi.InlineKeyboard([]botapi.InlineKeyboardButton{
 			botapi.InlineButtonData("✅ markup edited", "demo:ok"),
 		})
@@ -203,17 +222,20 @@ func registerCommands(bot *botapi.Bot) {
 		}
 
 		time.Sleep(time.Second)
+
 		if _, err := c.Bot.EditMessageText(c, chat, m.MessageID,
 			"Step 2: ✅ all edits succeeded", botapi.WithReplyMarkup(kb)); err != nil {
 			_, _ = c.Reply("final EditMessageText failed: " + err.Error())
 			return err
 		}
+
 		return nil
 	})
 
 	bot.OnCommand("forward", "Forward your command back to you", func(c *botapi.Context) error {
 		chat, _ := c.Chat()
 		_, err := c.Bot.ForwardMessage(c, chat, chat, c.Message().MessageID)
+
 		return err
 	})
 
@@ -228,13 +250,17 @@ func registerCommands(bot *botapi.Bot) {
 	bot.OnCommand("remind", "Send a reminder in 5 seconds (background)", func(c *botapi.Context) error {
 		chat, _ := c.Chat()
 		ctx := c.Background()
+
 		go func() {
 			time.Sleep(5 * time.Second)
+
 			if _, err := c.Bot.SendMessage(ctx, chat, "⏰ Here's your reminder!"); err != nil {
 				glog.For(c.Bot.Logger()).Warn(ctx, "background reminder failed", glog.Error(err))
 			}
 		}()
+
 		_, err := c.Reply("OK, I'll remind you in 5 seconds.")
+
 		return err
 	})
 
@@ -263,12 +289,15 @@ func registerKeyboards(bot *botapi.Bot) {
 		if err := c.AnswerCallback(botapi.WithCallbackText("You chose " + data)); err != nil {
 			return err
 		}
+
 		msg := c.Update.CallbackQuery.Message
 		if msg == nil {
 			return nil
 		}
+
 		_, err := c.Bot.EditMessageText(c, botapi.ID(msg.Chat.ID), msg.MessageID,
 			"You chose: "+data, botapi.WithReplyMarkup(demoInlineKeyboard()))
+
 		return err
 	}, botapi.CallbackPrefix("demo:"))
 }
@@ -281,35 +310,42 @@ func registerMedia(bot *botapi.Bot) {
 		chat, _ := c.Chat()
 		_, err := c.Bot.SendPhoto(c, chat, botapi.FileID(largest.FileID),
 			fmt.Sprintf("Got your photo: %d×%d", largest.Width, largest.Height))
+
 		return err
 	}, hasPhoto)
 
 	bot.OnMessage(func(c *botapi.Context) error {
 		doc := c.Message().Document
+
 		file, err := c.Bot.GetFile(c, doc.FileID)
 		if err != nil {
 			return err
 		}
+
 		_, err = c.Reply(fmt.Sprintf("Got document %q (%d bytes)\nfile_unique_id=%s",
 			doc.FileName, doc.FileSize, file.FileUniqueID))
+
 		return err
 	}, hasDocument)
 
 	bot.OnMessage(func(c *botapi.Context) error {
 		s := c.Message().Sticker
 		_, err := c.Reply("Nice sticker " + s.Emoji)
+
 		return err
 	}, hasSticker)
 
 	bot.OnMessage(func(c *botapi.Context) error {
 		loc := c.Message().Location
 		_, err := c.Reply(fmt.Sprintf("You are at %.4f, %.4f", loc.Latitude, loc.Longitude))
+
 		return err
 	}, hasLocation)
 
 	bot.OnMessage(func(c *botapi.Context) error {
 		ct := c.Message().Contact
 		_, err := c.Reply("Contact: " + ct.FirstName + " " + ct.PhoneNumber)
+
 		return err
 	}, hasContact)
 }
@@ -322,11 +358,13 @@ func registerMisc(bot *botapi.Bot) {
 		if q == "" {
 			return c.AnswerInline(nil)
 		}
+
 		results := []botapi.InlineQueryResult{
 			article("upper", "UPPERCASE", strings.ToUpper(q)),
 			article("lower", "lowercase", strings.ToLower(q)),
 			article("reverse", "Reversed", reverse(q)),
 		}
+
 		return c.AnswerInline(results, botapi.WithInlineCacheTime(1))
 	})
 
@@ -380,9 +418,11 @@ func displayName(u *botapi.User) string {
 	if u == nil {
 		return "stranger"
 	}
+
 	if u.Username != "" {
 		return "@" + u.Username
 	}
+
 	return u.FirstName
 }
 
@@ -391,6 +431,7 @@ func reverse(s string) string {
 	for i, j := 0, len(r)-1; i < j; i, j = i+1, j-1 {
 		r[i], r[j] = r[j], r[i]
 	}
+
 	return string(r)
 }
 

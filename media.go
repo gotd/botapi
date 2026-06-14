@@ -16,9 +16,11 @@ import (
 func (b *Bot) uploadInputFile(ctx context.Context, f *InputFileUpload) (tg.InputFileClass, error) {
 	up := uploader.NewUploader(b.raw)
 	name := f.Name
+
 	if name == "" {
 		name = "file"
 	}
+
 	switch {
 	case f.Path != "":
 		file, err := up.FromPath(ctx, f.Path)
@@ -44,11 +46,13 @@ func (b *Bot) photoMedia(ctx context.Context, file InputFile, caption []styling.
 		if err != nil {
 			return nil, &Error{Code: 400, Description: descWrongFileID}
 		}
+
 		photo := &tg.InputMediaPhoto{ID: &tg.InputPhoto{
 			ID:            fid.ID,
 			AccessHash:    fid.AccessHash,
 			FileReference: fid.FileReference,
 		}}
+
 		return message.Media(photo, caption...), nil
 	case InputFileURL:
 		return message.PhotoExternal(string(f), caption...), nil
@@ -57,6 +61,7 @@ func (b *Bot) photoMedia(ctx context.Context, file InputFile, caption []styling.
 		if err != nil {
 			return nil, err
 		}
+
 		return message.UploadedPhoto(upFile, caption...), nil
 	default:
 		return nil, &Error{Code: 400, Description: descInvalidFile}
@@ -73,11 +78,13 @@ func (b *Bot) documentMedia(ctx context.Context, file InputFile, caption []styli
 		if err != nil {
 			return nil, &Error{Code: 400, Description: descWrongFileID}
 		}
+
 		doc := &tg.InputMediaDocument{ID: &tg.InputDocument{
 			ID:            fid.ID,
 			AccessHash:    fid.AccessHash,
 			FileReference: fid.FileReference,
 		}}
+
 		return message.Media(doc, caption...), nil
 	case InputFileURL:
 		return message.DocumentExternal(string(f), caption...), nil
@@ -86,10 +93,12 @@ func (b *Bot) documentMedia(ctx context.Context, file InputFile, caption []styli
 		if err != nil {
 			return nil, err
 		}
+
 		b := message.UploadedDocument(upFile, caption...)
 		if f.Name != "" {
 			b = b.Filename(f.Name)
 		}
+
 		return b, nil
 	default:
 		return nil, &Error{Code: 400, Description: descInvalidFile}
@@ -105,6 +114,7 @@ func (b *Bot) sendResolvedMedia(
 	opts ...SendOption,
 ) (*Message, error) {
 	var cfg sendConfig
+
 	for _, o := range opts {
 		o(&cfg)
 	}
@@ -113,6 +123,7 @@ func (b *Bot) sendResolvedMedia(
 	if err != nil {
 		return nil, err
 	}
+
 	media, err := build(ctx, styled)
 	if err != nil {
 		return nil, err
@@ -122,13 +133,16 @@ func (b *Bot) sendResolvedMedia(
 	if err != nil {
 		return nil, err
 	}
+
 	builder := &b.sender.To(peer).Builder
+
 	builder, err = b.applySendConfig(builder, cfg)
 	if err != nil {
 		return nil, err
 	}
 
 	resp, err := builder.Media(ctx, media)
+
 	return b.sentMessage(ctx, peer, resp, err)
 }
 

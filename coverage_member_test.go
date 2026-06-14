@@ -31,9 +31,11 @@ func TestPeerUserIDAndUsersByID(t *testing.T) {
 	if got := peerUserID(&tg.PeerUser{UserID: 7}); got != 7 {
 		t.Fatalf("peerUserID(user) = %d", got)
 	}
+
 	if got := peerUserID(&tg.PeerChannel{ChannelID: 9}); got != 0 {
 		t.Fatalf("peerUserID(channel) = %d, want 0", got)
 	}
+
 	m := usersByID([]tg.UserClass{&tg.User{ID: 1}, &tg.UserEmpty{ID: 2}})
 	if len(m) != 1 || m[1] == nil {
 		t.Fatalf("usersByID = %#v", m)

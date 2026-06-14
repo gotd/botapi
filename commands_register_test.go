@@ -14,6 +14,7 @@ func TestOnCommandCollectsCommands(t *testing.T) {
 	if len(b.commands) != 3 {
 		t.Fatalf("want 3 commands, got %d: %#v", len(b.commands), b.commands)
 	}
+
 	want := map[string]string{
 		"start": "Start the bot",
 		"help":  "Show help",
@@ -30,6 +31,7 @@ func TestRegisterCommandIgnoresEmpty(t *testing.T) {
 	b := newTestBot(t)
 	b.registerCommand("", "no name")
 	b.registerCommand("/", "slash only")
+
 	if len(b.commands) != 0 {
 		t.Fatalf("empty command names should be ignored, got %#v", b.commands)
 	}
@@ -40,6 +42,7 @@ func TestDisableCommandRegistration(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+
 	if b.registerCommands {
 		t.Fatal("registerCommands should be false when disabled")
 	}

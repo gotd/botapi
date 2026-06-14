@@ -19,9 +19,11 @@ func Recover() Middleware {
 						log.Any("panic", r),
 						log.String("stack", string(debug.Stack())),
 					)
+
 					err = &Error{Code: 500, Description: "Internal Server Error: handler panicked"}
 				}
 			}()
+
 			return next(c)
 		}
 	}
@@ -33,8 +35,11 @@ func Timeout(d time.Duration) Middleware {
 		return func(c *Context) error {
 			ctx, cancel := context.WithTimeout(c.Context, d)
 			defer cancel()
+
 			scoped := *c
+
 			scoped.Context = ctx
+
 			return next(&scoped)
 		}
 	}
@@ -52,6 +57,7 @@ func Logging() Middleware {
 			} else {
 				c.Bot.logger().Debug(c, "Update handled", log.Int("update_id", c.Update.UpdateID))
 			}
+
 			return err
 		}
 	}

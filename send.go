@@ -64,22 +64,28 @@ func (b *Bot) applySendConfig(builder *message.Builder, cfg sendConfig) (*messag
 	if cfg.disableWebPreview {
 		builder = builder.NoWebpage()
 	}
+
 	if cfg.silent {
 		builder = builder.Silent()
 	}
+
 	if cfg.protect {
 		builder = builder.NoForwards()
 	}
+
 	if cfg.replyTo != 0 {
 		builder = builder.Reply(cfg.replyTo)
 	}
+
 	if cfg.markup != nil {
 		mkp, err := replyMarkupToTg(cfg.markup)
 		if err != nil {
 			return nil, err
 		}
+
 		builder = builder.Markup(mkp)
 	}
+
 	return builder, nil
 }
 
@@ -97,10 +103,12 @@ func (b *Bot) sentMessage(ctx context.Context, peer tg.InputPeerClass, resp tg.U
 			return nil, asAPIError(err)
 		}
 	}
+
 	msg, ok := m.(*tg.Message)
 	if !ok {
 		return &Message{}, nil
 	}
+
 	if msg.PeerID == nil {
 		switch p := peer.(type) {
 		case *tg.InputPeerChat:
@@ -111,12 +119,14 @@ func (b *Bot) sentMessage(ctx context.Context, peer tg.InputPeerClass, resp tg.U
 			msg.PeerID = &tg.PeerChannel{ChannelID: p.ChannelID}
 		}
 	}
+
 	return b.convertMessage(ctx, msg)
 }
 
 // SendMessage sends a text message to a chat and returns the sent message.
 func (b *Bot) SendMessage(ctx context.Context, chat ChatID, text string, opts ...SendOption) (*Message, error) {
 	var cfg sendConfig
+
 	for _, o := range opts {
 		o(&cfg)
 	}
@@ -132,11 +142,13 @@ func (b *Bot) SendMessage(ctx context.Context, chat ChatID, text string, opts ..
 	}
 
 	builder := &b.sender.To(peer).Builder
+
 	builder, err = b.applySendConfig(builder, cfg)
 	if err != nil {
 		return nil, err
 	}
 
 	resp, err := builder.StyledText(ctx, styled...)
+
 	return b.sentMessage(ctx, peer, resp, err)
 }

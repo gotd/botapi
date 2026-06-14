@@ -21,10 +21,13 @@ func replyMarkupToTg(m ReplyMarkup) (tg.ReplyMarkupClass, error) {
 				if err != nil {
 					return nil, err
 				}
+
 				buttons[i] = b
 			}
+
 			rows = append(rows, tg.KeyboardButtonRow{Buttons: buttons})
 		}
+
 		return &tg.ReplyInlineMarkup{Rows: rows}, nil
 	case *ReplyKeyboardMarkup:
 		rows := make([]tg.KeyboardButtonRow, 0, len(m.Keyboard))
@@ -33,8 +36,10 @@ func replyMarkupToTg(m ReplyMarkup) (tg.ReplyMarkupClass, error) {
 			for i, btn := range row {
 				buttons[i] = keyboardButtonToTg(btn)
 			}
+
 			rows = append(rows, tg.KeyboardButtonRow{Buttons: buttons})
 		}
+
 		res := &tg.ReplyKeyboardMarkup{
 			Resize:     m.ResizeKeyboard,
 			SingleUse:  m.OneTimeKeyboard,
@@ -45,17 +50,20 @@ func replyMarkupToTg(m ReplyMarkup) (tg.ReplyMarkupClass, error) {
 		if m.InputFieldPlaceholder != "" {
 			res.SetPlaceholder(m.InputFieldPlaceholder)
 		}
+
 		return res, nil
 	case *ReplyKeyboardRemove:
 		if m.Selective {
 			return markup.SelectiveHide(), nil
 		}
+
 		return markup.Hide(), nil
 	case *ForceReply:
 		res := &tg.ReplyKeyboardForceReply{Selective: m.Selective}
 		if m.InputFieldPlaceholder != "" {
 			res.SetPlaceholder(m.InputFieldPlaceholder)
 		}
+
 		return res, nil
 	default:
 		return nil, &Error{Code: 400, Description: "Bad Request: unsupported reply markup"}

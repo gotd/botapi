@@ -12,10 +12,12 @@ import (
 // photoFileID builds a valid photo file_id, for cached-photo results.
 func photoFileID(t *testing.T, id int64) string {
 	t.Helper()
+
 	s, err := fileid.EncodeFileID(fileid.FileID{Type: fileid.Photo, DC: 2, ID: id, AccessHash: 7})
 	if err != nil {
 		t.Fatalf("encode photo file id: %v", err)
 	}
+
 	return s
 }
 
@@ -48,6 +50,7 @@ func TestInlineResultsToTg(t *testing.T) {
 			if err != nil {
 				t.Fatalf("toTg: %v", err)
 			}
+
 			switch r := got.(type) {
 			case *tg.InputBotInlineResult:
 				if r.Type != c.wantTyp {
@@ -73,22 +76,28 @@ func TestInlineResultsToTg(t *testing.T) {
 func TestAnswerInlineQueryDispatch(t *testing.T) {
 	inv := newMockInvoker()
 	inv.reply(tg.MessagesSetInlineBotResultsRequestTypeID, &tg.BoolTrue{})
+
 	b := newMockBot(inv)
 
 	results := []InlineQueryResult{
 		&InlineQueryResultArticle{ID: "1", Title: "A", InputMessageContent: &InputTextMessageContent{MessageText: "x"}},
 		&InlineQueryResultContact{ID: "2", PhoneNumber: "+1", FirstName: "Ada"},
 	}
+
 	err := b.AnswerInlineQuery(context.Background(), "777", results,
 		WithInlineCacheTime(10), WithInlinePersonal(), WithInlineNextOffset("next"))
 	if err != nil {
 		t.Fatalf("AnswerInlineQuery: %v", err)
 	}
+
 	var req tg.MessagesSetInlineBotResultsRequest
+
 	inv.decode(t, tg.MessagesSetInlineBotResultsRequestTypeID, &req)
+
 	if req.QueryID != 777 || len(req.Results) != 2 {
 		t.Fatalf("req = %#v", req)
 	}
+
 	if req.CacheTime != 10 || !req.Private || req.NextOffset != "next" {
 		t.Fatalf("req opts = %#v", req)
 	}
@@ -97,7 +106,9 @@ func TestAnswerInlineQueryDispatch(t *testing.T) {
 func TestAnswerInlineQueryInvalidID(t *testing.T) {
 	b := newMockBot(newMockInvoker())
 	err := b.AnswerInlineQuery(context.Background(), "not-a-number", nil)
+
 	var apiErr *Error
+
 	if !errors.As(err, &apiErr) || apiErr.Code != 400 {
 		t.Fatalf("want 400, got %v", err)
 	}
@@ -133,9 +144,11 @@ func TestInputContentVariantsToTg(t *testing.T) {
 func TestPassportErrorsToTg(t *testing.T) {
 	inv := newMockInvoker()
 	inv.reply(tg.UsersSetSecureValueErrorsRequestTypeID, &tg.BoolTrue{})
+
 	b := newMockBot(inv)
 
 	const h = "aGFzaGhhc2hoYXNoaGFzaA==" // base64, 16+ bytes
+
 	errs := []PassportElementError{
 		&PassportElementErrorDataField{Type: "personal_details", FieldName: "first_name", DataHash: h, Message: "m"},
 		&PassportElementErrorFrontSide{Type: "passport", FileHash: h, Message: "m"},
@@ -147,11 +160,15 @@ func TestPassportErrorsToTg(t *testing.T) {
 		&PassportElementErrorTranslationFiles{Type: "passport", FileHashes: []string{h}, Message: "m"},
 		&PassportElementErrorUnspecified{Type: "passport", ElementHash: h, Message: "m"},
 	}
+
 	if err := b.SetPassportDataErrors(context.Background(), 99, errs); err != nil {
 		t.Fatalf("SetPassportDataErrors: %v", err)
 	}
+
 	var req tg.UsersSetSecureValueErrorsRequest
+
 	inv.decode(t, tg.UsersSetSecureValueErrorsRequestTypeID, &req)
+
 	if len(req.Errors) != len(errs) {
 		t.Fatalf("errors = %d, want %d", len(req.Errors), len(errs))
 	}

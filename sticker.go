@@ -62,14 +62,17 @@ func (b *Bot) UploadStickerFile(ctx context.Context, userID int64, sticker Input
 	if !ok {
 		return nil, &Error{Code: 400, Description: "Bad Request: sticker file must be an uploaded file"}
 	}
+
 	doc, err := b.uploadStickerDocument(ctx, up, format)
 	if err != nil {
 		return nil, err
 	}
+
 	encoded, err := fileid.EncodeFileID(fileid.FromDocument(doc))
 	if err != nil {
 		return nil, asAPIError(err)
 	}
+
 	return &File{
 		FileID:       encoded,
 		FileUniqueID: fileUniqueID(fileid.FromDocument(doc)),
@@ -84,10 +87,12 @@ func (b *Bot) uploadStickerDocument(ctx context.Context, up *InputFileUpload, fo
 	if err != nil {
 		return nil, err
 	}
+
 	name := up.Name
 	if name == "" {
 		name = "sticker"
 	}
+
 	media, err := b.raw.MessagesUploadMedia(ctx, &tg.MessagesUploadMediaRequest{
 		Peer: &tg.InputPeerSelf{},
 		Media: &tg.InputMediaUploadedDocument{
@@ -101,14 +106,17 @@ func (b *Bot) uploadStickerDocument(ctx context.Context, up *InputFileUpload, fo
 	if err != nil {
 		return nil, asAPIError(err)
 	}
+
 	mediaDoc, ok := media.(*tg.MessageMediaDocument)
 	if !ok {
 		return nil, &Error{Code: 500, Description: "Internal Server Error: unexpected upload media response"}
 	}
+
 	doc, ok := mediaDoc.Document.(*tg.Document)
 	if !ok {
 		return nil, &Error{Code: 500, Description: "Internal Server Error: uploaded media is not a document"}
 	}
+
 	return doc, nil
 }
 
@@ -116,18 +124,21 @@ func (b *Bot) uploadStickerDocument(ctx context.Context, up *InputFileUpload, fo
 // uploading the file when it is a local upload.
 func (b *Bot) resolveStickerItem(ctx context.Context, sticker InputSticker) (tg.InputStickerSetItem, error) {
 	var doc tg.InputDocumentClass
+
 	switch f := sticker.Sticker.(type) {
 	case InputFileID:
 		d, err := inputDocumentFromFileID(string(f))
 		if err != nil {
 			return tg.InputStickerSetItem{}, err
 		}
+
 		doc = d
 	case *InputFileUpload:
 		uploaded, err := b.uploadStickerDocument(ctx, f, sticker.Format)
 		if err != nil {
 			return tg.InputStickerSetItem{}, err
 		}
+
 		doc = &tg.InputDocument{ID: uploaded.ID, AccessHash: uploaded.AccessHash, FileReference: uploaded.FileReference}
 	default:
 		return tg.InputStickerSetItem{}, &Error{Code: 400, Description: "Bad Request: sticker must be a file_id or an uploaded file"}
@@ -140,6 +151,7 @@ func (b *Bot) resolveStickerItem(ctx context.Context, sticker InputSticker) (tg.
 	if len(sticker.Keywords) > 0 {
 		item.SetKeywords(strings.Join(sticker.Keywords, ","))
 	}
+
 	return item, nil
 }
 
@@ -149,21 +161,26 @@ func (b *Bot) CreateNewStickerSet(
 	ctx context.Context, userID int64, name, title string, stickers []InputSticker, opts ...StickerSetOption,
 ) error {
 	var cfg stickerSetConfig
+
 	for _, o := range opts {
 		o(&cfg)
 	}
+
 	user, err := b.resolveInputUser(ctx, userID)
 	if err != nil {
 		return err
 	}
+
 	items := make([]tg.InputStickerSetItem, 0, len(stickers))
 	for _, s := range stickers {
 		item, err := b.resolveStickerItem(ctx, s)
 		if err != nil {
 			return err
 		}
+
 		items = append(items, item)
 	}
+
 	if _, err := b.raw.StickersCreateStickerSet(ctx, &tg.StickersCreateStickerSetRequest{
 		Masks:     cfg.masks,
 		UserID:    user,
@@ -173,6 +190,7 @@ func (b *Bot) CreateNewStickerSet(
 	}); err != nil {
 		return asAPIError(err)
 	}
+
 	return nil
 }
 
@@ -182,12 +200,14 @@ func (b *Bot) AddStickerToSet(ctx context.Context, name string, sticker InputSti
 	if err != nil {
 		return err
 	}
+
 	if _, err := b.raw.StickersAddStickerToSet(ctx, &tg.StickersAddStickerToSetRequest{
 		Stickerset: &tg.InputStickerSetShortName{ShortName: name},
 		Sticker:    item,
 	}); err != nil {
 		return asAPIError(err)
 	}
+
 	return nil
 }
 
@@ -198,9 +218,11 @@ func (b *Bot) DeleteStickerFromSet(ctx context.Context, sticker string) error {
 	if err != nil {
 		return err
 	}
+
 	if _, err := b.raw.StickersRemoveStickerFromSet(ctx, doc); err != nil {
 		return asAPIError(err)
 	}
+
 	return nil
 }
 
@@ -211,12 +233,14 @@ func (b *Bot) SetStickerPositionInSet(ctx context.Context, sticker string, posit
 	if err != nil {
 		return err
 	}
+
 	if _, err := b.raw.StickersChangeStickerPosition(ctx, &tg.StickersChangeStickerPositionRequest{
 		Sticker:  doc,
 		Position: position,
 	}); err != nil {
 		return asAPIError(err)
 	}
+
 	return nil
 }
 

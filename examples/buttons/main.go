@@ -50,6 +50,7 @@ func main() {
 	if err != nil {
 		log.Fatal("Open storage", zap.Error(err))
 	}
+
 	defer func() { _ = store.Close() }()
 
 	bot, err := botapi.New(os.Getenv("BOT_TOKEN"), botapi.Options{
@@ -73,22 +74,27 @@ func main() {
 	// to our "vote:" buttons.
 	bot.OnCallbackQuery(func(c *botapi.Context) error {
 		choice := "🤷"
+
 		switch c.Update.CallbackQuery.Data {
 		case "vote:up":
 			choice = "👍"
 		case "vote:down":
 			choice = "👎"
 		}
+
 		// Acknowledge the tap (removes the client-side loading state).
 		if err := c.AnswerCallback(botapi.WithCallbackText("Thanks for voting " + choice)); err != nil {
 			return err
 		}
+
 		// Edit the original message to reflect the choice.
 		msg := c.Update.CallbackQuery.Message
 		if msg == nil {
 			return nil
 		}
+
 		_, err := c.Bot.EditMessageText(c, botapi.ID(msg.Chat.ID), msg.MessageID, "You voted "+choice)
+
 		return err
 	}, botapi.CallbackPrefix("vote:"))
 
@@ -96,6 +102,7 @@ func main() {
 	defer cancel()
 
 	log.Info("Starting buttons bot")
+
 	if err := bot.Run(ctx); err != nil {
 		log.Fatal("Run", zap.Error(err))
 	}

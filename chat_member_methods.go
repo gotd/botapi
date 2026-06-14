@@ -14,10 +14,12 @@ func (b *Bot) resolveChannel(ctx context.Context, chat ChatID) (tg.InputChannelC
 	if err != nil {
 		return nil, err
 	}
+
 	ch, ok := p.(peers.Channel)
 	if !ok {
 		return nil, &Error{Code: 400, Description: "Bad Request: method is available only for supergroups and channels"}
 	}
+
 	return ch.InputChannel(), nil
 }
 
@@ -44,6 +46,7 @@ func WithRevokeMessages() BanChatMemberOption {
 // administrator with the can_restrict_members right.
 func (b *Bot) BanChatMember(ctx context.Context, chat ChatID, userID int64, opts ...BanChatMemberOption) error {
 	var cfg banConfig
+
 	for _, o := range opts {
 		o(&cfg)
 	}
@@ -52,6 +55,7 @@ func (b *Bot) BanChatMember(ctx context.Context, chat ChatID, userID int64, opts
 	if err != nil {
 		return err
 	}
+
 	user, err := b.resolveInputUser(ctx, userID)
 	if err != nil {
 		return err
@@ -74,6 +78,7 @@ func (b *Bot) BanChatMember(ctx context.Context, chat ChatID, userID int64, opts
 	}); err != nil {
 		return asAPIError(err)
 	}
+
 	if cfg.revokeHistory {
 		if _, err := b.raw.ChannelsDeleteParticipantHistory(ctx, &tg.ChannelsDeleteParticipantHistoryRequest{
 			Channel:     channel,
@@ -82,6 +87,7 @@ func (b *Bot) BanChatMember(ctx context.Context, chat ChatID, userID int64, opts
 			return asAPIError(err)
 		}
 	}
+
 	return nil
 }
 
@@ -92,6 +98,7 @@ func (b *Bot) UnbanChatMember(ctx context.Context, chat ChatID, userID int64) er
 	if err != nil {
 		return err
 	}
+
 	user, err := b.resolveInputUser(ctx, userID)
 	if err != nil {
 		return err
@@ -104,6 +111,7 @@ func (b *Bot) UnbanChatMember(ctx context.Context, chat ChatID, userID int64) er
 	}); err != nil {
 		return asAPIError(err)
 	}
+
 	return nil
 }
 
@@ -115,6 +123,7 @@ func (b *Bot) RestrictChatMember(ctx context.Context, chat ChatID, userID int64,
 	if err != nil {
 		return err
 	}
+
 	user, err := b.resolveInputUser(ctx, userID)
 	if err != nil {
 		return err
@@ -127,6 +136,7 @@ func (b *Bot) RestrictChatMember(ctx context.Context, chat ChatID, userID int64,
 	}); err != nil {
 		return asAPIError(err)
 	}
+
 	return nil
 }
 
@@ -137,6 +147,7 @@ func (b *Bot) PromoteChatMember(ctx context.Context, chat ChatID, userID int64, 
 	if err != nil {
 		return err
 	}
+
 	user, err := b.resolveInputUser(ctx, userID)
 	if err != nil {
 		return err
@@ -150,6 +161,7 @@ func (b *Bot) PromoteChatMember(ctx context.Context, chat ChatID, userID int64, 
 	}); err != nil {
 		return asAPIError(err)
 	}
+
 	return nil
 }
 
@@ -159,6 +171,7 @@ func (b *Bot) GetChatMember(ctx context.Context, chat ChatID, userID int64) (Cha
 	if err != nil {
 		return nil, err
 	}
+
 	user, err := b.resolveInputUser(ctx, userID)
 	if err != nil {
 		return nil, err
@@ -171,6 +184,7 @@ func (b *Bot) GetChatMember(ctx context.Context, chat ChatID, userID int64) (Cha
 	if err != nil {
 		return nil, asAPIError(err)
 	}
+
 	return chatMemberFromParticipant(res.Participant, usersByID(res.Users)), nil
 }
 
@@ -190,6 +204,7 @@ func (b *Bot) GetChatAdministrators(ctx context.Context, chat ChatID) ([]ChatMem
 	if err != nil {
 		return nil, asAPIError(err)
 	}
+
 	participants, ok := res.AsModified()
 	if !ok {
 		return nil, &Error{Code: 500, Description: "Internal Server Error: unexpected participants response"}
@@ -197,9 +212,11 @@ func (b *Bot) GetChatAdministrators(ctx context.Context, chat ChatID) ([]ChatMem
 
 	users := usersByID(participants.Users)
 	out := make([]ChatMember, 0, len(participants.Participants))
+
 	for _, p := range participants.Participants {
 		out = append(out, chatMemberFromParticipant(p, users))
 	}
+
 	return out, nil
 }
 
@@ -218,10 +235,12 @@ func (b *Bot) GetChatMemberCount(ctx context.Context, chat ChatID) (int, error) 
 	if err != nil {
 		return 0, asAPIError(err)
 	}
+
 	participants, ok := res.AsModified()
 	if !ok {
 		return 0, &Error{Code: 500, Description: "Internal Server Error: unexpected participants response"}
 	}
+
 	return participants.Count, nil
 }
 
@@ -248,6 +267,7 @@ func (b *Bot) SetChatAdministratorCustomTitle(ctx context.Context, chat ChatID, 
 	if err != nil {
 		return err
 	}
+
 	user, err := b.resolveInputUser(ctx, userID)
 	if err != nil {
 		return err
@@ -260,6 +280,7 @@ func (b *Bot) SetChatAdministratorCustomTitle(ctx context.Context, chat ChatID, 
 	if err != nil {
 		return asAPIError(err)
 	}
+
 	admin, ok := res.Participant.(*tg.ChannelParticipantAdmin)
 	if !ok {
 		return &Error{Code: 400, Description: "Bad Request: user is not an administrator"}
@@ -273,5 +294,6 @@ func (b *Bot) SetChatAdministratorCustomTitle(ctx context.Context, chat ChatID, 
 	}); err != nil {
 		return asAPIError(err)
 	}
+
 	return nil
 }

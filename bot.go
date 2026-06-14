@@ -54,10 +54,13 @@ func New(token string, opt Options) (*Bot, error) {
 	if token == "" {
 		return nil, errors.New("token is required")
 	}
+
 	if opt.AppID == 0 || opt.AppHash == "" {
 		return nil, errors.New("AppID and AppHash are required (see https://my.telegram.org)")
 	}
+
 	opt.setDefaults()
+
 	lg := opt.Logger
 
 	disp := tg.NewUpdateDispatcher()
@@ -96,6 +99,7 @@ func New(token string, opt Options) (*Bot, error) {
 		PublicKeys:     opt.publicKeys,
 		DCList:         opt.dcList,
 	})
+
 	*rawPlaceholder = *client.API()
 
 	b := &Bot{
@@ -111,6 +115,7 @@ func New(token string, opt Options) (*Bot, error) {
 		registerCommands: !opt.DisableCommandRegistration,
 	}
 	b.installHandlers()
+
 	return b, nil
 }
 
@@ -121,13 +126,16 @@ func (b *Bot) registerCommand(name, description string) {
 	if name == "" {
 		return
 	}
+
 	b.commandsMu.Lock()
 	defer b.commandsMu.Unlock()
+
 	for _, c := range b.commands {
 		if c.Command == name {
 			return
 		}
 	}
+
 	b.commands = append(b.commands, BotCommand{Command: name, Description: description})
 }
 
@@ -138,16 +146,22 @@ func (b *Bot) publishCommands(ctx context.Context) {
 	if !b.registerCommands {
 		return
 	}
+
 	b.commandsMu.Lock()
+
 	cmds := append([]BotCommand(nil), b.commands...)
 	b.commandsMu.Unlock()
+
 	if len(cmds) == 0 {
 		return
 	}
+
 	if err := b.SetMyCommands(ctx, cmds); err != nil {
 		b.logger().Warn(ctx, "Register bot commands", log.Error(err))
+
 		return
 	}
+
 	b.logger().Debug(ctx, "Registered bot commands", log.Int("count", len(cmds)))
 }
 
@@ -164,6 +178,7 @@ func (b *Bot) Run(ctx context.Context) error {
 		if err != nil {
 			return errors.Wrap(err, "auth status")
 		}
+
 		if !status.Authorized {
 			if _, err := b.client.Auth().Bot(ctx, b.token); err != nil {
 				return errors.Wrap(err, "bot login")
@@ -174,9 +189,11 @@ func (b *Bot) Run(ctx context.Context) error {
 		if err != nil {
 			return errors.Wrap(err, "get self")
 		}
+
 		if !me.Bot {
 			return errors.New("authorized account is not a bot")
 		}
+
 		b.self = me
 
 		if err := b.peers.Init(ctx); err != nil {
@@ -191,6 +208,7 @@ func (b *Bot) Run(ctx context.Context) error {
 					log.String("username", me.Username),
 				)
 				b.publishCommands(ctx)
+
 				if b.onStart != nil {
 					b.onStart(ctx)
 				}
@@ -225,6 +243,7 @@ func (b *Bot) logger() log.Helper { return log.For(b.log) }
 
 func (b *Bot) setRunCtx(ctx context.Context) {
 	b.runMu.Lock()
+
 	b.runCtx = ctx
 	b.runMu.Unlock()
 }
@@ -251,11 +270,14 @@ func (b *Bot) setRunCtx(ctx context.Context) {
 // already-canceled context, so background sends fail fast rather than block.
 func (b *Bot) Background() context.Context {
 	b.runMu.Lock()
+
 	ctx := b.runCtx
 	b.runMu.Unlock()
+
 	if ctx == nil {
 		return canceledContext
 	}
+
 	return ctx
 }
 
@@ -263,5 +285,6 @@ func (b *Bot) Background() context.Context {
 var canceledContext = func() context.Context {
 	ctx, cancel := context.WithCancel(context.Background())
 	cancel()
+
 	return ctx
 }()

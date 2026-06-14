@@ -23,12 +23,14 @@ func (s *MessageOriginUser) Decode(d *jx.Decoder) error {
 			if err != nil {
 				return err
 			}
+
 			s.Type = MessageOriginType(v)
 		case "date":
 			v, err := d.Int()
 			if err != nil {
 				return err
 			}
+
 			s.Date = v
 		case "sender_user":
 			if err := s.SenderUser.Decode(d); err != nil {
@@ -37,6 +39,7 @@ func (s *MessageOriginUser) Decode(d *jx.Decoder) error {
 		default:
 			return d.Skip()
 		}
+
 		return nil
 	})
 }
@@ -68,22 +71,26 @@ func (s *MessageOriginHiddenUser) Decode(d *jx.Decoder) error {
 			if err != nil {
 				return err
 			}
+
 			s.Type = MessageOriginType(v)
 		case "date":
 			v, err := d.Int()
 			if err != nil {
 				return err
 			}
+
 			s.Date = v
 		case "sender_user_name":
 			v, err := d.Str()
 			if err != nil {
 				return err
 			}
+
 			s.SenderUserName = v
 		default:
 			return d.Skip()
 		}
+
 		return nil
 	})
 }
@@ -103,10 +110,12 @@ func (s *MessageOriginChat) Encode(e *jx.Encoder) {
 	e.Int(s.Date)
 	e.FieldStart("sender_chat")
 	s.SenderChat.Encode(e)
+
 	if s.AuthorSignature != "" {
 		e.FieldStart("author_signature")
 		e.Str(s.AuthorSignature)
 	}
+
 	e.ObjEnd()
 }
 
@@ -119,12 +128,14 @@ func (s *MessageOriginChat) Decode(d *jx.Decoder) error {
 			if err != nil {
 				return err
 			}
+
 			s.Type = MessageOriginType(v)
 		case "date":
 			v, err := d.Int()
 			if err != nil {
 				return err
 			}
+
 			s.Date = v
 		case "sender_chat":
 			if err := s.SenderChat.Decode(d); err != nil {
@@ -135,10 +146,12 @@ func (s *MessageOriginChat) Decode(d *jx.Decoder) error {
 			if err != nil {
 				return err
 			}
+
 			s.AuthorSignature = v
 		default:
 			return d.Skip()
 		}
+
 		return nil
 	})
 }
@@ -160,10 +173,12 @@ func (s *MessageOriginChannel) Encode(e *jx.Encoder) {
 	s.Chat.Encode(e)
 	e.FieldStart("message_id")
 	e.Int(s.MessageID)
+
 	if s.AuthorSignature != "" {
 		e.FieldStart("author_signature")
 		e.Str(s.AuthorSignature)
 	}
+
 	e.ObjEnd()
 }
 
@@ -176,12 +191,14 @@ func (s *MessageOriginChannel) Decode(d *jx.Decoder) error {
 			if err != nil {
 				return err
 			}
+
 			s.Type = MessageOriginType(v)
 		case "date":
 			v, err := d.Int()
 			if err != nil {
 				return err
 			}
+
 			s.Date = v
 		case "chat":
 			if err := s.Chat.Decode(d); err != nil {
@@ -192,16 +209,19 @@ func (s *MessageOriginChannel) Decode(d *jx.Decoder) error {
 			if err != nil {
 				return err
 			}
+
 			s.MessageID = v
 		case "author_signature":
 			v, err := d.Str()
 			if err != nil {
 				return err
 			}
+
 			s.AuthorSignature = v
 		default:
 			return d.Skip()
 		}
+
 		return nil
 	})
 }

@@ -64,6 +64,7 @@ func ParseType(s string) Type {
 
 	if t := strings.TrimPrefix(s, "Array of "); t != s {
 		item := ParseType(t)
+
 		return Type{
 			Kind: KindArray,
 			Item: &item,
@@ -71,8 +72,10 @@ func ParseType(s string) Type {
 	}
 
 	const sumDelim = " or "
+
 	s = strings.ReplaceAll(s, " and ", sumDelim)
 	s = strings.ReplaceAll(s, ", ", sumDelim)
+
 	if strings.Contains(s, sumDelim) {
 		t := Type{
 			Kind: KindSum,
@@ -80,6 +83,7 @@ func ParseType(s string) Type {
 		for _, e := range strings.Split(s, sumDelim) {
 			t.Sum = append(t.Sum, ParseType(e))
 		}
+
 		return t
 	}
 
@@ -89,6 +93,7 @@ func ParseType(s string) Type {
 			Name: s,
 		}
 	}
+
 	return Type{
 		Kind: KindObject,
 		Name: s,
@@ -105,14 +110,17 @@ func (t Type) String() string {
 		return fmt.Sprintf("Array of %s", t.Item)
 	case KindSum:
 		var sum []string
+
 		for _, s := range t.Sum {
 			sum = append(sum, s.String())
 		}
+
 		return strings.Join(sum, " or ")
 	default:
 		if t.Name == "" {
 			return "unknown"
 		}
+
 		return fmt.Sprintf("unknown (%s)", t.Name)
 	}
 }

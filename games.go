@@ -27,6 +27,7 @@ type GameHighScore struct {
 // SendGame sends a game identified by its short name (configured via BotFather).
 func (b *Bot) SendGame(ctx context.Context, chat ChatID, gameShortName string, opts ...SendOption) (*Message, error) {
 	var cfg sendConfig
+
 	for _, o := range opts {
 		o(&cfg)
 	}
@@ -41,12 +42,14 @@ func (b *Bot) SendGame(ctx context.Context, chat ChatID, gameShortName string, o
 	})
 
 	builder := &b.sender.To(peer).Builder
+
 	builder, err = b.applySendConfig(builder, cfg)
 	if err != nil {
 		return nil, err
 	}
 
 	resp, err := builder.Media(ctx, media)
+
 	return b.sentMessage(ctx, peer, resp, err)
 }
 
@@ -75,6 +78,7 @@ func (b *Bot) SetGameScore(
 	ctx context.Context, chat ChatID, messageID int, userID int64, score int, opts ...SetGameScoreOption,
 ) (*Message, error) {
 	var cfg gameScoreConfig
+
 	for _, o := range opts {
 		o(&cfg)
 	}
@@ -83,6 +87,7 @@ func (b *Bot) SetGameScore(
 	if err != nil {
 		return nil, err
 	}
+
 	user, err := b.resolveInputUser(ctx, userID)
 	if err != nil {
 		return nil, err
@@ -96,6 +101,7 @@ func (b *Bot) SetGameScore(
 		UserID:      user,
 		Score:       score,
 	})
+
 	return b.sentMessage(ctx, peer, resp, err)
 }
 
@@ -106,6 +112,7 @@ func (b *Bot) GetGameHighScores(ctx context.Context, chat ChatID, messageID int,
 	if err != nil {
 		return nil, err
 	}
+
 	user, err := b.resolveInputUser(ctx, userID)
 	if err != nil {
 		return nil, err
@@ -122,12 +129,15 @@ func (b *Bot) GetGameHighScores(ctx context.Context, chat ChatID, messageID int,
 
 	users := usersByID(res.Users)
 	out := make([]GameHighScore, 0, len(res.Scores))
+
 	for _, s := range res.Scores {
 		hs := GameHighScore{Position: s.Pos, Score: s.Score, User: User{ID: s.UserID}}
 		if u, ok := users[s.UserID]; ok {
 			hs.User = userFromTgUser(u)
 		}
+
 		out = append(out, hs)
 	}
+
 	return out, nil
 }

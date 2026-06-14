@@ -20,6 +20,7 @@ func TestPollFromTg(t *testing.T) {
 		},
 	}
 	poll.SetPublicVoters(false)
+
 	results := &tg.PollResults{
 		TotalVoters: 5,
 		Results: []tg.PollAnswerVoters{
@@ -33,15 +34,19 @@ func TestPollFromTg(t *testing.T) {
 	if got.ID != "99" || got.Question != "2+2?" || !got.IsClosed || got.Type != PollQuiz {
 		t.Fatalf("poll header: %#v", got)
 	}
+
 	if !got.IsAnonymous {
 		t.Fatal("non-public poll should be anonymous")
 	}
+
 	if len(got.Options) != 2 || got.Options[0].Text != "3" || got.Options[1].VoterCount != 3 {
 		t.Fatalf("options: %#v", got.Options)
 	}
+
 	if got.CorrectOptionID != 1 {
 		t.Fatalf("correct option: %d", got.CorrectOptionID)
 	}
+
 	if got.TotalVoterCount != 5 || got.Explanation != "it's four" || got.OpenPeriod != 30 {
 		t.Fatalf("tally/explanation: %#v", got)
 	}

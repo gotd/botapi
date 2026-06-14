@@ -48,17 +48,20 @@ func photoSizesFromTg(photo *tg.Photo) []PhotoSize {
 	}
 
 	var out []PhotoSize
+
 	for _, sz := range photo.Sizes {
 		size, ok := sz.(sized)
 		if !ok {
 			continue
 		}
+
 		t := size.GetType()
 		if t == "" {
 			continue
 		}
 
 		var fileSize int
+
 		switch s := sz.(type) {
 		case *tg.PhotoSize:
 			fileSize = s.Size
@@ -67,6 +70,7 @@ func photoSizesFromTg(photo *tg.Photo) []PhotoSize {
 		}
 
 		fileID, uniqueID := encodeFileID(fileid.FromPhoto(photo, rune(t[0])))
+
 		out = append(out, PhotoSize{
 			FileID:       fileID,
 			FileUniqueID: uniqueID,
@@ -75,6 +79,7 @@ func photoSizesFromTg(photo *tg.Photo) []PhotoSize {
 			FileSize:     fileSize,
 		})
 	}
+
 	return out
 }
 
@@ -90,6 +95,7 @@ func setDocumentMedia(d *tg.Document, r *Message) {
 		duration        int
 		animated, round bool
 	)
+
 	for _, attr := range d.Attributes {
 		switch a := attr.(type) {
 		case *tg.DocumentAttributeFilename:
@@ -117,6 +123,7 @@ func setDocumentMedia(d *tg.Document, r *Message) {
 				Emoji:        a.Alt,
 				FileSize:     int(d.Size),
 			}
+
 			return
 		case *tg.DocumentAttributeAudio:
 			if a.Voice {
@@ -139,6 +146,7 @@ func setDocumentMedia(d *tg.Document, r *Message) {
 					FileSize:     d.Size,
 				}
 			}
+
 			return
 		}
 	}

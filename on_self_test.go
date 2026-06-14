@@ -13,6 +13,7 @@ import (
 func TestDispatchSkipsOwnOutgoingMessage(t *testing.T) {
 	b := newTestBot(t)
 	fired := false
+
 	b.OnMessage(func(*Context) error { fired = true; return nil })
 
 	own := &tg.Message{

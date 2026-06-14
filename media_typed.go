@@ -21,14 +21,17 @@ func (b *Bot) typedMedia(
 	if !ok {
 		return b.documentMedia(ctx, file, caption)
 	}
+
 	f, err := b.uploadInputFile(ctx, up)
 	if err != nil {
 		return nil, err
 	}
+
 	doc := message.UploadedDocument(f, caption...)
 	if up.Name != "" {
 		doc = doc.Filename(up.Name)
 	}
+
 	return typed(doc), nil
 }
 

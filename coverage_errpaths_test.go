@@ -18,6 +18,7 @@ func testTgErr() *tgerr.Error {
 func botFailing(id uint32) *Bot {
 	inv := newMockInvoker()
 	inv.fail(id, testTgErr())
+
 	return newMockBot(inv)
 }
 
@@ -57,9 +58,11 @@ func TestChatMemberQueryErrors(t *testing.T) {
 	if _, err := botFailing(tg.ChannelsGetParticipantRequestTypeID).GetChatMember(ctx, ch, 10); err == nil {
 		t.Fatal("GetChatMember: expected error")
 	}
+
 	if _, err := botFailing(tg.ChannelsGetParticipantsRequestTypeID).GetChatMemberCount(ctx, ch); err == nil {
 		t.Fatal("GetChatMemberCount: expected error")
 	}
+
 	if _, err := botFailing(tg.ChannelsGetParticipantsRequestTypeID).GetChatAdministrators(ctx, ch); err == nil {
 		t.Fatal("GetChatAdministrators: expected error")
 	}
@@ -70,12 +73,15 @@ func TestChatMemberQueryErrors(t *testing.T) {
 func TestChatAdminRejectsPrivate(t *testing.T) {
 	ctx := context.Background()
 	b := newMockBot(newMockInvoker())
+
 	if err := b.SetChatTitle(ctx, userRef(10, 20), "t"); err == nil {
 		t.Fatal("SetChatTitle on private chat should fail")
 	}
+
 	if err := b.SetChatDescription(ctx, userRef(10, 20), "d"); err == nil {
 		t.Fatal("SetChatDescription on private chat should fail")
 	}
+
 	if err := b.LeaveChat(ctx, userRef(10, 20)); err == nil {
 		t.Fatal("LeaveChat on private chat should fail")
 	}
@@ -86,9 +92,11 @@ func TestChatAdminRejectsPrivate(t *testing.T) {
 func TestResolveChannelRejectsUser(t *testing.T) {
 	ctx := context.Background()
 	b := newMockBot(newMockInvoker())
+
 	if _, err := b.GetChatMemberCount(ctx, ID(10)); err == nil {
 		t.Fatal("GetChatMemberCount on a user id should fail")
 	}
+
 	if err := b.SetChatStickerSet(ctx, ID(10), "p"); err == nil {
 		t.Fatal("SetChatStickerSet on a user id should fail")
 	}

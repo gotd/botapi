@@ -14,6 +14,7 @@ func uploadDocInvoker() *mockInvoker {
 	inv.reply(tg.MessagesUploadMediaRequestTypeID, &tg.MessageMediaDocument{
 		Document: &tg.Document{ID: 9, AccessHash: 8, FileReference: []byte{1}, DCID: 2, MimeType: "image/png", Size: 42},
 	})
+
 	return inv
 }
 
@@ -27,10 +28,12 @@ func TestUploadStickerFileBranches(t *testing.T) {
 
 	// A successful upload yields a file_id.
 	b := newMockBot(uploadDocInvoker())
+
 	f, err := b.UploadStickerFile(ctx, 1, FileFromBytes("s.png", []byte("img")), StickerFormatStatic)
 	if err != nil {
 		t.Fatalf("UploadStickerFile: %v", err)
 	}
+
 	if f.FileID == "" || f.FileSize != 42 {
 		t.Fatalf("file = %#v", f)
 	}
@@ -50,6 +53,7 @@ func TestResolveStickerItemBranches(t *testing.T) {
 	if err != nil {
 		t.Fatalf("file_id item: %v", err)
 	}
+
 	if kw, ok := item.GetKeywords(); !ok || kw != "smile,happy" {
 		t.Fatalf("keywords = %q ok=%v", kw, ok)
 	}
@@ -65,6 +69,7 @@ func TestResolveStickerItemBranches(t *testing.T) {
 	if _, err := b.resolveStickerItem(ctx, InputSticker{Sticker: FileID("bad")}); err == nil {
 		t.Fatal("bad file_id should fail")
 	}
+
 	if _, err := b.resolveStickerItem(ctx, InputSticker{Sticker: FileURL("https://e/s.png")}); err == nil {
 		t.Fatal("URL sticker should fail")
 	}
@@ -75,6 +80,7 @@ func TestResolveStickerItemBranches(t *testing.T) {
 func TestUploadStickerDocumentBadResponse(t *testing.T) {
 	inv := newMockInvoker()
 	inv.reply(tg.MessagesUploadMediaRequestTypeID, &tg.MessageMediaEmpty{})
+
 	b := newMockBot(inv)
 	if _, err := b.uploadStickerDocument(context.Background(), &InputFileUpload{Name: "s", Bytes: []byte("x")}, StickerFormatStatic); err == nil {
 		t.Fatal("expected error for non-document upload response")

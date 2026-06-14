@@ -9,8 +9,10 @@ import (
 func TestUserFromTgUser(t *testing.T) {
 	u := &tg.User{ID: 42, Bot: true, FirstName: "Ada", LastName: "L", Username: "ada", LangCode: "en"}
 	u.SetPremium(true)
+
 	got := userFromTgUser(u)
 	want := User{ID: 42, IsBot: true, FirstName: "Ada", LastName: "L", Username: "ada", LanguageCode: "en", IsPremium: true}
+
 	if got != want {
 		t.Fatalf("got %+v want %+v", got, want)
 	}
@@ -27,10 +29,12 @@ func TestInlineKeyboardFromTg(t *testing.T) {
 	if len(got.InlineKeyboard) != 1 || len(got.InlineKeyboard[0]) != 3 {
 		t.Fatalf("unexpected shape: %+v", got.InlineKeyboard)
 	}
+
 	row := got.InlineKeyboard[0]
 	if row[0].URL != "https://example.com" || row[1].CallbackData != "ok:1" {
 		t.Fatalf("url/callback lost: %+v", row)
 	}
+
 	if row[2].SwitchInlineQueryCurrentChat == nil || *row[2].SwitchInlineQueryCurrentChat != "q" {
 		t.Fatalf("same-peer switch-inline lost: %+v", row[2])
 	}

@@ -12,6 +12,7 @@ import (
 
 func assertNoUnknown(t testing.TB, def []Definition) {
 	t.Helper()
+
 	for _, d := range def {
 		for _, f := range d.Fields {
 			if f.Type.Kind == "" {
@@ -34,6 +35,7 @@ func TestExtract(t *testing.T) {
 
 	for _, dd := range a.Types {
 		t.Log(dd.Name, dd.PrettyDescription)
+
 		for _, f := range dd.Fields {
 			t.Logf(" %s %s (%s)", f.Name, f.Type, f.PrettyDescription)
 		}

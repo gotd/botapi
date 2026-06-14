@@ -29,6 +29,9 @@ linters:
     - unconvert
     - unparam
     - whitespace
+    # Strict empty-line/cuddling rules (successor to wsl_v4, which this
+    # toolchain renamed to wsl_v5; the v4-era `wsl` is now deprecated).
+    - wsl_v5
   settings:
     revive:
       rules:
@@ -55,6 +58,11 @@ linters:
     gochecksumtype:
       # A `default:` case counts as covering the remaining variants.
       default-signifies-exhaustive: true
+    wsl_v5:
+      # Enable every check the linter ships with (strictest preset).
+      default: all
+      branch-max-lines: 2
+      case-max-lines: 0
     gocritic:
       enabled-tags:
         - diagnostic

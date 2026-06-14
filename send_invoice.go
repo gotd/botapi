@@ -39,6 +39,7 @@ type InvoiceParams struct {
 // SendInvoice sends an invoice.
 func (b *Bot) SendInvoice(ctx context.Context, chat ChatID, params InvoiceParams, opts ...SendOption) (*Message, error) {
 	var cfg sendConfig
+
 	for _, o := range opts {
 		o(&cfg)
 	}
@@ -52,6 +53,7 @@ func (b *Bot) SendInvoice(ctx context.Context, chat ChatID, params InvoiceParams
 	for i, a := range params.SuggestedTipAmounts {
 		suggested[i] = int64(a)
 	}
+
 	invoice := tg.Invoice{
 		NameRequested:            params.NeedName,
 		PhoneRequested:           params.NeedPhoneNumber,
@@ -77,6 +79,7 @@ func (b *Bot) SendInvoice(ctx context.Context, chat ChatID, params InvoiceParams
 	if params.ProviderData != "" {
 		media.ProviderData = tg.DataJSON{Data: params.ProviderData}
 	}
+
 	if params.PhotoURL != "" {
 		media.SetPhoto(tg.InputWebDocument{
 			URL:      params.PhotoURL,
@@ -89,12 +92,14 @@ func (b *Bot) SendInvoice(ctx context.Context, chat ChatID, params InvoiceParams
 	}
 
 	builder := &b.sender.To(peer).Builder
+
 	builder, err = b.applySendConfig(builder, cfg)
 	if err != nil {
 		return nil, err
 	}
 
 	resp, err := builder.Media(ctx, message.Media(media))
+
 	return b.sentMessage(ctx, peer, resp, err)
 }
 
@@ -104,5 +109,6 @@ func pricesToTg(prices []LabeledPrice) []tg.LabeledPrice {
 	for _, p := range prices {
 		out = append(out, tg.LabeledPrice{Label: p.Label, Amount: int64(p.Amount)})
 	}
+
 	return out
 }

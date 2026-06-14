@@ -29,7 +29,9 @@ type jsonDecoder interface {
 func marshalJX(v jsonEncoder) ([]byte, error) {
 	e := jx.GetEncoder()
 	defer jx.PutEncoder(e)
+
 	v.Encode(e)
+
 	// e.Bytes() aliases the pooled buffer; copy before the buffer is returned
 	// to the pool by the deferred PutEncoder.
 	return append([]byte(nil), e.Bytes()...), nil
@@ -40,7 +42,9 @@ func marshalJX(v jsonEncoder) ([]byte, error) {
 func unmarshalJX(data []byte, v jsonDecoder) error {
 	d := jx.GetDecoder()
 	defer jx.PutDecoder(d)
+
 	d.ResetBytes(data)
+
 	return v.Decode(d)
 }
 
@@ -50,6 +54,7 @@ func unmarshalJX(data []byte, v jsonDecoder) error {
 // discriminator before the variant is decoded.
 func decodeMessageOrigin(d *jx.Decoder) (MessageOrigin, error) {
 	var kind string
+
 	if err := d.Capture(func(d *jx.Decoder) error {
 		return d.ObjBytes(func(d *jx.Decoder, key []byte) error {
 			if string(key) == "type" {
@@ -57,9 +62,12 @@ func decodeMessageOrigin(d *jx.Decoder) (MessageOrigin, error) {
 				if err != nil {
 					return err
 				}
+
 				kind = string(v) // copy: StrBytes aliases the read buffer
+
 				return nil
 			}
+
 			return d.Skip()
 		})
 	}); err != nil {
@@ -67,6 +75,7 @@ func decodeMessageOrigin(d *jx.Decoder) (MessageOrigin, error) {
 	}
 
 	var origin MessageOrigin
+
 	switch MessageOriginType(kind) {
 	case OriginUser:
 		origin = &MessageOriginUser{}
@@ -79,8 +88,10 @@ func decodeMessageOrigin(d *jx.Decoder) (MessageOrigin, error) {
 	default:
 		return nil, errors.Errorf("unknown message origin type %q", kind)
 	}
+
 	if err := origin.(jsonDecoder).Decode(d); err != nil {
 		return nil, err
 	}
+
 	return origin, nil
 }

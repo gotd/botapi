@@ -17,6 +17,7 @@ func broadcastInvoker() *mockInvoker {
 			&tg.Channel{ID: 50, AccessHash: 1, Title: "ch", Broadcast: true, Photo: &tg.ChatPhotoEmpty{}},
 		}}, nil
 	})
+
 	return inv
 }
 
@@ -26,6 +27,7 @@ func TestDispatchMessageRouting(t *testing.T) {
 	ctx := context.Background()
 
 	var fired []string
+
 	b.OnMessage(func(c *Context) error { fired = append(fired, "message"); return nil })
 	b.OnEditedMessage(func(c *Context) error { fired = append(fired, "edited"); return nil })
 	b.OnChannelPost(func(c *Context) error { fired = append(fired, "channel"); return nil })
@@ -46,6 +48,7 @@ func TestDispatchMessageRouting(t *testing.T) {
 	if len(fired) != len(want) {
 		t.Fatalf("fired = %v, want %v", fired, want)
 	}
+
 	for i := range want {
 		if fired[i] != want[i] {
 			t.Fatalf("fired = %v, want %v", fired, want)
@@ -58,17 +61,21 @@ func TestDispatchMessageRouting(t *testing.T) {
 func TestInstallHandlers(t *testing.T) {
 	b := newMockBot(newMockInvoker())
 	b.installHandlers()
+
 	fired := false
+
 	b.OnMessage(func(c *Context) error { fired = true; return nil })
 
 	msg := &tg.Message{ID: 1, Message: "hi", PeerID: &tg.PeerUser{UserID: 10}}
 	msg.SetFromID(&tg.PeerUser{UserID: 10})
+
 	if err := b.disp.Handle(context.Background(), &tg.Updates{
 		Updates: []tg.UpdateClass{&tg.UpdateNewMessage{Message: msg}},
 		Users:   []tg.UserClass{&tg.User{ID: 10, AccessHash: 20}},
 	}); err != nil {
 		t.Fatalf("Handle: %v", err)
 	}
+
 	if !fired {
 		t.Fatal("new-message handler did not fire through the dispatcher")
 	}
@@ -95,10 +102,12 @@ func TestPollFromTgQuiz(t *testing.T) {
 		},
 	}
 	results.SetSolution("two plus two")
+
 	out := pollFromTg(poll, results)
 	if out.Type != PollQuiz || !out.IsClosed || out.CorrectOptionID != 1 {
 		t.Fatalf("poll = %#v", out)
 	}
+
 	if out.Explanation != "two plus two" || out.TotalVoterCount != 5 {
 		t.Fatalf("poll explanation/total = %#v", out)
 	}
@@ -113,9 +122,11 @@ func TestChatPhotoBranches(t *testing.T) {
 	if err := b.SetChatPhoto(ctx, userRef(10, 20), FileID("x")); err == nil {
 		t.Fatal("SetChatPhoto with non-upload file should fail")
 	}
+
 	if err := b.SetChatPhoto(ctx, userRef(10, 20), FileFromBytes("p.jpg", []byte("img"))); err == nil {
 		t.Fatal("SetChatPhoto on a private chat should fail")
 	}
+
 	if err := b.DeleteChatPhoto(ctx, userRef(10, 20)); err == nil {
 		t.Fatal("DeleteChatPhoto on a private chat should fail")
 	}

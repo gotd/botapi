@@ -45,6 +45,7 @@ func (b *Bot) EditMessageLiveLocation(
 	ctx context.Context, chat ChatID, messageID int, latitude, longitude float64, opts ...LiveLocationOption,
 ) (*Message, error) {
 	var cfg liveLocationConfig
+
 	for _, o := range opts {
 		o(&cfg)
 	}
@@ -58,12 +59,15 @@ func (b *Bot) EditMessageLiveLocation(
 	if cfg.accuracy > 0 {
 		media.GeoPoint.(*tg.InputGeoPoint).AccuracyRadius = int(cfg.accuracy)
 	}
+
 	if cfg.heading > 0 {
 		media.Heading = cfg.heading
 	}
+
 	if cfg.proximityAlertRadius > 0 {
 		media.ProximityNotificationRadius = cfg.proximityAlertRadius
 	}
+
 	return b.editLiveLocation(ctx, chat, messageID, media, cfg.markup)
 }
 
@@ -74,6 +78,7 @@ func (b *Bot) StopMessageLiveLocation(ctx context.Context, chat ChatID, messageI
 		Stopped:  true,
 		GeoPoint: &tg.InputGeoPointEmpty{},
 	}
+
 	return b.editLiveLocation(ctx, chat, messageID, media, markup)
 }
 
@@ -88,14 +93,17 @@ func (b *Bot) editLiveLocation(
 
 	req := &tg.MessagesEditMessageRequest{Peer: peer, ID: messageID}
 	req.SetMedia(media)
+
 	if markup != nil {
 		mkp, err := replyMarkupToTg(markup)
 		if err != nil {
 			return nil, err
 		}
+
 		req.SetReplyMarkup(mkp)
 	}
 
 	resp, err := b.raw.MessagesEditMessage(ctx, req)
+
 	return b.sentMessage(ctx, peer, resp, err)
 }

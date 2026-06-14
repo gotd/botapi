@@ -18,7 +18,9 @@ func BenchmarkEntitiesToTg(b *testing.B) {
 		{Type: EntityTextLink, Offset: 16, Length: 8, URL: "https://example.com"},
 		{Type: EntityTextMention, Offset: 25, Length: 5, User: &User{ID: 42}},
 	}
+
 	b.ReportAllocs()
+
 	for b.Loop() {
 		_ = entitiesToTg(entities)
 	}
@@ -32,7 +34,9 @@ func BenchmarkEntitiesFromTg(b *testing.B) {
 		&tg.MessageEntityTextURL{Offset: 16, Length: 8, URL: "https://example.com"},
 		&tg.MessageEntityMentionName{Offset: 25, Length: 5, UserID: 42},
 	}
+
 	b.ReportAllocs()
+
 	for b.Loop() {
 		_ = entitiesFromTg(entities)
 	}
@@ -49,7 +53,9 @@ func BenchmarkReplyMarkupToTg(b *testing.B) {
 			{Text: "switch", SwitchInlineQuery: &q},
 		},
 	}}
+
 	b.ReportAllocs()
+
 	for b.Loop() {
 		if _, err := replyMarkupToTg(markup); err != nil {
 			b.Fatal(err)
@@ -65,7 +71,9 @@ func BenchmarkUserFromTgUser(b *testing.B) {
 		Username:  "ada",
 		Bot:       false,
 	}
+
 	b.ReportAllocs()
+
 	for b.Loop() {
 		_ = userFromTgUser(u)
 	}
@@ -73,7 +81,9 @@ func BenchmarkUserFromTgUser(b *testing.B) {
 
 func BenchmarkFileUniqueID(b *testing.B) {
 	f := fileid.FileID{Type: fileid.Document, ID: 0x1122334455667788}
+
 	b.ReportAllocs()
+
 	for b.Loop() {
 		_ = fileUniqueID(f)
 	}

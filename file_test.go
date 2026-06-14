@@ -16,11 +16,13 @@ func TestFileUniqueID_Document(t *testing.T) {
 	raw := make([]byte, 12)
 	binary.LittleEndian.PutUint32(raw[0:], uniqueTypeDocument)
 	binary.LittleEndian.PutUint64(raw[4:], 0x1122334455667788)
+
 	want := base64.RawURLEncoding.EncodeToString(rleEncode(raw))
 
 	if got != want {
 		t.Fatalf("got %q, want %q", got, want)
 	}
+
 	if got == "" || got == "todo" {
 		t.Fatalf("unique id not derived: %q", got)
 	}
@@ -29,9 +31,11 @@ func TestFileUniqueID_Document(t *testing.T) {
 func TestFileUniqueID_Web(t *testing.T) {
 	f := fileid.FileID{URL: "https://example.com/a.jpg"}
 	got := fileUniqueID(f)
+
 	if got == "" {
 		t.Fatal("empty unique id for web file")
 	}
+
 	// Different URLs must yield different unique ids.
 	other := fileUniqueID(fileid.FileID{URL: "https://example.com/b.jpg"})
 	if got == other {

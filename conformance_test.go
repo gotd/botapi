@@ -49,8 +49,10 @@ func TestMethodConformance(t *testing.T) {
 	published := map[string]struct{}{}
 
 	var uncategorized []string
+
 	for _, def := range api.Methods {
 		name := def.Name
+
 		published[name] = struct{}{}
 
 		switch {
@@ -84,16 +86,21 @@ func TestMethodConformance(t *testing.T) {
 // snapshot.
 func loadAPI(t *testing.T) botdoc.API {
 	t.Helper()
+
 	path := filepath.Join("internal", "botdoc", "_testdata", "api.html")
+
 	f, err := os.Open(path)
 	if err != nil {
 		t.Fatalf("open api docs: %v", err)
 	}
+
 	defer func() { _ = f.Close() }()
+
 	doc, err := goquery.NewDocumentFromReader(f)
 	if err != nil {
 		t.Fatalf("parse api docs: %v", err)
 	}
+
 	return botdoc.Extract(doc)
 }
 
@@ -101,9 +108,11 @@ func loadAPI(t *testing.T) botdoc.API {
 func botMethodSet() map[string]bool {
 	t := reflect.TypeFor[*Bot]()
 	set := make(map[string]bool, t.NumMethod())
+
 	for i := 0; i < t.NumMethod(); i++ {
 		set[t.Method(i).Name] = true
 	}
+
 	return set
 }
 
@@ -113,9 +122,11 @@ func goName(apiName string) string {
 	if apiName == "" {
 		return ""
 	}
+
 	b := []byte(apiName)
 	if b[0] >= 'a' && b[0] <= 'z' {
 		b[0] -= 'a' - 'A'
 	}
+
 	return string(b)
 }

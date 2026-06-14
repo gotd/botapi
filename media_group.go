@@ -22,10 +22,12 @@ func (b *Bot) photoMulti(ctx context.Context, file InputFile, caption []styling.
 	if !ok {
 		return nil, errNonUploadInAlbum
 	}
+
 	upFile, err := b.uploadInputFile(ctx, up)
 	if err != nil {
 		return nil, err
 	}
+
 	return message.UploadedPhoto(upFile, caption...), nil
 }
 
@@ -41,14 +43,17 @@ func (b *Bot) docMulti(
 	if !ok {
 		return nil, errNonUploadInAlbum
 	}
+
 	upFile, err := b.uploadInputFile(ctx, up)
 	if err != nil {
 		return nil, err
 	}
+
 	doc := message.UploadedDocument(upFile, caption...)
 	if up.Name != "" {
 		doc = doc.Filename(up.Name)
 	}
+
 	return typed(doc), nil
 }
 
@@ -58,36 +63,42 @@ func (b *Bot) docMulti(
 func (b *Bot) inputMediaToMulti(ctx context.Context, m InputMedia) (message.MultiMediaOption, error) {
 	resolver := b.peers.UserResolveHook(ctx)
 	plain := func(d *message.UploadedDocumentBuilder) message.MultiMediaOption { return d }
+
 	switch m := m.(type) {
 	case *InputMediaPhoto:
 		caption, err := styledText(m.Caption, m.ParseMode, resolver)
 		if err != nil {
 			return nil, err
 		}
+
 		return b.photoMulti(ctx, m.Media, caption)
 	case *InputMediaVideo:
 		caption, err := styledText(m.Caption, m.ParseMode, resolver)
 		if err != nil {
 			return nil, err
 		}
+
 		return b.docMulti(ctx, m.Media, caption, func(d *message.UploadedDocumentBuilder) message.MultiMediaOption { return d.Video() })
 	case *InputMediaAnimation:
 		caption, err := styledText(m.Caption, m.ParseMode, resolver)
 		if err != nil {
 			return nil, err
 		}
+
 		return b.docMulti(ctx, m.Media, caption, func(d *message.UploadedDocumentBuilder) message.MultiMediaOption { return d.GIF() })
 	case *InputMediaAudio:
 		caption, err := styledText(m.Caption, m.ParseMode, resolver)
 		if err != nil {
 			return nil, err
 		}
+
 		return b.docMulti(ctx, m.Media, caption, func(d *message.UploadedDocumentBuilder) message.MultiMediaOption { return d.Audio() })
 	case *InputMediaDocument:
 		caption, err := styledText(m.Caption, m.ParseMode, resolver)
 		if err != nil {
 			return nil, err
 		}
+
 		return b.docMulti(ctx, m.Media, caption, plain)
 	default:
 		return nil, &Error{Code: 400, Description: "Bad Request: invalid media"}
@@ -101,6 +112,7 @@ func (b *Bot) sentMessages(ctx context.Context, resp tg.UpdatesClass, sendErr er
 	}
 
 	var updates []tg.UpdateClass
+
 	switch u := resp.(type) {
 	case *tg.Updates:
 		updates = u.Updates
@@ -111,8 +123,10 @@ func (b *Bot) sentMessages(ctx context.Context, resp tg.UpdatesClass, sendErr er
 	}
 
 	var out []*Message
+
 	for _, upd := range updates {
 		var msg tg.MessageClass
+
 		switch u := upd.(type) {
 		case *tg.UpdateNewMessage:
 			msg = u.Message
@@ -121,16 +135,20 @@ func (b *Bot) sentMessages(ctx context.Context, resp tg.UpdatesClass, sendErr er
 		default:
 			continue
 		}
+
 		m, ok := msg.(*tg.Message)
 		if !ok {
 			continue
 		}
+
 		converted, err := b.convertMessage(ctx, m)
 		if err != nil {
 			return nil, err
 		}
+
 		out = append(out, converted)
 	}
+
 	return out, nil
 }
 
@@ -142,6 +160,7 @@ func (b *Bot) SendMediaGroup(ctx context.Context, chat ChatID, media []InputMedi
 	}
 
 	var cfg sendConfig
+
 	for _, o := range opts {
 		o(&cfg)
 	}
@@ -152,6 +171,7 @@ func (b *Bot) SendMediaGroup(ctx context.Context, chat ChatID, media []InputMedi
 		if err != nil {
 			return nil, err
 		}
+
 		items[i] = mm
 	}
 
@@ -159,12 +179,15 @@ func (b *Bot) SendMediaGroup(ctx context.Context, chat ChatID, media []InputMedi
 	if err != nil {
 		return nil, err
 	}
+
 	builder := &b.sender.To(peer).Builder
+
 	builder, err = b.applySendConfig(builder, cfg)
 	if err != nil {
 		return nil, err
 	}
 
 	resp, err := builder.Album(ctx, items[0], items[1:]...)
+
 	return b.sentMessages(ctx, resp, err)
 }

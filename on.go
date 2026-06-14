@@ -13,34 +13,42 @@ import (
 func (b *Bot) installHandlers() {
 	b.disp.OnNewMessage(func(ctx context.Context, _ tg.Entities, u *tg.UpdateNewMessage) error {
 		b.dispatchMessage(ctx, u.Message, false)
+
 		return nil
 	})
 	b.disp.OnEditMessage(func(ctx context.Context, _ tg.Entities, u *tg.UpdateEditMessage) error {
 		b.dispatchMessage(ctx, u.Message, true)
+
 		return nil
 	})
 	b.disp.OnNewChannelMessage(func(ctx context.Context, _ tg.Entities, u *tg.UpdateNewChannelMessage) error {
 		b.dispatchMessage(ctx, u.Message, false)
+
 		return nil
 	})
 	b.disp.OnEditChannelMessage(func(ctx context.Context, _ tg.Entities, u *tg.UpdateEditChannelMessage) error {
 		b.dispatchMessage(ctx, u.Message, true)
+
 		return nil
 	})
 	b.disp.OnBotCallbackQuery(func(ctx context.Context, e tg.Entities, u *tg.UpdateBotCallbackQuery) error {
 		b.route(ctx, &Update{CallbackQuery: callbackQueryFromTg(e, u)})
+
 		return nil
 	})
 	b.disp.OnBotInlineQuery(func(ctx context.Context, e tg.Entities, u *tg.UpdateBotInlineQuery) error {
 		b.route(ctx, &Update{InlineQuery: inlineQueryFromTg(e, u)})
+
 		return nil
 	})
 	b.disp.OnBotShippingQuery(func(ctx context.Context, e tg.Entities, u *tg.UpdateBotShippingQuery) error {
 		b.route(ctx, &Update{ShippingQuery: shippingQueryFromTg(e, u)})
+
 		return nil
 	})
 	b.disp.OnBotPrecheckoutQuery(func(ctx context.Context, e tg.Entities, u *tg.UpdateBotPrecheckoutQuery) error {
 		b.route(ctx, &Update{PreCheckoutQuery: preCheckoutQueryFromTg(e, u)})
+
 		return nil
 	})
 }
@@ -59,13 +67,16 @@ func (b *Bot) dispatchMessage(ctx context.Context, msg tg.MessageClass, edited b
 	m, err := b.messageFromTg(ctx, msg)
 	if err != nil {
 		b.logger().Error(ctx, "Convert message", log.Error(err))
+
 		return
 	}
+
 	if m == nil {
 		return
 	}
 
 	u := &Update{}
+
 	switch {
 	case m.Chat.Type == ChatTypeChannel && edited:
 		u.EditedChannelPost = m
@@ -76,6 +87,7 @@ func (b *Bot) dispatchMessage(ctx context.Context, msg tg.MessageClass, edited b
 	default:
 		u.Message = m
 	}
+
 	b.route(ctx, u)
 }
 
@@ -127,7 +139,9 @@ func (b *Bot) OnPreCheckoutQuery(h Handler, predicates ...Predicate) {
 // prepend returns p followed by rest, without mutating rest.
 func prepend(p Predicate, rest []Predicate) []Predicate {
 	out := make([]Predicate, 0, len(rest)+1)
+
 	out = append(out, p)
 	out = append(out, rest...)
+
 	return out
 }

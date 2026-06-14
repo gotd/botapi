@@ -16,11 +16,13 @@ func TestSendChatActionAll(t *testing.T) {
 	for _, action := range actions {
 		inv := newMockInvoker()
 		inv.reply(tg.MessagesSetTypingRequestTypeID, &tg.BoolTrue{})
+
 		b := newMockBot(inv)
 		if err := b.SendChatAction(context.Background(), userRef(10, 20), action); err != nil {
 			t.Fatalf("SendChatAction(%q): %v", action, err)
 		}
 	}
+
 	// Unknown action is rejected before the wire.
 	b := newMockBot(newMockInvoker())
 	if err := b.SendChatAction(context.Background(), userRef(10, 20), ChatAction("nonsense")); err == nil {

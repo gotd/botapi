@@ -32,21 +32,26 @@ func chatFromPeer(p peers.Peer) Chat {
 		if v, ok := p.Username(); ok {
 			c.Username = v
 		}
+
 		if v, ok := p.FirstName(); ok {
 			c.FirstName = v
 		}
+
 		if v, ok := p.LastName(); ok {
 			c.LastName = v
 		}
+
 		return c
 	case peers.Channel:
 		c := Chat{ID: int64(p.TDLibPeerID()), Title: p.VisibleName(), Type: ChatTypeSupergroup}
 		if _, ok := p.ToBroadcast(); ok {
 			c.Type = ChatTypeChannel
 		}
+
 		if v, ok := p.Username(); ok {
 			c.Username = v
 		}
+
 		return c
 	case peers.Chat:
 		return Chat{ID: int64(p.TDLibPeerID()), Type: ChatTypeGroup, Title: p.VisibleName()}
@@ -81,10 +86,13 @@ func inlineKeyboardFromTg(mkp *tg.ReplyInlineMarkup) *InlineKeyboardMarkup {
 				// login_url buttons are represented as ordinary url buttons.
 				btn.URL = b.URL
 			}
+
 			buttons[j] = btn
 		}
+
 		rows[i] = buttons
 	}
+
 	return &InlineKeyboardMarkup{InlineKeyboard: rows}
 }
 
@@ -94,6 +102,7 @@ func (b *Bot) chatByPeer(ctx context.Context, p tg.PeerClass) (Chat, error) {
 	if err != nil {
 		return Chat{}, asAPIError(err)
 	}
+
 	return chatFromPeer(peer), nil
 }
 
@@ -106,15 +115,19 @@ func (b *Bot) fillFrom(ctx context.Context, from tg.PeerClass, m *Message) error
 		if err != nil {
 			return asAPIError(err)
 		}
+
 		user := userFromTgUser(u.Raw())
+
 		m.From = &user
 	case *tg.PeerChat, *tg.PeerChannel:
 		chat, err := b.chatByPeer(ctx, from)
 		if err != nil {
 			return err
 		}
+
 		m.SenderChat = &chat
 	}
+
 	return nil
 }
 
@@ -136,6 +149,7 @@ func (b *Bot) forwardOrigin(ctx context.Context, h *tg.MessageFwdHeader) (Messag
 		if err != nil {
 			return nil, asAPIError(err)
 		}
+
 		return &MessageOriginUser{Type: OriginUser, Date: h.Date, SenderUser: userFromTgUser(u.Raw())}, nil
 	}
 
@@ -143,6 +157,7 @@ func (b *Bot) forwardOrigin(ctx context.Context, h *tg.MessageFwdHeader) (Messag
 	if err != nil {
 		return nil, err
 	}
+
 	author, _ := h.GetPostAuthor()
 	if post, ok := h.GetChannelPost(); ok && chat.Type == ChatTypeChannel {
 		return &MessageOriginChannel{
@@ -153,6 +168,7 @@ func (b *Bot) forwardOrigin(ctx context.Context, h *tg.MessageFwdHeader) (Messag
 			AuthorSignature: author,
 		}, nil
 	}
+
 	return &MessageOriginChat{
 		Type:            OriginChat,
 		Date:            h.Date,
@@ -180,6 +196,7 @@ func (b *Bot) convertMessage(ctx context.Context, m *tg.Message) (*Message, erro
 	if v, ok := m.GetEditDate(); ok {
 		r.EditDate = v
 	}
+
 	if v, ok := m.GetPostAuthor(); ok {
 		r.AuthorSignature = v
 	}
@@ -187,6 +204,7 @@ func (b *Bot) convertMessage(ctx context.Context, m *tg.Message) (*Message, erro
 	if m.Out {
 		if self, selfErr := b.peers.Self(ctx); selfErr == nil {
 			user := userFromTgUser(self.Raw())
+
 			r.From = &user
 		}
 	} else if from, ok := m.GetFromID(); ok {
@@ -204,11 +222,13 @@ func (b *Bot) convertMessage(ctx context.Context, m *tg.Message) (*Message, erro
 		if err != nil {
 			return nil, err
 		}
+
 		r.ForwardOrigin = origin
 	}
 
 	if media, ok := m.GetMedia(); ok {
 		convertMessageMedia(media, r)
+
 		// On a media message, m.Message is the caption.
 		if m.Message != "" {
 			r.Caption = m.Message
@@ -220,10 +240,12 @@ func (b *Bot) convertMessage(ctx context.Context, m *tg.Message) (*Message, erro
 		if m.Message != "" {
 			r.Text = m.Message
 		}
+
 		if len(m.Entities) > 0 {
 			r.Entities = entitiesFromTg(m.Entities)
 		}
 	}
+
 	if mkp, ok := m.ReplyMarkup.(*tg.ReplyInlineMarkup); ok {
 		r.ReplyMarkup = inlineKeyboardFromTg(mkp)
 	}

@@ -99,6 +99,7 @@ func (s botCommandScopeChat) resolve(ctx context.Context, b *Bot) (tg.BotCommand
 	if err != nil {
 		return nil, err
 	}
+
 	return &tg.BotCommandScopePeer{Peer: peer}, nil
 }
 
@@ -107,6 +108,7 @@ func (s botCommandScopeChatAdministrators) resolve(ctx context.Context, b *Bot) 
 	if err != nil {
 		return nil, err
 	}
+
 	return &tg.BotCommandScopePeerAdmins{Peer: peer}, nil
 }
 
@@ -115,10 +117,12 @@ func (s botCommandScopeChatMember) resolve(ctx context.Context, b *Bot) (tg.BotC
 	if err != nil {
 		return nil, err
 	}
+
 	user, err := b.resolveInputUser(ctx, s.userID)
 	if err != nil {
 		return nil, err
 	}
+
 	return &tg.BotCommandScopePeerUser{Peer: peer, UserID: user}, nil
 }
 
@@ -134,6 +138,7 @@ func (c commandConfig) resolveScope(ctx context.Context, b *Bot) (tg.BotCommandS
 	if c.scope == nil {
 		return &tg.BotCommandScopeDefault{}, nil
 	}
+
 	return c.scope.resolve(ctx, b)
 }
 
@@ -152,9 +157,11 @@ func WithLanguageCode(code string) CommandOption {
 // language.
 func (b *Bot) SetMyCommands(ctx context.Context, commands []BotCommand, opts ...CommandOption) error {
 	var cfg commandConfig
+
 	for _, o := range opts {
 		o(&cfg)
 	}
+
 	scope, err := cfg.resolveScope(ctx, b)
 	if err != nil {
 		return err
@@ -172,6 +179,7 @@ func (b *Bot) SetMyCommands(ctx context.Context, commands []BotCommand, opts ...
 	}); err != nil {
 		return asAPIError(err)
 	}
+
 	return nil
 }
 
@@ -179,9 +187,11 @@ func (b *Bot) SetMyCommands(ctx context.Context, commands []BotCommand, opts ...
 // scope and language.
 func (b *Bot) GetMyCommands(ctx context.Context, opts ...CommandOption) ([]BotCommand, error) {
 	var cfg commandConfig
+
 	for _, o := range opts {
 		o(&cfg)
 	}
+
 	scope, err := cfg.resolveScope(ctx, b)
 	if err != nil {
 		return nil, err
@@ -199,6 +209,7 @@ func (b *Bot) GetMyCommands(ctx context.Context, opts ...CommandOption) ([]BotCo
 	for i, c := range cmds {
 		out[i] = BotCommand{Command: c.Command, Description: c.Description}
 	}
+
 	return out, nil
 }
 
@@ -206,9 +217,11 @@ func (b *Bot) GetMyCommands(ctx context.Context, opts ...CommandOption) ([]BotCo
 // language, restoring the default commands.
 func (b *Bot) DeleteMyCommands(ctx context.Context, opts ...CommandOption) error {
 	var cfg commandConfig
+
 	for _, o := range opts {
 		o(&cfg)
 	}
+
 	scope, err := cfg.resolveScope(ctx, b)
 	if err != nil {
 		return err
@@ -220,5 +233,6 @@ func (b *Bot) DeleteMyCommands(ctx context.Context, opts ...CommandOption) error
 	}); err != nil {
 		return asAPIError(err)
 	}
+
 	return nil
 }

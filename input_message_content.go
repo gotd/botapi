@@ -73,12 +73,15 @@ func (c *InputTextMessageContent) toTg(ctx context.Context, b *Bot, markup tg.Re
 		if err != nil {
 			return nil, err
 		}
+
 		msg.Message = text
 		msg.Entities = entities
 	}
+
 	if markup != nil {
 		msg.SetReplyMarkup(markup)
 	}
+
 	return msg, nil
 }
 
@@ -96,6 +99,7 @@ func (c *InputLocationMessageContent) toTg(_ context.Context, _ *Bot, markup tg.
 	if markup != nil {
 		msg.SetReplyMarkup(markup)
 	}
+
 	return msg, nil
 }
 
@@ -111,6 +115,7 @@ func (c *InputVenueMessageContent) toTg(_ context.Context, _ *Bot, markup tg.Rep
 	if markup != nil {
 		msg.SetReplyMarkup(markup)
 	}
+
 	return msg, nil
 }
 
@@ -124,6 +129,7 @@ func (c *InputContactMessageContent) toTg(_ context.Context, _ *Bot, markup tg.R
 	if markup != nil {
 		msg.SetReplyMarkup(markup)
 	}
+
 	return msg, nil
 }
 
@@ -132,9 +138,11 @@ func venueProvider(c *InputVenueMessageContent) string {
 	if c.FoursquareID != "" || c.FoursquareType != "" {
 		return "foursquare"
 	}
+
 	if c.GooglePlaceID != "" || c.GooglePlaceType != "" {
 		return "gplaces"
 	}
+
 	return ""
 }
 
@@ -144,5 +152,6 @@ func firstNonEmpty(values ...string) string {
 			return v
 		}
 	}
+
 	return ""
 }

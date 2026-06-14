@@ -14,6 +14,7 @@ func (b *Bot) SendChatAction(ctx context.Context, chat ChatID, action ChatAction
 	}
 
 	a := b.sender.To(peer).TypingAction()
+
 	switch action {
 	case ChatActionTyping:
 		err = a.Typing(ctx)
@@ -40,5 +41,6 @@ func (b *Bot) SendChatAction(ctx context.Context, chat ChatID, action ChatAction
 	default:
 		return &Error{Code: 400, Description: "Bad Request: wrong parameter action in request"}
 	}
+
 	return asAPIError(err)
 }

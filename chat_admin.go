@@ -28,10 +28,12 @@ func (b *Bot) resolveChatAdmin(ctx context.Context, chat ChatID) (chatAdmin, err
 	if err != nil {
 		return nil, err
 	}
+
 	a, ok := p.(chatAdmin)
 	if !ok {
 		return nil, errNotInPrivateChat()
 	}
+
 	return a, nil
 }
 
@@ -42,9 +44,11 @@ func (b *Bot) SetChatTitle(ctx context.Context, chat ChatID, title string) error
 	if err != nil {
 		return err
 	}
+
 	if err := a.SetTitle(ctx, title); err != nil {
 		return asAPIError(err)
 	}
+
 	return nil
 }
 
@@ -54,9 +58,11 @@ func (b *Bot) SetChatDescription(ctx context.Context, chat ChatID, description s
 	if err != nil {
 		return err
 	}
+
 	if err := a.SetDescription(ctx, description); err != nil {
 		return asAPIError(err)
 	}
+
 	return nil
 }
 
@@ -66,9 +72,11 @@ func (b *Bot) LeaveChat(ctx context.Context, chat ChatID) error {
 	if err != nil {
 		return err
 	}
+
 	if err := a.Leave(ctx); err != nil {
 		return asAPIError(err)
 	}
+
 	return nil
 }
 
@@ -76,13 +84,16 @@ func (b *Bot) LeaveChat(ctx context.Context, chat ChatID) error {
 // Silent to pin quietly.
 func (b *Bot) PinChatMessage(ctx context.Context, chat ChatID, messageID int, opts ...SendOption) error {
 	var cfg sendConfig
+
 	for _, o := range opts {
 		o(&cfg)
 	}
+
 	peer, err := b.resolveInputPeer(ctx, chat)
 	if err != nil {
 		return err
 	}
+
 	if _, err := b.raw.MessagesUpdatePinnedMessage(ctx, &tg.MessagesUpdatePinnedMessageRequest{
 		Peer:   peer,
 		ID:     messageID,
@@ -90,6 +101,7 @@ func (b *Bot) PinChatMessage(ctx context.Context, chat ChatID, messageID int, op
 	}); err != nil {
 		return asAPIError(err)
 	}
+
 	return nil
 }
 
@@ -99,6 +111,7 @@ func (b *Bot) UnpinChatMessage(ctx context.Context, chat ChatID, messageID int) 
 	if err != nil {
 		return err
 	}
+
 	if _, err := b.raw.MessagesUpdatePinnedMessage(ctx, &tg.MessagesUpdatePinnedMessageRequest{
 		Peer:  peer,
 		ID:    messageID,
@@ -106,6 +119,7 @@ func (b *Bot) UnpinChatMessage(ctx context.Context, chat ChatID, messageID int) 
 	}); err != nil {
 		return asAPIError(err)
 	}
+
 	return nil
 }
 
@@ -115,11 +129,13 @@ func (b *Bot) UnpinAllChatMessages(ctx context.Context, chat ChatID) error {
 	if err != nil {
 		return err
 	}
+
 	if _, err := b.raw.MessagesUnpinAllMessages(ctx, &tg.MessagesUnpinAllMessagesRequest{
 		Peer: peer,
 	}); err != nil {
 		return asAPIError(err)
 	}
+
 	return nil
 }
 
@@ -130,12 +146,14 @@ func (b *Bot) SetChatPermissions(ctx context.Context, chat ChatID, permissions C
 	if err != nil {
 		return err
 	}
+
 	if _, err := b.raw.MessagesEditChatDefaultBannedRights(ctx, &tg.MessagesEditChatDefaultBannedRightsRequest{
 		Peer:         peer,
 		BannedRights: permissions.toBannedRights(0),
 	}); err != nil {
 		return asAPIError(err)
 	}
+
 	return nil
 }
 
@@ -145,12 +163,14 @@ func (b *Bot) SetChatStickerSet(ctx context.Context, chat ChatID, stickerSetName
 	if err != nil {
 		return err
 	}
+
 	if _, err := b.raw.ChannelsSetStickers(ctx, &tg.ChannelsSetStickersRequest{
 		Channel:    channel,
 		Stickerset: &tg.InputStickerSetShortName{ShortName: stickerSetName},
 	}); err != nil {
 		return asAPIError(err)
 	}
+
 	return nil
 }
 
@@ -160,11 +180,13 @@ func (b *Bot) DeleteChatStickerSet(ctx context.Context, chat ChatID) error {
 	if err != nil {
 		return err
 	}
+
 	if _, err := b.raw.ChannelsSetStickers(ctx, &tg.ChannelsSetStickersRequest{
 		Channel:    channel,
 		Stickerset: &tg.InputStickerSetEmpty{},
 	}); err != nil {
 		return asAPIError(err)
 	}
+
 	return nil
 }

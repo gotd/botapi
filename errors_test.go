@@ -13,6 +13,7 @@ func TestAsFloodWait(t *testing.T) {
 	t.Run("FromError", func(t *testing.T) {
 		err := &Error{Code: 429, Description: "Too Many Requests", Parameters: &ResponseParameters{RetryAfter: 5}}
 		d, ok := AsFloodWait(err)
+
 		if !ok || d != 5*time.Second {
 			t.Fatalf("got (%v, %v), want (5s, true)", d, ok)
 		}
@@ -39,11 +40,13 @@ func TestAsFloodWait(t *testing.T) {
 func TestErrorUnwrap(t *testing.T) {
 	sentinel := errors.New("underlying")
 	err := &Error{Code: 400, Description: "Bad Request", err: sentinel}
+
 	if !errors.Is(err, sentinel) {
 		t.Fatal("errors.Is should reach the wrapped error")
 	}
 
 	var apiErr *Error
+
 	if !errors.As(fmt.Errorf("ctx: %w", err), &apiErr) || apiErr.Code != 400 {
 		t.Fatal("errors.As should extract *Error through a wrap")
 	}

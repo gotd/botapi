@@ -16,14 +16,19 @@ func (b *Bot) styledMessage(ctx context.Context, text string, mode ParseMode) (s
 	if mode == ParseModeNone {
 		return text, nil, nil
 	}
+
 	opts, err := styledText(text, mode, b.peers.UserResolveHook(ctx))
 	if err != nil {
 		return "", nil, err
 	}
+
 	var builder entity.Builder
+
 	if err := styling.Perform(&builder, opts...); err != nil {
 		return "", nil, &Error{Code: 400, Description: "Bad Request: can't parse entities: " + err.Error()}
 	}
+
 	msg, entities := builder.Complete()
+
 	return msg, entities, nil
 }

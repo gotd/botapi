@@ -15,9 +15,11 @@ func (c *Context) Sender() *User {
 	case c.Update.InlineQuery != nil:
 		return &c.Update.InlineQuery.From
 	}
+
 	if m := c.Message(); m != nil {
 		return m.From
 	}
+
 	return nil
 }
 
@@ -26,9 +28,11 @@ func (c *Context) Chat() (ChatID, bool) {
 	if m := c.Message(); m != nil {
 		return ID(m.Chat.ID), true
 	}
+
 	if cq := c.Update.CallbackQuery; cq != nil && cq.Message != nil {
 		return ID(cq.Message.Chat.ID), true
 	}
+
 	return nil, false
 }
 
@@ -38,6 +42,7 @@ func (c *Context) Send(text string, opts ...SendOption) (*Message, error) {
 	if !ok {
 		return nil, &Error{Code: 400, Description: "Bad Request: update has no chat to send to"}
 	}
+
 	return c.Bot.SendMessage(c, chat, text, opts...)
 }
 
@@ -48,7 +53,9 @@ func (c *Context) Reply(text string, opts ...SendOption) (*Message, error) {
 	if m == nil {
 		return nil, &Error{Code: 400, Description: "Bad Request: update has no message to reply to"}
 	}
+
 	opts = append([]SendOption{ReplyTo(m.MessageID)}, opts...)
+
 	return c.Bot.SendMessage(c, ID(m.Chat.ID), text, opts...)
 }
 
@@ -59,6 +66,7 @@ func (c *Context) AnswerCallback(opts ...AnswerCallbackQueryOption) error {
 	if cq == nil {
 		return &Error{Code: 400, Description: "Bad Request: update has no callback query to answer"}
 	}
+
 	return c.Bot.AnswerCallbackQuery(c, cq.ID, opts...)
 }
 
@@ -81,5 +89,6 @@ func (c *Context) AnswerInline(results []InlineQueryResult, opts ...AnswerInline
 	if iq == nil {
 		return &Error{Code: 400, Description: "Bad Request: update has no inline query to answer"}
 	}
+
 	return c.Bot.AnswerInlineQuery(c, iq.ID, results, opts...)
 }

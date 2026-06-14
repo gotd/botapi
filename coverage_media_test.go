@@ -21,14 +21,17 @@ func TestSendTypedMediaUpload(t *testing.T) {
 		"videonote": func(b *Bot) (*Message, error) { return b.SendVideoNote(context.Background(), userRef(10, 20), file) },
 		"sticker":   func(b *Bot) (*Message, error) { return b.SendSticker(context.Background(), userRef(10, 20), file) },
 	}
+
 	for name, send := range sends {
 		t.Run(name, func(t *testing.T) {
 			inv := newMockInvoker()
 			inv.reply(tg.MessagesSendMediaRequestTypeID, sendMediaOK())
+
 			b := newMockBot(inv)
 			if _, err := send(b); err != nil {
 				t.Fatalf("%s upload: %v", name, err)
 			}
+
 			if !inv.called(tg.UploadSaveFilePartRequestTypeID) {
 				t.Fatalf("%s did not upload a file part", name)
 			}
@@ -41,12 +44,14 @@ func TestSendTypedMediaUpload(t *testing.T) {
 func TestEditMessageMediaUploadAndMarkup(t *testing.T) {
 	inv := newMockInvoker()
 	inv.reply(tg.MessagesEditMessageRequestTypeID, editUpdates(&tg.Message{ID: 5, PeerID: &tg.PeerUser{UserID: 10}}))
+
 	b := newMockBot(inv)
 
 	media := &InputMediaPhoto{Media: FileFromBytes("p.jpg", []byte("img")), Caption: "<b>x</b>", ParseMode: ParseModeHTML}
 	if _, err := b.EditMessageMedia(context.Background(), userRef(10, 20), 5, media, WithReplyMarkup(goodInlineMarkup)); err != nil {
 		t.Fatalf("EditMessageMedia upload: %v", err)
 	}
+
 	if !inv.called(tg.UploadSaveFilePartRequestTypeID) {
 		t.Fatal("photo upload should save a file part")
 	}
@@ -60,9 +65,11 @@ func TestEditMessageMediaErrors(t *testing.T) {
 	if _, err := b.EditMessageMedia(context.Background(), userRef(10, 20), 5, &InputMediaPhoto{Media: FileID("bad")}); err == nil {
 		t.Fatal("expected error for bad photo file_id")
 	}
+
 	if _, err := b.EditMessageMedia(context.Background(), userRef(10, 20), 5, &InputMediaDocument{Media: FileID("bad")}); err == nil {
 		t.Fatal("expected error for bad document file_id")
 	}
+
 	if _, err := b.EditMessageMedia(context.Background(), userRef(10, 20), 5,
 		&InputMediaPhoto{Media: FileURL("https://e/p.jpg")}, WithReplyMarkup(badInlineMarkup)); err == nil {
 		t.Fatal("expected error for bad reply markup")
@@ -133,10 +140,12 @@ func TestSentMessagesBranches(t *testing.T) {
 	if _, err := b.sentMessages(ctx, nil, context.Canceled); err == nil {
 		t.Fatal("expected error to propagate")
 	}
+
 	// Unhandled updates shape yields no messages.
 	if msgs, err := b.sentMessages(ctx, &tg.UpdateShort{}, nil); err != nil || msgs != nil {
 		t.Fatalf("UpdateShort: msgs=%v err=%v", msgs, err)
 	}
+
 	// UpdatesCombined with a channel message is converted.
 	resp := &tg.UpdatesCombined{
 		Updates: []tg.UpdateClass{
@@ -146,6 +155,7 @@ func TestSentMessagesBranches(t *testing.T) {
 		Users: []tg.UserClass{&tg.User{ID: 10, AccessHash: 20}},
 	}
 	msgs, err := b.sentMessages(ctx, resp, nil)
+
 	if err != nil || len(msgs) != 1 {
 		t.Fatalf("UpdatesCombined: msgs=%d err=%v", len(msgs), err)
 	}

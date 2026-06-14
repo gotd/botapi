@@ -12,6 +12,7 @@ import (
 // WithShippingError describing why the order can't be shipped.
 func (b *Bot) AnswerShippingQuery(ctx context.Context, shippingQueryID string, ok bool, opts ...ShippingAnswerOption) error {
 	var cfg shippingAnswerConfig
+
 	for _, o := range opts {
 		o(&cfg)
 	}
@@ -31,6 +32,7 @@ func (b *Bot) AnswerShippingQuery(ctx context.Context, shippingQueryID string, o
 	if _, err := b.raw.MessagesSetBotShippingResults(ctx, req); err != nil {
 		return asAPIError(err)
 	}
+
 	return nil
 }
 
@@ -57,6 +59,7 @@ func WithShippingError(message string) ShippingAnswerOption {
 // provide a human-readable reason via WithPreCheckoutError.
 func (b *Bot) AnswerPreCheckoutQuery(ctx context.Context, preCheckoutQueryID string, ok bool, opts ...PreCheckoutAnswerOption) error {
 	var cfg preCheckoutAnswerConfig
+
 	for _, o := range opts {
 		o(&cfg)
 	}
@@ -77,6 +80,7 @@ func (b *Bot) AnswerPreCheckoutQuery(ctx context.Context, preCheckoutQueryID str
 	if _, err := b.raw.MessagesSetBotPrecheckoutResults(ctx, req); err != nil {
 		return asAPIError(err)
 	}
+
 	return nil
 }
 
@@ -99,5 +103,6 @@ func shippingOptionsToTg(options []ShippingOption) []tg.ShippingOption {
 	for _, o := range options {
 		out = append(out, tg.ShippingOption{ID: o.ID, Title: o.Title, Prices: pricesToTg(o.Prices)})
 	}
+
 	return out
 }

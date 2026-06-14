@@ -18,12 +18,14 @@ func TestBotCommandScopeResolve(t *testing.T) {
 		{BotCommandScopeAllGroupChats(), &tg.BotCommandScopeChats{}},
 		{BotCommandScopeAllChatAdministrators(), &tg.BotCommandScopeChatAdmins{}},
 	}
+
 	for _, c := range cases {
 		// The non-targeted variants ignore the *Bot receiver, so nil is fine.
 		got, err := c.scope.resolve(ctx, nil)
 		if err != nil {
 			t.Fatalf("resolve %T: %v", c.scope, err)
 		}
+
 		if got.TypeID() != c.want.TypeID() {
 			t.Fatalf("resolve %T: got %T, want %T", c.scope, got, c.want)
 		}
@@ -32,10 +34,12 @@ func TestBotCommandScopeResolve(t *testing.T) {
 
 func TestCommandConfigDefaultScope(t *testing.T) {
 	var cfg commandConfig
+
 	scope, err := cfg.resolveScope(context.Background(), nil)
 	if err != nil {
 		t.Fatal(err)
 	}
+
 	if _, ok := scope.(*tg.BotCommandScopeDefault); !ok {
 		t.Fatalf("default scope: got %T", scope)
 	}

@@ -52,9 +52,11 @@ func selDescription(sel *goquery.Selection) string {
 
 		link := rootURL.ResolveReference(u).String()
 		text := strings.ReplaceAll(s.Text(), "»", "")
+
 		text = strings.TrimSpace(text)
 
 		s.SetText(fmt.Sprintf("[%s](%s)", text, link))
 	})
+
 	return strings.TrimSpace(fixTypos(sel.Text()))
 }

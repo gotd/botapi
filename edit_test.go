@@ -41,6 +41,7 @@ func TestEditedMessageFromResp(t *testing.T) {
 			if ok != c.ok {
 				t.Fatalf("ok: got %v, want %v", ok, c.ok)
 			}
+
 			if ok && got.GetID() != 42 {
 				t.Fatalf("message id: %d", got.GetID())
 			}

@@ -19,14 +19,17 @@ func ParseToken(s string) (Token, error) {
 	if s == "" {
 		return Token{}, errors.New("blank token")
 	}
+
 	id, secret, ok := strings.Cut(s, ":")
 	if !ok {
 		return Token{}, errors.New("invalid token")
 	}
+
 	n, err := strconv.Atoi(id)
 	if err != nil {
 		return Token{}, errors.Wrap(err, "parse token id")
 	}
+
 	return Token{ID: n, Secret: secret}, nil
 }
 

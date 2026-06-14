@@ -13,13 +13,17 @@ func (b *Bot) resolveInviteLinks(ctx context.Context, chat ChatID) (peers.Invite
 	if err != nil {
 		return peers.InviteLinks{}, err
 	}
+
 	type linkable interface {
 		InviteLinks() peers.InviteLinks
 	}
+
 	l, ok := p.(linkable)
+
 	if !ok {
 		return peers.InviteLinks{}, errNotInPrivateChat()
 	}
+
 	return l.InviteLinks(), nil
 }
 
@@ -35,18 +39,23 @@ func (b *Bot) convertInviteLink(ctx context.Context, link peers.InviteLink) (*Ch
 	if creator, err := link.Creator(ctx); err == nil {
 		out.Creator = userFromTgUser(creator.Raw())
 	}
+
 	if name, ok := link.Title(); ok {
 		out.Name = name
 	}
+
 	if expire, ok := link.ExpireDate(); ok {
 		out.ExpireDate = int(expire.Unix())
 	}
+
 	if limit, ok := link.UsageLimit(); ok {
 		out.MemberLimit = limit
 	}
+
 	if requested, ok := link.Requested(); ok {
 		out.PendingJoinRequestCount = requested
 	}
+
 	return out, nil
 }
 
@@ -81,10 +90,12 @@ func (b *Bot) ExportChatInviteLink(ctx context.Context, chat ChatID) (string, er
 	if err != nil {
 		return "", err
 	}
+
 	link, err := links.ExportNew(ctx, peers.ExportLinkOptions{})
 	if err != nil {
 		return "", asAPIError(err)
 	}
+
 	return link.Link(), nil
 }
 
@@ -94,14 +105,18 @@ func (b *Bot) CreateChatInviteLink(ctx context.Context, chat ChatID, opts ...Inv
 	if err != nil {
 		return nil, err
 	}
+
 	var o peers.ExportLinkOptions
+
 	for _, opt := range opts {
 		opt(&o)
 	}
+
 	link, err := links.AddNew(ctx, o)
 	if err != nil {
 		return nil, asAPIError(err)
 	}
+
 	return b.convertInviteLink(ctx, link)
 }
 
@@ -111,14 +126,18 @@ func (b *Bot) EditChatInviteLink(ctx context.Context, chat ChatID, inviteLink st
 	if err != nil {
 		return nil, err
 	}
+
 	var o peers.ExportLinkOptions
+
 	for _, opt := range opts {
 		opt(&o)
 	}
+
 	link, err := links.Edit(ctx, inviteLink, o)
 	if err != nil {
 		return nil, asAPIError(err)
 	}
+
 	return b.convertInviteLink(ctx, link)
 }
 
@@ -128,9 +147,11 @@ func (b *Bot) RevokeChatInviteLink(ctx context.Context, chat ChatID, inviteLink 
 	if err != nil {
 		return nil, err
 	}
+
 	link, err := links.Revoke(ctx, inviteLink)
 	if err != nil {
 		return nil, asAPIError(err)
 	}
+
 	return b.convertInviteLink(ctx, link)
 }

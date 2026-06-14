@@ -45,6 +45,7 @@ func WithCallbackCacheTime(seconds int) AnswerCallbackQueryOption {
 // The callbackQueryID is the CallbackQuery.ID from the update.
 func (b *Bot) AnswerCallbackQuery(ctx context.Context, callbackQueryID string, opts ...AnswerCallbackQueryOption) error {
 	var cfg answerCallbackConfig
+
 	for _, o := range opts {
 		o(&cfg)
 	}
@@ -62,6 +63,7 @@ func (b *Bot) AnswerCallbackQuery(ctx context.Context, callbackQueryID string, o
 	if cfg.text != "" {
 		req.SetMessage(cfg.text)
 	}
+
 	if cfg.url != "" {
 		req.SetURL(cfg.url)
 	}
@@ -69,6 +71,7 @@ func (b *Bot) AnswerCallbackQuery(ctx context.Context, callbackQueryID string, o
 	if _, err := b.raw.MessagesSetBotCallbackAnswer(ctx, req); err != nil {
 		return asAPIError(err)
 	}
+
 	return nil
 }
 
@@ -116,6 +119,7 @@ func (b *Bot) AnswerInlineQuery(
 	ctx context.Context, inlineQueryID string, results []InlineQueryResult, opts ...AnswerInlineQueryOption,
 ) error {
 	var cfg answerInlineConfig
+
 	for _, o := range opts {
 		o(&cfg)
 	}
@@ -130,10 +134,12 @@ func (b *Bot) AnswerInlineQuery(
 		if r == nil {
 			return &Error{Code: 400, Description: "Bad Request: inline query result is nil"}
 		}
+
 		converted, err := r.toTg(ctx, b)
 		if err != nil {
 			return err
 		}
+
 		tgResults = append(tgResults, converted)
 	}
 
@@ -154,5 +160,6 @@ func (b *Bot) AnswerInlineQuery(
 	if _, err := b.raw.MessagesSetInlineBotResults(ctx, req); err != nil {
 		return asAPIError(err)
 	}
+
 	return nil
 }

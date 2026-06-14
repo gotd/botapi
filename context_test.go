@@ -19,9 +19,11 @@ func TestContextChatAndSender(t *testing.T) {
 	if !ok {
 		t.Fatal("Chat should be present")
 	}
+
 	if id, isInt := chat.(ChatIDInt); !isInt || int64(id) != -100500 {
 		t.Fatalf("Chat id = %v", chat)
 	}
+
 	if s := c.Sender(); s == nil || s.ID != 11 {
 		t.Fatalf("Sender = %+v", c.Sender())
 	}
@@ -42,6 +44,7 @@ func TestContextReplyWithoutMessage(t *testing.T) {
 	if _, err := c.Reply("hi"); err == nil {
 		t.Fatal("Reply with no message should error")
 	}
+
 	if _, ok := c.Chat(); ok {
 		t.Fatal("inline-query-only update should have no chat")
 	}

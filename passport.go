@@ -101,6 +101,7 @@ func (e *PassportElementErrorDataField) toTg() (tg.SecureValueErrorClass, error)
 	if err != nil {
 		return nil, err
 	}
+
 	return &tg.SecureValueErrorData{Type: secureValueType(e.Type), DataHash: h, Field: e.FieldName, Text: e.Message}, nil
 }
 
@@ -109,6 +110,7 @@ func (e *PassportElementErrorFrontSide) toTg() (tg.SecureValueErrorClass, error)
 	if err != nil {
 		return nil, err
 	}
+
 	return &tg.SecureValueErrorFrontSide{Type: secureValueType(e.Type), FileHash: h, Text: e.Message}, nil
 }
 
@@ -117,6 +119,7 @@ func (e *PassportElementErrorReverseSide) toTg() (tg.SecureValueErrorClass, erro
 	if err != nil {
 		return nil, err
 	}
+
 	return &tg.SecureValueErrorReverseSide{Type: secureValueType(e.Type), FileHash: h, Text: e.Message}, nil
 }
 
@@ -125,6 +128,7 @@ func (e *PassportElementErrorSelfie) toTg() (tg.SecureValueErrorClass, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	return &tg.SecureValueErrorSelfie{Type: secureValueType(e.Type), FileHash: h, Text: e.Message}, nil
 }
 
@@ -133,6 +137,7 @@ func (e *PassportElementErrorFile) toTg() (tg.SecureValueErrorClass, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	return &tg.SecureValueErrorFile{Type: secureValueType(e.Type), FileHash: h, Text: e.Message}, nil
 }
 
@@ -141,6 +146,7 @@ func (e *PassportElementErrorFiles) toTg() (tg.SecureValueErrorClass, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	return &tg.SecureValueErrorFiles{Type: secureValueType(e.Type), FileHash: h, Text: e.Message}, nil
 }
 
@@ -149,6 +155,7 @@ func (e *PassportElementErrorTranslationFile) toTg() (tg.SecureValueErrorClass, 
 	if err != nil {
 		return nil, err
 	}
+
 	return &tg.SecureValueErrorTranslationFile{Type: secureValueType(e.Type), FileHash: h, Text: e.Message}, nil
 }
 
@@ -157,6 +164,7 @@ func (e *PassportElementErrorTranslationFiles) toTg() (tg.SecureValueErrorClass,
 	if err != nil {
 		return nil, err
 	}
+
 	return &tg.SecureValueErrorTranslationFiles{Type: secureValueType(e.Type), FileHash: h, Text: e.Message}, nil
 }
 
@@ -165,6 +173,7 @@ func (e *PassportElementErrorUnspecified) toTg() (tg.SecureValueErrorClass, erro
 	if err != nil {
 		return nil, err
 	}
+
 	return &tg.SecureValueError{Type: secureValueType(e.Type), Hash: h, Text: e.Message}, nil
 }
 
@@ -181,10 +190,12 @@ func (b *Bot) SetPassportDataErrors(ctx context.Context, userID int64, errs []Pa
 		if e == nil {
 			continue
 		}
+
 		converted, err := e.toTg()
 		if err != nil {
 			return err
 		}
+
 		tgErrors = append(tgErrors, converted)
 	}
 
@@ -194,6 +205,7 @@ func (b *Bot) SetPassportDataErrors(ctx context.Context, userID int64, errs []Pa
 	}); err != nil {
 		return asAPIError(err)
 	}
+
 	return nil
 }
 
@@ -203,6 +215,7 @@ func decodeHash(s string) ([]byte, error) {
 	if err != nil {
 		return nil, &Error{Code: 400, Description: "Bad Request: invalid passport data hash"}
 	}
+
 	return h, nil
 }
 
@@ -213,8 +226,10 @@ func decodeHashes(hashes []string) ([][]byte, error) {
 		if err != nil {
 			return nil, err
 		}
+
 		out = append(out, h)
 	}
+
 	return out, nil
 }
 

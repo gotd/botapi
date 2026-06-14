@@ -15,6 +15,7 @@ import (
 func TestSetPassportDataErrorsAllVariants(t *testing.T) {
 	inv := newMockInvoker()
 	inv.reply(tg.UsersSetSecureValueErrorsRequestTypeID, &tg.BoolTrue{})
+
 	b := newMockBot(inv)
 
 	h := base64.StdEncoding.EncodeToString([]byte("abc"))
@@ -30,9 +31,11 @@ func TestSetPassportDataErrorsAllVariants(t *testing.T) {
 		&PassportElementErrorTranslationFiles{Type: "passport_registration", FileHashes: []string{h}, Message: "m"},
 		&PassportElementErrorUnspecified{Type: "email", ElementHash: h, Message: "m"},
 	}
+
 	if err := b.SetPassportDataErrors(context.Background(), 42, errs); err != nil {
 		t.Fatalf("SetPassportDataErrors: %v", err)
 	}
+
 	if !inv.called(tg.UsersSetSecureValueErrorsRequestTypeID) {
 		t.Fatal("secure value errors RPC not invoked")
 	}
@@ -45,6 +48,7 @@ func TestPassportErrorBadHashPropagates(t *testing.T) {
 	errs := []PassportElementError{
 		&PassportElementErrorFiles{Type: "passport", FileHashes: []string{"!!!"}, Message: "m"},
 	}
+
 	if err := b.SetPassportDataErrors(context.Background(), 42, errs); err == nil {
 		t.Fatal("expected error for invalid hash")
 	}
@@ -75,13 +79,16 @@ func TestFileUniqueID(t *testing.T) {
 func TestGetFile(t *testing.T) {
 	b := &Bot{}
 	id := documentFileID(t, 0x1234)
+
 	f, err := b.GetFile(context.Background(), id)
 	if err != nil {
 		t.Fatal(err)
 	}
+
 	if f.FileID != id || f.FileUniqueID == "" {
 		t.Fatalf("file = %#v", f)
 	}
+
 	if _, err := b.GetFile(context.Background(), "not-a-file-id"); err == nil {
 		t.Fatal("expected error for bad file_id")
 	}
@@ -92,6 +99,7 @@ func TestDownloadFileBadID(t *testing.T) {
 	if _, err := b.DownloadFile(context.Background(), "bad", nil); err == nil {
 		t.Fatal("expected error for bad file_id (DownloadFile)")
 	}
+
 	if err := b.DownloadFileToPath(context.Background(), "bad", "/tmp/x"); err == nil {
 		t.Fatal("expected error for bad file_id (DownloadFileToPath)")
 	}

@@ -8,7 +8,9 @@ import (
 
 func TestRouterFirstMatchWins(t *testing.T) {
 	b := newTestBot(t)
+
 	var calls []string
+
 	b.on(func(c *Context) error { calls = append(calls, "skipped"); return nil }, func(u *Update) bool { return false })
 	b.on(func(c *Context) error { calls = append(calls, "matched"); return nil })
 	b.on(func(c *Context) error { calls = append(calls, "second-match"); return nil })
@@ -22,11 +24,14 @@ func TestRouterFirstMatchWins(t *testing.T) {
 
 func TestMiddlewareOrder(t *testing.T) {
 	b := newTestBot(t)
+
 	var order []string
+
 	b.Use(func(next Handler) Handler {
 		return func(c *Context) error {
 			order = append(order, "outer-in")
 			defer func() { order = append(order, "outer-out") }()
+
 			return next(c)
 		}
 	})
@@ -34,6 +39,7 @@ func TestMiddlewareOrder(t *testing.T) {
 		return func(c *Context) error {
 			order = append(order, "inner-in")
 			defer func() { order = append(order, "inner-out") }()
+
 			return next(c)
 		}
 	})
@@ -45,6 +51,7 @@ func TestMiddlewareOrder(t *testing.T) {
 	if len(order) != len(want) {
 		t.Fatalf("order = %v, want %v", order, want)
 	}
+
 	for i := range want {
 		if order[i] != want[i] {
 			t.Fatalf("order = %v, want %v", order, want)

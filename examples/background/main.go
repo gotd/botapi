@@ -52,6 +52,7 @@ func main() {
 	if err != nil {
 		log.Fatal("Open storage", zap.Error(err))
 	}
+
 	defer func() { _ = sess.Close() }()
 
 	bot, err := botapi.New(os.Getenv("BOT_TOKEN"), botapi.Options{
@@ -63,12 +64,14 @@ func main() {
 	if err != nil {
 		log.Fatal("Create bot", zap.Error(err))
 	}
+
 	bot.Use(botapi.Recover(), botapi.Logging())
 
 	path := os.Getenv("SUBS_FILE")
 	if path == "" {
 		path = "subscribers.json"
 	}
+
 	store, err := loadStore(path)
 	if err != nil {
 		log.Fatal("Load subscribers", zap.Error(err))
@@ -79,18 +82,22 @@ func main() {
 		if !ok {
 			return nil
 		}
+
 		// Resolve the chat to a PeerRef once, here, while we have it — this is
 		// what captures the access hash needed to message it later.
 		ref, err := c.Bot.PeerRef(c, chat)
 		if err != nil {
 			return err
 		}
+
 		if store.add(ref) {
 			if err := store.save(); err != nil {
 				return err
 			}
 		}
+
 		_, err = c.Reply("Subscribed. You'll get a broadcast every 30s, and a hello after each restart.")
+
 		return err
 	})
 
@@ -99,16 +106,20 @@ func main() {
 		if !ok {
 			return nil
 		}
+
 		ref, err := c.Bot.PeerRef(c, chat)
 		if err != nil {
 			return err
 		}
+
 		if store.remove(ref) {
 			if err := store.save(); err != nil {
 				return err
 			}
 		}
+
 		_, err = c.Reply("Unsubscribed.")
+
 		return err
 	})
 
@@ -118,10 +129,14 @@ func main() {
 	// Run the bot in the background so we can use its run-lifetime context for
 	// proactive sends from this goroutine.
 	var wg sync.WaitGroup
+
 	wg.Add(1)
+
 	go func() {
 		defer wg.Done()
+
 		log.Info("Starting background bot", zap.Int("subscribers", store.len()))
+
 		if err := bot.Run(ctx); err != nil {
 			log.Error("Run", zap.Error(err))
 			cancel()
@@ -134,6 +149,7 @@ func main() {
 	bg := waitReady(ctx, bot)
 	if bg.Err() != nil {
 		wg.Wait()
+
 		return
 	}
 
@@ -155,6 +171,7 @@ func main() {
 func broadcastLoop(ctx context.Context, bot *botapi.Bot, store *store, log *zap.Logger) {
 	ticker := time.NewTicker(30 * time.Second)
 	defer ticker.Stop()
+
 	for {
 		select {
 		case <-ctx.Done():
@@ -177,6 +194,7 @@ func waitReady(ctx context.Context, bot *botapi.Bot) context.Context {
 		if bg := bot.Background(); bg.Err() == nil {
 			return bg
 		}
+
 		select {
 		case <-ctx.Done():
 			return ctx
@@ -197,19 +215,25 @@ type store struct {
 func loadStore(path string) (*store, error) {
 	s := &store{path: path, byID: map[int64]botapi.PeerRef{}}
 	data, err := os.ReadFile(path) //nolint:gosec // example: path is an operator-provided env var
+
 	if os.IsNotExist(err) {
 		return s, nil
 	}
+
 	if err != nil {
 		return nil, err
 	}
+
 	var refs []botapi.PeerRef
+
 	if err := json.Unmarshal(data, &refs); err != nil {
 		return nil, err
 	}
+
 	for _, ref := range refs {
 		s.byID[ref.ID] = ref
 	}
+
 	return s, nil
 }
 
@@ -217,14 +241,17 @@ func loadStore(path string) (*store, error) {
 func (s *store) save() error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
+
 	data, err := json.MarshalIndent(s.list(), "", "  ")
 	if err != nil {
 		return err
 	}
+
 	tmp := s.path + ".tmp"
 	if err := os.WriteFile(tmp, data, 0o600); err != nil { //nolint:gosec // example: operator-provided path
 		return err
 	}
+
 	return os.Rename(tmp, s.path) //nolint:gosec // example: operator-provided path
 }
 
@@ -232,10 +259,13 @@ func (s *store) save() error {
 func (s *store) add(ref botapi.PeerRef) bool {
 	s.mu.Lock()
 	defer s.mu.Unlock()
+
 	if _, ok := s.byID[ref.ID]; ok {
 		return false
 	}
+
 	s.byID[ref.ID] = ref
+
 	return true
 }
 
@@ -243,10 +273,13 @@ func (s *store) add(ref botapi.PeerRef) bool {
 func (s *store) remove(ref botapi.PeerRef) bool {
 	s.mu.Lock()
 	defer s.mu.Unlock()
+
 	if _, ok := s.byID[ref.ID]; !ok {
 		return false
 	}
+
 	delete(s.byID, ref.ID)
+
 	return true
 }
 
@@ -254,6 +287,7 @@ func (s *store) remove(ref botapi.PeerRef) bool {
 func (s *store) refs() []botapi.PeerRef {
 	s.mu.Lock()
 	defer s.mu.Unlock()
+
 	return s.list()
 }
 
@@ -261,6 +295,7 @@ func (s *store) refs() []botapi.PeerRef {
 func (s *store) len() int {
 	s.mu.Lock()
 	defer s.mu.Unlock()
+
 	return len(s.byID)
 }
 
@@ -270,5 +305,6 @@ func (s *store) list() []botapi.PeerRef {
 	for _, ref := range s.byID {
 		refs = append(refs, ref)
 	}
+
 	return refs
 }

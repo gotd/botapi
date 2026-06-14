@@ -22,9 +22,11 @@ func TestPeerRefInputPeerRoundTrip(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
+
 		if got.String() != c.want.String() {
 			t.Fatalf("inputPeer: got %#v, want %#v", got, c.want)
 		}
+
 		// Extracting a ref back from the input peer yields the original.
 		back, err := peerRefFromInputPeer(got)
 		if err != nil || back != c.ref {
@@ -38,10 +40,12 @@ func TestPeerSendsDirectlyFromRef(t *testing.T) {
 	// peer manager or network — this is what survives a restart.
 	b := &Bot{}
 	ref := PeerRef{Kind: peerKindChannel, ID: 100, AccessHash: 200}
+
 	got, err := b.resolveInputPeer(context.Background(), Peer(ref))
 	if err != nil {
 		t.Fatal(err)
 	}
+
 	ch, ok := got.(*tg.InputPeerChannel)
 	if !ok || ch.ChannelID != 100 || ch.AccessHash != 200 {
 		t.Fatalf("input peer: %#v", got)
@@ -50,14 +54,18 @@ func TestPeerSendsDirectlyFromRef(t *testing.T) {
 
 func TestPeerRefJSONRoundTrip(t *testing.T) {
 	ref := PeerRef{Kind: peerKindUser, ID: 42, AccessHash: 99}
+
 	data, err := json.Marshal(ref)
 	if err != nil {
 		t.Fatal(err)
 	}
+
 	var back PeerRef
+
 	if err := json.Unmarshal(data, &back); err != nil {
 		t.Fatal(err)
 	}
+
 	if back != ref {
 		t.Fatalf("json round-trip: got %#v, want %#v", back, ref)
 	}
@@ -69,9 +77,11 @@ func TestPeerChatIDMarshalsToTDLibID(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+
 	if string(data) != "42" {
 		t.Fatalf("user chat id: %s", data)
 	}
+
 	// Channels use the -100… supergroup id space.
 	data, _ = json.Marshal(Peer(PeerRef{Kind: peerKindChannel, ID: 123}))
 	if string(data) != "-1000000000123" {
@@ -81,10 +91,12 @@ func TestPeerChatIDMarshalsToTDLibID(t *testing.T) {
 
 func TestPeerRefResolves(t *testing.T) {
 	b := newMockBot(newMockInvoker())
+
 	ref, err := b.PeerRef(context.Background(), tdlibChannel(50))
 	if err != nil {
 		t.Fatalf("PeerRef: %v", err)
 	}
+
 	if ref.Kind != peerKindChannel || ref.ID != 50 {
 		t.Fatalf("ref = %#v", ref)
 	}

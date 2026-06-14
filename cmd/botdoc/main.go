@@ -56,29 +56,35 @@ func run() error {
 		methods = flag.Bool("methods", false, "list all method names")
 		name    = flag.String("name", "", "show details for a specific type or method")
 	)
+
 	flag.Parse()
 
 	doc, err := loadDocument(*url, *file)
 	if err != nil {
 		return err
 	}
+
 	api := botdoc.Extract(doc)
 
 	switch {
 	case *asJSON:
 		enc := json.NewEncoder(os.Stdout)
 		enc.SetIndent("", "  ")
+
 		return enc.Encode(api)
 	case *name != "":
 		return printDefinition(api, *name)
 	case *types:
 		printNames(api.Types)
+
 		return nil
 	case *methods:
 		printNames(api.Methods)
+
 		return nil
 	default:
 		printSummary(api)
+
 		return nil
 	}
 }
@@ -90,24 +96,31 @@ func loadDocument(url, file string) (*goquery.Document, error) {
 		if err != nil {
 			return nil, err
 		}
+
 		defer func() { _ = f.Close() }()
+
 		return goquery.NewDocumentFromReader(f)
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
+
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, http.NoBody)
 	if err != nil {
 		return nil, err
 	}
+
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return nil, err
 	}
+
 	defer func() { _ = resp.Body.Close() }()
+
 	if resp.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("fetch %s: unexpected status %s", url, resp.Status)
 	}
+
 	return goquery.NewDocumentFromReader(resp.Body)
 }
 
@@ -122,7 +135,9 @@ func printNames(defs []botdoc.Definition) {
 	for i, d := range defs {
 		names[i] = d.Name
 	}
+
 	sort.Strings(names)
+
 	for _, n := range names {
 		fmt.Println(n)
 	}
@@ -131,12 +146,16 @@ func printNames(defs []botdoc.Definition) {
 func printDefinition(api botdoc.API, name string) error {
 	if d, ok := findDefinition(api.Types, name); ok {
 		printDefinitionDetail("type", d)
+
 		return nil
 	}
+
 	if d, ok := findDefinition(api.Methods, name); ok {
 		printDefinitionDetail("method", d)
+
 		return nil
 	}
+
 	return fmt.Errorf("no type or method named %q", name)
 }
 
@@ -147,17 +166,21 @@ func findDefinition(defs []botdoc.Definition, name string) (botdoc.Definition, b
 			return d, true
 		}
 	}
+
 	return botdoc.Definition{}, false
 }
 
 func printDefinitionDetail(kind string, d botdoc.Definition) {
 	fmt.Printf("%s %s\n", kind, d.Name)
+
 	if d.PrettyDescription != "" {
 		fmt.Printf("\n%s\n", d.PrettyDescription)
 	}
+
 	if d.Ret != nil {
 		fmt.Printf("\nreturns: %s\n", d.Ret)
 	}
+
 	if len(d.Fields) == 0 {
 		return
 	}
@@ -166,13 +189,17 @@ func printDefinitionDetail(kind string, d botdoc.Definition) {
 	if kind == "method" {
 		label = "Parameters"
 	}
+
 	fmt.Printf("\n%s:\n", label)
+
 	for _, f := range d.Fields {
 		opt := ""
 		if f.Optional {
 			opt = " (optional)"
 		}
+
 		fmt.Printf("  %-28s %s%s\n", f.Name, f.Type.String(), opt)
+
 		if len(f.Enum) > 0 {
 			fmt.Printf("  %-28s   one of: %s\n", "", strings.Join(f.Enum, ", "))
 		}

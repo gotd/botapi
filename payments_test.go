@@ -20,9 +20,11 @@ func TestShippingQueryFromTg(t *testing.T) {
 		},
 	}
 	q := shippingQueryFromTg(e, u)
+
 	if q.ID != "100" || q.From.FirstName != "Ann" || q.InvoicePayload != "order-1" {
 		t.Fatalf("query: %#v", q)
 	}
+
 	if q.ShippingAddress.CountryCode != "US" || q.ShippingAddress.City != "Town" {
 		t.Fatalf("address: %#v", q.ShippingAddress)
 	}
@@ -43,9 +45,11 @@ func TestPreCheckoutQueryFromTg(t *testing.T) {
 	if q.ID != "200" || q.From.ID != 9 || q.Currency != "USD" || q.TotalAmount != 1500 {
 		t.Fatalf("query: %#v", q)
 	}
+
 	if q.ShippingOptionID != "express" {
 		t.Fatalf("shipping option: %q", q.ShippingOptionID)
 	}
+
 	if q.OrderInfo == nil || q.OrderInfo.Name != "Bob" || q.OrderInfo.Email != "b@x.io" {
 		t.Fatalf("order info: %#v", q.OrderInfo)
 	}
@@ -56,6 +60,7 @@ func TestShippingOptionsToTg(t *testing.T) {
 		{ID: "std", Title: "Standard", Prices: []LabeledPrice{{Label: "Base", Amount: 500}}},
 	}
 	got := shippingOptionsToTg(opts)
+
 	if len(got) != 1 || got[0].ID != "std" || len(got[0].Prices) != 1 || got[0].Prices[0].Amount != 500 {
 		t.Fatalf("converted: %#v", got)
 	}

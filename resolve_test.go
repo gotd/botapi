@@ -13,7 +13,9 @@ func TestResolvePeerEmptyUsername(t *testing.T) {
 	}
 
 	_, err = b.resolvePeer(context.Background(), Username("@"))
+
 	var apiErr *Error
+
 	if !errors.As(err, &apiErr) || apiErr.Code != 400 {
 		t.Fatalf("empty username should be a 400, got %v", err)
 	}

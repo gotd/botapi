@@ -16,6 +16,7 @@ func (b *Bot) GetStickerSet(ctx context.Context, name string) (*StickerSet, erro
 	if err != nil {
 		return nil, asAPIError(err)
 	}
+
 	set, ok := res.(*tg.MessagesStickerSet)
 	if !ok {
 		return nil, &Error{Code: 400, Description: "Bad Request: sticker set not found"}
@@ -27,17 +28,21 @@ func (b *Bot) GetStickerSet(ctx context.Context, name string) (*StickerSet, erro
 		Title:       set.Set.Title,
 		StickerType: typ,
 	}
+
 	out.Stickers = make([]Sticker, 0, len(set.Documents))
+
 	for _, d := range set.Documents {
 		if doc, ok := d.(*tg.Document); ok {
 			out.Stickers = append(out.Stickers, stickerFromDocument(doc, set.Set.ShortName, typ))
 		}
 	}
+
 	if thumbs := set.Set.Thumbs; len(thumbs) > 0 {
 		if ps := photoSizeFromThumb(thumbs[0]); ps != nil {
 			out.Thumbnail = ps
 		}
 	}
+
 	return out, nil
 }
 
@@ -45,18 +50,21 @@ func (b *Bot) GetStickerSet(ctx context.Context, name string) (*StickerSet, erro
 // thumbnail is referenced by file_id or uploaded.
 func (b *Bot) SetStickerSetThumb(ctx context.Context, name string, thumb InputFile) error {
 	var doc tg.InputDocumentClass
+
 	switch f := thumb.(type) {
 	case InputFileID:
 		d, err := inputDocumentFromFileID(string(f))
 		if err != nil {
 			return err
 		}
+
 		doc = d
 	case *InputFileUpload:
 		uploaded, err := b.uploadStickerDocument(ctx, f, StickerFormatStatic)
 		if err != nil {
 			return err
 		}
+
 		doc = &tg.InputDocument{ID: uploaded.ID, AccessHash: uploaded.AccessHash, FileReference: uploaded.FileReference}
 	default:
 		return &Error{Code: 400, Description: "Bad Request: thumbnail must be a file_id or an uploaded file"}
@@ -68,6 +76,7 @@ func (b *Bot) SetStickerSetThumb(ctx context.Context, name string, thumb InputFi
 	}); err != nil {
 		return asAPIError(err)
 	}
+
 	return nil
 }
 
@@ -96,6 +105,7 @@ func stickerFromDocument(d *tg.Document, setName string, typ StickerType) Sticke
 		IsAnimated:   d.MimeType == mimeStickerAnimated,
 		IsVideo:      d.MimeType == mimeStickerVideo,
 	}
+
 	for _, attr := range d.Attributes {
 		switch a := attr.(type) {
 		case *tg.DocumentAttributeImageSize:
@@ -106,9 +116,11 @@ func stickerFromDocument(d *tg.Document, setName string, typ StickerType) Sticke
 			s.Emoji = a.Alt
 		}
 	}
+
 	if len(d.Thumbs) > 0 {
 		s.Thumbnail = photoSizeFromThumb(d.Thumbs[0])
 	}
+
 	return s
 }
 
@@ -120,13 +132,17 @@ func photoSizeFromThumb(t tg.PhotoSizeClass) *PhotoSize {
 		GetW() int
 		GetH() int
 	}
+
 	s, ok := t.(sized)
+
 	if !ok {
 		return nil
 	}
+
 	ps := &PhotoSize{Width: s.GetW(), Height: s.GetH()}
 	if base, ok := t.(*tg.PhotoSize); ok {
 		ps.FileSize = base.Size
 	}
+
 	return ps
 }

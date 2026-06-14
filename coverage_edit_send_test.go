@@ -10,6 +10,7 @@ import (
 func TestEditMessageTextOptions(t *testing.T) {
 	inv := newMockInvoker()
 	inv.reply(tg.MessagesEditMessageRequestTypeID, editUpdates(&tg.Message{ID: 5, Message: "new", PeerID: &tg.PeerUser{UserID: 10}}))
+
 	b := newMockBot(inv)
 	ctx := context.Background()
 
@@ -19,6 +20,7 @@ func TestEditMessageTextOptions(t *testing.T) {
 		WithReplyMarkup(goodInlineMarkup), DisableWebPagePreview()); err != nil {
 		t.Fatalf("EditMessageText: %v", err)
 	}
+
 	if _, err := b.EditMessageCaption(ctx, userRef(10, 20), 5, "cap"); err != nil {
 		t.Fatalf("EditMessageCaption: %v", err)
 	}
@@ -32,15 +34,18 @@ func TestEditMessageTextOptions(t *testing.T) {
 func TestEditMessageReplyMarkupBranches(t *testing.T) {
 	inv := newMockInvoker()
 	inv.reply(tg.MessagesEditMessageRequestTypeID, editUpdates(&tg.Message{ID: 5, PeerID: &tg.PeerUser{UserID: 10}}))
+
 	b := newMockBot(inv)
 	ctx := context.Background()
 
 	if _, err := b.EditMessageReplyMarkup(ctx, userRef(10, 20), 5, goodInlineMarkup); err != nil {
 		t.Fatalf("set markup: %v", err)
 	}
+
 	if _, err := b.EditMessageReplyMarkup(ctx, userRef(10, 20), 5, nil); err != nil {
 		t.Fatalf("clear markup: %v", err)
 	}
+
 	if _, err := b.EditMessageReplyMarkup(ctx, userRef(10, 20), 5, badInlineMarkup); err == nil {
 		t.Fatal("expected markup error")
 	}
@@ -51,6 +56,7 @@ func TestEditMessageReplyMarkupBranches(t *testing.T) {
 func TestSendMessageAllOptions(t *testing.T) {
 	inv := newMockInvoker()
 	inv.reply(tg.MessagesSendMessageRequestTypeID, messageUpdates(&tg.Message{ID: 1, Message: "hi", PeerID: &tg.PeerUser{UserID: 10}}))
+
 	b := newMockBot(inv)
 
 	_, err := b.SendMessage(context.Background(), userRef(10, 20), "hi",
@@ -80,6 +86,7 @@ func TestEditedMessageFromRespShapes(t *testing.T) {
 		{"none", &tg.Updates{Updates: []tg.UpdateClass{&tg.UpdateMessageID{}}}, false},
 		{"unhandled", &tg.UpdatesTooLong{}, false},
 	}
+
 	for _, c := range cases {
 		if _, ok := editedMessageFromResp(c.resp); ok != c.ok {
 			t.Errorf("%s: ok=%v, want %v", c.name, ok, c.ok)

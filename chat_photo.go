@@ -14,10 +14,12 @@ func (b *Bot) SetChatPhoto(ctx context.Context, chat ChatID, photo InputFile) er
 	if !ok {
 		return &Error{Code: 400, Description: "Bad Request: chat photo must be an uploaded file"}
 	}
+
 	uploaded, err := b.uploadInputFile(ctx, up)
 	if err != nil {
 		return err
 	}
+
 	input := &tg.InputChatUploadedPhoto{}
 	input.SetFile(uploaded)
 
@@ -25,11 +27,13 @@ func (b *Bot) SetChatPhoto(ctx context.Context, chat ChatID, photo InputFile) er
 	if err != nil {
 		return err
 	}
+
 	switch c := p.(type) {
 	case peers.Channel:
 		if err := c.SetPhoto(ctx, input); err != nil {
 			return asAPIError(err)
 		}
+
 		return nil
 	case peers.Chat:
 		if _, err := b.raw.MessagesEditChatPhoto(ctx, &tg.MessagesEditChatPhotoRequest{
@@ -38,6 +42,7 @@ func (b *Bot) SetChatPhoto(ctx context.Context, chat ChatID, photo InputFile) er
 		}); err != nil {
 			return asAPIError(err)
 		}
+
 		return nil
 	default:
 		return errNotInPrivateChat()
@@ -50,11 +55,13 @@ func (b *Bot) DeleteChatPhoto(ctx context.Context, chat ChatID) error {
 	if err != nil {
 		return err
 	}
+
 	switch c := p.(type) {
 	case peers.Channel:
 		if err := c.DeletePhoto(ctx); err != nil {
 			return asAPIError(err)
 		}
+
 		return nil
 	case peers.Chat:
 		if _, err := b.raw.MessagesEditChatPhoto(ctx, &tg.MessagesEditChatPhotoRequest{
@@ -63,6 +70,7 @@ func (b *Bot) DeleteChatPhoto(ctx context.Context, chat ChatID) error {
 		}); err != nil {
 			return asAPIError(err)
 		}
+
 		return nil
 	default:
 		return errNotInPrivateChat()

@@ -20,16 +20,19 @@ func TestSendMediaGroup(t *testing.T) {
 		},
 		Users: []tg.UserClass{&tg.User{ID: 10, AccessHash: 20}},
 	})
+
 	b := newMockBot(inv)
 
 	media := []InputMedia{
 		&InputMediaPhoto{Media: FileFromBytes("a.jpg", []byte("a"))},
 		&InputMediaPhoto{Media: FileFromBytes("b.jpg", []byte("b"))},
 	}
+
 	msgs, err := b.SendMediaGroup(context.Background(), userRef(10, 20), media)
 	if err != nil {
 		t.Fatalf("SendMediaGroup: %v", err)
 	}
+
 	if len(msgs) != 2 {
 		t.Fatalf("messages = %d", len(msgs))
 	}
@@ -47,16 +50,19 @@ func TestSendMediaGroupDocuments(t *testing.T) {
 		},
 		Users: []tg.UserClass{&tg.User{ID: 10, AccessHash: 20}},
 	})
+
 	b := newMockBot(inv)
 
 	media := []InputMedia{
 		&InputMediaDocument{Media: FileFromBytes("a.pdf", []byte("a")), Caption: "first"},
 		&InputMediaVideo{Media: FileFromBytes("b.mp4", []byte("b"))},
 	}
+
 	msgs, err := b.SendMediaGroup(context.Background(), userRef(10, 20), media)
 	if err != nil {
 		t.Fatalf("SendMediaGroup docs: %v", err)
 	}
+
 	if len(msgs) != 2 {
 		t.Fatalf("messages = %d", len(msgs))
 	}
@@ -67,7 +73,9 @@ func TestSendMediaGroupCountValidation(t *testing.T) {
 	_, err := b.SendMediaGroup(context.Background(), ID(1), []InputMedia{
 		&InputMediaPhoto{Type: InputMediaPhotoType, Media: FileFromBytes("a", []byte("x"))},
 	})
+
 	var apiErr *Error
+
 	if !errors.As(err, &apiErr) || apiErr.Code != 400 {
 		t.Fatalf("single-item group should be a 400, got %v", err)
 	}
@@ -79,6 +87,7 @@ func TestMediaGroupRejectsNonUpload(t *testing.T) {
 		Type:  InputMediaPhotoType,
 		Media: FileURL("https://example.com/a.jpg"),
 	})
+
 	if !errors.Is(err, error(errNonUploadInAlbum)) {
 		t.Fatalf("URL item in album should be rejected, got %v", err)
 	}

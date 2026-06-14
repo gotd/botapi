@@ -14,6 +14,7 @@ func TestCallbackQueryFromTg(t *testing.T) {
 	if cq.ID != "100" || cq.ChatInstance != "77" || cq.Data != "vote:1" {
 		t.Fatalf("scalar fields: %+v", cq)
 	}
+
 	if cq.From.ID != 5 || cq.From.Username != "ada" {
 		t.Fatalf("from from entities: %+v", cq.From)
 	}
