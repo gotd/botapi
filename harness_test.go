@@ -180,25 +180,13 @@ func channelRef(id, hash int64) ChatID {
 	return Peer(PeerRef{Kind: peerKindChannel, ID: id, AccessHash: hash})
 }
 
-// tdlibChannel/tdlibUser/tdlibChat build a numeric ChatID (TDLib id convention)
-// that resolves through the peers manager — the mock invoker answers the
-// resulting users.getUsers / channels.getChannels. Use these for the
-// chat-management methods, which reject a PeerRef.
-func tdlibChannel(id int64) ChatID {
+// tdlibChannel builds a numeric ChatID (TDLib id convention) that resolves
+// through the peers manager — the mock invoker answers the resulting
+// channels.getChannels. Used for the chat-management methods, which reject a
+// PeerRef.
+func tdlibChannel(id int64) ChatID { //nolint:unparam // a single fixed id keeps tests readable
 	var p constant.TDLibPeerID
 	p.Channel(id)
-	return ID(int64(p))
-}
-
-func tdlibUser(id int64) ChatID {
-	var p constant.TDLibPeerID
-	p.User(id)
-	return ID(int64(p))
-}
-
-func tdlibChat(id int64) ChatID {
-	var p constant.TDLibPeerID
-	p.Chat(id)
 	return ID(int64(p))
 }
 
