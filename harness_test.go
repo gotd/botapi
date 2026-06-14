@@ -186,12 +186,13 @@ func newMockBot(inv *mockInvoker) *Bot {
 	raw := tg.NewClient(inv)
 
 	return &Bot{
-		log:    log.Nop,
-		raw:    raw,
-		sender: message.NewSender(raw),
-		peers:  peers.Options{}.Build(raw),
-		disp:   tg.NewUpdateDispatcher(),
-		self:   &tg.User{ID: 1, Bot: true, AccessHash: 1, Username: "test_bot"},
+		log:     log.Nop,
+		raw:     raw,
+		invoker: inv,
+		sender:  message.NewSender(raw),
+		peers:   peers.Options{}.Build(raw),
+		disp:    tg.NewUpdateDispatcher(),
+		self:    &tg.User{ID: 1, Bot: true, AccessHash: 1, Username: "test_bot"},
 	}
 }
 

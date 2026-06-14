@@ -35,3 +35,6 @@ state/*.bbolt
 # Subscriber store written by the background example.
 subscribers.json
 subscribers.json.tmp
+
+# Local parity status doc (not committed).
+parity.md

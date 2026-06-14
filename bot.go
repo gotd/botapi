@@ -24,10 +24,14 @@ type Bot struct {
 
 	client *telegram.Client
 	raw    *tg.Client
-	sender *message.Sender
-	peers  *peers.Manager
-	gaps   *updates.Manager
-	disp   tg.UpdateDispatcher
+	// invoker is the low-level RPC entry point (client.API() hides its invoker),
+	// used to send invokeWith* wrappers such as invokeWithBusinessConnection that
+	// *tg.Client exposes no generated helper for.
+	invoker tg.Invoker
+	sender  *message.Sender
+	peers   *peers.Manager
+	gaps    *updates.Manager
+	disp    tg.UpdateDispatcher
 
 	router router
 
@@ -107,6 +111,7 @@ func New(token string, opt Options) (*Bot, error) {
 		log:              opt.Logger,
 		client:           client,
 		raw:              client.API(),
+		invoker:          client,
 		sender:           message.NewSender(client.API()),
 		peers:            pm,
 		gaps:             gaps,
