@@ -92,8 +92,8 @@ github.com/gotd/log/logzap v0.1.1 h1:O6l7d8HUbODe+UMcrM47eXYDwdJ6RNmpQejLjrlcEIQ
 github.com/gotd/log/logzap v0.1.1/go.mod h1:5ObZkITbfhbsBOLzBkzmMk9QxXc0eNQpimau7zRL+Y8=
 github.com/gotd/neo v0.1.5 h1:oj0iQfMbGClP8xI59x7fE/uHoTJD7NZH9oV1WNuPukQ=
 github.com/gotd/neo v0.1.5/go.mod h1:9A2a4bn9zL6FADufBdt7tZt+WMhvZoc5gWXihOPoiBQ=
-github.com/gotd/td v0.156.2 h1:07bZ5YnuKjStRHJ1d8IyU19KZMLs1vZslT9dQeUAcaw=
-github.com/gotd/td v0.156.2/go.mod h1:pVVlJYiMUMinSR/5uDfCSUoB3DyqxftanMWYLP16riY=
+github.com/gotd/td v0.156.4-0.20260614193908-5e4cd68a6720 h1:g+FwLfBSJ0CvXCMqRv/qx+RNgmVdk66AkIdGbrRWJtM=
+github.com/gotd/td v0.156.4-0.20260614193908-5e4cd68a6720/go.mod h1:pVVlJYiMUMinSR/5uDfCSUoB3DyqxftanMWYLP16riY=
 github.com/gotd/teled v0.5.0 h1:jcO5sMVPCKLMBvBOrauhPzGIaxv6bxvmkJ6V9cftKto=
 github.com/gotd/teled v0.5.0/go.mod h1:7jbroRefOZTTvWZiQrBxyThCcIa1USrLfhEG8Gt7taU=
 github.com/jackc/pgerrcode v0.0.0-20240316143900-6e2875d9b438 h1:Dj0L5fhJ9F82ZJyVOmBx6msDp/kfd1t9GRfny/mfJA0=
