@@ -49,6 +49,16 @@
 // helpers Code, AsFloodWait and AsChatMigrated. Context cancellation passes
 // through unchanged so callers can errors.Is on ctx.Err().
 //
+// # Persistence
+//
+// With no Options.Storage everything is kept in memory and nothing survives a
+// restart. Providing a Storage (storage.BBoltStorage satisfies it) is strongly
+// recommended for any long-lived bot: without a persisted session every Run
+// re-authorizes the bot, and Telegram rate-limits repeated logins with
+// FLOOD_WAIT — which grows with each retry and can lock the bot out on restart
+// loops. Persisting the session lets the bot reuse its authorization instead of
+// logging in again.
+//
 // # Sealed unions
 //
 // Where the Bot API uses "one of" objects (ChatID, InputFile, ReplyMarkup,

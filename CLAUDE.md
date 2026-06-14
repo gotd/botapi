@@ -88,7 +88,9 @@ can't back the `peers.Peer` that chat-management methods need.
   front end.
 - `storage/` — `BBoltStorage`, one bbolt file holding session + peer cache + update state. The
   composite `Storage` interface (in `options.go`) requires all of those; `Options.Storage` is
-  optional and everything stays in memory when nil.
+  optional and everything stays in memory when nil — but is effectively mandatory in production:
+  without a persisted session every `Run` re-authorizes the bot and Telegram answers repeated
+  logins with a growing `FLOOD_WAIT`.
 - `internal/botdoc/` + `cmd/botdoc/` — fetch/extract the published Bot API docs. Kept as a reference
   oracle and as a conformance check (`conformance_test.go`) that catches *unacknowledged* drift
   between the hand-written surface and the published API.

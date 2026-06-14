@@ -38,8 +38,15 @@ type Options struct {
 	// Device describes the client to Telegram. Optional.
 	Device telegram.DeviceConfig
 
-	// Storage persists session, peers and update state. Optional; in-memory if
-	// nil (nothing survives a restart).
+	// Storage persists session, peers and update state. In-memory if nil, in
+	// which case nothing survives a restart.
+	//
+	// Providing a Storage is strongly recommended for any long-lived bot:
+	// without a persisted session every Run starts a fresh one and re-authorizes
+	// the bot, and Telegram rate-limits repeated logins with FLOOD_WAIT, which
+	// grows with each retry and can lock the bot out on restart loops. With a
+	// persisted session the bot reuses its authorization instead of logging in
+	// again.
 	Storage Storage
 
 	// OnStart is called once, after the bot is authorized and update gap
