@@ -50,6 +50,10 @@ type Bot struct {
 	runCtx context.Context
 
 	self *tg.User
+
+	// businessSeen suppresses re-processing of redelivered business messages, so
+	// the bot does not reply to the same message twice.
+	businessSeen *businessDedup
 }
 
 // New constructs an unconnected Bot from a BotFather token. It performs no
@@ -118,6 +122,7 @@ func New(token string, opt Options) (*Bot, error) {
 		disp:             disp,
 		onStart:          opt.OnStart,
 		registerCommands: !opt.DisableCommandRegistration,
+		businessSeen:     newBusinessDedup(businessDedupSize),
 	}
 	b.installHandlers()
 

@@ -74,6 +74,48 @@ func TestDispatchBusinessMessageEdited(t *testing.T) {
 	}
 }
 
+func TestDispatchBusinessMessageDedup(t *testing.T) {
+	b := newMockBot(newMockInvoker())
+
+	var fires int
+
+	b.OnBusinessMessage(func(c *Context) error { fires++; return nil })
+
+	e := tg.Entities{Users: map[int64]*tg.User{10: {ID: 10, AccessHash: 1}}}
+	msg := &tg.Message{ID: 50, PeerID: &tg.PeerUser{UserID: 10}}
+
+	// A redelivered (identical) business message must be handled only once.
+	b.dispatchBusinessMessage(context.Background(), e, "bc1", msg, false)
+	b.dispatchBusinessMessage(context.Background(), e, "bc1", msg, false)
+
+	if fires != 1 {
+		t.Fatalf("handler fired %d times, want 1", fires)
+	}
+
+	// The same id on a different connection is a different message.
+	b.dispatchBusinessMessage(context.Background(), e, "bc2", msg, false)
+
+	if fires != 2 {
+		t.Fatalf("handler fired %d times, want 2", fires)
+	}
+}
+
+func TestBusinessDedupFresh(t *testing.T) {
+	d := newBusinessDedup(2)
+
+	if !d.fresh("a") || d.fresh("a") {
+		t.Fatal("first 'a' fresh, second not")
+	}
+
+	// Fill past capacity to evict "a", which then reads as fresh again.
+	d.fresh("b")
+	d.fresh("c")
+
+	if !d.fresh("a") {
+		t.Fatal("evicted key should read fresh again")
+	}
+}
+
 func TestContextBusinessFromMessage(t *testing.T) {
 	b := newMockBot(newMockInvoker())
 	c := &Context{Context: context.Background(), Bot: b, Update: &Update{

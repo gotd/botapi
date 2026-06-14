@@ -193,6 +193,8 @@ func newMockBot(inv *mockInvoker) *Bot {
 		peers:   peers.Options{}.Build(raw),
 		disp:    tg.NewUpdateDispatcher(),
 		self:    &tg.User{ID: 1, Bot: true, AccessHash: 1, Username: "test_bot"},
+
+		businessSeen: newBusinessDedup(businessDedupSize),
 	}
 }
 

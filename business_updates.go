@@ -61,6 +61,12 @@ func (b *Bot) dispatchBusinessMessage(ctx context.Context, e tg.Entities, connec
 
 	m.BusinessConnectionID = connectionID
 	if m.raw != nil {
+		// Drop redelivered messages so the bot does not reply to the same one
+		// twice (Telegram may resend updates, especially to bots on reconnect).
+		if b.businessSeen != nil && !b.businessSeen.fresh(businessMessageKey(connectionID, m.raw)) {
+			return
+		}
+
 		m.businessPeer = inputPeerFromEntities(m.raw.PeerID, e)
 	}
 
