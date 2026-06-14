@@ -20,7 +20,7 @@ func (b *Bot) sendMedia(ctx context.Context, chat ChatID, media message.MediaOpt
 		return nil, err
 	}
 
-	builder := &b.sender.To(peer).Builder
+	builder := &b.senderFor(cfg).To(peer).Builder
 
 	builder, err = b.applySendConfig(builder, cfg)
 	if err != nil {

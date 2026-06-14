@@ -47,8 +47,10 @@ func WithParseMode(m ParseMode) SendOption { return func(c *sendConfig) { c.pars
 // WithBusinessConnection sends the message on behalf of the business account
 // identified by the given connection id, instead of as the bot itself.
 //
-// It currently applies to SendMessage (text). Sending media on behalf of a
-// business account is not yet supported.
+// It applies to the text and media send methods (SendMessage, SendPhoto,
+// SendDocument, SendVideo, SendAudio, SendMediaGroup, …). Files are uploaded in
+// the bot's own session; only the resulting send is performed on behalf of the
+// account.
 func WithBusinessConnection(connectionID string) SendOption {
 	return func(c *sendConfig) { c.businessConn = connectionID }
 }

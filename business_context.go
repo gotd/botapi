@@ -78,3 +78,18 @@ func (c *BusinessContext) DeleteMessages(ctx context.Context, messageIDs []int) 
 func (c *BusinessContext) SendMessage(ctx context.Context, chat ChatID, text string, opts ...SendOption) (*Message, error) {
 	return c.bot.SendMessage(ctx, chat, text, append(opts, WithBusinessConnection(c.connectionID))...)
 }
+
+// SendPhoto sends a photo to a chat on behalf of the connected business account.
+func (c *BusinessContext) SendPhoto(
+	ctx context.Context, chat ChatID, photo InputFile, caption string, opts ...SendOption,
+) (*Message, error) {
+	return c.bot.SendPhoto(ctx, chat, photo, caption, append(opts, WithBusinessConnection(c.connectionID))...)
+}
+
+// SendDocument sends a general file to a chat on behalf of the connected business
+// account.
+func (c *BusinessContext) SendDocument(
+	ctx context.Context, chat ChatID, document InputFile, caption string, opts ...SendOption,
+) (*Message, error) {
+	return c.bot.SendDocument(ctx, chat, document, caption, append(opts, WithBusinessConnection(c.connectionID))...)
+}

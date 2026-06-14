@@ -180,7 +180,7 @@ func (b *Bot) SendMediaGroup(ctx context.Context, chat ChatID, media []InputMedi
 		return nil, err
 	}
 
-	builder := &b.sender.To(peer).Builder
+	builder := &b.senderFor(cfg).To(peer).Builder
 
 	builder, err = b.applySendConfig(builder, cfg)
 	if err != nil {
