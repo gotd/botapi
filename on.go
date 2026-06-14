@@ -51,6 +51,7 @@ func (b *Bot) installHandlers() {
 
 		return nil
 	})
+	b.installBusinessHandlers()
 }
 
 // dispatchMessage converts a message and routes it as the appropriate update

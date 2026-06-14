@@ -64,6 +64,17 @@ type BusinessConnection struct {
 	IsEnabled bool `json:"is_enabled"`
 }
 
+// BusinessMessagesDeleted reports that messages were deleted from a connected
+// business account.
+type BusinessMessagesDeleted struct {
+	// BusinessConnectionID is the unique identifier of the business connection.
+	BusinessConnectionID string `json:"business_connection_id"`
+	// Chat is the chat in the business account the messages were deleted from.
+	Chat Chat `json:"chat"`
+	// MessageIDs are the identifiers of the deleted messages.
+	MessageIDs []int `json:"message_ids"`
+}
+
 // invokeBusiness sends an inner RPC on behalf of a connected business account,
 // wrapping it in invokeWithBusinessConnection. *tg.Client has no generated
 // helper for this wrapper, so it goes through the raw invoker.

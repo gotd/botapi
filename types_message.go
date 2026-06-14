@@ -82,19 +82,23 @@ type PollAnswer struct {
 
 // Message represents a message.
 type Message struct {
-	MessageID           int           `json:"message_id"`
-	MessageThreadID     int           `json:"message_thread_id,omitempty"`
-	From                *User         `json:"from,omitempty"`
-	SenderChat          *Chat         `json:"sender_chat,omitempty"`
-	Date                int           `json:"date"`
-	Chat                Chat          `json:"chat"`
-	ForwardOrigin       MessageOrigin `json:"forward_origin,omitempty"`
-	ReplyToMessage      *Message      `json:"reply_to_message,omitempty"`
-	ViaBot              *User         `json:"via_bot,omitempty"`
-	EditDate            int           `json:"edit_date,omitempty"`
-	HasProtectedContent bool          `json:"has_protected_content,omitempty"`
-	MediaGroupID        string        `json:"media_group_id,omitempty"`
-	AuthorSignature     string        `json:"author_signature,omitempty"`
+	MessageID       int `json:"message_id"`
+	MessageThreadID int `json:"message_thread_id,omitempty"`
+	// BusinessConnectionID is the unique identifier of the business connection
+	// the message was received from, for messages delivered as part of a
+	// business connection.
+	BusinessConnectionID string        `json:"business_connection_id,omitempty"`
+	From                 *User         `json:"from,omitempty"`
+	SenderChat           *Chat         `json:"sender_chat,omitempty"`
+	Date                 int           `json:"date"`
+	Chat                 Chat          `json:"chat"`
+	ForwardOrigin        MessageOrigin `json:"forward_origin,omitempty"`
+	ReplyToMessage       *Message      `json:"reply_to_message,omitempty"`
+	ViaBot               *User         `json:"via_bot,omitempty"`
+	EditDate             int           `json:"edit_date,omitempty"`
+	HasProtectedContent  bool          `json:"has_protected_content,omitempty"`
+	MediaGroupID         string        `json:"media_group_id,omitempty"`
+	AuthorSignature      string        `json:"author_signature,omitempty"`
 
 	Text     string          `json:"text,omitempty"`
 	Entities []MessageEntity `json:"entities,omitempty"`
