@@ -78,6 +78,39 @@ func (b *Bot) SendGift(ctx context.Context, target ChatID, giftID string, opts .
 	return b.payStarsForm(ctx, invoice)
 }
 
+// GiftPremiumSubscription gifts a Telegram Premium subscription to a user for
+// the given number of months. The Telegram Stars cost is determined by the
+// payment form for the chosen duration. WithGiftPayForUpgrade has no effect
+// here.
+func (b *Bot) GiftPremiumSubscription(ctx context.Context, userID int64, months int, opts ...GiftOption) error {
+	var cfg giftConfig
+
+	for _, opt := range opts {
+		opt(&cfg)
+	}
+
+	user, err := b.resolveInputUser(ctx, userID)
+	if err != nil {
+		return err
+	}
+
+	invoice := &tg.InputInvoicePremiumGiftStars{
+		UserID: user,
+		Months: months,
+	}
+
+	if cfg.text != "" {
+		text, entities, err := b.giftMessage(ctx, cfg)
+		if err != nil {
+			return err
+		}
+
+		invoice.SetMessage(tg.TextWithEntities{Text: text, Entities: entities})
+	}
+
+	return b.payStarsForm(ctx, invoice)
+}
+
 // giftMessage resolves the gift text into a (text, entities) pair: explicit
 // entities take precedence over the parse mode.
 func (b *Bot) giftMessage(ctx context.Context, cfg giftConfig) (string, []tg.MessageEntityClass, error) {
@@ -98,17 +131,31 @@ func (b *Bot) payStarsForm(ctx context.Context, invoice tg.InputInvoiceClass) er
 		return asAPIError(err)
 	}
 
-	stars, ok := form.(*tg.PaymentsPaymentFormStarGift)
-	if !ok {
-		return &Error{Code: 500, Description: "Internal Server Error: unexpected payment form"}
+	formID, err := starsFormID(form)
+	if err != nil {
+		return err
 	}
 
 	if _, err := b.raw.PaymentsSendStarsForm(ctx, &tg.PaymentsSendStarsFormRequest{
-		FormID:  stars.FormID,
+		FormID:  formID,
 		Invoice: invoice,
 	}); err != nil {
 		return asAPIError(err)
 	}
 
 	return nil
+}
+
+// starsFormID extracts the form id from a Telegram Stars payment form. Star
+// gifts return a starGift form; subscriptions and other star purchases return a
+// plain stars form.
+func starsFormID(form tg.PaymentsPaymentFormClass) (int64, error) {
+	switch f := form.(type) {
+	case *tg.PaymentsPaymentFormStarGift:
+		return f.FormID, nil
+	case *tg.PaymentsPaymentFormStars:
+		return f.FormID, nil
+	default:
+		return 0, &Error{Code: 500, Description: "Internal Server Error: unexpected payment form"}
+	}
 }
