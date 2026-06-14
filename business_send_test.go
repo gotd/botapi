@@ -7,8 +7,34 @@ import (
 	"github.com/gotd/td/tg"
 )
 
+// multiBusinessMessageUpdates is the response an album sent on behalf of a
+// business account returns: each message wrapped in updateBotNewBusinessMessage.
+func multiBusinessMessageUpdates(ids ...int) *tg.Updates {
+	upds := make([]tg.UpdateClass, 0, len(ids))
+
+	for _, id := range ids {
+		upds = append(upds, &tg.UpdateBotNewBusinessMessage{
+			ConnectionID: "bc1",
+			Message:      &tg.Message{ID: id, Out: true, PeerID: &tg.PeerUser{UserID: 10}},
+		})
+	}
+
+	return &tg.Updates{Updates: upds, Users: []tg.UserClass{&tg.User{ID: 10, AccessHash: 1}}}
+}
+
+// businessSendReply is the response a send on behalf of a business account
+// returns: the sent message wrapped in updateBotNewBusinessMessage (not the
+// updateNewMessage a normal send returns).
 func businessSendReply() *tg.Updates {
-	return messageUpdates(&tg.Message{ID: 1, Message: "hi", PeerID: &tg.PeerUser{UserID: 10}})
+	return &tg.Updates{
+		Updates: []tg.UpdateClass{
+			&tg.UpdateBotNewBusinessMessage{
+				ConnectionID: "bc1",
+				Message:      &tg.Message{ID: 1, Out: true, Message: "hi", PeerID: &tg.PeerUser{UserID: 10}},
+			},
+		},
+		Users: []tg.UserClass{&tg.User{ID: 10, AccessHash: 1}},
+	}
 }
 
 func TestSendMessageWithBusinessConnection(t *testing.T) {

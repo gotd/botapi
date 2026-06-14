@@ -42,7 +42,7 @@ func businessAlbumHandler(t *testing.T, connSeen *string) func(*bin.Buffer) (bin
 
 			return m, nil
 		case tg.MessagesSendMultiMediaRequestTypeID:
-			return multiMessageUpdates(11, 12), nil
+			return multiBusinessMessageUpdates(11, 12), nil
 		default:
 			return nil, fmt.Errorf("unexpected inner request %#x", inner)
 		}
@@ -51,7 +51,7 @@ func businessAlbumHandler(t *testing.T, connSeen *string) func(*bin.Buffer) (bin
 
 func TestSendPhotoWithBusinessConnection(t *testing.T) {
 	inv := newMockInvoker()
-	inv.reply(tg.InvokeWithBusinessConnectionRequestTypeID, sendMediaOK())
+	inv.reply(tg.InvokeWithBusinessConnectionRequestTypeID, businessSendReply())
 
 	b := newMockBot(inv)
 
@@ -85,7 +85,7 @@ func TestSendPhotoWithBusinessConnection(t *testing.T) {
 
 func TestSendDocumentWithBusinessConnection(t *testing.T) {
 	inv := newMockInvoker()
-	inv.reply(tg.InvokeWithBusinessConnectionRequestTypeID, sendMediaOK())
+	inv.reply(tg.InvokeWithBusinessConnectionRequestTypeID, businessSendReply())
 
 	b := newMockBot(inv)
 
@@ -116,7 +116,7 @@ func TestSendPhotoByFileIDWithBusinessConnection(t *testing.T) {
 	fid := documentFileID(t, 0x91)
 
 	inv := newMockInvoker()
-	inv.reply(tg.InvokeWithBusinessConnectionRequestTypeID, sendMediaOK())
+	inv.reply(tg.InvokeWithBusinessConnectionRequestTypeID, businessSendReply())
 
 	b := newMockBot(inv)
 

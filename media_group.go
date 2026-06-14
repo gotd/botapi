@@ -132,6 +132,10 @@ func (b *Bot) sentMessages(ctx context.Context, resp tg.UpdatesClass, sendErr er
 			msg = u.Message
 		case *tg.UpdateNewChannelMessage:
 			msg = u.Message
+		case *tg.UpdateBotNewBusinessMessage:
+			// A media group sent on behalf of a business account returns its
+			// messages as business message updates.
+			msg = u.Message
 		default:
 			continue
 		}

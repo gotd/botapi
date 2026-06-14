@@ -78,9 +78,10 @@ func (b *Bot) EditMessageReplyMarkup(ctx context.Context, chat ChatID, messageID
 	return b.sentMessage(ctx, peer, resp, err)
 }
 
-// editedMessageFromResp extracts the edited message from an edit response.
-// Edits return UpdateEditMessage/UpdateEditChannelMessage, which the generic
-// send unpacker does not handle.
+// editedMessageFromResp extracts the resulting message from a response the
+// generic send unpacker (unpack.MessageClass) does not handle: edits
+// (UpdateEditMessage/UpdateEditChannelMessage) and sends on behalf of a business
+// account (UpdateBotNew/EditBusinessMessage).
 func editedMessageFromResp(resp tg.UpdatesClass) (tg.MessageClass, bool) {
 	var updates []tg.UpdateClass
 
@@ -100,6 +101,10 @@ func editedMessageFromResp(resp tg.UpdatesClass) (tg.MessageClass, bool) {
 		case *tg.UpdateEditMessage:
 			return upd.Message, true
 		case *tg.UpdateEditChannelMessage:
+			return upd.Message, true
+		case *tg.UpdateBotNewBusinessMessage:
+			return upd.Message, true
+		case *tg.UpdateBotEditBusinessMessage:
 			return upd.Message, true
 		}
 	}
