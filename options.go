@@ -71,7 +71,7 @@ type Options struct {
 
 	// resolver, publicKeys and dcList override the MTProto endpoints the client
 	// connects to. They are unexported test seams used to point a Bot at an
-	// in-process tgtest server; production code reaches Telegram's real DCs.
+	// in-process teledtest server; production code reaches Telegram's real DCs.
 	resolver   dcs.Resolver
 	publicKeys []telegram.PublicKey
 	dcList     dcs.List
