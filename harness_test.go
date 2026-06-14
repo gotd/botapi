@@ -56,6 +56,9 @@ func newMockInvoker() *mockInvoker {
 		}
 		return &tg.UserClassVector{Elems: users}, nil
 	})
+	// Default upload: accept any file part.
+	m.reply(tg.UploadSaveFilePartRequestTypeID, &tg.BoolTrue{})
+	m.reply(tg.UploadSaveBigFilePartRequestTypeID, &tg.BoolTrue{})
 	m.handle(tg.ChannelsGetChannelsRequestTypeID, func(buf *bin.Buffer) (bin.Encoder, error) {
 		req := &tg.ChannelsGetChannelsRequest{}
 		if err := req.Decode(buf); err != nil {
