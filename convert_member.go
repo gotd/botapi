@@ -1,6 +1,9 @@
 package botapi
 
-import "github.com/gotd/td/tg"
+import (
+	"github.com/gotd/td/constant"
+	"github.com/gotd/td/tg"
+)
 
 // chatMemberFromParticipant converts an MTProto channel participant into a Bot
 // API ChatMember. users maps user id to the resolved tg.User harvested from the
@@ -103,4 +106,76 @@ func usersByID(users []tg.UserClass) map[int64]*tg.User {
 	}
 
 	return m
+}
+
+// chatsByID indexes resolved tg.Chat/tg.Channel values from an MTProto response
+// by their raw (unmarked) id.
+func chatsByID(chats []tg.ChatClass) map[int64]tg.ChatClass {
+	m := make(map[int64]tg.ChatClass, len(chats))
+	for _, c := range chats {
+		switch c := c.(type) {
+		case *tg.Chat:
+			m[c.ID] = c
+		case *tg.ChatForbidden:
+			m[c.ID] = c
+		case *tg.Channel:
+			m[c.ID] = c
+		case *tg.ChannelForbidden:
+			m[c.ID] = c
+		}
+	}
+
+	return m
+}
+
+// chatFromRaw builds a Bot API Chat from a raw chat/channel peer, enriching it
+// from the resolved chats map when the peer is present. It works offline: when
+// the chat is absent only the marked id and kind are filled.
+func chatFromRaw(p tg.PeerClass, chats map[int64]tg.ChatClass) Chat {
+	var id constant.TDLibPeerID
+
+	switch p := p.(type) {
+	case *tg.PeerChat:
+		id.Chat(p.ChatID)
+
+		c := Chat{ID: int64(id), Type: ChatTypeGroup}
+
+		switch raw := chats[p.ChatID].(type) {
+		case *tg.Chat:
+			c.Title = raw.Title
+		case *tg.ChatForbidden:
+			c.Title = raw.Title
+		}
+
+		return c
+	case *tg.PeerChannel:
+		id.Channel(p.ChannelID)
+
+		c := Chat{ID: int64(id), Type: ChatTypeSupergroup}
+
+		switch raw := chats[p.ChannelID].(type) {
+		case *tg.Channel:
+			c.Title = raw.Title
+			c.Username = raw.Username
+			c.IsForum = raw.Forum
+			c.Type = channelChatType(raw.Broadcast)
+		case *tg.ChannelForbidden:
+			c.Title = raw.Title
+			c.Type = channelChatType(raw.Broadcast)
+		}
+
+		return c
+	default:
+		return Chat{}
+	}
+}
+
+// channelChatType reports the Bot API chat type for a channel by its broadcast
+// flag: broadcast channels are "channel", supergroups are "supergroup".
+func channelChatType(broadcast bool) ChatType {
+	if broadcast {
+		return ChatTypeChannel
+	}
+
+	return ChatTypeSupergroup
 }
