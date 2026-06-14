@@ -62,7 +62,6 @@ func (b *Bot) dispatchBusinessMessage(ctx context.Context, e tg.Entities, connec
 	m.BusinessConnectionID = connectionID
 	if m.raw != nil {
 		m.businessPeer = inputPeerFromEntities(m.raw.PeerID, e)
-		b.logBusinessPeerDiag(ctx, m.raw.PeerID, e, m.businessPeer)
 	}
 
 	u := &Update{}
@@ -73,46 +72,6 @@ func (b *Bot) dispatchBusinessMessage(ctx context.Context, e tg.Entities, connec
 	}
 
 	b.route(ctx, u)
-}
-
-// logBusinessPeerDiag logs how a business message's send peer was (or was not)
-// resolved, to diagnose BUSINESS_PEER_INVALID: whether the peer was present in
-// the update's entities, and the access hash / min flag carried there.
-func (b *Bot) logBusinessPeerDiag(ctx context.Context, peer tg.PeerClass, e tg.Entities, resolved tg.InputPeerClass) {
-	fields := []log.Attr{
-		log.String("raw_peer", peerKindString(peer)),
-		log.Bool("resolved_from_entities", resolved != nil),
-		log.Int("entity_users", len(e.Users)),
-		log.Int("entity_chats", len(e.Chats)),
-		log.Int("entity_channels", len(e.Channels)),
-	}
-
-	if pu, ok := peer.(*tg.PeerUser); ok {
-		if u, ok := e.Users[pu.UserID]; ok {
-			fields = append(fields,
-				log.Int64("entity_access_hash", u.AccessHash),
-				log.Bool("entity_min", u.Min),
-			)
-		} else {
-			fields = append(fields, log.Bool("user_in_entities", false))
-		}
-	}
-
-	b.logger().Debug(ctx, "Business peer diagnostic", fields...)
-}
-
-// peerKindString describes a peer for diagnostics.
-func peerKindString(peer tg.PeerClass) string {
-	switch peer.(type) {
-	case *tg.PeerUser:
-		return peerKindUser
-	case *tg.PeerChat:
-		return peerKindChat
-	case *tg.PeerChannel:
-		return peerKindChannel
-	default:
-		return "none"
-	}
 }
 
 // inputPeerFromEntities builds the input peer for a message's chat from the
