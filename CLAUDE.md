@@ -114,3 +114,7 @@ can't back the `peers.Peer` that chat-management methods need.
   `chore:`, `docs:`, etc.
 - No `reflect` in the hot path and allocation-consciousness are explicit design goals — prefer the
   typed jx codecs and fully-typed request building over reflection-based shortcuts.
+
+## Documentation
+
+When updating the docs, also update `../docs` (gotd.dev).
