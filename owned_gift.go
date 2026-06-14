@@ -35,6 +35,15 @@ func OwnedGiftFromSlug(slug string) string {
 	return ownedGiftSlugPrefix + ":" + slug
 }
 
+// ownedGiftFromChannel builds an owned_gift_id for a gift received by a channel
+// chat, from the channel's id and access hash and the gift's saved id.
+func ownedGiftFromChannel(channelID, accessHash, savedID int64) string {
+	return ownedGiftChatPrefix + ":" +
+		strconv.FormatInt(channelID, 10) + ":" +
+		strconv.FormatInt(accessHash, 10) + ":" +
+		strconv.FormatInt(savedID, 10)
+}
+
 // ownedGiftToTg decodes an owned_gift_id into the MTProto inputSavedStarGift it
 // addresses.
 func ownedGiftToTg(id string) (tg.InputSavedStarGiftClass, error) {
