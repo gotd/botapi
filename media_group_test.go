@@ -4,7 +4,63 @@ import (
 	"context"
 	"errors"
 	"testing"
+
+	"github.com/gotd/td/tg"
 )
+
+func TestSendMediaGroup(t *testing.T) {
+	inv := newMockInvoker()
+	inv.reply(tg.MessagesUploadMediaRequestTypeID, &tg.MessageMediaPhoto{
+		Photo: &tg.Photo{ID: 1, AccessHash: 2, FileReference: []byte{1}, DCID: 2, Sizes: []tg.PhotoSizeClass{&tg.PhotoSize{Type: "x", W: 1, H: 1, Size: 1}}},
+	})
+	inv.reply(tg.MessagesSendMultiMediaRequestTypeID, &tg.Updates{
+		Updates: []tg.UpdateClass{
+			&tg.UpdateNewMessage{Message: &tg.Message{ID: 1, PeerID: &tg.PeerUser{UserID: 10}}},
+			&tg.UpdateNewMessage{Message: &tg.Message{ID: 2, PeerID: &tg.PeerUser{UserID: 10}}},
+		},
+		Users: []tg.UserClass{&tg.User{ID: 10, AccessHash: 20}},
+	})
+	b := newMockBot(inv)
+
+	media := []InputMedia{
+		&InputMediaPhoto{Media: FileFromBytes("a.jpg", []byte("a"))},
+		&InputMediaPhoto{Media: FileFromBytes("b.jpg", []byte("b"))},
+	}
+	msgs, err := b.SendMediaGroup(context.Background(), userRef(10, 20), media)
+	if err != nil {
+		t.Fatalf("SendMediaGroup: %v", err)
+	}
+	if len(msgs) != 2 {
+		t.Fatalf("messages = %d", len(msgs))
+	}
+}
+
+func TestSendMediaGroupDocuments(t *testing.T) {
+	inv := newMockInvoker()
+	inv.reply(tg.MessagesUploadMediaRequestTypeID, &tg.MessageMediaDocument{
+		Document: &tg.Document{ID: 1, AccessHash: 2, FileReference: []byte{1}, DCID: 2, MimeType: "application/pdf", Size: 10},
+	})
+	inv.reply(tg.MessagesSendMultiMediaRequestTypeID, &tg.Updates{
+		Updates: []tg.UpdateClass{
+			&tg.UpdateNewMessage{Message: &tg.Message{ID: 1, PeerID: &tg.PeerUser{UserID: 10}}},
+			&tg.UpdateNewMessage{Message: &tg.Message{ID: 2, PeerID: &tg.PeerUser{UserID: 10}}},
+		},
+		Users: []tg.UserClass{&tg.User{ID: 10, AccessHash: 20}},
+	})
+	b := newMockBot(inv)
+
+	media := []InputMedia{
+		&InputMediaDocument{Media: FileFromBytes("a.pdf", []byte("a")), Caption: "first"},
+		&InputMediaVideo{Media: FileFromBytes("b.mp4", []byte("b"))},
+	}
+	msgs, err := b.SendMediaGroup(context.Background(), userRef(10, 20), media)
+	if err != nil {
+		t.Fatalf("SendMediaGroup docs: %v", err)
+	}
+	if len(msgs) != 2 {
+		t.Fatalf("messages = %d", len(msgs))
+	}
+}
 
 func TestSendMediaGroupCountValidation(t *testing.T) {
 	b := newTestBot(t)

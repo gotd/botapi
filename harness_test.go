@@ -205,3 +205,8 @@ func messageUpdates(msg *tg.Message) *tg.Updates {
 		Users:   []tg.UserClass{&tg.User{ID: 1, AccessHash: 1, Bot: true, Username: "test_bot"}},
 	}
 }
+
+// sendMediaOK is a canned successful response for a media send to user 10.
+func sendMediaOK() *tg.Updates {
+	return messageUpdates(&tg.Message{ID: 1, PeerID: &tg.PeerUser{UserID: 10}})
+}

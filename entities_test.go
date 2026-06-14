@@ -52,3 +52,54 @@ func TestEntitiesEmpty(t *testing.T) {
 		t.Fatal("empty input should yield nil")
 	}
 }
+
+func TestEntitiesAllTypes(t *testing.T) {
+	entities := []MessageEntity{
+		{Type: EntityMention, Offset: 0, Length: 1},
+		{Type: EntityHashtag, Offset: 1, Length: 1},
+		{Type: EntityCashtag, Offset: 2, Length: 1},
+		{Type: EntityBotCommand, Offset: 3, Length: 1},
+		{Type: EntityURL, Offset: 4, Length: 1},
+		{Type: EntityEmail, Offset: 5, Length: 1},
+		{Type: EntityPhoneNumber, Offset: 6, Length: 1},
+		{Type: EntityBold, Offset: 7, Length: 1},
+		{Type: EntityItalic, Offset: 8, Length: 1},
+		{Type: EntityUnderline, Offset: 9, Length: 1},
+		{Type: EntityStrikethrough, Offset: 10, Length: 1},
+		{Type: EntitySpoiler, Offset: 11, Length: 1},
+		{Type: EntityBlockquote, Offset: 12, Length: 1},
+		{Type: EntityExpandableBlockquote, Offset: 13, Length: 1},
+		{Type: EntityCode, Offset: 14, Length: 1},
+		{Type: EntityPre, Offset: 15, Length: 1, Language: "go"},
+		{Type: EntityTextLink, Offset: 16, Length: 1, URL: "https://e"},
+		{Type: EntityTextMention, Offset: 17, Length: 1, User: &User{ID: 42}},
+		{Type: EntityCustomEmoji, Offset: 18, Length: 1, CustomEmojiID: "555"},
+	}
+	tgEntities := entitiesToTg(entities)
+	if len(tgEntities) != len(entities) {
+		t.Fatalf("toTg produced %d, want %d", len(tgEntities), len(entities))
+	}
+	back := entitiesFromTg(tgEntities)
+	if len(back) != len(entities) {
+		t.Fatalf("fromTg produced %d, want %d", len(back), len(entities))
+	}
+	byType := map[MessageEntityType]MessageEntity{}
+	for _, e := range back {
+		byType[e.Type] = e
+	}
+	if byType[EntityPre].Language != "go" {
+		t.Fatalf("pre lang = %q", byType[EntityPre].Language)
+	}
+	if byType[EntityTextLink].URL != "https://e" {
+		t.Fatalf("text link url = %q", byType[EntityTextLink].URL)
+	}
+	if byType[EntityTextMention].User == nil || byType[EntityTextMention].User.ID != 42 {
+		t.Fatalf("text mention user = %#v", byType[EntityTextMention].User)
+	}
+	if byType[EntityCustomEmoji].CustomEmojiID != "555" {
+		t.Fatalf("custom emoji id = %q", byType[EntityCustomEmoji].CustomEmojiID)
+	}
+	if _, ok := byType[EntityExpandableBlockquote]; !ok {
+		t.Fatal("expandable blockquote lost")
+	}
+}

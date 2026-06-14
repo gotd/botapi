@@ -78,3 +78,14 @@ func TestPeerChatIDMarshalsToTDLibID(t *testing.T) {
 		t.Fatalf("channel chat id: %s", data)
 	}
 }
+
+func TestPeerRefResolves(t *testing.T) {
+	b := newMockBot(newMockInvoker())
+	ref, err := b.PeerRef(context.Background(), tdlibChannel(50))
+	if err != nil {
+		t.Fatalf("PeerRef: %v", err)
+	}
+	if ref.Kind != peerKindChannel || ref.ID != 50 {
+		t.Fatalf("ref = %#v", ref)
+	}
+}
