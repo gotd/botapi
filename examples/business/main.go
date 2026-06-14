@@ -137,6 +137,23 @@ func handleBusiness(log *zap.Logger) botapi.Handler {
 			return nil
 		}
 
+		// Diagnostic: fetch the connection (a read, never a business send) to see
+		// the owner id and granted rights, and whether we are about to reply to
+		// the owner themselves (an invalid business peer).
+		if conn, err := bc.Connection(c); err == nil {
+			canReply := conn.Rights != nil && conn.Rights.CanReply
+			log.Info("Business connection state",
+				zap.String("connection", conn.ID),
+				zap.Int64("owner_id", conn.User.ID),
+				zap.Bool("enabled", conn.IsEnabled),
+				zap.Bool("can_reply", canReply),
+				zap.Int64("reply_peer", bm.Chat.ID),
+				zap.Bool("reply_peer_is_owner", conn.User.ID == bm.Chat.ID),
+			)
+		} else {
+			log.Warn("Get business connection", zap.Error(err))
+		}
+
 		log.Info("Business message",
 			zap.String("connection", bc.ConnectionID()),
 			zap.Int64("chat", bm.Chat.ID),
