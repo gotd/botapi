@@ -132,6 +132,13 @@ type Message struct {
 	// nil for synthesized stubs (e.g. reply_to/pinned placeholders). It is not
 	// serialized; reach it through Raw.
 	raw *tg.Message
+
+	// businessPeer is the input peer of a business message's chat, built from the
+	// access hash delivered in the update's entities. A reply on behalf of a
+	// business account must use this peer (the account's own access hash for the
+	// chat) rather than the bot's stored one, which is invalid in the business
+	// context (BUSINESS_PEER_INVALID). Nil for non-business messages.
+	businessPeer tg.InputPeerClass
 }
 
 // Raw returns the original MTProto message this Message was converted from, for

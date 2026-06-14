@@ -30,6 +30,10 @@ func (c *Context) Chat() (ChatID, bool) {
 	}
 
 	if bm := c.BusinessMessage(); bm != nil {
+		if target, ok := businessChatID(bm); ok {
+			return target, true
+		}
+
 		return ID(bm.Chat.ID), true
 	}
 
@@ -64,7 +68,12 @@ func (c *Context) Reply(text string, opts ...SendOption) (*Message, error) {
 			WithBusinessConnection(bm.BusinessConnectionID),
 		}, opts...)
 
-		return c.Bot.SendMessage(c, ID(bm.Chat.ID), text, opts...)
+		target, ok := businessChatID(bm)
+		if !ok {
+			target = ID(bm.Chat.ID)
+		}
+
+		return c.Bot.SendMessage(c, target, text, opts...)
 	}
 
 	m := c.Message()

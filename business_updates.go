@@ -15,13 +15,13 @@ func (b *Bot) installBusinessHandlers() {
 
 		return nil
 	})
-	b.disp.OnBotNewBusinessMessage(func(ctx context.Context, _ tg.Entities, u *tg.UpdateBotNewBusinessMessage) error {
-		b.dispatchBusinessMessage(ctx, u.ConnectionID, u.Message, false)
+	b.disp.OnBotNewBusinessMessage(func(ctx context.Context, e tg.Entities, u *tg.UpdateBotNewBusinessMessage) error {
+		b.dispatchBusinessMessage(ctx, e, u.ConnectionID, u.Message, false)
 
 		return nil
 	})
-	b.disp.OnBotEditBusinessMessage(func(ctx context.Context, _ tg.Entities, u *tg.UpdateBotEditBusinessMessage) error {
-		b.dispatchBusinessMessage(ctx, u.ConnectionID, u.Message, true)
+	b.disp.OnBotEditBusinessMessage(func(ctx context.Context, e tg.Entities, u *tg.UpdateBotEditBusinessMessage) error {
+		b.dispatchBusinessMessage(ctx, e, u.ConnectionID, u.Message, true)
 
 		return nil
 	})
@@ -47,7 +47,7 @@ func (b *Bot) installBusinessHandlers() {
 // and routes it as a (edited) business message. Unlike dispatchMessage it keeps
 // outgoing messages: the Bot API delivers the whole business conversation,
 // including messages the account itself sent.
-func (b *Bot) dispatchBusinessMessage(ctx context.Context, connectionID string, msg tg.MessageClass, edited bool) {
+func (b *Bot) dispatchBusinessMessage(ctx context.Context, e tg.Entities, connectionID string, msg tg.MessageClass, edited bool) {
 	m, err := b.messageFromTg(ctx, msg)
 	if err != nil {
 		b.logger().Error(ctx, "Convert business message", log.Error(err))
@@ -60,6 +60,9 @@ func (b *Bot) dispatchBusinessMessage(ctx context.Context, connectionID string, 
 	}
 
 	m.BusinessConnectionID = connectionID
+	if m.raw != nil {
+		m.businessPeer = inputPeerFromEntities(m.raw.PeerID, e)
+	}
 
 	u := &Update{}
 	if edited {
@@ -69,6 +72,41 @@ func (b *Bot) dispatchBusinessMessage(ctx context.Context, connectionID string, 
 	}
 
 	b.route(ctx, u)
+}
+
+// inputPeerFromEntities builds the input peer for a message's chat from the
+// access hashes delivered with the update, so a business send addresses the chat
+// with the account's own access hash. Returns nil when the peer is absent.
+func inputPeerFromEntities(peer tg.PeerClass, e tg.Entities) tg.InputPeerClass {
+	switch p := peer.(type) {
+	case *tg.PeerUser:
+		if u, ok := e.Users[p.UserID]; ok {
+			return &tg.InputPeerUser{UserID: p.UserID, AccessHash: u.AccessHash}
+		}
+	case *tg.PeerChannel:
+		if ch, ok := e.Channels[p.ChannelID]; ok {
+			return &tg.InputPeerChannel{ChannelID: p.ChannelID, AccessHash: ch.AccessHash}
+		}
+	case *tg.PeerChat:
+		return &tg.InputPeerChat{ChatID: p.ChatID}
+	}
+
+	return nil
+}
+
+// businessChatID returns a send target for a business message's chat that carries
+// the account-scoped access hash, bypassing the bot's peer store.
+func businessChatID(m *Message) (ChatID, bool) {
+	if m == nil || m.businessPeer == nil {
+		return nil, false
+	}
+
+	ref, err := peerRefFromInputPeer(m.businessPeer)
+	if err != nil {
+		return nil, false
+	}
+
+	return Peer(ref), true
 }
 
 // businessConnectionID returns the connection id the update belongs to, or empty
@@ -130,6 +168,14 @@ func (c *Context) BusinessMessage() *Message {
 	default:
 		return nil
 	}
+}
+
+// BusinessChat returns a send target for the business message's chat that
+// carries the account-scoped access hash, and whether the update is a business
+// message. Use it to address sends on behalf of the connected account; the bot's
+// stored access hash is invalid in the business context.
+func (c *Context) BusinessChat() (ChatID, bool) {
+	return businessChatID(c.BusinessMessage())
 }
 
 // Business returns a BusinessContext scoped to the update's business connection,

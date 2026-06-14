@@ -155,7 +155,10 @@ func dispatchCommand(c *botapi.Context, bc *botapi.BusinessContext, fields []str
 	}
 
 	cmd, args := fields[0], fields[1:]
-	chat := botapi.ID(c.BusinessMessage().Chat.ID)
+
+	// Address sends with the account-scoped peer (carries the right access hash),
+	// not the bot's stored one.
+	chat, _ := c.BusinessChat()
 
 	switch cmd {
 	case "help":

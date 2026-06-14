@@ -46,7 +46,7 @@ func TestDispatchBusinessMessageKeepsOutgoing(t *testing.T) {
 
 	// Unlike a normal message, an outgoing business message is still delivered.
 	msg := &tg.Message{ID: 7, Out: true, Message: "hi", PeerID: &tg.PeerUser{UserID: 10}}
-	b.dispatchBusinessMessage(context.Background(), "bc1", msg, false)
+	b.dispatchBusinessMessage(context.Background(), tg.Entities{}, "bc1", msg, false)
 
 	if got == nil {
 		t.Fatal("outgoing business message should be dispatched")
@@ -67,7 +67,7 @@ func TestDispatchBusinessMessageEdited(t *testing.T) {
 	fired := false
 
 	b.OnEditedBusinessMessage(func(c *Context) error { fired = true; return nil })
-	b.dispatchBusinessMessage(context.Background(), "bc1", &tg.Message{ID: 8, PeerID: &tg.PeerUser{UserID: 10}}, true)
+	b.dispatchBusinessMessage(context.Background(), tg.Entities{}, "bc1", &tg.Message{ID: 8, PeerID: &tg.PeerUser{UserID: 10}}, true)
 
 	if !fired {
 		t.Fatal("edited business message handler did not fire")

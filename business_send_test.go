@@ -113,6 +113,39 @@ func TestContextReplyBusiness(t *testing.T) {
 	}
 }
 
+func TestBusinessReplyUsesEntitiesPeer(t *testing.T) {
+	inv := newMockInvoker()
+	inv.reply(tg.InvokeWithBusinessConnectionRequestTypeID, businessSendReply())
+
+	b := newMockBot(inv)
+	b.OnBusinessMessage(func(c *Context) error {
+		_, err := c.Reply("hi")
+
+		return err
+	})
+
+	// The update delivers the chat's access hash (555) in its entities; the reply
+	// must address the peer with that hash, not the bot's stored one.
+	e := tg.Entities{Users: map[int64]*tg.User{10: {ID: 10, AccessHash: 555}}}
+	msg := &tg.Message{ID: 7, PeerID: &tg.PeerUser{UserID: 10}}
+
+	b.dispatchBusinessMessage(context.Background(), e, "bc1", msg, false)
+
+	wrapper := tg.InvokeWithBusinessConnectionRequest{Query: &tg.MessagesSendMessageRequest{}}
+
+	inv.decode(t, tg.InvokeWithBusinessConnectionRequestTypeID, &wrapper)
+
+	sm, ok := wrapper.Query.(*tg.MessagesSendMessageRequest)
+	if !ok {
+		t.Fatalf("query = %#v", wrapper.Query)
+	}
+
+	peer, ok := sm.Peer.(*tg.InputPeerUser)
+	if !ok || peer.UserID != 10 || peer.AccessHash != 555 {
+		t.Fatalf("peer = %#v, want user 10 with access hash 555", sm.Peer)
+	}
+}
+
 func TestContextSendBusiness(t *testing.T) {
 	inv := newMockInvoker()
 	inv.reply(tg.InvokeWithBusinessConnectionRequestTypeID, businessSendReply())
