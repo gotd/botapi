@@ -3,15 +3,17 @@ package pool
 import (
 	"context"
 	"errors"
+	"sync/atomic"
 	"testing"
 	"time"
 )
 
 // fakeManaged returns a managed entry that is already "ready", with a cancel
-// hook recording whether it was killed.
-func fakeManaged(killed *bool) *managed {
+// hook recording whether it was killed. The flag is atomic because the pool may
+// cancel from a GC goroutine.
+func fakeManaged(killed *atomic.Bool) *managed {
 	m := &managed{ready: make(chan struct{})}
-	m.cancel = func() { *killed = true }
+	m.cancel = func() { killed.Store(true) }
 	m.markReady(nil)
 	return m
 }
@@ -48,11 +50,11 @@ func TestManagedIdleBefore(t *testing.T) {
 
 func TestKillRemovesAndCancels(t *testing.T) {
 	p, _ := New(Options{AppID: 1, AppHash: "x"})
-	killed := false
+	var killed atomic.Bool
 	p.bots["123:abc"] = fakeManaged(&killed)
 
 	p.Kill("123:abc")
-	if !killed {
+	if !killed.Load() {
 		t.Fatal("Kill should cancel the bot")
 	}
 	if _, ok := p.bots["123:abc"]; ok {
@@ -64,13 +66,13 @@ func TestKillRemovesAndCancels(t *testing.T) {
 
 func TestCloseKillsAll(t *testing.T) {
 	p, _ := New(Options{AppID: 1, AppHash: "x"})
-	k1, k2 := false, false
+	var k1, k2 atomic.Bool
 	p.bots["1:a"] = fakeManaged(&k1)
 	p.bots["2:b"] = fakeManaged(&k2)
 
 	p.Close()
-	if !k1 || !k2 {
-		t.Fatalf("Close should kill all: %v %v", k1, k2)
+	if !k1.Load() || !k2.Load() {
+		t.Fatalf("Close should kill all: %v %v", k1.Load(), k2.Load())
 	}
 	if len(p.bots) != 0 {
 		t.Fatalf("pool not emptied: %d", len(p.bots))
@@ -79,7 +81,7 @@ func TestCloseKillsAll(t *testing.T) {
 
 func TestReapCollectsIdle(t *testing.T) {
 	p, _ := New(Options{AppID: 1, AppHash: "x"})
-	idleKilled, freshKilled := false, false
+	var idleKilled, freshKilled atomic.Bool
 
 	idle := fakeManaged(&idleKilled)
 	idle.lastUsed = time.Now().Add(-time.Hour)
@@ -91,10 +93,10 @@ func TestReapCollectsIdle(t *testing.T) {
 
 	p.reap(time.Now().Add(-time.Minute))
 
-	if !idleKilled {
+	if !idleKilled.Load() {
 		t.Fatal("idle bot should be reaped")
 	}
-	if freshKilled {
+	if freshKilled.Load() {
 		t.Fatal("fresh bot should survive")
 	}
 	if _, ok := p.bots["idle"]; ok {
@@ -107,7 +109,7 @@ func TestReapCollectsIdle(t *testing.T) {
 
 func TestRunGCReapsThenStops(t *testing.T) {
 	p, _ := New(Options{AppID: 1, AppHash: "x", IdleTimeout: 10 * time.Millisecond})
-	killed := false
+	var killed atomic.Bool
 	m := fakeManaged(&killed)
 	m.lastUsed = time.Now().Add(-time.Hour)
 	p.bots["idle"] = m
@@ -131,7 +133,7 @@ func TestRunGCReapsThenStops(t *testing.T) {
 		case <-time.After(5 * time.Millisecond):
 		}
 	}
-	if !killed {
+	if !killed.Load() {
 		t.Fatal("reaped bot should be killed")
 	}
 
@@ -145,7 +147,7 @@ func TestRunGCReapsThenStops(t *testing.T) {
 
 func TestAcquireDedupes(t *testing.T) {
 	p, _ := New(Options{AppID: 1, AppHash: "x"})
-	killed := false
+	var killed atomic.Bool
 	existing := fakeManaged(&killed)
 	p.bots["123:abc"] = existing
 
