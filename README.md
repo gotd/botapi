@@ -76,7 +76,8 @@ func main() {
 See the [**guide**](./docs/guide.md) for the full surface (sending, media,
 keyboards, handlers, predicates, middleware, commands, files, chat management,
 errors, pooling) and [`examples/`](./examples) for runnable bots
-(`echo`, `buttons`, `inline`, `media`, `rich`, `background`, `advanced`).
+(`echo`, `buttons`, `inline`, `media`, `rich`, `background`, `advanced`,
+`business`).
 
 `Options.Storage` is optional — leave it nil to keep session, peers and update
 state in memory (nothing survives a restart). `storage.Open("bot.bbolt")`
