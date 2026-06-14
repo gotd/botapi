@@ -90,6 +90,12 @@ type ChatInviteLink struct {
 	ExpireDate              int    `json:"expire_date,omitempty"`
 	MemberLimit             int    `json:"member_limit,omitempty"`
 	PendingJoinRequestCount int    `json:"pending_join_request_count,omitempty"`
+	// SubscriptionPeriod is the number of seconds the subscription is active
+	// before the next payment, for subscription invite links.
+	SubscriptionPeriod int `json:"subscription_period,omitempty"`
+	// SubscriptionPrice is the amount of Telegram Stars a user must pay initially
+	// and after each subsequent subscription period to join via the link.
+	SubscriptionPrice int `json:"subscription_price,omitempty"`
 }
 
 // ChatMemberUpdated represents a change in the status of a chat member.
