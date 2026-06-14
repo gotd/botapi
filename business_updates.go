@@ -98,7 +98,7 @@ func (b *Bot) logBusinessPeerDiag(ctx context.Context, peer tg.PeerClass, e tg.E
 		}
 	}
 
-	b.logger().Info(ctx, "Business peer diagnostic", fields...)
+	b.logger().Debug(ctx, "Business peer diagnostic", fields...)
 }
 
 // peerKindString describes a peer for diagnostics.

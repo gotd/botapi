@@ -49,11 +49,16 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/gotd/botapi"
+	"github.com/gotd/botapi/examples"
 	"github.com/gotd/botapi/storage"
 )
 
 func main() {
-	log, _ := zap.NewProduction()
+	log, err := examples.NewLogger()
+	if err != nil {
+		panic(err)
+	}
+
 	defer func() { _ = log.Sync() }()
 
 	appID, err := atoi(os.Getenv("APP_ID"))
