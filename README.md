@@ -9,11 +9,14 @@ sidesteps the Bot API server's rate limits, removes the `getUpdates`/webhook
 round trip, and keeps the raw `gotd/td` client one method call away
 (`Bot.Raw()`) for anything not yet covered.
 
-> **Status: under active reconstruction.** The repo is being rebuilt from a
-> codegen-first OpenAPI/ogen project into a hand-written library. The `Bot`
-> client skeleton compiles and connects today; the typed Bot API surface
-> (methods, types, handler framework) is being filled in. See
-> [`docs/roadmap.md`](./docs/roadmap.md) for what's done and what's next.
+> **Status: experimental.** The library is hand-written and functional: it
+> connects and authorizes as a bot, serves updates over a persistent connection,
+> and exposes a broad typed Bot API surface — sending and editing, media,
+> keyboards, inline queries, payments and stars, gifts, stories, business
+> accounts, chat management, and the handler framework. A few areas remain
+> unimplemented over MTProto (see the [**guide**](./docs/guide.md)); the raw
+> `*tg.Client` (`Bot.Raw()`) covers anything not yet typed. The API may still
+> change before a stable release.
 
 ## Why MTProto instead of HTTP
 
@@ -88,7 +91,7 @@ they reconnect without re-authorizing.
 ## Package layout
 
 - `botapi` (root) — the public library: the `Bot` client, options, and the
-  hand-written Bot API surface as it lands.
+  hand-written Bot API surface (types, methods, updates, handlers).
 - `pool` — runs and multiplexes many bots by token over one process.
 - `storage` — bbolt-backed session/peer/update-state storage.
 - `internal/botdoc` — fetches and extracts the published Bot API docs; kept as a
