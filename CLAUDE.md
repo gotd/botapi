@@ -10,10 +10,11 @@ surface (types, methods, updates) **directly over MTProto** via `github.com/gotd
 persistent connection. The raw `*tg.Client` is always reachable through `Bot.Raw()` for anything
 the typed surface does not cover.
 
-The project is under active reconstruction from an old codegen-first (OpenAPI/ogen) design into a
-hand-written library. **Note:** `docs/architecture.md` describes a *target* layout (`tdbot/`,
-`handler/` subpackages) that does **not** exist — the real code is a flat root package. Trust the
-code over that doc.
+The project was rebuilt from an old codegen-first (OpenAPI/ogen) design into a hand-written
+library; that reconstruction is complete and ongoing work is incremental Bot API feature parity.
+**Note:** `docs/architecture.md` and `docs/roadmap.md` describe the original target/plan —
+`architecture.md` in particular references a *target* layout (`tdbot/`, `handler/` subpackages)
+that does **not** exist; the real code is a flat root package. Trust the code over those docs.
 
 ## Commands
 

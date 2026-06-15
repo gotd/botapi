@@ -1,13 +1,17 @@
 # Roadmap
 
-> Rebuild `github.com/gotd/botapi` from a codegen-first OpenAPI/ogen project into
-> a hand-written, MTProto-backed Bot API **library** that beats existing HTTP
-> Bot API clients on ergonomics and performance.
+> **The rebuild is complete.** This document is now a historical record of how
+> `github.com/gotd/botapi` was rebuilt from a codegen-first OpenAPI/ogen project
+> into a hand-written, MTProto-backed Bot API **library**. All phases below
+> landed on `main`; the library connects, serves updates, and exposes a broad
+> typed Bot API surface. Ongoing work is incremental feature parity, not
+> reconstruction; the `conformance_test.go` drift guard tracks coverage against
+> the published Bot API.
 > Companion docs: `architecture.md`, `building-blocks.md`.
 
 Legend: ☐ todo · ◐ in progress · ☑ done
 
-## Phase 0 — Planning & docs (current)
+## Phase 0 — Planning & docs
 
 - ☑ Map `gotd/td` building blocks (`building-blocks.md`)
 - ☑ Inventory existing `botapi` reusable translation logic
