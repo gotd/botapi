@@ -2,8 +2,15 @@
 // bot's @username followed by a query in any chat and it offers article results
 // echoing the query; picking one sends the text.
 //
+// It also demonstrates inline_message_id: each result carries an inline
+// keyboard, so when a user picks a result Telegram assigns it an
+// inline_message_id. That id is surfaced both on the chosen-inline-result update
+// and on callback queries from the inline message's button — a bot can persist
+// it to edit the inline message later.
+//
 // Run it with an MTProto app identity (https://my.telegram.org) and a BotFather
-// token (inline mode must be enabled for the bot via @BotFather):
+// token. Both inline mode and inline feedback (for chosen-inline-result updates)
+// must be enabled for the bot via @BotFather:
 //
 //	APP_ID=12345 APP_HASH=abcdef BOT_TOKEN=123:abc go run ./examples/inline
 package main
@@ -49,6 +56,12 @@ func main() {
 		log.Fatal("Create bot", zap.Error(err))
 	}
 
+	// A callback keyboard on the result makes Telegram mint an inline_message_id
+	// for the sent message and lets the user interact with it afterwards.
+	keyboard := botapi.InlineKeyboard(
+		botapi.InlineRow(botapi.InlineKeyboardButton{Text: "🔁 Shout again", CallbackData: "shout"}),
+	)
+
 	bot.OnInlineQuery(func(c *botapi.Context) error {
 		q := strings.TrimSpace(c.Update.InlineQuery.Query)
 		if q == "" {
@@ -63,6 +76,7 @@ func main() {
 				InputMessageContent: &botapi.InputTextMessageContent{
 					MessageText: strings.ToUpper(q),
 				},
+				ReplyMarkup: keyboard,
 			},
 			&botapi.InlineQueryResultArticle{
 				ID:          "echo",
@@ -71,10 +85,43 @@ func main() {
 				InputMessageContent: &botapi.InputTextMessageContent{
 					MessageText: q,
 				},
+				ReplyMarkup: keyboard,
 			},
 		}
 
 		return c.AnswerInline(results, botapi.WithInlineCacheTime(1))
+	})
+
+	// Fires when a user picks one of the offered results. The inline_message_id
+	// identifies the message that was sent into the user's chat; persist it to
+	// edit the message later. Requires inline feedback enabled in @BotFather.
+	bot.OnChosenInlineResult(func(c *botapi.Context) error {
+		r := c.Update.ChosenInlineResult
+
+		log.Info("Inline result chosen",
+			zap.String("result_id", r.ResultID),
+			zap.String("query", r.Query),
+			zap.String("inline_message_id", r.InlineMessageID),
+		)
+
+		return nil
+	})
+
+	// Callback queries from the inline message's button carry an
+	// inline_message_id instead of a Message (the bot never sees the host chat).
+	bot.OnCallbackQuery(func(c *botapi.Context) error {
+		cq := c.Update.CallbackQuery
+		if cq.InlineMessageID == "" {
+			// Callback from a normal message (not an inline one).
+			return c.AnswerCallback()
+		}
+
+		log.Info("Callback on inline message",
+			zap.String("data", cq.Data),
+			zap.String("inline_message_id", cq.InlineMessageID),
+		)
+
+		return c.AnswerCallback(botapi.WithCallbackText("Got it!"), botapi.WithCallbackAlert())
 	})
 
 	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt)
