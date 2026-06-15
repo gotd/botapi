@@ -41,6 +41,16 @@ func (b *Bot) installHandlers() {
 
 		return nil
 	})
+	b.disp.OnBotInlineSend(func(ctx context.Context, e tg.Entities, u *tg.UpdateBotInlineSend) error {
+		b.route(ctx, &Update{ChosenInlineResult: chosenInlineResultFromTg(e, u)})
+
+		return nil
+	})
+	b.disp.OnInlineBotCallbackQuery(func(ctx context.Context, e tg.Entities, u *tg.UpdateInlineBotCallbackQuery) error {
+		b.route(ctx, &Update{CallbackQuery: inlineCallbackQueryFromTg(e, u)})
+
+		return nil
+	})
 	b.disp.OnBotShippingQuery(func(ctx context.Context, e tg.Entities, u *tg.UpdateBotShippingQuery) error {
 		b.route(ctx, &Update{ShippingQuery: shippingQueryFromTg(e, u)})
 
@@ -94,13 +104,14 @@ func (b *Bot) dispatchMessage(ctx context.Context, msg tg.MessageClass, edited b
 
 // Kind predicates select an update by which field it carries. They are shared
 // by Bot.On* and Group.On*.
-func hasMessage(u *Update) bool          { return u.Message != nil }
-func hasEditedMessage(u *Update) bool    { return u.EditedMessage != nil }
-func hasChannelPost(u *Update) bool      { return u.ChannelPost != nil }
-func hasCallbackQuery(u *Update) bool    { return u.CallbackQuery != nil }
-func hasInlineQuery(u *Update) bool      { return u.InlineQuery != nil }
-func hasShippingQuery(u *Update) bool    { return u.ShippingQuery != nil }
-func hasPreCheckoutQuery(u *Update) bool { return u.PreCheckoutQuery != nil }
+func hasMessage(u *Update) bool            { return u.Message != nil }
+func hasEditedMessage(u *Update) bool      { return u.EditedMessage != nil }
+func hasChannelPost(u *Update) bool        { return u.ChannelPost != nil }
+func hasCallbackQuery(u *Update) bool      { return u.CallbackQuery != nil }
+func hasInlineQuery(u *Update) bool        { return u.InlineQuery != nil }
+func hasChosenInlineResult(u *Update) bool { return u.ChosenInlineResult != nil }
+func hasShippingQuery(u *Update) bool      { return u.ShippingQuery != nil }
+func hasPreCheckoutQuery(u *Update) bool   { return u.PreCheckoutQuery != nil }
 
 // OnMessage registers a handler for new messages matching the predicates.
 func (b *Bot) OnMessage(h Handler, predicates ...Predicate) {
@@ -125,6 +136,12 @@ func (b *Bot) OnCallbackQuery(h Handler, predicates ...Predicate) {
 // OnInlineQuery registers a handler for inline queries.
 func (b *Bot) OnInlineQuery(h Handler, predicates ...Predicate) {
 	b.on(h, prepend(hasInlineQuery, predicates)...)
+}
+
+// OnChosenInlineResult registers a handler for inline results chosen by users.
+// Requires inline feedback to be enabled with BotFather.
+func (b *Bot) OnChosenInlineResult(h Handler, predicates ...Predicate) {
+	b.on(h, prepend(hasChosenInlineResult, predicates)...)
 }
 
 // OnShippingQuery registers a handler for shipping queries (flexible invoices).

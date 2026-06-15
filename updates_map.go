@@ -37,6 +37,63 @@ func callbackQueryFromTg(e tg.Entities, u *tg.UpdateBotCallbackQuery) *CallbackQ
 	return cq
 }
 
+// inlineCallbackQueryFromTg builds a CallbackQuery from a callback on an inline
+// message (one sent via an inline query result). Unlike a regular callback, it
+// carries an inline_message_id instead of a Message.
+func inlineCallbackQueryFromTg(e tg.Entities, u *tg.UpdateInlineBotCallbackQuery) *CallbackQuery {
+	cq := &CallbackQuery{
+		ID:            strconv.FormatInt(u.QueryID, 10),
+		ChatInstance:  strconv.FormatInt(u.ChatInstance, 10),
+		Data:          string(u.Data),
+		GameShortName: u.GameShortName,
+	}
+
+	if id, err := encodeInlineMessageID(u.MsgID); err == nil {
+		cq.InlineMessageID = id
+	}
+
+	if user, ok := e.Users[u.UserID]; ok {
+		cq.From = userFromTgUser(user)
+	} else {
+		cq.From = User{ID: u.UserID}
+	}
+
+	return cq
+}
+
+// chosenInlineResultFromTg builds a ChosenInlineResult from a bot inline-send
+// update (the user picked one of the bot's inline results).
+func chosenInlineResultFromTg(e tg.Entities, u *tg.UpdateBotInlineSend) *ChosenInlineResult {
+	r := &ChosenInlineResult{
+		ResultID: u.ID,
+		Query:    u.Query,
+	}
+
+	if id, ok := u.GetMsgID(); ok {
+		if enc, err := encodeInlineMessageID(id); err == nil {
+			r.InlineMessageID = enc
+		}
+	}
+
+	if geo, ok := u.GetGeo(); ok {
+		if g, ok := geo.(*tg.GeoPoint); ok {
+			r.Location = &Location{
+				Latitude:           g.Lat,
+				Longitude:          g.Long,
+				HorizontalAccuracy: float64(g.AccuracyRadius),
+			}
+		}
+	}
+
+	if user, ok := e.Users[u.UserID]; ok {
+		r.From = userFromTgUser(user)
+	} else {
+		r.From = User{ID: u.UserID}
+	}
+
+	return r
+}
+
 // inlineQueryFromTg builds an InlineQuery from a bot inline-query update.
 func inlineQueryFromTg(e tg.Entities, u *tg.UpdateBotInlineQuery) *InlineQuery {
 	iq := &InlineQuery{
