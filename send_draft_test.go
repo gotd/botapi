@@ -4,6 +4,7 @@ import (
 	"context"
 	"testing"
 
+	"github.com/gotd/td/telegram/message/rich"
 	"github.com/gotd/td/tg"
 )
 
@@ -38,13 +39,9 @@ func TestSendRichMessageDraft(t *testing.T) {
 	inv := newMockInvoker()
 	inv.reply(tg.MessagesSetTypingRequestTypeID, &tg.BoolTrue{})
 
-	message := RichMessage{
-		Blocks: []tg.PageBlockClass{&tg.PageBlockParagraph{Text: &tg.TextPlain{Text: "partial"}}},
-		RTL:    true,
-		Part:   true,
-	}
+	msg := rich.New(&tg.PageBlockParagraph{Text: &tg.TextPlain{Text: "partial"}}).Input()
 
-	if err := newMockBot(inv).SendRichMessageDraft(context.Background(), userRef(10, 20), 1000, message); err != nil {
+	if err := newMockBot(inv).SendRichMessageDraft(context.Background(), userRef(10, 20), 1000, msg); err != nil {
 		t.Fatalf("SendRichMessageDraft: %v", err)
 	}
 
@@ -52,20 +49,16 @@ func TestSendRichMessageDraft(t *testing.T) {
 
 	inv.decode(t, tg.MessagesSetTypingRequestTypeID, &req)
 
-	action, ok := req.Action.(*tg.SendMessageRichMessageDraftAction)
+	action, ok := req.Action.(*tg.InputSendMessageRichMessageDraftAction)
 	if !ok {
-		t.Fatalf("action = %#v, want rich draft", req.Action)
+		t.Fatalf("action = %#v, want input rich draft", req.Action)
 	}
 
-	if action.RandomID != 1000 || len(action.RichMessage.Blocks) != 1 {
-		t.Fatalf("action = %#v", action)
+	if action.RandomID != 1000 {
+		t.Fatalf("random id = %d", action.RandomID)
 	}
 
-	if !action.RichMessage.GetRtl() {
-		t.Fatal("rtl flag should be set")
-	}
-
-	if _, ok := action.RichMessage.Blocks[0].(*tg.PageBlockParagraph); !ok {
-		t.Fatalf("block 0 = %#v, want paragraph", action.RichMessage.Blocks[0])
+	if _, ok := action.RichMessage.(*tg.InputRichMessage); !ok {
+		t.Fatalf("rich message = %#v, want input rich message", action.RichMessage)
 	}
 }

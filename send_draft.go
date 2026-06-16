@@ -68,50 +68,18 @@ func (b *Bot) SendMessageDraft(ctx context.Context, chat ChatID, draftID int64, 
 	return nil
 }
 
-// RichMessage is the structured content of a rich message, expressed as native
-// MTProto page blocks.
+// SendRichMessageDraft streams a partial rich message (Bot API 10.1) to a chat
+// while the message is being generated, so its members see an ephemeral preview.
+// draftID is a unique client-side identifier for the draft; reuse it across the
+// stream and finalize with SendRichMessage once generation completes.
 //
-// The HTTP Bot API accepts a rich message only as an HTML or Markdown string and
-// parses it into this structure server-side. botapi is MTProto-native, so it
-// takes the page-block tree directly: no content parser is needed and the full
-// block vocabulary (paragraphs, headers, lists, embedded media, …) is available.
-// Build blocks with the tg.PageBlock* types; Bot.Raw exposes the same client.
-type RichMessage struct {
-	// Blocks are the page blocks that make up the message body.
-	Blocks []tg.PageBlockClass
-	// Photos are photos referenced by the blocks.
-	Photos []tg.PhotoClass
-	// Documents are documents referenced by the blocks.
-	Documents []tg.DocumentClass
-	// RTL renders the message right-to-left.
-	RTL bool
-	// Part marks this as a partial segment of a longer streamed message.
-	Part bool
-}
-
-// toTg converts the rich message into its MTProto representation.
-func (r RichMessage) toTg() tg.RichMessage {
-	out := tg.RichMessage{
-		Blocks:    r.Blocks,
-		Photos:    r.Photos,
-		Documents: r.Documents,
-	}
-	if r.RTL {
-		out.SetRtl(true)
-	}
-
-	if r.Part {
-		out.SetPart(true)
-	}
-
-	return out
-}
-
-// SendRichMessageDraft streams a partial rich message to a chat while the message
-// is being generated, so its members see an ephemeral preview. draftID is a
-// unique client-side identifier for the draft. Once generation finishes, persist
-// the result with a regular send.
-func (b *Bot) SendRichMessageDraft(ctx context.Context, chat ChatID, draftID int64, message RichMessage, opts ...DraftOption) error {
+// Build msg the same way as for SendRichMessage — from native page blocks with
+// github.com/gotd/td/telegram/message/rich (rich.New(...).Input()), or from a
+// whole HTML/Markdown document (rich.HTML / rich.Markdown), which Telegram's
+// servers parse.
+func (b *Bot) SendRichMessageDraft(
+	ctx context.Context, chat ChatID, draftID int64, msg tg.InputRichMessageClass, opts ...DraftOption,
+) error {
 	var cfg draftConfig
 
 	for _, o := range opts {
@@ -125,9 +93,9 @@ func (b *Bot) SendRichMessageDraft(ctx context.Context, chat ChatID, draftID int
 
 	req := &tg.MessagesSetTypingRequest{
 		Peer: peer,
-		Action: &tg.SendMessageRichMessageDraftAction{
+		Action: &tg.InputSendMessageRichMessageDraftAction{
 			RandomID:    draftID,
-			RichMessage: message.toTg(),
+			RichMessage: msg,
 		},
 	}
 	if cfg.messageThreadID != 0 {
