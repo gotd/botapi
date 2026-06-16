@@ -297,3 +297,28 @@ func (b *Bot) SetChatAdministratorCustomTitle(ctx context.Context, chat ChatID, 
 
 	return nil
 }
+
+// SetChatMemberTag sets a custom tag (rank) for a member of a supergroup or
+// channel. An empty tag removes it. The bot must be an administrator with the
+// appropriate rights.
+func (b *Bot) SetChatMemberTag(ctx context.Context, chat ChatID, userID int64, tag string) error {
+	peer, err := b.resolveInputPeer(ctx, chat)
+	if err != nil {
+		return err
+	}
+
+	user, err := b.resolveInputUser(ctx, userID)
+	if err != nil {
+		return err
+	}
+
+	if _, err := b.raw.MessagesEditChatParticipantRank(ctx, &tg.MessagesEditChatParticipantRankRequest{
+		Peer:        peer,
+		Participant: userToInputPeer(user),
+		Rank:        tag,
+	}); err != nil {
+		return asAPIError(err)
+	}
+
+	return nil
+}

@@ -183,3 +183,24 @@ func TestSetChatAdministratorCustomTitle(t *testing.T) {
 		t.Fatalf("rank = %q", req.Rank)
 	}
 }
+
+func TestSetChatMemberTag(t *testing.T) {
+	inv := newMockInvoker()
+	inv.reply(tg.MessagesEditChatParticipantRankRequestTypeID, okUpdates())
+
+	if err := newMockBot(inv).SetChatMemberTag(context.Background(), tdlibChannel(50), 60, "VIP"); err != nil {
+		t.Fatalf("SetChatMemberTag: %v", err)
+	}
+
+	var req tg.MessagesEditChatParticipantRankRequest
+
+	inv.decode(t, tg.MessagesEditChatParticipantRankRequestTypeID, &req)
+
+	if req.Rank != "VIP" {
+		t.Fatalf("rank = %q", req.Rank)
+	}
+
+	if _, ok := req.Participant.(*tg.InputPeerUser); !ok {
+		t.Fatalf("participant = %#v, want user", req.Participant)
+	}
+}
