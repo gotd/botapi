@@ -236,6 +236,58 @@ func (b *Bot) DeleteBusinessMessages(ctx context.Context, businessConnectionID s
 	return nil
 }
 
+// ReadBusinessMessage marks a message and all earlier messages in the chat as
+// read on behalf of a managed business account. The bot must have the
+// can_read_messages business bot right.
+func (b *Bot) ReadBusinessMessage(ctx context.Context, businessConnectionID string, chat ChatID, messageID int) error {
+	peer, err := b.resolveInputPeer(ctx, chat)
+	if err != nil {
+		return err
+	}
+
+	var affected tg.MessagesAffectedMessages
+
+	if err := b.invokeBusiness(ctx, businessConnectionID, &tg.MessagesReadHistoryRequest{
+		Peer:  peer,
+		MaxID: messageID,
+	}, &affected); err != nil {
+		return asAPIError(err)
+	}
+
+	return nil
+}
+
+// TransferBusinessAccountStars transfers Telegram Stars from a managed business
+// account to the bot's own account. The bot must have the can_transfer_stars
+// business bot right.
+func (b *Bot) TransferBusinessAccountStars(ctx context.Context, businessConnectionID string, starCount int) error {
+	invoice := &tg.InputInvoiceBusinessBotTransferStars{
+		Bot:   &tg.InputUserSelf{},
+		Stars: int64(starCount),
+	}
+
+	raw := b.businessRaw(businessConnectionID)
+
+	form, err := raw.PaymentsGetPaymentForm(ctx, &tg.PaymentsGetPaymentFormRequest{Invoice: invoice})
+	if err != nil {
+		return asAPIError(err)
+	}
+
+	formID, err := starsFormID(form)
+	if err != nil {
+		return err
+	}
+
+	if _, err := raw.PaymentsSendStarsForm(ctx, &tg.PaymentsSendStarsFormRequest{
+		FormID:  formID,
+		Invoice: invoice,
+	}); err != nil {
+		return asAPIError(err)
+	}
+
+	return nil
+}
+
 // updatesAndUsers unpacks the update list and a user-by-id index from an
 // Updates response.
 func updatesAndUsers(resp tg.UpdatesClass) (updates []tg.UpdateClass, users map[int64]*tg.User) {
