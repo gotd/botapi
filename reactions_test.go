@@ -70,6 +70,44 @@ func TestReactionToTgCustomEmoji(t *testing.T) {
 	}
 }
 
+func TestDeleteMessageReaction(t *testing.T) {
+	inv := newMockInvoker()
+	inv.reply(tg.MessagesDeleteParticipantReactionRequestTypeID, okUpdates())
+
+	if err := newMockBot(inv).DeleteMessageReaction(context.Background(), tdlibChannel(50), 42, userRef(60, 1)); err != nil {
+		t.Fatalf("DeleteMessageReaction: %v", err)
+	}
+
+	var req tg.MessagesDeleteParticipantReactionRequest
+
+	inv.decode(t, tg.MessagesDeleteParticipantReactionRequestTypeID, &req)
+
+	if req.MsgID != 42 {
+		t.Fatalf("msg id = %d", req.MsgID)
+	}
+
+	if _, ok := req.Participant.(*tg.InputPeerUser); !ok {
+		t.Fatalf("participant = %#v, want user", req.Participant)
+	}
+}
+
+func TestDeleteAllMessageReactions(t *testing.T) {
+	inv := newMockInvoker()
+	inv.reply(tg.MessagesDeleteParticipantReactionsRequestTypeID, &tg.BoolTrue{})
+
+	if err := newMockBot(inv).DeleteAllMessageReactions(context.Background(), tdlibChannel(50), userRef(60, 1)); err != nil {
+		t.Fatalf("DeleteAllMessageReactions: %v", err)
+	}
+
+	var req tg.MessagesDeleteParticipantReactionsRequest
+
+	inv.decode(t, tg.MessagesDeleteParticipantReactionsRequestTypeID, &req)
+
+	if _, ok := req.Participant.(*tg.InputPeerUser); !ok {
+		t.Fatalf("participant = %#v, want user", req.Participant)
+	}
+}
+
 func TestChatJoinRequests(t *testing.T) {
 	for _, c := range []struct {
 		name     string

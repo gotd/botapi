@@ -77,3 +77,53 @@ func (b *Bot) SetMessageReaction(ctx context.Context, chat ChatID, messageID int
 
 	return nil
 }
+
+// DeleteMessageReaction removes all reactions left by the given sender on a
+// single message. The bot must be an administrator with the can_delete_messages
+// right. sender identifies the user or chat whose reactions are removed.
+func (b *Bot) DeleteMessageReaction(ctx context.Context, chat ChatID, messageID int, sender ChatID) error {
+	peer, err := b.resolveInputPeer(ctx, chat)
+	if err != nil {
+		return err
+	}
+
+	participant, err := b.resolveInputPeer(ctx, sender)
+	if err != nil {
+		return err
+	}
+
+	if _, err := b.raw.MessagesDeleteParticipantReaction(ctx, &tg.MessagesDeleteParticipantReactionRequest{
+		Peer:        peer,
+		MsgID:       messageID,
+		Participant: participant,
+	}); err != nil {
+		return asAPIError(err)
+	}
+
+	return nil
+}
+
+// DeleteAllMessageReactions removes all reactions left by the given sender across
+// every message in a chat. The bot must be an administrator with the
+// can_delete_messages right. sender identifies the user or chat whose reactions
+// are removed.
+func (b *Bot) DeleteAllMessageReactions(ctx context.Context, chat, sender ChatID) error {
+	peer, err := b.resolveInputPeer(ctx, chat)
+	if err != nil {
+		return err
+	}
+
+	participant, err := b.resolveInputPeer(ctx, sender)
+	if err != nil {
+		return err
+	}
+
+	if _, err := b.raw.MessagesDeleteParticipantReactions(ctx, &tg.MessagesDeleteParticipantReactionsRequest{
+		Peer:        peer,
+		Participant: participant,
+	}); err != nil {
+		return asAPIError(err)
+	}
+
+	return nil
+}
