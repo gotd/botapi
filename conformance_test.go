@@ -21,20 +21,7 @@ var coveredByOtherMeans = map[string]string{
 // yet implemented, each blocked on a missing gotd/td RPC or unclear MTProto
 // mapping. They should move to an implementation as td gains support.
 var deferredMethods = map[string]string{
-	"deleteMessageReaction":        "no bot-accessible MTProto RPC to remove another user's reaction",
-	"deleteAllMessageReactions":    "no bot-accessible MTProto RPC to clear a message's reactions",
-	"sendMessageDraft":             "messages.saveDraft exists but Bot API draft_id has no MTProto equivalent (one draft per peer/thread)",
-	"sendRichMessageDraft":         "rich-message drafts (Bot API 10.1) have no MTProto mapping yet",
-	"sendLivePhoto":                "no MTProto RPC for the iOS live-photo upload form",
-	"setChatMemberTag":             "no MTProto RPC for member tags",
-	"getUserProfileAudios":         "no MTProto RPC for profile audios",
-	"getUserPersonalChatMessages":  "no MTProto RPC for a user's personal-chat messages",
-	"savePreparedKeyboardButton":   "no MTProto RPC for prepared keyboard buttons",
-	"answerChatJoinRequestQuery":   "Bot API 10.1; no MTProto mapping yet",
-	"sendChatJoinRequestWebApp":    "Bot API 10.1; no MTProto mapping yet",
-	"answerGuestQuery":             "messages.setBotGuestChatResult not exposed by td v0.156.3",
-	"readBusinessMessage":          "messages.readHistory needs business-context peer resolution botapi can't do offline",
-	"transferBusinessAccountStars": "no Stars-transfer RPC exposed by td v0.156.3",
+	"sendRichMessageDraft": "needs a tg.RichMessage PageBlock tree built from HTML/markdown, a content parser TDLib runs server-side",
 }
 
 // notApplicableMethods lists published methods that do not apply to the
