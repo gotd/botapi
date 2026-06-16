@@ -20,9 +20,10 @@ var coveredByOtherMeans = map[string]string{
 // deferredMethods lists published methods that are feasible in principle but not
 // yet implemented, each blocked on a missing gotd/td RPC or unclear MTProto
 // mapping. They should move to an implementation as td gains support.
-var deferredMethods = map[string]string{
-	"sendRichMessageDraft": "needs a tg.RichMessage PageBlock tree built from HTML/markdown, a content parser TDLib runs server-side",
-}
+//
+// Empty: every published method is implemented, covered by other means, or
+// not-applicable below.
+var deferredMethods = map[string]string{}
 
 // notApplicableMethods lists published methods that do not apply to the
 // MTProto-native model and are intentionally not implemented.
