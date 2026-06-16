@@ -24,6 +24,7 @@ type sendConfig struct {
 	markup            ReplyMarkup
 	parseMode         ParseMode
 	businessConn      string
+	paidMediaPayload  string
 }
 
 // DisableWebPagePreview disables the link preview for messages with links.
@@ -43,6 +44,12 @@ func WithReplyMarkup(m ReplyMarkup) SendOption { return func(c *sendConfig) { c.
 
 // WithParseMode selects the formatting mode for the text or caption.
 func WithParseMode(m ParseMode) SendOption { return func(c *sendConfig) { c.parseMode = m } }
+
+// WithPaidMediaPayload attaches a bot-defined payload to a SendPaidMedia call,
+// 0-128 bytes, not shown to the user. Use it for internal processes.
+func WithPaidMediaPayload(payload string) SendOption {
+	return func(c *sendConfig) { c.paidMediaPayload = payload }
+}
 
 // WithBusinessConnection sends the message on behalf of the business account
 // identified by the given connection id, instead of as the bot itself.
