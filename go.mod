@@ -9,7 +9,7 @@ require (
 	github.com/gotd/contrib v0.21.1
 	github.com/gotd/log v0.1.0
 	github.com/gotd/log/logzap v0.1.1
-	github.com/gotd/td v0.156.3
+	github.com/gotd/td v0.157.1
 	github.com/gotd/teled v0.5.0
 	github.com/stretchr/testify v1.11.1
 	go.etcd.io/bbolt v1.4.3
@@ -26,7 +26,7 @@ require (
 	github.com/andybalholm/cascadia v1.3.3 // indirect
 	github.com/cenkalti/backoff/v4 v4.3.0 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
-	github.com/coder/websocket v1.8.14 // indirect
+	github.com/coder/websocket v1.8.15 // indirect
 	github.com/containerd/errdefs v1.0.0 // indirect
 	github.com/containerd/errdefs/pkg v0.3.0 // indirect
 	github.com/containerd/log v0.1.0 // indirect
