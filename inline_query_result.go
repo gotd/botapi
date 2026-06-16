@@ -9,6 +9,11 @@ import (
 // mimeImageJPEG is the default thumbnail MIME type for inline results.
 const mimeImageJPEG = "image/jpeg"
 
+// errNilInlineResult is returned when a method is given a nil InlineQueryResult.
+func errNilInlineResult() *Error {
+	return &Error{Code: 400, Description: "Bad Request: inline query result is nil"}
+}
+
 // InlineQueryResult is a sealed union describing one result of an inline query.
 //
 // Concrete variants cover articles, fresh-by-URL media (photo/gif/mpeg4

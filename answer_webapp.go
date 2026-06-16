@@ -20,7 +20,7 @@ type SentWebAppMessage struct {
 // originated. webAppQueryID is the query id from the Web App.
 func (b *Bot) AnswerWebAppQuery(ctx context.Context, webAppQueryID string, result InlineQueryResult) (*SentWebAppMessage, error) {
 	if result == nil {
-		return nil, &Error{Code: 400, Description: "Bad Request: inline query result is nil"}
+		return nil, errNilInlineResult()
 	}
 
 	converted, err := result.toTg(ctx, b)

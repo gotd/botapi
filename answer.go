@@ -132,7 +132,7 @@ func (b *Bot) AnswerInlineQuery(
 	tgResults := make([]tg.InputBotInlineResultClass, 0, len(results))
 	for _, r := range results {
 		if r == nil {
-			return &Error{Code: 400, Description: "Bad Request: inline query result is nil"}
+			return errNilInlineResult()
 		}
 
 		converted, err := r.toTg(ctx, b)
