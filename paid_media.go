@@ -155,7 +155,7 @@ func (b *Bot) paidUploadedVideo(ctx context.Context, f *InputFileUpload, v Input
 
 	doc := &tg.InputMediaUploadedDocument{
 		File:       uploaded,
-		MimeType:   "video/mp4",
+		MimeType:   mimeVideoMP4,
 		Attributes: []tg.DocumentAttributeClass{video},
 	}
 	if f.Name != "" {

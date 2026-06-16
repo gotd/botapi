@@ -86,10 +86,10 @@ func (b *Bot) inputMediaToTg(ctx context.Context, m InputMedia) (tg.InputMediaCl
 		media, err := b.photoInputMedia(ctx, m.Media)
 		return media, captionData{m.Caption, m.ParseMode, m.CaptionEntities}, err
 	case *InputMediaVideo:
-		media, err := b.documentInputMedia(ctx, m.Media, "video/mp4")
+		media, err := b.documentInputMedia(ctx, m.Media, mimeVideoMP4)
 		return media, captionData{m.Caption, m.ParseMode, m.CaptionEntities}, err
 	case *InputMediaAnimation:
-		media, err := b.documentInputMedia(ctx, m.Media, "video/mp4")
+		media, err := b.documentInputMedia(ctx, m.Media, mimeVideoMP4)
 		return media, captionData{m.Caption, m.ParseMode, m.CaptionEntities}, err
 	case *InputMediaAudio:
 		media, err := b.documentInputMedia(ctx, m.Media, "audio/mpeg")

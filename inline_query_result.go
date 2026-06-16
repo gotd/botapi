@@ -9,6 +9,9 @@ import (
 // mimeImageJPEG is the default thumbnail MIME type for inline results.
 const mimeImageJPEG = "image/jpeg"
 
+// mimeVideoMP4 is the MIME type used for uploaded video documents.
+const mimeVideoMP4 = "video/mp4"
+
 // errNilInlineResult is returned when a method is given a nil InlineQueryResult.
 func errNilInlineResult() *Error {
 	return &Error{Code: 400, Description: "Bad Request: inline query result is nil"}
@@ -349,7 +352,7 @@ func (r *InlineQueryResultGif) toTg(ctx context.Context, b *Bot) (tg.InputBotInl
 
 func (r *InlineQueryResultMpeg4Gif) toTg(ctx context.Context, b *Bot) (tg.InputBotInlineResultClass, error) {
 	return b.webResult(ctx, r.ID, "gif", r.Title, "",
-		r.Mpeg4URL, "video/mp4", r.ThumbnailURL, 0, 0,
+		r.Mpeg4URL, mimeVideoMP4, r.ThumbnailURL, 0, 0,
 		r.InputMessageContent, r.captioned, r.ReplyMarkup)
 }
 

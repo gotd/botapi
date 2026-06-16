@@ -280,7 +280,7 @@ func (b *Bot) storyVideoMedia(ctx context.Context, content InputStoryContentVide
 
 		return &tg.InputMediaUploadedDocument{
 			File:         upFile,
-			MimeType:     "video/mp4",
+			MimeType:     mimeVideoMP4,
 			NosoundVideo: content.IsAnimation,
 			Attributes:   []tg.DocumentAttributeClass{&video},
 		}, nil
