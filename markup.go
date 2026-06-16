@@ -40,11 +40,13 @@ type KeyboardButtonPollType struct {
 // KeyboardButton is one button of a reply (custom) keyboard. Text is sent as a
 // plain message when no request/web-app field is set.
 type KeyboardButton struct {
-	Text            string                  `json:"text"`
-	RequestContact  bool                    `json:"request_contact,omitempty"`
-	RequestLocation bool                    `json:"request_location,omitempty"`
-	RequestPoll     *KeyboardButtonPollType `json:"request_poll,omitempty"`
-	WebApp          *WebAppInfo             `json:"web_app,omitempty"`
+	Text            string                      `json:"text"`
+	RequestUsers    *KeyboardButtonRequestUsers `json:"request_users,omitempty"`
+	RequestChat     *KeyboardButtonRequestChat  `json:"request_chat,omitempty"`
+	RequestContact  bool                        `json:"request_contact,omitempty"`
+	RequestLocation bool                        `json:"request_location,omitempty"`
+	RequestPoll     *KeyboardButtonPollType     `json:"request_poll,omitempty"`
+	WebApp          *WebAppInfo                 `json:"web_app,omitempty"`
 }
 
 // ReplyKeyboardMarkup is a custom keyboard with reply options.

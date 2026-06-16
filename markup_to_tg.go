@@ -91,6 +91,10 @@ func inlineButtonToTg(btn InlineKeyboardButton) (tg.KeyboardButtonClass, error) 
 
 func keyboardButtonToTg(btn KeyboardButton) tg.KeyboardButtonClass {
 	switch {
+	case btn.RequestUsers != nil:
+		return requestUsersToTg(btn.Text, btn.RequestUsers)
+	case btn.RequestChat != nil:
+		return requestChatToTg(btn.Text, btn.RequestChat)
 	case btn.RequestContact:
 		return markup.RequestPhone(btn.Text)
 	case btn.RequestLocation:
