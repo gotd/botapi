@@ -116,6 +116,13 @@ func (b *Bot) businessSender(connectionID string) *message.Sender {
 	return message.NewSender(tg.NewClient(businessInvoker{inner: b.invoker, connectionID: connectionID}))
 }
 
+// businessRaw returns a raw *tg.Client whose every RPC is forwarded on behalf of
+// the business account identified by connectionID. It must not be used for
+// uploads (see businessInvoker).
+func (b *Bot) businessRaw(connectionID string) *tg.Client {
+	return tg.NewClient(businessInvoker{inner: b.invoker, connectionID: connectionID})
+}
+
 // GetBusinessConnection returns information about the connection of the bot with
 // a business account by the connection id received in updates.
 func (b *Bot) GetBusinessConnection(ctx context.Context, businessConnectionID string) (*BusinessConnection, error) {
