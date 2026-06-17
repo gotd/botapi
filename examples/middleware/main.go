@@ -7,10 +7,11 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/gotd/botapi"
-	"github.com/gotd/botapi/storage"
 	"github.com/gotd/log/logzap"
 	"go.uber.org/zap"
+
+	"github.com/gotd/botapi"
+	"github.com/gotd/botapi/storage"
 )
 
 func main() {
@@ -24,6 +25,7 @@ func main() {
 	if err != nil {
 		log.Fatal("Open storage", zap.Error(err))
 	}
+
 	defer func() { _ = store.Close() }()
 
 	appID, err := strconv.Atoi(os.Getenv("APP_ID"))
@@ -51,7 +53,8 @@ func main() {
 	bot.Use(botapi.Recover(), botapi.Timeout(time.Minute), botapi.Logging())
 
 	log.Info("Starting bot")
+
 	if err := bot.Run(ctx); err != nil {
-		log.Fatal("Run", zap.Error(err))
+		log.Error("Run", zap.Error(err))
 	}
 }

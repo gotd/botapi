@@ -92,9 +92,11 @@ func (b *Bot) route(ctx context.Context, u *Update) {
 	if b.self != nil {
 		u.botUsername = b.self.Username
 	}
+
 	c := &Context{Context: ctx, Bot: b, Update: u}
 
 	b.router.mu.RLock()
+
 	preMws := b.router.preMws
 	routes := b.router.routes
 	mws := b.router.mws
@@ -117,8 +119,10 @@ func (b *Bot) route(ctx context.Context, u *Update) {
 
 			return h(c)
 		}
+
 		return nil
 	}
+
 	for i := len(preMws) - 1; i >= 0; i-- {
 		routingHandler = preMws[i](routingHandler)
 	}
