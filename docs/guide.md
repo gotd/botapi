@@ -280,6 +280,27 @@ bot.Use(botapi.Recover(), botapi.Timeout(30*time.Second), botapi.Logging())
 
 Built-ins: `Recover` (turns panics into errors), `Timeout`, `Logging`.
 
+## Outer Middleware
+
+An `OuterMiddleware` is also a `func(Handler) Handler`. Register global middleware
+that runs before route matching with `UseOuter`:
+```go
+bot.UseOuter(botapi.Recover(), ChatConfigMiddleware())
+```
+
+See [`examples/middleware`](../examples/middleware) for a complete example
+showing how data flows from outer middleware to predicates and handlers.
+
+### Pipeline Execution Order
+
+Middlewares and handlers execute in a distinct lifecycle layer (from the outside in).
+The visualization below demonstrates how an update travels through the bot:
+
+1. **`UseOuter`** (Always runs first; can short-circuit or inject data into `Context`).
+2. **`Predicate` matching** (Evaluates route guards; has access to data from `UseOuter`).
+3. **`Use`** (Runs only if a route matches; ideal for logging, telemetry, or lazy-loading user sessions).
+4. **`Handler`** (Your core business logic).
+
 ## Groups
 
 `Group` scopes shared predicates and middleware to a subset of handlers:
