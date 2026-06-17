@@ -41,6 +41,7 @@ type ChatMemberMember struct {
 	Status    ChatMemberStatus `json:"status"`
 	User      User             `json:"user"`
 	UntilDate int              `json:"until_date,omitempty"`
+	Tag       string           `json:"tag,omitempty"`
 }
 
 // ChatMemberRestricted is a member subject to restrictions.
@@ -57,6 +58,7 @@ type ChatMemberRestricted struct {
 	CanInviteUsers        bool             `json:"can_invite_users,omitempty"`
 	CanPinMessages        bool             `json:"can_pin_messages,omitempty"`
 	UntilDate             int              `json:"until_date,omitempty"`
+	Tag                   string           `json:"tag,omitempty"`
 }
 
 // ChatMemberLeft is a user who is not and was not a member of the chat.

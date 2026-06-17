@@ -46,9 +46,9 @@ func chatMemberFromParticipant(p tg.ChannelParticipantClass, users map[int64]*tg
 			CustomTitle:         v.Rank,
 		}
 	case *tg.ChannelParticipantSelf:
-		return &ChatMemberMember{Status: StatusMember, User: user(v.UserID)}
+		return &ChatMemberMember{Status: StatusMember, User: user(v.UserID), Tag: v.Rank}
 	case *tg.ChannelParticipant:
-		return &ChatMemberMember{Status: StatusMember, User: user(v.UserID)}
+		return &ChatMemberMember{Status: StatusMember, User: user(v.UserID), Tag: v.Rank}
 	case *tg.ChannelParticipantBanned:
 		uid := peerUserID(v.Peer)
 		if v.Left {
@@ -78,6 +78,7 @@ func chatMemberFromParticipant(p tg.ChannelParticipantClass, users map[int64]*tg
 			CanChangeInfo:         !br.ChangeInfo,
 			CanInviteUsers:        !br.InviteUsers,
 			CanPinMessages:        !br.PinMessages,
+			Tag:                   v.Rank,
 			UntilDate:             br.UntilDate,
 		}
 	case *tg.ChannelParticipantLeft:
