@@ -26,28 +26,28 @@ func reverse(s string) string {
 
 // --- incoming-media predicates, shared by media.go ---
 
-func hasPhoto(u *botapi.Update) bool {
-	m := u.EffectiveMessage()
+func hasPhoto(c *botapi.Context) bool {
+	m := c.Message()
 	return m != nil && len(m.Photo) > 0
 }
 
-func hasDocument(u *botapi.Update) bool {
-	m := u.EffectiveMessage()
+func hasDocument(c *botapi.Context) bool {
+	m := c.Message()
 	return m != nil && m.Document != nil
 }
 
-func hasSticker(u *botapi.Update) bool {
-	m := u.EffectiveMessage()
+func hasSticker(c *botapi.Context) bool {
+	m := c.Message()
 	return m != nil && m.Sticker != nil
 }
 
-func hasLocation(u *botapi.Update) bool {
-	m := u.EffectiveMessage()
+func hasLocation(c *botapi.Context) bool {
+	m := c.Message()
 	return m != nil && m.Location != nil
 }
 
-func hasContact(u *botapi.Update) bool {
-	m := u.EffectiveMessage()
+func hasContact(c *botapi.Context) bool {
+	m := c.Message()
 	return m != nil && m.Contact != nil
 }
 

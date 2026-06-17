@@ -69,8 +69,8 @@ func commandName(text string) (name, target string, ok bool) {
 func Command(name string) Predicate {
 	name = strings.TrimPrefix(name, "/")
 
-	return func(u *Update) bool {
-		m := u.EffectiveMessage()
+	return func(c *Context) bool {
+		m := c.Message()
 		if m == nil {
 			return false
 		}
@@ -80,30 +80,30 @@ func Command(name string) Predicate {
 			return false
 		}
 
-		return target == "" || strings.EqualFold(target, u.botUsername)
+		return target == "" || strings.EqualFold(target, c.Update.botUsername)
 	}
 }
 
 // HasPrefix matches a message whose text starts with prefix.
 func HasPrefix(prefix string) Predicate {
-	return func(u *Update) bool {
-		m := u.EffectiveMessage()
+	return func(c *Context) bool {
+		m := c.Message()
 		return m != nil && strings.HasPrefix(m.Text, prefix)
 	}
 }
 
 // HasText matches any message that carries non-empty text.
 func HasText() Predicate {
-	return func(u *Update) bool {
-		m := u.EffectiveMessage()
+	return func(c *Context) bool {
+		m := c.Message()
 		return m != nil && m.Text != ""
 	}
 }
 
 // TextEquals matches a message whose text equals s exactly.
 func TextEquals(s string) Predicate {
-	return func(u *Update) bool {
-		m := u.EffectiveMessage()
+	return func(c *Context) bool {
+		m := c.Message()
 		return m != nil && m.Text == s
 	}
 }
@@ -113,44 +113,44 @@ func TextEquals(s string) Predicate {
 func Regex(pattern string) Predicate {
 	re := regexp.MustCompile(pattern)
 
-	return func(u *Update) bool {
-		m := u.EffectiveMessage()
+	return func(c *Context) bool {
+		m := c.Message()
 		return m != nil && re.MatchString(m.Text)
 	}
 }
 
 // ChatTypeIs matches a message sent in a chat of the given type.
 func ChatTypeIs(t ChatType) Predicate {
-	return func(u *Update) bool {
-		m := u.EffectiveMessage()
+	return func(c *Context) bool {
+		m := c.Message()
 		return m != nil && m.Chat.Type == t
 	}
 }
 
 // CallbackData matches a callback query whose data equals s.
 func CallbackData(s string) Predicate {
-	return func(u *Update) bool {
-		return u.CallbackQuery != nil && u.CallbackQuery.Data == s
+	return func(c *Context) bool {
+		return c.Update.CallbackQuery != nil && c.Update.CallbackQuery.Data == s
 	}
 }
 
 // CallbackPrefix matches a callback query whose data starts with prefix.
 func CallbackPrefix(prefix string) Predicate {
-	return func(u *Update) bool {
-		return u.CallbackQuery != nil && strings.HasPrefix(u.CallbackQuery.Data, prefix)
+	return func(c *Context) bool {
+		return c.Update.CallbackQuery != nil && strings.HasPrefix(c.Update.CallbackQuery.Data, prefix)
 	}
 }
 
 // Not inverts a predicate.
 func Not(p Predicate) Predicate {
-	return func(u *Update) bool { return !p(u) }
+	return func(c *Context) bool { return !p(c) }
 }
 
 // Or matches when any of the given predicates matches.
 func Or(predicates ...Predicate) Predicate {
-	return func(u *Update) bool {
+	return func(c *Context) bool {
 		for _, p := range predicates {
-			if p(u) {
+			if p(c) {
 				return true
 			}
 		}

@@ -11,7 +11,7 @@ func TestRouterFirstMatchWins(t *testing.T) {
 
 	var calls []string
 
-	b.on(func(c *Context) error { calls = append(calls, "skipped"); return nil }, func(u *Update) bool { return false })
+	b.on(func(c *Context) error { calls = append(calls, "skipped"); return nil }, func(c *Context) bool { return false })
 	b.on(func(c *Context) error { calls = append(calls, "matched"); return nil })
 	b.on(func(c *Context) error { calls = append(calls, "second-match"); return nil })
 

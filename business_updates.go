@@ -133,10 +133,10 @@ func (u *Update) businessConnectionID() string {
 }
 
 // Kind predicates for business updates.
-func hasBusinessMessage(u *Update) bool         { return u.BusinessMessage != nil }
-func hasEditedBusinessMessage(u *Update) bool   { return u.EditedBusinessMessage != nil }
-func hasBusinessConnection(u *Update) bool      { return u.BusinessConnection != nil }
-func hasDeletedBusinessMessages(u *Update) bool { return u.DeletedBusinessMessages != nil }
+func hasBusinessMessage(c *Context) bool         { return c.Update.BusinessMessage != nil }
+func hasEditedBusinessMessage(c *Context) bool   { return c.Update.EditedBusinessMessage != nil }
+func hasBusinessConnection(c *Context) bool      { return c.Update.BusinessConnection != nil }
+func hasDeletedBusinessMessages(c *Context) bool { return c.Update.DeletedBusinessMessages != nil }
 
 // OnBusinessMessage registers a handler for new messages from a connected
 // business account.

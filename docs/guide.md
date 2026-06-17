@@ -251,8 +251,8 @@ queue. (`PeerRef` is for sending; chat-management methods still take a resolved
 
 ## Predicates
 
-Every `On*` method accepts trailing `Predicate`s (`func(*Update) bool`); the
-handler runs only when all match. First match wins across handlers.
+Every `On*` method accepts trailing `Predicate`s (`func(*botapi.Context) bool`);
+the handler runs only when all match. First match wins across handlers.
 
 ```go
 bot.OnMessage(handler, botapi.HasText(), botapi.Not(botapi.HasPrefix("/")))
@@ -263,8 +263,8 @@ Built-ins: `Command`, `HasPrefix`, `HasText`, `TextEquals`, `Regex`,
 Write your own — it's just a function:
 
 ```go
-func hasPhoto(u *botapi.Update) bool {
-	m := u.EffectiveMessage()
+func hasPhoto(c *botapi.Context) bool {
+	m := c.Message()
 	return m != nil && len(m.Photo) > 0
 }
 ```
