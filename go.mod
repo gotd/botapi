@@ -9,7 +9,7 @@ require (
 	github.com/gotd/contrib v0.24.0
 	github.com/gotd/log v0.1.0
 	github.com/gotd/log/logzap v0.1.1
-	github.com/gotd/td v0.157.1
+	github.com/gotd/td v0.158.0
 	github.com/gotd/teled v0.5.0
 	github.com/stretchr/testify v1.11.1
 	go.etcd.io/bbolt v1.4.3
