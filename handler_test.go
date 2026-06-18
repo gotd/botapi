@@ -59,6 +59,45 @@ func TestMiddlewareOrder(t *testing.T) {
 	}
 }
 
+func TestOuterMiddlewareOrder(t *testing.T) {
+	b := newTestBot(t)
+
+	var order []string
+
+	b.UseOuter(func(next Handler) Handler {
+		return func(c *Context) error {
+			order = append(order, "outer")
+			return next(c)
+		}
+	})
+
+	b.Use(func(next Handler) Handler {
+		return func(c *Context) error {
+			order = append(order, "global")
+			return next(c)
+		}
+	})
+
+	b.on(func(c *Context) error {
+		order = append(order, "handler")
+		return nil
+	})
+
+	b.route(context.Background(), &Update{})
+
+	want := []string{"outer", "global", "handler"}
+
+	if len(order) != len(want) {
+		t.Fatalf("order = %v, want %v", order, want)
+	}
+
+	for i := range want {
+		if order[i] != want[i] {
+			t.Fatalf("order = %v, want %v", order, want)
+		}
+	}
+}
+
 func TestRouterHandlerErrorIsContained(t *testing.T) {
 	b := newTestBot(t)
 	b.on(func(c *Context) error { return errors.New("boom") })
