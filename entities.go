@@ -2,6 +2,7 @@ package botapi
 
 import (
 	"strconv"
+	"strings"
 
 	"github.com/gotd/td/tg"
 )
@@ -130,6 +131,33 @@ func entitiesFromTg(entities []tg.MessageEntityClass) []MessageEntity {
 		case *tg.MessageEntityCustomEmoji:
 			me.Type = EntityCustomEmoji
 			me.CustomEmojiID = strconv.FormatInt(e.DocumentID, 10)
+		case *tg.MessageEntityFormattedDate:
+			me.Type = EntityDateTime
+			me.UnixTime = e.Date
+
+			if e.Relative {
+				me.DateTimeFormat = "r"
+			} else {
+				var dateTimeFormat strings.Builder
+
+				if e.DayOfWeek {
+					dateTimeFormat.WriteString("w")
+				}
+
+				if e.ShortDate {
+					dateTimeFormat.WriteString("d")
+				} else if e.LongDate {
+					dateTimeFormat.WriteString("D")
+				}
+
+				if e.ShortTime {
+					dateTimeFormat.WriteString("t")
+				} else if e.LongTime {
+					dateTimeFormat.WriteString("T")
+				}
+
+				me.DateTimeFormat = dateTimeFormat.String()
+			}
 		default:
 			// Unknown or bot-irrelevant entity (e.g. unknown future types): skip.
 			continue

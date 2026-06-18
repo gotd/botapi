@@ -5,13 +5,15 @@ import "github.com/gotd/td/tg"
 // MessageEntity represents one special entity in a text message (e.g. a
 // hashtag, link, or formatted run).
 type MessageEntity struct {
-	Type          MessageEntityType `json:"type"`
-	Offset        int               `json:"offset"`
-	Length        int               `json:"length"`
-	URL           string            `json:"url,omitempty"`
-	User          *User             `json:"user,omitempty"`
-	Language      string            `json:"language,omitempty"`
-	CustomEmojiID string            `json:"custom_emoji_id,omitempty"`
+	Type           MessageEntityType `json:"type"`
+	Offset         int               `json:"offset"`
+	Length         int               `json:"length"`
+	URL            string            `json:"url,omitempty"`
+	User           *User             `json:"user,omitempty"`
+	Language       string            `json:"language,omitempty"`
+	CustomEmojiID  string            `json:"custom_emoji_id,omitempty"`
+	UnixTime       int               `json:"unix_time,omitempty"`
+	DateTimeFormat string            `json:"date_time_format,omitempty"`
 }
 
 // Contact represents a phone contact.
