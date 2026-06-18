@@ -117,3 +117,71 @@ func TestEntitiesAllTypes(t *testing.T) {
 		t.Fatal("expandable blockquote lost")
 	}
 }
+
+func TestEntitiesFormattedDateFromTg(t *testing.T) {
+	cases := []struct {
+		name string
+		in   tg.MessageEntityClass
+		want MessageEntity
+	}{
+		{
+			name: "RelativeTime",
+			in: &tg.MessageEntityFormattedDate{
+				Offset:   0,
+				Length:   5,
+				Date:     1781027109,
+				Relative: true,
+			},
+			want: MessageEntity{
+				Type:           EntityDateTime,
+				UnixTime:       1781027109,
+				DateTimeFormat: "r",
+			},
+		},
+		{
+			name: "Absolute-DayOfWeek-ShortDate-ShortTime",
+			in: &tg.MessageEntityFormattedDate{
+				Offset:    5,
+				Length:    10,
+				Date:      1781027109,
+				DayOfWeek: true,
+				ShortDate: true,
+				ShortTime: true,
+			},
+			want: MessageEntity{
+				Type:           EntityDateTime,
+				UnixTime:       1781027109,
+				DateTimeFormat: "wdt",
+			},
+		},
+		{
+			name: "Absolute-LongDate-LongTime",
+			in: &tg.MessageEntityFormattedDate{
+				Offset:   10,
+				Length:   8,
+				Date:     1781027109,
+				LongDate: true,
+				LongTime: true,
+			},
+			want: MessageEntity{
+				Type:           EntityDateTime,
+				UnixTime:       1781027109,
+				DateTimeFormat: "DT",
+			},
+		},
+	}
+
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			out := entitiesFromTg([]tg.MessageEntityClass{tc.in})
+			if len(out) != 1 {
+				t.Fatalf("expected 1 entity, got %d", len(out))
+			}
+
+			got := out[0]
+			if got.Type != tc.want.Type || got.UnixTime != tc.want.UnixTime || got.DateTimeFormat != tc.want.DateTimeFormat {
+				t.Errorf("got %+v, want %+v", got, tc.want)
+			}
+		})
+	}
+}

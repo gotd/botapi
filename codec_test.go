@@ -56,19 +56,23 @@ func fullMessage() *Message {
 		MediaGroupID:        "mg",
 		AuthorSignature:     "auth",
 		Text:                "hello",
-		Entities:            []MessageEntity{{Type: EntityBold, Offset: 0, Length: 5}, {Type: EntityTextMention, Offset: 1, Length: 2, User: user, URL: "u", Language: "go", CustomEmojiID: "e"}},
-		Caption:             "cap",
-		CaptionEntities:     []MessageEntity{{Type: EntityItalic, Offset: 0, Length: 3}},
-		Animation:           &Animation{FileID: "a", FileUniqueID: "au", Width: 1, Height: 2, Duration: 3, Thumbnail: thumb, FileName: "a.gif", MIMEType: "image/gif", FileSize: 4},
-		Audio:               &Audio{FileID: "b", FileUniqueID: "bu", Duration: 10, Performer: "p", Title: "t", FileName: "b.mp3", MIMEType: "audio/mpeg", FileSize: 5, Thumbnail: thumb},
-		Document:            &Document{FileID: "c", FileUniqueID: "cu", Thumbnail: thumb, FileName: "c.pdf", MIMEType: "application/pdf", FileSize: 6},
-		Photo:               []PhotoSize{{FileID: "p1", FileUniqueID: "p1u", Width: 100, Height: 200, FileSize: 7}},
-		Sticker:             &Sticker{FileID: "s", FileUniqueID: "su", Type: StickerRegular, Width: 512, Height: 512, IsAnimated: true, IsVideo: true, Thumbnail: thumb, Emoji: "🙂", SetName: "set", FileSize: 8},
-		Video:               &Video{FileID: "v", FileUniqueID: "vu", Width: 640, Height: 480, Duration: 12, Thumbnail: thumb, FileName: "v.mp4", MIMEType: "video/mp4", FileSize: 9},
-		VideoNote:           &VideoNote{FileID: "vn", FileUniqueID: "vnu", Length: 240, Duration: 6, Thumbnail: thumb, FileSize: 11},
-		Voice:               &Voice{FileID: "vo", FileUniqueID: "vou", Duration: 4, MIMEType: "audio/ogg", FileSize: 12},
-		Contact:             &Contact{PhoneNumber: "+1", FirstName: "Ada", LastName: "L", UserID: 1, VCard: "vc"},
-		Dice:                &Dice{Emoji: DiceDart, Value: 6},
+		Entities: []MessageEntity{
+			{Type: EntityBold, Offset: 0, Length: 5},
+			{Type: EntityTextMention, Offset: 1, Length: 2, User: user, URL: "u", Language: "go", CustomEmojiID: "e"},
+			{Type: EntityDateTime, Offset: 3, Length: 4, UnixTime: 1781027109, DateTimeFormat: "wdt"},
+		},
+		Caption:         "cap",
+		CaptionEntities: []MessageEntity{{Type: EntityItalic, Offset: 0, Length: 3}},
+		Animation:       &Animation{FileID: "a", FileUniqueID: "au", Width: 1, Height: 2, Duration: 3, Thumbnail: thumb, FileName: "a.gif", MIMEType: "image/gif", FileSize: 4},
+		Audio:           &Audio{FileID: "b", FileUniqueID: "bu", Duration: 10, Performer: "p", Title: "t", FileName: "b.mp3", MIMEType: "audio/mpeg", FileSize: 5, Thumbnail: thumb},
+		Document:        &Document{FileID: "c", FileUniqueID: "cu", Thumbnail: thumb, FileName: "c.pdf", MIMEType: "application/pdf", FileSize: 6},
+		Photo:           []PhotoSize{{FileID: "p1", FileUniqueID: "p1u", Width: 100, Height: 200, FileSize: 7}},
+		Sticker:         &Sticker{FileID: "s", FileUniqueID: "su", Type: StickerRegular, Width: 512, Height: 512, IsAnimated: true, IsVideo: true, Thumbnail: thumb, Emoji: "🙂", SetName: "set", FileSize: 8},
+		Video:           &Video{FileID: "v", FileUniqueID: "vu", Width: 640, Height: 480, Duration: 12, Thumbnail: thumb, FileName: "v.mp4", MIMEType: "video/mp4", FileSize: 9},
+		VideoNote:       &VideoNote{FileID: "vn", FileUniqueID: "vnu", Length: 240, Duration: 6, Thumbnail: thumb, FileSize: 11},
+		Voice:           &Voice{FileID: "vo", FileUniqueID: "vou", Duration: 4, MIMEType: "audio/ogg", FileSize: 12},
+		Contact:         &Contact{PhoneNumber: "+1", FirstName: "Ada", LastName: "L", UserID: 1, VCard: "vc"},
+		Dice:            &Dice{Emoji: DiceDart, Value: 6},
 		Poll: &Poll{
 			ID:                    "poll1",
 			Question:              "q?",
@@ -164,6 +168,7 @@ func TestLeafEntitiesJSON(t *testing.T) {
 	jsonRoundTrip(t, Voice{FileID: "vo", FileUniqueID: "vou", Duration: 3, MIMEType: "m", FileSize: 10})
 	jsonRoundTrip(t, Sticker{FileID: "s", FileUniqueID: "su", Type: StickerMask, Width: 1, Height: 2, IsAnimated: true, IsVideo: true, Thumbnail: thumb, Emoji: "x", SetName: "set", FileSize: 11})
 	jsonRoundTrip(t, MessageEntity{Type: EntityTextLink, Offset: 1, Length: 2, URL: "u", User: &User{ID: 1, FirstName: "A"}, Language: "go", CustomEmojiID: "e"})
+	jsonRoundTrip(t, MessageEntity{Type: EntityDateTime, Offset: 0, Length: 10, UnixTime: 1781027109, DateTimeFormat: "wdt"})
 	jsonRoundTrip(t, Contact{PhoneNumber: "+1", FirstName: "A", LastName: "B", UserID: 1, VCard: "v"})
 	jsonRoundTrip(t, Dice{Emoji: DiceBasketball, Value: 5})
 	jsonRoundTrip(t, Location{Longitude: 1.5, Latitude: 2.25, HorizontalAccuracy: 0.5, LivePeriod: 60, Heading: 90, ProximityAlertRadius: 10})
@@ -219,6 +224,8 @@ func TestDecodeTypeMismatch(t *testing.T) {
 		`{"photo":5}`,                            // array field, number value
 		`{"reply_markup":{"inline_keyboard":7}}`, // nested array, number value
 		`{"forward_origin":{"type":"user","date":"x"}}`, // union variant, bad field
+		`{"entities":[{"unix_time":"string"}]}`,         // int field, string value
+		`{"entities":[{"date_time_format":12345}]}`,     // string field, number value
 	}
 	for _, c := range cases {
 		var m Message
