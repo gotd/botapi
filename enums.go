@@ -73,6 +73,7 @@ const (
 	EntityTextLink             MessageEntityType = "text_link"
 	EntityTextMention          MessageEntityType = "text_mention"
 	EntityCustomEmoji          MessageEntityType = "custom_emoji"
+	EntityDateTime             MessageEntityType = "date_time"
 )
 
 // ChatMemberStatus is a member's status in a chat.

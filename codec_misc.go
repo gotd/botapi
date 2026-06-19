@@ -32,6 +32,16 @@ func (s *MessageEntity) Encode(e *jx.Encoder) {
 		e.Str(s.CustomEmojiID)
 	}
 
+	if s.UnixTime != 0 {
+		e.FieldStart("unix_time")
+		e.Int(s.UnixTime)
+	}
+
+	if s.DateTimeFormat != "" {
+		e.FieldStart("date_time_format")
+		e.Str(s.DateTimeFormat)
+	}
+
 	e.ObjEnd()
 }
 
@@ -88,6 +98,20 @@ func (s *MessageEntity) Decode(d *jx.Decoder) error {
 			}
 
 			s.CustomEmojiID = v
+		case "unix_time":
+			v, err := d.Int()
+			if err != nil {
+				return err
+			}
+
+			s.UnixTime = v
+		case "date_time_format":
+			v, err := d.Str()
+			if err != nil {
+				return err
+			}
+
+			s.DateTimeFormat = v
 		default:
 			return d.Skip()
 		}
