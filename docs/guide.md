@@ -251,8 +251,8 @@ queue. (`PeerRef` is for sending; chat-management methods still take a resolved
 
 ## Predicates
 
-Every `On*` method accepts trailing `Predicate`s (`func(*Update) bool`); the
-handler runs only when all match. First match wins across handlers.
+Every `On*` method accepts trailing `Predicate`s (`func(*botapi.Context) bool`);
+the handler runs only when all match. First match wins across handlers.
 
 ```go
 bot.OnMessage(handler, botapi.HasText(), botapi.Not(botapi.HasPrefix("/")))
@@ -263,8 +263,8 @@ Built-ins: `Command`, `HasPrefix`, `HasText`, `TextEquals`, `Regex`,
 Write your own — it's just a function:
 
 ```go
-func hasPhoto(u *botapi.Update) bool {
-	m := u.EffectiveMessage()
+func hasPhoto(c *botapi.Context) bool {
+	m := c.Message()
 	return m != nil && len(m.Photo) > 0
 }
 ```
@@ -279,6 +279,27 @@ bot.Use(botapi.Recover(), botapi.Timeout(30*time.Second), botapi.Logging())
 ```
 
 Built-ins: `Recover` (turns panics into errors), `Timeout`, `Logging`.
+
+## Outer Middleware
+
+An `OuterMiddleware` is also a `func(Handler) Handler`. Register global middleware
+that runs before route matching with `UseOuter`:
+```go
+bot.UseOuter(botapi.Recover(), ChatConfigMiddleware())
+```
+
+See [`examples/middleware`](../examples/middleware) for a complete example
+showing how data flows from outer middleware to predicates and handlers.
+
+### Pipeline Execution Order
+
+Middlewares and handlers execute in a distinct lifecycle layer (from the outside in).
+The visualization below demonstrates how an update travels through the bot:
+
+1. **`UseOuter`** (Always runs first; can short-circuit or inject data into `Context`).
+2. **`Predicate` matching** (Evaluates route guards; has access to data from `UseOuter`).
+3. **`Use`** (Runs only if a route matches; ideal for logging, telemetry, or lazy-loading user sessions).
+4. **`Handler`** (Your core business logic).
 
 ## Groups
 

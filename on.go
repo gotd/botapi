@@ -104,14 +104,14 @@ func (b *Bot) dispatchMessage(ctx context.Context, msg tg.MessageClass, edited b
 
 // Kind predicates select an update by which field it carries. They are shared
 // by Bot.On* and Group.On*.
-func hasMessage(u *Update) bool            { return u.Message != nil }
-func hasEditedMessage(u *Update) bool      { return u.EditedMessage != nil }
-func hasChannelPost(u *Update) bool        { return u.ChannelPost != nil }
-func hasCallbackQuery(u *Update) bool      { return u.CallbackQuery != nil }
-func hasInlineQuery(u *Update) bool        { return u.InlineQuery != nil }
-func hasChosenInlineResult(u *Update) bool { return u.ChosenInlineResult != nil }
-func hasShippingQuery(u *Update) bool      { return u.ShippingQuery != nil }
-func hasPreCheckoutQuery(u *Update) bool   { return u.PreCheckoutQuery != nil }
+func hasMessage(c *Context) bool            { return c.Update.Message != nil }
+func hasEditedMessage(c *Context) bool      { return c.Update.EditedMessage != nil }
+func hasChannelPost(c *Context) bool        { return c.Update.ChannelPost != nil }
+func hasCallbackQuery(c *Context) bool      { return c.Update.CallbackQuery != nil }
+func hasInlineQuery(c *Context) bool        { return c.Update.InlineQuery != nil }
+func hasChosenInlineResult(c *Context) bool { return c.Update.ChosenInlineResult != nil }
+func hasShippingQuery(c *Context) bool      { return c.Update.ShippingQuery != nil }
+func hasPreCheckoutQuery(c *Context) bool   { return c.Update.PreCheckoutQuery != nil }
 
 // OnMessage registers a handler for new messages matching the predicates.
 func (b *Bot) OnMessage(h Handler, predicates ...Predicate) {

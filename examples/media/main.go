@@ -116,13 +116,13 @@ func main() {
 }
 
 // hasPhoto matches messages that carry a photo.
-func hasPhoto(u *botapi.Update) bool {
-	m := u.EffectiveMessage()
+func hasPhoto(c *botapi.Context) bool {
+	m := c.Message()
 	return m != nil && len(m.Photo) > 0
 }
 
 // hasDocument matches messages that carry a document.
-func hasDocument(u *botapi.Update) bool {
-	m := u.EffectiveMessage()
+func hasDocument(c *botapi.Context) bool {
+	m := c.Message()
 	return m != nil && m.Document != nil
 }

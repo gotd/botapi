@@ -11,7 +11,7 @@ func TestRouterFirstMatchWins(t *testing.T) {
 
 	var calls []string
 
-	b.on(func(c *Context) error { calls = append(calls, "skipped"); return nil }, func(u *Update) bool { return false })
+	b.on(func(c *Context) error { calls = append(calls, "skipped"); return nil }, func(c *Context) bool { return false })
 	b.on(func(c *Context) error { calls = append(calls, "matched"); return nil })
 	b.on(func(c *Context) error { calls = append(calls, "second-match"); return nil })
 
@@ -48,6 +48,45 @@ func TestMiddlewareOrder(t *testing.T) {
 	b.route(context.Background(), &Update{})
 
 	want := []string{"outer-in", "inner-in", "handler", "inner-out", "outer-out"}
+	if len(order) != len(want) {
+		t.Fatalf("order = %v, want %v", order, want)
+	}
+
+	for i := range want {
+		if order[i] != want[i] {
+			t.Fatalf("order = %v, want %v", order, want)
+		}
+	}
+}
+
+func TestOuterMiddlewareOrder(t *testing.T) {
+	b := newTestBot(t)
+
+	var order []string
+
+	b.UseOuter(func(next Handler) Handler {
+		return func(c *Context) error {
+			order = append(order, "outer")
+			return next(c)
+		}
+	})
+
+	b.Use(func(next Handler) Handler {
+		return func(c *Context) error {
+			order = append(order, "global")
+			return next(c)
+		}
+	})
+
+	b.on(func(c *Context) error {
+		order = append(order, "handler")
+		return nil
+	})
+
+	b.route(context.Background(), &Update{})
+
+	want := []string{"outer", "global", "handler"}
+
 	if len(order) != len(want) {
 		t.Fatalf("order = %v, want %v", order, want)
 	}

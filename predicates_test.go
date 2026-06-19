@@ -26,7 +26,7 @@ func TestCommandName(t *testing.T) {
 
 func TestCommandPredicate(t *testing.T) {
 	// Untargeted command always matches.
-	plain := &Update{Message: &Message{Text: "/start hi"}}
+	plain := &Context{Update: &Update{Message: &Message{Text: "/start hi"}}}
 	if !Command("start")(plain) || !Command("/start")(plain) {
 		t.Fatal("Command should match with and without slash")
 	}
@@ -35,54 +35,56 @@ func TestCommandPredicate(t *testing.T) {
 		t.Fatal("Command should not match a different command")
 	}
 
-	if Command("start")(&Update{CallbackQuery: &CallbackQuery{}}) {
+	nonMsg := &Context{Update: &Update{CallbackQuery: &CallbackQuery{}}}
+	if Command("start")(nonMsg) {
 		t.Fatal("Command should not match a non-message update")
 	}
 
 	// Targeted command matches only when the @target is this bot (case-insensitive).
-	mine := &Update{Message: &Message{Text: "/start@MyBot hi"}, botUsername: "mybot"}
+	// Если поле botUsername находится в Update:
+	mine := &Context{Update: &Update{Message: &Message{Text: "/start@MyBot hi"}, botUsername: "mybot"}}
 	if !Command("start")(mine) {
 		t.Fatal("Command should match when targeted at this bot")
 	}
 
-	other := &Update{Message: &Message{Text: "/start@other_bot hi"}, botUsername: "mybot"}
+	other := &Context{Update: &Update{Message: &Message{Text: "/start@other_bot hi"}, botUsername: "mybot"}}
 	if Command("start")(other) {
 		t.Fatal("Command should not match when targeted at another bot")
 	}
 
 	// Targeted command with an unknown bot username does not match.
-	unknown := &Update{Message: &Message{Text: "/start@mybot hi"}}
+	unknown := &Context{Update: &Update{Message: &Message{Text: "/start@mybot hi"}}}
 	if Command("start")(unknown) {
 		t.Fatal("Command should not match a targeted command when the bot username is unknown")
 	}
 }
 
 func TestTextAndChatPredicates(t *testing.T) {
-	u := &Update{Message: &Message{Text: "hello world", Chat: Chat{Type: ChatTypePrivate}}}
-	if !HasPrefix("hello")(u) || !HasText()(u) || !Regex(`^hello`)(u) {
+	c := &Context{Update: &Update{Message: &Message{Text: "hello world", Chat: Chat{Type: ChatTypePrivate}}}}
+	if !HasPrefix("hello")(c) || !HasText()(c) || !Regex(`^hello`)(c) {
 		t.Fatal("text predicates should match")
 	}
 
-	if !ChatTypeIs(ChatTypePrivate)(u) || ChatTypeIs(ChatTypeChannel)(u) {
+	if !ChatTypeIs(ChatTypePrivate)(c) || ChatTypeIs(ChatTypeChannel)(c) {
 		t.Fatal("ChatTypeIs mismatch")
 	}
 
-	if !Not(TextEquals("nope"))(u) {
+	if !Not(TextEquals("nope"))(c) {
 		t.Fatal("Not should invert")
 	}
 }
 
 func TestCallbackPredicates(t *testing.T) {
-	u := &Update{CallbackQuery: &CallbackQuery{Data: "vote:42"}}
-	if !CallbackPrefix("vote:")(u) || !CallbackData("vote:42")(u) {
+	c := &Context{Update: &Update{CallbackQuery: &CallbackQuery{Data: "vote:42"}}}
+	if !CallbackPrefix("vote:")(c) || !CallbackData("vote:42")(c) {
 		t.Fatal("callback predicates should match")
 	}
 
-	if !Or(CallbackData("x"), CallbackPrefix("vote:"))(u) {
+	if !Or(CallbackData("x"), CallbackPrefix("vote:"))(c) {
 		t.Fatal("Or should match when one matches")
 	}
 
-	if u.Text() != "vote:42" {
-		t.Fatalf("Update.Text for callback = %q", u.Text())
+	if c.Update.Text() != "vote:42" {
+		t.Fatalf("Update.Text for callback = %q", c.Update.Text())
 	}
 }
