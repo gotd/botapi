@@ -45,6 +45,7 @@ func (m *Message) TextAndEntities() (string, []MessageEntity) {
 	if m.Text != "" {
 		return m.Text, m.Entities
 	}
+
 	return m.Caption, m.CaptionEntities
 }
 
