@@ -1,6 +1,9 @@
 package botapi
 
-import "testing"
+import (
+	"context"
+	"testing"
+)
 
 func TestMessage_OriginalMD(t *testing.T) {
 	msg := &Message{
@@ -227,5 +230,125 @@ func TestMessage_OriginalTextMD_UsesCaptionWhenTextEmpty(t *testing.T) {
 
 	if got != want {
 		t.Fatalf("OriginalTextMD() = %q, want %q", got, want)
+	}
+}
+
+func TestMessage_OriginalCaptionMD(t *testing.T) {
+	msg := &Message{
+		Caption: "caption",
+		CaptionEntities: []MessageEntity{
+			{
+				Type:   EntityItalic,
+				Offset: 0,
+				Length: 7,
+			},
+		},
+	}
+
+	if got := msg.OriginalCaptionMD(); got != "_caption_" {
+		t.Fatalf("got %q", got)
+	}
+}
+
+func TestMessage_OriginalCaptionMDV2(t *testing.T) {
+	msg := &Message{
+		Caption: "caption",
+		CaptionEntities: []MessageEntity{
+			{
+				Type:   EntityUnderline,
+				Offset: 0,
+				Length: 7,
+			},
+		},
+	}
+
+	if got := msg.OriginalCaptionMDV2(); got != "__caption__" {
+		t.Fatalf("got %q", got)
+	}
+}
+
+func TestMessage_OriginalCaptionHTML(t *testing.T) {
+	msg := &Message{
+		Caption: "caption",
+		CaptionEntities: []MessageEntity{
+			{
+				Type:   EntityBold,
+				Offset: 0,
+				Length: 7,
+			},
+		},
+	}
+
+	if got := msg.OriginalCaptionHTML(); got != "<b>caption</b>" {
+		t.Fatalf("got %q", got)
+	}
+}
+
+func TestMessage_OriginalMDV2_Blockquote(t *testing.T) {
+	msg := &Message{
+		Text: "line1\nline2",
+		Entities: []MessageEntity{
+			{
+				Type:   EntityBlockquote,
+				Offset: 0,
+				Length: 11,
+			},
+		},
+	}
+
+	want := ">line1\n>line2"
+
+	if got := msg.OriginalMDV2(); got != want {
+		t.Fatalf("got %q want %q", got, want)
+	}
+}
+
+func TestMessage_OriginalMDV2_Spoiler(t *testing.T) {
+	msg := &Message{
+		Text: "secret",
+		Entities: []MessageEntity{
+			{
+				Type:   EntitySpoiler,
+				Offset: 0,
+				Length: 6,
+			},
+		},
+	}
+
+	if got := msg.OriginalMDV2(); got != "||secret||" {
+		t.Fatalf("got %q", got)
+	}
+}
+
+func TestMessage_OriginalHTML_CustomEmoji(t *testing.T) {
+	msg := &Message{
+		Text: "🙂",
+		Entities: []MessageEntity{
+			{
+				Type:          EntityCustomEmoji,
+				Offset:        0,
+				Length:        2,
+				CustomEmojiID: "123",
+			},
+		},
+	}
+
+	want := `<tg-emoji emoji-id="123">🙂</tg-emoji>`
+
+	if got := msg.OriginalHTML(); got != want {
+		t.Fatalf("got %q want %q", got, want)
+	}
+}
+
+func TestAnswerInlineQuery_NilResult(t *testing.T) {
+	b := newMockBot(newMockInvoker())
+
+	err := b.AnswerInlineQuery(
+		context.Background(),
+		"123",
+		[]InlineQueryResult{nil},
+	)
+	if err == nil {
+		t.Fatal("expected error")
 	}
 }
