@@ -71,6 +71,9 @@ func (b *Bot) dispatchBusinessMessage(ctx context.Context, e tg.Entities, connec
 	}
 
 	u := &Update{}
+
+	u.Entities = e
+
 	if edited {
 		u.EditedBusinessMessage = m
 	} else {

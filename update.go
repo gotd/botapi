@@ -1,5 +1,7 @@
 package botapi
 
+import "github.com/gotd/td/tg"
+
 // Update represents one incoming update. At most one of the optional fields is
 // present in any given update.
 type Update struct {
@@ -29,6 +31,8 @@ type Update struct {
 	// DeletedBusinessMessages reports messages deleted from a connected business
 	// account.
 	DeletedBusinessMessages *BusinessMessagesDeleted `json:"deleted_business_messages,omitempty"`
+
+	Entities tg.Entities `json:"-"`
 
 	// botUsername is this bot's @username (without the @), set by the router so
 	// command predicates can tell a command targeted at this bot ("/cmd@me")

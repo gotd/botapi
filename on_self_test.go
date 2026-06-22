@@ -22,7 +22,7 @@ func TestDispatchSkipsOwnOutgoingMessage(t *testing.T) {
 		Message: "echo",
 		PeerID:  &tg.PeerUser{UserID: 42},
 	}
-	b.dispatchMessage(context.Background(), own, false)
+	b.dispatchMessage(context.Background(), tg.Entities{}, own, false)
 
 	if fired {
 		t.Fatal("handler fired for the bot's own outgoing message")
