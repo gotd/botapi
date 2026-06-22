@@ -11,53 +11,53 @@ import (
 // called once from New. Update-conversion failures are logged and swallowed so
 // a single bad update never tears down the update stream.
 func (b *Bot) installHandlers() {
-	b.disp.OnNewMessage(func(ctx context.Context, _ tg.Entities, u *tg.UpdateNewMessage) error {
-		b.dispatchMessage(ctx, u.Message, false)
+	b.disp.OnNewMessage(func(ctx context.Context, e tg.Entities, u *tg.UpdateNewMessage) error {
+		b.dispatchMessage(ctx, e, u.Message, false)
 
 		return nil
 	})
-	b.disp.OnEditMessage(func(ctx context.Context, _ tg.Entities, u *tg.UpdateEditMessage) error {
-		b.dispatchMessage(ctx, u.Message, true)
+	b.disp.OnEditMessage(func(ctx context.Context, e tg.Entities, u *tg.UpdateEditMessage) error {
+		b.dispatchMessage(ctx, e, u.Message, true)
 
 		return nil
 	})
-	b.disp.OnNewChannelMessage(func(ctx context.Context, _ tg.Entities, u *tg.UpdateNewChannelMessage) error {
-		b.dispatchMessage(ctx, u.Message, false)
+	b.disp.OnNewChannelMessage(func(ctx context.Context, e tg.Entities, u *tg.UpdateNewChannelMessage) error {
+		b.dispatchMessage(ctx, e, u.Message, false)
 
 		return nil
 	})
-	b.disp.OnEditChannelMessage(func(ctx context.Context, _ tg.Entities, u *tg.UpdateEditChannelMessage) error {
-		b.dispatchMessage(ctx, u.Message, true)
+	b.disp.OnEditChannelMessage(func(ctx context.Context, e tg.Entities, u *tg.UpdateEditChannelMessage) error {
+		b.dispatchMessage(ctx, e, u.Message, true)
 
 		return nil
 	})
 	b.disp.OnBotCallbackQuery(func(ctx context.Context, e tg.Entities, u *tg.UpdateBotCallbackQuery) error {
-		b.route(ctx, &Update{CallbackQuery: callbackQueryFromTg(e, u)})
+		b.route(ctx, &Update{CallbackQuery: callbackQueryFromTg(e, u), Entities: e})
 
 		return nil
 	})
 	b.disp.OnBotInlineQuery(func(ctx context.Context, e tg.Entities, u *tg.UpdateBotInlineQuery) error {
-		b.route(ctx, &Update{InlineQuery: inlineQueryFromTg(e, u)})
+		b.route(ctx, &Update{InlineQuery: inlineQueryFromTg(e, u), Entities: e})
 
 		return nil
 	})
 	b.disp.OnBotInlineSend(func(ctx context.Context, e tg.Entities, u *tg.UpdateBotInlineSend) error {
-		b.route(ctx, &Update{ChosenInlineResult: chosenInlineResultFromTg(e, u)})
+		b.route(ctx, &Update{ChosenInlineResult: chosenInlineResultFromTg(e, u), Entities: e})
 
 		return nil
 	})
 	b.disp.OnInlineBotCallbackQuery(func(ctx context.Context, e tg.Entities, u *tg.UpdateInlineBotCallbackQuery) error {
-		b.route(ctx, &Update{CallbackQuery: inlineCallbackQueryFromTg(e, u)})
+		b.route(ctx, &Update{CallbackQuery: inlineCallbackQueryFromTg(e, u), Entities: e})
 
 		return nil
 	})
 	b.disp.OnBotShippingQuery(func(ctx context.Context, e tg.Entities, u *tg.UpdateBotShippingQuery) error {
-		b.route(ctx, &Update{ShippingQuery: shippingQueryFromTg(e, u)})
+		b.route(ctx, &Update{ShippingQuery: shippingQueryFromTg(e, u), Entities: e})
 
 		return nil
 	})
 	b.disp.OnBotPrecheckoutQuery(func(ctx context.Context, e tg.Entities, u *tg.UpdateBotPrecheckoutQuery) error {
-		b.route(ctx, &Update{PreCheckoutQuery: preCheckoutQueryFromTg(e, u)})
+		b.route(ctx, &Update{PreCheckoutQuery: preCheckoutQueryFromTg(e, u), Entities: e})
 
 		return nil
 	})
@@ -67,7 +67,7 @@ func (b *Bot) installHandlers() {
 // dispatchMessage converts a message and routes it as the appropriate update
 // field. Channel-broadcast messages become channel posts; everything else is a
 // regular message. edited selects the edited_* fields.
-func (b *Bot) dispatchMessage(ctx context.Context, msg tg.MessageClass, edited bool) {
+func (b *Bot) dispatchMessage(ctx context.Context, e tg.Entities, msg tg.MessageClass, edited bool) {
 	// Drop the bot's own outgoing messages. MTProto echoes them back on the
 	// update stream, but the HTTP Bot API never delivers them — without this a
 	// bot that replies to messages would answer its own replies in a loop.
@@ -87,6 +87,8 @@ func (b *Bot) dispatchMessage(ctx context.Context, msg tg.MessageClass, edited b
 	}
 
 	u := &Update{}
+
+	u.Entities = e
 
 	switch {
 	case m.Chat.Type == ChatTypeChannel && edited:

@@ -34,15 +34,17 @@ func TestDispatchMessageRouting(t *testing.T) {
 
 	regular := &tg.Message{ID: 1, Message: "x", PeerID: &tg.PeerUser{UserID: 10}}
 	regular.SetFromID(&tg.PeerUser{UserID: 10})
-	b.dispatchMessage(ctx, regular, false)
-	b.dispatchMessage(ctx, regular, true)
+
+	e := tg.Entities{}
+	b.dispatchMessage(ctx, e, regular, false)
+	b.dispatchMessage(ctx, e, regular, true)
 
 	channelMsg := &tg.Message{ID: 2, Message: "x", PeerID: &tg.PeerChannel{ChannelID: 50}}
-	b.dispatchMessage(ctx, channelMsg, false)
-	b.dispatchMessage(ctx, channelMsg, true) // edited channel post (no registrar; exercises the switch)
+	b.dispatchMessage(ctx, e, channelMsg, false)
+	b.dispatchMessage(ctx, e, channelMsg, true) // edited channel post (no registrar; exercises the switch)
 
 	// A service message converts to nil and routes nothing.
-	b.dispatchMessage(ctx, &tg.MessageService{ID: 3, PeerID: &tg.PeerUser{UserID: 10}}, false)
+	b.dispatchMessage(ctx, e, &tg.MessageService{ID: 3, PeerID: &tg.PeerUser{UserID: 10}}, false)
 
 	want := []string{"message", "edited", "channel"}
 	if len(fired) != len(want) {

@@ -167,7 +167,7 @@ func TestDispatchMessageDropsOutgoing(t *testing.T) {
 
 	b.OnMessage(func(c *Context) error { fired = true; return nil })
 	// An outgoing (bot's own) message must be dropped, not dispatched.
-	b.dispatchMessage(context.Background(), &tg.Message{Out: true, Message: "self"}, false)
+	b.dispatchMessage(context.Background(), tg.Entities{}, &tg.Message{Out: true, Message: "self"}, false)
 
 	if fired {
 		t.Fatal("outgoing message must not be dispatched")
