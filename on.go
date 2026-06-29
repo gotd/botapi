@@ -32,7 +32,26 @@ func (b *Bot) installHandlers() {
 		return nil
 	})
 	b.disp.OnBotCallbackQuery(func(ctx context.Context, e tg.Entities, u *tg.UpdateBotCallbackQuery) error {
-		b.route(ctx, &Update{CallbackQuery: callbackQueryFromTg(e, u), Entities: e})
+		cq := callbackQueryFromTg(e, u)
+
+		chat, err := b.chatByPeer(ctx, u.Peer)
+		if err != nil {
+			b.logger().Warn(ctx, "Resolve callback chat", log.Error(err))
+		} else {
+			msg, err := b.GetMessage(ctx, ID(chat.ID), u.MsgID)
+			if err != nil {
+				b.logger().Warn(ctx, "Get callback message", log.Error(err))
+
+				cq.Message = &Message{
+					MessageID: u.MsgID,
+					Chat:      chat,
+				}
+			} else {
+				cq.Message = msg
+			}
+		}
+
+		b.route(ctx, &Update{CallbackQuery: cq})
 
 		return nil
 	})
