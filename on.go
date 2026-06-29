@@ -35,10 +35,19 @@ func (b *Bot) installHandlers() {
 		cq := callbackQueryFromTg(e, u)
 
 		chat, err := b.chatByPeer(ctx, u.Peer)
-		if err == nil {
-			cq.Message = &Message{
-				MessageID: u.MsgID,
-				Chat:      chat,
+		if err != nil {
+			b.logger().Warn(ctx, "Resolve callback chat", log.Error(err))
+		} else {
+			msg, err := b.GetMessage(ctx, ID(chat.ID), u.MsgID)
+			if err != nil {
+				b.logger().Warn(ctx, "Get callback message", log.Error(err))
+
+				cq.Message = &Message{
+					MessageID: u.MsgID,
+					Chat:      chat,
+				}
+			} else {
+				cq.Message = msg
 			}
 		}
 
