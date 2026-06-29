@@ -42,7 +42,7 @@ func (b *Bot) installHandlers() {
 			}
 		}
 
-		b.route(ctx, &Update{CallbackQuery: callbackQueryFromTg(e, u)})
+		b.route(ctx, &Update{CallbackQuery: cq})
 
 		return nil
 	})
