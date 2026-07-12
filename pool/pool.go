@@ -48,7 +48,7 @@ type Pool struct {
 	log log.Logger
 
 	mu   sync.Mutex
-	bots map[string]*managed
+	bots map[string]*Managed
 }
 
 // New constructs an empty Pool. It performs no network I/O.
@@ -62,7 +62,7 @@ func New(opt Options) (*Pool, error) {
 	return &Pool{
 		opt:  opt,
 		log:  opt.Logger,
-		bots: map[string]*managed{},
+		bots: map[string]*Managed{},
 	}, nil
 }
 
@@ -76,7 +76,7 @@ func (p *Pool) Do(ctx context.Context, token string, fn func(*botapi.Bot) error)
 		return err
 	}
 
-	m, err := p.acquire(tok)
+	m, err := p.Acquire(tok)
 	if err != nil {
 		return err
 	}
@@ -103,9 +103,9 @@ func (p *Pool) Len() int {
 	return len(p.bots)
 }
 
-// acquire returns the managed bot for the token, creating and starting it if it
+// Acquire returns the managed bot for the token, creating and starting it if it
 // does not exist yet.
-func (p *Pool) acquire(tok Token) (*managed, error) {
+func (p *Pool) Acquire(tok Token) (*Managed, error) {
 	p.mu.Lock()
 	defer p.mu.Unlock()
 
@@ -113,7 +113,7 @@ func (p *Pool) acquire(tok Token) (*managed, error) {
 		return m, nil
 	}
 
-	m, err := p.start(tok)
+	m, err := p.Start(tok)
 	if err != nil {
 		return nil, err
 	}
@@ -123,8 +123,8 @@ func (p *Pool) acquire(tok Token) (*managed, error) {
 	return m, nil
 }
 
-// start builds and runs a bot for the token in the background.
-func (p *Pool) start(tok Token) (*managed, error) {
+// Start builds and runs a bot for the token in the background.
+func (p *Pool) Start(tok Token) (*Managed, error) {
 	botLog := log.With(log.Named(p.log, "bot"), log.Int("id", tok.ID))
 
 	var (
@@ -144,7 +144,7 @@ func (p *Pool) start(tok Token) (*managed, error) {
 		store = storage.NewBBoltStorage(opened)
 	}
 
-	m := &managed{ready: make(chan struct{}), db: db}
+	m := &Managed{ready: make(chan struct{}), db: db}
 
 	bot, err := botapi.New(tok.String(), botapi.Options{
 		AppID:   p.opt.AppID,
@@ -194,7 +194,7 @@ var errStopped = errors.New("bot stopped before becoming ready")
 
 // drop removes m from the pool if it is still the current entry for token and
 // kills it.
-func (p *Pool) drop(token string, m *managed) {
+func (p *Pool) drop(token string, m *Managed) {
 	p.mu.Lock()
 
 	if cur, ok := p.bots[token]; ok && cur == m {
@@ -227,7 +227,7 @@ func (p *Pool) Close() {
 
 	bots := p.bots
 
-	p.bots = map[string]*managed{}
+	p.bots = map[string]*Managed{}
 	p.mu.Unlock()
 
 	for _, m := range bots {
@@ -262,7 +262,7 @@ func (p *Pool) RunGC(ctx context.Context) {
 func (p *Pool) reap(deadline time.Time) {
 	p.mu.Lock()
 
-	var dead []*managed
+	var dead []*Managed
 
 	for token, m := range p.bots {
 		if m.idleBefore(deadline) {
@@ -279,8 +279,8 @@ func (p *Pool) reap(deadline time.Time) {
 	}
 }
 
-// managed is one bot under the pool's control.
-type managed struct {
+// Managed is one bot under the pool's control.
+type Managed struct {
 	bot    *botapi.Bot
 	cancel context.CancelFunc
 	db     *bbolt.DB
@@ -295,30 +295,39 @@ type managed struct {
 	lastUsed time.Time
 }
 
+// Bot returns the underlying botapi.Bot managed by this entry.
+//
+// The returned bot is not guaranteed to be ready (connected/authorized) —
+// callers that need readiness should go through Pool.Do, which waits on
+// the ready channel before invoking the callback.
+func (m *Managed) Bot() *botapi.Bot {
+	return m.bot
+}
+
 // markReady latches the startup outcome and unblocks every waiter. The first
 // call wins; later calls (e.g. shutdown after a successful start) are no-ops.
-func (m *managed) markReady(err error) {
+func (m *Managed) markReady(err error) {
 	m.readyOnce.Do(func() {
 		m.startErr = err
 		close(m.ready)
 	})
 }
 
-func (m *managed) use() {
+func (m *Managed) use() {
 	m.mu.Lock()
 
 	m.lastUsed = time.Now()
 	m.mu.Unlock()
 }
 
-func (m *managed) idleBefore(deadline time.Time) bool {
+func (m *Managed) idleBefore(deadline time.Time) bool {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 
 	return !m.lastUsed.IsZero() && m.lastUsed.Before(deadline)
 }
 
-func (m *managed) kill() {
+func (m *Managed) kill() {
 	if m.cancel != nil {
 		m.cancel()
 	}
