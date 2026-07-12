@@ -95,6 +95,14 @@ func (p *Pool) Do(ctx context.Context, token string, fn func(*botapi.Bot) error)
 	}
 }
 
+// Len returns the number of bots currently managed by the pool.
+func (p *Pool) Len() int {
+	p.mu.Lock()
+	defer p.mu.Unlock()
+
+	return len(p.bots)
+}
+
 // acquire returns the managed bot for the token, creating and starting it if it
 // does not exist yet.
 func (p *Pool) acquire(tok Token) (*managed, error) {
