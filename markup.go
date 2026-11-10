@@ -15,16 +15,31 @@ type WebAppInfo struct {
 	URL string `json:"url"`
 }
 
+// KeyboardButtonStyle defines the visual style of an inline keyboard button.
+type KeyboardButtonStyle struct {
+	BgPrimary bool   `json:"bg_primary,omitempty"`
+	BgDanger  bool   `json:"bg_danger,omitempty"`
+	BgSuccess bool   `json:"bg_success,omitempty"`
+	Icon      *int64 `json:"icon,omitempty"`
+}
+
 // InlineKeyboardButton is one button of an inline keyboard. Exactly one of the
 // optional action fields should be set.
 type InlineKeyboardButton struct {
-	Text                         string      `json:"text"`
-	URL                          string      `json:"url,omitempty"`
-	CallbackData                 string      `json:"callback_data,omitempty"`
-	WebApp                       *WebAppInfo `json:"web_app,omitempty"`
-	SwitchInlineQuery            *string     `json:"switch_inline_query,omitempty"`
-	SwitchInlineQueryCurrentChat *string     `json:"switch_inline_query_current_chat,omitempty"`
-	Pay                          bool        `json:"pay,omitempty"`
+	Text                         string               `json:"text"`
+	URL                          string               `json:"url,omitempty"`
+	CallbackData                 string               `json:"callback_data,omitempty"`
+	WebApp                       *WebAppInfo          `json:"web_app,omitempty"`
+	Style                        *KeyboardButtonStyle `json:"style,omitempty"`
+	SwitchInlineQuery            *string              `json:"switch_inline_query,omitempty"`
+	SwitchInlineQueryCurrentChat *string              `json:"switch_inline_query_current_chat,omitempty"`
+	Pay                          bool                 `json:"pay,omitempty"`
+}
+
+func (s *InlineKeyboardButton) Styled(style *KeyboardButtonStyle) InlineKeyboardButton {
+	s.Style = style
+
+	return *s
 }
 
 // InlineKeyboardMarkup is an inline keyboard that appears beneath a message.

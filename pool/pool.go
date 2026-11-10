@@ -40,6 +40,12 @@ type Options struct {
 	// IdleTimeout shuts down a bot that has not been borrowed for this long.
 	// Zero disables idle collection (RunGC then does nothing).
 	IdleTimeout time.Duration
+
+	// BotOptions configures each bot individually.
+	BotOptions func(token string) botapi.Options
+
+	// Configure registers handlers before Bot.Run.
+	Configure func(token string, bot *botapi.Bot) error
 }
 
 // Pool is a concurrency-safe set of bots keyed by token.
@@ -138,19 +144,48 @@ func (p *Pool) start(tok Token) (*managed, error) {
 
 	m := &managed{ready: make(chan struct{}), db: db}
 
-	bot, err := botapi.New(tok.String(), botapi.Options{
+	botOptions := botapi.Options{
 		AppID:   p.opt.AppID,
 		AppHash: p.opt.AppHash,
 		Logger:  botLog,
 		Storage: store,
-		OnStart: func(context.Context) { m.markReady(nil) },
-	})
+	}
+
+	if p.opt.BotOptions != nil {
+		botOptions = p.opt.BotOptions(tok.String())
+		botOptions.AppID = p.opt.AppID
+		botOptions.AppHash = p.opt.AppHash
+		botOptions.Logger = botLog
+		botOptions.Storage = store
+	}
+
+	onStart := botOptions.OnStart
+
+	botOptions.OnStart = func(ctx context.Context) {
+		if onStart != nil {
+			onStart(ctx)
+		}
+
+		m.markReady(nil)
+	}
+
+	bot, err := botapi.New(tok.String(), botOptions)
 	if err != nil {
 		if db != nil {
 			_ = db.Close()
 		}
 
 		return nil, err
+	}
+
+	if p.opt.Configure != nil {
+		if err := p.opt.Configure(tok.String(), bot); err != nil {
+			if db != nil {
+				_ = db.Close()
+			}
+
+			return nil, errors.Wrap(err, "configure bot")
+		}
 	}
 
 	m.bot = bot

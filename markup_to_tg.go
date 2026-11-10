@@ -71,19 +71,40 @@ func replyMarkupToTg(m ReplyMarkup) (tg.ReplyMarkupClass, error) {
 }
 
 func inlineButtonToTg(btn InlineKeyboardButton) (tg.KeyboardButtonClass, error) {
+	var opts []markup.StyleOption
+
+	if btn.Style != nil {
+		s := btn.Style
+		if s.Icon != nil {
+			opts = append(opts, markup.StyleIcon(*s.Icon))
+		}
+
+		if s.BgDanger {
+			opts = append(opts, markup.StyleBgDanger())
+		}
+
+		if s.BgPrimary {
+			opts = append(opts, markup.StyleBgPrimary())
+		}
+
+		if s.BgSuccess {
+			opts = append(opts, markup.StyleBgSuccess())
+		}
+	}
+
 	switch {
 	case btn.URL != "":
-		return markup.URL(btn.Text, btn.URL), nil
+		return markup.URL(btn.Text, btn.URL, opts...), nil
 	case btn.CallbackData != "":
-		return markup.Callback(btn.Text, []byte(btn.CallbackData)), nil
+		return markup.Callback(btn.Text, []byte(btn.CallbackData), opts...), nil
 	case btn.WebApp != nil:
-		return markup.WebView(btn.Text, btn.WebApp.URL), nil
+		return markup.WebView(btn.Text, btn.WebApp.URL, opts...), nil
 	case btn.SwitchInlineQuery != nil:
-		return markup.SwitchInline(btn.Text, *btn.SwitchInlineQuery, false), nil
+		return markup.SwitchInline(btn.Text, *btn.SwitchInlineQuery, false, opts...), nil
 	case btn.SwitchInlineQueryCurrentChat != nil:
-		return markup.SwitchInline(btn.Text, *btn.SwitchInlineQueryCurrentChat, true), nil
+		return markup.SwitchInline(btn.Text, *btn.SwitchInlineQueryCurrentChat, true, opts...), nil
 	case btn.Pay:
-		return markup.Buy(btn.Text), nil
+		return markup.Buy(btn.Text, opts...), nil
 	default:
 		return nil, &Error{Code: 400, Description: "Bad Request: text buttons are unallowed in the inline keyboard"}
 	}
