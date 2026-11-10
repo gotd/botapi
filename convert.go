@@ -67,22 +67,24 @@ func inlineKeyboardFromTg(mkp *tg.ReplyInlineMarkup) *InlineKeyboardMarkup {
 	for i, row := range mkp.Rows {
 		buttons := make([]InlineKeyboardButton, len(row.Buttons))
 		for j, b := range row.Buttons {
-			btn := InlineKeyboardButton{Text: b.GetText()}
-			switch b := b.(type) {
-			case *tg.KeyboardButtonURL:
+			btn := InlineKeyboardButton{Text: b.Text}
+			switch b := b.Type.(type) {
+			case *tg.InlineButtonTypeURL:
 				btn.URL = b.URL
-			case *tg.KeyboardButtonCallback:
+			case *tg.InlineButtonTypeCallback:
 				btn.CallbackData = string(b.Data)
-			case *tg.KeyboardButtonBuy:
+			case *tg.InlineButtonTypeBuy:
 				btn.Pay = true
-			case *tg.KeyboardButtonSwitchInline:
+			case *tg.InlineButtonTypeWebView:
+				btn.WebApp = &WebAppInfo{URL: b.URL}
+			case *tg.InlineButtonTypeSwitchInline:
 				q := b.Query
 				if b.SamePeer {
 					btn.SwitchInlineQueryCurrentChat = &q
 				} else {
 					btn.SwitchInlineQuery = &q
 				}
-			case *tg.KeyboardButtonURLAuth:
+			case *tg.InlineButtonTypeURLAuth:
 				// login_url buttons are represented as ordinary url buttons.
 				btn.URL = b.URL
 			}

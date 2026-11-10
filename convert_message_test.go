@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/gotd/td/bin"
+	"github.com/gotd/td/telegram/message/markup"
 	"github.com/gotd/td/tg"
 )
 
@@ -44,8 +45,8 @@ func TestConvertTextMessageFromUser(t *testing.T) {
 	m.SetFromID(&tg.PeerUser{UserID: 10})
 	m.SetEntities([]tg.MessageEntityClass{&tg.MessageEntityBold{Offset: 0, Length: 5}})
 	m.SetReplyTo(&tg.MessageReplyHeader{ReplyToMsgID: 3})
-	m.SetReplyMarkup(&tg.ReplyInlineMarkup{Rows: []tg.KeyboardButtonRow{{
-		Buttons: []tg.KeyboardButtonClass{&tg.KeyboardButtonCallback{Text: "ok", Data: []byte("d")}},
+	m.SetReplyMarkup(&tg.ReplyInlineMarkup{Rows: []tg.KeyboardInlineButtonRow{{
+		Buttons: []tg.KeyboardInlineButton{markup.Callback("ok", []byte("d"))},
 	}}})
 
 	r := convMsg(t, m)

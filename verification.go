@@ -32,7 +32,7 @@ func (b *Bot) setCustomVerification(ctx context.Context, peer tg.InputPeerClass,
 	req.SetEnabled(enabled)
 
 	if enabled && cfg.description != "" {
-		req.SetCustomDescription(cfg.description)
+		req.SetCustomDescription(tg.TextWithEntities{Text: cfg.description})
 	}
 
 	if _, err := b.raw.BotsSetCustomVerification(ctx, req); err != nil {

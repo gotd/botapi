@@ -13,9 +13,9 @@ import (
 func replyMarkupToTg(m ReplyMarkup) (tg.ReplyMarkupClass, error) {
 	switch m := m.(type) {
 	case *InlineKeyboardMarkup:
-		rows := make([]tg.KeyboardButtonRow, 0, len(m.InlineKeyboard))
+		rows := make([]tg.KeyboardInlineButtonRow, 0, len(m.InlineKeyboard))
 		for _, row := range m.InlineKeyboard {
-			buttons := make([]tg.KeyboardButtonClass, len(row))
+			buttons := make([]tg.KeyboardInlineButton, len(row))
 			for i, btn := range row {
 				b, err := inlineButtonToTg(btn)
 				if err != nil {
@@ -25,14 +25,14 @@ func replyMarkupToTg(m ReplyMarkup) (tg.ReplyMarkupClass, error) {
 				buttons[i] = b
 			}
 
-			rows = append(rows, tg.KeyboardButtonRow{Buttons: buttons})
+			rows = append(rows, tg.KeyboardInlineButtonRow{Buttons: buttons})
 		}
 
 		return &tg.ReplyInlineMarkup{Rows: rows}, nil
 	case *ReplyKeyboardMarkup:
 		rows := make([]tg.KeyboardButtonRow, 0, len(m.Keyboard))
 		for _, row := range m.Keyboard {
-			buttons := make([]tg.KeyboardButtonClass, len(row))
+			buttons := make([]tg.KeyboardButton, len(row))
 			for i, btn := range row {
 				buttons[i] = keyboardButtonToTg(btn)
 			}
@@ -70,7 +70,7 @@ func replyMarkupToTg(m ReplyMarkup) (tg.ReplyMarkupClass, error) {
 	}
 }
 
-func inlineButtonToTg(btn InlineKeyboardButton) (tg.KeyboardButtonClass, error) {
+func inlineButtonToTg(btn InlineKeyboardButton) (tg.KeyboardInlineButton, error) {
 	switch {
 	case btn.URL != "":
 		return markup.URL(btn.Text, btn.URL), nil
@@ -85,11 +85,11 @@ func inlineButtonToTg(btn InlineKeyboardButton) (tg.KeyboardButtonClass, error) 
 	case btn.Pay:
 		return markup.Buy(btn.Text), nil
 	default:
-		return nil, &Error{Code: 400, Description: "Bad Request: text buttons are unallowed in the inline keyboard"}
+		return tg.KeyboardInlineButton{}, &Error{Code: 400, Description: "Bad Request: text buttons are unallowed in the inline keyboard"}
 	}
 }
 
-func keyboardButtonToTg(btn KeyboardButton) tg.KeyboardButtonClass {
+func keyboardButtonToTg(btn KeyboardButton) tg.KeyboardButton {
 	switch {
 	case btn.RequestUsers != nil:
 		return requestUsersToTg(btn.Text, btn.RequestUsers)
