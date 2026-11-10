@@ -8,11 +8,11 @@ import (
 	"time"
 )
 
-// fakeManaged returns a managed entry that is already "ready", with a cancel
+// fakeManaged returns a Managed entry that is already "ready", with a cancel
 // hook recording whether it was killed. The flag is atomic because the pool may
 // cancel from a GC goroutine.
-func fakeManaged(killed *atomic.Bool) *managed {
-	m := &managed{ready: make(chan struct{})}
+func fakeManaged(killed *atomic.Bool) *Managed {
+	m := &Managed{ready: make(chan struct{})}
 
 	m.cancel = func() { killed.Store(true) }
 	m.markReady(nil)
@@ -21,7 +21,7 @@ func fakeManaged(killed *atomic.Bool) *managed {
 }
 
 func TestManagedMarkReadyLatches(t *testing.T) {
-	m := &managed{ready: make(chan struct{})}
+	m := &Managed{ready: make(chan struct{})}
 	first := errors.New("first")
 	m.markReady(first)
 	m.markReady(errors.New("second")) // ignored
@@ -38,7 +38,7 @@ func TestManagedMarkReadyLatches(t *testing.T) {
 }
 
 func TestManagedIdleBefore(t *testing.T) {
-	m := &managed{ready: make(chan struct{})}
+	m := &Managed{ready: make(chan struct{})}
 	// Never used: not idle.
 	if m.idleBefore(time.Now()) {
 		t.Fatal("unused bot should not be idle")
@@ -191,7 +191,7 @@ func TestAcquireDedupes(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	got, err := p.acquire(tok)
+	got, err := p.Acquire(tok)
 	if err != nil {
 		t.Fatalf("acquire: %v", err)
 	}
