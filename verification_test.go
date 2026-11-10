@@ -23,7 +23,7 @@ func TestVerifyUser(t *testing.T) {
 		t.Fatal("enabled should be true")
 	}
 
-	if desc, ok := req.GetCustomDescription(); !ok || desc != "trusted" {
+	if desc, ok := req.GetCustomDescription(); !ok || desc.Text != "trusted" {
 		t.Fatalf("description = %q, ok=%v", desc, ok)
 	}
 

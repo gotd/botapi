@@ -25,16 +25,16 @@ func TestReplyMarkupToTg_Inline(t *testing.T) {
 		t.Fatalf("unexpected: %#v", got)
 	}
 
-	if _, isURL := inline.Rows[0].Buttons[0].(*tg.KeyboardButtonURL); !isURL {
-		t.Fatalf("button 0: want URL, got %T", inline.Rows[0].Buttons[0])
+	if _, isURL := inline.Rows[0].Buttons[0].Type.(*tg.InlineButtonTypeURL); !isURL {
+		t.Fatalf("button 0: want URL, got %T", inline.Rows[0].Buttons[0].Type)
 	}
 
-	cb, isCb := inline.Rows[0].Buttons[1].(*tg.KeyboardButtonCallback)
+	cb, isCb := inline.Rows[0].Buttons[1].Type.(*tg.InlineButtonTypeCallback)
 	if !isCb || string(cb.Data) != "ok:1" {
 		t.Fatalf("button 1: want callback ok:1, got %#v", inline.Rows[0].Buttons[1])
 	}
 
-	si, isSwitch := inline.Rows[0].Buttons[2].(*tg.KeyboardButtonSwitchInline)
+	si, isSwitch := inline.Rows[0].Buttons[2].Type.(*tg.InlineButtonTypeSwitchInline)
 	if !isSwitch || si.Query != "go" || si.SamePeer {
 		t.Fatalf("button 2: want switch-inline, got %#v", inline.Rows[0].Buttons[2])
 	}
@@ -64,12 +64,12 @@ func TestReplyMarkupToTg_Reply(t *testing.T) {
 		t.Fatalf("unexpected: %#v", got)
 	}
 
-	if _, ok := kb.Rows[0].Buttons[1].(*tg.KeyboardButtonRequestPhone); !ok {
-		t.Fatalf("want request-phone, got %T", kb.Rows[0].Buttons[1])
+	if _, ok := kb.Rows[0].Buttons[1].Type.(*tg.ButtonTypeRequestPhone); !ok {
+		t.Fatalf("want request-phone, got %T", kb.Rows[0].Buttons[1].Type)
 	}
 
-	if _, ok := kb.Rows[0].Buttons[2].(*tg.KeyboardButtonRequestGeoLocation); !ok {
-		t.Fatalf("want request-geo, got %T", kb.Rows[0].Buttons[2])
+	if _, ok := kb.Rows[0].Buttons[2].Type.(*tg.ButtonTypeRequestGeoLocation); !ok {
+		t.Fatalf("want request-geo, got %T", kb.Rows[0].Buttons[2].Type)
 	}
 }
 

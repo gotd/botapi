@@ -30,7 +30,7 @@ func TestSavePreparedKeyboardButtonUsers(t *testing.T) {
 
 	inv.decode(t, tg.BotsRequestWebViewButtonRequestTypeID, &req)
 
-	rp, ok := req.Button.(*tg.KeyboardButtonRequestPeer)
+	rp, ok := req.Button.Type.(*tg.ButtonTypeRequestPeer)
 	if !ok || rp.ButtonID != 7 || rp.MaxQuantity != 3 {
 		t.Fatalf("button = %#v", req.Button)
 	}
@@ -62,7 +62,7 @@ func TestSavePreparedKeyboardButtonChat(t *testing.T) {
 
 	inv.decode(t, tg.BotsRequestWebViewButtonRequestTypeID, &req)
 
-	rp := req.Button.(*tg.KeyboardButtonRequestPeer)
+	rp := req.Button.Type.(*tg.ButtonTypeRequestPeer)
 
 	bc, ok := rp.PeerType.(*tg.RequestPeerTypeBroadcast)
 	if !ok || !bc.Creator {

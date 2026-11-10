@@ -3,6 +3,7 @@ package botapi
 import (
 	"testing"
 
+	"github.com/gotd/td/telegram/message/markup"
 	"github.com/gotd/td/tg"
 )
 
@@ -19,10 +20,10 @@ func TestUserFromTgUser(t *testing.T) {
 }
 
 func TestInlineKeyboardFromTg(t *testing.T) {
-	mkp := &tg.ReplyInlineMarkup{Rows: []tg.KeyboardButtonRow{{Buttons: []tg.KeyboardButtonClass{
-		&tg.KeyboardButtonURL{Text: "site", URL: "https://example.com"},
-		&tg.KeyboardButtonCallback{Text: "ok", Data: []byte("ok:1")},
-		&tg.KeyboardButtonSwitchInline{Text: "here", Query: "q", SamePeer: true},
+	mkp := &tg.ReplyInlineMarkup{Rows: []tg.KeyboardInlineButtonRow{{Buttons: []tg.KeyboardInlineButton{
+		markup.URL("site", "https://example.com"),
+		markup.Callback("ok", []byte("ok:1")),
+		markup.SwitchInline("here", "q", true),
 	}}}}
 
 	got := inlineKeyboardFromTg(mkp)

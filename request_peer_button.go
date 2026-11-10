@@ -1,6 +1,9 @@
 package botapi
 
-import "github.com/gotd/td/tg"
+import (
+	"github.com/gotd/td/telegram/message/markup"
+	"github.com/gotd/td/tg"
+)
 
 // KeyboardButtonRequestUsers defines the criteria used to request suitable users
 // when pressed. Maps to a request-peer keyboard button.
@@ -50,7 +53,7 @@ type KeyboardButtonRequestChat struct {
 }
 
 // requestUsersToTg builds the MTProto request-peer button for a user request.
-func requestUsersToTg(text string, r *KeyboardButtonRequestUsers) *tg.KeyboardButtonRequestPeer {
+func requestUsersToTg(text string, r *KeyboardButtonRequestUsers) tg.KeyboardButton {
 	peerType := &tg.RequestPeerTypeUser{}
 	if r.UserIsBot != nil {
 		peerType.SetBot(*r.UserIsBot)
@@ -65,16 +68,18 @@ func requestUsersToTg(text string, r *KeyboardButtonRequestUsers) *tg.KeyboardBu
 		maxQuantity = 1
 	}
 
-	return &tg.KeyboardButtonRequestPeer{
-		Text:        text,
-		ButtonID:    r.RequestID,
-		PeerType:    peerType,
-		MaxQuantity: maxQuantity,
+	return tg.KeyboardButton{
+		Text: text,
+		Type: &tg.ButtonTypeRequestPeer{
+			ButtonID:    r.RequestID,
+			PeerType:    peerType,
+			MaxQuantity: maxQuantity,
+		},
 	}
 }
 
 // requestChatToTg builds the MTProto request-peer button for a chat request.
-func requestChatToTg(text string, r *KeyboardButtonRequestChat) *tg.KeyboardButtonRequestPeer {
+func requestChatToTg(text string, r *KeyboardButtonRequestChat) tg.KeyboardButton {
 	var peerType tg.RequestPeerTypeClass
 
 	if r.ChatIsChannel {
@@ -113,9 +118,5 @@ func requestChatToTg(text string, r *KeyboardButtonRequestChat) *tg.KeyboardButt
 		peerType = chat
 	}
 
-	return &tg.KeyboardButtonRequestPeer{
-		Text:     text,
-		ButtonID: r.RequestID,
-		PeerType: peerType,
-	}
+	return markup.RequestPeer(text, r.RequestID, peerType)
 }
