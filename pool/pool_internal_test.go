@@ -144,7 +144,9 @@ func TestRunGCReapsThenStops(t *testing.T) {
 
 	go func() { p.RunGC(ctx); close(done) }()
 
-	// Wait for the idle bot to be reaped.
+	// Wait for the idle bot to be reaped and killed. reap removes the bot from
+	// the map under the lock and kills it after unlocking, so both must be
+	// awaited.
 	deadline := time.After(2 * time.Second)
 
 	for {
@@ -153,19 +155,15 @@ func TestRunGCReapsThenStops(t *testing.T) {
 		n := len(p.bots)
 		p.mu.Unlock()
 
-		if n == 0 {
+		if n == 0 && killed.Load() {
 			break
 		}
 
 		select {
 		case <-deadline:
-			t.Fatal("idle bot was not reaped")
+			t.Fatalf("idle bot was not reaped (bots=%d, killed=%v)", n, killed.Load())
 		case <-time.After(5 * time.Millisecond):
 		}
-	}
-
-	if !killed.Load() {
-		t.Fatal("reaped bot should be killed")
 	}
 
 	cancel()
